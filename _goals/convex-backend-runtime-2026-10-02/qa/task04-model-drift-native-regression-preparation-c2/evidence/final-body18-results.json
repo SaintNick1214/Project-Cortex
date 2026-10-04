@@ -1,0 +1,347 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/independent-body18.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/parent-inputs.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/evidence/final-body18-results.json"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T11:15:36.942Z",
+  "source": {
+    "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/parent-inputs.mjs",
+    "bytes": 19209,
+    "sha256": "8b6f5b88c07a099e11d2a7829519f905f31408ca7a99de1ba9b794ca65bbe7e1"
+  },
+  "defined": 18,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "name": "empty-success",
+      "status": "PASS",
+      "value": 0,
+      "error": null,
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 0,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "two-byte-success",
+      "status": "PASS",
+      "value": 2,
+      "error": null,
+      "effects": {
+        "reader": 1,
+        "reads": 2,
+        "cancels": 0,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "exact16KiB-single",
+      "status": "PASS",
+      "value": 16384,
+      "error": null,
+      "effects": {
+        "reader": 1,
+        "reads": 2,
+        "cancels": 0,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "exact16KiB-chunked",
+      "status": "PASS",
+      "value": 16384,
+      "error": null,
+      "effects": {
+        "reader": 1,
+        "reads": 3,
+        "cancels": 0,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "oversize-single",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "PARENT_RESPONSE_BYTES",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "oversize-chunked",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "PARENT_RESPONSE_BYTES",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 2,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "read-first-error",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "DUMMY_FIRST_READ_FAILURE",
+        "firstIdentity": true
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "read-cancel-error",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "DUMMY_FIRST_READ_FAILURE",
+        "firstIdentity": true
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "read-release-error",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "DUMMY_FIRST_READ_FAILURE",
+        "firstIdentity": true
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "oversize-release-error",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "PARENT_RESPONSE_BYTES",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "release-only-error",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "DUMMY_RELEASE_FAILURE",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 2,
+        "cancels": 0,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "missing-body",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "PARENT_RESPONSE_BODY",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 0,
+        "reads": 0,
+        "cancels": 0,
+        "releases": 0,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "expired-before-body",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "AssertionError",
+        "message": "PARENT_TOTAL_TIME_BUDGET",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 0,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "read-crosses-deadline",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "AssertionError",
+        "message": "PARENT_TOTAL_TIME_BUDGET",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "actual-late-read",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "Error",
+        "message": "PARENT_RESPONSE_DEADLINE",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 1,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "HTTP403-cancel-before-read",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "AssertionError",
+        "message": "owned peer environment update\n\n403 !== 200\n",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 0,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "HTTP403-cancel-secondary",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "AssertionError",
+        "message": "owned peer environment update\n\n403 !== 200\n",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 0,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    },
+    {
+      "name": "HTTP403-cancel-release-secondary",
+      "status": "PASS",
+      "value": null,
+      "error": {
+        "name": "AssertionError",
+        "message": "owned peer environment update\n\n403 !== 200\n",
+        "firstIdentity": false
+      },
+      "effects": {
+        "reader": 1,
+        "reads": 0,
+        "cancels": 1,
+        "releases": 1,
+        "realNetwork": 0,
+        "privateReads": 0,
+        "signatures": 0
+      }
+    }
+  ],
+  "scope": "EXACT_SOURCE_HELPER_DUMMY_STREAMS_ONLY_NO_NETWORK_PRIVATE_OR_SIGNING"
+}

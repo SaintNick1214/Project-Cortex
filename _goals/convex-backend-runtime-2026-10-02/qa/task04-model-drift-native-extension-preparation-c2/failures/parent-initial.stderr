@@ -1,0 +1,9 @@
+file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c1/extension/parent-proof/actual-chain.mjs:35
+ const physical=[];for(const n of stats.writes){const p=path.join(e.scratch,n),b=fs.readFileSync(p);assert.equal(fs.lstatSync(p).mode&511,0o600);physical.push({name:n,bytes:b.length,sha256:hash(b)});}if(expect.lastBytes!==undefined)assert.equal(physical.at(-1)?.bytes,expect.lastBytes);if(expect.created>0&&expect.written===true)assert.ok(physical.at(-1).bytes>0);if(subject==='c9'){const before=JSON.stringify(e.stats);let second;try{await(mode==='setup'?e.parent:e.watcher).namespace.main();}catch(caught){second=caught;}assert.match(second.message,/ALREADY_STARTED/);assert.equal(JSON.stringify(e.stats),before,'once denial/no reset/reissue');}
+                                                                                                                                                                                                                                                                                                                                                                            ^
+
+ReferenceError: subject is not defined
+    at runProbe (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c1/extension/parent-proof/actual-chain.mjs:35:365)
+    at async file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c1/extension/parent-proof/actual-chain.mjs:42:74
+
+Node.js v24.19.0

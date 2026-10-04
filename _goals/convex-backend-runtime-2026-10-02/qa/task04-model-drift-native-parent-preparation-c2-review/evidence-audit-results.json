@@ -1,0 +1,227 @@
+{
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "extension",
+      "exactContractEqualsRequest": true,
+      "parentSHA256": "e9be71bc6886434cfe49270cc0e50634b006af695128387e2fc300c87d7b20c2",
+      "watchSHA256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071",
+      "historicalConstantsExactC1": true,
+      "candidateArgument": "\"task04-model-drift-native-extension-preparation-c1\"",
+      "oldCLIlabelOnly": "equality assertion only; no path/target selection",
+      "completeClosure": "independently checked separate full-closure-results.json"
+    },
+    {
+      "profile": "regression",
+      "exactContractEqualsRequest": true,
+      "parentSHA256": "8b6f5b88c07a099e11d2a7829519f905f31408ca7a99de1ba9b794ca65bbe7e1",
+      "watchSHA256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071",
+      "historicalConstantsExactC1": true,
+      "candidateArgument": "\"task04-model-drift-native-regression-preparation-c1\"",
+      "oldCLIlabelOnly": "equality assertion only; no path/target selection",
+      "completeClosure": "independently checked separate full-closure-results.json"
+    },
+    {
+      "profile": "extra",
+      "exactContractEqualsRequest": true,
+      "parentSHA256": "a43b5eeb8800144b67e6c97a0609f6909d56dd63cb40f2bba138a17f37a856b7",
+      "watchSHA256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071",
+      "historicalConstantsExactC1": true,
+      "candidateArgument": "\"task04-model-drift-native-extra-preparation-c1\"",
+      "oldCLIlabelOnly": "equality assertion only; no path/target selection",
+      "completeClosure": "independently checked separate full-closure-results.json"
+    }
+  ],
+  "identicalNormalizedParentBodies": true,
+  "identicalExactWatchBodies": true,
+  "fourHistoricalSourcesAndNineLocatorsUnchanged": true,
+  "uniqueNewIdentityFields": true,
+  "finalReceiptsVerified": 26,
+  "receipts": [
+    {
+      "profile": "extension",
+      "receipt": "final-body18.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/parent-inputs.mjs",
+      "sha256": "e9be71bc6886434cfe49270cc0e50634b006af695128387e2fc300c87d7b20c2",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-inventory.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/inventory.mjs",
+      "sha256": "5f18eba0488f0435c5913515a84a066433586a38bad89574749dc11a1ace79a9",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-original-first-review-denial.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/guard.mjs",
+      "sha256": "820f988a86a282e0ac47087015f908edfa8948b7bf5ca609aaff3bb5ef907b2b",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-outcomes.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/offline-extension.mjs",
+      "sha256": "9f82723aeefd23e9c1482b92fd84b5c6b012e488c9a6f883ef601d5a4b9d05cb",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-parent-adversarial.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/extension/parent-proof/adversarial-chain.mjs",
+      "sha256": "9f0ef25c25021978a055ef245a6d4abc9007411ffe305e8ca694c87036de82d1",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-parent-original.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/extension/parent-proof/actual-chain.mjs",
+      "sha256": "855d3bb2900b2f93c2afb8c925c908dd96a5d924d4f39dd69571f941d8de402f",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-parent-watch17.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/extension/parent-proof/independent-watch17.mjs",
+      "sha256": "50014e90c8208f6cc94cce76b463861c1bf7494d76a5e21b0a701c9a44cabffe",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extension",
+      "receipt": "final-runtime-freeze.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/offline-runtime-freeze.mjs",
+      "sha256": "161ea31144be5290bbc6df5329bfad1c70f8f72ec9f10560f5898e3690a291f7",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-body18.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/parent-inputs.mjs",
+      "sha256": "8b6f5b88c07a099e11d2a7829519f905f31408ca7a99de1ba9b794ca65bbe7e1",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-inventory.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/inventory.mjs",
+      "sha256": "741a7d9db87bbe141bb7ef7f91ab08e8ca540dba44ecb1f64eb17d2b2fe7916e",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-original-first-review-denial.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/guard.mjs",
+      "sha256": "edf54daef88fa7bf0742c810f8f139acb709eaf16eb6b604384ae86fa9fff19d",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-outcomes.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/offline-actual-core.mjs",
+      "sha256": "ad7551d4bac53e86dbefe1a36a30b7f8c0bea53ee706d2e15493007345cdc167",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-parent-adversarial.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/regression/parent-proof/adversarial-chain.mjs",
+      "sha256": "977b9108482ba5d828634018e7141be5962959936f0ad588753410aa923988ac",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-parent-original.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/regression/parent-proof/actual-chain.mjs",
+      "sha256": "e5d319932a3be77bc64d51edf4c307542cd97f4db98408913e74b365fbfddf68",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-parent-watch17.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/regression/parent-proof/independent-watch17.mjs",
+      "sha256": "081c1869f983ce95f953f8287a63d9eb11e99a238eef6a9fd3dee315e4cf6b44",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "regression",
+      "receipt": "final-runtime-freeze.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/offline-runtime-freeze.mjs",
+      "sha256": "a329ca6de9d2bdb3a1694dfacf004fea3f8f973214f3147309082da9215a64c1",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-body18.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/parent-inputs.mjs",
+      "sha256": "a43b5eeb8800144b67e6c97a0609f6909d56dd63cb40f2bba138a17f37a856b7",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-driver-error-controls.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/driver-error-controls.mjs",
+      "sha256": "5ac41f6cfeff3b38e845091478b0f576b866dfad54f665480ef767b435c7bd14",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-inventory.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/inventory.mjs",
+      "sha256": "52145aca3bac8beb17ca1cede11ba7c3ea24a470ce90b7def1f7c02f6d2b44a0",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-original-first-review-denial.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/guard.mjs",
+      "sha256": "79e9f3f1113a44c961f2dd28fad422618fba867f1e8880ae7efe51363dd13d64",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-outcomes.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/offline-extension.mjs",
+      "sha256": "85183cf38f35c53c07e09a6e2a3716fe5c0559e7ad1fa05fffe14ce4fac80719",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-parent-adversarial.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/extra/parent-proof/adversarial-chain.mjs",
+      "sha256": "bb6b9ba303621e612d7862e68a8bcb7907aa8ba4b5332c661fa1c52eeb209210",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-parent-original.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/extra/parent-proof/actual-chain.mjs",
+      "sha256": "6641c7ce6341a7dc27d09490459df795c754a17c3534cf24cf389d84dc6a6d00",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-parent-watch17.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/extra/parent-proof/independent-watch17.mjs",
+      "sha256": "542810061a039df60b3eb72c63ab5e542a24986ee1280c0929d690a1db3f7c5a",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-rpc-binding-controls.receipt.json",
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c2/rpc-binding-controls.mjs",
+      "sha256": "4f37e590dc2f91fa9d78c4fd287fcb08534e7924f31c9472f5c0291f1eb30abd",
+      "sourcePrePostCurrentEqual": true
+    },
+    {
+      "profile": "extra",
+      "receipt": "final-runtime-freeze.receipt.json",
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/offline-runtime-freeze.mjs",
+      "sha256": "47bea195c6cdf5bc398aadb777853570e0446c871ba49033a4f0e1e8bf023dc2",
+      "sourcePrePostCurrentEqual": true
+    }
+  ],
+  "recorderSHA256": "80d68cbfe769cec4329a0b123e5aae87ac504b66cd4d203c866e9c1ad453e547",
+  "earlierEvidence": "NON_CERTIFYING retained failures/c2-receipt-instrumentation and c2-receipt-shadow; some exploratory UTC NOT_CAPTURED",
+  "observerHelpers": "read-only syntax inspection, not invoked/native-certified"
+}

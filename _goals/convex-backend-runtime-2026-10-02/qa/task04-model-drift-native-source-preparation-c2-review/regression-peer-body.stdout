@@ -1,0 +1,68 @@
+{
+  "kind": "regression",
+  "sourcePath": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/peer.mjs",
+  "sourceSHA256": "141580d9099e0d2b90f7a029e26377d00ceac521e8885edbadb7d4f4464d755f",
+  "results": [
+    {
+      "mode": "success",
+      "read": 2,
+      "cancel": 0,
+      "release": 0,
+      "result": "ok",
+      "failures": [
+        {
+          "assertion": "releases reader lock on every path",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+        }
+      ]
+    },
+    {
+      "mode": "read-error",
+      "read": 0,
+      "cancel": 0,
+      "release": 0,
+      "error": "DUMMY_READ_ERROR",
+      "failures": [
+        {
+          "assertion": "cancels reader on read error",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+        },
+        {
+          "assertion": "releases reader lock on every path",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+        }
+      ]
+    },
+    {
+      "mode": "overflow",
+      "read": 1,
+      "cancel": 1,
+      "release": 0,
+      "error": "QA_RESPONSE_CEILING",
+      "failures": [
+        {
+          "assertion": "releases reader lock on every path",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+        }
+      ]
+    },
+    {
+      "mode": "overflow-cancel-error",
+      "read": 1,
+      "cancel": 1,
+      "release": 0,
+      "error": "DUMMY_CANCEL_ERROR",
+      "failures": [
+        {
+          "assertion": "rejects original ceiling despite cleanup failure",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'DUMMY_CANCEL_ERROR'\n- 'QA_RESPONSE_CEILING'\n"
+        },
+        {
+          "assertion": "releases reader lock on every path",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+        }
+      ]
+    }
+  ],
+  "network": "NOT_RUN"
+}

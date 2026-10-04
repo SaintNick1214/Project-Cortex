@@ -1,0 +1,26 @@
+from pathlib import Path
+import hashlib,json,datetime
+repo=Path('/workspace/Project-Cortex');out=repo/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def rowscheck(base,rows):
+ failures=[]
+ for row in rows:
+  p=base/row['path']; b=p.read_bytes()
+  if hashlib.sha256(b).hexdigest()!=row['sha256'] or ('bytes'in row and len(b)!=row['bytes']):failures.append(row['path'])
+ return failures
+def complete(base,rows,exclude):
+ actual=sorted(str(p.relative_to(base)) for p in base.rglob('*') if p.is_file() and str(p.relative_to(base))!=exclude)
+ expected=sorted(row['path'] for row in rows)
+ return {'missing':sorted(set(actual)-set(expected)),'extraneous':sorted(set(expected)-set(actual)),'duplicates':len(expected)-len(set(expected))}
+res=[];history={}
+for kind in ['extension','regression','extra']:
+ root=repo/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{kind}-preparation-c2';manifest=json.loads((root/'qa-manifest.json').read_text());freeze=json.loads((root/'runtime-freeze.json').read_text())
+ tiers=json.loads((root/'dependency-tiers.json').read_text()); runner=json.loads((root/'runner-dependency-inventory.json').read_text()); tools=json.loads((root/'toolchain-evidence.json').read_text());dep={}
+ for key,full in [('runner',runner['inputs']),('tools',tools['files'])]:
+  r=tiers['rpc'][key];bd=tiers['boundaryOnly'][key];dep[key]={'rpc':len(r),'boundary':len(bd),'full':len(full),'exactUnion':sorted(r+bd,key=lambda x:x['path'])==sorted(full,key=lambda x:x['path']),'disjoint':not(set(x['path']for x in r)&set(x['path']for x in bd)),'hashFailures':rowscheck(repo,full)}
+ for packet in json.loads((root/'historical-preservation.json').read_text())['packets']:
+  name=packet['path'];base=repo/name;mp=base/packet['manifest'];m=json.loads(mp.read_text());whole=m
+  if 'fullClosure'in packet:whole=json.loads((root/packet['fullClosure']['path']).read_text())
+  history[name]={'manifestSHA256':sha(mp),'expectedManifestSHA256':packet['manifestSHA256'],'rows':len(m['files']),'expectedRows':packet['rows'],'completeRows':len(whole['files']),'hashFailures':rowscheck(base,whole['files']),'inventory':complete(base,whole['files'],packet['manifest'])}
+ res.append({'kind':kind,'qaSHA256':sha(root/'qa-manifest.json'),'qaRows':len(manifest['files']),'qaHashFailures':rowscheck(root,manifest['files']),'qaInventory':complete(root,manifest['files'],'qa-manifest.json'),'freezeSHA256':sha(root/'runtime-freeze.json'),'freezeRows':len(freeze['files']),'freezeHashFailures':rowscheck(root,freeze['files']),'freezePathsEqual':freeze['operationalPaths']==[x['path']for x in freeze['files']],'dependencies':dep})
+result={'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'subjects':res,'uniqueHistoricalPackets':len(history),'history':history,'scope':'READ_ONLY_BYTES_AND_RECURSIVE_INVENTORY_ONLY_NO_NATIVE_ACCEPTANCE'};(out/'closure-audit.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'subjects':res,'uniqueHistoricalPackets':len(history),'historicalFailures':[k for k,v in history.items()if v['hashFailures'] or any(v['inventory'].values()) or v['manifestSHA256']!=v['expectedManifestSHA256'] or v['rows']!=v['expectedRows']]},indent=2))

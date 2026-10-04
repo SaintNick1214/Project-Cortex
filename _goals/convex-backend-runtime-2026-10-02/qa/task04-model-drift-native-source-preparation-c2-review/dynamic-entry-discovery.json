@@ -1,0 +1,279 @@
+{
+  "observedAt": "2026-10-04T11:25:10.535497+00:00",
+  "scope": "STATIC_NON_OFFLINE_MJS_TRANSPORT_SPAWN_DISCOVERY_NOT_EXHAUSTIVE_EXECUTION",
+  "rows": [
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/driver.mjs",
+      "line": 21,
+      "sourceSHA256": "8727109ecdf565318e3ede3ee1857b834d36bdf84f31274858fb97672de46004",
+      "code": " const boundedFetch=async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl)throw Error('QA_ORIGIN');const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(response);if([400,401,403].includes(response.status)){try{const envelope=JSON.parse(body);if(['InvalidAuth','Unauthenticated','InvalidAuthHeader','NoAuthProvider'].includes(envelope.code)&&typeof envelope.message==='string'&&Object.keys(envelope).every(k=>['code','message'].includes(k)))wire.add(body);}catch{}}"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/driver.mjs",
+      "line": 24,
+      "sourceSHA256": "8727109ecdf565318e3ede3ee1857b834d36bdf84f31274858fb97672de46004",
+      "code": " let windowProofs=0;const s={async recordWindowEvidence(proof,status){if(++windowProofs>4)throw Error('QA_WINDOW_PROOF_BUDGET');const receipt={operation:target.operation,runId:parent.runId,phase,status,...proof};const bytes=Buffer.byteLength(JSON.stringify(receipt,null,2)+'\\n');if(bytes>4096)throw Error('QA_WINDOW_PROOF_BYTES');reservePublicationEvidence(bytes);exclusive(resolve(scratch,'window-proof-'+String(windowProofs)+'-'+randomUUID()+'.json'),receipt,true,4096);},runId:parent.runId,target,parent,publication,publicationEquality,journal,peerCalls:0,peerEffects:0,peerOther:0,profile:json(resolve(root,'profile.json')),async rpc(type,path,args,client=operator){if(++rpc>limits.rpc||Date.now()-start>limits.qualifierMs||++active>limits.concurrency)throw Error('QA_RPC_BUDGET');if(s.caseRPCMax!==undefined&&rpc>s.caseRPCMax)throw Error('QA_CASE_RPC_BUDGET');if(path.startsWith('qualificationOwned:cleanup')){if(++cleanupRpc>limits.cleanupRpc)throw Error('QA_CLEANUP_BUDGET');await reserveTicket('cleanup',limits.cleanupRpc);}await reserveTicket('native',limits.nativeClientRpc,s.cleanupMode===true);if(client===operator&&['qualificationOwned:parentRollback','qualificationCapture:parentRefinementRollback'].includes(path))await reserveTicket('nested-parent',1);if(['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path))await reserveTicket('nested-auth',28);const begun=Date.now();try{const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');wire.clear();const value=await client[type](makeFunctionReference(path),args);if(Buffer.byteLength(JSON.stringify(value))>limits.resultBytes)throw Error('QA_RESULT_BYTES');if(value?.createdRefs)track(value.createdRefs,'created',target.operation);if(value?.deletedRefs)track(value.deletedRefs,'deleted',target.operation);if(path==='qualificationOwned:snapshot')track(ownedSnapshot(value,parent.runId),'created',target.operation);journal.append({phase,caseId:path.replace(':','-'),status:'PASS',observedCategory:'rpc-complete',elapsedMs:Date.now()-begun});return value;}catch(error){journal.append({phase,caseId:path.replace(':','-'),status:'FAIL',observedCategory:'rpc-rejected',failureClass:error?.data?.code&&/^[A-Z_]+$/.test(error.data.code)?error.data.code.toLowerCase():'native_or_transport'});throw error;}finally{active--;}}"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/fault-driver.mjs",
+      "line": 3,
+      "sourceSHA256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "code": "const mode=process.argv[2];if(!['before-peer','lost-receipt','before-settle'].includes(mode))throw Error('QA_FAULT_MODE');const {target}=livePreflight('synthetic');const owner=new ProcessOwner();await reserveTicket('process',6);const runtime={};for(const name of ['HTTPS_PROXY','HTTP_PROXY','NO_PROXY','https_proxy','http_proxy','no_proxy','NODE_EXTRA_CA_CERTS'])if(process.env[name])runtime[name]=process.env[name];const record=owner.spawn([resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']});"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/parent-inputs.mjs",
+      "line": 91,
+      "sourceSHA256": "e9be71bc6886434cfe49270cc0e50634b006af695128387e2fc300c87d7b20c2",
+      "code": "  parentDeadline(deadline);effects.configurationCalls++;const response=await fetch(url,options);"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/peer.mjs",
+      "line": 5,
+      "sourceSHA256": "141580d9099e0d2b90f7a029e26377d00ceac521e8885edbadb7d4f4464d755f",
+      "code": " await reserveTicket(effect?'peer-effect':'peer-other',effect?limits.peerEffects:limits.peerOther);const url=session.target.deploymentUrl.replace('.convex.cloud','.convex.site')+'/qa/task04-peer/effect';const response=await fetch(url,{method:'POST',redirect:'error',headers:{'content-type':'application/json',...(credential?{'x-cortex-qa-peer':credential}:{}),...(authorization?{authorization:'Bearer '+authorization}:{})},body:JSON.stringify({run:bodyRun,dispatchDigest:sha256(dispatchIdentity)}),signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(response,2048);assert.equal(response.status,expected);if(expected===403){assert.equal(body,'denied');return;}const result=JSON.parse(body);assert.deepEqual(Object.keys(result).sort(),['effectCount','requestCount']);return result;}"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/process-owner.mjs",
+      "line": 37,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "  spawn(args, options) {"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/process-owner.mjs",
+      "line": 40,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "    const expected=reviewPin();if(options.env?.CORTEX_QA_TASK04_REVIEW_SHA256!==undefined&&options.env.CORTEX_QA_TASK04_REVIEW_SHA256!==expected)throw Error('QA_CHILD_REVIEW_PIN');const child = spawn(process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true });"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/process-owner.mjs",
+      "line": 50,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "    const record = this.spawn(args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] });"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/provision.mjs",
+      "line": 25,
+      "sourceSHA256": "d7645f3bd396407277e8a780024d02095ed96dfd14cd09d22238d6ca0bc51a19",
+      "code": "  const response = await fetch(`https://api.convex.dev/v1${path}`, {"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/publication.mjs",
+      "line": 6,
+      "sourceSHA256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c",
+      "code": "assertFreshPublication(phase);let rawCapture;const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl||new URL(url).pathname!=='/api/query'||options.method!=='POST'||JSON.parse(options.body).path!=='_system/cli/modules:apiSpec'||rawCapture)throw Error('QA_ORIGIN');const r=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedRawResponse(r);rawCapture=captureRawResponse(phase,target.operation,body,r.status);return new Response(body,{status:r.status,headers:r.headers});}});client.setAdminAuth(values.CONVEX_DEPLOY_KEY);"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/publication.mjs",
+      "line": 7,
+      "sourceSHA256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c",
+      "code": "await reserveTicket('native',limits.nativeClientRpc);const published=await client.query(makeFunctionReference('_system/cli/modules:apiSpec'),{});assert.ok(Array.isArray(published));const functions=normalizeApiSpec(published);"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/retire.mjs",
+      "line": 13,
+      "sourceSHA256": "008913657397cb31c1e5b144e87ba60673301a590c8b8bb15ed801cefb723ee4",
+      "code": "const api=async(path,method='GET')=>{if(++calls>5||Date.now()>deadline)throw new Error('Management ceiling');const response=await fetch(`https://api.convex.dev/v1${path}`,{method,headers:{Authorization:`Bearer ${key}`},redirect:'error',signal:AbortSignal.timeout(30000)});return {status:response.status,body:await response.text()};};"
+    },
+    {
+      "kind": "extension",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/task04-native-c8-parent-inputs.mjs",
+      "line": 35,
+      "sourceSHA256": "ca6b91903c1b12805423b907e854790e2cf3a1927f1d60fbd15733bf755327ea",
+      "code": " currentTarget(undefined,identity);const startedAt=new Date().toISOString(),response=await fetch(target.deploymentUrl+'/api/update_environment_variables',{method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,'owned peer environment update');const body=await response.text();assert.ok(Buffer.byteLength(body)<=16384);currentTarget(undefined,identity);preservationPreflight();exclusive(resolve(scratch,'parent-inputs-receipt.json'),{operation:target.operation,runId:target.runId,status:'PASS',startedAt,observedAt:new Date().toISOString(),adapterSourceSHA256:sha256(readFileSync(canonical(fileURLToPath(import.meta.url),repo))),keysCreated:0,signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:1,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readPrivate(resolve(scratch,'initial-physical-id-provenance.json'),scratch)),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'});process.stdout.write(JSON.stringify({status:'PASS',keysCreated:0,signatures,storageCreated:0,configurationCalls:1,currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'})+'\\n');}"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/driver.mjs",
+      "line": 21,
+      "sourceSHA256": "8727109ecdf565318e3ede3ee1857b834d36bdf84f31274858fb97672de46004",
+      "code": " const boundedFetch=async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl)throw Error('QA_ORIGIN');const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(response);if([400,401,403].includes(response.status)){try{const envelope=JSON.parse(body);if(['InvalidAuth','Unauthenticated','InvalidAuthHeader','NoAuthProvider'].includes(envelope.code)&&typeof envelope.message==='string'&&Object.keys(envelope).every(k=>['code','message'].includes(k)))wire.add(body);}catch{}}"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/driver.mjs",
+      "line": 24,
+      "sourceSHA256": "8727109ecdf565318e3ede3ee1857b834d36bdf84f31274858fb97672de46004",
+      "code": " let windowProofs=0;const s={async recordWindowEvidence(proof,status){if(++windowProofs>4)throw Error('QA_WINDOW_PROOF_BUDGET');const receipt={operation:target.operation,runId:parent.runId,phase,status,...proof};const bytes=Buffer.byteLength(JSON.stringify(receipt,null,2)+'\\n');if(bytes>4096)throw Error('QA_WINDOW_PROOF_BYTES');reservePublicationEvidence(bytes);exclusive(resolve(scratch,'window-proof-'+String(windowProofs)+'-'+randomUUID()+'.json'),receipt,true,4096);},runId:parent.runId,target,parent,publication,publicationEquality,journal,peerCalls:0,peerEffects:0,peerOther:0,profile:json(resolve(root,'profile.json')),async rpc(type,path,args,client=operator){if(++rpc>limits.rpc||Date.now()-start>limits.qualifierMs||++active>limits.concurrency)throw Error('QA_RPC_BUDGET');if(s.caseRPCMax!==undefined&&rpc>s.caseRPCMax)throw Error('QA_CASE_RPC_BUDGET');if(path.startsWith('qualificationOwned:cleanup')){if(++cleanupRpc>limits.cleanupRpc)throw Error('QA_CLEANUP_BUDGET');await reserveTicket('cleanup',limits.cleanupRpc);}await reserveTicket('native',limits.nativeClientRpc,s.cleanupMode===true);if(client===operator&&['qualificationOwned:parentRollback','qualificationCapture:parentRefinementRollback'].includes(path))await reserveTicket('nested-parent',1);if(['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path))await reserveTicket('nested-auth',28);const begun=Date.now();try{const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');wire.clear();const value=await client[type](makeFunctionReference(path),args);if(Buffer.byteLength(JSON.stringify(value))>limits.resultBytes)throw Error('QA_RESULT_BYTES');if(value?.createdRefs)track(value.createdRefs,'created',target.operation);if(value?.deletedRefs)track(value.deletedRefs,'deleted',target.operation);if(path==='qualificationOwned:snapshot')track(ownedSnapshot(value,parent.runId),'created',target.operation);journal.append({phase,caseId:path.replace(':','-'),status:'PASS',observedCategory:'rpc-complete',elapsedMs:Date.now()-begun});return value;}catch(error){journal.append({phase,caseId:path.replace(':','-'),status:'FAIL',observedCategory:'rpc-rejected',failureClass:error?.data?.code&&/^[A-Z_]+$/.test(error.data.code)?error.data.code.toLowerCase():'native_or_transport'});throw error;}finally{active--;}}"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/fault-driver.mjs",
+      "line": 3,
+      "sourceSHA256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "code": "const mode=process.argv[2];if(!['before-peer','lost-receipt','before-settle'].includes(mode))throw Error('QA_FAULT_MODE');const {target}=livePreflight('synthetic');const owner=new ProcessOwner();await reserveTicket('process',6);const runtime={};for(const name of ['HTTPS_PROXY','HTTP_PROXY','NO_PROXY','https_proxy','http_proxy','no_proxy','NODE_EXTRA_CA_CERTS'])if(process.env[name])runtime[name]=process.env[name];const record=owner.spawn([resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']});"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/parent-inputs.mjs",
+      "line": 91,
+      "sourceSHA256": "8b6f5b88c07a099e11d2a7829519f905f31408ca7a99de1ba9b794ca65bbe7e1",
+      "code": "  parentDeadline(deadline);effects.configurationCalls++;const response=await fetch(url,options);"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/peer.mjs",
+      "line": 5,
+      "sourceSHA256": "141580d9099e0d2b90f7a029e26377d00ceac521e8885edbadb7d4f4464d755f",
+      "code": " await reserveTicket(effect?'peer-effect':'peer-other',effect?limits.peerEffects:limits.peerOther);const url=session.target.deploymentUrl.replace('.convex.cloud','.convex.site')+'/qa/task04-peer/effect';const response=await fetch(url,{method:'POST',redirect:'error',headers:{'content-type':'application/json',...(credential?{'x-cortex-qa-peer':credential}:{}),...(authorization?{authorization:'Bearer '+authorization}:{})},body:JSON.stringify({run:bodyRun,dispatchDigest:sha256(dispatchIdentity)}),signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(response,2048);assert.equal(response.status,expected);if(expected===403){assert.equal(body,'denied');return;}const result=JSON.parse(body);assert.deepEqual(Object.keys(result).sort(),['effectCount','requestCount']);return result;}"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/process-owner.mjs",
+      "line": 37,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "  spawn(args, options) {"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/process-owner.mjs",
+      "line": 40,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "    const expected=reviewPin();if(options.env?.CORTEX_QA_TASK04_REVIEW_SHA256!==undefined&&options.env.CORTEX_QA_TASK04_REVIEW_SHA256!==expected)throw Error('QA_CHILD_REVIEW_PIN');const child = spawn(process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true });"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/process-owner.mjs",
+      "line": 50,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "    const record = this.spawn(args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] });"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/provision.mjs",
+      "line": 25,
+      "sourceSHA256": "5b4514ee7b8003608fbddf12f4965a09af970a89e537bd02101150ac1a8d9257",
+      "code": "  const response = await fetch(`https://api.convex.dev/v1${path}`, {"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/publication.mjs",
+      "line": 6,
+      "sourceSHA256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c",
+      "code": "assertFreshPublication(phase);let rawCapture;const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl||new URL(url).pathname!=='/api/query'||options.method!=='POST'||JSON.parse(options.body).path!=='_system/cli/modules:apiSpec'||rawCapture)throw Error('QA_ORIGIN');const r=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedRawResponse(r);rawCapture=captureRawResponse(phase,target.operation,body,r.status);return new Response(body,{status:r.status,headers:r.headers});}});client.setAdminAuth(values.CONVEX_DEPLOY_KEY);"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/publication.mjs",
+      "line": 7,
+      "sourceSHA256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c",
+      "code": "await reserveTicket('native',limits.nativeClientRpc);const published=await client.query(makeFunctionReference('_system/cli/modules:apiSpec'),{});assert.ok(Array.isArray(published));const functions=normalizeApiSpec(published);"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/retire.mjs",
+      "line": 13,
+      "sourceSHA256": "008913657397cb31c1e5b144e87ba60673301a590c8b8bb15ed801cefb723ee4",
+      "code": "const api=async(path,method='GET')=>{if(++calls>5||Date.now()>deadline)throw new Error('Management ceiling');const response=await fetch(`https://api.convex.dev/v1${path}`,{method,headers:{Authorization:`Bearer ${key}`},redirect:'error',signal:AbortSignal.timeout(30000)});return {status:response.status,body:await response.text()};};"
+    },
+    {
+      "kind": "regression",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/task04-native-c8-parent-inputs.mjs",
+      "line": 35,
+      "sourceSHA256": "ca6b91903c1b12805423b907e854790e2cf3a1927f1d60fbd15733bf755327ea",
+      "code": " currentTarget(undefined,identity);const startedAt=new Date().toISOString(),response=await fetch(target.deploymentUrl+'/api/update_environment_variables',{method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,'owned peer environment update');const body=await response.text();assert.ok(Buffer.byteLength(body)<=16384);currentTarget(undefined,identity);preservationPreflight();exclusive(resolve(scratch,'parent-inputs-receipt.json'),{operation:target.operation,runId:target.runId,status:'PASS',startedAt,observedAt:new Date().toISOString(),adapterSourceSHA256:sha256(readFileSync(canonical(fileURLToPath(import.meta.url),repo))),keysCreated:0,signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:1,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readPrivate(resolve(scratch,'initial-physical-id-provenance.json'),scratch)),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'});process.stdout.write(JSON.stringify({status:'PASS',keysCreated:0,signatures,storageCreated:0,configurationCalls:1,currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'})+'\\n');}"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/driver.mjs",
+      "line": 21,
+      "sourceSHA256": "cb110d3739d92e11a7a70de4afe26d6329430116fbfbe4b63401e25bcd8d436a",
+      "code": " const boundedFetch=async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl)throw Error('QA_ORIGIN');const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(response);if([400,401,403].includes(response.status)){try{const envelope=JSON.parse(body);if(['InvalidAuth','Unauthenticated','InvalidAuthHeader','NoAuthProvider'].includes(envelope.code)&&typeof envelope.message==='string'&&Object.keys(envelope).every(k=>['code','message'].includes(k)))wire.add(body);}catch{}}"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/driver.mjs",
+      "line": 24,
+      "sourceSHA256": "cb110d3739d92e11a7a70de4afe26d6329430116fbfbe4b63401e25bcd8d436a",
+      "code": " let windowProofs=0;const s={async recordWindowEvidence(proof,status){if(++windowProofs>4)throw Error('QA_WINDOW_PROOF_BUDGET');const receipt={operation:target.operation,runId:parent.runId,phase,status,...proof};const bytes=Buffer.byteLength(JSON.stringify(receipt,null,2)+'\\n');if(bytes>4096)throw Error('QA_WINDOW_PROOF_BYTES');reservePublicationEvidence(bytes);exclusive(resolve(scratch,'window-proof-'+String(windowProofs)+'-'+randomUUID()+'.json'),receipt,true,4096);},runId:parent.runId,target,parent,publication,publicationEquality,journal,peerCalls:0,peerEffects:0,peerOther:0,profile:json(resolve(root,'profile.json')),async rpc(type,path,args,client=operator){if(++rpc>limits.rpc||Date.now()-start>limits.qualifierMs||++active>limits.concurrency)throw Error('QA_RPC_BUDGET');if(s.caseRPCMax!==undefined&&rpc>s.caseRPCMax)throw Error('QA_CASE_RPC_BUDGET');if(path.startsWith('qualificationOwned:cleanup')){if(++cleanupRpc>limits.cleanupRpc)throw Error('QA_CLEANUP_BUDGET');await reserveTicket('cleanup',limits.cleanupRpc);}await reserveTicket('native',limits.nativeClientRpc,s.cleanupMode===true);if(client===operator&&['qualificationOwned:parentRollback','qualificationCapture:parentRefinementRollback'].includes(path))await reserveTicket('nested-parent',1);if(['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path))await reserveTicket('nested-auth',28);const begun=Date.now();try{const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');wire.clear();const value=await client[type](makeFunctionReference(path),args);if(Buffer.byteLength(JSON.stringify(value))>limits.resultBytes)throw Error('QA_RESULT_BYTES');if(value?.createdRefs)track(value.createdRefs,'created',target.operation);if(value?.deletedRefs)track(value.deletedRefs,'deleted',target.operation);if(path==='qualificationOwned:snapshot')track(ownedSnapshot(value,parent.runId),'created',target.operation);journal.append({phase,caseId:path.replace(':','-'),status:'PASS',observedCategory:'rpc-complete',elapsedMs:Date.now()-begun});return value;}catch(error){journal.append({phase,caseId:path.replace(':','-'),status:'FAIL',observedCategory:'rpc-rejected',failureClass:typeof error?.data?.code==='string'&&/^[A-Z_]{1,64}$/.test(error.data.code)?error.data.code.toLowerCase():'native_or_transport'});throw error;}finally{active--;}}"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/fault-driver.mjs",
+      "line": 3,
+      "sourceSHA256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "code": "const mode=process.argv[2];if(!['before-peer','lost-receipt','before-settle'].includes(mode))throw Error('QA_FAULT_MODE');const {target}=livePreflight('synthetic');const owner=new ProcessOwner();await reserveTicket('process',6);const runtime={};for(const name of ['HTTPS_PROXY','HTTP_PROXY','NO_PROXY','https_proxy','http_proxy','no_proxy','NODE_EXTRA_CA_CERTS'])if(process.env[name])runtime[name]=process.env[name];const record=owner.spawn([resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']});"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/parent-inputs.mjs",
+      "line": 91,
+      "sourceSHA256": "a43b5eeb8800144b67e6c97a0609f6909d56dd63cb40f2bba138a17f37a856b7",
+      "code": "  parentDeadline(deadline);effects.configurationCalls++;const response=await fetch(url,options);"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/peer.mjs",
+      "line": 5,
+      "sourceSHA256": "141580d9099e0d2b90f7a029e26377d00ceac521e8885edbadb7d4f4464d755f",
+      "code": " await reserveTicket(effect?'peer-effect':'peer-other',effect?limits.peerEffects:limits.peerOther);const url=session.target.deploymentUrl.replace('.convex.cloud','.convex.site')+'/qa/task04-peer/effect';const response=await fetch(url,{method:'POST',redirect:'error',headers:{'content-type':'application/json',...(credential?{'x-cortex-qa-peer':credential}:{}),...(authorization?{authorization:'Bearer '+authorization}:{})},body:JSON.stringify({run:bodyRun,dispatchDigest:sha256(dispatchIdentity)}),signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(response,2048);assert.equal(response.status,expected);if(expected===403){assert.equal(body,'denied');return;}const result=JSON.parse(body);assert.deepEqual(Object.keys(result).sort(),['effectCount','requestCount']);return result;}"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/process-owner.mjs",
+      "line": 37,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "  spawn(args, options) {"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/process-owner.mjs",
+      "line": 40,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "    const expected=reviewPin();if(options.env?.CORTEX_QA_TASK04_REVIEW_SHA256!==undefined&&options.env.CORTEX_QA_TASK04_REVIEW_SHA256!==expected)throw Error('QA_CHILD_REVIEW_PIN');const child = spawn(process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true });"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/process-owner.mjs",
+      "line": 50,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "code": "    const record = this.spawn(args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] });"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/provision.mjs",
+      "line": 25,
+      "sourceSHA256": "52b3a44f34a0d7b7d1a96beed54b58ab83c37631821f5b1cb1670903cb863aef",
+      "code": "  const response = await fetch(`https://api.convex.dev/v1${path}`, {"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/publication.mjs",
+      "line": 6,
+      "sourceSHA256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c",
+      "code": "assertFreshPublication(phase);let rawCapture;const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl||new URL(url).pathname!=='/api/query'||options.method!=='POST'||JSON.parse(options.body).path!=='_system/cli/modules:apiSpec'||rawCapture)throw Error('QA_ORIGIN');const r=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedRawResponse(r);rawCapture=captureRawResponse(phase,target.operation,body,r.status);return new Response(body,{status:r.status,headers:r.headers});}});client.setAdminAuth(values.CONVEX_DEPLOY_KEY);"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/publication.mjs",
+      "line": 7,
+      "sourceSHA256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c",
+      "code": "await reserveTicket('native',limits.nativeClientRpc);const published=await client.query(makeFunctionReference('_system/cli/modules:apiSpec'),{});assert.ok(Array.isArray(published));const functions=normalizeApiSpec(published);"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/retire.mjs",
+      "line": 13,
+      "sourceSHA256": "008913657397cb31c1e5b144e87ba60673301a590c8b8bb15ed801cefb723ee4",
+      "code": "const api=async(path,method='GET')=>{if(++calls>5||Date.now()>deadline)throw new Error('Management ceiling');const response=await fetch(`https://api.convex.dev/v1${path}`,{method,headers:{Authorization:`Bearer ${key}`},redirect:'error',signal:AbortSignal.timeout(30000)});return {status:response.status,body:await response.text()};};"
+    },
+    {
+      "kind": "extra",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/task04-native-c8-parent-inputs.mjs",
+      "line": 35,
+      "sourceSHA256": "ca6b91903c1b12805423b907e854790e2cf3a1927f1d60fbd15733bf755327ea",
+      "code": " currentTarget(undefined,identity);const startedAt=new Date().toISOString(),response=await fetch(target.deploymentUrl+'/api/update_environment_variables',{method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,'owned peer environment update');const body=await response.text();assert.ok(Buffer.byteLength(body)<=16384);currentTarget(undefined,identity);preservationPreflight();exclusive(resolve(scratch,'parent-inputs-receipt.json'),{operation:target.operation,runId:target.runId,status:'PASS',startedAt,observedAt:new Date().toISOString(),adapterSourceSHA256:sha256(readFileSync(canonical(fileURLToPath(import.meta.url),repo))),keysCreated:0,signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:1,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readPrivate(resolve(scratch,'initial-physical-id-provenance.json'),scratch)),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'});process.stdout.write(JSON.stringify({status:'PASS',keysCreated:0,signatures,storageCreated:0,configurationCalls:1,currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'})+'\\n');}"
+    }
+  ]
+}

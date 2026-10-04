@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: boundedBody must release reader and preserve original ceiling
+
+6 !== 0
+
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-source-preparation-c2-review/peer-body-controls.mjs:4:158 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 6,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
