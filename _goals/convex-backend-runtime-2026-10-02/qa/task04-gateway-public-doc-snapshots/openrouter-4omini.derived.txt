@@ -1,0 +1,196 @@
+GPT-4o-mini - API Pricing & Benchmarks | OpenRouterSkip to contentSearch⌘KDashboardModelsBenchmarksChatChatRankingsAppsOriPricingDocs
+Models 
+Rankings 
+Ori BenchmarksChatChatPricingDocsSign UpSign Up© 2026 OpenRouter, Inc
+Product
+Chat
+Rankings
+Benchmarks
+Apps
+Discover
+Models
+Collections
+Providers
+Tools
+Pricing
+Business
+Enterprise
+Labs
+Company
+About
+Blog
+CareersHiring
+Privacy
+Terms of Service
+Trust Center
+Support
+Works With OR
+Data
+Brand
+Developer
+Documentation
+API Reference
+Developer Platform
+Status
+AI Site Map
+Connect
+Discord
+GitHub
+LinkedIn
+X
+YouTubeSign UpSign Up
+OpenAI: GPT-4o-mini
+openai/gpt-4o-miniCompareAPITry this model
+GPT-4o mini is OpenAI's newest model after GPT-4 Omni, supporting both text and image inputs with text outputs.
+
+As their most advanced small model, it is many multiples more affordable than other recent frontier models, and more than 60% cheaper than GPT-3.5 Turbo. It maintains SOTA intelligence, while being significantly more cost-effective.
+
+GPT-4o mini achieves an 82% score on MMLU and presently ranks higher than GPT-4 on chat preferences common leaderboardsOpens in new tab.
+
+Check out the launch announcementOpens in new tab to learn more.
+
+#multimodalModalitiesIn / Out Price$0.15 / $0.60per 1MContext128KReleasedJul 18, 2024Knowledge CutoffOct 2023OpenAI: GPT-4o-miniCompareAPITry this modelProvidersPricingPerformanceUptimeBenchmarksAppsActivityFAQExploreProviders
+Providers
+Different companies host the same model. OpenRouter routes your request to one of them based on the routing mode you pick — Balanced (price + speed), Nitro (fastest), Floor (cheapest), or Exacto (highest tool-calling accuracy).
+Pricing
+The average price customers actually pay for this model, next to the prices providers post. Caching and discounts mean the price actually paid is often well below the listed one.
+Performance
+Throughput is how fast the model writes (tokens per second — higher is better). Latency is total round-trip time (lower is better). TTFT is time-to-first-token — how long before you see anything appear (lower is better).
+Uptime
+Uptime is the percentage of the past 3 days that at least one provider was responding to requests. Availability is the percentage of time that inference was successfully served. OpenRouter continuously monitors and uses the next-best provider when one returns an error.
+Benchmarks
+Scores on standardized evaluations and this model’s own outputs on shared benchmark prompts. Higher percentages are better — and each rank shows where this model lands among the models evaluated on that source.Benchmark score summary for OpenAI: GPT-4o-mini (Artificial Analysis)
+
+Source
+Benchmark
+Score
+
+Artificial Analysis
+GPT-4o mini Coding Index
+11.4
+
+Artificial Analysis
+GPT-4o mini GPQA Diamond
+42.6%
+
+Artificial Analysis
+GPT-4o mini HLE
+4.2%
+
+Artificial Analysis
+GPT-4o mini IFBench
+31.0%
+
+Artificial Analysis
+GPT-4o mini GDPval-AA
+0.0%
+Apps
+Public apps that send the most traffic to this model. Good signal for what real production workloads look like — and a hint at which use cases this model is best suited for.
+Activity
+Token volume and request traffic to this model over time.
+API
+Drop-in code to call this model. OpenRouter's API is OpenAI-compatible — most SDKs work by just swapping the base URL. The only thing that changes between models is the model slug below.
+Explore more modelsAI Models with Vision: Multimodal LLMs for Image UnderstandingCollectionAI Model RankingsRankingStandardLatency / throughputP50
+
+Provider
+Input /M
+Output /M
+Cache read /M
+Latency
+Throughput
+Uptime
+
+Azure
+$0.150
+$0.60
+$0.0750
+1.34s
+58 tps
+100.00%
+
+OpenAI
+$0.150
+$0.60
+$0.0750
+0.51s
+76 tps
+100.00%
+
+Not used in Standard routing:Why these endpoints are not used
+
+Azure
+$0.165
+$0.66
+$0.0825
+0.80s
+113 tps
+100.00%Throughput113tok/s
+P50, best across providersLatency0.51s
+P50, best providerAll locationsLatency / throughputP501 weekAutoExacto benchmarksGPQA DiamondTAU-BenchAzure (EU)44.9%--Azure42.1%--auto-routing42.9%31.3%OpenAI43.1%29.3%Uptime (3d)The model was reachable. Request routed to a provider.100.00%Availability (3d)The model returned inference from any provider. Errors and empty responses count against it.99.99%
+Availability over the last 3 daysLast 72 hoursAvailability 99.99%3 Days Ago2 Days AgoYesterdayNow
+Availability over the last 24 hoursOpenRouter Availability99.99%Without Routing97.76%
+When an error occurs in an upstream provider, we can recover by routing to another healthy provider, if your request filters allow it. You can access per-provider uptime data programmatically through the Endpoints API. Learn more about our load balancing and customization options.1."Closet Theory" new12.6Btokens2.Hermes Agent Hermes Agent is an open-source, self-improving AI agent by Nous Research that runs persistently with memory across sessions, and builds reusable skills from experience. It comes with 40+ built-in tools, including web search, browser automation, and vision, plus scheduled automations and subagents.9.55Btokens3.MPKHub new9.21Btokens4.AI Broker new8.62Btokens5.LocalPipe Enrichment Worker new4.62Btokens
+Frequently asked questions
+What is GPT-4o-mini?
+GPT-4o mini is OpenAI's newest model after GPT-4 Omni, supporting both text and image inputs with text outputs. As their most advanced small model, it is many multiples more affordable than other recent frontier models, and more than 60% cheaper than GPT-3.5 Turbo. It maintains SOTA intelligence, while being significantly more cost-effective.
+How much does GPT-4o-mini cost?
+GPT-4o-mini costs $0.15/M input tokens and $0.60/M output tokens, with separate rates for Cache Read at $0.075/M tokens.
+What is the context length of GPT-4o-mini?
+GPT-4o-mini has a 128,000 token context window. It supports up to 16,384 completion tokens.
+Does GPT-4o-mini support tool calling and structured outputs?
+Yes. GPT-4o-mini accepts tools and tool_choice for function calling on 1 of the 2 providers serving it, and requests that send tools are routed to those providers. It also supports structured outputs via a JSON schema in response_format.
+What inputs and outputs does GPT-4o-mini support?
+GPT-4o-mini accepts text, images, and files such as PDFs as input and returns text.
+Which providers serve GPT-4o-mini?
+GPT-4o-mini is served by 2 providers on OpenRouter: Azure and OpenAI. Requests are routed to the best available provider, with automatic failover to the others, and you can pin or exclude providers with provider routing.
+When was GPT-4o-mini released?
+GPT-4o-mini was released on July 18, 2024. Its knowledge cutoff is October 31, 2023.
+More models from OpenAIGPT-6.1 Sol Pro
+GPT-6.1 Sol Pro is the same underlying model as GPT-6.1 Sol, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6.1 Sol and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6.1 Sol instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$2 / $10GPT-6.1 Sol
+GPT-6.1 Sol is an upgrade to GPT-6 Sol from OpenAI, positioned below the flagship GPT-6 Astra in the GPT-6 series. It is suited for agentic coding, computer use, document-heavy professional work, and multi-step business workflow automation, and approaches Astra-level results on these tasks at a much lower cost. Compared with GPT-6 Sol, it makes fewer factual errors and is more reliable at respecting explicit restrictions and user intent during agentic tasks.Text1.1M context$2 / $10GPT-6 Luna Pro
+GPT-6 Luna Pro is the same underlying model as GPT-6 Luna, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Luna and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Luna instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$0.10 / $0.50GPT-6 Luna Pro
+GPT-6 Luna Pro is the same underlying model as GPT-6 Luna, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Luna and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Luna instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$0.05 / $0.25GPT-6 Luna
+GPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 series, positioned below GPT-6 Sol. It is suited for high-volume and latency-sensitive workloads such as chat, classification, and lightweight agentic tasks, and at higher reasoning effort it can take on complex software engineering and computer-use tasks that previously called for a Sol-tier model. It shares the GPT-6 family's gains in factual reliability and its clearer, more concise communication style.Text1.1M context$0.10 / $0.50GPT-6 Luna
+GPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 series, positioned below GPT-6 Sol. It is suited for high-volume and latency-sensitive workloads such as chat, classification, and lightweight agentic tasks, and at higher reasoning effort it can take on complex software engineering and computer-use tasks that previously called for a Sol-tier model. It shares the GPT-6 family's gains in factual reliability and its clearer, more concise communication style.Text1.1M context$0.05 / $0.25GPT-6 Sol Pro
+GPT-6 Sol Pro is the same underlying model as GPT-6 Sol, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Sol and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Sol instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$2 / $10GPT-6 Sol Pro
+GPT-6 Sol Pro is the same underlying model as GPT-6 Sol, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Sol and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Sol instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$1 / $5GPT-6 Sol
+GPT-6 Sol is the cost-efficient high-end model in OpenAI's GPT-6 series, positioned below the flagship GPT-6 Astra and above the fast GPT-6 Luna tier. It is suited for demanding professional work, agentic coding, business workflow automation, and computer use, and is particularly strong at long-horizon software engineering tasks in real codebases. It approaches Astra-level factual reliability at a much lower cost and shares Astra's clearer, more concise communication style in technical and coding conversations.Text1.1M context$2 / $10GPT-6 Sol
+GPT-6 Sol is the cost-efficient high-end model in OpenAI's GPT-6 series, positioned below the flagship GPT-6 Astra and above the fast GPT-6 Luna tier. It is suited for demanding professional work, agentic coding, business workflow automation, and computer use, and is particularly strong at long-horizon software engineering tasks in real codebases. It approaches Astra-level factual reliability at a much lower cost and shares Astra's clearer, more concise communication style in technical and coding conversations.Text1.1M context$1 / $5GPT Astra Latest
+This model always redirects to the latest model in the GPT Astra family.Text1.1M contextGPT Sol Latest
+This model always redirects to the latest model in the GPT Sol family.Text1.1M contextGPT Terra Latest
+This model always redirects to the latest model in the GPT Terra family.Text1.1M contextGPT Luna Latest
+This model always redirects to the latest model in the GPT Luna family.Text1.1M contextGPT Image 2.5 Sunburst
+GPT Image 2.5 Sunburst is an image generation and editing model from OpenAI, positioned as the precision-oriented tier of the GPT Image 2.5 series. It is suited to detailed creative work where editing accuracy matters more than generation speed, via the dedicated Images API.Image$8 / $30GPT Image 2.5 Flare
+GPT Image 2.5 Flare is an image generation and editing model from OpenAI, positioned as the speed-oriented tier of the GPT Image 2.5 series. It is suited to high-volume everyday generation, creator content, and rapid prototyping via the dedicated Images API.Image$8 / $30GPT-6 Astra
+GPT-6 Astra is OpenAI's flagship model for demanding end-to-end work. It is suited for advanced analysis, software engineering, deep research, scientific work, and document creation, with particular strengths in long-horizon agentic tasks that involve computer and browser use.Text1.1M context$10 / $50GPT-6 Astra
+GPT-6 Astra is OpenAI's flagship model for demanding end-to-end work. It is suited for advanced analysis, software engineering, deep research, scientific work, and document creation, with particular strengths in long-horizon agentic tasks that involve computer and browser use.Text1.1M context$5 / $25GPT-6 Astra Pro
+GPT-6 Astra Pro is the same underlying model as GPT-6 Astra, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Astra and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Astra instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$10 / $50GPT-6 Astra Pro
+GPT-6 Astra Pro is the same underlying model as GPT-6 Astra, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Astra and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Astra instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$5 / $25Previous slideNext slide
