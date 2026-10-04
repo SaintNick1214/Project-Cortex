@@ -1,0 +1,20 @@
+(node:236212) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: original stale-dispatch zero assertions
+
+5 !== 0
+
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs:11:226 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 5,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

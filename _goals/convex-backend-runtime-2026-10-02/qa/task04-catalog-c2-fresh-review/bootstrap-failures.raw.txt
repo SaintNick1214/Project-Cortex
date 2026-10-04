@@ -1,0 +1,17 @@
+Copied actual tool traceback excerpts; historical UTC, argv-specific raw separation and BEFORE envelope are NOT_CAPTURED.
+
+First bootstrap exit 1:
+  File "/workspace/Project-Cortex/work/resume/task04-catalog-c2-fresh-review/audit.py", line 29, in bootstrap
+    write(Q/'closure-before.json',verify(S,'4da603f62af5d47620284864372762ca2700605ac291089009e488eba8b17d4f836',836))
+  File "/workspace/Project-Cortex/work/resume/task04-catalog-c2-fresh-review/audit.py", line 25, in verify
+    f=folder/'qa-manifest.json';assert h(f.read_bytes())==pin
+AssertionError
+
+Second bootstrap exit 1:
+  File "/workspace/Project-Cortex/work/resume/task04-catalog-c2-fresh-review/audit.py", line 31, in bootstrap
+    write(Q/'lineage-check.json',[verify(...),verify(...)])
+  File "/workspace/Project-Cortex/work/resume/task04-catalog-c2-fresh-review/audit.py", line 25, in verify
+    assert actual==expected
+AssertionError: ('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review', 2177, 2177)
+
+First issue was reviewer copying the parent payload's hash immediately followed by row count. Exact 64-character hash was independently observed with sha256sum. Second issue was reviewer comparing depth-first path order against the C1 review manifest's globally sorted path order. Comparison now normalizes path ordering without changing any path, kind, byte count, hash or literal target. Both failed audit source versions remain in reviewer scratch. Neither failure ran the composition or changed the frozen subject. No behavior failure occurred in the eight fully captured review checks.

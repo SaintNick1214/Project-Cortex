@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-04T12:27:55.494Z",
+  "scope": "OFFLINE_CONTROL_FAILURE_ONLY",
+  "stage": "baseline",
+  "code": "COMPOSITION_FAILED",
+  "logs": [
+    {
+      "args": [
+        "--import",
+        "tsx",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2/native-probe.mts",
+        "/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/replica",
+        "/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/current-native.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/replica",
+      "startUTC": "2026-10-04T12:27:54.933Z",
+      "endUTC": "2026-10-04T12:27:55.377Z",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs",
+        "/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/baseline"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/replica",
+      "startUTC": "2026-10-04T12:27:55.410Z",
+      "endUTC": "2026-10-04T12:27:55.494Z",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "node:fs:1411\n  const result = binding.mkdir(\n                         ^\n\nError: EEXIST: file already exists, mkdir '/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/baseline'\n    at Object.mkdirSync (node:fs:1411:26)\n    at file:///workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/replica/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:75:4\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -17,\n  code: 'EEXIST',\n  syscall: 'mkdir',\n  path: '/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c2/private-624PDn/baseline'\n}\n\nNode.js v24.19.0\n"
+    }
+  ]
+}

@@ -1,0 +1,346 @@
+{
+  "utc": "2026-10-04T03:53:39.112Z",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/review.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "actualSourceExecution": "Watcher import bindings replaced by credential-free VM dependencies; unchanged executable watcher body, actual canonical function. Never ran real parent top-level.",
+  "checks": [
+    {
+      "name": "legitimate-two-current-receipts",
+      "outcome": "ACCEPTED",
+      "expected": "accept",
+      "diagnostic": null,
+      "writes": [
+        "current-physical-id-input-receipt.json",
+        "argument-scope.json",
+        "public-arguments.json"
+      ],
+      "preflightCalls": 2,
+      "printed": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[\"runtimeModelOperations\",\"runtimeModelAttempts\"],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+      "proof": {
+        "operation": "current-operation",
+        "runId": "current-run",
+        "observedAt": "2026-10-04T03:53:38.963Z",
+        "status": "SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE",
+        "historicalProvenanceSHA256": "1cd1cb254d101140b224e1efdd847459278438d01a74ca460408c743e1fa774d",
+        "currentCoreOwnership": {
+          "runtimeModelOperations": {
+            "path": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-tgDgtM/owned-created-7e1cf5b3d2b9c009e9bea3633e7a228f6f185e0a6195716feeb23dd02be2697d.json",
+            "sha256": "7a76f846d5b2761e6c90630958314b0902535c124da019c2b33887f8ed20428c",
+            "locatorSHA256": "d2ae7e3f3909b5aa0bda575a85760468441a5614188bc25f416f1258a35e2d9c",
+            "bytes": 140
+          },
+          "runtimeModelAttempts": {
+            "path": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-tgDgtM/owned-created-c051cc65055893f9ef95a85d942cf1ca867fa7c86c1f296603a35e663abfeec9.json",
+            "sha256": "11910720f699a7ef05b53401245bd2b123b1904e0546ac6282dcf0a631c7ce37",
+            "locatorSHA256": "863db981267f9f83e6904972043eac07d0d5f0bac845d45c8995cb3505e14b30",
+            "bytes": 138
+          }
+        },
+        "scopeSHA256": "b23f8ebe20d5d5c23cbda8c81c5a136acf023a779f1f03e84e71cda46a39c3a2",
+        "storageCreated": 0,
+        "currentPublicStorageDecoding": "NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations",
+        "extraRPC": 0,
+        "extraRows": 0
+      }
+    },
+    {
+      "name": "foreign-history-operation",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'foreign'\n- 'current-operation'\n",
+      "writes": [],
+      "preflightCalls": 1,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "foreign-history-run",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'foreign'\n- 'current-run'\n",
+      "writes": [],
+      "preflightCalls": 1,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "foreign-current-operation",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'foreign'\n- 'current-operation'\n",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "missing-current-receipts",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "CURRENT_NATIVE_ID_OWNERSHIP_NOT_OBSERVED",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "partial-current-receipts",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "CURRENT_NATIVE_ID_OWNERSHIP_NOT_OBSERVED",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "misnamed-current-receipt",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'owned-created-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json'\n- 'owned-created-c051cc65055893f9ef95a85d942cf1ca867fa7c86c1f296603a35e663abfeec9.json'\n",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "insecure-current-receipt-permissions",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "QA_PRIVATE",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "symlink-history",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "QA_PATH",
+      "writes": [],
+      "preflightCalls": 1,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "preexisting-proof-exclusive",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "EEXIST: file already exists, open '/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-QDvsgI/current-physical-id-input-receipt.json'",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "stale-core-IDs-in-history-bypass-receipts",
+      "outcome": "ACCEPTED",
+      "expected": "accept",
+      "diagnostic": null,
+      "writes": [
+        "current-physical-id-input-receipt.json",
+        "argument-scope.json",
+        "public-arguments.json"
+      ],
+      "preflightCalls": 1,
+      "printed": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+      "proof": {
+        "operation": "current-operation",
+        "runId": "current-run",
+        "observedAt": "2026-10-04T03:53:38.985Z",
+        "status": "SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE",
+        "historicalProvenanceSHA256": "1cd1cb254d101140b224e1efdd847459278438d01a74ca460408c743e1fa774d",
+        "currentCoreOwnership": {},
+        "scopeSHA256": "ea76b2fc08a20361c55b32686cce55097e03bd77971f1be96e2a29e6c1376cbc",
+        "storageCreated": 0,
+        "currentPublicStorageDecoding": "NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations",
+        "extraRPC": 0,
+        "extraRows": 0
+      }
+    },
+    {
+      "name": "foreign-provenance-proof-not-validated",
+      "outcome": "ACCEPTED",
+      "expected": "accept",
+      "diagnostic": null,
+      "writes": [
+        "current-physical-id-input-receipt.json",
+        "argument-scope.json",
+        "public-arguments.json"
+      ],
+      "preflightCalls": 2,
+      "printed": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[\"runtimeModelOperations\",\"runtimeModelAttempts\"],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+      "proof": {
+        "operation": "current-operation",
+        "runId": "current-run",
+        "observedAt": "2026-10-04T03:53:38.988Z",
+        "status": "SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE",
+        "historicalProvenanceSHA256": "02730b1a7a659f1f54447f789cf3498a61c5b01d4235670935e345d14fadc12f",
+        "currentCoreOwnership": {
+          "runtimeModelOperations": {
+            "path": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-wC10yG/owned-created-7e1cf5b3d2b9c009e9bea3633e7a228f6f185e0a6195716feeb23dd02be2697d.json",
+            "sha256": "4499c7a55cb17578f0400fb6ce14f9114829695dc301fac88d9d32d5cf1019be",
+            "locatorSHA256": "d2ae7e3f3909b5aa0bda575a85760468441a5614188bc25f416f1258a35e2d9c",
+            "bytes": 140
+          },
+          "runtimeModelAttempts": {
+            "path": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-wC10yG/owned-created-c051cc65055893f9ef95a85d942cf1ca867fa7c86c1f296603a35e663abfeec9.json",
+            "sha256": "40715a480572f03f42933697c21af147072c5993a4d6f19535d94f4e88937a4e",
+            "locatorSHA256": "863db981267f9f83e6904972043eac07d0d5f0bac845d45c8995cb3505e14b30",
+            "bytes": 138
+          }
+        },
+        "scopeSHA256": "b23f8ebe20d5d5c23cbda8c81c5a136acf023a779f1f03e84e71cda46a39c3a2",
+        "storageCreated": 0,
+        "currentPublicStorageDecoding": "NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations",
+        "extraRPC": 0,
+        "extraRows": 0
+      }
+    },
+    {
+      "name": "changed-run-from-repeat-preflight-ignored",
+      "outcome": "ACCEPTED",
+      "expected": "accept",
+      "diagnostic": null,
+      "writes": [
+        "current-physical-id-input-receipt.json",
+        "argument-scope.json",
+        "public-arguments.json"
+      ],
+      "preflightCalls": 2,
+      "printed": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[\"runtimeModelOperations\",\"runtimeModelAttempts\"],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+      "proof": {
+        "operation": "current-operation",
+        "runId": "current-run",
+        "observedAt": "2026-10-04T03:53:38.990Z",
+        "status": "SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE",
+        "historicalProvenanceSHA256": "1cd1cb254d101140b224e1efdd847459278438d01a74ca460408c743e1fa774d",
+        "currentCoreOwnership": {
+          "runtimeModelOperations": {
+            "path": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-fsX7Ob/owned-created-7e1cf5b3d2b9c009e9bea3633e7a228f6f185e0a6195716feeb23dd02be2697d.json",
+            "sha256": "cf2f0f405cfeadd9ddf1c8e75af2a66c5ac38ded85273a4c205d529b7ce5b259",
+            "locatorSHA256": "d2ae7e3f3909b5aa0bda575a85760468441a5614188bc25f416f1258a35e2d9c",
+            "bytes": 140
+          },
+          "runtimeModelAttempts": {
+            "path": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/case-fsX7Ob/owned-created-c051cc65055893f9ef95a85d942cf1ca867fa7c86c1f296603a35e663abfeec9.json",
+            "sha256": "31daca8d5953601a13e3f9212b03844109020c2535413dd67ba7ff48583fd916",
+            "locatorSHA256": "863db981267f9f83e6904972043eac07d0d5f0bac845d45c8995cb3505e14b30",
+            "bytes": 138
+          }
+        },
+        "scopeSHA256": "b23f8ebe20d5d5c23cbda8c81c5a136acf023a779f1f03e84e71cda46a39c3a2",
+        "storageCreated": 0,
+        "currentPublicStorageDecoding": "NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations",
+        "extraRPC": 0,
+        "extraRows": 0
+      }
+    },
+    {
+      "name": "nonstring-current-ID-rejected",
+      "outcome": "REJECTED",
+      "expected": "reject",
+      "diagnostic": "The \"data\" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received type number (7)",
+      "writes": [],
+      "preflightCalls": 2,
+      "printed": "",
+      "proof": null
+    },
+    {
+      "name": "actual-guard-foreign-run-accepted",
+      "outcome": "ACCEPTED",
+      "expected": "accept",
+      "network": 0
+    },
+    {
+      "name": "actual-parent-private-key-mode-check-accepts-symlink",
+      "outcome": "ACCEPTED",
+      "expected": "accept",
+      "readPrivateKey": false
+    }
+  ],
+  "sourceVerification": [
+    {
+      "name": "owned-foundation-29178d862bcf4a31926b4530c322efd4.json",
+      "sha256": "dad0b33db5ab6c59412116e8f422119a60659032bc56204cf2b5b3f5db12c988",
+      "bytes": 13654,
+      "matched": true
+    },
+    {
+      "name": "owned-journal-foundation-29178d862bcf4a31926b4530c322efd4.jsonl",
+      "sha256": "a4ab88d904f3962efe5998eb73c501df8a4c64b37cbc0f6f22da0a4cbb0a2e9d",
+      "bytes": 12268502,
+      "matched": true
+    },
+    {
+      "name": "qualify-325ff9b9-223e-47c5-b245-f50e5162b0cc.json",
+      "sha256": "754c6876005896ed566a3c6118f67a31b9526406f2678e9ec3754d5bc9cd75fe",
+      "bytes": 454,
+      "matched": true
+    },
+    {
+      "name": "target-retirement.json",
+      "sha256": "83d36a299f18465aedd12c0280a810e1eacef20b30b7ba172d1ff0a95dcf97f2",
+      "bytes": 529,
+      "matched": true
+    }
+  ],
+  "locatorChecks": [
+    {
+      "table": "_storage",
+      "locatorSHA256": "e51631743959cf873fe52e7914faf30ac6e11eeec8aff0e1234969ce6966f12e",
+      "journalWitnessed": true
+    },
+    {
+      "table": "facts",
+      "locatorSHA256": "8d499e7290d76f479b9202346c1bd4fabc530b7d73102876171eb0aba7e9e299",
+      "journalWitnessed": true
+    },
+    {
+      "table": "governancePolicies",
+      "locatorSHA256": "f08f2a6840d72dd4591a62744badcd5e9255479041d1345b7f218e83550a704e",
+      "journalWitnessed": true
+    },
+    {
+      "table": "graphSyncQueue",
+      "locatorSHA256": "4aa1dffcca9a8e4b0a8740748a11c986f87176dccb082a033e5d2a0db5c5cae7",
+      "journalWitnessed": true
+    },
+    {
+      "table": "memories",
+      "locatorSHA256": "acfe0428377f70f6f2a07d7437bf056f96f9d43b980435fb016a59c352e1949d",
+      "journalWitnessed": true
+    },
+    {
+      "table": "runtimeAuthGrants",
+      "locatorSHA256": "4de07a16762f266ec7dbcd2c862376fca5f156cfae371328ee7188d8262ab14f",
+      "journalWitnessed": true
+    },
+    {
+      "table": "runtimeAuthMemberships",
+      "locatorSHA256": "f5d6891e916aca25e89f17e42018a447d8f875401ddaf542f569d04510540775",
+      "journalWitnessed": true
+    },
+    {
+      "table": "runtimeAuthPrincipals",
+      "locatorSHA256": "4e7f6ff86813439433bb88a01f43e0ab6c7463f08eb2bd27538bc786d264b7ec",
+      "journalWitnessed": true
+    },
+    {
+      "table": "runtimeMemoryVectors",
+      "locatorSHA256": "15c9c0762537c8c8e78e800d640b8faef6b1f16ff9446fe76a8a8d06ca1e8a36",
+      "journalWitnessed": true
+    }
+  ],
+  "sourceUnchanged": true,
+  "historicalSourceEqualsArchived": true,
+  "network": 0,
+  "signing": 0,
+  "realRPC": 0,
+  "realRows": 0,
+  "realStorage": 0
+}

@@ -1,0 +1,21 @@
+from pathlib import Path
+import json,re,hashlib
+r=Path.cwd();w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review';H=lambda b:hashlib.sha256(b).hexdigest();rows=[]
+for k in ['extension','regression','extra']:
+ original=(w/k/'inputs/scripts/parent-inputs.mjs').read_text();assert original==(r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c3/scripts/parent-inputs.mjs').read_text();old=(r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c2/scripts/parent-inputs.mjs').read_text()
+ declarations={}
+ for name in ['historicalSources','historicalLocatorHashes']:
+  pat=r'export const '+name+r'=Object.freeze\(\{[\s\S]*?\}\);';decl=re.search(pat,original).group(0);assert decl==re.search(pat,old).group(0);declarations[name]=(pat,decl)
+ cases=[]
+ for p in sorted((w/k/'cases').rglob('vm-parent-DUMMY-source.mjs')):
+  vm=p.read_text();restore=vm
+  for pat,decl in declarations.values():restore=re.sub(pat,lambda _:decl,restore,count=1)
+  assert restore==original
+  cases.append(dict(path=str(p.relative_to(r)),vmSHA256=H(vm.encode()),restoredSHA256=H(restore.encode()),exactTwoAllowedDeclarations=True))
+ assert len(cases)>=139
+ src=r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c3';c2=r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c2'
+ preservation=json.loads((src/'preservation-map.json').read_bytes());proved=[]
+ for x in preservation['c3AssertionBytePreservation']:
+  b=(src/x['path']).read_bytes();assert b==(c2/x['path']).read_bytes();assert H(b)==x['C3SHA256']==x['C2SHA256'];proved.append(x)
+ rows.append(dict(profile=k,cases=len(cases),rows=cases,constantsPreservedSHA256={n:H(v[1].encode()) for n,v in declarations.items()},assertionsByteExact=proved))
+(q/'DUMMY-substitution-audit.json').write_text(json.dumps(dict(status='PASS',actualPrivateReads='NEVER',actualSigning='NEVER',rows=rows),indent=2)+'\n');print(json.dumps(dict(status='PASS',DUMMYcases=[x['cases'] for x in rows])))

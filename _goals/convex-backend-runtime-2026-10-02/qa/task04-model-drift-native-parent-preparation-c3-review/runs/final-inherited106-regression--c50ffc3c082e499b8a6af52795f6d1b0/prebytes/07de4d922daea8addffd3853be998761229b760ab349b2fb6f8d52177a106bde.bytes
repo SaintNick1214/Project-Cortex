@@ -1,0 +1,302 @@
+{
+  "version": 1,
+  "scope": "NONPAID_NATIVE_PREPARATION_ONLY",
+  "scenarios": [
+    {
+      "id": "equal-refinements",
+      "kind": "equal-refinements",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 20,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Concurrent two identical known150 captures return same evidenceId; one U100\u2192S150 delta, overrun true, slots0."
+    },
+    {
+      "id": "conflicting-refinements",
+      "kind": "conflicting-refinements",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 28,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Concurrent known150/151: exactly one succeeds; aggregate delta equals winner full C; subsequent loser retry complete snapshot unchanged."
+    },
+    {
+      "id": "revoked-live-origin",
+      "kind": "revoked-live-origin",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 24,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Unknown100 then revoke origin grant only; tenant/space live, no tombstones, admin unused; capture150 succeeds accounting only, slots0/closed."
+    },
+    {
+      "id": "initial-duplicates",
+      "kind": "initial-duplicates",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 30,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Exact initial unknown duplicate before and after refinement returns immutable evidenceId/latest accounting; byte exact whole snapshot unchanged."
+    },
+    {
+      "id": "final-lost-response",
+      "kind": "final-lost-response",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 24,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Discard successful final150 response, exact retry returns same evidenceId/current cost; snapshot unchanged and peer counts unchanged."
+    },
+    {
+      "id": "parent-refinement-rollback",
+      "kind": "parent-refinement-rollback",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 20,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Owned internal parent invokes capture150 then throws QA_ROLLBACK; whole database snapshot equals preimage, U100/slots0 remains."
+    },
+    {
+      "id": "released-slot",
+      "kind": "released-slot",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 22,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Genuine unknown terminal first releases slot to0; refinement150 and all duplicates retain0 in original accounts/operation/attempt."
+    },
+    {
+      "id": "late-original-window",
+      "kind": "late-original-window",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 20,
+      "rpcCeiling": 35,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Real server-window rollover with retained IDs; known150 charges full original tenant/run/operation windows, overrun true; newly created current window spend unchanged."
+    },
+    {
+      "id": "facts-add-absent",
+      "kind": "facts-add-absent",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 22,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Complete150 may add absent actualModel and usage facts compatible with stored model/root; initial bytes/hash/evidenceId immutable."
+    },
+    {
+      "id": "facts-change-remove",
+      "kind": "facts-change-remove",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 45,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Initially known usage/model facts cannot change or disappear on complete150; each denial whole snapshot unchanged."
+    },
+    {
+      "id": "unknown-intermediate",
+      "kind": "unknown-intermediate",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 20,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Different still-unknown receipt with added absent facts conflicts; no writes or slot/money/result effect."
+    },
+    {
+      "id": "malformed-private-raw",
+      "kind": "malformed-private-raw",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 40,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Malformed canonical, raw provider/private payload, unsupported proof/cost, >180000 UTF8 bytes each denied with whole snapshot unchanged."
+    },
+    {
+      "id": "no-checkpoint",
+      "kind": "no-checkpoint",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 18,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Reserved attempt without checkpoint capture denied with whole snapshot unchanged, reserved100 and active1."
+    },
+    {
+      "id": "closed-renew-ordinary",
+      "kind": "closed-renew-ordinary",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 28,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Unknown captured closed; renew original grant then authorized settle150 with privateResultCanonical: money once, initial exact, closed, no result stored/replayed."
+    },
+    {
+      "id": "admin-compatibility",
+      "kind": "admin-compatibility",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 35,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Scoped authorized recover150 uses shared compatibility; incompatible refinement denied, initial exact/closed/private absent; unauthorized origin as admin denied."
+    },
+    {
+      "id": "operator-compatibility",
+      "kind": "operator-compatibility",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 35,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Operator reconcile denied before positive retirement with zero writes; positive original tenant tombstone then compatible150 succeeds liability-only, initial exact/closed/private absent."
+    },
+    {
+      "id": "partial-marker",
+      "kind": "partial-marker",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 32,
+      "rpcCeiling": 55,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Owned partial-marker corruption variants fail closed on capture/attach/settle; whole snapshot unchanged, no legacy bypass."
+    },
+    {
+      "id": "legacy-preserve",
+      "kind": "legacy-preserve",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 32,
+      "rpcCeiling": 45,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Legacy valid existing private result and missing attachment state preserve original bytes; new attach denied; exact old known capture no new attachment privilege."
+    },
+    {
+      "id": "healthy-known-attach",
+      "kind": "healthy-known-attach",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 35,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Healthy known40 first capture pending; eligible attach answer sets attached/outputVisible; zero monetary delta; exact attach duplicate zero writes; conflicting bytes denied."
+    },
+    {
+      "id": "attachment-current-fences",
+      "kind": "attachment-current-fences",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 80,
+      "rpcCeiling": 100,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Fresh known pending cases: revoked grant, tenant retirement, space retirement, cancel, source tombstone => withheld; no private result/output visibility/money change."
+    },
+    {
+      "id": "internal-publication",
+      "kind": "internal-publication",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 0,
+      "rpcCeiling": 4,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "Full actual apiSpec validator/path/visibility comparison: captureTerminalEvidence and attachTerminalResult internal Mutation only; no public alias/proxy/import route."
+    },
+    {
+      "id": "peer-no-replay",
+      "kind": "peer-no-replay",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 28,
+      "assertionSource": "scripts/cases.mjs",
+      "requiredOutcomes": "One real deterministic HTTP peer POST/effect followed by capture/refine/lost-response retries; request/effect counts unchanged; no paid provider."
+    }
+  ],
+  "additionalScenarios": [
+    "current-public-security-matrix",
+    "empty-production-root",
+    "real-peer-before-request-crash",
+    "real-peer-lost-receipt-crash",
+    "real-peer-before-settle-crash",
+    "public-peer-denials"
+  ],
+  "budgets": {
+    "logicalScenarios": 49,
+    "simultaneouslyLiveRows": 320,
+    "cumulativeRows": 783,
+    "cumulativeRowComputation": {
+      "core": 716,
+      "security": 15,
+      "fault": 40,
+      "empty": 12,
+      "recovery": 0
+    },
+    "nativeRpc": 3000,
+    "rpcWorstCase": 2892,
+    "cleanupRpc": 256,
+    "cleanupWorstCase": 51,
+    "qualifierMs": 1200000,
+    "parentDriverMs": 1440000,
+    "requestMs": 12000,
+    "peerEffectRequests": 8,
+    "peerOtherRequests": 24,
+    "processes": 6,
+    "groups": 2,
+    "storageFiles": 0,
+    "nativeClientRpc": 2963,
+    "nestedNativeInvocations": 37,
+    "rpcComputation": {
+      "coreAssertions": 713,
+      "coreCleanupAndSnapshots": 66,
+      "security": 2044,
+      "fault": 0,
+      "empty": 20,
+      "publication": 2,
+      "finalAndRecovery": 10,
+      "nestedNative": 37
+    },
+    "cumulativeDeletions": 783,
+    "cumulativeCreationAndDeletionEvents": 1566,
+    "derivedRowsUpper": 465,
+    "derivedNativeUpper": 2892
+  },
+  "security": {
+    "publicPaths": 200,
+    "negativeIdentities": 7,
+    "authorizationObservations": 1400,
+    "completeStateSnapshots": 400,
+    "internalPaths": 87,
+    "internalVisibilityObservations": 174,
+    "privateTableMaintenanceNegatives": 20,
+    "healthyPublicControl": "mutable:set/get",
+    "publicPeerDenials": 5,
+    "internalRejectionCategory": "published-internal-inaccessible; separate from public-grant-authorization"
+  },
+  "costClassification": "FIXTURE_SYNTHETIC_NO_PROVIDER_TERMINAL_OR_PRICE_QUALIFICATION",
+  "candidate": "TERMINAL_CAPTURE_C4_EXTENSION",
+  "publication": "both phases exact tuples and structurally normalized arguments, independently verified in driver",
+  "faultAssertions": {
+    "eachMode": [
+      "parent-killed:attempt/operation/run/tenant R100 U0 S0 slots1",
+      "unknown-recovered:attempt/operation/run/tenant R0 U100 S0 slots1"
+    ],
+    "beforeSettleAlso": "known-settled:attempt/operation/run/tenant R0 U0 S40 slots0; parallel receipt once-only"
+  },
+  "combinedWithOtherProfile": "SEPARATE_NEW_TARGET; no resetting original accounts or unreviewed combined allocation",
+  "nestedEnumeration": {
+    "authorizationQueries": {
+      "paths": [
+        "facts:semanticSearch",
+        "memories:search",
+        "runtimeMemory:remember",
+        "runtimeMemory:recall"
+      ],
+      "identitiesPerPath": 7,
+      "upper": 28,
+      "effectGate": "nested-auth ticket28 before each corresponding Action RPC; each handler denied at first authorization query"
+    },
+    "peerRecord": {
+      "path": "qualificationPeer:effect\u2192record",
+      "upper": 8,
+      "effectGate": "peer-effect ticket8 before every HTTP POST"
+    },
+    "parent": {
+      "paths": [
+        "qualificationOwned:parentRollback\u2192admit",
+        "qualificationCapture:parentRefinementRollback\u2192captureTerminalEvidence"
+      ],
+      "upper": 1,
+      "effectGate": "shared nested-parent ticket1 before parent operator RPC; one planned parent path per profile"
+    },
+    "allOtherNested": "Full AST inventory retained; unreachable after fixed failed authorization/internal visibility. No ctx.runQuery/runMutation in model-policy core."
+  }
+}

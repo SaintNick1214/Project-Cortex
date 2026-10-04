@@ -1,0 +1,433 @@
+{
+  "rows": [
+    {
+      "caseId": "known-drift-40",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 36,
+      "basis": [
+        "setup6",
+        "capture+snapshot2",
+        "duplicate-capture3",
+        "attach1",
+        "guarded21",
+        "percase-final-snapshot-cleanup-snapshot3"
+      ],
+      "allocatedUpper": 36,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "known-drift-150",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 36,
+      "basis": [
+        "setup6",
+        "capture+snapshot2",
+        "duplicate-capture3",
+        "attach1",
+        "guarded21",
+        "percase-final-snapshot-cleanup-snapshot3"
+      ],
+      "allocatedUpper": 36,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "unknown-drift-terminal",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "denied-successor3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "unknown-lifetime",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 16,
+      "basis": [
+        "setup6",
+        "denied-unsupported3",
+        "snapshot1",
+        "recover1",
+        "snapshot1",
+        "checkpoint1",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "token-input-unknown",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "denied-successor3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "token-input-known40",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 36,
+      "basis": [
+        "setup6",
+        "capture+snapshot2",
+        "duplicate-capture3",
+        "attach1",
+        "guarded21",
+        "percase-final-snapshot-cleanup-snapshot3"
+      ],
+      "allocatedUpper": 36,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "token-output-unknown",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "denied-successor3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "token-output-known40",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 36,
+      "basis": [
+        "setup6",
+        "capture+snapshot2",
+        "duplicate-capture3",
+        "attach1",
+        "guarded21",
+        "percase-final-snapshot-cleanup-snapshot3"
+      ],
+      "allocatedUpper": 36,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "refinement-add-absent-model",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "denied-conflicting-refinement3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "refinement-add-absent-tokens",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "denied-conflicting-refinement3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "captured-parity-settle",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 29,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "route-denial3",
+        "route1",
+        "duplicate-route3",
+        "conflicting-route-denial3",
+        "final-snapshot1",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "captured-parity-recover",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 29,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "route-denial3",
+        "route1",
+        "duplicate-route3",
+        "conflicting-route-denial3",
+        "final-snapshot1",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "captured-parity-operator",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 30,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "route-denial3",
+        "tenant-delete1",
+        "route1",
+        "duplicate-route3",
+        "conflicting-route-denial3",
+        "final-snapshot1",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-initial-model-pending",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 32,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "isolated-attempt-model-subarm9",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-initial-model-attached",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 32,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "isolated-attempt-model-subarm9",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-initial-token-pending",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-initial-token-attached",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-final-model-pending",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 32,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "isolated-attempt-model-subarm9",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-final-model-attached",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 32,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "isolated-attempt-model-subarm9",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-final-token-pending",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "defensive-final-token-attached",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "capture+baseline2",
+        "control+snapshot2",
+        "admit-denial+snapshot2",
+        "attach+snapshot2",
+        "duplicate-attach3",
+        "snapshot+recover+snapshot3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "gateway-native-drift-40",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": null,
+      "basis": [],
+      "allocatedUpper": 32,
+      "status": "COMPILED_GATEWAY_LIFECYCLE_ALL_ERROR_PATHS_NOT_COMPLETED"
+    },
+    {
+      "caseId": "gateway-native-drift-150",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": null,
+      "basis": [],
+      "allocatedUpper": 32,
+      "status": "COMPILED_GATEWAY_LIFECYCLE_ALL_ERROR_PATHS_NOT_COMPLETED"
+    },
+    {
+      "caseId": "gateway-native-healthy-attachment",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": null,
+      "basis": [],
+      "allocatedUpper": 32,
+      "status": "COMPILED_GATEWAY_LIFECYCLE_ALL_ERROR_PATHS_NOT_COMPLETED"
+    },
+    {
+      "caseId": "late-drift-refinement-revoked-cancelled",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 23,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "revoke+snapshot+cancel3",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    },
+    {
+      "caseId": "late-drift-refinement-original-window",
+      "localSrpcSourceEnvelopeIncludingPerCaseCleanup": 26,
+      "basis": [
+        "setup6",
+        "initial-capture+snapshot2",
+        "bounded248waits_noRPC",
+        "denied-before3",
+        "final-capture+snapshot2",
+        "duplicate-final3",
+        "duplicate-initial3",
+        "attach1",
+        "denied-after3",
+        "percase-final3"
+      ],
+      "allocatedUpper": 32,
+      "status": "LOCAL_CALLER_ENVELOPE_ONLY"
+    }
+  ],
+  "securityCallerEnvelope": {
+    "healthySeedAndControl": 4,
+    "publicDenialsAndSnapshots": 1800,
+    "internalVisibility": 174,
+    "maintenanceValidatorsAndSnapshots": 60,
+    "peerCounter": 1,
+    "totalSrpc": 2039,
+    "peerHTTP": 5,
+    "basis": "exact preserved driver.security loops; earlier exceptions shorten selected loop but finally separate"
+  },
+  "finally": {
+    "qualifyRecoveryUpperSrpc": 6,
+    "perCaseCleanupSrpc": 3,
+    "emptySelectedSrpc": 17,
+    "sourceMeaning": "EMPTY seed1 fabricate1 snapshot1 reject1 snapshot1 +2x(snapshot1,reject1,snapshot1)=11 + finally at most6. Publication two separately ticketed calls."
+  },
+  "createdSourceFacts": {
+    "seedCommittedInsertSites": 7,
+    "snapshotTotalLiveCeiling": 320,
+    "cleanupOwnedTablesOnly": true,
+    "sourceUpper444Derivation": "NOT_COMPLETED: policy install/bind/admit/capture/partialMarker/fault/Gateway lifecycle and failed-return ownership must be semantically joined"
+  },
+  "remainingUnproved": [
+    "All original22 and43 success/negative/concurrent/error/finally call envelopes",
+    "Compiled Gateway lifecycle errors/cancel/finally RPC counts",
+    "All nested backend runQuery/runMutation transaction subarms and committed-created counts across all original fixtures",
+    "Joint all forms and Unicode/escaping/array/blob/key max-domain serialization beyond concrete1093 ASCII forms",
+    "Journal primary/secondary/partial-write completion and all failure-event preservation",
+    "Fault3 shared cleanup ownership/retirement and process terminal effects (native forbidden)",
+    "Deadline latency20m feasibility"
+  ],
+  "upperBudgetVerdict": "NOT_PROVED_NO_STATIC_UPPER_PASS",
+  "noNumericWaiver": true
+}

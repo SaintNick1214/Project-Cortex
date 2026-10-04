@@ -1,0 +1,781 @@
+{
+  "commands": [
+    {
+      "receipt": "runs/assertions-preserved--e5d31533-23ff-4cf4-92c0-39de998c748a/receipt.json",
+      "argv": [
+        "node",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/preservation-audit.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:23:24.357361+00:00",
+      "observedAt": "2026-10-04T12:23:24.722373+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "4c38e122a691c6a08fbf4f7e9da18fd0fa349e36c7747d1d7292efeeb9ebfce2"
+    },
+    {
+      "receipt": "runs/assertions-preserved-exact-inventory--f0e371f1-2f15-4e84-b13d-fe74ca7e27c8/receipt.json",
+      "argv": [
+        "node",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/preservation-audit.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:23:41.206476+00:00",
+      "observedAt": "2026-10-04T12:23:41.671780+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "d21ff98fcb7eb7e115ee402612b79b0c31d201e0b2ee60ae5603c3e5fa9d8bf0",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "runs/authored-journal-forms--0c64e238-a854-4df5-8b13-e21e4f3343d9/receipt.json",
+      "argv": [
+        "node",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-proof.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:23:24.988585+00:00",
+      "observedAt": "2026-10-04T12:23:25.052856+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "d795e37f169d12ffc1058fdf74c104ace48545732e1a9a8af277e75ec0044da6",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "runs/custody-audit--9c702d50-5b00-424a-afd6-e78dcdc27db8/receipt.json",
+      "argv": [
+        "python",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/custody-audit.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:20:27.387969+00:00",
+      "observedAt": "2026-10-04T12:20:33.518819+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "20c79bd14d9299cafa89c6eb2a1f07d4f5be36464de1681585ed8ccf16498513",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "runs/final-closure--283d1e77-d014-41be-8260-a135a45e56c4/receipt.json",
+      "argv": [
+        "python",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/closure-audit.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:23:25.318930+00:00",
+      "observedAt": "2026-10-04T12:23:33.653575+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "0f5ad854d99e401fd07f6bcf53b7e2a1d75455567a7b434b2ebadee56e7f7bd7",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "runs/final-journal-short-extension--1d1c13d4-b6b4-49b1-aa39-e62c0a30a9b3/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:24:38.646369+00:00",
+      "observedAt": "2026-10-04T12:24:38.760733+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "735f2731d5b4da2694cd6a334e0cdff3fe69441461a4366f8fb967eb7050330a",
+      "stderrSHA256": "2db6aedcfccb92c4cc75082204af8b7b8bb79a486a205915a94917f732cff3f4"
+    },
+    {
+      "receipt": "runs/final-journal-short-extra--d8bdb60c-4d2a-45be-a453-88edceed6d64/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:24:39.440701+00:00",
+      "observedAt": "2026-10-04T12:24:39.555410+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "f233c66158047a574126c34e444f13c08617376d65d7d848a7df27f5d02f7ef2",
+      "stderrSHA256": "2db6aedcfccb92c4cc75082204af8b7b8bb79a486a205915a94917f732cff3f4"
+    },
+    {
+      "receipt": "runs/final-journal-short-regression--fc3c26f9-23a7-4ee1-ab60-07434e1b1014/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:24:39.019930+00:00",
+      "observedAt": "2026-10-04T12:24:39.184556+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "a263ec11d0d27e5d7262a1e44d2d3b2bdf2db4401d6872dd5bffbbbed60018ff",
+      "stderrSHA256": "2db6aedcfccb92c4cc75082204af8b7b8bb79a486a205915a94917f732cff3f4"
+    },
+    {
+      "receipt": "runs/final-queue-extension--75949945-138d-4ddc-a521-0acec7c2fa21/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:21.913887+00:00",
+      "observedAt": "2026-10-04T12:22:23.984811+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "43a43b60d37a0b78f846730792255d710ba01cab899c3c52ff2a9bc802fb9ce7",
+      "stderrSHA256": "add4f1d12560f07fdb3c61e5b50120917f4ea504aee80bce889ffb0812a3abde"
+    },
+    {
+      "receipt": "runs/final-queue-extra--7fea3d7d-03a2-47fc-b8e9-277afff6aab9/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:26.583874+00:00",
+      "observedAt": "2026-10-04T12:22:29.263332+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "f5cb740fba8af06825a1da2ddde6d649ec6c6fce53a4548aa6f10a1a72ceb6af",
+      "stderrSHA256": "7ad3d464f528cb4ab1876b40f93cb707bba2e3f5cef1ac384c3adf0b4fb1568b"
+    },
+    {
+      "receipt": "runs/final-queue-regression--8cc21fde-756d-43d5-9e47-b8458c6e24fb/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:24.240907+00:00",
+      "observedAt": "2026-10-04T12:22:26.320137+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "83640ed85b81c4959d0d90df03a90fcb06c2f8c5c9ce088f1266993c748ce0ad",
+      "stderrSHA256": "d4297dbf43e9dd3ec232c1a6662ed65d8d8d7ab2e75c6efc32cb9a5cd952ce1e"
+    },
+    {
+      "receipt": "runs/graph-audit--a1a79166-f131-42d7-a557-6ec4adcf3f04/receipt.json",
+      "argv": [
+        "node",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/graph-audit.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:19:30.766346+00:00",
+      "observedAt": "2026-10-04T12:19:37.997797+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "04511a1628c0f314a4da9f305b19f1a74b8a3dd546ff7157a9ea644b7169ea58",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "runs/independent-source-budgets--d7f7f143-86e8-4e3b-8cad-2a81ae60e442/receipt.json",
+      "argv": [
+        "python",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/source-budget-map.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:24:38.345985+00:00",
+      "observedAt": "2026-10-04T12:24:38.378226+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "27a57eefe418af423bfbf8afbe02bcb8178ce63a6d39e6142ab67a7d2c802c07",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "runs/journal-short-extension--b0909b0a-8c56-439e-96f2-4f18df2e80dc/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:01.555199+00:00",
+      "observedAt": "2026-10-04T12:22:01.669560+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "7612d5ce7780882579e454eb1990451cb9fe127751630679d530cbc1d8f16875",
+      "stderrSHA256": "2db6aedcfccb92c4cc75082204af8b7b8bb79a486a205915a94917f732cff3f4"
+    },
+    {
+      "receipt": "runs/journal-short-extra--0102240d-ce0e-4810-abd3-cad2c76de869/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:02.256650+00:00",
+      "observedAt": "2026-10-04T12:22:02.371021+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "7d77a6544942157d5bb419dc34ef542984fd2096007c9381cd6049ab7103162a",
+      "stderrSHA256": "2db6aedcfccb92c4cc75082204af8b7b8bb79a486a205915a94917f732cff3f4"
+    },
+    {
+      "receipt": "runs/journal-short-regression--903a6b27-6374-42a6-ac62-0f315a41a718/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:01.908241+00:00",
+      "observedAt": "2026-10-04T12:22:02.022568+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "346b696b80886314f0cb27f9d7a8bcfef899a599980b9ab3d507b6c2d4cfff6d",
+      "stderrSHA256": "2db6aedcfccb92c4cc75082204af8b7b8bb79a486a205915a94917f732cff3f4"
+    },
+    {
+      "receipt": "runs/management-reserve-extension--0d5f7723-dca4-4e37-9a97-24154b4e927f/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-reserve-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:55.585774+00:00",
+      "observedAt": "2026-10-04T12:22:55.750238+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "0f3b5ddad06e292ce433aede713824132ee1870535369d04a3eaf7f9999ee413",
+      "stderrSHA256": "83a048f8a1fe622fc9002d45444d70436f52c0ed7036aa5fe0420413da2bd00b"
+    },
+    {
+      "receipt": "runs/management-reserve-extra--a6e078fa-8eda-4ecb-9006-1369fa73609f/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-reserve-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:55.573662+00:00",
+      "observedAt": "2026-10-04T12:22:55.738224+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "70a3ee8ef3fead21e86abd812ea03c44111d5a8dcca8d172634e8d12fe75a9f6",
+      "stderrSHA256": "7e4c03620926946743d2c3eedec0f452af979ce84630f3e6ce16bcb74115b9b5"
+    },
+    {
+      "receipt": "runs/management-reserve-regression--0582210f-6f9b-4e0e-9489-97261d6399bf/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-reserve-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:55.560161+00:00",
+      "observedAt": "2026-10-04T12:22:55.726664+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "2bd5d5fd9dd9597a7b4a19507b18fa01bdc33d2f02da06cb2ad6edda8f89eec7",
+      "stderrSHA256": "82204d920dfc92d064140280f7128120dec4f1ed82f0c56d8619438c3374d1ee"
+    },
+    {
+      "receipt": "runs/original-first-pin-extension--3cd4ee34-3f6f-445c-ad22-e038de1dd5c0/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/same-source-review-denial.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:39.697278+00:00",
+      "observedAt": "2026-10-04T12:22:39.811866+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "78533633e5983a3c828335506d191e77936c97f1becfeb52c44978ac7333b115",
+      "stderrSHA256": "a6184e8d92f8b29605db5b8bc3cbf465e10ab4b287e7bfd85617ed3f10df6cbb"
+    },
+    {
+      "receipt": "runs/original-first-pin-extra--aefd9e37-ba8c-465b-9319-a956d7968d6d/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/same-source-review-denial.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:40.476593+00:00",
+      "observedAt": "2026-10-04T12:22:40.591165+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "25d4fc1a25e58209fb42e12c9c3a8ea8aa3ce06d09ea8f7f0cf7e9490bff6374",
+      "stderrSHA256": "b3e0c02646540287e367fd1f8411ba9e346fe7990b533ec2917b3d07bac4f5d3"
+    },
+    {
+      "receipt": "runs/original-first-pin-regression--977ef527-33dd-4c28-822f-f8e9adf8fbb5/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/same-source-review-denial.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:40.100184+00:00",
+      "observedAt": "2026-10-04T12:22:40.214774+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "9d4d9af82d229b1b12a58fbed53e8d75c03aef6e2ff04c59e2317661f42982cb",
+      "stderrSHA256": "662be680110df212989f6bda12a9557466117e0dc1daf657eaab62f68ecead08"
+    },
+    {
+      "receipt": "runs/original-peer-body-extension--86000772-1edb-4511-92bf-9baeeff7bfa7/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/original-c2-peer-body-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:55.243786+00:00",
+      "observedAt": "2026-10-04T12:22:55.307968+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "53a9aba8030b24961cfd71967334e97d8a48d3176ab4b253b412361cb8d2e477",
+      "stderrSHA256": "1452c6783207dad817f551b86d549dba37519d9caac01cca72af41455b42435e"
+    },
+    {
+      "receipt": "runs/original-peer-body-extra--aba46cd6-24d0-4e54-bba2-83ed8632b4e9/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/original-c2-peer-body-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:55.224666+00:00",
+      "observedAt": "2026-10-04T12:22:55.293125+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "a9829c6871277fbf2925929521009bd6338ccb7c4ea23dc34e68a85a57969a2d",
+      "stderrSHA256": "a75f17c92823f2a24da644d4e7221df34bff93ce3476274b7c57d2c5d1dae605"
+    },
+    {
+      "receipt": "runs/original-peer-body-regression--97eee17a-4aa9-4544-9b6c-f068690126a9/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/original-c2-peer-body-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:55.222243+00:00",
+      "observedAt": "2026-10-04T12:22:55.286529+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "cbaab47bb31e58b01c30295824f86afb7930afd03aec494004c58ef3aca31615",
+      "stderrSHA256": "da0707483607d619f421c16c0ce3d95f5a8ce7d51d0b56cb52c8c2ba2dd9a5fa"
+    },
+    {
+      "receipt": "runs/original-peer-source-extension--6443f6dd-c23f-4b45-a376-298dadb1fd46/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/original-c2-peer-source-drift.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:54.850872+00:00",
+      "observedAt": "2026-10-04T12:22:54.967346+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "848f89bded4bb6664595a741fbfff15d4d0b84692947b2f298e843806738257c",
+      "stderrSHA256": "9bbb1909ca904f53b91c0250c52b31339e614ff7498b4071c307e72a743ed2e5"
+    },
+    {
+      "receipt": "runs/original-peer-source-extra--20819d36-ab16-4149-979a-aaee34d485d5/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/original-c2-peer-source-drift.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:54.835039+00:00",
+      "observedAt": "2026-10-04T12:22:54.951401+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "f154724895e0eb52aa625cd094898ff0e09c62ae88de6c97f9f0c5d361b1c82e",
+      "stderrSHA256": "2e522e74750433a8d6ad676fc0052804776c6fd51b70f9d4b9c6c0b05fc67843"
+    },
+    {
+      "receipt": "runs/original-peer-source-regression--b1dd4e46-11c3-4f67-a818-9ad4a61690a9/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/original-c2-peer-source-drift.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:22:54.831845+00:00",
+      "observedAt": "2026-10-04T12:22:54.946195+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "06805dc4facedcd35f287489c26d3d2e60e9e0fab72eaa393f61bfdbf9a9056e",
+      "stderrSHA256": "670939593cb5ff40e0b485d20261cf24df8080851fe1e4634cc3172532b22c24"
+    },
+    {
+      "receipt": "runs/queue-extension--d5e29a54-21d0-40e1-868e-6f3ed36ddc6c/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:16:24.087274+00:00",
+      "observedAt": "2026-10-04T12:16:24.201699+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "80855a7f7e1ef7152ff1b3032213f4435e87adbac1cb0c0a4e1a1cda5cd4f169"
+    },
+    {
+      "receipt": "runs/queue-extension-ready--38e9c615-deb0-4261-ad48-e4b57125cf73/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:16:34.469968+00:00",
+      "observedAt": "2026-10-04T12:16:36.741046+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "47822b210fe2ee508a3e3e11ebc0467e6911ba9d206a70038955f91fee0a898f",
+      "stderrSHA256": "867ce1b9795c41e8d19cfab3811a4a035489c835811994a477273a605a837957"
+    },
+    {
+      "receipt": "runs/queue-extra--47ead318-e095-43cd-9b79-72a17893e0fd/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:16:53.690890+00:00",
+      "observedAt": "2026-10-04T12:16:54.006062+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "53e0630d41030a1f02e3a5a67a85b505ab91ba2c747d6a39cc34d3f1979a33f6"
+    },
+    {
+      "receipt": "runs/queue-extra-globals-ready--471edc9e-1567-4f3b-9906-138a7db4d93f/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:17:44.381455+00:00",
+      "observedAt": "2026-10-04T12:17:47.052026+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "4b1651e718e83d9176634c1670cd0452dd05c72884fdcd6955f545af824ed23c",
+      "stderrSHA256": "fe5c62bce936f144ac4483a5961dfb009a1bbbd265bd46b940634b6328a0ba34"
+    },
+    {
+      "receipt": "runs/queue-extra-meta-ready--6dc7cf34-c17a-471a-9a71-bfb47e9f5d50/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:17:22.485463+00:00",
+      "observedAt": "2026-10-04T12:17:22.853909+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5c1b7addcab5b537b9f2bcfa6b134c5a6a07d1b6ce6ccffab72b1b2f7b87a507"
+    },
+    {
+      "receipt": "runs/queue-extra-ready--9a35dff0-15ba-432e-b176-d8733c9af27c/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:17:07.400444+00:00",
+      "observedAt": "2026-10-04T12:17:07.815923+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "08c1744b2282abf5b2fd7abc534680ee58fbdd0dcdbb59c8a0f606dee711d82a"
+    },
+    {
+      "receipt": "runs/queue-regression--aa721711-079b-497a-a08e-9a9d7a0ec93f/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:16:53.690990+00:00",
+      "observedAt": "2026-10-04T12:16:55.813687+00:00",
+      "exitCode": 1,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "df2a5415b2696188d7e02e862cdfcc1811da25fbb78b66e4dfbac7bad95fce3f",
+      "stderrSHA256": "daf47ced6eaddd608b3b12d0c2cd054972d42650551a76465c5fec30cf6b0449"
+    },
+    {
+      "receipt": "runs/repaired-body--bc709ea8-65a6-40e8-bb9e-33946f5f04b1/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/body-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:23.341619+00:00",
+      "observedAt": "2026-10-04T12:18:23.506091+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "2fb98f86b36ec438336bc3c4463643939aac499ce9c7deba5d3a641748caa640",
+      "stderrSHA256": "dc4e1503c53db2b3847438815bb88f867e987400acb77e5312f80670b2013b2c"
+    },
+    {
+      "receipt": "runs/repaired-dispatch-extension--7b424cce-5cc1-4a68-91e4-08f4c9d74de3/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/dispatch-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:27.760912+00:00",
+      "observedAt": "2026-10-04T12:18:30.230563+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "349015a60b08c29f91e5cf5bc6690718975b2228d0082d58988d7ed137e10dfd",
+      "stderrSHA256": "14a92ce41809a90691c1b1415474f848adc2cd0fb70a0f8735e0d761046d68c7"
+    },
+    {
+      "receipt": "runs/repaired-dispatch-extra--1e2a63e6-3938-4069-8530-96febce1e5cb/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/dispatch-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.189984+00:00",
+      "observedAt": "2026-10-04T12:18:31.241873+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "46ccffe3fb73e297f84506bbf2efe9234e2c0ba02ef60a871f5c74cf7c387106",
+      "stderrSHA256": "208174a3852bcd639514ea2080c9cc562390b5246fe225c83183ebcd3fa80d15"
+    },
+    {
+      "receipt": "runs/repaired-dispatch-regression--bbda56c7-9b16-420b-88ee-0d604ef1343e/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/dispatch-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:27.854252+00:00",
+      "observedAt": "2026-10-04T12:18:30.799760+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "25465990a1cd8b419b65b39d59fe4762082432d1483f35172712b5bc19f6ff06",
+      "stderrSHA256": "2116847ad3e6f1d18b1feaf3e3fa6d871a034479cb485a5b4e090230d3cd3fe5"
+    },
+    {
+      "receipt": "runs/repaired-management-entry-extension--49db8b25-3ee3-4f99-97ef-09ebd6664b88/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-entry-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.079008+00:00",
+      "observedAt": "2026-10-04T12:18:35.953466+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "78427b051a3b47158172103309181ea2bdee64fc40a9f16b896949bcf4a4d479",
+      "stderrSHA256": "e1a8c58696b0d018bbc4b2e11d7fd4fc25f282ee8699937b4c8dae1a6328b79a"
+    },
+    {
+      "receipt": "runs/repaired-management-entry-extra--2c138ef2-907e-4ffa-83d0-9925a9a71015/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-entry-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.434601+00:00",
+      "observedAt": "2026-10-04T12:18:35.946661+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "3eb72a6e8771627fd97264948fa3e0ffd365df28d06e1f83ab081d555cdf667b",
+      "stderrSHA256": "959cccfc082a5df5f8b2c2098be116867ff0b9505951f6f1d4cccf13f99442e1"
+    },
+    {
+      "receipt": "runs/repaired-management-entry-regression--2334e7b7-0da8-4958-a90c-8f1863986534/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-entry-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.349058+00:00",
+      "observedAt": "2026-10-04T12:18:35.788060+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "c07fc9f89660dce8cdc21a4ac59293e42b77771c011691e71c5511e26726051c",
+      "stderrSHA256": "4c4f02d59027110bd7a8f83501fcdf5c063d519c2f4db1d951739b44163a0eb9"
+    },
+    {
+      "receipt": "runs/repaired-management-extension--13c8ca68-ae3e-456c-b9fc-4e0141037b01/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.090266+00:00",
+      "observedAt": "2026-10-04T12:18:35.034258+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "51cef9d96c7a0e44d10900ad98708a25b067b6adb1592bdd1cecb8efe8e7caa6",
+      "stderrSHA256": "e5c64cd52c72e101b9d9b96c673b44df966768f0d2ae121d76d9a51e32392688"
+    },
+    {
+      "receipt": "runs/repaired-management-extra--3228cd5b-4bf9-46be-b491-4da4096f5699/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.548554+00:00",
+      "observedAt": "2026-10-04T12:18:35.834410+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "95296f3f5d83bb231d5be3dbb2aa797b2bcbce0721f9942b588b88c6fd0d401b",
+      "stderrSHA256": "1f3c841a493350783767d12f9333443900a6d9e8bc8e5066e21f209a05665147"
+    },
+    {
+      "receipt": "runs/repaired-management-regression--580f0bae-2069-4523-8152-7ed62437be59/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/management-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.481216+00:00",
+      "observedAt": "2026-10-04T12:18:35.789999+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "2cfcda91992a93b771127d0ad638e1a919ce0beab7c08e950a7c56155e791018",
+      "stderrSHA256": "433459b1d2ae40b4f0048ff4248fe5026dbe041a6a5060288c84d6797e12a59a"
+    },
+    {
+      "receipt": "runs/repaired-publication-extension--bb7ae15c-ad24-4434-8b2f-cd8a228b8519/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/publication-controls.mjs",
+        "extension"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:27.865245+00:00",
+      "observedAt": "2026-10-04T12:18:33.129334+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "677371783de529547b633d6143390aedc513dc3ecdb2778b6d553dd2b9f955e5",
+      "stderrSHA256": "083db5a0d0d9bec9a9f7261b5666ac26a4c09819243ce920d9f4cea83bb6836d"
+    },
+    {
+      "receipt": "runs/repaired-publication-extra--60e9b5bb-c4f1-4c6c-a0b8-34bb447b99be/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/publication-controls.mjs",
+        "extra"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:28.525880+00:00",
+      "observedAt": "2026-10-04T12:18:34.646419+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "0f586a3dced441391edbf220f967f04783fcfc873e186ab582cc539582c6a274",
+      "stderrSHA256": "52910688c7d38943cb9d52a4fe932ecb6f69a2327761869b84fa8543b22928b1"
+    },
+    {
+      "receipt": "runs/repaired-publication-regression--0517e615-d21a-434d-8d6a-a6b2c889957d/receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/publication-controls.mjs",
+        "regression"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:18:27.800950+00:00",
+      "observedAt": "2026-10-04T12:18:32.994680+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "e93e6b90a01748248a8ab6471cbcda8f9910fb8b39ad5bce7e8a17e1c2ed886d",
+      "stderrSHA256": "57187e184b7f51c23f22f332cb49c2f945a833030294458808716a56a7297406"
+    },
+    {
+      "receipt": "runs/sdk-entries--3891ba26-068b-4521-983a-03ceb2e1929a/receipt.json",
+      "argv": [
+        "node",
+        "work/resume/task04-model-drift-native-source-preparation-c3-review/sdk-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T12:19:38.241487+00:00",
+      "observedAt": "2026-10-04T12:19:38.361111+00:00",
+      "exitCode": 0,
+      "changedOriginalPaths": [],
+      "stdoutSHA256": "eb4bf25420201eb76a31b2e24948ab5ed79b1b2e9c0771641da61114f1766424",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "queueDiscoveredArmsPerCompletedRun": 7,
+  "bodyArmsPerProfile": 39,
+  "peerArmsPerProfile": 14,
+  "publicationArmsPerProfile": 21,
+  "managementBindingArmsPerProfile": 38,
+  "managementEntryArmsPerProfile": 21,
+  "skips": 0,
+  "setupFailures": "preserved in commands; initial directory/import-meta/globals and absent regression original-b discovery",
+  "earliestRecorderScope": "capsule operative+runner+tool inputs; final recorder additionally explicitly accepted/product/external rows",
+  "native": "NOT_RUN"
+}

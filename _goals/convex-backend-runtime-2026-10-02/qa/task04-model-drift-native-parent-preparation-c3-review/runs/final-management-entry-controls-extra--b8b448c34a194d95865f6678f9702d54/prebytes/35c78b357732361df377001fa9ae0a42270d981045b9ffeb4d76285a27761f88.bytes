@@ -1,0 +1,13 @@
+from pathlib import Path
+import subprocess
+r=Path.cwd();w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review'
+tasks=[('trust',['node','--experimental-vm-modules',str(w/'trust.mjs'),str(r),str(w),str(q/'trust-results.json')]),('process-pin',['node','--experimental-vm-modules',str(w/'process-pin.mjs'),str(r),str(q/'process-pin-results.json')]),('shared-body',['node','--experimental-vm-modules',str(w/'shared-body.mjs'),str(q/'shared-body-results.json')])]
+for k in ['extension','regression','extra']:
+ for name,out in [('final-inherited106',None),('added16','added16-results.json'),('final-watch','watch17-results.json'),('body18','body18-results.json')]:
+  src=w/k/(name+'.mjs') if name!='body18' else w/'body18.mjs';args=['node','--experimental-vm-modules',str(src)]
+  if name=='body18':args +=[str(r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c3/scripts/parent-inputs.mjs')]
+  if out:args +=[str(q/k/out)]
+  tasks.append((name+'-'+k,args))
+ for name in ['management-controls','management-entry-controls','management-reserve-controls']:tasks.append((name+'-'+k,['node','--experimental-vm-modules',str(w/(name+'.mjs')),k]))
+for name,args in tasks:
+ p=subprocess.run(['python',str(w/'record.py'),'final-'+name,*args],cwd=r,capture_output=True,text=True);print(p.stdout,end='');assert p.returncode==0,p.stderr

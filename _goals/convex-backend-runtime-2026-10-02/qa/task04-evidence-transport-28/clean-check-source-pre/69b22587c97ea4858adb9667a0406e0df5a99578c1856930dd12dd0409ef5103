@@ -1,0 +1,17 @@
+import pathlib, json, hashlib, shutil, subprocess, tempfile, datetime
+repo=pathlib.Path.cwd(); relative=pathlib.Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-28'); source=repo/relative
+owned=pathlib.Path(tempfile.mkdtemp(prefix='transport28-clean-',dir=repo/'work/resume'))
+target=owned/relative;target.mkdir(parents=True)
+mapping=json.loads((source/'transport-map.json').read_text())
+for name in ['materialize.py','transport-map.json']+[pathlib.Path(r['archivePath']).name for r in mapping['files']]: shutil.copyfile(source/name,target/name)
+for row in mapping['files']:(owned/row['originalPath']).parent.mkdir(parents=True)
+results=[]
+for mode in ['--materialize',None,'--materialize']:
+ argv=['python',str(target/'materialize.py')]+([mode] if mode else [])
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();r=subprocess.run(argv,cwd=owned,capture_output=True)
+ results.append(dict(argv=argv,cwd=str(owned),start=start,end=datetime.datetime.now(datetime.timezone.utc).isoformat(),exit=r.returncode,stdout=r.stdout.decode(),stderr=r.stderr.decode()))
+ assert r.returncode==0
+for row in mapping['files']:
+ restored=(owned/row['originalPath']).read_bytes();original=(repo/row['originalPath']).read_bytes()
+ assert restored==original and hashlib.sha256(restored).hexdigest()==row['originalSha256']
+print(json.dumps(dict(status='PASS_EXACT_MISSING_PATH_MATERIALIZATION_AND_IDEMPOTENCE',originalFiles=3,originalBytes=sum(r['originalBytes'] for r in mapping['files']),results=results,ownedScratch=str(owned),qualificationAcceptance=False)))

@@ -1,0 +1,22 @@
+from pathlib import Path
+import json,hashlib,datetime,re
+r=Path.cwd();w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review';H=lambda b:hashlib.sha256(b).hexdigest();pins=json.loads((r/'work/resume/task04-model-drift-native-preparation-c3/final-packet-pins.json').read_bytes());out=[]
+for p in pins['packets']:
+ root=r/f"_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{p['kind']}-preparation-c3"
+ assert H((root/'qa-manifest.json').read_bytes())==p['qaManifestSHA256'];assert H((root/'runtime-freeze.json').read_bytes())==p['runtimeFreezeSHA256'];assert H((root/'report.md').read_bytes())==p['reportSHA256'];out.append(p)
+# every own final run is exact source bound before and after, including actual copied harness dependencies
+runs=[]
+for p in sorted((q/'runs').glob('final-*/run.receipt.json')):
+ d=json.loads(p.read_bytes());assert d['exitCode']==0 and d['rawComplete'];pre=d['sourceBefore'];post=d['sourceAfter'];assert [(x['path'],x['bytes'],x['sha256']) for x in pre]==[(x['path'],x['bytes'],x['sha256']) for x in post];assert len(pre)==len({x['path'] for x in pre});assert d['startedAt']<d['endedAt'];
+ for x in pre:assert H((q/x['bytePath']).read_bytes())==x['sha256']
+ runs.append(dict(path=str(p.relative_to(q)),argv=d['argv'],sourceRows=len(pre),prePostExact=True))
+assert len(runs)==25
+# byteexact all operative copies and historical declarations; prior judgments read as context only
+contexts=['AGENTS.md','.agents/CODEX-RUNTIME.md','.agents/PROJECT-PROFILE.md','.agents/roles/pessimistic-judge.md','.agents/skills/judge-task/SKILL.md','_research/convex-ai-gateway-2026-10-02/decision-gates.md','_research/convex-ai-gateway-2026-10-02/architecture.md','_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md','_goals/convex-backend-runtime-2026-10-02/goal.md','_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md']
+for k in ['task04-model-drift-native-profile-design-c1-review','task04-model-drift-native-design-correction-c2-review','task04-model-drift-native-parent-preparation-c1-review','task04-model-drift-native-parent-preparation-c2-review','task04-model-drift-native-source-preparation-c1-review','task04-model-drift-native-source-preparation-c2-review']:
+ p=r/f'_goals/convex-backend-runtime-2026-10-02/qa/{k}/report.md'
+ if p.is_file():contexts.append(str(p.relative_to(r)))
+reads=[]
+for rel in contexts:
+ b=(r/rel).read_bytes();reads.append(dict(path=rel,bytes=len(b),sha256=H(b)))
+(q/'final-audit.json').write_text(json.dumps(dict(status='PASS_PREPARATION_CUSTODY',utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),subjectPins=out,finalRuns=runs,contextCompleteReadHashes=reads,actualPrivate='NEVER_READ',sourceIndependentReview='PENDING_OR_SEPARATE_ROOT_GATE',native='NOT_RUN'),indent=2)+'\n');print(json.dumps(dict(status='PASS',finalRuns=len(runs))))

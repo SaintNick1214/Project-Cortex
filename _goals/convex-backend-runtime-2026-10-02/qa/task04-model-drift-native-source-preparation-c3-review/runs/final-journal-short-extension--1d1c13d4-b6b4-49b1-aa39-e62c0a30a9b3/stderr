@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Journal append must complete writes or report failure without claiming complete retained bytes
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-source-preparation-c3-review/journal-short-write.mjs:1:1562 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
