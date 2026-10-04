@@ -1,0 +1,10 @@
+import pathlib,subprocess,datetime,json,hashlib,os
+r=pathlib.Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3-review';w=r/'work/resume/task04-native-admission-c3-review';c=q.parent/'task04-native-admission-fixture-c3'
+pre=json.loads((q/'protected-pre.json').read_text());hashes=lambda:{p:hashlib.sha256((r/p).read_bytes()).hexdigest() for p in pre}
+checks=[]
+commands=[('versions',['node','--version']),('npm-version',['npm','--version']),('discovery',['node','--experimental-vm-modules','--test',str(w/'offline-check.mjs'),str(w/'offline-regressions.mjs'),str(w/'offline-public-semantic.mjs')]),('inventory',['node',str(w/'inventory.mjs'),'--verify'])]
+for name,args in commands:
+ d=q/name;d.mkdir();before=hashes();start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(args,cwd=r,env={'PATH':os.environ['PATH'],'LANG':'C.UTF-8','NO_COLOR':'1'},capture_output=True,timeout=120)
+ (d/'stdout.txt').write_bytes(p.stdout);(d/'stderr.txt').write_bytes(p.stderr)
+ item={'argv':args,'cwd':str(r),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'environmentNames':['PATH','LANG','NO_COLOR'],'sourceChanged':[n for n,h in before.items() if hashes()[n]!=h]};(d/'result.json').write_text(json.dumps(item,indent=2)+'\n');checks.append(item);print(name,p.returncode,p.stdout[-500:].decode())
+(q/'checks.json').write_text(json.dumps(checks,indent=2)+'\n');(q/'protected-post.json').write_text(json.dumps(hashes(),indent=2)+'\n')

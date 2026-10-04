@@ -1,0 +1,130 @@
+{
+  "idFields": [
+    {
+      "path": "artifacts:setFileRef",
+      "visibility": "internal",
+      "table": "_storage"
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "visibility": "public",
+      "table": "_storage"
+    },
+    {
+      "path": "attachments:attach",
+      "visibility": "public",
+      "table": "_storage"
+    },
+    {
+      "path": "facts:fetchFactsByIds",
+      "visibility": "internal",
+      "table": "facts"
+    },
+    {
+      "path": "governance:enforce",
+      "visibility": "internal",
+      "table": "governancePolicies"
+    },
+    {
+      "path": "graphSync:markSynced",
+      "visibility": "internal",
+      "table": "graphSyncQueue"
+    },
+    {
+      "path": "graphSync:markFailed",
+      "visibility": "internal",
+      "table": "graphSyncQueue"
+    },
+    {
+      "path": "graphSync:deleteSyncItem",
+      "visibility": "internal",
+      "table": "graphSyncQueue"
+    },
+    {
+      "path": "memories:fetchMemoriesByIds",
+      "visibility": "internal",
+      "table": "memories"
+    },
+    {
+      "path": "runtimeAuth:revokeGrant",
+      "visibility": "internal",
+      "table": "runtimeAuthGrants"
+    },
+    {
+      "path": "runtimeAuth:revokeMembership",
+      "visibility": "internal",
+      "table": "runtimeAuthMemberships"
+    },
+    {
+      "path": "runtimeAuth:deletePrincipal",
+      "visibility": "internal",
+      "table": "runtimeAuthPrincipals"
+    },
+    {
+      "path": "runtimeMemory:readVectorMatches",
+      "visibility": "internal",
+      "table": "runtimeMemoryVectors"
+    },
+    {
+      "path": "runtimeModelPolicy:admit",
+      "visibility": "internal",
+      "table": "runtimeModelOperations"
+    },
+    {
+      "path": "runtimeModelPolicy:checkpoint",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:markVisible",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:settle",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:recover",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:releaseNotDispatched",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:admitFallback",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "runtimeModelPolicy:checkFallback",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    },
+    {
+      "path": "qualificationOwned:change",
+      "visibility": "internal",
+      "table": "runtimeModelOperations"
+    },
+    {
+      "path": "qualificationOwned:change",
+      "visibility": "internal",
+      "table": "runtimeModelAttempts"
+    }
+  ],
+  "publicStoragePaths": [
+    "artifacts:completeArtifactUpload",
+    "attachments:attach"
+  ],
+  "offline": "NOT_NATIVE_ID_PROOF",
+  "requiredParentEvidence": "source-bound owned/deleted storage and internal locators; current handler denials for two public storage paths; new core operation/attempt physical ownership receipts before security"
+}

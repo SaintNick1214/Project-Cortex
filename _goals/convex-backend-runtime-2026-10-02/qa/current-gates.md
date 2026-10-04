@@ -149,3 +149,19 @@ Fresh scoped PASS 4.6, requirements 5, independently observes 74 candidate outco
 ## Task04 native preparation C2 rejection
 
 Fresh REJECT 3.0 accepts the four C1 repairs offline, but finds a generated governance duration that actual production code rejects before authentication. Parent verified 62 self-excluded review rows. Twenty offline outcomes, strict types, inventory and hostile investigations passed; native service coverage remains NOT_RUN. C3 will preserve all200 public paths and strict auth outcomes, qualify semantic payloads against actual handlers, and keep source/target/budget boundaries unchanged. No target has been created. See task04-native-admission-c2-preparation-rejection.json.
+
+## Task04 conditional output serialization proof accepted
+
+Fresh independent conditional proof PASS 4.8. Parent verified all32 self-excluded review rows and446 protected source fingerprints. Exact official vocabulary artifact and analytical maximal-subpart decoder composition support the precise text envelope bound128*M+11; the single default1536-vector canonical envelope has maximum40177 bytes. This accepts mathematical preparation only. Actual serving tokenizer, cap, decoder, private-result correspondence, input/framing and all-charge pricing remain NOT_RUN; production root remains EMPTY. Whole04/full03-final/full goal are incomplete. See task04-output-envelope-proof-acceptance.json.
+
+## Task04 native preparation C3 frozen; fresh review pending
+
+C3 retains every native case, budget, product source and prior rejection. All24 offline assertions pass, including200 distinct actual-handler null-identity authentication-boundary probes with zero DB/effects; old malformed governance duration remains INVALID_INPUT before identity, never an authorization pass. Parent verified236 freeze rows and242 self-excluded recursive rows (243 actual files). Native target creation, publication, OCC/rollback/peer faults, cleanup and retirement remain NOT_RUN. Fresh independent preparation review is in progress, including concrete source-bound physical-ID prerequisites; a Boolean or offline string shape is not native ID evidence.
+
+## Feature branch and draft PR checkpoint
+
+Reviewed Gateway helper product and preserved qualification evidence pushed37f14608; conditional proof and C3 packet pushed23c374e6 through the connected GitHub app after the CLI credential returned401. These commits are unsigned; no signature verification is claimed. Parent verified every selected local and remote blob after nonforce updates. Draft PR133 is open against dev: https://github.com/SaintNick1214/Project-Cortex/pull/133. Closed, unmerged PR132 remains preserved. Original17-task implementation and all missing coverage remain in progress. The user waived numeric cycle limits; failed gates and acceptance criteria remain binding.
+
+## Task04 C3 native deployment failure preserved and target retired
+
+Preparation PASS4.6 was followed by actual official deployment failure: fixture manifest omitted convex dependency. No functions published/native tickets/owned rows/storage created. The one CLI group is terminal; owned project3138926 was retired with five calls/delete200/absence404. Target-only credentials were removed afterward; original failure, source-bound inputs and all236 freeze rows are preserved. C4 QA-only manifest repair and fresh review require a new execution identity. B native/whole04/goal remain incomplete. See task04-native-admission-c3-execution/report.md.

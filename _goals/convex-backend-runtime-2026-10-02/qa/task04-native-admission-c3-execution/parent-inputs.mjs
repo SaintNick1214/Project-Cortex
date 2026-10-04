@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,statSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createPrivateKey,createPublicKey,sign,randomBytes,createHash} from 'node:crypto';
+import {livePreflight,root,repo,scratch,json,exclusive,sha256} from '../../_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3/scripts/guard.mjs';
+
+const {target,values}=livePreflight();
+const old=resolve(repo,'work/backend-runtime/task03-foundation-live-c11');
+const names={owned:'owned-foundation-29178d862bcf4a31926b4530c322efd4.json',journal:'owned-journal-foundation-29178d862bcf4a31926b4530c322efd4.jsonl',qualification:'qualify-325ff9b9-223e-47c5-b245-f50e5162b0cc.json',retirement:'target-retirement.json'};
+const original=Object.fromEntries(Object.entries(names).map(([k,n])=>[k,readFileSync(resolve(old,n))]));
+const owned=JSON.parse(original.owned),qualified=JSON.parse(original.qualification),retired=JSON.parse(original.retirement);
+assert.equal(qualified.status,'PASS');assert.equal(qualified.cleanupComplete,true);
+assert.equal(retired.status,'PASS');assert.equal(retired.deletionHttpStatus,200);assert.equal(retired.absentProjectHttpStatus,404);assert.equal(retired.projectId,3138249);
+assert.equal(owned.files.length,2);assert.ok(original.journal.toString().endsWith('\n'));
+const journal=original.journal.toString().trimEnd().split('\n').map(s=>JSON.parse(s));
+assert.ok(journal.some(r=>r.run===owned.run&&r.files?.some(f=>f.id===owned.files[0].id)));
+const tables=['facts','governancePolicies','graphSyncQueue','memories','runtimeAuthGrants','runtimeAuthMemberships','runtimeAuthPrincipals','runtimeMemoryVectors'];
+const ids={_storage:owned.files[0].id};
+for(const table of tables){const r=owned.refs.find(r=>r.table===table);assert.ok(r?.id);ids[table]=r.id;}
+const provenance={operation:target.operation,runId:target.runId,observedAt:new Date().toISOString(),historicalTargetProjectId:retired.projectId,historicalQualification:'PASS',historicalOwnedCleanup:true,historicalProjectDeletion:200,historicalProjectAbsence:404,storageCreatedHere:0,currentTargetDecoder:'NOT_RUN',newOperationAttemptIDs:'PENDING_CURRENT_CORE_OWNERSHIP',sources:Object.fromEntries(Object.entries(names).map(([k,n])=>[n,{sha256:sha256(original[k]),bytes:original[k].length}])),locators:Object.entries(ids).map(([table,id])=>({table,locatorSHA256:sha256(id),provenance:'previously native-issued owned locator; original target cleaned and retired; current decoding not claimed'}))};
+exclusive(resolve(scratch,'initial-physical-id-provenance.json'),provenance);
+exclusive(resolve(scratch,'historical-native-locators.json'),{operation:target.operation,runId:target.runId,ids,provenanceSHA256:sha256(JSON.stringify(provenance))});
+
+const keyPath=resolve(repo,'work/backend-runtime/qualification/jwt-private.pem');
+assert.equal(statSync(keyPath).mode&511,384);assert.equal(statSync(resolve(keyPath,'..')).mode&511,448);
+const privateKey=createPrivateKey(readFileSync(keyPath)),pub=createPublicKey(privateKey).export({format:'jwk'});
+const config=readFileSync(resolve(root,'fixture/convex/auth.config.ts'),'utf8');
+const expected=JSON.parse(Buffer.from(config.match(/base64,([A-Za-z0-9+/=]+)/)[1],'base64')).keys[0];
+assert.equal(pub.n,expected.n);assert.equal(pub.e,expected.e);
+const issuer=config.match(/issuer: "([^"]+)"/)[1],aud=config.match(/applicationID: "([^"]+)"/)[1];
+const now=Math.floor(Date.now()/1000);let signatures=0;
+const jwt=(subject,override={})=>{const head=Buffer.from(JSON.stringify({alg:'RS256',typ:'JWT',kid:expected.kid})).toString('base64url');const payload=Buffer.from(JSON.stringify({iss:issuer,aud,sub:subject,iat:now,exp:now+7200,...override})).toString('base64url');const input=head+'.'+payload;signatures++;return input+'.'+sign('RSA-SHA256',Buffer.from(input),privateKey).toString('base64url');};
+const owner=target.runId+'-security-owner',foreign=target.runId+'-security-foreign';
+const forged=jwt(owner).split('.');const damaged=Buffer.from(forged[2],'base64url');damaged[0]^=1;forged[2]=damaged.toString('base64url');
+exclusive(resolve(scratch,'identities.json'),{operation:target.operation,runId:target.runId,ownerJWT:jwt(owner),readerJWT:jwt(target.runId+'-security-reader'),identities:{noJWT:null,forgedJWT:forged.join('.'),wrongIssuer:jwt(owner,{iss:'https://wrong-cortex-qualification.invalid'}),wrongAudience:jwt(owner,{aud:'wrong-cortex-task01'}),expiredJWT:jwt(owner,{exp:now-60,iat:now-120}),ungranted:jwt(target.runId+'-ungranted'),foreign:jwt(foreign)}});
+const peerSecret=randomBytes(32).toString('hex');
+exclusive(resolve(scratch,'peer-config.json'),{operation:target.operation,peerSecret});
+const startedAt=new Date().toISOString();
+const response=await fetch(target.deploymentUrl+'/api/update_environment_variables',{method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(30000)});
+assert.equal(response.status,200,'owned peer environment update');
+const body=await response.text();assert.ok(Buffer.byteLength(body)<=16384);
+exclusive(resolve(scratch,'parent-inputs-receipt.json'),{operation:target.operation,status:'PASS',startedAt,observedAt:new Date().toISOString(),keysCreated:0,signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:1,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readFileSync(resolve(scratch,'initial-physical-id-provenance.json'))),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'});
+process.stdout.write(JSON.stringify({status:'PASS',keysCreated:0,signatures,storageCreated:0,configurationCalls:1,currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'})+'\n');
