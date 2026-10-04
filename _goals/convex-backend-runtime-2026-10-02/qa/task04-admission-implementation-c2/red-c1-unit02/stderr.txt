@@ -1,0 +1,76 @@
+(node:77340) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts (16.176 s)
+  native private policy ledger — offline logic only
+    ✓ production root is empty, and arbitrary operator manifest selectors cannot attest prices (39 ms)
+    ✓ installs the exact compiled root idempotently and refuses mutated same-version evidence (28 ms)
+    ✓ rejects an invalid root classification before accounts/dispatch (2 ms)
+    ✓ rejects an invalid root acceptance before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root expiry before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root model before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root proof before accounts/dispatch (1 ms)
+    ✓ binds one backend account per exact trusted request and rejects changed request/owner (14 ms)
+    ✓ forced account-key hash collisions compare the complete trusted binding tuple (9 ms)
+    ✓ derives actual normalized input and full trusted ceiling, overriding untrusted estimates (34 ms)
+    ✓ same child canonical replay does not reserve again; changed text/hash collision rejects (77 ms)
+    ✓ one checkpoint winner returns a permit and subsequent attempts cannot dispatch (56 ms)
+    ✓ changed final native request/proof and expired qualifications deny checkpoint (35 ms)
+    ✓ last operation/concurrency capacity applies across distinct children without partial rejection writes (73 ms)
+    ✓ different backend request accounts share one tenant quota and concurrency (29 ms)
+    ✓ known cost settles exactly once and eligible result replay needs no new reservation (122 ms)
+    ✓ invalid private results are withheld without erasing a known complete charge (118 ms)
+    ✓ overrun accounts full spend and blocks further admission without rollback of charge (90 ms)
+    ✓ malformed/missing cost remains unknown liability; qualified terminal proof releases slot only (92 ms)
+    ✓ postcheckpoint crash recovery cannot claim no dispatch or zero cost (33 ms)
+    ✓ proved precheckpoint refusal releases balances and slots exactly once (38 ms)
+    ✓ current admin may release proved precheckpoint liability after origin revocation without delivery (29 ms)
+    ✓ unknown liability blocks rollover; late receipt charges original immutable window (27 ms)
+    ✓ revoked originating grant requires current admin liability-only recovery (25 ms)
+    ✓ monotone visibility flags and cancellation prevent later dispatch and safe fallback (50 ms)
+    ✓ space admin cannot change global/root policy or install own tenant-wide constraints (2 ms)
+    ✓ healthy tenant admin may narrow own rules but cannot forge prices or broaden caps (8 ms)
+    ✓ trusted own tenant override is backend-versioned and never broadens deployment hard bounds (16 ms)
+    ✓ a current source tombstone blocks replay/delivery but retains already incurred charge (24 ms)
+    ✓ source revision changes before checkpoint cannot dispatch or recreate source (10 ms)
+    ✓ child operation inherits exact parent account and cancellation/current authority fences (37 ms)
+    ✓ trusted compiled versioned agent specialization is consumed only by its matching tenant/version (9 ms)
+    ✓ native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider (2 ms)
+    ✓ embedding bound treats per-value and aggregate caps separately and counts normalized UTF8 (2 ms)
+    ✓ invalid terminal cost overflow remains unknown without refund or invented zero (25 ms)
+    ✓ post-admission source/account corruption fails closed before checkpoint (8 ms)
+    ✓ explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend (80 ms)
+    ✓ visible output, unknown outcome and unqualified candidates deny fallback reservation (45 ms)
+    ✓ storage bounds deny multi-vector calls and unbounded output before reservation (9 ms)
+    ✓ usage exceeding trusted input/output caps fully charges and blocks the faulty qualification (39 ms)
+    ✓ retired tenant blocks scoped actors while operator records full private overrun exactly once (38 ms)
+    ✓ retired memorySpace blocks scoped actors while operator records full private overrun exactly once (42 ms)
+    ✓ deployment liability route refuses live scopes and preserves retired unknown charge liability (27 ms)
+    ✓ all registrations are internal and their native argument schemas have no arbitrary payload escape (6 ms)
+    ✓ all five additive native tables have unique index field configurations (2 ms)
+    ✓ rounds authoritative 0 USD upward to 0 microUSD
+    ✓ rounds authoritative 0.0000001 USD upward to 1 microUSD (7 ms)
+    ✓ rounds authoritative 0.000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ✓ rejects invalid or overflowing money NaN (5 ms)
+    ✓ rejects invalid or overflowing money Infinity (1 ms)
+    ✓ rejects invalid or overflowing money -1
+    ✓ rejects invalid or overflowing money 1e4 (1 ms)
+    ✓ rejects invalid or overflowing money 9007199254740992
+  current policy narrowing at fallback and dispatch boundaries
+    ✓ fresh fallback includes prior known spend under current narrowed operation ceiling (73 ms)
+    ✓ current fallback revocation denies fresh reservation and query even with generally allowed model (66 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current operation aggregate (19 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current run aggregate (28 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current tenant aggregate (71 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current concurrency aggregate (75 ms)
+    ✓ fallback permission revoked after valid reservation denies checkpoint with zero effects (135 ms)
+    ✓ operation narrowing after valid fallback reserve preserves full original liability and denies permit (81 ms)
+    ✓ aggregate at exact current caps permits held reservation without charging it twice (49 ms)
+    ✓ compatible fallback at exact narrowed cumulative ceiling remains permitted (64 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       64 passed, 64 total
+Snapshots:   0 total
+Time:        16.409 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2/red-c1-unit02/jest-result.json
