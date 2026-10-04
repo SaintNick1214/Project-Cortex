@@ -1,0 +1,50 @@
+[
+  {
+    "selection": 1,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/native-validator-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.234,
+    "stdout": "{\"status\":\"PASS\",\"registered\":259,\"public\":200,\"internal\":59,\"validatorMismatches\":0,\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 2,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.838,
+    "stdout": "{\"scope\":\"OFFLINE_ONLY\",\"status\":\"PASS\",\"negativeControls\":25,\"registered\":259,\"public\":200,\"internal\":59,\"liveQualification\":\"BLOCKED\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 3,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-arguments-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.054,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 4,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-closure-check.mjs"
+    ],
+    "exitCode": 1,
+    "elapsedSeconds": 0.081,
+    "stdout": "",
+    "stderr": "node:internal/modules/esm/resolve:271\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/convex-dev/schema.ts' imported from /workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-closure-check.mjs\n    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n    at moduleResolve (node:internal/modules/esm/resolve:865:10)\n    at defaultResolve (node:internal/modules/esm/resolve:992:11)\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveBaseSync (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)\n    at resolveDirectorySync (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)\n    at resolveTsPathsSync (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)\n    at resolve (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///convex-dev/schema.ts'\n}\n\nNode.js v24.19.0\n"
+  }
+]
