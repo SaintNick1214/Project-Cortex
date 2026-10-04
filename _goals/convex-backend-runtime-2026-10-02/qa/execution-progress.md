@@ -941,3 +941,38 @@ PR134 actualhead1db53a3b41c52bc84e2070db353523025383302c open/draft/dev freshlyc
 ### 2026-10-04 15:12 UTC — checkpoint32 frozen evidence selection
 
 Checkpoint32 selects frozenmetadataC1/rejectionreview, conditionaltierC2freshreview/acceptance, SOURCEC4physical17filepacket/PARENTfullreport, associatedsmallfrozenROOTnotes/31receipts/CI and19literalmetadata/tierworkhelperfiles. FullC4plusSOURCE/PARENTreferencedbacking is separately losslesstransporting; thisselectiondoesnotclaimremotecompleteC4/source-review/nativeclosure. MutablemetadataC2/nativeC5/transportC4C1 excluded, allgatespending. Executionprogress freezes until32expectedtree/source/remotehead/commit/refverification. All originalcaps/assertions/historicalfails/actualkeynull/moneyEMPTY retained.
+
+
+Checkpoint32 verification complete; progress thawed. Commit773e9532f1958de45ecfee0206486e525c35f543 /tree37b117f9ef33d843a72c3f0642e6102261708d40, parent1db53a3b41c52bc84e2070db353523025383302c. All2899selectedpaths rehashed/202binarySHAchecked/7treecalls matchedindependentexpectedtree; forcefalsepush andindependentrefcomparisonidentical0ahead/behind. PR134open/draft/dev bodyupdated. Source/PARENTfullreferencedC4transportpending; mutableC2/C5excluded. InitialROOT32helperselectedprevious31plan, sourcehashfailedbeforetreeverification; originalfailedhelper/rawtooltrace/partialisolatedindex retained, allactual32sources unchanged, newv2helperexpectedtreePASS. LiveHEAD/indexunchanged.
+
+
+### 2026-10-04 15:25 UTC — metadata C2 bounded offline accepted
+
+Fullfreshreport502e87a028b3d285eab1dcb349f33073c6d9283b2cae78877ca15a861aca4016 read;664QA/8scratch exactrecursive/self-onlybytes/nlink1 verified, candidate676/12 previouslyverified. PASS_OFFLINE4.2 accepted ONLYisolatedconstructionrepair. Completeprospectiveprefix beforekeysort/freeze, independent26groups+additional3parentcumulativeboundaryPASS. Retainedmetadata16=14PASS2earlierSHAPEFAIL, historicalconstructionGRAPH_LIMITFAIL, original40=37PASS3historicalFAIL, moneydiagnosticFAIL unchanged. Allactualqualification/service/category/allattempt/finality/native/sourcekey/registryinstallation remainsheld; no paid/native/defaultrelease. NativeC5repair andtransportC4Gitmodecontrols active.
+
+
+### 2026-10-04 15:29 UTC — transport actual Git-mode path and workspace bounded storage
+
+TransportC4C1 executor fulloriginalclean148325entryrestoration and49adversariesPASS. Sourceoriginalaudit initialnlink1 assumptionFAILpreserved; correctedexact32negativefixture nlink2paths/16pairs knownNONOPERATIVEparent-proof/case-* aliases, exactbeforeaftermode/inode/nlink retained;735operative and148295 restoredregularfiles nlink1 required unchanged. Sourcebytes/modes/literals/terminal sets all148325unchanged. Ownpyc overwriteexploratorygap NOT_CAPTURED retained, no missingpreimage fabricated; finalhelperexecution sourcecompilation bypasses cachedpyc.
+
+Git644vsoriginal600 conflicts actualcheckpoint32SOURCE17files, so narrowseparateexplicitnormalizer validatesallmappedexistingbytes/hash/type/owner/nlink1/ancestryBEFOREanymodechanges, exactGit644→recorded600only. No originalsource8roots changes; OWN/tmp17fileseedGitnormalization12controlsPASS+full148308new/17existingrestore148325PASS. Independentfreshcleanjudge stillrequired afterfinalfreeze, no inheritedfixturefreshclaim. OWNfirst/tmpcleanmirror safelydisposedafterexactproof+archivevalidation, no originaltargets.
+
+Workspaceagain0freealertread-onlyhistory, no falselyassertedchildENOSPC. ROOTcompleted406derivedGitrequestpayloads26/27/28/29/32 total270961818B losslesslyarchived33584851B afterallmemberSHA/sourcechecks, net237376967Bfreed; source/QAoriginals/liveGitindex/HEAD untouched. Exactrawpayloadpaths requirematerializationbeforephysicalpathclaims. NativeC5exector requestedboundOWNgeneratedfixtures and /tmpprospectiveintermediates, no oldevidence/caps/guards waiver.
+
+
+### 2026-10-04 15:36 UTC — real C5 namespace incident, preserved recovery and independent hold
+
+C5 inherited inventory output and temporary fixture paths wrote inside frozen C4 scratch: two derived files were overwritten and 750 new DUMMY files were added. Transport final source audit detected the two byte mismatches and safely refused cleanup; its verified original-byte mirror remains available. C5 executor is stopped with genuine command receipts and both overwritten bytes retained in its incident handoff. No intact-history claim, manifest repin, paid call, native target, or acceptance follows from this incident.
+
+ROOT archived all 752 incident files with exact bytes, hashes and modes before any mutation (incident archive SHA256 6a4d8a32576af62bd92c8201d1f549d31d8e15295ef20d7575262f54d942f046). The two original bytes were independently checked against unchanged C4 manifest and verified mirror, restored using held nofollow descriptors, and 750 proven manifest-absent incident additions were removed only after their archive was verified. Current inodes were retained; preincident inode/timestamp continuity is unavailable and not claimed. Recovery records and source-before metadata live in task04-c4-namespace-incident-root-recovery/.
+
+ROOT post-incident whole-byte checks verify unchanged 8,248 QA entries, 735 runtime entries and 133,251 scratch entries including 30 literal symlinks. A fresh independent recovery judge is active; transport independently reruns source topology with the incident history retained. C5 execution remains held pending recovery disposition and a corrected-path source audit. Original failed checks remain evidence. User waives cycle counts, not acceptance assertions, scope, caps or independent reviews.
+
+
+### 2026-10-04 15:40 UTC — recovery accepted only, checkpoint33 selection freeze
+
+Fresh recovery review PASS4.6 full report fcd6e47fa1b605b3b292adc588355178da3f7a02746d50ad0ed7ed2426827365 read; exact6QA/2work self-only closures verified. All133251currentC4rows/30literal links/752incidentarchive entries/750removed additions/twooriginals/16negativehardlinkpairs independently checked. ALL SIX incident C5 receipt inventories omit C4 scratch, so their broad labels cannot prove historical custody. Subsequent reviews require fresh recovered-state source capture and explicit incident provenance; preincident inode/timestamp continuity remains unavailable. C5 control execution held pending finite output-route audit. Transport directory-mode sidecar repair authorized in new owned candidate only; original helper/index/history preserved, independent gate pending.
+
+Checkpoint32 latest CI firstpage jobs: packed/browser and Neo4j/Memgraph contracts plusfourdemo builds PASS; SDK/CLI/provider/lint-type/deploy-purge SKIPPED, signaturesFAIL, CodeQLIN_PROGRESS, scorecardSKIPPED, OpenAPI actualauditSKIPPED. WrapperSUCCESS is notfullcorePASS.
+
+Checkpoint33 selects accepted isolated metadataC2 and full676/664 QA +12/8 literal work closure, preserved incident archive/recovery/freshreview/ROOTdisposition,32receipts/CI andsmallROOThelpers. MutableC5/eight-roottransport excluded; no current default/sourcekey/native/paid/product installation or Task04 completion. Progress freezes until expectedtree/source/remotecommit/ref checks complete.

@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-04T15:39:57.288486+00:00",
+  "verdict": "ACCEPT_RECOVERY_ONLY_4.6",
+  "fullReportReadSha256": "fcd6e47fa1b605b3b292adc588355178da3f7a02746d50ad0ed7ed2426827365",
+  "checks": [
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c4-incident-recovery-fresh-review",
+      "manifest": "qa-manifest.json",
+      "sha256": "4b81fcf0a0d8cb95cbd6385d012d99fc1e0752ae61819e474709645dc3fa731c",
+      "rows": 6,
+      "exactSelfOnlyBytesVerified": true
+    },
+    {
+      "root": "work/resume/task04-c4-incident-recovery-fresh-review",
+      "manifest": "work-manifest.json",
+      "sha256": "4d408fccc6b52170c04cef82d4ef892aed40aa3d2b9330cf70dde03d3fcf3d6a",
+      "rows": 2,
+      "exactSelfOnlyBytesVerified": true
+    }
+  ],
+  "limits": "Historical custody broken by incident; six C5 receipts omit C4 scratch. New genuine byte-based captures and explicit incident provenance required; no continuity/native/C5/transport acceptance."
+}

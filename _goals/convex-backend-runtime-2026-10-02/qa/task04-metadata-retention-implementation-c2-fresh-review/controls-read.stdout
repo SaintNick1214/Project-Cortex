@@ -1,0 +1,82 @@
+import assert from 'node:assert/strict';
+import {selectGenerate,nativeEvent,observeGenerate,observeStream,makeEvent} from '../convex/observer.ts';
+import {canonical} from '../convex/validate.ts';
+import {BINDING} from '../convex/installed.ts';
+const model='openai/gpt-4o-mini',cost=.000001;
+const ctx=scenarioId=>({binding:BINDING,scenarioId,dispatchIdentity:'a'.repeat(64),enteredAt:Date.now(),now:Date.now(),originalDeadline:Date.now()+15000,sourceClosureHash:BINDING.installedClosureHash});
+const result=()=>({content:[{type:'text',text:'DUMMY'}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:1},outputTokens:{total:1}},providerMetadata:{convexGateway:{cost}},response:{id:'DUMMY',modelId:model,body:{id:'DUMMY',model,choices:[{index:0,message:{content:'DUMMY'},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,cost},padding:[]}}});
+const nodes=x=>1+(x&&typeof x==='object'?Object.values(x).reduce((a,b)=>a+nodes(b),0):0);
+const outcomes=[];
+async function test(name,fn){await fn();outcomes.push({name,status:'PASS'});}
+async function noWitnessWork(action,reason){
+ const sort=Array.prototype.sort,freeze=Object.freeze;let sorted=0,frozen=0;
+ Array.prototype.sort=function(...args){if(this.includes('unused999')&&this.includes('cost'))sorted++;return sort.apply(this,args);};
+ Object.freeze=function(value){if(Array.isArray(value)&&value.includes('unused999')&&value.includes('cost'))frozen++;return freeze(value);};
+ try{await assert.rejects(Promise.resolve().then(action),reason);assert.equal(sorted,0);assert.equal(frozen,0);}finally{Array.prototype.sort=sort;Object.freeze=freeze;}
+}
+const oversized=result();oversized.response.body.padding=Array(4050).fill(null);for(let i=0;i<1000;i++)oversized.providerMetadata.convexGateway['unused'+i]=null;
+await test('actual generate same historical oversized native source aborts BEFORE witness sort/freeze',async()=>{await noWitnessWork(()=>selectGenerate(oversized),/GRAPH_LIMIT/);await noWitnessWork(()=>observeGenerate(ctx('C01'),oversized),/GRAPH_LIMIT/);});
+await test('actual V2 native finish same historical raw prefix counts full history BEFORE sort/freeze',async()=>{const raw=await makeEvent(0,'raw',{id:'DUMMY',model,choices:[],padding:Array(4050).fill(null)});const prefix=[raw];await noWitnessWork(()=>nativeEvent(1,{type:'finish',finishReason:oversized.finishReason,usage:oversized.usage,providerMetadata:oversized.providerMetadata},prefix),/GRAPH_LIMIT/);assert.equal(prefix.length,1);});
+await test('actual generate exact4096 construction agrees frozen complete canonical transcript at boundary',async()=>{const r=result();for(let i=0;i<1000;i++)r.providerMetadata.convexGateway['unused'+i]=null;const small=await observeGenerate(ctx('C01'),r),n=nodes(JSON.parse(small.transcriptCanonical));r.response.body.padding=Array(4096-n).fill(null);const full=await observeGenerate(ctx('C01'),r);assert.equal(nodes(JSON.parse(full.transcriptCanonical)),4096);canonical(JSON.parse(full.transcriptCanonical),180000);r.response.body.padding.push(null);await noWitnessWork(()=>selectGenerate(r),/GRAPH_LIMIT/);});
+await test('actual stream explicit prefix cumulative exact4096 then extra prior scalar denies before keys sort',async()=>{const fin={type:'finish',finishReason:{unified:'stop',raw:'stop'},usage:oversized.usage,providerMetadata:oversized.providerMetadata};let raw=await makeEvent(0,'raw',{id:'DUMMY',model,choices:[],padding:[]});const emptyFinish=await nativeEvent(1,fin,[raw]);const n=nodes({version:2,method:'stream',events:[raw,emptyFinish],ended:'reader-done'});raw=await makeEvent(0,'raw',{id:'DUMMY',model,choices:[],padding:Array(4096-n).fill(null)});const finish=await nativeEvent(1,fin,[raw]);const graph={version:2,method:'stream',events:[raw,finish],ended:'reader-done'};assert.equal(nodes(graph),4096);canonical(graph,180000);const text=canonical(graph,180000);for(let i=0;i<20;i++){const repeated=await nativeEvent(1,fin,[raw]);assert.equal(repeated.digest,finish.digest);assert.equal(canonical({...graph,events:[raw,repeated]},180000),text);}const bigger=await makeEvent(0,'raw',{id:'DUMMY',model,choices:[],padding:[...raw.data.padding,null]});await noWitnessWork(()=>nativeEvent(1,fin,[bigger]),/GRAPH_LIMIT/);});
+await test('actual encoded Unicode escaped key scalar bytes exact180000/180001 before witness sorting',async()=>{const r=result();r.providerMetadata.convexGateway['unused999']=null;r.providerMetadata.convexGateway['"\\\n😀']=null;const empty=await observeGenerate(ctx('C01'),r);r.response.body.padding='x'.repeat(180000-Buffer.byteLength(empty.transcriptCanonical));const exact=await observeGenerate(ctx('C01'),r);assert.equal(Buffer.byteLength(exact.transcriptCanonical),180000);r.response.body.padding+='x';await noWitnessWork(()=>selectGenerate(r),/BYTE_LIMIT/);});
+await test('actual explicit V2 event count never renews envelope and V1 helper cannot emit metadata provenance',async()=>{const prefix=[];for(let i=0;i<512;i++)prefix.push(await makeEvent(i,'unsupported',{type:'DUMMY'}));await assert.rejects(nativeEvent(512,{type:'finish',finishReason:oversized.finishReason,usage:oversized.usage,providerMetadata:oversized.providerMetadata},prefix),/STREAM_BOUND/);const old=await nativeEvent(1,{type:'finish',finishReason:oversized.finishReason,usage:oversized.usage,providerMetadata:oversized.providerMetadata});assert.deepEqual(Object.keys(old.data).sort(),['finish','usage']);const raw=await makeEvent(0,'raw',{id:'DUMMY',model,choices:[]});const current=await nativeEvent(1,{type:'finish',finishReason:oversized.finishReason,usage:oversized.usage,providerMetadata:{convexGateway:{cost}}},[raw]);assert.equal(current.data.providerCost.cost,cost);assert.equal(raw.digest,(await makeEvent(0,'raw',raw.data)).digest);assert.notEqual(old.digest,current.digest);assert.equal((await observeStream(ctx('C09'),[raw,old],'reader-done',undefined,2)).receipt.reason,'unsupported');});
+console.log(JSON.stringify({scope:'ACTUAL_SHARED_PROSPECTIVE_BUILDER_ORDER_BOUNDARIES_OFFLINE_ONLY',outcomes,skipped:0,actual:'EMPTY/null/uninstalled'}));
+import assert from 'node:assert/strict';
+import {OFFICIAL_DRIVER} from '../../fixture-vm/convex/runner.ts';
+import {setParts,setGeneration} from '../../fixture-vm/convex/dummy-port.mjs';
+import {BINDING} from '../convex/installed.ts';
+import {CASES} from '../convex/cases.ts';
+import {nativeEvent,makeEvent} from '../convex/observer.ts';
+const model='openai/gpt-4o-mini',cost=.000001;
+const context=scenarioId=>({binding:BINDING,scenarioId,dispatchIdentity:'a'.repeat(64),enteredAt:Date.now(),now:Date.now(),originalDeadline:Date.now()+15000,sourceClosureHash:BINDING.installedClosureHash});
+const outcomes=[];
+const finish={type:'finish',finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:1},outputTokens:{total:1}},providerMetadata:{convexGateway:{cost}}};
+for(let i=0;i<1000;i++)finish.providerMetadata.convexGateway['unused'+i]=null;
+const sort=Array.prototype.sort,freeze=Object.freeze;
+async function beforeKeys(fn){let sorted=0,frozen=0;Array.prototype.sort=function(...args){if(this.includes('unused999')&&this.includes('cost'))sorted++;return sort.apply(this,args);};Object.freeze=function(value){if(Array.isArray(value)&&value.includes('unused999')&&value.includes('cost'))frozen++;return freeze(value);};try{await fn();assert.equal(sorted,0);assert.equal(frozen,0);}finally{Array.prototype.sort=sort;Object.freeze=freeze;}}
+const raw=()=>({type:'raw',rawValue:{id:'DUMMY',model,choices:[],usage:{cost}}});
+await beforeKeys(async()=>{const prefix=[];for(let i=0;i<9;i++)prefix.push(await makeEvent(i,'raw',raw().rawValue));await assert.rejects(nativeEvent(9,finish,prefix),/SHAPE/);});
+outcomes.push({name:'actual explicit V2 finish full raw9 prefix rejects before witness sort/freeze',status:'PASS'});
+await beforeKeys(async()=>{const first=await nativeEvent(0,{...finish,providerMetadata:{convexGateway:{cost}}},[]);await assert.rejects(nativeEvent(1,finish,[first]),/SHAPE/);});
+outcomes.push({name:'actual explicit V2 second finish rejects before witness sort/freeze',status:'PASS'});
+for(const [name,parts] of [['raw9',[...Array.from({length:9},raw),finish]],['finish2',[{...finish,providerMetadata:{convexGateway:{cost}}},finish]]]){
+ await beforeKeys(async()=>{setParts(parts);const o=await OFFICIAL_DRIVER.execute(CASES.find(c=>c.scenarioId==='C09'),context('C09'),new AbortController().signal,async()=>false);assert.equal(o.receipt.money,'unknown');assert.equal(o.amountEvidence,null);assert.equal(o.privateResultCanonical,null);assert.equal(o.receipt.reason,'unsupported');assert(o.readerOwnership.failures.some(e=>e.message==='SHAPE'));await o.readerOwnership.join();});
+ outcomes.push({name:'ACTUAL official runner '+name+' structural error owned cancellation/marker/private withholding',status:'PASS'});
+}
+const r={content:[{type:'text',text:'DUMMY'}],finishReason:finish.finishReason,usage:finish.usage,providerMetadata:finish.providerMetadata,response:{id:'DUMMY',modelId:model,body:{id:'DUMMY',model,choices:[{index:0,message:{content:'DUMMY'},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,cost},padding:Array(4050).fill(null)}}};
+await beforeKeys(async()=>{setGeneration(r);await assert.rejects(OFFICIAL_DRIVER.execute(CASES.find(c=>c.scenarioId==='C01'),context('C01'),new AbortController().signal,async()=>false),/GRAPH_LIMIT/);});
+outcomes.push({name:'ACTUAL official generate historical oversized source rejects before keys sort/freeze',status:'PASS'});
+console.log(JSON.stringify({scope:'ACTUAL_OFFICIAL_SOURCE_EARLIER_CONSTRUCTION_DENIAL_SUPPLEMENT_OFFLINE_ONLY',outcomes,actual:'EMPTY/null/uninstalled',skipped:0}));
+import assert from 'node:assert/strict';
+import {observeGenerate,observeTranscript,observeStream,makeEvent} from '../convex/observer.ts';
+import {canonical,digest} from '../convex/validate.ts';
+import {BINDING} from '../convex/installed.ts';
+import {Harness} from './harness.mjs';
+import * as guard from '../convex/guard.ts';
+const context=(scenarioId='C01')=>({binding:BINDING,scenarioId,dispatchIdentity:'a'.repeat(64),enteredAt:Date.now(),now:Date.now(),originalDeadline:Date.now()+15000,sourceClosureHash:BINDING.installedClosureHash});
+function result(){const model='openai/gpt-4o-mini',cost=.000001;return {content:[{type:'text',text:'DUMMY'}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:1},outputTokens:{total:1}},providerMetadata:{convexGateway:{cost}},response:{id:'DUMMY',modelId:model,body:{id:'DUMMY',model,choices:[{index:0,message:{content:'DUMMY'},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,cost}}}}}
+async function captured(input){const h=await new Harness().setup();await h.reserve();await h.enter();const ctx={...context(),dispatchIdentity:h.state().attempts.at(-1).dispatchIdentity},o=await observeGenerate(ctx,input);const again=await observeTranscript(ctx,o.transcriptCanonical);assert.deepEqual(again.amountEvidence,o.amountEvidence);const before=h.state().reserved;const got=await h.mutation(guard.capture,{scenarioId:'C01',dispatchIdentity:ctx.dispatchIdentity,observationCanonical:canonical(o.receipt,8192),contextCanonical:canonical(ctx,4096),transcriptCanonical:o.transcriptCanonical});assert.equal(got.slotReleased,false);assert.equal(h.state().reserved,before);assert.equal(h.state().attempts.at(-1).known,null);assert.equal(o.receipt.money,'unknown');return o}
+const outcomes=[];
+const input=result();input.response.body.padding=[];
+const base=await observeGenerate(context(),input),tr=JSON.parse(base.transcriptCanonical);
+function nodes(x){return 1+(x&&typeof x==='object'?Object.values(x).reduce((sum,v)=>sum+nodes(v),0):0)}
+const count=nodes(tr);input.response.body.padding=Array(4096-count).fill(null);
+const full=await captured(input);assert.equal(nodes(JSON.parse(full.transcriptCanonical)),4096);
+const extra=result();extra.response.body.padding=[...input.response.body.padding,null];await assert.rejects(observeGenerate(context(),extra),/GRAPH_LIMIT/);
+const differentParent=result();differentParent.response.body.padding=[...input.response.body.padding];differentParent.providerMetadata.convexGateway.unused=1;await assert.rejects(observeGenerate(context(),differentParent),/GRAPH_LIMIT/);
+outcomes.push({name:'actual native selector and registered capture equality at4096,4097 and identical cost extra parent key',status:'PASS'});
+const byteInput=result();byteInput.response.body.padding='';const empty=await observeGenerate(context(),byteInput);
+byteInput.response.body.padding='x'.repeat(180000-Buffer.byteLength(empty.transcriptCanonical));const fullByte=await captured(byteInput);assert.equal(Buffer.byteLength(fullByte.transcriptCanonical),180000);
+byteInput.response.body.padding+='x';await assert.rejects(observeGenerate(context(),byteInput),/BYTE_LIMIT/);
+outcomes.push({name:'actual selector registered capture exact180000 vs180001 full UTF8 bytes',status:'PASS'});
+const deep=result();let nested=null;for(let i=0;i<11;i++)nested={child:nested};deep.response.body.padding=nested;await captured(deep);deep.response.body.padding={child:nested};await assert.rejects(observeGenerate(context(),deep),/GRAPH_LIMIT/);
+outcomes.push({name:'actual selector/capture root0 depth16 accepts depth17 denies',status:'PASS'});
+const raw=await makeEvent(0,'raw',{id:'DUMMY',model:'openai/gpt-4o-mini',choices:[],padding:Array(4044).fill(null)});
+let one={version:2,method:'stream',events:[raw],ended:'reader-done'};
+while(nodes(one)<4096){one.events[0].data.padding.push(null)}
+assert.equal(nodes(one),4096);one.events[0].digest=await digest(canonical(one.events[0].data,180000));const ctx=context('C09'),text=canonical(one,180000),first=await observeTranscript(ctx,text);for(let i=0;i<50;i++)assert.deepEqual((await observeTranscript(ctx,text)).receipt,first.receipt);
+const additional=await makeEvent(1,'response-metadata',{id:'DUMMY',modelId:'openai/gpt-4o-mini'});await assert.rejects(observeStream(ctx,[raw,additional],'reader-done',undefined,2),/GRAPH_LIMIT/);
+const many=[];for(let i=0;i<512;i++)many.push(await makeEvent(i,'unsupported',{type:'DUMMY'}));assert.equal((await observeStream(ctx,many,'reader-done',undefined,2)).receipt.money,'unknown');many.push(await makeEvent(512,'unsupported',{type:'DUMMY'}));await assert.rejects(observeStream(ctx,many,'reader-done',undefined,2),/TRANSCRIPT/);
+outcomes.push({name:'actual observer repeated identical prefix50 times does not doublecharge, new cumulative event and513 limit deny',status:'PASS'});
+console.log(JSON.stringify({scope:'ACTUAL_CANDIDATE_NATIVE_SELECTOR_REGISTERED_CAPTURE_EXACT_RESOURCE_BOUNDARIES',outcomes,actualMoney:'EMPTY',skipped:0}));

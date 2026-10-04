@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observer.ts\");s=p.read_text();old=\" return {version:2,method,events:[...prefix,{sequence,kind,digest:'0'.repeat(64),data}],ended:method==='generate'?'returned':'reader-done'};\";new=\"\"\" const graph={version:2,method,events:[...prefix,{sequence,kind,digest:'0'.repeat(64),data}],ended:method==='generate'?'returned':'reader-done'};\n canonical(graph,180000);\n if(method==='stream'){\n  let rawUsage=0,finishes=0;\n  for(const event of graph.events){\n   if(event.kind==='finish'&&++finishes>1)fail('SHAPE');\n   if(event.kind==='raw'&&event.data!==null&&typeof event.data==='object'&&!Array.isArray(event.data)){\n    const raw=event.data as Data;\n    if(raw.usage!==undefined&&raw.usage!==null&&++rawUsage>8)fail('SHAPE');\n   }\n  }\n }\n return graph;\"\"\";assert old in s;s=s.replace(old,new);p.write_text(s);p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-construction.mjs\");p.write_text(p.read_text().replace('actual generate exact4096 construction agrees frozen canonical and capture at boundary','actual generate exact4096 construction agrees frozen complete canonical transcript at boundary'))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T15:05:54.551701+00:00",
+  "endUtc": "2026-10-04T15:05:54.578995+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901"
+}

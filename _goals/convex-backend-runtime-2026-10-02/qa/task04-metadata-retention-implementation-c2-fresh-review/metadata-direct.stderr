@@ -1,0 +1,17 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/validate.ts:6
+export function fail(code       )      {throw new Error(code)}
+                                              ^
+
+Error: SHAPE
+    at fail (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/validate.ts:6:47)
+    at prospective (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observer.ts:25:43)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observer.ts:43:81
+    at retainProviderKeys (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observation-builder.ts:6:14)
+    at selectProviderSnapshot (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/provider-cost.ts:38:2)
+    at nativeEvent (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observer.ts:43:43)
+    at events (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs:22:75)
+    at async stream (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs:24:52)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs:45:259
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs:9:52)
+
+Node.js v24.19.0

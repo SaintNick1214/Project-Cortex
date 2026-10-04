@@ -1,0 +1,86 @@
+{
+  "observedAt": "2026-10-04T15:38:25.679562+00:00",
+  "negativeHardlinkPairs": 16,
+  "allCurrentPairsNlink2": true,
+  "allPairCtimesBeforeIncident": true,
+  "mirrorHardlinksFlattened": true,
+  "commandsC4Coverage": [
+    {
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/inventory-extension--ac91a8d62c344d94b9c28b7971f279da/receipt.json.gz",
+      "c4PreRows": 0,
+      "c4PostRows": 0
+    },
+    {
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/inventory-extension--bf3aa9a2896948d68300aaa47734dc90/receipt.json.gz",
+      "c4PreRows": 0,
+      "c4PostRows": 0
+    },
+    {
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/outcomes-extension--54a14a7645ad44ea803b8fc85d8d425a/receipt.json.gz",
+      "c4PreRows": 0,
+      "c4PostRows": 0
+    },
+    {
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/outcomes-extension--b0cafa4c9e03416981505d463173893c/receipt.json.gz",
+      "c4PreRows": 0,
+      "c4PostRows": 0
+    },
+    {
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/source-anchors-extension--49a094b4f44840198c9e6a16a9834770/receipt.json.gz",
+      "c4PreRows": 0,
+      "c4PostRows": 0
+    },
+    {
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/source-anchors-extension--9df64edc0e224e14968c960e879eb589/receipt.json.gz",
+      "c4PreRows": 0,
+      "c4PostRows": 0
+    }
+  ],
+  "inputCurrentHashes": [
+    {
+      "path": "work/resume/task04-c4-incident-root-recovery.py",
+      "bytes": 5121,
+      "sha256": "2d7ce470a65901b95134b9c4facca853dc3e883cecfe3e102374bc0120caae45"
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c4/work-manifest.json",
+      "bytes": 39219107,
+      "sha256": "0e3575cdb2978556896a4fa41e78a370d417d2b3352367717ad0a274b81e1901"
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/incident-hold/incident-handoff.json",
+      "bytes": 6544206,
+      "sha256": "cb69403208d4eff8f1a65eb56d46dd6aa0094b4dd35d74c0795e5a3cfd4cb3aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c4-namespace-incident-root-recovery/source-before.json",
+      "bytes": 351663,
+      "sha256": "fb98bd6d4a0544591658930a00ac979b54e44b75c158d5f7b94d3568dc6c709e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c4-namespace-incident-root-recovery/recovery-receipt.json",
+      "bytes": 478854,
+      "sha256": "2f4ba3d34e70cb6d4db6aa0fa0f8259573df4b4a6a1579b85bc0ca8d2fd854c3"
+    },
+    {
+      "path": "work/resume/task04-c4-incident-recovery-fresh-review/verify.py",
+      "bytes": 7401,
+      "sha256": "d38d9e9aa548c7fac4919ea043aa5f920651166aa98392e003cebd33fc3d6c5a"
+    }
+  ],
+  "reviewCommandExitCode": 0,
+  "reviewSession": 14182,
+  "rootReportedRecoverySession": 17074,
+  "rootReportedRecoveryExitCode": 0,
+  "captureGaps": [
+    "Root recovery stdout/terminal trace is coordinator-reported; not independently copied into recovery QA.",
+    "Recovery script original preexecution image/hash absent; current script independently inspected.",
+    "Review helper original preexecution byte hash absent; current source preserved and postexecution hash captured.",
+    "All six C5 incident-linked command receipts omit C4 scratch namespace from both source inventories."
+  ],
+  "inspectionFailuresPreserved": [
+    "Initial rg search exited 1; directory discovery followed.",
+    "Initial bulk read used qa shorthand path and failed to find recovery receipt; goal QA canonical path subsequently verified.",
+    "Bulk 1.7-million-token handoff read was truncated; replaced with structured JSON receipt and raw-channel verification."
+  ]
+}

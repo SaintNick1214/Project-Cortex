@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;p=Path(\"work/resume/task04-metadata-retention-implementation-c2/verify.py\");s=p.read_text().replace(\"assert len(out['preservedOriginalAssertions'])==47 and len(out['unchangedModules'])==12\",\"assert len(out['preservedOriginalAssertions'])==47\\nassert {x['name'] for x in v['unchangedSource']} <= {x['name'] for x in out['unchangedModules']}\\nassert len(v['unchangedSource'])==12\");s=s.replace(\"assert cap['nativeEnabled'] is False and cap['privateKey'] is None and cap['actualProofs']==[]\",\"assert cap['nativeEnabled'] is False and cap['privateKey'] is None and cap['actualProofs']==[]\\nassert 'const PRIVATE_STAGE_KEY_BYTES:Uint8Array|null=null;' in (q/'fixture/convex/runner.ts').read_text()\\nassert 'ACTUAL_PROOFS:readonly Data[]=Object.freeze([]);' in (q/'fixture/convex/proofs.ts').read_text()\\nassert 'NATIVE_INSTALLATION_ENABLED=false;' in (q/'fixture/convex/installed.ts').read_text()\");s=s.replace(\"'unchangedModules':12\",\"'unchangedDefaultModules':12,'unchangedC1Modules':len(out['unchangedModules'])\");p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T15:10:10.267493+00:00",
+  "endUtc": "2026-10-04T15:10:10.289592+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901"
+}
