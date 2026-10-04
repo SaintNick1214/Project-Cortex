@@ -8,8 +8,8 @@ The17-task goal remains incomplete. The exact sequencing refinement independentl
 |---|---|---|
 |01 | Bounded actual qualification independently PASS; targets retired | Later product capabilities retain own live gates |
 |02 | Domain/repository foundations independently PASS | Governed models, canonical writers and managed retrieval later |
-|03 | Partial: accepted controls/refresh/metadata41/worker25/MF42/registry46/artifact22/stats2/SDK registry | All65 safety closures and SDK followups independently accepted offline; catalog preservation composition independentlyPASS4.4, currentguard live qualification and fresh aggregate03-foundation review; later original functional03-final |
-|04 | Pending |03-foundation live/implementation PASS |
+|03 | Foundation independently PASS4.6; full03 incomplete | All original functional restoration gates and03-final remain required before Task17 |
+|04 | In progress: bounded pure-policy contracts | Fresh pure-contract review, atomic admission/accounting, governed Gateway and meaningful service validation |
 |05 | Pending |02/04/03-foundation; canonical Agent transcript, source ownership, statistics restoration, locks/revisions |
 |06 | Pending |05/03-foundation; additive host installation |
 |07 | Pending |05/06; actual tool/stream/approval/cancel/background fences |
