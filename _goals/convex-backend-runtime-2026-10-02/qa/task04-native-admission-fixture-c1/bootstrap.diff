@@ -1,0 +1,24 @@
+--- production/convex-dev/runtimeModelPolicyBootstrap.ts
++++ fixture/convex/runtimeModelPolicyBootstrap.ts
+@@ -31,14 +31,14 @@
+   readonly qualifications: readonly TrustedModelQualification[];
+   readonly dispatchEvidence: readonly QualifiedDispatchEvidence[];
+ }
+-/** Empty until independently reviewed ACTUAL cost/token/interface evidence is installed. */
+-const manifests: readonly DeploymentPolicyManifest[] = Object.freeze([]);
+-export function lookupDeploymentManifest(manifestId: string, revision: number): DeploymentPolicyManifest | undefined {
+-  const selected = manifests.filter((entry) => entry.manifestId === manifestId && entry.revision === revision);
++/** FIXTURE ONLY: registry-owned synthetic entries, never actual inference/price evidence. */
++import { syntheticManifest } from "./qualificationManifest";
++const manifests: readonly DeploymentPolicyManifest[] = Object.freeze([syntheticManifest]);
++export function lookupDeploymentManifest(id: string, revision: number): DeploymentPolicyManifest | undefined {
++  const selected = manifests.filter(entry => entry.manifestId === id && entry.revision === revision);
+   return selected.length === 1 ? selected[0] : undefined;
+ }
+-
+-/** Trust comes from this installed registry, never a string/boolean supplied by application callers. */
+ export function isTrustedDeploymentManifest(manifest: DeploymentPolicyManifest): boolean {
+-  return manifest.classification === "reviewed-actual" && manifests.some((entry) => entry === manifest);
++  return manifest.classification === "fixture-synthetic" && manifest.manifestId === "qa-task04-synthetic-v1"
++    && manifest.revision === 1 && manifests.some(entry => entry === manifest);
+ }

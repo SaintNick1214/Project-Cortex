@@ -1,0 +1,30 @@
+{
+  "soleUnequalCopiedProductModule": {
+    "source": "convex-dev/runtimeModelPolicyBootstrap.ts",
+    "copy": "fixture/convex/runtimeModelPolicyBootstrap.ts",
+    "productionSha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+    "fixtureSha256": "51f02b9917720ebe66a5a3ef66583685ea75006a282445243aebc64202dd4075"
+  },
+  "exactProductSchemaMapping": {
+    "source": "convex-dev/schema.ts",
+    "copy": "fixture/convex/productionSchema.ts",
+    "sha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2"
+  },
+  "fixtureAdditions": [
+    "schema.ts",
+    "qualificationOwned.ts",
+    "qualificationPeer.ts",
+    "qualificationManifest.ts",
+    "http.ts"
+  ],
+  "authPublicTemplate": {
+    "source": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c11/fixture/convex/auth.config.ts",
+    "copy": "fixture/convex/auth.config.ts",
+    "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1"
+  },
+  "classification": "synthetic bookkeeping only; no model/price/framing/provider terminal qualification",
+  "secondPhase": "parent-only deploy staging substitutes byte-identical production empty bootstrap; fabricated complete stored synthetic root must yield CAPABILITY_UNAVAILABLE with complete NO_EFFECT",
+  "newUnregisteredGateway": "excluded outside registered import closure; never invoked",
+  "productionSha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+  "syntheticSha256": "51f02b9917720ebe66a5a3ef66583685ea75006a282445243aebc64202dd4075"
+}
