@@ -131,3 +131,7 @@ Fresh independent offline-native-ledger PASS4.4, requirement5/all dimensions>=4.
 ## Task04 terminal capture design C2
 
 Fresh scoped DESIGN PASS 4.4 (requirements 5) closes the rejected revoked-live-scope unknown-to-known charge path and captured-row legacy settlement privacy gap. Parent verified all three recursive review rows and 29 source fingerprints; original rejected design and evidence remain. Implementation stays held until accepted B C2 native qualification finishes and its disposable target is verified retired. Gateway must change its capture-only semantic contract together with the attachment port and terminal order. No native/model readiness or whole Task04 completion is claimed. See task04-terminal-capture-c2-design-acceptance.json.
+
+## Task04 Gateway helper C1 rejection
+
+Fresh offline helper REJECT 2.8: cancellation during an awaited visibility RPC permits later delivery, and the native-reader deadline leaves completion suspended on that RPC. Candidate 56 tests/types/lint passed but two hostile outcome probes failed. Parent verified all 48 recursive review manifest rows; original setup failures and candidate history remain. A bounded two-file C2 repair must fence every delivery and bound authority/persistence waits without dropping known charge or replaying inference. Capture remains an unwired capture-only port. Accepted B C2 is unchanged; full Task04 remains incomplete. See task04-gateway-middleware-c1-rejection.json.

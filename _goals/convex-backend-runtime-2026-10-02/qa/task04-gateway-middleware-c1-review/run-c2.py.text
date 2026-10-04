@@ -1,0 +1,10 @@
+from pathlib import Path
+import os,json,hashlib,subprocess,datetime,uuid
+r=Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review'; w=Path(json.loads((q/'scratch-path.json').read_text())); c='_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1'
+e=json.loads((r/c/'source-evidence.json').read_text()); paths=sorted(set(x['path'] for x in e['sources']+e['acceptedPrerequisites'])|{str(p.relative_to(r)) for p in q.glob('*') if p.is_file()})
+def hashes(): return {p:hashlib.sha256((r/p).read_bytes()).hexdigest() for p in paths}
+def run(name,argv):
+ a=q/(name+'-'+str(uuid.uuid4())); a.mkdir(); before=hashes(); start=datetime.datetime.now(datetime.timezone.utc).isoformat(); env={'PATH':os.environ['PATH'],'TMPDIR':str(w),'NO_COLOR':'1'}
+ with (a/'stdout').open('wb') as out,(a/'stderr').open('wb') as err: p=subprocess.run(argv,cwd=r,env=env,stdout=out,stderr=err)
+ after=hashes(); rec={'argv':argv,'cwd':str(r),'environmentKeys':list(env),'startedUTC':start,'endedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'pre':before,'post':after,'stable':before==after,'skip':'none; inspect jest result for cases','raw':['stdout','stderr']};(a/'receipt.json').write_text(json.dumps(rec,indent=2)); print(name,p.returncode, str(a),flush=True)
+run('hostile-c2',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(q/'jest.hostile-c2.mjs'),'--runInBand','--json','--outputFile='+str(q/'hostile-c2-result.json'),'--cacheDirectory='+str(w/'jest-hostile-c2')])
