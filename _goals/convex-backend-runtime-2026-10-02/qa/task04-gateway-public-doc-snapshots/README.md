@@ -1,0 +1,3 @@
+# Public Gateway/token/pricing source snapshots
+
+These21 public unauthenticated documentation GETs were observed during the bounded research. Raw response bytes are preserved losslessly as deterministic gzip; derived text has separate original hashes. Parent verified all original raw and derived byte counts/hashes before copying. The manifest binds URLs/status/UTC and compressed/raw/derived fingerprints. Decompression reproduces the exact original raw SHA256. These are public source observations, not actual model, cost, token-bound, invoice or readiness qualification. See the separate task04-gateway-cost-bound-research report and its explicit gaps.
