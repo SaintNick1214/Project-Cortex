@@ -1,0 +1,115 @@
+(node:71048) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/domain/model-policy.test.ts
+  ● detached canonical request data and effect-free fallback evidence › detaches nested tool definition without changing or freezing caller-owned data
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not {"label": "before", "values": [{"count": 1}, ["unchanged"]]}
+
+      259 |   function assertDetachedGraph(original: unknown, admitted: unknown): void {
+      260 |     if (original !== null && typeof original === "object") {
+    > 261 |       expect(admitted).not.toBe(original);
+          |                            ^
+      262 |       expect(Object.isFrozen(original)).toBe(false);
+      263 |       expect(Object.isFrozen(admitted)).toBe(true);
+      264 |       for (const [key, child] of Object.entries(original)) {
+
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:261:28)
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:265:9)
+      at tests/unit/domain/model-policy.test.ts:294:7
+
+  ● detached canonical request data and effect-free fallback evidence › detaches nested output schema without changing or freezing caller-owned data
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not {"label": "before", "values": [{"count": 1}, ["unchanged"]]}
+
+      259 |   function assertDetachedGraph(original: unknown, admitted: unknown): void {
+      260 |     if (original !== null && typeof original === "object") {
+    > 261 |       expect(admitted).not.toBe(original);
+          |                            ^
+      262 |       expect(Object.isFrozen(original)).toBe(false);
+      263 |       expect(Object.isFrozen(admitted)).toBe(true);
+      264 |       for (const [key, child] of Object.entries(original)) {
+
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:261:28)
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:265:9)
+      at tests/unit/domain/model-policy.test.ts:294:7
+
+  ● detached canonical request data and effect-free fallback evidence › detaches nested tool call input without changing or freezing caller-owned data
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not {"label": "before", "values": [{"count": 1}, ["unchanged"]]}
+
+      259 |   function assertDetachedGraph(original: unknown, admitted: unknown): void {
+      260 |     if (original !== null && typeof original === "object") {
+    > 261 |       expect(admitted).not.toBe(original);
+          |                            ^
+      262 |       expect(Object.isFrozen(original)).toBe(false);
+      263 |       expect(Object.isFrozen(admitted)).toBe(true);
+      264 |       for (const [key, child] of Object.entries(original)) {
+
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:261:28)
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:265:9)
+      at tests/unit/domain/model-policy.test.ts:294:7
+
+  ● detached canonical request data and effect-free fallback evidence › detaches nested tool result output without changing or freezing caller-owned data
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not {"label": "before", "values": [{"count": 1}, ["unchanged"]]}
+
+      259 |   function assertDetachedGraph(original: unknown, admitted: unknown): void {
+      260 |     if (original !== null && typeof original === "object") {
+    > 261 |       expect(admitted).not.toBe(original);
+          |                            ^
+      262 |       expect(Object.isFrozen(original)).toBe(false);
+      263 |       expect(Object.isFrozen(admitted)).toBe(true);
+      264 |       for (const [key, child] of Object.entries(original)) {
+
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:261:28)
+      at assertDetachedGraph (tests/unit/domain/model-policy.test.ts:265:9)
+      at tests/unit/domain/model-policy.test.ts:294:7
+
+  ● detached canonical request data and effect-free fallback evidence › rejects fallback accessor evidence without evaluating counting or throwing getters
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      316 |         return "not_dispatched";
+      317 |       } });
+    > 318 |       expect(canFallbackModel(resolved, "fixture/alternative", evidence)).toBe(false);
+          |                                                                           ^
+      319 |       expect(effects).toBe(0);
+      320 |     }
+      321 |     expect(canFallbackModel(resolved, "fixture/alternative", safe)).toBe(true);
+
+      at Object.<anonymous> (tests/unit/domain/model-policy.test.ts:318:75)
+
+  ● detached canonical request data and effect-free fallback evidence › rejects symbolic, nonplain, nonenumerable and iterator fallback evidence with zero effects
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      331 |     const iteratorArray = [safe]; Object.defineProperty(iteratorArray, Symbol.iterator, { value() { effects++; return [safe][Symbol.iterator](); } });
+      332 |     for (const invalid of [symbolic, nonplain, hidden, iterable, accessorArray, iteratorArray]) {
+    > 333 |       expect(canFallbackModel(resolved, "fixture/alternative", invalid)).toBe(false);
+          |                                                                          ^
+      334 |     }
+      335 |     expect(effects).toBe(0);
+      336 |     expect(canFallbackModel(resolved, "fixture/alternative", safe)).toBe(true);
+
+      at Object.<anonymous> (tests/unit/domain/model-policy.test.ts:333:74)
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 24 passed, 30 total
+Snapshots:   0 total
+Time:        2.592 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c2/run01-c1-plus-regressions/unit.result.json

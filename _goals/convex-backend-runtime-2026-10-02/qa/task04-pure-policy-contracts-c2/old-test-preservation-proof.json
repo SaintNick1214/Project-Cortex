@@ -1,0 +1,57 @@
+{
+  "observedAtUTC": "2026-10-04T01:23:00.432045+00:00",
+  "originalTestFile": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c1-candidate/model-policy.test.ts.text",
+    "bytes": 23110,
+    "sha256": "da443be790853c4785a65d257bccf25fecd336224df2ceaa4684b93f3cca28a1"
+  },
+  "currentTestFile": {
+    "path": "tests/unit/domain/model-policy.test.ts",
+    "bytes": 28011,
+    "sha256": "1bfb874dc2fe4bac9900c2c699e2985c4925129f55aad03b2f84a1f738acf714"
+  },
+  "oldFileIsExactBytePrefix": true,
+  "oldPrefixSha256": "da443be790853c4785a65d257bccf25fecd336224df2ceaa4684b93f3cca28a1",
+  "oldAssertionNamesPreserved": [
+    "trusted pure model policy registers every approved operation and leaves media unavailable",
+    "trusted pure model policy defaults to qualified gpt-4o-mini Chat and requires explicit Responses receipt",
+    "trusted pure model policy resolves ordered scope specialization independent of database arrival order",
+    "trusted pure model policy selects distinct per-function models only from explicitly supplied qualified receipts",
+    "trusted pure model policy intersects restrictions and never broadens deployment hard bounds",
+    "trusted pure model policy allows only exact versioned authorized overrides within hard bounds",
+    "trusted pure model policy fails ambiguous, incomplete, unknown, cross-scope and stale-agent records closed",
+    "trusted pure model policy requires exact qualified capability/price/bound and rejects ambiguous receipts",
+    "trusted pure model policy rejects invalid integer monetary bound NaN",
+    "trusted pure model policy rejects invalid integer monetary bound Infinity",
+    "trusted pure model policy rejects invalid integer monetary bound -1",
+    "trusted pure model policy rejects invalid integer monetary bound 0.1",
+    "trusted pure model policy rejects invalid integer monetary bound 9007199254740992",
+    "trusted pure model policy rejects zero positive caps, inconsistent ceilings and unqualified model IDs",
+    "trusted pure model policy pins and deeply freezes snapshots without freezing or retaining caller objects",
+    "exact dispatch request identity normalizes text and hashes exact canonical scope/source/policy/request",
+    "exact dispatch request identity rejects invalid options, retries, headers, versions, token/time/cost/tool caps",
+    "exact dispatch request identity enforces combined context capacity independently of individual input/output ceilings",
+    "exact dispatch request identity requires structured operation schema and validates tool definitions",
+    "exact dispatch request identity canonicalizes key order but rejects coercion, cycles, sparse arrays and accessor values",
+    "immutable default embedding policy requires actual qualified embedding receipt and every immutable profile field",
+    "immutable default embedding policy pins batch ordinal/range and prohibits language/tool options or changed profiles",
+    "conservative fallback eligibility permits only registered qualified candidates with positive predispatch/rejection proof",
+    "conservative fallback eligibility forbids visible text/tools, committed effects, ambiguous paid/cancelled and unchecked replay"
+  ],
+  "oldAssertionsAllPassed": true,
+  "c1PlusRegressions": {
+    "numTotalTests": 30,
+    "numPassedTests": 24,
+    "numFailedTests": 6,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "c2Outcome": {
+    "numTotalTests": 30,
+    "numPassedTests": 30,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "domainIndexUnchanged": true
+}
