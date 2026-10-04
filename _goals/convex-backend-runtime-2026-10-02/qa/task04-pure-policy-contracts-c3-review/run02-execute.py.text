@@ -1,0 +1,17 @@
+from pathlib import Path
+import json,hashlib,subprocess,datetime,os,shutil
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c3-review';s=r/'work/resume/task04-pure-policy-c3-review/run02'
+base=json.loads((q/'source-before.json').read_text());paths=[x['path'] for x in base]
+def hashes():return [{'path':p,'sha256':hashlib.sha256((r/p).read_bytes()).hexdigest(),'bytes':(r/p).stat().st_size} for p in paths]
+def configs():return [{'path':str(p.relative_to(s)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in s.glob('*') if p.is_file()]
+env={'PATH':os.environ['PATH'],'TMPDIR':str(s/'tmp'),'npm_config_offline':'true','npm_config_cache':str(s/'npm-cache'),'NO_COLOR':'1'}
+def run(name,args):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();before=hashes();assert before==base
+ info={'argv':args,'cwd':str(s),'startUTC':start,'sourceHashes':before,'configHashes':configs(),'environmentKeys':list(env),'environmentLoaders':False,'npmOffline':True}
+ with (q/(name+'.started.json')).open('x') as f:json.dump(info,f,indent=2)
+ with (q/(name+'.stdout')).open('x') as so,(q/(name+'.stderr')).open('x') as se:p=subprocess.run(args,cwd=s,env=env,stdout=so,stderr=se)
+ with (q/(name+'.receipt.json')).open('x') as f:json.dump({**info,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'sourceHashesAfter':hashes(),'configHashesAfter':configs()},f,indent=2)
+ assert hashes()==base
+ print(name,p.returncode,flush=True)
+shutil.copy2(__file__,q/'run02-execute.py.text');shutil.copy2(s/'fresh-c3-probes.mjs',q/'run02-fresh-c3-probes.mjs.text')
+run('run02-fresh-c3',['node','fresh-c3-probes.mjs'])

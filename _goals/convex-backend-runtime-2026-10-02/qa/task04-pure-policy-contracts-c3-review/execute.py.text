@@ -1,0 +1,29 @@
+from pathlib import Path
+import json,hashlib,subprocess,datetime,os,shutil
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c3-review';s=r/'work/resume/task04-pure-policy-c3-review/run01'
+base=json.loads((q/'source-before.json').read_text());paths=[x['path'] for x in base]
+def hashes():return [{'path':p,'sha256':hashlib.sha256((r/p).read_bytes()).hexdigest(),'bytes':(r/p).stat().st_size} for p in paths]
+def configs():return [{'path':str(p.relative_to(s)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in s.glob('*') if p.is_file()]
+env={'PATH':os.environ['PATH'],'TMPDIR':str(s/'tmp'),'npm_config_offline':'true','npm_config_cache':str(s/'npm-cache'),'NO_COLOR':'1'}
+def run(name,args):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();before=hashes();assert before==base
+ info={'argv':args,'cwd':str(s),'startUTC':start,'sourceHashes':before,'configHashes':configs(),'environmentKeys':list(env),'environmentLoaders':False,'npmOffline':True}
+ with (q/(name+'.started.json')).open('x') as f:json.dump(info,f,indent=2)
+ with (q/(name+'.stdout')).open('x') as so,(q/(name+'.stderr')).open('x') as se:p=subprocess.run(args,cwd=s,env=env,stdout=so,stderr=se)
+ with (q/(name+'.receipt.json')).open('x') as f:json.dump({**info,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'sourceHashesAfter':hashes(),'configHashesAfter':configs()},f,indent=2)
+ assert hashes()==base
+ print(name,p.returncode,flush=True)
+npm='/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js'
+shutil.copy2(__file__,q/'execute.py.text');shutil.copy2(s/'fresh-c3-probes.mjs',q/'fresh-c3-probes.mjs.text')
+run('node',['node','--version']);run('npm',['node',npm,'--version'])
+run('types',['node','node_modules/typescript/bin/tsc','--project','tsconfig.scoped.json','--noEmit'])
+run('lint',['node','node_modules/eslint/bin/eslint.js','src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts','--max-warnings=0','--report-unused-disable-directives'])
+run('discovery',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','jest.scoped.mjs','--listTests','--runInBand'])
+run('unit',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','jest.scoped.mjs','--runInBand','--json','--outputFile',str(q/'unit.result.json')])
+run('original-c1',['node','original-c1-probes.mjs'])
+run('original-c2',['node','original-c2-probes.mjs'])
+run('prior-broad',['node','prior-broad-probes.mjs'])
+run('fresh-c3',['node','fresh-c3-probes.mjs'])
+run('build',['node',npm,'run','build'])
+run('packed-contracts',['node','verify-public-contracts.mjs'])
+(q/'source-after.json').write_text(json.dumps(hashes(),indent=2)+'\n')

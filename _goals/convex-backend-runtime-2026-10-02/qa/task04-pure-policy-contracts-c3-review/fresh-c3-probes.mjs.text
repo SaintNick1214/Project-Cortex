@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+const d=await import('./browser-domain.mjs');
+const limits={inputTokens:1000,contextTokens:2000,outputTokens:500,toolSteps:3,timeoutMs:10000,operationBudgetUnits:1000,runBudgetUnits:5000,tenantBudgetUnits:10000,concurrency:4};
+const pins={promptVersion:'p',schemaVersion:'s',extractionVersion:'e',toolRegistryVersion:'t',priceRevision:'price',boundRevision:'bound'};
+const context={scope:{tenantId:'tenant',tenantEpoch:1,memorySpaceId:'space',memorySpaceEpoch:1,principalId:'owner',principalVersion:1,membershipId:'member',membershipVersion:1,grantId:'grant',grantVersion:1},agent:{agentId:'agent',version:1},operationKey:'agent.respond',runBudgetId:'run',parentOperationId:'parent',source:{sourceId:'source',sourceEventId:'event',sourceRevision:1},authorizedOverrides:[]};
+const policy={policyId:'deployment',version:1,scope:'deployment',rules:{allowedModels:[d.DEFAULT_CHAT_MODEL_ID,'fixture/other'],interfaces:['chat','responses'],capabilities:['text','structured','tools'],allowedOptions:['temperature'],allowedTools:['lookup'],fallbackModels:['fixture/other'],limits,pins}};
+const receipt={receiptId:'synthetic-primary',modelId:d.DEFAULT_CHAT_MODEL_ID,nativeInterface:'chat',capabilities:['text','structured','tools'],allowedOptions:['temperature'],limits,costBound:{kind:'qualified-call-ceiling',maximumCostUnits:500,provenance:'synthetic-only',coversAllProviderCharges:true},priceRevision:'price',boundRevision:'bound'};
+function base(){return JSON.parse(JSON.stringify({context,policies:[policy],qualifications:[receipt,{...receipt,receiptId:'synthetic-other',modelId:'fixture/other'}]}));}
+function req(){return {semanticId:'semantic',childCallId:'child',texts:['hello'],messages:[{role:'user',parts:[{type:'text',text:'hello'}]}],inputTokens:20,outputTokens:100,toolSteps:0,timeoutMs:1000,reservationUnits:500,promptVersion:'p',schemaVersion:'s',extractionVersion:'e',toolRegistryVersion:'t',tools:[],options:{maxRetries:0}};}
+const snap=d.resolveModelPolicy(base()); const safe={outcome:'not_dispatched',proof:'pre_dispatch',outputVisible:false,toolInputVisible:false,toolResultVisible:false,toolEffectCommitted:false,paidLiabilityUncertain:false,cancelled:false,priorAttemptAccounted:true,currentAuthorityChecked:true,currentSourceChecked:true,currentPolicyChecked:true};
+const outcomes=[];
+function test(name,fn){try{fn();outcomes.push({name,pass:true})}catch(e){outcomes.push({name,pass:false,error:e.message})}}
+function setup(family,payload){const r=req();let s=snap;if(family==='schema'){const b=base();b.context.operationKey='memory.extract';s=d.resolveModelPolicy(b);r.outputSchema=payload;}else {r.toolSteps=1;r.tools=[{name:'lookup',definition:family==='definition'?payload:{}}];if(family!=='definition')r.messages.push({role:family==='input'?'assistant':'tool',parts:[{type:family==='input'?'tool-call':'tool-result',toolCallId:'id',toolName:'lookup',[family]:payload}]});}return {r,s};}
+function select(family,v){return family==='schema'?v.request.outputSchema:family==='definition'?v.request.tools[0].definition:v.request.messages[1].parts[0][family];}
+for(const family of ['definition','schema','input','output']){
+ test(family+' deeply preserves ordinary keys, descriptors, aliases and caller mutability',()=>{
+ const value=JSON.parse('{"__proto__":{"marker":"original"},"constructor":{"prototype":{"__proto__":1}},"prototype":[{"__proto__":2}],"toJSON":{"__proto__":3},"0":"zero","":"empty"}');
+ const shared={items:[value]};value.sharedA=shared;value.sharedB=shared;
+ const c=d.canonicalModelJson(value),{r,s}=setup(family,value),v=d.validateModelRequest(s,r),a=select(family,v);
+ assert.equal(d.canonicalModelJson(a),c);assert.notEqual(a,value);assert.notEqual(a.sharedA,shared);assert.equal(Object.isFrozen(value),false);assert.equal(Object.isFrozen(shared),false);assert.equal(Object.isFrozen(a.sharedA.items),true);assert.equal(Object.getPrototypeOf(a),Object.prototype);
+ const desc=Object.getOwnPropertyDescriptor(a,'__proto__');assert.deepEqual([desc.enumerable,desc.writable,desc.configurable],[true,false,false]);assert.equal(Object.getPrototypeOf(desc.value),Object.prototype);assert.equal(Object.hasOwn(Object.prototype,'marker'),false);
+ value.__proto__.marker='changed';shared.items.push('changed');assert.equal(d.canonicalModelJson(a),c);assert.equal(v.canonical,d.canonicalModelJson({snapshot:s,request:v.request}));
+ });
+ test(family+' malformed roots and descendants reject without effects or caller freeze',()=>{
+ let effects=0;const getter={};Object.defineProperty(getter,'__proto__',{enumerable:true,get(){effects++;throw Error('must not execute')}});
+ const hidden={};Object.defineProperty(hidden,'hidden',{value:1});const symbol={};Object.defineProperty(symbol,Symbol('hidden'),{get(){effects++;return 1}});
+ const array=[1];Object.defineProperty(array,Symbol.iterator,{value(){effects++;return [][Symbol.iterator]()}});
+ const cycle={};cycle.self=cycle;const proto=Object.create({unsafe:1});proto.own=1;
+ for(const x of [null,[],true,1,'value',getter,hidden,symbol,proto,{nested:getter},{nested:array},{nested:cycle},{nested:undefined},{nested:NaN},{nested:Infinity},{nested:-0},{nested:1n},{nested:new Date()},{nested:Array(1)}]){const {r,s}=setup(family,x);assert.throws(()=>d.validateModelRequest(s,r));if(x&&typeof x==='object')assert.equal(Object.isFrozen(x),false);}assert.equal(effects,0);
+ });
+ test(family+' null-prototype JSON remains lossless detached plain admitted data',()=>{const p=Object.create(null);Object.defineProperty(p,'__proto__',{enumerable:true,writable:true,configurable:true,value:{marker:1}});const {r,s}=setup(family,p),v=d.validateModelRequest(s,r),a=select(family,v);assert.equal(d.canonicalModelJson(a),d.canonicalModelJson(p));assert.equal(Object.getPrototypeOf(a),Object.prototype);assert.equal(Object.getPrototypeOf(p),null);assert.equal(Object.isFrozen(p),false);});
+}
+console.log(JSON.stringify({outcomes,total:outcomes.length,passed:outcomes.filter(x=>x.pass).length,failed:outcomes.filter(x=>!x.pass).length},null,2));assert(outcomes.every(x=>x.pass));

@@ -1,0 +1,59 @@
+{
+  "outcomes": [
+    {
+      "name": "definition deeply preserves ordinary keys, descriptors, aliases and caller mutability",
+      "pass": false,
+      "error": "INVALID_INPUT: noncanonical JSON"
+    },
+    {
+      "name": "definition malformed roots and descendants reject without effects or caller freeze",
+      "pass": true
+    },
+    {
+      "name": "definition null-prototype JSON remains lossless detached plain admitted data",
+      "pass": true
+    },
+    {
+      "name": "schema deeply preserves ordinary keys, descriptors, aliases and caller mutability",
+      "pass": false,
+      "error": "INVALID_INPUT: noncanonical JSON"
+    },
+    {
+      "name": "schema malformed roots and descendants reject without effects or caller freeze",
+      "pass": true
+    },
+    {
+      "name": "schema null-prototype JSON remains lossless detached plain admitted data",
+      "pass": true
+    },
+    {
+      "name": "input deeply preserves ordinary keys, descriptors, aliases and caller mutability",
+      "pass": false,
+      "error": "INVALID_INPUT: noncanonical JSON"
+    },
+    {
+      "name": "input malformed roots and descendants reject without effects or caller freeze",
+      "pass": true
+    },
+    {
+      "name": "input null-prototype JSON remains lossless detached plain admitted data",
+      "pass": true
+    },
+    {
+      "name": "output deeply preserves ordinary keys, descriptors, aliases and caller mutability",
+      "pass": false,
+      "error": "INVALID_INPUT: noncanonical JSON"
+    },
+    {
+      "name": "output malformed roots and descendants reject without effects or caller freeze",
+      "pass": true
+    },
+    {
+      "name": "output null-prototype JSON remains lossless detached plain admitted data",
+      "pass": true
+    }
+  ],
+  "total": 12,
+  "passed": 8,
+  "failed": 4
+}
