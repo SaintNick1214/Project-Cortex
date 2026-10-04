@@ -467,3 +467,90 @@ describe("current policy narrowing at fallback and dispatch boundaries", () => {
     expect(f.account("tenant")).toMatchObject({ settledUnits: 40, reservedUnits: 80 });
   });
 });
+
+/** Actual registered B handlers and the installed registration serializer; synthetic DB only. */
+describe("native structured PURE denial boundary", () => {
+  async function denial(call: () => Promise<unknown>, code: string, outcome = "not_dispatched") {
+    const { ConvexError } = await import("convex/values");
+    let error: unknown;
+    try { await call(); } catch (caught) { error = caught; }
+    expect(error).toBeInstanceOf(ConvexError);
+    expect((error as InstanceType<typeof ConvexError>).data).toEqual({ version: 1, code,
+      message: "Model operation control failed.", retryable: false, outcome });
+    return error;
+  }
+  function state(f: ReturnType<typeof fixture>) {
+    return JSON.stringify([f.db.table("runtimeBudgetAccounts"), f.db.table("runtimeModelOperations"), f.db.table("runtimeModelAttempts")]);
+  }
+  it("changed existing admitted canonical is a structured identity denial with exact unchanged ledger", async () => {
+    const { f, b } = await admitted(); const before = state(f), writes = f.db.writes;
+    await denial(() => f.admit(b, 0, "changed private input"), "IDEMPOTENCY_CONFLICT");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  });
+  it("forced equal hash cannot hide changed canonical or change original reservation", async () => {
+    const { f, b, a } = await admitted();
+    f.attempt(a.attemptId).canonical = canonicalModelJson({ forcedCollision: "different canonical with original hash" });
+    const before = state(f), writes = f.db.writes;
+    await denial(() => f.admit(b), "IDEMPOTENCY_CONFLICT");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  });
+  it.each([
+    ["INVALID_INPUT", { options: { maxRetries: 1 } }],
+    ["POLICY_DENIED", { options: { maxRetries: 0, topP: 0.5 } }],
+    ["POLICY_DENIED", { promptVersion: "untrusted-prompt" }],
+    ["POLICY_DENIED", { timeoutMs: 10001 }],
+  ])("request contract denial %s preserves all original accounts and attempts", async (code, change) => {
+    const { f, b } = await admitted(); const before = state(f), writes = f.db.writes;
+    await denial(() => f.admit(b, 1, "hello", { requestCanonical: canonicalModelJson({ ...request(), ...change }) }), code as string);
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  });
+  it("malformed resolver contract preserves its source-defined code before installation writes", async () => {
+    root = { ...root, policies: [{ ...deployment, rules: { ...deployment.rules, limits: undefined } }] };
+    const f = fixture(); const before = state(f);
+    await denial(() => f.install(), "INVALID_INPUT", "uncertain");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(0);
+  });
+  it.each(["CAPABILITY_UNSUPPORTED", "CAPABILITY_UNAVAILABLE"])("resolver retains exact %s without installation effects", async (code) => {
+    const rules = code === "CAPABILITY_UNSUPPORTED" ? { ...deployment.rules, allowedModels: [DEFAULT_EMBEDDING_PROFILE.modelId] } : {
+      ...deployment.rules, modelId: "fixture/unqualified", allowedModels: ["fixture/unqualified"] };
+    root = { ...root, policies: [{ ...deployment, rules }] };
+    const f = fixture(); const before = state(f);
+    await denial(() => f.install(), code, "uncertain");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(0);
+  });
+  it("checkpoint changed canonical emits identity code without permit or ledger effects", async () => {
+    const { f, a } = await admitted();
+    f.attempt(a.attemptId).canonical = canonicalModelJson({ forcedCollision: "checkpoint canonical mismatch" });
+    const before = state(f), writes = f.db.writes;
+    await denial(() => f.checkpoint(a), "IDEMPOTENCY_CONFLICT");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  });
+  it("conflicting settled receipt preserves incurred money and returns conservative outcome", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); await f.settle(a);
+    const before = state(f), writes = f.db.writes;
+    await denial(() => f.settle(a, "0.000041"), "IDEMPOTENCY_CONFLICT", "uncertain");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
+    expect(f.account("tenant").settledUnits).toBe(40);
+  });
+  it("installed serializer emits genuine Convex errorData for the actual registered handler denial", async () => {
+    // Installed private registration runtime has no declaration entrypoint.
+    const registrationImplPath = "../../../node_modules/convex/dist/esm/server/impl/registration_impl.js";
+    const { invokeFunction } = await import(registrationImplPath) as {
+      invokeFunction: (handler: Registration["_handler"], ctx: MutationCtx, args: [unknown]) => Promise<unknown>;
+    };
+    const { jsonToConvex, ConvexError } = await import("convex/values");
+    const { f, b } = await admitted(); const before = state(f), writes = f.db.writes;
+    const registration = ledger.admit as unknown as Registration;
+    let error: unknown;
+    try { await invokeFunction(registration._handler, f.ctx, [{ reference: f.reference,
+      operationKey: "agent.respond", runBudgetId: b.runBudgetId, semanticId: "semantic", ordinal: 0,
+      requestCanonical: canonicalModelJson(request("changed private input")) }]); } catch (caught) { error = caught; }
+    expect(error).toBeInstanceOf(ConvexError);
+    const errorData = (error as InstanceType<typeof ConvexError>).data;
+    expect(typeof errorData).toBe("string");
+    expect(jsonToConvex(JSON.parse(errorData as string))).toEqual({ version: 1, code: "IDEMPOTENCY_CONFLICT",
+      message: "Model operation control failed.", retryable: false, outcome: "not_dispatched" });
+    expect(String(errorData)).not.toContain("changed private input");
+    expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  });
+});

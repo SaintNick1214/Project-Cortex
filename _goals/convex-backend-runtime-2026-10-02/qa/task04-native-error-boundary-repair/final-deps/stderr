@@ -1,0 +1,49 @@
+(node:103993) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/gateway-dispatch.test.ts (8.542 s)
+FAIL tests/unit/runtime/model-policy-admission.test.ts
+  ● native structured PURE denial boundary › resolver retains exact CAPABILITY_UNSUPPORTED without installation effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "CAPABILITY_UNSUPPORTED",
+    +   "code": "INVALID_INPUT",
+        "message": "Model operation control failed.",
+        "outcome": "uncertain",
+        "retryable": false,
+        "version": 1,
+      }
+
+      476 |     try { await call(); } catch (caught) { error = caught; }
+      477 |     expect(error).toBeInstanceOf(ConvexError);
+    > 478 |     expect((error as InstanceType<typeof ConvexError>).data).toEqual({ version: 1, code,
+          |                                                              ^
+      479 |       message: "Model operation control failed.", retryable: false, outcome });
+      480 |     return error;
+      481 |   }
+
+      at denial (tests/unit/runtime/model-policy-admission.test.ts:478:62)
+      at tests/unit/runtime/model-policy-admission.test.ts:518:5
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/runtimeAuth/authority.test.ts
+PASS tests/unit/domain/profile.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+
+Test Suites: 1 failed, 12 passed, 13 total
+Tests:       1 failed, 637 passed, 638 total
+Snapshots:   0 total
+Time:        15.56 s, estimated 25 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-native-error-boundary-repair/final-deps-result.json

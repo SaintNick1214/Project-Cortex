@@ -11,7 +11,7 @@ import { createAuthorityReader, recheckAuthority } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
-import { assertModelRequestIdentity, canonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy, validateModelRequest } from "../src/domain/model-policy";
+import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest } from "../src/domain/model-policy";
 import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
 import { isTrustedDeploymentManifest, lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
@@ -29,6 +29,40 @@ const MAX_CANONICAL_BYTES = MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes;
 const digest = /^[a-f0-9]{64}$/;
 function fail(code: string, outcome = "not_dispatched"): never {
   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+}
+/** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+ * Inspect own data descriptors, never arbitrary error getters or raw user details.
+ * Nonstandard errors and inspection failures keep their original identity/cause.
+ */
+function domainControl<T>(call: () => T, outcome = "not_dispatched"): T {
+  try { return call(); } catch (error: unknown) {
+    let message: unknown;
+    try {
+      if (typeof error !== "object" || error === null || Object.getPrototypeOf(error) !== Error.prototype) throw error;
+      const descriptor = Object.getOwnPropertyDescriptor(error, "message");
+      if (!descriptor || !("value" in descriptor)) throw error;
+      message = descriptor.value;
+    } catch { throw error; }
+    if (typeof message === "string") {
+      const code = /^(INVALID_INPUT|POLICY_DENIED|CAPABILITY_UNAVAILABLE|CAPABILITY_UNSUPPORTED|PROFILE_NOT_READY|IDEMPOTENCY_CONFLICT): /.exec(message)?.[1];
+      if (code) fail(code, outcome);
+    }
+    throw error;
+  }
+}
+// Shared stored-snapshot/canonical paths can execute after paid dispatch. Their
+// conservative envelope never asserts absence of earlier liability or alters it.
+function canonicalModelJson(value: unknown): string {
+  return domainControl(() => pureCanonicalModelJson(value), "uncertain");
+}
+function resolveModelPolicy(value: unknown): ModelPolicySnapshotV1 {
+  return domainControl(() => pureResolveModelPolicy(value), "uncertain");
+}
+function validateModelRequest(...args: Parameters<typeof pureValidateModelRequest>) {
+  return domainControl(() => pureValidateModelRequest(...args));
+}
+function assertModelRequestIdentity(...args: [...Parameters<typeof pureAssertModelRequestIdentity>, outcome?: string]): void {
+  domainControl(() => pureAssertModelRequestIdentity(args[0], args[1]), args[2]);
 }
 function integer(value: number, minimum = 0): number {
   if (!Number.isSafeInteger(value) || value < minimum) fail("INVALID_INPUT");
@@ -636,7 +670,7 @@ async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference
   const chargeCanonical = canonical(chargeReceipt);
   const receiptHash = await semanticHash(chargeCanonical);
   if (attempt.receiptCanonical) {
-    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash });
+    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
     const candidateResult = canDeliver ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
     if (attempt.privateResultCanonical && candidateResult && attempt.privateResultCanonical !== candidateResult) fail("IDEMPOTENCY_CONFLICT");
     return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver };

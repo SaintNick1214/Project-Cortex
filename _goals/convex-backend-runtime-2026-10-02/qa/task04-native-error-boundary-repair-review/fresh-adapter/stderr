@@ -1,0 +1,30 @@
+(node:104820) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS work/resume/task04-native-error-boundary-repair-review-01/adapter.test.ts (6.551 s)
+  fresh descriptor and source-owned adapter investigations
+    ✓ closed anchored code refuses INVALID_INPUTX: private (2 ms)
+    ✓ closed anchored code refuses INVALID_INPUT:private (1 ms)
+    ✓ closed anchored code refuses  INVALID_INPUT: private
+    ✓ closed anchored code refuses XINVALID_INPUT: private (1 ms)
+    ✓ closed anchored code refuses INVALID_INPUT
+: private
+    ✓ closed anchored code refuses BUDGET_EXCEEDED: private
+    ✓ closed anchored code refuses FORBIDDEN: private
+    ✓ closed anchored code refuses UNCERTAIN_OUTCOME: private
+    ✓ closed anchored code refuses OTHER: private (1 ms)
+    ✓ Error subclass source-looking message stays original
+    ✓ inherited message stays original (1 ms)
+    ✓ getter metadata never executes
+    ✓ descriptor trap preserves original proxy identity
+    ✓ typed source-looking error retains data and identity (1 ms)
+    ✓ actual canonical cycles produce sanitized uncertain envelope (1 ms)
+    ✓ actual PURE trap unknown cause retained
+    ✓ actual identity conflict equal hashes and distinct canonicals sanitized
+    ✓ actual resolver invalid shape produces source code (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       18 passed, 18 total
+Snapshots:   0 total
+Time:        6.785 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-native-error-boundary-repair-review/fresh-adapter-result.json

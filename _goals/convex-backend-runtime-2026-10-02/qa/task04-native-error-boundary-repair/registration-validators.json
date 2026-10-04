@@ -1,0 +1,1440 @@
+{
+  "all14Exact": true,
+  "entries": [
+    {
+      "name": "admit",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "operationKey": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "agent.respond"
+                },
+                {
+                  "type": "literal",
+                  "value": "memory.extract"
+                },
+                {
+                  "type": "literal",
+                  "value": "facts.resolve"
+                },
+                {
+                  "type": "literal",
+                  "value": "memory.summarize"
+                },
+                {
+                  "type": "literal",
+                  "value": "conversation.title"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.text"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.code"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.sheet"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.suggestions"
+                },
+                {
+                  "type": "literal",
+                  "value": "embedding.query"
+                },
+                {
+                  "type": "literal",
+                  "value": "embedding.memory"
+                },
+                {
+                  "type": "literal",
+                  "value": "media.image.generate"
+                },
+                {
+                  "type": "literal",
+                  "value": "media.video.generate"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "runBudgetId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "source": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "sourceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "sourceEventId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "sourceRevision": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "contentHash": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                }
+              }
+            },
+            "optional": true
+          },
+          "semanticId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "ordinal": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "requestCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "parentOperationId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelOperations"
+            },
+            "optional": true
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "d52e8f3f1511c080162790ab048b9206c8833095f11f179456115f16eb1e7223"
+    },
+    {
+      "name": "admitFallback",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "candidateModelId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "b6aca8ccd15867577d380a8e3ee295f9372daed720f6e634fc0ee9487a1f9acd"
+    },
+    {
+      "name": "cancelBudget",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "runBudgetId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "6de6ef375bafd1b57f2e510a54bbcb7537c979846b15eb348cc970366ea15070"
+    },
+    {
+      "name": "checkFallback",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "candidateModelId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "b6aca8ccd15867577d380a8e3ee295f9372daed720f6e634fc0ee9487a1f9acd"
+    },
+    {
+      "name": "checkpoint",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "requestCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "f57a926fb7ada072adbfc652ee0298d21be5801f48b76eedb57cb12c8eb6749b"
+    },
+    {
+      "name": "ensureBudget",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "operationKey": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "agent.respond"
+                },
+                {
+                  "type": "literal",
+                  "value": "memory.extract"
+                },
+                {
+                  "type": "literal",
+                  "value": "facts.resolve"
+                },
+                {
+                  "type": "literal",
+                  "value": "memory.summarize"
+                },
+                {
+                  "type": "literal",
+                  "value": "conversation.title"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.text"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.code"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.sheet"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.suggestions"
+                },
+                {
+                  "type": "literal",
+                  "value": "embedding.query"
+                },
+                {
+                  "type": "literal",
+                  "value": "embedding.memory"
+                },
+                {
+                  "type": "literal",
+                  "value": "media.image.generate"
+                },
+                {
+                  "type": "literal",
+                  "value": "media.video.generate"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "requestId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "requestCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "agentId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "agentVersion": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "ea03782d80cb77a41f33ced591ad0feaf4b8616c9fb2dda6da55778cbd935572"
+    },
+    {
+      "name": "installDeploymentPolicy",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "manifestId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "expectedRevision": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "8a3f8267d72c6ad3fdb164190050ab69ab536344b9d0120021a92d41fbbf1d8b"
+    },
+    {
+      "name": "markVisible",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "outputVisible": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "toolInputVisible": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "toolResultVisible": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "toolEffectCommitted": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "18b4ee2ad52da8b791e5740f4df641f170041a45d9906f4e92f7f127ea86da38"
+    },
+    {
+      "name": "provisionTenantPolicy",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "policyCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "overrideRequested": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "da004e18ae5cb903849b1ba3324eabaeb699266ae1994a7bd5bfe75e9435d33f"
+    },
+    {
+      "name": "reconcileDeploymentLiability",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "receiptCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "790a73d7b2953f3a0ddfd675ba89c13b018b4e732ceca6de6d8703bb2e853ec5"
+    },
+    {
+      "name": "recover",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "receiptCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "7d3502906ffaa74d602505e97a1f375bc509b36f64ff382a2e17649c1390d820"
+    },
+    {
+      "name": "releaseNotDispatched",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "e97fa0ff79ae8d1b8664a4860b74aaa33c6df1f77ab7a1ddab8aa138dbce34b0"
+    },
+    {
+      "name": "resolve",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "operationKey": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "agent.respond"
+                },
+                {
+                  "type": "literal",
+                  "value": "memory.extract"
+                },
+                {
+                  "type": "literal",
+                  "value": "facts.resolve"
+                },
+                {
+                  "type": "literal",
+                  "value": "memory.summarize"
+                },
+                {
+                  "type": "literal",
+                  "value": "conversation.title"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.text"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.code"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.sheet"
+                },
+                {
+                  "type": "literal",
+                  "value": "artifact.suggestions"
+                },
+                {
+                  "type": "literal",
+                  "value": "embedding.query"
+                },
+                {
+                  "type": "literal",
+                  "value": "embedding.memory"
+                },
+                {
+                  "type": "literal",
+                  "value": "media.image.generate"
+                },
+                {
+                  "type": "literal",
+                  "value": "media.video.generate"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "runBudgetId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "source": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "sourceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "sourceEventId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "sourceRevision": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "contentHash": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                }
+              }
+            },
+            "optional": true
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "a32a6e429c3a2d9ff048e2eb851b1196daf3a003aa85e32efb621bce8fdabf0b"
+    },
+    {
+      "name": "settle",
+      "isInternal": true,
+      "isPublic": false,
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "attemptId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "runtimeModelAttempts"
+            },
+            "optional": false
+          },
+          "receiptCanonical": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "returns": null,
+      "validatorSHA256": "7d0f7529b351ba4d0b6ff818af3d3ca05edb97bcfdd8f7fb41a00939d6f9ff2d"
+    }
+  ]
+}
