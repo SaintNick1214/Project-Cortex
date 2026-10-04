@@ -1,0 +1,104 @@
+(node:76327) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/task04-admission-c1-review/hostile.test.ts
+  native private policy ledger — offline logic only
+    ○ skipped production root is empty, and arbitrary operator manifest selectors cannot attest prices
+    ○ skipped installs the exact compiled root idempotently and refuses mutated same-version evidence
+    ○ skipped rejects an invalid root classification before accounts/dispatch
+    ○ skipped rejects an invalid root acceptance before accounts/dispatch
+    ○ skipped rejects an invalid root expiry before accounts/dispatch
+    ○ skipped rejects an invalid root model before accounts/dispatch
+    ○ skipped rejects an invalid root proof before accounts/dispatch
+    ○ skipped binds one backend account per exact trusted request and rejects changed request/owner
+    ○ skipped forced account-key hash collisions compare the complete trusted binding tuple
+    ○ skipped derives actual normalized input and full trusted ceiling, overriding untrusted estimates
+    ○ skipped same child canonical replay does not reserve again; changed text/hash collision rejects
+    ○ skipped one checkpoint winner returns a permit and subsequent attempts cannot dispatch
+    ○ skipped changed final native request/proof and expired qualifications deny checkpoint
+    ○ skipped last operation/concurrency capacity applies across distinct children without partial rejection writes
+    ○ skipped different backend request accounts share one tenant quota and concurrency
+    ○ skipped known cost settles exactly once and eligible result replay needs no new reservation
+    ○ skipped invalid private results are withheld without erasing a known complete charge
+    ○ skipped overrun accounts full spend and blocks further admission without rollback of charge
+    ○ skipped malformed/missing cost remains unknown liability; qualified terminal proof releases slot only
+    ○ skipped postcheckpoint crash recovery cannot claim no dispatch or zero cost
+    ○ skipped proved precheckpoint refusal releases balances and slots exactly once
+    ○ skipped current admin may release proved precheckpoint liability after origin revocation without delivery
+    ○ skipped unknown liability blocks rollover; late receipt charges original immutable window
+    ○ skipped revoked originating grant requires current admin liability-only recovery
+    ○ skipped monotone visibility flags and cancellation prevent later dispatch and safe fallback
+    ○ skipped space admin cannot change global/root policy or install own tenant-wide constraints
+    ○ skipped healthy tenant admin may narrow own rules but cannot forge prices or broaden caps
+    ○ skipped trusted own tenant override is backend-versioned and never broadens deployment hard bounds
+    ○ skipped a current source tombstone blocks replay/delivery but retains already incurred charge
+    ○ skipped source revision changes before checkpoint cannot dispatch or recreate source
+    ○ skipped child operation inherits exact parent account and cancellation/current authority fences
+    ○ skipped trusted compiled versioned agent specialization is consumed only by its matching tenant/version
+    ○ skipped native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider
+    ○ skipped embedding bound treats per-value and aggregate caps separately and counts normalized UTF8
+    ○ skipped invalid terminal cost overflow remains unknown without refund or invented zero
+    ○ skipped post-admission source/account corruption fails closed before checkpoint
+    ○ skipped explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    ○ skipped visible output, unknown outcome and unqualified candidates deny fallback reservation
+    ○ skipped storage bounds deny multi-vector calls and unbounded output before reservation
+    ○ skipped usage exceeding trusted input/output caps fully charges and blocks the faulty qualification
+    ○ skipped retired tenant blocks scoped actors while operator records full private overrun exactly once
+    ○ skipped retired memorySpace blocks scoped actors while operator records full private overrun exactly once
+    ○ skipped deployment liability route refuses live scopes and preserves retired unknown charge liability
+    ○ skipped all registrations are internal and their native argument schemas have no arbitrary payload escape
+    ○ skipped all five additive native tables have unique index field configurations
+    ○ skipped rounds authoritative 0 USD upward to 0 microUSD
+    ○ skipped rounds authoritative 0.0000001 USD upward to 1 microUSD
+    ○ skipped rounds authoritative 0.000001 USD upward to 1 microUSD
+    ○ skipped rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ○ skipped rejects invalid or overflowing money NaN
+    ○ skipped rejects invalid or overflowing money Infinity
+    ○ skipped rejects invalid or overflowing money -1
+    ○ skipped rejects invalid or overflowing money 1e4
+    ○ skipped rejects invalid or overflowing money 9007199254740992
+  independent hostile fallback currentness
+    ✕ new narrowed operation budget denies fallback that would exceed current cumulative ceiling (72 ms)
+    ✕ current removed fallback permission denies fresh fallback even if model remains generally allowed (31 ms)
+
+  ● independent hostile fallback currentness › new narrowed operation budget denies fallback that would exceed current cumulative ceiling
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attemptId": "runtimeModelAttempts:14", "operationId": "runtimeModelOperations:11", "requestCanonical": "{\"childCallId\":\"f98d7a54e19ff0dc5f924191fcf1fc9fe7c67b1fd4a332f49bd543390ace11b9\",\"extractionVersion\":\"extract-1\",\"inputTokens\":15,\"messages\":[{\"parts\":[{\"text\":\"hello\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":80,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"hello\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small", "fixture/fallback"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 80, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [{"modelId": "fixture/fallback", "qualificationReceiptId": "synthetic-fallback"}], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "fixture/fallback", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-fallback", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}, "status": "reserved"}
+
+      415 |     await f.invoke("provisionTenantPolicy",{reference,policyCanonical:canonicalModelJson({policyId:"tight",version:1,scope:"tenant",tenantId:"tenant-a",rules:{limits:{operationBudgetUnits:100}}})});
+      416 |     const before=f.db.writes;
+    > 417 |     await expect(f.invoke("admitFallback",{reference:f.reference,attemptId:a.attemptId,candidateModelId:"fixture/fallback"})).rejects.toThrow();
+          |           ^
+      418 |     expect(f.db.writes).toBe(before);
+      419 |   });
+      420 |   it("current removed fallback permission denies fresh fallback even if model remains generally allowed",async()=>{
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (work/resume/task04-admission-c1-review/hostile.test.ts:417:11)
+
+  ● independent hostile fallback currentness › current removed fallback permission denies fresh fallback even if model remains generally allowed
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attemptId": "runtimeModelAttempts:14", "operationId": "runtimeModelOperations:11", "requestCanonical": "{\"childCallId\":\"f98d7a54e19ff0dc5f924191fcf1fc9fe7c67b1fd4a332f49bd543390ace11b9\",\"extractionVersion\":\"extract-1\",\"inputTokens\":15,\"messages\":[{\"parts\":[{\"text\":\"hello\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":80,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"hello\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small", "fixture/fallback"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 80, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [{"modelId": "fixture/fallback", "qualificationReceiptId": "synthetic-fallback"}], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "fixture/fallback", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-fallback", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}, "status": "reserved"}
+
+      422 |     await f.invoke("provisionTenantPolicy",{reference,policyCanonical:canonicalModelJson({policyId:"tight",version:1,scope:"tenant",tenantId:"tenant-a",rules:{fallbackModels:[]}})});
+      423 |     const before=f.db.writes;
+    > 424 |     await expect(f.invoke("admitFallback",{reference:f.reference,attemptId:a.attemptId,candidateModelId:"fixture/fallback"})).rejects.toThrow();
+          |           ^
+      425 |     expect(f.db.writes).toBe(before);
+      426 |   });
+      427 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (work/resume/task04-admission-c1-review/hostile.test.ts:424:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 54 skipped, 56 total
+Snapshots:   0 total
+Time:        4.705 s, estimated 12 s
+Ran all test suites with tests matching "independent hostile".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c1-review/hostile02/jest-result.json
