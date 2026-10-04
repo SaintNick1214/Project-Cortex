@@ -1,0 +1,418 @@
+(node:68600) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✓ covers all original17 actual handlers: eleven public, six internal with no public aliases (4 ms)
+  ✓ both adapter guards reject and never resolve Promise<never> (1 ms)
+  ✓ native exportArgs matches every original installed Convex validator field and preserves required selectors (7 ms)
+  ✓ accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added (1276 ms)
+  artifacts:completeArtifactUpload
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (7 ms)
+    ✓ denies missing (1 ms)
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject (1 ms)
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted (1 ms)
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant (1 ms)
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked
+    ✓ denies membershipRevoked
+    ✓ denies membershipDeleted (1 ms)
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (13 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (3 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (3 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (2 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body (1 ms)
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (2 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  artifacts:detachFile
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted (1 ms)
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted
+    ✓ denies principalRevoked (1 ms)
+    ✓ denies membershipRevoked
+    ✓ denies membershipDeleted
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (14 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (3 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure
+    ✓ expiry reached during the last read of the final matching sweep denies (2 ms)
+    ✓ expiry at the final database await cannot reveal readiness
+  artifacts:generateArtifactUploadUrl
+    ✓ healthy matching storage authority is fixed unavailable before any old effect
+    ✓ internal helper is uniformly unavailable without identity, scope or any DB access (1 ms)
+  artifacts:getArtifactFileUrl
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ internal helper is uniformly unavailable without identity, scope or any DB access
+  artifacts:setFileRef
+    ✓ healthy matching storage authority is fixed unavailable before any old effect
+    ✓ internal helper is uniformly unavailable without identity, scope or any DB access (1 ms)
+  attachments:attach
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing (1 ms)
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked (1 ms)
+    ✓ denies membershipRevoked
+    ✓ denies membershipDeleted (1 ms)
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (11 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (2 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (3 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  attachments:count
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (2 ms)
+    ✓ denies missing
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject (1 ms)
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted (1 ms)
+    ✓ denies capability
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant (1 ms)
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked
+    ✓ denies membershipRevoked (1 ms)
+    ✓ denies membershipDeleted (1 ms)
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (16 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (3 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (3 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body
+    ✓ late principal fences stop readiness before old body
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness
+  attachments:generateUploadUrl
+    ✓ healthy matching storage authority is fixed unavailable before any old effect
+    ✓ internal helper is uniformly unavailable without identity, scope or any DB access (1 ms)
+  attachments:get
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted
+    ✓ denies scopeEpoch
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted
+    ✓ denies principalRevoked (1 ms)
+    ✓ denies membershipRevoked (1 ms)
+    ✓ denies membershipDeleted
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (11 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (3 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body
+    ✓ late membership fences stop readiness before old body
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body (1 ms)
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness
+  attachments:getByConversation
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked
+    ✓ denies membershipRevoked (1 ms)
+    ✓ denies membershipDeleted
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (12 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (3 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (3 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  attachments:getByIds
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing (1 ms)
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired (1 ms)
+    ✓ denies revoked
+    ✓ denies grantDeleted (1 ms)
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage
+    ✓ denies tenant (1 ms)
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked
+    ✓ denies membershipRevoked (1 ms)
+    ✓ denies membershipDeleted
+    ✓ denies tombstone
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (11 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (2 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (3 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body
+    ✓ late fault fences stop readiness before old body (1 ms)
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  attachments:getByMessage
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing
+    ✓ denies forgedIssuer
+    ✓ denies forgedSubject (1 ms)
+    ✓ denies expired (1 ms)
+    ✓ denies revoked
+    ✓ denies grantDeleted (1 ms)
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant (1 ms)
+    ✓ denies space
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked (1 ms)
+    ✓ denies membershipRevoked
+    ✓ denies membershipDeleted (1 ms)
+    ✓ denies tombstone
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (10 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (5 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body
+    ✓ late tombstone fences stop readiness before old body
+    ✓ late fault fences stop readiness before old body (1 ms)
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  attachments:getUrl
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ internal helper is uniformly unavailable without identity, scope or any DB access
+  attachments:list
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing (1 ms)
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted
+    ✓ denies capability
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant (1 ms)
+    ✓ denies space
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked
+    ✓ denies membershipRevoked (1 ms)
+    ✓ denies membershipDeleted (1 ms)
+    ✓ denies tombstone
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (11 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (3 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body (1 ms)
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body
+    ✓ late fault fences stop readiness before old body
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  attachments:purgeAll
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ internal helper is uniformly unavailable without identity, scope or any DB access
+  attachments:remove
+    ✓ healthy matching storage authority is fixed unavailable before any old effect
+    ✓ denies missing
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted
+    ✓ denies capability
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted (1 ms)
+    ✓ denies scopeEpoch
+    ✓ denies tenantDeleted
+    ✓ denies principalDeleted (1 ms)
+    ✓ denies principalRevoked
+    ✓ denies membershipRevoked (1 ms)
+    ✓ denies membershipDeleted
+    ✓ denies tombstone
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (11 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (4 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values
+    ✓ late grant fences stop readiness before old body
+    ✓ late principal fences stop readiness before old body (1 ms)
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body
+    ✓ late tombstone fences stop readiness before old body
+    ✓ late fault fences stop readiness before old body (1 ms)
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+  attachments:removeMany
+    ✓ healthy matching storage authority is fixed unavailable before any old effect (1 ms)
+    ✓ denies missing
+    ✓ denies forgedIssuer (1 ms)
+    ✓ denies forgedSubject
+    ✓ denies expired (1 ms)
+    ✓ denies revoked (1 ms)
+    ✓ denies grantDeleted
+    ✓ denies capability (1 ms)
+    ✓ denies oppositeStorage (1 ms)
+    ✓ denies tenant
+    ✓ denies space (1 ms)
+    ✓ denies scopeDeleted
+    ✓ denies scopeEpoch (1 ms)
+    ✓ denies tenantDeleted (1 ms)
+    ✓ denies principalDeleted
+    ✓ denies principalRevoked (1 ms)
+    ✓ denies membershipRevoked
+    ✓ denies membershipDeleted
+    ✓ denies tombstone (1 ms)
+    ✓ private IDs and caller owner labels never affect unavailable or grant denial (10 ms)
+    ✓ omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny (2 ms)
+    ✓ opaque identity failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ opaque control failures never become denial or readiness and never invoke diagnostic getters (2 ms)
+    ✓ malicious identity and control-row getters abort opaquely without revealing values (1 ms)
+    ✓ late grant fences stop readiness before old body
+    ✓ late principal fences stop readiness before old body
+    ✓ late scope fences stop readiness before old body (1 ms)
+    ✓ late membership fences stop readiness before old body (1 ms)
+    ✓ late expiry fences stop readiness before old body (1 ms)
+    ✓ late tombstone fences stop readiness before old body (1 ms)
+    ✓ late fault fences stop readiness before old body
+    ✓ an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure (1 ms)
+    ✓ expiry reached during the last read of the final matching sweep denies (1 ms)
+    ✓ expiry at the final database await cannot reveal readiness (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       390 passed, 390 total
+Snapshots:   0 total
+Time:        4.259 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts".
+Test results written to: ../../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review/jest-final-asset-result.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

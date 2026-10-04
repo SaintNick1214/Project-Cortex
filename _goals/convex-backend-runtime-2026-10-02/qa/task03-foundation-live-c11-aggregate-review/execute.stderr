@@ -1,0 +1,2850 @@
+(node:68354) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/auth/credentials.test.ts (16.473 s)
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts (6.098 s)
+  ● native exportArgs matches every original installed Convex validator field and preserves required selectors
+
+    ENOENT: no such file or directory, open '_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/native-validators17.json'
+
+      186 | }
+      187 | it('native exportArgs matches every original installed Convex validator field and preserves required selectors', () => {
+    > 188 |   const frozen = JSON.parse(fs.readFileSync(qa + 'native-validators17.json', 'utf8')) as { registrations: { path: string; args: { type: string; value: Record<string, unknown> } }[] };
+          |                                ^
+      189 |   expect(frozen.registrations).toHaveLength(17);
+      190 |   for (const row of frozen.registrations) {
+      191 |     const call = calls.find(c => c.path === row.path)!;
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:188:32)
+
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    ENOENT: no such file or directory, open '_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/accepted22.json'
+
+      200 | });
+      201 | it('accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added', () => {
+    > 202 |   const accepted = JSON.parse(fs.readFileSync(qa + 'accepted22.json', 'utf8')) as { path: string; declaration: string; sha256: string }[];
+          |                                  ^
+      203 |   // Preserve the exact accepted historical declarations while separately proving
+      204 |   // the sole current native index repair; no declaration is normalized.
+      205 |   const archivedArtifact = '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/convex-dev/artifacts.ts';
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:202:34)
+
+FAIL tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ● freezes original source hashes, full native validators and original 251 classification
+
+    ENOENT: no such file or directory, open '_goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-foundation/original/source-hashes.json'
+
+      177 | it('freezes original source hashes, full native validators and original 251 classification', () => {
+      178 |   const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-foundation/original/';
+    > 179 |   const hashes = JSON.parse(fs.readFileSync(qa + 'source-hashes.json', 'utf8')) as Record<string, string>;
+          |                                ^
+      180 |   for (const [file, expected] of Object.entries(hashes)) expect(crypto.createHash('sha256').update(fs.readFileSync(qa + file.split('/').pop())).digest('hex')).toBe(expected);
+      181 |   const rows = JSON.parse(fs.readFileSync(qa + 'registrations48.json', 'utf8')) as unknown[]; expect(rows).toHaveLength(48);
+      182 |   expect(fs.existsSync(qa + 'baseline251.json')).toBe(true);
+
+      at Object.<anonymous> (tests/unit/runtimeUnavailableAuth/closure.test.ts:179:32)
+
+  ● original argument validators remain byte-identical per AST; only absent selectors added
+
+    ENOENT: no such file or directory, open '_goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-foundation/original/conversations.ts'
+
+      198 |   }
+      199 |   for (const module of Object.keys(modules)) {
+    > 200 |     const before = validators(fs.readFileSync(originals + module + '.ts', 'utf8'));
+          |                                  ^
+      201 |     const after = validators(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
+      202 |     expect([...after.keys()]).toEqual([...before.keys()]);
+      203 |     for (const [name, fields] of before) {
+
+      at Object.<anonymous> (tests/unit/runtimeUnavailableAuth/closure.test.ts:200:34)
+
+FAIL tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● actual registered visibility and canonical schema/AST catalog › AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "status": 0,
+    -   "stderr": "",
+    +   "status": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      152 |     try {
+      153 |       const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+    > 154 |       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
+          |                                                          ^
+      155 |       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
+      156 |         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
+      157 |       };
+
+      at Object.<anonymous> (tests/unit/runtimeWorkerAuth/admin-catalog.test.ts:154:58)
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+FAIL tests/unit/runtimeAuth/inventory.test.ts
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › facts:fetchFactsByIds remains a scoped internal read helper
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › memories:fetchMemoriesByIds remains a scoped internal read helper
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › memories:keywordSearchMemories remains a scoped internal read helper
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › admin:listTable requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › admin:deleteRecord requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › admin:clearTable requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › admin:countTable requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › admin:getAllCounts requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › agents:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › artifacts:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › attachments:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › contexts:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › conversations:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › facts:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › graphSync:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › immutable:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › memories:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › memorySpaces:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › mutable:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › governance:purgeAllPolicies requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › governance:purgeAllEnforcement requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › authorize uses requested capability and inherited verified issuer/subject
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › recheck uses requested capability and exact persisted versions/epochs/optional scope
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › runtimeAuth:provision is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › runtimeAuth:revokeGrant is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › runtimeAuth:revokeMembership is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › runtimeAuth:deletePrincipal is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › runtimeAuth:deleteScope is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › runtimeAuth:tombstoneResource is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › keeps ordinary facts:get available through scoped read grants
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › keeps ordinary memories:store available through scoped write grants
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs › accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › facts:fetchFactsByIds remains a scoped internal read helper
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › memories:fetchMemoriesByIds remains a scoped internal read helper
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › memories:keywordSearchMemories remains a scoped internal read helper
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › admin:listTable requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › admin:deleteRecord requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › admin:clearTable requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › admin:countTable requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › admin:getAllCounts requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › agents:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › artifacts:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › attachments:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › contexts:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › conversations:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › facts:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › graphSync:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › immutable:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › memories:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › memorySpaces:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › mutable:purgeAll requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › governance:purgeAllPolicies requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › governance:purgeAllEnforcement requires operator maintenance without a target runtime grant
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › authorize uses requested capability and inherited verified issuer/subject
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › recheck uses requested capability and exact persisted versions/epochs/optional scope
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › runtimeAuth:provision is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › runtimeAuth:revokeGrant is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › runtimeAuth:revokeMembership is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › runtimeAuth:deletePrincipal is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › runtimeAuth:deleteScope is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › runtimeAuth:tombstoneResource is a deployment operator control
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › keeps ordinary facts:get available through scoped read grants
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › keeps ordinary memories:store available through scoped write grants
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+  ● portable generated inventory policies: /workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs › accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "exitCode": 0,
+    -   "stderr": "",
+    +   "exitCode": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      57 |       // Absolute retained runner resolves TypeScript from the repository; child cwd has no work parent/runner.
+      58 |       const result = spawnSync(process.execPath, [runner, "inventory-output"], { cwd: fixture, encoding: "utf8", timeout: 10000 });
+    > 59 |       expect({ exitCode: result.status, stderr: result.stderr }).toEqual({ exitCode: 0, stderr: "" });
+         |                                                                  ^
+      60 |       inventory = JSON.parse(fs.readFileSync(path.join(fixture, "inventory-output/public-path-inventory.json"), "utf8")) as Inventory;
+      61 |       expect(inventory.completeness.unresolved).toEqual([]);
+      62 |       expect(inventory.completeness.counts.registeredBuilderCalls).toBe(inventory.endpoints.length);
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/inventory.test.ts:59:66)
+
+PASS tests/unit/runtimeRegistryAuth/registered.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+PASS tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+FAIL tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ● import-aware AST and native Convex registration visibility › retained import-aware AST finds the exact baseline paths with zero unresolved
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 20
+
+      Object {
+    -   "status": 0,
+    -   "stderr": "",
+    +   "status": 1,
+    +   "stderr": "node:internal/modules/cjs/loader:1520
+    +   throw err;
+    +   ^
+    +
+    + Error: Cannot find module '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs'
+    +     at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    +     at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    +     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    +     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    +     at Module._load (node:internal/modules/cjs/loader:1294:5)
+    +     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    +     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    +     at node:internal/main/run_main_module:33:47 {
+    +   code: 'MODULE_NOT_FOUND',
+    +   requireStack: []
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      24 |     const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-metadata-inventory-"));
+      25 |     try {
+    > 26 |       const result = spawnSync(process.execPath, [`${base}/task03b2a/inventory.mjs`, temporary], { encoding: "utf8", timeout: 10000 }); expect({ status: result.status, stderr: result.stderr }).toEqual({ status: 0, stderr: "" });
+         |                                                                                                                                                                                                  ^
+      27 |       const actual = JSON.parse(fs.readFileSync(path.join(temporary, "public-path-inventory.json"), "utf8"));
+      28 |       const original = JSON.parse(fs.readFileSync(`${base}/task03a/public-path-inventory.json`, "utf8"));
+      29 |       const selected = original.endpoints.filter((row: { path: string }) => /^(immutable|mutable|users|sessions):/.test(row.path));
+
+      at Object.<anonymous> (tests/unit/runtimeMetadataAuth/registrations.test.ts:26:194)
+
+Test Suites: 5 failed, 8 passed, 13 total
+Tests:       70 failed, 2590 passed, 2660 total
+Snapshots:   0 total
+Time:        41.729 s
+Ran all test suites within paths "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts", "tests/unit/runtimeArtifactAuth/admission-errors.test.ts", "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts", "tests/unit/auth/credentials.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeRegistryAuth/registered.test.ts", "tests/unit/runtimeMetadataAuth/registrations.test.ts", "tests/unit/runtimeAuth/inventory.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts".
+Test results written to: ../../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review/jest-result.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
