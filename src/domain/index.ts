@@ -8,3 +8,5 @@ export * from "./slots.js";
 export * from "./deduplication.js";
 export * from "./conflicts.js";
 export * from "./recall.js";
+
+export * from "./model-policy.js";
