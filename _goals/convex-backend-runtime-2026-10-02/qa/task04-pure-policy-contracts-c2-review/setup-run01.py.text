@@ -1,0 +1,33 @@
+from pathlib import Path
+import shutil,json,hashlib,subprocess,datetime,os
+r=Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c2-review';q.mkdir(exist_ok=False)
+s=r/'work/resume/task04-pure-policy-c2-review/run01';s.mkdir(exist_ok=False)
+for p in ['src','tests/unit/domain','dist','convex-dev']: shutil.copytree(r/p,s/p)
+for p in ['package.json','tsconfig.json','eslint.config.js','tsconfig.lint.json','README.md','LICENSE.md']: shutil.copy2(r/p,s/p)
+(s/'node_modules').symlink_to(r/'node_modules',target_is_directory=True)
+(s/'tmp').mkdir();(s/'npm-cache').mkdir()
+(s/'tsconfig.scoped.json').write_text(json.dumps({'extends':'./tsconfig.json','compilerOptions':{'noEmit':True},'include':['src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts']}))
+shutil.copy2(r/'work/resume/task04-pure-policy-review/mirror/jest.scoped.mjs',s/'jest.scoped.mjs')
+npm='/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js'
+script=(r/'scripts/verify-public-contracts.mjs').read_text().replace("resolve('node_modules/.cortex-contract-')","resolve('contracts-')").replace("execFileSync('npm', ['pack'",f"execFileSync(process.execPath, ['{npm}', 'pack'")
+(s/'verify-public-contracts.mjs').write_text(script)
+shutil.copy2(r/'work/resume/task04-pure-policy-review/mirror/probes.mjs',s/'original-c1-probes.mjs')
+paths=['src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts','package.json','tsconfig.json','eslint.config.js','_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c2/report.md','_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review/report.md']
+def hashes():return [{'path':p,'sha256':hashlib.sha256((r/p).read_bytes()).hexdigest(),'bytes':(r/p).stat().st_size} for p in paths]
+(q/'source-before.json').write_text(json.dumps(hashes(),indent=2)+'\n')
+for p in ['jest.scoped.mjs','tsconfig.scoped.json','verify-public-contracts.mjs','original-c1-probes.mjs']:shutil.copy2(s/p,q/(p+'.text'))
+env={'PATH':os.environ['PATH'],'TMPDIR':str(s/'tmp'),'npm_config_offline':'true','npm_config_cache':str(s/'npm-cache'),'NO_COLOR':'1'}
+def run(name,args):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ with (q/(name+'.started.json')).open('x') as f:json.dump({'argv':args,'cwd':str(s),'startUTC':start,'sourceHashes':hashes(),'environmentKeys':list(env)},f,indent=2)
+ with (q/(name+'.stdout')).open('x') as so,(q/(name+'.stderr')).open('x') as se: result=subprocess.run(args,cwd=s,stdout=so,stderr=se,env=env)
+ with (q/(name+'.receipt.json')).open('x') as f:json.dump({'argv':args,'cwd':str(s),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':result.returncode,'sourceHashesAfter':hashes(),'environmentLoaders':False,'npmOffline':True},f,indent=2)
+ print(name,result.returncode,flush=True)
+run('node',['node','--version']);run('npm',['node',npm,'--version'])
+run('types',['node','node_modules/typescript/bin/tsc','--project','tsconfig.scoped.json','--noEmit'])
+run('lint',['node','node_modules/eslint/bin/eslint.js','src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts','--report-unused-disable-directives','--max-warnings=0'])
+run('discovery',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','jest.scoped.mjs','--listTests','--runInBand'])
+run('unit',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','jest.scoped.mjs','--runInBand','--json','--outputFile',str(q/'unit.result.json')])
+run('public-contracts',['node','verify-public-contracts.mjs'])
+run('original-c1-probes',['node','original-c1-probes.mjs'])
+(q/'source-after.json').write_text(json.dumps(hashes(),indent=2)+'\n')
