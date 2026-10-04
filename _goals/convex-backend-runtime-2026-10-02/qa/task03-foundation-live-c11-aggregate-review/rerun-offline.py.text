@@ -1,0 +1,10 @@
+import json,shutil,subprocess,datetime
+from pathlib import Path
+r=Path('/workspace/Project-Cortex');s=r/'work/resume/c11-aggregate-review';b=s/'mirror';pub=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review';base=Path('_goals/convex-backend-runtime-2026-10-02/qa')
+for name in ['task03a','task03b2a','task03b2d','task03b2e-transcript-a2a-foundation/original','task03b2f-asset-foundation/original','task03-artifact-schema-index-repair']:
+ shutil.copytree(r/base/name,b/base/name,dirs_exist_ok=True)
+node='/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node';env={'PATH':str(Path(node).parent)+':/usr/bin:/bin','HOME':str(s),'TMPDIR':str(s),'NO_COLOR':'1'}
+paths=['tests/unit/runtimeAssetUnavailableAuth/closure.test.ts','tests/unit/runtimeUnavailableAuth/closure.test.ts','tests/unit/runtimeWorkerAuth/admin-catalog.test.ts','tests/unit/runtimeAuth/inventory.test.ts','tests/unit/runtimeMetadataAuth/registrations.test.ts'];argv=[node,'--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','foundation-jest.config.mjs','--runInBand','--runTestsByPath',*paths,'--json','--outputFile='+str(pub/'jest-rerun-result.json')]
+t=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=b,env=env,capture_output=True,text=True,timeout=100)
+for label,val in [('stdout',p.stdout),('stderr',p.stderr)]: (pub/f'rerun.{label}').write_text(val)
+d=json.loads((pub/'offline-receipts.json').read_text());d['setupCorrection']='Initial scratch mirror omitted exact static QA dependency files; copied referenced historical inventory/archive fixtures, no source/assertion changes';d['checks'].append({'name':'rerun','argv':argv,'cwd':str(b),'startUTC':t,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdout':'rerun.stdout','stderr':'rerun.stderr'});(pub/'offline-receipts.json').write_text(json.dumps(d,indent=2)+'\n');print(p.returncode);j=json.loads((pub/'jest-rerun-result.json').read_text());print({k:j[k] for k in ['numTotalTestSuites','numPassedTestSuites','numTotalTests','numPassedTests','numFailedTests','numPendingTests','numTodoTests']})

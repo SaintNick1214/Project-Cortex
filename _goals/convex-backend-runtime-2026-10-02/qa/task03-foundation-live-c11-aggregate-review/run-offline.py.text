@@ -1,0 +1,29 @@
+import json,subprocess,datetime,hashlib,shutil,os
+from pathlib import Path
+r=Path('/workspace/Project-Cortex'); s=r/'work/resume/c11-aggregate-review'; b=s/'mirror'; b.mkdir(exist_ok=True)
+q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11'; pub=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review'
+hashfile=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+freeze=json.loads((q/'runtime-freeze.json').read_text()); mismatches=[x['path'] for x in freeze['files'] if hashfile(r/x['path'])!=x['sha256']]
+assert len(freeze['files'])==622 and not mismatches
+(pub/'initial-freeze-reconciliation.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'candidateSha256':hashfile(q/'runtime-freeze.json'),'files':622,'mismatches':mismatches},indent=2)+'\n')
+for name in ['src','convex-dev','tests/unit']:
+ shutil.copytree(r/name,b/name,dirs_exist_ok=True)
+for name in ['package.json','tsconfig.json','convex.json','jest.config.mjs']:
+ shutil.copy2(r/name,b/name)
+(b/'node_modules').symlink_to(r/'node_modules',target_is_directory=True) if not (b/'node_modules').exists() else None
+(b/'foundation-jest.config.mjs').write_text("import base from './jest.config.mjs';\nexport default {...base,rootDir:'.',setupFiles:[],setupFilesAfterEnv:[],reporters:['default'],cacheDirectory:'../jest-cache',testMatch:['<rootDir>/tests/unit/**/*.test.ts']};\n")
+shutil.copy2(r/'_goals/convex-backend-runtime-2026-10-02/qa/resume-dependency-refinement-c2/inventory.mjs',b/'inventory.mjs')
+node='/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node'
+env={'PATH':str(Path(node).parent)+':/usr/bin:/bin','HOME':str(s),'TMPDIR':str(s),'NO_COLOR':'1'}
+receipts=[]
+def run(name,argv):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=b,env=env,capture_output=True,text=True,timeout=100)
+ for label,val in [('stdout',p.stdout),('stderr',p.stderr)]: (pub/f'{name}.{label}').write_text(val)
+ row={'name':name,'argv':argv,'cwd':str(b),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdout':f'{name}.stdout','stderr':f'{name}.stderr'};receipts.append(row)
+ (pub/'offline-receipts.json').write_text(json.dumps({'scope':'INDEPENDENT_C11_OFFLINE_ONLY','environmentLoaders':False,'services':0,'candidateSha256':hashfile(q/'runtime-freeze.json'),'checks':receipts},indent=2)+'\n');print(json.dumps(row),flush=True);assert p.returncode==0
+run('inventory',[node,'inventory.mjs',str(pub/'current-inventory')])
+paths=['tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts','tests/unit/runtimeMemory/public-closure.test.ts','tests/unit/runtimeArtifactAuth/schema-indexes.test.ts','tests/unit/runtimeArtifactAuth/admission-errors.test.ts','tests/unit/runtimeRegistryAuth/failureBoundary.test.ts','tests/unit/auth/credentials.test.ts','tests/unit/runtimeUnavailableAuth/closure.test.ts','tests/unit/runtimeAssetUnavailableAuth/closure.test.ts','tests/unit/runtimeRegistryAuth/registered.test.ts','tests/unit/runtimeMetadataAuth/registrations.test.ts','tests/unit/runtimeAuth/inventory.test.ts','tests/unit/runtimeMemory/public-boundary.test.ts','tests/unit/runtimeWorkerAuth/admin-catalog.test.ts']
+argv=[node,'--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','foundation-jest.config.mjs','--runInBand','--runTestsByPath',*paths]
+run('discovery',argv+['--listTests'])
+run('execute',argv+['--json','--outputFile='+str(pub/'jest-result.json')])
+d=json.loads((pub/'jest-result.json').read_text());print(json.dumps({k:d[k] for k in ['numTotalTestSuites','numPassedTestSuites','numTotalTests','numPassedTests','numPendingTests','numTodoTests']}))
