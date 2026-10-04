@@ -1,0 +1,41 @@
+{
+  "status": "PASS_ROUTING_ONLY",
+  "unitBefore": 71,
+  "unitAfter": 70,
+  "onlyRemoved": "tests/unit/runtime/gateway-dispatch.test.ts",
+  "currentIncluded": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+  "oldTestSHA256": "fc58a25d9c5cf9526e65838ab1b25c4fcf5cda024885082a560e3cf6faa029f2",
+  "typeOnlyAdded": "tests/unit/runtime/convex-schema-test-types.d.ts",
+  "configFiles": {
+    "tsconfig.lint.json": {
+      "testDeclarationIncluded": false
+    },
+    "tsconfig.build.json": {
+      "testDeclarationIncluded": false
+    }
+  },
+  "prototypeExport": "actual installed SchemaDefinition.prototype.export returned string",
+  "declarationOnly": true,
+  "noJavaScriptGenerated": true,
+  "controls": [
+    {
+      "name": "broad Gateway omission",
+      "status": "denied"
+    },
+    {
+      "name": "hidden required current omission",
+      "status": "denied"
+    },
+    {
+      "name": "current historical mapping",
+      "status": "denied"
+    },
+    {
+      "name": "missing exact historical routing",
+      "status": "denied"
+    }
+  ],
+  "testExecution": false,
+  "skips": [],
+  "historicalQualification": "inherited accepted 78/78, four suites, transpile-only; not rerun here"
+}

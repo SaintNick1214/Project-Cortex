@@ -1,0 +1,777 @@
+{
+  "original35": [
+    {
+      "name": "revision denied 0",
+      "status": "PASS"
+    },
+    {
+      "name": "revision denied 9007199254740992",
+      "status": "PASS"
+    },
+    {
+      "name": "revision denied -1",
+      "status": "PASS"
+    },
+    {
+      "name": "revision denied 1.5",
+      "status": "PASS"
+    },
+    {
+      "name": "revision denied NaN",
+      "status": "PASS"
+    },
+    {
+      "name": "revision accepted 1",
+      "status": "PASS"
+    },
+    {
+      "name": "revision accepted 9007199254740991",
+      "status": "PASS"
+    },
+    {
+      "name": "native revision1 reads matching current source",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId rejects \"\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId rejects \" \"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId rejects \" source\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId rejects \"source \"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId rejects \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId rejects \"\\ud800\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceId accepts256 codeunits",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId rejects \"\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId rejects \" \"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId rejects \" source\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId rejects \"source \"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId rejects \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId rejects \"\\ud800\"",
+      "status": "PASS"
+    },
+    {
+      "name": "sourceEventId accepts256 codeunits",
+      "status": "PASS"
+    },
+    {
+      "name": "getter denied without execution or effects",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor rejects symbol",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor rejects nonenumerable",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor rejects extra",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor rejects prototype",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor rejects null",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor rejects array",
+      "status": "PASS"
+    },
+    {
+      "name": "detachment preserves all identity after caller mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "source absence omitted",
+      "status": "PASS"
+    },
+    {
+      "name": "hash denied 64",
+      "status": "PASS"
+    },
+    {
+      "name": "hash denied 63",
+      "status": "PASS"
+    },
+    {
+      "name": "hash denied 65",
+      "status": "PASS"
+    },
+    {
+      "name": "hash denied 8",
+      "status": "PASS"
+    }
+  ],
+  "current35": [
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision denied 0 before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision denied 0 before effects",
+      "startAt": 1791105386925
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision denied 9007199254740992 before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision denied 9007199254740992 before effects",
+      "startAt": 1791105386927
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision denied -1 before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision denied -1 before effects",
+      "startAt": 1791105386928
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision denied 1.5 before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision denied 1.5 before effects",
+      "startAt": 1791105386929
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision denied NaN before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision denied NaN before effects",
+      "startAt": 1791105386930
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 4,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision accepted 1 and retained in admission",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision accepted 1 and retained in admission",
+      "startAt": 1791105386931
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 5,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product revision accepted 9007199254740991 and retained in admission",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "revision accepted 9007199254740991 and retained in admission",
+      "startAt": 1791105386935
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 4,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product current matching revision1 reaches attach with exact original reference and no fabricated source argument",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "current matching revision1 reaches attach with exact original reference and no fabricated source argument",
+      "startAt": 1791105386940
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId rejects \"\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId rejects \"\" before effects",
+      "startAt": 1791105386944
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId rejects \" \" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId rejects \" \" before effects",
+      "startAt": 1791105386945
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId rejects \" source\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId rejects \" source\" before effects",
+      "startAt": 1791105386946
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId rejects \"source \" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId rejects \"source \" before effects",
+      "startAt": 1791105386948
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId rejects \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId rejects \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" before effects",
+      "startAt": 1791105386949
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId rejects \"\ud800\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId rejects \"\ud800\" before effects",
+      "startAt": 1791105386950
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 4,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceId accepts256 UTF16 codeunits",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceId accepts256 UTF16 codeunits",
+      "startAt": 1791105386951
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId rejects \"\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId rejects \"\" before effects",
+      "startAt": 1791105386955
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId rejects \" \" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId rejects \" \" before effects",
+      "startAt": 1791105386956
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId rejects \" source\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId rejects \" source\" before effects",
+      "startAt": 1791105386958
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId rejects \"source \" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId rejects \"source \" before effects",
+      "startAt": 1791105386959
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId rejects \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId rejects \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" before effects",
+      "startAt": 1791105386960
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId rejects \"\ud800\" before effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId rejects \"\ud800\" before effects",
+      "startAt": 1791105386961
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 4,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product sourceEventId accepts256 UTF16 codeunits",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "sourceEventId accepts256 UTF16 codeunits",
+      "startAt": 1791105386962
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 2,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product getter denied without execution or effects",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "getter denied without execution or effects",
+      "startAt": 1791105386966
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product descriptor rejects symbol",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "descriptor rejects symbol",
+      "startAt": 1791105386968
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product descriptor rejects nonenumerable",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "descriptor rejects nonenumerable",
+      "startAt": 1791105386969
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product descriptor rejects extra",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "descriptor rejects extra",
+      "startAt": 1791105386970
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product descriptor rejects prototype",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "descriptor rejects prototype",
+      "startAt": 1791105386971
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product descriptor rejects null",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "descriptor rejects null",
+      "startAt": 1791105386972
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product descriptor rejects array",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "descriptor rejects array",
+      "startAt": 1791105386973
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 4,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product detachment preserves all identity after caller mutation",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 1,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "detachment preserves all identity after caller mutation",
+      "startAt": 1791105386974
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 3,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product source absence stays omitted through resolution and admission",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 3,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "source absence stays omitted through resolution and admission",
+      "startAt": 1791105386978
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product hash denied AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "hash denied AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "startAt": 1791105386981
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "startAt": 1791105386982
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "startAt": 1791105386983
+    },
+    {
+      "ancestorTitles": [
+        "accepted 35 source boundary scenarios against current product"
+      ],
+      "duration": 1,
+      "failing": false,
+      "failureDetails": [],
+      "failureMessages": [],
+      "fullName": "accepted 35 source boundary scenarios against current product hash denied not-hash",
+      "invocations": 1,
+      "location": null,
+      "numPassingAsserts": 2,
+      "retryMessages": [],
+      "retryReasons": [],
+      "status": "passed",
+      "title": "hash denied not-hash",
+      "startAt": 1791105386984
+    }
+  ],
+  "caveat": "Source scenario8 now tests real Gateway trusted attachment forwarding; native repository read qualification remains separate accepted owner evidence."
+}

@@ -1,0 +1,43 @@
+--- before/tsconfig.json
++++ after/tsconfig.json
+@@ -32,6 +32,10 @@
+   ],
+   "exclude": [
+     "node_modules",
+-    "dist"
++    "dist",
++    // Immutable old Gateway assertions run separately under the mandatory guarded
++    // historical 78-outcome catalog. Current types/tests use the actual Gateway
++    // and gateway-terminal-composition.test.ts with its required attach port.
++    "tests/unit/runtime/gateway-dispatch.test.ts"
+   ]
+ }
+--- before/jest.config.mjs
++++ after/jest.config.mjs
+@@ -4,6 +4,13 @@
+   testEnvironment: "node",
+   roots: ["<rootDir>/tests"],
+   testMatch: ["**/*.test.ts"],
++  // Immutable old Gateway assertions run separately under the mandatory guarded
++  // historical 78-outcome catalog. gateway-terminal-composition.test.ts remains
++  // in this current runner against the actual Gateway; no historical mapping.
++  testPathIgnorePatterns: [
++    "/node_modules/",
++    "^<rootDir>/tests/unit/runtime/gateway-dispatch\\.test\\.ts$",
++  ],
+   setupFiles: ["<rootDir>/tests/env.ts"],
+   setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
+   collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],
+--- before/eslint.config.js
++++ after/eslint.config.js
+@@ -35,6 +35,10 @@
+       "Internal Docs/**/*", // Exclude internal docs
+       "work/**/*", // Private scratch files and generated qualification probes
+       "_goals/**/qa/**/*", // Frozen evidence and standalone fixtures use their scoped lint configs
++      // Immutable old Gateway assertions run separately under the mandatory guarded
++      // historical 78-outcome catalog, outside this current typed parser project.
++      // gateway-terminal-composition.test.ts still checks the actual Gateway here.
++      "tests/unit/runtime/gateway-dispatch.test.ts",
+     ],
+   },
+ 

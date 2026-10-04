@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import ts from '../../../node_modules/typescript/lib/typescript.js';
+import { ESLint } from '../../../node_modules/eslint/lib/api.js';
+const config = ts.readConfigFile('tsconfig.json', ts.sys.readFile);
+if (config.error) throw new Error(ts.flattenDiagnosticMessageText(config.error.messageText, '\n'));
+const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, process.cwd());
+if (parsed.errors.length) throw new Error(JSON.stringify(parsed.errors));
+const files = parsed.fileNames.map(p => path.relative(process.cwd(), p)).sort();
+const walk = p => fs.readdirSync(p, {withFileTypes:true}).flatMap(e => e.isDirectory() ? walk(path.join(p,e.name)) : [path.join(p,e.name)]);
+const unit = walk('tests/unit').filter(p => p.endsWith('.test.ts')).sort();
+const lint = new ESLint();
+const ignored = [];
+for (const p of unit) if (await lint.isPathIgnored(p)) ignored.push(p);
+console.log(JSON.stringify({typeFiles:files, unitFiles:unit, eslintIgnoredUnit:ignored, errors:parsed.errors},null,2));

@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-04T09:21:26.196739+00:00",
+  "verdict": "PASS_CURRENT_ROUTING_AND_QUALITY_ONLY_PENDING_FRESH_REVIEW",
+  "rootTypes": {
+    "exitCode": 0,
+    "stableSources": true,
+    "receipt": "evidence/root-types-repaired/receipt.json"
+  },
+  "rootLint": {
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 115,
+    "stableSources": true,
+    "receipt": "evidence/root-lint-repaired/receipt.json"
+  },
+  "historicalOutcomesInherited": 78,
+  "historicalSuitesInherited": [
+    74,
+    1,
+    1,
+    2
+  ],
+  "historicalSkippedInherited": 0,
+  "historicalStrictTypecheckClaim": false,
+  "currentTestExecutionHere": false,
+  "unitDiscoveryBefore": 71,
+  "unitDiscoveryAfter": 70,
+  "onlyUnitRemoved": "tests/unit/runtime/gateway-dispatch.test.ts",
+  "requiredFullGate": "Separate guarded accepted historical78 AND current ordinary units both mandatory",
+  "sourceFreeze": [
+    {
+      "path": "tsconfig.json",
+      "sha256": "d2e0218dafdad8470e2bbeb52c488a176ec00856b09cbd45382fe15cf8520f4a"
+    },
+    {
+      "path": "jest.config.mjs",
+      "sha256": "0d738d5fe818717587b3c50b20684a443e563c1c34942cb201ef8aa62678374c"
+    },
+    {
+      "path": "eslint.config.js",
+      "sha256": "ba0d4422abf6422c90b2c020436b4c43658a171567074e1fc653441fbf7be934"
+    },
+    {
+      "path": "tsconfig.lint.json",
+      "sha256": "70d8e256124c4bb928095fc00a6fab9a36897e03f00ab58faf933cb55cc5db57"
+    },
+    {
+      "path": "tsconfig.build.json",
+      "sha256": "647e52c6be548913da763eb05f1aaa7cff045007b2884d1f712cd2f852310147"
+    },
+    {
+      "path": "tests/unit/runtime/convex-schema-test-types.d.ts",
+      "sha256": "04226cc6b8b093bc655dede0b2612ecd5bdc42f37d13a882b76abd9189ece394"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-dispatch.test.ts",
+      "sha256": "fc58a25d9c5cf9526e65838ab1b25c4fcf5cda024885082a560e3cf6faa029f2"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "sha256": "d324b1a85beb20fc98c1d81bc9fc592969be452ddd2d3a00886df464edc8dba1"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "e796e43aafe70c37d8af7330a969e5b643eb58e86be7621cc7c08991ff1224be"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "817def96244c30f0eb176afa90163f38d5c9deac842d714c9ad3c3d69829e967"
+    },
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "4467a4d4e424fa57cd07de95bce702108765747cfb6afa8a0756fea253926534"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "7394c55d00ccdc9c75cd8abab7a30e945d9bcaf76118b7b48ae55d4c02d71dcb"
+    }
+  ],
+  "freshReviewRequired": true
+}
