@@ -1,0 +1,5 @@
+# Provisional freeze ordering failure retained
+
+The first read-only dispatch preflight failed with QA_SOURCE_INVENTORY_DRIFT before any credential access or dispatch. Python Path ordering placed fixture/convex/_generated/api.d.ts before fixture/convex.json; the guard correctly requires lexical STRING ordering, which places fixture/convex.json first. No product, script, case, budget or previous check byte changed.
+
+The exact failed provisional freeze SHA256 d454cec1af0e5137f070fdc92a0b3065e76b5c50cae19d677a5529bb5408ce55 and manifest SHA256 178c832f610d0d6d2c4c4912aedfa79ac6b21744e0911359440c6f4791fda62a were explicitly moved into evidence/provisional-freeze-ordering-failure, with original-path/hash mapping and unrelabeled failure receipt. The final runtime-freeze operationalPaths uses lexical strings; its full file list and final manifest additionally preserve this immutable failure archive and this explanation. A NEW exclusive read-only successful preflight validation is required; the failed observation is not promoted to success.
