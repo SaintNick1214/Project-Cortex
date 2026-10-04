@@ -1,0 +1,42 @@
+{
+  "scope": "EXACT_DRIVER_SESSION_SOURCE_DUMMY_PORTS_ONLY_NO_PRIVATE_NATIVE_OR_NETWORK",
+  "sourceSHA256": "35d78993339818dd682edcdcfd32b48c0f66d0e6fb36b311e5514293f3ed7d6e",
+  "results": [
+    {
+      "mode": "healthy",
+      "status": "PASS",
+      "clientCalls": 1,
+      "preflights": 2,
+      "error": null,
+      "secretValuesPrinted": false,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "target",
+      "status": "PASS",
+      "clientCalls": 0,
+      "preflights": 2,
+      "error": "QA_TARGET_DRIFT",
+      "secretValuesPrinted": false,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "private-env",
+      "status": "PASS",
+      "clientCalls": 0,
+      "preflights": 2,
+      "error": "QA_PRIVATE_SELECTOR_DRIFT",
+      "secretValuesPrinted": false,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "publication",
+      "status": "PASS",
+      "clientCalls": 0,
+      "preflights": 2,
+      "error": "QA_PUBLICATION_DRIFT",
+      "secretValuesPrinted": false,
+      "native": "NOT_RUN"
+    }
+  ]
+}

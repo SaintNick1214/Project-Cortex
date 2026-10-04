@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T11:02:17.261838+00:00",
+  "verdict": "REJECT",
+  "scope": "TASK04_MODEL_DRIFT_NATIVE_PARENT_PREPARATION_C1_ONLY",
+  "scores": {
+    "requirementFulfillment": 2,
+    "codeQuality": 2,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 2
+  },
+  "average": 2.6,
+  "critical": "Initial reviewed freeze+complete manifest+private review trust anchor missing; each exact final guard accepts a self-consistent before-first-call replacement, including full ownDUMMY preservation.",
+  "directControlCounts": {
+    "finalInheritedSetupWatch": 106,
+    "finalIndependentWatcher": 17,
+    "finalIndependentBody": 18,
+    "finalInitialBindingHostileProfiles": 3
+  },
+  "native": "NOT_RUN",
+  "paid": "NOT_RUN",
+  "actualPrivateInputs": "NOT_READ_NOT_CREATED",
+  "defaultAcceptance": false,
+  "fullTask04Acceptance": false,
+  "goalAcceptance": false,
+  "ROOTSourceReleasePins": {
+    "extension": [
+      "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "08256428dbbc5e164c72ce02ccbfff51bae2fc75561ee6a5657feeacc3165f15"
+    ],
+    "regression": [
+      "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad"
+    ],
+    "extra": [
+      "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "63128dbd82efdd0932652d4696c2be32d677b83c73f90f66307f846d5b1443e6"
+    ]
+  }
+}

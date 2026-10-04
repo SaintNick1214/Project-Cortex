@@ -1,0 +1,13 @@
+from pathlib import Path
+import subprocess,json,datetime,time,hashlib
+repo=Path('/workspace/Project-Cortex');base=repo/'_goals/convex-backend-runtime-2026-10-02/qa';w=repo/'work/resume/task04-model-drift-native-preparation-c1'
+tasks=[]
+for k in ['extension','regression','extra']:
+ r=base/f'task04-model-drift-native-{k}-preparation-c1'
+ for name,path in [('parent-original',w/k/'parent-proof/actual-chain.mjs'),('parent-adversarial',w/k/'parent-proof/adversarial-chain.mjs'),('runtime-freeze',r/'scripts/offline-runtime-freeze.mjs'),('inventory',r/'scripts/inventory.mjs'),('outcomes',r/'scripts'/('offline-actual-core.mjs' if k=='regression' else 'offline-extension.mjs'))]:
+  cmd=['node','--experimental-vm-modules',str(path)]+(['--verify'] if name=='inventory' else [])
+  tasks.append((r,name,cmd,path))
+for name in ['driver-error-controls','rpc-binding-controls']:
+ tasks.append((base/'task04-model-drift-native-extra-preparation-c1',name,['node','--experimental-vm-modules',str(w/f'{name}.mjs')],w/f'{name}.mjs'))
+for r,name,cmd,p in tasks:
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); t=time.monotonic();res=subprocess.run(cmd,cwd=repo,capture_output=True,text=True,timeout=120);d=r/'evidence';(d/f'final-{name}.stdout').write_text(res.stdout);(d/f'final-{name}.stderr').write_text(res.stderr);(d/f'final-{name}.receipt.json').write_text(json.dumps({'argv':cmd,'cwd':str(repo),'sourceSHA256':hashlib.sha256(p.read_bytes()).hexdigest(),'startedAt':start,'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'elapsedMs':round((time.monotonic()-t)*1000),'exitCode':res.returncode,'native':'NOT_RUN'},indent=2)+'\n');print(r.name,name,res.returncode,res.stdout[-250:],res.stderr[-200:],flush=True)

@@ -1,0 +1,13 @@
+import {build} from '/workspace/Project-Cortex/node_modules/esbuild/lib/main.js';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+const repo='/workspace/Project-Cortex',out=resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review');
+const results=[];
+for(const kind of ['extension','regression','extra']){
+ const packet=resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-'+kind+'-preparation-c1'),tiers=JSON.parse(readFileSync(resolve(packet,'dependency-tiers.json')));
+ const fresh=await build({absWorkingDir:repo,entryPoints:tiers.runtimeEntries.map(n=>resolve(packet,'scripts',n)),bundle:true,platform:'node',format:'esm',metafile:true,write:false,outdir:resolve(repo,'work/resume/task04-model-drift-native-source-preparation-c1-review/graph-'+kind),logLevel:'silent'});
+ const paths=Object.keys(fresh.metafile.inputs).sort(),expected=tiers.rpc.runner.map(r=>r.path).sort();
+ const result={kind,freshConsumedInputs:paths.length,expectedRPCInputs:expected.length,missing:paths.filter(p=>!expected.includes(p)),extra:expected.filter(p=>!paths.includes(p)),status:paths.every(p=>expected.includes(p))?'OBSERVED_GRAPH_COVERED':'MISSING_CONSUMED_SOURCE'};results.push(result);
+ writeFileSync(resolve(out,kind+'-fresh-consumed-graph.json'),JSON.stringify(fresh.metafile,null,2)+'\n');
+}
+writeFileSync(resolve(out,'fresh-graph-check.json'),JSON.stringify(results,null,2)+'\n');console.log(JSON.stringify(results,null,2));

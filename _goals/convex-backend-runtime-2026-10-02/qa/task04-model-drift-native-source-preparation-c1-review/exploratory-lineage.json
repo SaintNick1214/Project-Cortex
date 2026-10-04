@@ -1,0 +1,25 @@
+{
+  "firstHostileInvocation": {
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "work/resume/task04-model-drift-native-source-preparation-c1-review/first-binding-hostile.mjs"
+    ],
+    "exitCode": 1,
+    "actual": "ACCEPTED_UNREVIEWED_SELF_CONSISTENT_FIRST_SUBSTITUTION",
+    "raw": "Original tool output retained in conversation; independently repeated raw file-backed outcomes in three receipts"
+  },
+  "inspectionFailures": [
+    {
+      "operation": "Initial rg included missing qa/... source-review path",
+      "exitCode": 2,
+      "impact": "Discovery only; no certification"
+    },
+    {
+      "operation": "Inspect extension budget-source-proof.json",
+      "error": "FileNotFoundError; proof belongs to extra only",
+      "shellExitCode": 0,
+      "impact": "Inspected extra next; no inferred success"
+    }
+  ]
+}

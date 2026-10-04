@@ -1,0 +1,47 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/independent-initial-binding-v4.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-source-preimages/regression/scripts/guard.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/regression-initial-binding-v4-results.json",
+    "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad",
+    "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T11:01:23.972Z",
+  "source": {
+    "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-source-preimages/regression/scripts/guard.mjs",
+    "bytes": 20417,
+    "sha256": "b8491b55f4423f44653dbad909530ae91f68c253bfe528d612f1695ac17b718b"
+  },
+  "DUMMYArea": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-source-preimages/regression/scripts/DUMMY-binding-w8btBZ",
+  "externallyReviewedROOTPins": {
+    "freezeSha256": "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad",
+    "manifestSha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c"
+  },
+  "DUMMYSubstitutedPins": {
+    "freezeSha256": "80f9561f17f930b2a8e6a4b0413cab9fba709279ac7cde654e7534c3c8c050b5",
+    "manifestSha256": "c81b9b1a22e45fa7a4f83ca542dd63775a62478c4665aec15d2f73f4ef0767fd"
+  },
+  "firstCall": {
+    "substitutedBeforeFirstCall": true,
+    "completeRecursiveOwnDUMMYManifest": true,
+    "fullPreservationPassed": true,
+    "preservedFiles": 17,
+    "accepted": true,
+    "error": null,
+    "frozenInputsReturned": 16
+  },
+  "laterCall": {
+    "privateReviewChanged": true,
+    "denied": true,
+    "error": "QA_REVIEW_SUBSTITUTION"
+  },
+  "scope": "EXACT_FINAL_GUARD_SOURCE_VM_OWN_DUMMY_PUBLIC_PRIVATE_FILES_ONLY",
+  "actualPrivateReads": 0,
+  "actualNetwork": 0,
+  "actualSigning": 0,
+  "native": "NOT_RUN",
+  "paid": "NOT_RUN",
+  "finding": "MISSING_INITIAL_EXTERNAL_TRUST_ANCHOR"
+}

@@ -1,0 +1,67 @@
+{
+  "label": "DUMMY SEMANTIC EXAMPLES ONLY",
+  "canonical": "{\"domain\":\"cortex.experiment.scope-profile.v1\",\"ownerHash\":\"3333333333333333333333333333333333333333333333333333333333333333\",\"profileHash\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"spaceHash\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"tenantHash\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"version\":1}",
+  "digest": "e5cd2dae96ed6678a30b62e8d7b5065688c70c8e6f7b70288a8d580fb106775c",
+  "cases": [
+    {
+      "case": "same tuple ordered differently",
+      "pass": true
+    },
+    {
+      "case": "honest wrong tenantHash equality excluded",
+      "pass": true
+    },
+    {
+      "case": "forged expected composite wrong tenantHash semantic denied",
+      "pass": true
+    },
+    {
+      "case": "honest wrong spaceHash equality excluded",
+      "pass": true
+    },
+    {
+      "case": "forged expected composite wrong spaceHash semantic denied",
+      "pass": true
+    },
+    {
+      "case": "honest wrong ownerHash equality excluded",
+      "pass": true
+    },
+    {
+      "case": "forged expected composite wrong ownerHash semantic denied",
+      "pass": true
+    },
+    {
+      "case": "honest wrong profileHash equality excluded",
+      "pass": true
+    },
+    {
+      "case": "forged expected composite wrong profileHash semantic denied",
+      "pass": true
+    },
+    {
+      "case": "otherwise valid row wrong composite denied",
+      "pass": true
+    },
+    {
+      "case": "named tuple position swap distinct",
+      "pass": true
+    },
+    {
+      "case": "delimiter denied",
+      "pass": true
+    },
+    {
+      "case": "wrong type denied",
+      "pass": true
+    },
+    {
+      "case": "extra key denied",
+      "pass": true
+    },
+    {
+      "case": "uppercase denied",
+      "pass": true
+    }
+  ]
+}

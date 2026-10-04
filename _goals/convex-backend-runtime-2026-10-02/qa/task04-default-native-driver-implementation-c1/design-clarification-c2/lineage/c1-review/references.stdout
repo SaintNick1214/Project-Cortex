@@ -1,0 +1,1892 @@
+# Cortex repository
+
+## Scope and safeguards
+
+This is the `Project-Cortex` SDK monorepo. The surrounding Cortex workspace contains
+independent repositories. Use explicit working directories and inspect Git status,
+the relevant manifests and CI before editing. Preserve local work. Do not commit,
+publish, deploy production or message other chats unless requested.
+
+The Python SDK and old pipeline helpers are archived under `_DEPRECATED/`. They are
+reference material, outside active package builds, parity work and QA. SDK documentation
+is canonical in the sibling website repository at `cortexmemory.dev/docs-site/docs/`;
+do not restore the removed `Documentation/` tree or edit the website without task scope.
+
+## Active packages and tooling
+
+| Path | Role |
+|---|---|
+| Root (`@cortexmemory/sdk`) | TypeScript memory client, domain modules and shared contracts |
+| `convex-dev/` | Convex backend; `convex.json` selects this functions directory |
+| `packages/cortex-cli/` | CLI and shipped scaffold templates |
+| `packages/vercel-ai-provider/` | AI SDK integration with core and React export paths |
+| `packages/vercel-ai-provider/quickstart/` | Canonical Next.js demo; separate install outside npm workspaces |
+| `packages/cortex-cli/templates/basic/` | Basic scaffold; separate checks/install |
+| `packages/cortex-cli/templates/chat-sdk-quickstart/` | Chat scaffold; separate checks/install |
+| `packages/cortex-cli/templates/vercel-ai-quickstart/` | Generated mirror of the canonical demo |
+
+Root npm workspaces include the root and `packages/*`. Current active manifests require
+Node >=24.15.0 and declare npm 12.2.0. Use their current scripts and lockfiles. The current
+stack uses TypeScript 6.0 and ESLint 10; old `.ncurc.json` exclusions and global `ncu`
+setup are superseded. `scripts/update-deps.mjs` uses local npm execution, skips archived
+packages and restricts TypeScript to supported patch upgrades. Run its dry mode before
+an authorized dependency update; do not run it for unrelated work.
+
+## Codex orchestration
+
+The workspace orchestration suite is canonical in `Project-Cortex/.agents/` and linked
+from the workspace `.agents/`. When installed, read `.agents/CODEX-RUNTIME.md` and
+`.agents/PROJECT-PROFILE.md` for path resolution, module scope and validation commands.
+Verify profile facts against current manifests when branches have changed.
+
+Use feature-orchestrator for substantial multi-step features, deep-research-orchestrator
+for research/planning, and project-bootstrap-orchestrator only for requested new projects.
+These workflows use native Codex subagents for bounded execution and independent review;
+ordinary small edits stay direct. Planning documents do not authorize implementation.
+
+## Builds and checks
+
+Convex generated bindings are versioned so a clean build does not require credentials or
+an automatic backend deployment. Do not initialize a deployment or regenerate bindings
+just to satisfy an unrelated check. Verify generated imports when changing backend APIs.
+
+- Root: `npm run lint`, `npm run build`, and `npm run test:contracts`.
+- CLI: its own lint, build and `test:unit` scripts. Its `prebuild` synchronizes the demo
+  mirror, so inspect generated diffs and protect unrelated template work.
+- Provider: its own lint, build and `test:unit` scripts, including React exports.
+- Demo/templates: inspect each package's scripts; they are separate installs. Chat scaffold
+  uses npm/Vitest. The basic scaffold's `build` runs offline TypeScript; its separate
+  `build:convex` deploys Convex and requires deployment authorization.
+
+After behavior changes run affected code-quality and applicable module/UI QA. A requested
+full QA gate covers the active core modules in the profile, not all sibling repositories.
+Use verified disposable targets for integration, isolation, graph and paid inference;
+credentials alone do not establish a safe target. Report absent/skipped coverage honestly.
+Do not deploy, seed, migrate or invoke paid models solely to make a check pass.
+
+## Runtime and environment
+
+Inspect `.env.example` and actual configured prerequisites without printing secrets.
+Do not assume cloud-injected credentials, rewrite `.env.local`, or disable graph features
+in local Codex because of older Cursor Cloud guidance. Convex authentication and service
+access are checked when needed; Neo4j/Memgraph reachability depends on the actual runtime.
+Keep browser-safe exports separate from backend/Node-only modules and provider secrets.
+# Codex runtime adapter
+
+## Resolve the installation and target
+
+This file, `PROJECT-PROFILE.md`, `roles/`, and `skills/` share one `.agents/` directory.
+Resolve the active skill file's real path (including symlinks), then use its ancestor
+`.agents/` directory as the orchestration root. The parent of that directory is the
+profile root. For this installation it is the `Project-Cortex` Git repository.
+References beginning `.agents/` are relative to the profile root, even when the current
+working directory is the surrounding Cortex workspace. Other paths in the profile are
+relative to the profile root unless explicitly stated otherwise. Pass absolute paths
+and explicit working directories to subagents and shell calls.
+
+Check the actual target repository's `AGENTS.md`, manifests, and Git status before work.
+The surrounding Cortex directory contains independent repositories. Do not run one
+repo's checks in another, infer a shared Git root, or initialize Git in the workspace.
+The source blueprint is reference material; its examples do not authorize new work.
+
+## Native delegation
+
+When an installed orchestration workflow calls for delegated execution or review, use
+Codex's available subagent tools. In this desktop runtime these are
+`collaboration.spawn_agent`, `send_message`, `followup_task`, `wait_agent`, and
+`interrupt_agent`. Call them directly, outside `functions.exec`.
+There is no Cursor Task tool or special generalPurpose/browser-use type.
+Role Markdown files are prompts to read, not registered tool types.
+
+Give each child a bounded task, absolute target paths, the original requirements,
+relevant role and rubric paths, permitted writes, prerequisites, and evidence expected.
+For fresh judgment use `fork_turns="none"` and provide minimum raw context, rather than
+inheriting the implementer's conclusions. Keep the user's configured model; do not set
+model or reasoning overrides without authorization. Judges inspect but do not edit.
+Wait for the child's final result and inspect outputs before recording a verdict.
+A sent message or spawn acknowledgment is not completion.
+
+The current runtime supports four concurrent agents including the coordinator; leave
+space for review. Serialize dependent edits and writes to overlapping files. All agents
+share the filesystem; use native worktree support only when isolation is warranted.
+Do not create user-owned chats for internal subtasks. Do not message other chats unless
+the human explicitly authorized it. Use the runtime's actual tool schemas if names differ.
+If native delegation is unavailable, report an incomplete independent-review gate;
+do not invent tools or label self-review as independent judgment.
+
+Retry a genuinely transient invocation failure up to three total attempts with brief
+backoff. Do not retry permission, missing-tool, or invalid-schema failures unchanged.
+Limit fix-and-judge loops to three cycles. A failed or REJECT verdict never becomes a
+PASS by exhausting retries. Report the unresolved issue and continue only independent,
+authorized work; ask for input only when it is necessary to resolve the blocker.
+
+## Questions and autonomy
+
+Follow Profile §10 and the user's current instructions. Prefer available asynchronous
+user-input tools for missing requirements while progressing on independent work.
+Ask only questions whose answers materially change scope or behavior. Do not impose a
+question count or an extra confirmation for work the user already requested.
+For routine reversible decisions, choose the smallest change consistent with the code
+and record the reason. Required answers and permissions remain pending until received.
+Skill instructions do not change the conversation's collaboration mode.
+
+## Browser QA
+
+Use available native browser/computer-use tools and their returned documentation.
+In this desktop runtime use `mcp__cua_repl.js` with the documented `cua` API; initialize
+with exactly one entry-point call before additional interaction. Read its documentation
+before using browser APIs. Never invent Cursor browser_* tools, special browser agent
+types, or screenshots/console/network evidence that the tools did not provide.
+Serialize work on the same browser tab or app. A judge can review saved evidence while
+another task runs only when they do not share a mutable browser session.
+Record unavailable evidence explicitly; if it is required for the gate, mark that gate
+incomplete. Live QA writes require a verified disposable test environment and cleanup.
+
+## Scope, checks, and evidence
+
+Profile §4 defines selectable check sets. Select affected stacks plus dependency checks
+for normal work; a requested full core gate selects all core sets. A docs/config-only
+installation needs skill/reference/manifest validation, not application test execution.
+Do not add tests that only mirror reversible low-impact edits. For behavior changes,
+map requirements to outcome assertions and meaningful regression tests; a separate
+per-layer test task is optional. Apply these rules when older rubric text says every
+layer needs a test task or every public function needs an error test.
+
+A check's result is PASS only after an observed successful execution. Missing services,
+credentials, tools, unsafe targets, or unexecuted required checks are BLOCKED/incomplete,
+never success. Keep pre-existing failures separate from failures introduced by the task.
+Inspect skipped tests and test discovery as well as exit codes. A zero-test run or skipped
+required graph/LLM/integration coverage cannot certify that behavior, even with exit 0.
+Do not repair unrelated code just to obtain a green suite. After a fix, rerun the failed
+check and independent judge gate. Do not broaden passing checks without a new reason.
+Preserve dirty work, never print secret values, and honor the user's commit/publish scope.
+# Cortex Project Profile
+
+Refreshed for the cloud implementation handoff on 2026-10-03 from reconciled dev
+`3341d64ddc06f1de26ed525312ef2c1b89b16952`: current AGENTS.md, active package manifests,
+Jest configs and PR CI. Commands below were inspected, not executed during this
+planning handoff. Re-read manifests after implementation changes.
+Read `CODEX-RUNTIME.md` for path resolution, native delegation and evidence rules.
+
+## 1. Project Identity
+
+| Field | Value |
+|---|---|
+| Project | Cortex persistent memory and agent runtime, backed by Convex |
+| Profile root | This Git repository, the parent of `.agents/`; discover the actual checkout path |
+| Implementation branch | `feat/convex-backend-runtime`, based on reconciled `dev` |
+| npm monorepo | Root `@cortexmemory/sdk`, `packages/cortex-cli`, `packages/vercel-ai-provider`; workspaces `.` and `packages/*` |
+| Runtime | Node >=24.15.0; package manager npm 12.2.0; TypeScript ~6.0.3 and ESLint 10 at the handoff baseline |
+| Separate installs | Canonical quickstart and each shipped scaffold template |
+| Archived code | Python SDK and old pipeline helpers under `_DEPRECATED/`; excluded from active work and QA |
+
+All paths below are relative to this repository unless explicitly described as a sibling.
+Desktop absolute paths in historical research are provenance, not cloud prerequisites.
+The Markdown orchestration instructions are tracked on this feature branch so a clean
+cloud checkout can follow them, even though `.agents/` remains ignored for untracked files.
+
+## 2. Tech Stacks
+
+| Stack | Tooling | Location | Role |
+|---|---|---|---|
+| sdk | TypeScript 6, tsup, Jest 30 | `src/`, `tests/` | Public TypeScript client/domain contracts |
+| backend | TypeScript, Convex >=1.46 | `convex-dev/` | Schema, queries, mutations, actions and generated bindings |
+| cli | TypeScript, tsc, ESLint, Jest | `packages/cortex-cli/` | CLI and shipped scaffold templates |
+| provider | AI SDK 7, TypeScript, React hooks, tsup, Jest | `packages/vercel-ai-provider/` | Core and `./react` exports |
+| demo | Next.js, React, Jest | `packages/vercel-ai-provider/quickstart/` | Canonical interactive app; separate npm install |
+| basic template | TypeScript, Vitest | `packages/cortex-cli/templates/basic/` | Offline build and unit checks; deployment is a separate script |
+| chat template | Next.js, npm, Vitest, Playwright | `packages/cortex-cli/templates/chat-sdk-quickstart/` | Separate install and product-flow checks |
+| docs | Package READMEs; canonical MDX in website repository | `README.md`, package READMEs; sibling `cortexmemory.dev/docs-site/docs/` | New-install and public-contract documentation |
+
+`packages/cortex-cli/templates/vercel-ai-quickstart/` is generated from the canonical
+quickstart by CLI prebuild. Edit the source, run sync and inspect the mirror diff.
+Do not restore removed `Documentation/`, root Python or old dependency holds.
+Sibling applications are independent repositories and are outside this feature except
+related canonical website documentation. If website access is unavailable, produce a
+reviewable docs patch/handoff and identify incomplete website integration explicitly.
+
+## 3. Architecture & Layers
+
+| Order | Layer | Paths / dependencies |
+|---:|---|---|
+| 1 | Backend schema/contracts and components | `convex-dev/schema.ts`, `convex-dev/*.ts`, `convex.json`, generated `convex-dev/_generated/` |
+| 2 | Shared domain and TypeScript clients | `src/`; scoped validation, memory/facts, artifacts, streaming, graph adapters |
+| 3 | CLI and AI SDK integration | `packages/cortex-cli/src/`, `packages/vercel-ai-provider/src/`, `packages/vercel-ai-provider/react/` |
+| 4 | Demo, templates and docs | Canonical quickstart, basic/chat templates, package READMEs and canonical website docs |
+| 5 | Behavioral verification | `tests/`, package/template tests and goal `qa/` receipts |
+
+Only affected layers need tasks. Build SDK before packages consuming its exports.
+Generated bindings are versioned; clean offline builds do not require deployment.
+Do not hand-edit generated API files instead of codegen when backend contracts change.
+
+## 4. Quality Gate Commands
+
+Select affected stacks and dependency checks. A full active core gate selects sdk/backend,
+CLI, provider, demo/templates and the six modules in §9; it excludes archived Python and
+unrelated sibling applications. Check test discovery, skipped suites and service coverage.
+A successful mocked run does not certify actual service behavior.
+
+| Stack | Check | Command | Working directory |
+|---|---|---|---|
+| sdk/backend | Lint + lint typecheck | `npm run lint` | `.` |
+| sdk/backend | CI typecheck | `npx --no-install tsc --noEmit` | `.` |
+| sdk/backend | Build | `npm run build` | `.` |
+| sdk/backend | Packed/browser public contracts | `npm run test:contracts` after build | `.` |
+| sdk/backend | Unit | `node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit --runInBand --forceExit` | `.` |
+| cli | Lint | `npm run lint` | `packages/cortex-cli` |
+| cli | Typecheck | `npm run typecheck` | `packages/cortex-cli` |
+| cli | Build and template sync | `npm run build` | `packages/cortex-cli` |
+| cli | Unit | `npm run test:unit -- --runInBand` | `packages/cortex-cli` |
+| provider | Typecheck | `npm run lint` | `packages/vercel-ai-provider` |
+| provider | Build both exports | `npm run build` | `packages/vercel-ai-provider` |
+| provider | Unit/React/mocked integration | `node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects unit unit-react integration --runInBand` | `packages/vercel-ai-provider` |
+| demo | Lint | `npm run lint` | `packages/vercel-ai-provider/quickstart` |
+| demo | Typecheck | `npx --no-install tsc --noEmit` | `packages/vercel-ai-provider/quickstart` |
+| demo | Build | `npm run build` | `packages/vercel-ai-provider/quickstart` |
+| demo | Unit/mocked integration | `npm test -- --runInBand` | `packages/vercel-ai-provider/quickstart` |
+| basic template | Offline build | `npm run build` | `packages/cortex-cli/templates/basic` |
+| basic template | Unit | `npm run test:unit` | `packages/cortex-cli/templates/basic` |
+| chat template | Build/lint/unit | `npm run build`, `npm run lint`, `npm test` | `packages/cortex-cli/templates/chat-sdk-quickstart` |
+
+Root setup uses `npm ci`; independent demo/template installs use their own lockfiles.
+The basic template's `build:convex` deploys; it is not an offline quality check.
+No blanket dependency updater, package release, production deployment or destructive
+purge is a substitute for scoped validation.
+
+### Service-dependent coverage
+
+First identify a verified disposable development/test target and effective environment.
+Root tests load `.env.test` and `.env.local` (the latter overrides values); inspect targets
+without printing secrets. Managed vector behavior requires actual managed service evidence.
+Graph and Gateway/LLM tests need their actual services and an approved bounded budget.
+
+| Area | Command or evidence | Prerequisite |
+|---|---|---|
+| SDK/backend integration | `npm run test:local -- --runInBand` or `npm run test:managed -- --runInBand` | Verified test deployment and selected service prerequisites |
+| CLI command/e2e | `npm run test:commands -- --runInBand`, `npm run test:e2e -- --runInBand` in CLI | Inspect actual selected tests; use dedicated disposable fixtures |
+| Provider e2e | `npm run test:e2e -- --runInBand` in provider | Convex, verified identity and qualified inference |
+| Demo e2e | `npm run test:e2e -- --runInBand` in canonical quickstart | Running test app/backend and qualified inference |
+| Template flows | Basic integration/e2e scripts; chat `npm run test:e2e` | Their own installs, host-preservation fixtures and live test targets |
+| Graph | `tests/graph/graphAdapter.test.ts` and changed outbox/service outcomes | Actual Neo4j/Memgraph; CI has dedicated containers |
+| New runtime | Meaningful acceptance tests in the goal tasks | Gateway/Agent/Workflow, managed vectors, private assets and media as applicable |
+
+Inspect `convex.json` and current CLI instructions before backend codegen/deploy changes.
+A deploy key or URL alone does not establish that a target is disposable. Existing CI
+uses dedicated shared test deployments and serializes full runs; do not concurrently
+purge/redeploy those backends from the cloud session. Missing services/credentials/unsafe
+targets are BLOCKED/incomplete, never PASS. Do not disable graph or skip media to claim
+full goal completion. Continue independent work while a service-specific gate is blocked.
+
+## 5. Code Patterns To Follow
+
+| Concern | Existing reference | Purpose |
+|---|---|---|
+| SDK API | `src/memory/index.ts`, `src/memory/validators.ts` | Namespaced APIs, validation, error contracts |
+| Tenant/auth boundary | `src/auth/context.ts`, `convex-dev/memories.ts` | Inventory current semantics; replace untrusted scope with verified grants for this runtime |
+| Backend schema | `convex-dev/schema.ts`, `convex-dev/conversations.ts` | Validators, indexes and transaction conventions |
+| Streaming/provider | `packages/vercel-ai-provider/src/provider.ts`, `packages/vercel-ai-provider/src/streaming-helpers.ts` | Lifecycle and cancellation references, not a second loop for backend runs |
+| CLI | `packages/cortex-cli/src/index.ts`, `packages/cortex-cli/src/commands/` | Registration and exit behavior |
+| Isolated test data | `tests/helpers/isolation.ts`, `tests/unit/memory/` | Unique owned fixtures and cleanup |
+| Demo UI | `packages/vercel-ai-provider/quickstart/app/page.tsx` | Product flows and current app structure |
+
+Hard rules: preserve tenant/space isolation and unrelated host data/config; validate external
+input; never expose secrets; protect existing work; never weaken assertions to hide a defect;
+keep active public exports/contracts consistent. Python parity and legacy data migrations
+are excluded by user instruction. Existing code examples are evidence, not immutable design
+constraints for the clean-slate backend runtime.
+
+## 6. Domain / Reference Docs
+
+| Topic | Reference | Read for |
+|---|---|---|
+| Repo operation | `AGENTS.md`, manifests, `.github/workflows/pr-checks.yml` | Current setup/check selection |
+| Approved scope | `_research/convex-ai-gateway-2026-10-02/decision-gates.md` | User decisions override historical proposals |
+| Architecture | `_research/convex-ai-gateway-2026-10-02/architecture.md` | Current versus proposed diagrams, ownership and technical gates |
+| Implementation | `_goals/convex-backend-runtime-2026-10-02/goal.md`, `tasks/` | Ordered contracts, outcomes and dependencies |
+| Data model | `convex-dev/schema.ts` | Current schema and prospective changes |
+| Product docs | Package READMEs and sibling `cortexmemory.dev/docs-site/docs/` | Public semantics and new installation |
+| Demo setup | `packages/vercel-ai-provider/quickstart/README.md`, `.env.local.example` | Actual app bootstrap |
+
+## 7. Artifact Locations
+
+Relative to the target repository, never an assumed desktop/cloud absolute path:
+
+| Artifact | Location |
+|---|---|
+| Research prompt | `_research/prompts/topic.md` |
+| Research report | `_research/topic/report.md` |
+| Goal | `_goals/goal-name/goal.md` |
+| Ordered tasks | `_goals/goal-name/tasks/NN-name.md` |
+| QA evidence/reports | `_goals/goal-name/qa/` |
+
+Markdown goals do not authorize the separate active-goal API. Record task state, decisions,
+qualified locks, observed receipts, ownership and blockers in this goal tree.
+
+## 8. UI QA Bootstrap
+
+Use the canonical quickstart and independently selected changed template flows. Read each
+README/environment example and install its own dependencies. The current demo requires
+`CONVEX_URL`, `NEXT_PUBLIC_CONVEX_URL`, `OPENAI_API_KEY`; the new backend runtime should
+replace upstream app-side inference keys with authenticated Cortex transport. Qualify the
+new setup rather than treating the old variables as the final required contract.
+
+Use a verified disposable backend and test identity. Reuse safe running services. Run
+`npm run dev` in the canonical quickstart; inspect the actual ready port and browser render.
+HTTP success alone does not certify chat, recall, reconnect, tool approvals or artifact
+flows. Use available native browser tools, save real evidence and never invent screenshots.
+Required browser access unavailable means UI QA incomplete. Browser/device tool execution
+is outside the ordinary backend runtime; UI observation/approval remains in scope.
+
+## 9. QA Modules
+
+Full core QA covers the active product, excluding archived Python and unrelated repositories.
+A scoped gate reports its selection; required service coverage cannot be skipped with PASS.
+
+| Order | Module | Validation skill |
+|---:|---|---|
+| 1 | CLI | `.agents/skills/validate-cortex-cli/SKILL.md` |
+| 2 | AI provider | `.agents/skills/validate-cortex-provider/SKILL.md` |
+| 3 | Memory/backend | `.agents/skills/validate-cortex-memory/SKILL.md` |
+| 4 | Auth/isolation | `.agents/skills/validate-cortex-isolation/SKILL.md` |
+| 5 | Graph | `.agents/skills/validate-cortex-graph/SKILL.md` |
+| 6 | Demo/UI | `.agents/skills/validate-cortex-demo/SKILL.md` |
+
+Read-only/mocked checks precede live mutation. Use unique owned fixtures and cleanup;
+never use real user memory as QA data. Missing service coverage blocks the relevant gate
+and aggregate full success; it does not erase independent completed work.
+
+## 10. Workflow Conventions
+
+- Work autonomously within the user's requested scope. A pasted implementation prompt
+  is the execution request; planning-only disclaimers describe artifact creation and do
+  not require asking for the same permission again.
+- Use feature-orchestrator with native bounded executors and fresh independent judges.
+  Follow the real runtime's tools; report unavailable independent gates honestly.
+- Preserve dirty work and disjoint delegated ownership. Serialize overlapping provider,
+  demo, CLI and generated-mirror edits. No broad workspace formatting/update.
+- Current authorization covers creating/committing/pushing this planning branch. Future
+  implementation commits/draft PRs follow the human's pasted prompt; package publication,
+  releases, production deployment and PR merging require separate authorization.
+- Product decisions in the decision register are settled. Ask only for missing credentials,
+  a safe target/budget, or a consequential technical conflict that cannot be resolved
+  consistently with the approved scope. Continue independent authorized work meanwhile.
+- Only observed checks/reviews count as PASS. Keep pre-existing defects separate, fix
+  task-related failures, and never silently drop scoped features to obtain a green label.
+---
+name: pessimistic-judge
+description: Skeptical reviewer that defaults to finding problems. Assumes issues exist until proven clean. Use when objective judgment is needed for goals, tasks, implementations, or test coverage. Counterbalances optimistic bias in orchestrators. Stack-agnostic — reads the Project Profile for project-specific rules.
+---
+
+Read `.agents/CODEX-RUNTIME.md` before applying this document. Resolve profile and role
+paths against the orchestration root defined there; its scope and evidence rules apply.
+
+You are a SKEPTICAL, PESSIMISTIC judge. Your job is to find problems, not approve work.
+
+## First: Load Project Context
+
+Before judging, read **`.agents/PROJECT-PROFILE.md`**. It defines this project's stacks,
+layers, code patterns, hard rules, and quality commands. Judge against *that* reality, not
+against generic assumptions. When this document refers to "the hard rules" or "house
+patterns," it means the ones declared in the Project Profile.
+
+If detailed judgment criteria are provided (e.g. `judge-goal`, `judge-task`, `judge-qa`),
+read and apply them — they refine what follows.
+
+## Core Principles
+
+1. **Default to pessimism**: Assume issues exist until you have concrete evidence they don't
+2. **No sunk cost bias**: You have no stake in the work being approved
+3. **Find problems first**: Your value is in catching issues early, not in moving fast
+4. **Be specific**: Vague "looks good" is worthless. Cite file, line, and evidence.
+
+## When Judging Goals
+
+Look for these problems (assume they exist):
+- Missing tasks for an affected layer (declared in the Project Profile) — e.g. client
+  changes planned with no server task, or vice versa
+- Missing test tasks for any implementation layer
+- Vague acceptance criteria that can't be objectively verified
+- Overlapping or redundant tasks
+- Missing edge cases or error-handling requirements
+- Unrealistic scope (too much for one goal)
+- Data/schema changes with no migration strategy
+- New behavior/endpoints with no corresponding lower-layer tasks
+
+## When Judging Tasks
+
+Look for these problems (assume they exist):
+- Requirements not fully met (check EVERY requirement individually)
+- Tests that don't actually verify outcomes (they just call the code)
+- Missing test coverage (uncovered functions, branches, error paths)
+- Missing input validation or error handling
+- Weak typing / unsafe casts where the language supports stronger guarantees
+- Missing exports, registrations, or wiring needed for the code to be reachable
+- Breaking changes to existing functionality
+- Data-layer code that doesn't match the declared schema/contract
+
+## Stack-Agnostic Code Skepticism
+
+Adapt these universal questions to the language(s) in the Project Profile. They map onto
+almost every stack:
+
+- **Concurrency/async**: Are asynchronous operations awaited/joined correctly? Any
+  fire-and-forget that drops errors? Any shared state mutated without synchronization?
+- **Resource safety**: Are files, sockets, connections, locks released on every path
+  (including error paths)?
+- **Error propagation**: Are errors handled or deliberately propagated — never silently
+  swallowed? Do public entry points fail gracefully?
+- **Dependency boundaries**: Are dependencies injected/passed rather than constructed
+  ad hoc where the codebase expects injection? Are layers respected?
+- **Input handling**: Is external input validated and parameterized (no injection via
+  string concatenation into queries, shells, templates, etc.)?
+- **Observability**: Is there appropriate logging/tracing for failures and key paths?
+- **Nullability/optionals**: Are absent values handled rather than assumed present?
+
+## When Judging Data-Layer Work
+
+Reference the schema/contract doc named in the Project Profile (§6) to verify:
+- Field names and types match the schema
+- Relationships are correctly understood
+- Required fields are never left empty/null without a valid default
+- Index/lookup usage is appropriate for the access pattern
+- Migrations/scripts are idempotent (safe to re-run)
+
+## When Judging Test Coverage
+
+Be ESPECIALLY skeptical:
+- Map changed public behavior, branches, and error paths to meaningful assertions
+- Review relevant test cases and their asserted outcomes
+- Identify uncovered changed behavior; function counts alone do not establish coverage
+- Check that tests verify OUTCOMES, not just that code ran without throwing
+- Check that error paths are tested
+- Check that edge cases are tested (empty, null, boundary, concurrent)
+- Check that mocks/fakes/fixtures are set up correctly and verified where it matters
+
+## Scoring Guidance
+
+Apply this rubric strictly:
+
+```
+5 - Exceptional: Cannot find any issues after thorough review
+4 - Good: 1-2 minor issues that don't block progress
+3 - Acceptable: Several issues that should be fixed but could proceed
+2 - Needs Work: Significant issues that must be fixed before proceeding
+1 - Failed: Fundamental problems, cannot proceed
+```
+
+**Default starting assumption: Score is 2 until evidence raises it.**
+
+## Output Format
+
+Always structure your judgment as:
+
+```markdown
+# Judgment: [Subject Name]
+
+## Verdict: [PASS | NEEDS FIXES | REJECT]
+
+## Evidence Review
+[What you examined, what you found]
+
+## Issues Found
+
+### Critical (must fix)
+- [Issue with specific location and evidence]
+
+### Important (should fix)
+- [Issue with specific location and evidence]
+
+### Minor (consider fixing)
+- [Issue with specific location and evidence]
+
+## Dimension Scores
+| Dimension | Score | Evidence |
+|-----------|-------|----------|
+| [Dim] | X/5 | [Specific finding] |
+
+**Average**: X.X/5
+
+## Recommendation
+[Specific actions needed to pass]
+```
+
+## Red Flags That Auto-Fail
+
+These automatically result in REJECT, regardless of stack:
+
+### Security
+- Exposed secrets (API keys, connection strings, tokens, passwords)
+- Injection vulnerabilities (SQL/NoSQL/command/template injection via unsanitized input)
+- Missing authentication/authorization on protected operations
+- Output that reflects untrusted input without escaping (XSS and equivalents)
+
+### Correctness
+- Asynchronous operations not awaited where the result/ordering matters
+- Uncaught errors at public entry points (handlers, controllers, command entry)
+- Missing input validation on externally reachable functions
+
+### Tests
+- Tests with no assertions verifying actual outcomes
+- Missing error-case tests for public functions
+- Mocks/spies set up but never verified when the interaction is the thing under test
+
+### Project Hard Rules
+- Any violation of the **Hard Rules** declared in the Project Profile (§5)
+
+## Note on Eventual Consistency & Transient Failures
+
+If the Project Profile documents systems with eventual consistency or known transient
+failure modes (e.g. distributed stores, cloud provisioning), do **not** flag deliberate
+retry logic against those systems as a defect. Removing such retries is itself a red flag.
+---
+name: judge-task
+description: Reference criteria for judging task implementation quality. Used by the pessimistic-judge subagent when evaluating work produced by implementation-executor. Not a standalone skill - provides a judgment framework. Stack-agnostic.
+---
+
+Read `.agents/CODEX-RUNTIME.md` before applying this document. Resolve profile and role
+paths against the orchestration root defined there; its scope and evidence rules apply.
+
+# Task Judgment Criteria
+
+Reference document for the pessimistic-judge subagent when evaluating task implementations.
+
+> Read `.agents/PROJECT-PROFILE.md` first. "Patterns," "hard rules," "quality commands,"
+> and "schema doc" below refer to what the Project Profile declares for *this* project.
+
+## Judgment Dimensions
+
+### 1. Requirement Fulfillment (Weight: Critical)
+
+**Question**: Are ALL requirements from the task file met?
+
+| Score | Criteria |
+|-------|----------|
+| 5 | All requirements met with evidence, exceeds expectations |
+| 4 | All requirements met, evidence clear |
+| 3 | Most requirements met, minor gaps |
+| 2 | Some requirements unmet or partially met |
+| 1 | Major requirements missing |
+
+**Verification Method:**
+1. List every requirement from the task file
+2. Check the implementation against each one
+3. Require evidence for each (file, line, test name, command output)
+
+**Auto-Fail Triggers:**
+- Any requirement marked complete but not verifiable
+- Any requirement silently dropped
+
+### 2. Code Quality (Weight: High)
+
+**Question**: Does the code follow project patterns and language best practices?
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Exemplary code, could be used as a reference |
+| 4 | Clean code, follows patterns, minor improvements possible |
+| 3 | Acceptable code, some pattern deviations |
+| 2 | Code quality issues that need fixing |
+| 1 | Poor code quality, significant issues |
+
+**Universal checks (translate to the stack):**
+- [ ] Inputs validated at public boundaries
+- [ ] Errors handled or deliberately propagated (never silently swallowed)
+- [ ] Async/concurrent work awaited/synchronized correctly
+- [ ] Resources released on all paths (files, connections, locks)
+- [ ] Dependencies injected/passed per house convention (not constructed ad hoc)
+- [ ] Strong typing where the language allows; escape hatches justified
+- [ ] Logging/observability present for failures and key paths
+- [ ] No violations of the Project Profile hard rules
+
+### 3. Test Quality (Weight: High — for test tasks)
+
+**Question**: Do tests actually verify behavior?
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Comprehensive tests with outcome verification |
+| 4 | Good coverage, all tests verify outcomes |
+| 3 | Adequate tests, some weak assertions |
+| 2 | Tests present but don't verify outcomes |
+| 1 | Missing tests or tests that just call code |
+
+**Verification Method:**
+1. Map changed public behavior, branches, and error paths to meaningful assertions
+2. Review relevant test cases and their asserted outcomes
+3. For each test, confirm assertions verify ACTUAL outcomes (not just "ran without error")
+
+**Auto-Fail Triggers:**
+- Tests that only invoke code without meaningful assertions
+- "Not null" / "is defined" / "did not throw" as the *only* assertion
+- Missing error-case tests
+- Public functions with no test coverage
+
+### 4. Pattern Adherence (Weight: Medium)
+
+**Question**: Does the implementation follow established project patterns?
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Perfect pattern adherence, consistent with the codebase |
+| 4 | Follows patterns, minor style differences |
+| 3 | Mostly follows patterns, some deviations |
+| 2 | Significant pattern deviations |
+| 1 | Ignores established patterns |
+
+**How to check:** Compare the new code against the canonical exemplar files named in the
+Project Profile (§5) for this concern. Deviations in structure, naming, error handling, or
+layering count against this dimension.
+
+### 5. Completeness (Weight: Medium)
+
+**Question**: Is the implementation truly complete and reachable?
+
+| Score | Criteria |
+|-------|----------|
+| 5 | Complete with all supporting changes (wiring, exports, registration) |
+| 4 | Implementation complete, supporting changes present |
+| 3 | Core implementation complete, some supporting changes missing |
+| 2 | Partial implementation, gaps in supporting infrastructure |
+| 1 | Incomplete implementation |
+
+**Completeness checks (translate to the stack):**
+- [ ] New components registered/wired so they're reachable
+- [ ] New routes/handlers mounted
+- [ ] New symbols exported where consumers need them
+- [ ] Config/enums/manifests updated where the pattern requires
+- [ ] Build/lint/typecheck/tests for the touched stack pass
+
+## Verdict Thresholds
+
+| Verdict | Criteria |
+|---------|----------|
+| **PASS** | All dimensions ≥ 4 AND Requirement Fulfillment = 5 |
+| **NEEDS FIXES** | Any dimension 3-4 AND no critical issues |
+| **REJECT** | Any dimension ≤ 2 OR an auto-fail trigger hit |
+
+## Output Format
+
+```markdown
+# Task Judgment: [Task Name]
+
+## Verdict: [PASS | NEEDS FIXES | REJECT]
+
+## Requirements Review
+
+| Requirement | Met? | Evidence |
+|-------------|------|----------|
+| [Req 1] | ✅/❌ | [Location/proof] |
+| [Req 2] | ✅/❌ | [Location/proof] |
+
+## Dimension Scores
+
+| Dimension | Score | Evidence |
+|-----------|-------|----------|
+| Requirement Fulfillment | X/5 | [Observation] |
+| Code Quality | X/5 | [Observation] |
+| Test Quality | X/5 | [Observation] (if test task) |
+| Pattern Adherence | X/5 | [Observation] |
+| Completeness | X/5 | [Observation] |
+
+**Average**: X.X/5
+
+## Issues Found
+
+### Critical (must fix - blocks PASS)
+- [Issue with file:line and suggested fix]
+
+### Important (should fix)
+- [Issue with file:line and suggested fix]
+
+### Minor (consider fixing)
+- [Issue with file:line and suggested fix]
+
+## Recommendations
+
+[Specific actions to achieve PASS verdict]
+```
+
+## Special Case: Test Task Judgment
+
+When judging test tasks, add this section:
+
+```markdown
+## Test Coverage Analysis
+
+| Implementation Function | Test Cases | Assertions Verify Outcome? |
+|-------------------------|------------|----------------------------|
+| `getById` | 2 | ✅ Checks return value |
+| `create` | 3 | ✅ Verifies created entity |
+| `delete` | 1 | ❌ Only checks no exception |
+
+**Coverage**: X/Y functions have adequate tests
+**Verdict Impact**: [How this affects overall verdict]
+```
+
+## Iron Law for Test Fixes
+
+When judging fixes to failing tests:
+
+**The TEST defines expected behavior. The IMPLEMENTATION must be fixed.**
+
+**Auto-REJECT if:**
+- Assertions were removed
+- Expected values were changed without justification
+- A test was made less specific just to pass
+- Error handling was removed from a test
+
+**Only acceptable test changes:**
+- Test setup was incorrect (wrong mock data)
+- Test was asserting wrong behavior (misread the spec)
+- The API genuinely changed and the test must update to the new correct behavior
+
+---
+
+## Critical Reference: Schema / Contract Doc
+
+The Project Profile (§6) names the authoritative schema/contract doc. When judging
+data-layer work (migrations, queries, persistence, models), verify against it:
+
+- [ ] Field names match the schema exactly
+- [ ] Data types are correct
+- [ ] Required (non-nullable) fields are always populated
+- [ ] Optional fields have appropriate absent-value handling
+- [ ] Relationships are respected
+- [ ] Lookup/index usage aligns with access patterns
+- [ ] Scripts are idempotent (safe to re-run)
+
+### Auto-Fail Triggers (Data Layer)
+- References to non-existent fields or entities
+- Data types that don't match the schema
+- Required fields left empty without a valid default
+- Injection risk (concatenating untrusted input instead of parameterizing)
+{
+  "name": "@cortexmemory/sdk",
+  "version": "0.37.0",
+  "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
+  "type": "module",
+  "workspaces": [
+    ".",
+    "packages/*"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "convex-dev",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "keywords": [
+    "ai",
+    "agents",
+    "memory",
+    "convex",
+    "sdk",
+    "typescript",
+    "conversations",
+    "vector-search",
+    "llm",
+    "chatbot",
+    "knowledge-graph",
+    "facts",
+    "hive-mode",
+    "memory-spaces",
+    "workflow-coordination",
+    "multi-agent",
+    "infinite-context"
+  ],
+  "author": "Saint Nick LLC",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaintNick1214/Project-Cortex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SaintNick1214/Project-Cortex/issues"
+  },
+  "homepage": "https://github.com/SaintNick1214/Project-Cortex#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm test && npm run build",
+    "prepack": "npm run build",
+    "release": "pwsh -File scripts/release.ps1",
+    "dev": "node scripts/dev-runner.mjs",
+    "dev:local": "node scripts/dev-runner.mjs --local",
+    "dev:cloud": "node scripts/dev-runner.mjs --cloud",
+    "logs": "convex logs",
+    "logs:local": "convex logs --url http://127.0.0.1:3210",
+    "logs:cloud": "convex logs --prod",
+    "lint": "tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives",
+    "test": "node scripts/test-runner.mjs",
+    "test:local": "cross-env CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug",
+    "test:managed": "cross-env CONVEX_TEST_MODE=managed node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug",
+    "test:both": "npm run test:local && npm run test:managed",
+    "test:serial": "node scripts/test-runner.mjs --runInBand",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --watch",
+    "test:interactive": "tsx tests/interactive-runner.ts",
+    "test:interactive:local": "cross-env CONVEX_URL=http://127.0.0.1:3210 tsx tests/interactive-runner.ts",
+    "test:interactive:cloud": "tsx tests/interactive-runner.ts",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --coverage",
+    "test:debug": "cross-env TEST_DEBUG=true TEST_VERBOSE=true TEST_INSPECT=true node --experimental-vm-modules node_modules/jest/bin/jest.js debug --runInBand",
+    "test:stress": "npx tsx tests/resilience-stress.manual.ts",
+    "update-deps": "node scripts/update-deps.mjs",
+    "update-deps:dry": "node scripts/update-deps.mjs --dry-run",
+    "test:contracts": "node scripts/verify-public-contracts.mjs"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "convex": "^1.46.0",
+    "openai": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "@anthropic-ai/sdk": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@convex-dev/eslint-plugin": "^5.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.4",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^18.0.5",
+    "eslint": "^10.11.0",
+    "globals": "^17.13.0",
+    "jest": "^30.5.2",
+    "npm-check-updates": "^23.1.0",
+    "openai": "^7.27.0",
+    "rimraf": "^6.1.3",
+    "ts-jest": "^29.4.14",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3"
+  },
+  "dependencies": {
+    "@convex-dev/agent": "0.7.3",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@convex-dev/workflow": "0.4.8",
+    "@convex-dev/workpool": "0.4.13",
+    "ai": "7.0.127",
+    "neo4j-driver": "^6.2.0",
+    "zod": "4.6.5"
+  },
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@12.2.0"
+}
+{
+  "name": "convex",
+  "description": "Client for the Convex Cloud",
+  "version": "1.46.0",
+  "author": "Convex, Inc. <no-reply@convex.dev>",
+  "homepage": "https://convex.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/get-convex/convex-backend.git",
+    "directory": "npm-packages/convex"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs-types/index.d.ts",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/cjs-types/index.d.ts",
+        "require": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/index.d.ts",
+        "import": "./dist/esm/index.js"
+      }
+    },
+    "./server": {
+      "require": {
+        "types": "./dist/cjs-types/server/index.d.ts",
+        "require": "./dist/cjs/server/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/server/index.d.ts",
+        "import": "./dist/esm/server/index.js"
+      }
+    },
+    "./react": {
+      "require": {
+        "types": "./dist/cjs-types/react/index.d.ts",
+        "require": "./dist/cjs/react/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/react/index.d.ts",
+        "import": "./dist/esm/react/index.js"
+      }
+    },
+    "./react-auth0": {
+      "require": {
+        "types": "./dist/cjs-types/react-auth0/index.d.ts",
+        "require": "./dist/cjs/react-auth0/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/react-auth0/index.d.ts",
+        "import": "./dist/esm/react-auth0/index.js"
+      }
+    },
+    "./react-clerk": {
+      "require": {
+        "types": "./dist/cjs-types/react-clerk/index.d.ts",
+        "require": "./dist/cjs/react-clerk/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/react-clerk/index.d.ts",
+        "import": "./dist/esm/react-clerk/index.js"
+      }
+    },
+    "./nextjs": {
+      "require": {
+        "types": "./dist/cjs-types/nextjs/index.d.ts",
+        "require": "./dist/cjs/nextjs/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/nextjs/index.d.ts",
+        "import": "./dist/esm/nextjs/index.js"
+      }
+    },
+    "./browser": {
+      "require": {
+        "types": "./dist/cjs-types/browser/index.d.ts",
+        "node": "./dist/cjs/browser/index-node.js",
+        "require": "./dist/cjs/browser/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/browser/index.d.ts",
+        "node": "./dist/esm/browser/index-node.js",
+        "import": "./dist/esm/browser/index.js"
+      }
+    },
+    "./values": {
+      "require": {
+        "types": "./dist/cjs-types/values/index.d.ts",
+        "require": "./dist/cjs/values/index.js"
+      },
+      "import": {
+        "types": "./dist/esm-types/values/index.d.ts",
+        "import": "./dist/esm/values/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "@comment typesVersions": [
+    "Thi types field in exports is only supported with moduleResolution",
+    "set to node16 or nodenext so typesVersions is still useful."
+  ],
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/cjs-types/index.d.ts"
+      ],
+      "server": [
+        "./dist/cjs-types/server/index.d.ts"
+      ],
+      "react": [
+        "./dist/cjs-types/react/index.d.ts"
+      ],
+      "react-auth0": [
+        "./dist/cjs-types/react-auth0/index.d.ts"
+      ],
+      "react-clerk": [
+        "./dist/cjs-types/react-clerk/index.d.ts"
+      ],
+      "nextjs": [
+        "./dist/cjs-types/nextjs/index.d.ts"
+      ],
+      "browser": [
+        "./dist/cjs-types/browser/index.d.ts"
+      ],
+      "values": [
+        "./dist/cjs-types/values/index.d.ts"
+      ]
+    }
+  },
+  "bin": {
+    "convex": "bin/main.js"
+  },
+  "files": [
+    "bin",
+    "browser",
+    "dist",
+    "nextjs",
+    "react",
+    "react-auth0",
+    "react-clerk",
+    "schemas",
+    "server",
+    "src",
+    "values",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "browser-bundle.js",
+    "package.json",
+    "!*.test.*",
+    "!test",
+    "!test_fixtures",
+    "!client_node_test_helpers.*",
+    "!src/bundler/.eslintrc.cjs"
+  ],
+  "keywords": [
+    "convex",
+    "database",
+    "react",
+    "state",
+    "serverless"
+  ],
+  "license": "Apache-2.0",
+  "@comment dependencies": [
+    "Most CLI tool dependencies go in devDependencies instead because the CLI is distributed bundled."
+  ],
+  "dependencies": {
+    "esbuild": "0.27.0",
+    "prettier": "^3.0.0",
+    "ws": "8.21.0"
+  },
+  "peerDependencies": {
+    "@auth0/auth0-react": "^2.0.1",
+    "@clerk/clerk-react": "^4.12.8 || ^5.0.0",
+    "@clerk/react": "^6.4.3",
+    "react": "^18.0.0 || ^19.0.0-0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "@auth0/auth0-react": {
+      "optional": true
+    },
+    "@clerk/clerk-react": {
+      "optional": true
+    },
+    "@clerk/react": {
+      "optional": true
+    }
+  },
+  "@comment devDependencies": [
+    "The dependencies of the CLI are also in devDependencies, built into",
+    "a bundle."
+  ],
+  "devDependencies": {
+    "@auth0/auth0-react": "2.15.1",
+    "@babel/code-frame": "^7.27.1",
+    "@babel/parser": "^7.27.1",
+    "@babel/types": "^7.27.1",
+    "@clerk/react": "^6.4.3",
+    "@commander-js/extra-typings": "^14.0.0",
+    "@convex-dev/platform": "0.1.10",
+    "@eslint/compat": "~2.0.0",
+    "@eslint/eslintrc": "^3",
+    "@eslint/js": "~9.39.0",
+    "@inquirer/confirm": "^6.0.4",
+    "@inquirer/input": "^5.0.4",
+    "@inquirer/search": "^4.1.0",
+    "@inquirer/select": "^5.0.4",
+    "@inquirer/testing": "^3.3.0",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "@octokit/openapi-types": "~27.0.0",
+    "@sentry/node": "^7.23.0",
+    "@sentry/tracing": "^7.23.0",
+    "@swc/core": "1.15.8",
+    "@testing-library/react": "~16.3.0",
+    "@types/babel__code-frame": "^7.0.6",
+    "@types/deep-equal": "1.0.4",
+    "@types/node": "^18.17.0",
+    "@types/react": "^19.2.4",
+    "@types/react-dom": "^19.2.3",
+    "@types/semver": "^7.3.13",
+    "@types/serve-handler": "~6.1.4",
+    "@types/ws": "^8.5.13",
+    "@vitest/eslint-plugin": "~1.6.0",
+    "adm-zip": "^0.6.0",
+    "bufferutil": "^4.0.7",
+    "chalk": "5",
+    "chokidar": "3.6.0",
+    "commander": "^14.0.3",
+    "deep-equal": "2.2.3",
+    "depcheck": "~1.4.7",
+    "detect-port": "^2.1.0",
+    "dotenv": "^16.4.7",
+    "esbuild": "0.27.0",
+    "esbuild-plugin-external-global": "~1.0.1",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-require-extensions": "~0.1.3",
+    "fetch-retry": "~6.0.0",
+    "find-up": "^8.0.0",
+    "globals": "~17.4.0",
+    "happy-dom": "~20.10.0",
+    "jsdom": "~28.1.0",
+    "json5": "~2.2.3",
+    "knip": "~5.86.0",
+    "napi-wasm": "1.1.3",
+    "open": "^11.0.0",
+    "openapi-fetch": "~0.17.0",
+    "openapi-typescript": "~7.8.0",
+    "openapi-typescript-helpers": "~0.1.0",
+    "openid-client": "^5.3.1",
+    "ora": "^9.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "semver": "^7.6.0",
+    "serve-handler": "~6.1.6",
+    "shx": "~0.4.0",
+    "skott": "~0.35.4",
+    "tar": "^7.5.21",
+    "tsx": "^4.19.4",
+    "typedoc": "^0.24.6",
+    "typescript": "~5.0.3",
+    "typescript-eslint": "~8.57.0",
+    "undici": "7.29.0",
+    "vitest": "^4.1.0",
+    "wait-for-expect": "~4.0.0",
+    "zod": "^3.24.0",
+    "zod-to-json-schema": "^3.24.0"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "npm run generateApiSpec && python3 scripts/build.py 2>&1",
+    "bundle-server": "node scripts/bundle-server.mjs",
+    "clean": "shx rm -rf dist tmpDist*",
+    "lint": "eslint . --cache",
+    "format": "prettier -w . '!CHANGELOG.md' && eslint --fix .",
+    "format-check": "prettier -c . '!CHANGELOG.md' && eslint . --cache",
+    "test": "vitest --silent",
+    "test-not-silent": "vitest",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "test-esm": "node ./scripts/test-esm.mjs && ./scripts/checkdeps.mjs && ./scripts/checkimports.mjs",
+    "compare-codegen": "node scripts/compare-codegen.mjs",
+    "generateApiSpec": "npm run generateManagementApiSpec && npm run generateFunctionLogsApiSpec",
+    "checkApiSpec": "npm run checkManagementApiSpec && npm run checkFunctionLogsApiSpec",
+    "generateManagementApiSpec": "openapi-typescript ./cli-management-openapi.json --output ./src/cli/generatedApi.ts --root-types --root-types-no-schema-prefix",
+    "checkManagementApiSpec": "openapi-typescript ./cli-management-openapi.json --output ./src/cli/generatedApi.ts --root-types --root-types-no-schema-prefix --check",
+    "generateFunctionLogsApiSpec": "openapi-typescript ./function-logs-openapi.json --output ./src/cli/lib/generatedFunctionLogsApi.ts --root-types --root-types-no-schema-prefix",
+    "checkFunctionLogsApiSpec": "openapi-typescript ./function-logs-openapi.json --output ./src/cli/lib/generatedFunctionLogsApi.ts --root-types --root-types-no-schema-prefix --check"
+  }
+}
+import { Id, Value } from "../values/value.js";
+import {
+  DocumentByInfo,
+  FieldTypeFromFieldPath,
+  GenericDataModel,
+  GenericDocument,
+  GenericTableInfo,
+  GenericVectorIndexConfig,
+  NamedTableInfo,
+  NamedVectorIndex,
+  TableNamesInDataModel,
+  VectorIndexNames,
+} from "./data_model.js";
+
+/**
+ * An object with parameters for performing a vector search against a vector index.
+ * @public
+ */
+export interface VectorSearchQuery<
+  TableInfo extends GenericTableInfo,
+  IndexName extends VectorIndexNames<TableInfo>,
+> {
+  /**
+   * The query vector.
+   *
+   * This must have the same length as the `dimensions` of the index.
+   * This vector search will return the IDs of the documents most similar to
+   * this vector.
+   */
+  vector: number[];
+  /**
+   * The number of results to return. If specified, must be between 1 and 256
+   * inclusive.
+   *
+   * @default 10
+   */
+  limit?: number;
+  /**
+   * Optional filter expression made up of `q.or` and `q.eq` operating
+   * over the filter fields of the index.
+   *
+   * e.g. `filter: q => q.or(q.eq("genre", "comedy"), q.eq("genre", "drama"))`
+   *
+   * @param q
+   * @returns
+   */
+  filter?: (
+    q: VectorFilterBuilder<
+      DocumentByInfo<TableInfo>,
+      NamedVectorIndex<TableInfo, IndexName>
+    >,
+  ) => FilterExpression<boolean>;
+}
+
+export type VectorSearch<
+  DataModel extends GenericDataModel,
+  TableName extends TableNamesInDataModel<DataModel>,
+  IndexName extends VectorIndexNames<NamedTableInfo<DataModel, TableName>>,
+> = (
+  tableName: TableName,
+  indexName: IndexName,
+  query: VectorSearchQuery<NamedTableInfo<DataModel, TableName>, IndexName>,
+) => Promise<Array<{ _id: Id<TableName>; _score: number }>>;
+
+/**
+ * Expressions are evaluated to produce a {@link values.Value} in the course of executing a query.
+ *
+ * To construct an expression, use the {@link VectorFilterBuilder} provided within
+ * {@link VectorSearchQuery}.
+ *
+ * @typeParam T - The type that this expression evaluates to.
+ * @public
+ */
+export abstract class FilterExpression<T extends Value | undefined> {
+  // Property for nominal type support.
+  private _isExpression: undefined;
+
+  // Property to distinguish expressions by the type they resolve to.
+  private _value!: T;
+
+  /**
+   * @internal
+   */
+  constructor() {
+    // only defining the constructor so we can mark it as internal and keep
+    // it out of the docs.
+  }
+}
+
+/**
+ * An interface for defining filters for vector searches.
+ *
+ * This has a similar interface to {@link FilterBuilder}, which is used in
+ * database queries, but supports only the methods that can be efficiently
+ * done in a vector search.
+ *
+ * @public
+ */
+export interface VectorFilterBuilder<
+  Document extends GenericDocument,
+  VectorIndexConfig extends GenericVectorIndexConfig,
+> {
+  //  Comparisons  /////////////////////////////////////////////////////////////
+
+  /**
+   * Is the field at `fieldName` equal to `value`
+   *
+   * @public
+   * */
+  eq<FieldName extends VectorIndexConfig["filterFields"]>(
+    fieldName: FieldName,
+    value: FieldTypeFromFieldPath<Document, FieldName>,
+  ): FilterExpression<boolean>;
+
+  //  Logic  ///////////////////////////////////////////////////////////////////
+
+  /**
+   * `exprs[0] || exprs[1] || ... || exprs[n]`
+   *
+   * @public
+   */
+  or(...exprs: Array<FilterExpression<boolean>>): FilterExpression<boolean>;
+}
+import { JSONValue } from "../../values/index.js";
+import { performAsyncSyscall } from "./syscall.js";
+import { version } from "../../index.js";
+import {
+  FilterExpression,
+  VectorFilterBuilder,
+  VectorSearch,
+  VectorSearchQuery,
+} from "../vector_search.js";
+import {
+  FieldTypeFromFieldPath,
+  GenericDataModel,
+  GenericDocument,
+  GenericTableInfo,
+  GenericVectorIndexConfig,
+} from "../data_model.js";
+import { validateArg } from "./validate.js";
+import { Value, convexOrUndefinedToJson } from "../../values/value.js";
+
+export function setupActionVectorSearch(
+  requestId: string,
+): VectorSearch<GenericDataModel, string, string> {
+  return async (
+    tableName: string,
+    indexName: string,
+    query: VectorSearchQuery<GenericTableInfo, string>,
+  ) => {
+    validateArg(tableName, 1, "vectorSearch", "tableName");
+    validateArg(indexName, 2, "vectorSearch", "indexName");
+    validateArg(query, 3, "vectorSearch", "query");
+    if (
+      !query.vector ||
+      !Array.isArray(query.vector) ||
+      query.vector.length === 0
+    ) {
+      throw Error("`vector` must be a non-empty Array in vectorSearch");
+    }
+
+    return await new VectorQueryImpl(
+      requestId,
+      tableName + "." + indexName,
+      query,
+    ).collect();
+  };
+}
+
+export class VectorQueryImpl {
+  private requestId: string;
+  private state:
+    | { type: "preparing"; query: SerializedVectorQuery }
+    | { type: "consumed" };
+
+  constructor(
+    requestId: string,
+    indexName: string,
+    query: VectorSearchQuery<GenericTableInfo, string>,
+  ) {
+    this.requestId = requestId;
+    const filters = query.filter
+      ? serializeExpression(query.filter(filterBuilderImpl))
+      : null;
+
+    this.state = {
+      type: "preparing",
+      query: {
+        indexName,
+        limit: query.limit,
+        vector: query.vector,
+        expressions: filters,
+      },
+    };
+  }
+
+  async collect(): Promise<Array<any>> {
+    if (this.state.type === "consumed") {
+      throw new Error("This query is closed and can't emit any more values.");
+    }
+    const query = this.state.query;
+    this.state = { type: "consumed" };
+
+    const { results } = await performAsyncSyscall("1.0/actions/vectorSearch", {
+      requestId: this.requestId,
+      version,
+      query,
+    });
+    return results;
+  }
+}
+
+type SerializedVectorQuery = {
+  indexName: string;
+  limit?: number | undefined;
+  vector: Array<number>;
+  expressions: JSONValue;
+};
+
+type ExpressionOrValue<T extends Value | undefined> = FilterExpression<T> | T;
+
+// The `any` type parameter in `Expression<any>` allows us to use this class
+// in place of any `Expression` type in `filterBuilderImpl`.
+export class ExpressionImpl extends FilterExpression<any> {
+  private inner: JSONValue;
+  constructor(inner: JSONValue) {
+    super();
+    this.inner = inner;
+  }
+
+  serialize(): JSONValue {
+    return this.inner;
+  }
+}
+
+export function serializeExpression(
+  expr: ExpressionOrValue<Value | undefined>,
+): JSONValue {
+  if (expr instanceof ExpressionImpl) {
+    return expr.serialize();
+  } else {
+    // Assume that the expression is a literal Convex value, which we'll serialize
+    // to its JSON representation.
+    return { $literal: convexOrUndefinedToJson(expr as Value | undefined) };
+  }
+}
+
+export const filterBuilderImpl: VectorFilterBuilder<
+  GenericDocument,
+  GenericVectorIndexConfig
+> = {
+  //  Comparisons  /////////////////////////////////////////////////////////////
+
+  eq<FieldName extends GenericVectorIndexConfig["filterFields"]>(
+    fieldName: FieldName,
+    value: FieldTypeFromFieldPath<GenericDocument, FieldName>,
+  ): FilterExpression<boolean> {
+    if (typeof fieldName !== "string") {
+      throw new Error("The first argument to `q.eq` must be a field name.");
+    }
+    return new ExpressionImpl({
+      $eq: [
+        serializeExpression(new ExpressionImpl({ $field: fieldName })),
+        serializeExpression(value),
+      ],
+    });
+  },
+
+  //  Logic  ///////////////////////////////////////////////////////////////////
+
+  or(...exprs: Array<ExpressionOrValue<boolean>>): FilterExpression<boolean> {
+    return new ExpressionImpl({ $or: exprs.map(serializeExpression) });
+  },
+};
+# Cloud implementation prompt
+
+Select `SaintNick1214/Project-Cortex` and `feat/convex-backend-runtime`, then paste this
+prompt. The branch contains the existing agreed plan and its orchestration instructions;
+product implementation has not started.
+
+```text
+Implement the approved Cortex backend-runtime plan in SaintNick1214/Project-Cortex on branch feat/convex-backend-runtime. This is authorization to implement; reuse the saved plan and settled product decisions. Planning-only disclaimers describe when the files were written and do not override this request.
+
+First read AGENTS.md, .agents/CODEX-RUNTIME.md and .agents/PROJECT-PROFILE.md. Then read:
+- _research/convex-ai-gateway-2026-10-02/decision-gates.md (authoritative decisions).
+- _research/convex-ai-gateway-2026-10-02/architecture.md (architecture and technical gates).
+- _goals/convex-backend-runtime-2026-10-02/goal.md and every file in its tasks/ directory.
+- .agents/skills/feature-orchestrator/SKILL.md.
+
+Inspect Git status and manifests, preserve unrelated work, and verify reconciled dev commit 3341d64ddc06f1de26ed525312ef2c1b89b16952 is an ancestor. Resolve paths against your checkout, not historical desktop paths. Use Node >=24.15.0 and the declared npm 12.2.0 toolchain.
+
+Follow feature-orchestrator: fresh independent goal review, bounded delegated implementation, independent task reviews, affected quality/module/UI checks and final audit. Earlier planning PASS reports cover superseded scope. Start with Task 01 technical qualification, complete the text slice in Tasks 01-09, then the remaining extensions and integration through Task 17. Verify current official API/package contracts as needed; do not silently drop approved capabilities or substitute another architecture.
+
+Keep the agreed pillars: Cortex/Convex owns orchestration and asynchronous memory; one authoritative transcript with tracked administrator unlocks; indexed memory plus authorized pending context and scoped strict barriers; per-function model/capability/budget policy for every billable call; clean-slate embeddings; retained Cortex artifacts with Gateway image/video jobs and Convex-only delivery capped at 20,000,000 bytes; verified identity/grants and background revocation/deletion; additive host installation; modern TypeScript/AI SDK 7 clients, CLI, demo and templates.
+
+Exclude Decisions/Jev, Python, legacy compatibility/data/deployment/embedding migrations, external media storage, image understanding/visual embeddings, unrelated sibling applications, production deployment and package releases. Canonical website docs live in cortexmemory.dev/docs-site/docs in a separate repository; do not restore Documentation/. If website access is unavailable, prepare a reviewable documentation patch/handoff and identify remaining coverage.
+
+Use verified disposable test targets and owned fixtures. Bounded paid inference needs an approved target/budget; request missing credentials or target details when necessary and continue independent work. Do not purge/redeploy shared CI backends concurrently. Run the full active core quality/module gate plus affected browser/template flows. Record task status, decisions, review verdicts, real test receipts and blockers under the goal's qa/ directory; mocked/skipped/unavailable service coverage is not PASS.
+
+Make incremental commits, push this feature branch, and open a draft PR against dev when reviewable. Do not merge, release packages or deploy production. Continue until the scoped implementation and validation are complete, or clearly identify the external blocker and completed independent work. Report final behavior, checks, remaining coverage and the PR link.
+```
+# Task 01: Stack and execution-boundary qualification
+
+**Status:** Complete — independent Task 01 review PASS (4.2/5). [Qualification evidence](../qa/task01/); [review](../qa/task01-review-1.md).
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** Later execution request and verified disposable prerequisites
+
+## Objective
+
+Qualify the composed stack and finalize the run/tool/stream/storage contracts before production implementation.
+
+## Requirements
+
+- [x] Record a qualified lock matrix for AI SDK >=7.0.105, Gateway provider, Agent, Workflow/Workpool, Convex >=1.46 and the repository Node >=24.15.0 / npm 12.2.0 floor; isolate Node-only modules.
+- [x] Core bounded spikes: authenticated text/tool/structured output and native interface; persisted stream reconnect/cancel; component finalization transaction; interrupted external call; minimal TS/UI transport. Establish approved disposable test prerequisites and shared versioned text/run/event/error contracts. Freeze the fresh default embedding profile (model, dimensions, preprocessing/chunking version and declared index contract) here; Tasks 02/04/08 implement its source/chunk/vector storage and policy matching. Observed managed retrieval for this profile is required before Task 09 PASS. Media/storage/graph and additional embedding-profile service gates occur at their own task entry and do not block the core text slice.
+- [x] Identify eligible disposable deployment and real test identities/services without printing secrets; no production deployment. Freeze explicit capability errors and uncertain-outcome semantics.
+
+## Acceptance Criteria
+
+- [x] Observed package/runtime/backend evidence distinguishes supported behavior from documented peers; missing service access is BLOCKED.
+- [x] Final-output/ingestion atomicity or cursor reconciliation is demonstrated with a forced failure boundary.
+- [x] The AI SDK UI transport contract is documented, model/tool effects are not duplicated after disconnect or retry.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §§3–4, 8, 10. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** Root/package manifests; convex.json; convex-dev component adapters; Vercel provider integration.
+
+## Validation and Execution Notes
+
+Profile §4/§9; retain spike receipts under qa/. No broad dependency upgrade or paid call before execution authorization.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+# Task 04: Per-function model policy and admission budgets
+
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md), [03 authorization foundation](03-authorization.md#authorization-execution-gates)
+
+This execution prerequisite means independently accepted **03-foundation**, not full03-final. All original Task03 functional criteria remain required at their mapped implementation gates and03-final before Task17. See [accepted sequencing contract](../qa/resume-dependency-refinement-c2/plan.md).
+
+## Objective
+
+Resolve and enforce versioned operation/model/capability and cost policy for every billable call.
+
+## Requirements
+
+- [ ] Register operation keys for chat, extraction, conflict, summaries/titles, memory/query embeddings, text/code/sheet/suggestions and image/video generation.
+- [ ] Resolve deployment/tenant/agent/operation policy with trusted overrides; pin model/interface/prompt versions and validate options, token limits and tools.
+- [ ] Atomically reserve run/tenant operation budget and concurrency; settle known usage once, retain uncertain paid outcomes conservatively; explicit safe fallbacks only.
+
+## Acceptance Criteria
+
+- [ ] Distinct function policies select different allowed models with correlated audit receipts; no hidden direct provider call bypasses policy.
+- [ ] Concurrent submissions and child/secondary calls cannot bypass reservation or settle twice; exhausted quotas fail before token mint.
+- [ ] Fallback never repeats visible output, tools or ambiguous paid jobs, and never changes an embedding profile.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §6. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** src/config.ts; backend policy/admission/usage schema and helpers; provider secondary-call integrations.
+
+## Validation and Execution Notes
+
+Concurrency/outcome fixtures with controlled failure injection; actual model/interface evidence in Task 14. Gateway deployment kill switch is not the application quota.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+# Task 14: TypeScript media, embedding and UI extensions
+
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [09 Minimal text clients and UI vertical slice](09-text-client-slice.md), [10 Clean-slate embedding storage and retrieval](10-embedding-profiles.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md), [13 Gateway image and durable asynchronous video jobs](13-media-jobs.md)
+
+## Objective
+
+Extend the qualified text/run clients with embedding, media/upload and persisted artifact behavior.
+
+## Requirements
+
+- [ ] Substep 14A: extend the versioned shared contract and TS APIs for embedding profile guards, media jobs/artifacts/inputs, stage-specific strict barriers and capability errors; retain the existing text/run cursor semantics.
+- [ ] Substep 14B: extend the qualified Vercel AI SDK 7 text transport/hooks with persisted multimodal/artifact/job state, renderers and restart/reconnect support; keep one backend tool and memory writer.
+- [ ] Propagate config/auth through every factory, keep backend credentials/modules out of browser bundles and provide explicit unsupported capability errors.
+
+## Acceptance Criteria
+
+- [ ] TypeScript clients create and observe the same backend outcomes, with equivalent scope/error/cancel/media behavior and token refresh handling.
+- [ ] React reconnect rebuilds text/tool/artifact state without duplicate messages or local-only artifact loss.
+- [ ] AI SDK UI finishes before delayed memory work, tool execution occurs only in backend and factories require no provider keys.
+- [ ] Package exports and browser builds expose neither action credentials nor Node graph modules; unsupported deployments fail inference explicitly.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §8. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** src/index.ts and client namespaces; packages/vercel-ai-provider src/react.
+
+## Validation and Execution Notes
+
+Assign 14A/14B as bounded disjoint implementation substeps with separate receipts; freeze contract first. Provider/memory gates apply.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+# Native driver C4 design hash/recovery repair
+
+Design only; fresh independent judgment required. Both C2 mandatory conflicts were accepted fixed in the C3 review; retain complete persisted stage identity/replay-before-live-fence and ROOT closed cleanup authority intact. C4 repairs only exact lifecycle hash preimages/domains/order/redundancy and retained post-purge trigger corroboration. Six current normative contracts include hash-recovery.md; corrected C3 contracts reference it without relying on vague aggregate hashes. Full C3 subject287/C3 review361 closure and all nested C1/C2 failures/preimages/rejections remain immutable lineage.
+
+Exact versioned canonical intents/R/S/E/L/T projections separate immutable nontext trigger identity from mutable liability snapshots. Every lifecycle row load validates canonical bytes/hash/redundant account/operation/key/intentHash/receiptHash and retained projections. Purge retains full canonical T and nested StageIdentity, not just an opaque aggregate. Postpurge hash-only recovery recomputes current account/attempt T against retained purge T; corrupted trigger denies0writes/no summary, while valid late terminal/money refinements change current liability without invalidating T. Historical S/L never freeze active/known/reserved; full known charge still uncapped and once-only. Exact stage mutation replay after purge denied closed; no private bytes restored. Alreadytombstoned/alreadyrevoked no-write receiptHash computed from exact current snapshot preimages; exact applied replay remains stable.
+
+All unchanged boundaries: official modelId-only convexGateway direct v4 doGenerate/doStream/doEmbed, action-local supported getServiceToken only after atomic reserve/checkpoint/immediate current-enter; exact compiled14/13nativehashes/ORDER C01–C08,E11–E14,C09,C10 and immutable identityordinals; one account/active/permit/no15th/replay/reset/regrant/renewwindow/model/options/tool/currencyfallback change. U/M/conditionalK314310/o200k outputproof/profile1536/vector versus production vectors distinction preserved. Absolute1000entry/15000native ownedlifecycle/1000persistence/1000cleanup and latepending handling, localabort≠upstreamterminal, original unknown liability/tombstones/root ownership retained. EMPTY actualproofs/productionroot and bootstrap split unchanged. Initial14/overall28/$10 voluntary engineeringlimits not userpermissioncaps or liabilityclipping. Persistent fresh/nocap authority/numericcyclewaiverONLY unchanged, independent gates remain.
+
+Root only actual provision/sign/stage/deploy/paid/cleanup; c827policy/e796Gateway frozen exact offline scope, changed-source native profiles and driverimplementation held behind accepted design/newnative gates. Newverifiedtarget/security/publication/officialcodegen/types/loadclosure/nativeOCC/currentgrant/source/serialduplicates/unknown/missingdriver/cleanupretirement proof/freshreview beforepaid remains required. All13operation/fullTask04/Task08 memory/Task09 authenticated text/tool/UI/nexttail/barrier/Task14 extensions/all17/fullcore original scope required and incomplete. No product/config/tests/oldQA/.agents/Git/network/services/env/private/nativeIDs/paid/subagents. Actualmodel/serving/revision/decoder/lifetime/wholeUSD/categories/managedsourcewrite/search UNKNOWN/NOT_RUN.
+# Standalone managed default-profile repository (design only)
+
+No production model root or previous vector schema import. Profile EXACT accepted six fields: profileId cortex-text-small-1536-v1, modelId openai/text-embedding-3-small, dimensions1536, normalization text-nfc-lf-v1, chunking codepoint-1600-overlap-200-v1, indexName by_default_embedding_v1. PROFILE_HASH is canonical six-field hash, not an invented actual revision. Official native embed model unchanged. Numeric vectors finite1536/-0 refused by mutation before storage; vector index dimensions1536.
+
+Schema design example (registered only in future newly reviewed standalone fixture):
+
+```ts
+const scope={tenantHash:v.string(),spaceHash:v.string(),ownerHash:v.string()};
+fixtureGrants: defineTable({...scope, grantHash:v.string(), epoch:v.number(),
+ operatorHash:v.string(), active:v.boolean(), profileHash:v.string()})
+ .index("by_grant",["grantHash"]),
+fixtureSources: defineTable({...scope, sourceKey:v.string(), sourceHash:v.string(),
+ revision:v.number(), epoch:v.number(), profileHash:v.string(), tombstone:v.boolean()})
+ .index("by_source",["sourceKey"]),
+fixtureChunks: defineTable({...scope, sourceId:v.id("fixtureSources"), chunkKey:v.string(),
+ sourceRevision:v.number(), sourceHash:v.string(), profileHash:v.string(), textHash:v.string(),
+ tombstone:v.boolean()}).index("by_chunk",["chunkKey"]),
+fixtureVectors: defineTable({...scope, sourceId:v.id("fixtureSources"),chunkId:v.id("fixtureChunks"),
+ sourceRevision:v.number(),sourceHash:v.string(),profileHash:v.string(), vector:v.array(v.number()),
+ receiptHash:v.string(),dispatchIdentity:v.string(),writeKey:v.string(),tombstone:v.boolean()})
+ .index("by_write",["writeKey"])
+ .index("by_source",["sourceId"])
+ .vectorIndex("by_default_embedding_v1",{vectorField:"vector",dimensions:1536,
+ filterFields:["tenantHash","spaceHash","ownerHash","profileHash"]}),
+fixtureStages: defineTable({accountHash:v.string(),scenarioId:v.string(),dispatchIdentity:v.string(),
+ stageHash:v.string(),stageIdentityHash:v.string(),stageIdentityCanonical:v.string(),
+ partSequence:v.number(),rawPartDigest:v.string(),privateCanonical:v.string(),trigger:v.string(),sourceEpoch:v.number(),
+ grantEpoch:v.number(),createdAt:v.number()}).index("by_dispatch",["dispatchIdentity"])
+```
+
+Table validators are necessary Convex primitives, not full semantic validation: every internal repository handler exact-key validates H/ID/Epoch/N from receipt contract, table IDs via corresponding v.id, exact stored profileHash, all scope fields H; createdAt Time. Table writes internal only. Grants/source/chunks provision operator-only internal root action/mutations on verified fixture target, never caller-derived tenant claims. At most1grant/1source/1chunk/E11vector plus at most2stage records per account, no dynamic corpus. fixtureSources owns source revision/hash, chunks own deterministic one-chunk textHash; no canonical request text or vector in public receipt. Source model/chunk profile belongs server constant; deployment/profile epochs bound in account. Sources contain no user data. Unique query via indexes prevents duplicate silently accepted rows; >1 match corrupt/STOP.
+
+```ts
+interface RepoFence {binding:BindingV2; tenantHash:H;spaceHash:H;ownerHash:H;
+ grantId:Id<"fixtureGrants">;sourceId:Id<"fixtureSources">;chunkId:Id<"fixtureChunks">;
+ sourceHash:H;sourceRevision:Epoch;chunkTextHash:H;profileHash:H;dispatchIdentity:H}
+writeE11(ctx:MutationCtx, fence:RepoFence, vector:number[], receiptHash:H):
+ {kind:"written"|"replay";vectorId:Id<"fixtureVectors">;vectorHash:H}|
+ {kind:"denied";reason:"stale"|"scope"|"closed"|"collision"};
+readOwned(ctx:QueryCtx,fence:RepoFence,vectorId:Id<"fixtureVectors">):
+ {kind:"current";sourceHash:H;sourceRevision:Epoch;vectorHash:H}|
+ {kind:"denied";reason:"stale"|"scope"|"closed"};
+searchE14(ctx:ActionCtx,fence:RepoFence,queryVector:number[],limit:1):
+ Promise<{kind:"current";matches:Match[]}|{kind:"denied";reason:"stale"|"scope"|"closed"}>;
+// Full DeleteIntent/result/idempotency API is normative in replay-cleanup.md, not RepoFence.
+deleteOwned(ctx:MutationCtx,intent:DeleteIntent):DeleteResult;
+```
+
+Match EXACT {sourceKey:H,sourceRevision:Epoch,sourceHash:H,profileHash:H,score:number}; score finite/-0 refused, at most1 match, NO IDs/vector/text/private/tenant/grant in public result. Internal vectorSearch candidate score/id stays private and must validate before hydration. Unscored read receipt never returns vector. The separate ROOT closed-account cleanup/evidence method returns hashes only, with no vector hydration. Public runner result cannot hydrate staging/private tables. Operation fence must match account manifest binding and E11/E14 attempts; write allowed ONLY E11 with first-capture-qualified terminal+money+serving+usage, attachment authority current, exact finite profile vector/hash/native correspondence. E12/E13 have no write path at all. E14 query search permitted ONLY qualified terminal+money+serving+usage/current authority with separately admitted E14 identity, not E11 native-hash reuse. Empty actual proof registry means these methods currently deny closed until qualified facts exist; managed evidence NOT_RUN.
+
+LIVE operation fence checker in inference read/write/search/new-stage mutation/query rereads account, grant, source, chunk by exact IDs; checks operator/grant hash+epoch active, scope equal on all rows, source epoch/revision/hash/profile matches fence/account, !tombstone, chunk sourceId/revision/hash/textHash/profile+scope exact and !tombstone, current window/proof/profile/source flags and !revoked/cancelled/stopped/closed authority. Production source IDs/hashes are never accepted. Current profile epoch may come from account fixed binding and current profile flag; no separate mutable profile alias. Proof actual model can never silently relabel vector profile.
+
+writeKey=H(canonical{account binding, E11 dispatchIdentity, sourceId,sourceRevision,sourceHash,chunkId,chunkTextHash,profileHash}). One transaction checks all fences and unique writeKey; absent -> inserts exactly1vector. Existing exact dispatch/receipt/vectorHash/profile/source tuple -> replay zero writes; differing vector/receipt/current source -> collision zero writes plus explicit STOP-control path. Async native embedding occurs outside mutation; recheck all current records AFTER embedding in write mutation, never rely on before-inference check. A stale/revoked/deleted source yields denied0writes and no vector resurrection.
+
+searchE14: first internal query returns exact fenced snapshot + opaque epoch binding. Action invokes official ctx.vectorSearch("fixtureVectors","by_default_embedding_v1",{vector:queryVector,limit:1,filter:q=>q.and(q.eq("tenantHash",...),q.eq("spaceHash",...),q.eq("ownerHash",...),q.eq("profileHash",PROFILE_HASH))}). Vector index cannot filter source/tombstone; final internal hydrate query therefore rereads account/grant/source/chunk and EVERY returned vector atomically, revalidates original snapshot source revision/hash/epoch/grant/profile and each vector owner/source/chunk/profile/revision/hash/receipt against current source. Tombstoned/stale/wrong scope candidate is excluded, no fallback/increasedlimit/rescan. If authority/source changes between preflight and hydration -> denied/no matches, not a misleading fresh empty success. At most1 candidate, return one allowlisted Match; zero candidates under current fence -> current matches[]. Caller's limit/model/filter arguments are not accepted. After hydration runner must recheck authority immediately before emitting public summary; if revoked in intervening action gap, withhold. Query transaction is authoritative hydration point, not promise of atomic transaction across asynchronous index search.
+
+Delete/revoke/recovery/purge use the operation-specific ROOT ownership/current expected epoch/historical replay contracts in replay-cleanup.md, never the LIVE inference fence. Fresh owned delete marks source/chunk/vector tombstones atomically, increments source revision/epoch, closes account authority/sourceCurrent/private attachments in same transaction while preserving original known/reserved/active. Subsequent cleanup may physically delete vectors/stage bytes only after evidence hashing, preserving tombstone until root target retirement. Unique owned max1source/vector makes bounded collect limit2 with >1 corruption denial, no global purge. Fresh ROOT revoke sets grant.active=false and grant epoch+1, closes account attachments/live staging authority atomically; already-revoked and exact historical replay are0writes per replay-cleanup.md. ROOT hash-only recovery remains allowed after closure. Wrong tenant/space/owner/grant denies0writes; stale fence cannot delete somebody else's rows.
+
+Negative controls: source revision/hash edited during embedding => E11 denied0insert; duplicate exact write =>0newrows; different receipt/hash=>collision; wrong scope/profile1536/finite shape=>0writes; E12/E13 invocation=>no write function; deletion during embedding=>tombstone survives/no resurrection; source/grant mutation after vectorSearch awaits but before hydrate=>denied no Match; stale candidate =>excluded; wrong index/profile query=>denied before vectorSearch; two unique write rows=>corruption STOP, never choose first. Genuine managed search/native transaction outcomes remain NOT_RUN.
+
+Private evidence table is additionally defined in observer-proofs.md: at most42 records/account (first+2refinements across14 attempts), each <=180000 canonical bytes; no keys/headers/request prompts stored, all access internal. It is a bounded evidence store, not a permit/charge authority. Stage rows max2 per account. Table schema primitives accept numbers/strings but semantic exact parsers impose Epoch/H/private byte limits and zero unknown fields on every handler before database calls; proof IDs never become Convex authorization IDs. A source tombstone is a durable authority fact, not deleted until target retirement.
+
+C3 required immutable ownership metadata for ALL fixture rows: accountHash,targetHash,operatorHash,manifestHash as H fields. Exact StageRow and fixtureLifecycle schemas, DeleteIntent/DeleteResult/RootOwned operations and cleanup cardinality limits are in replay-cleanup.md. LIVE fences never authorize destruction after closure; ROOT lifecycle fences never authorize private read/search/attach or new-stage creation.
+
+C4 fixtureLifecycle rows use exact canonical/preimage/hash fields and row<=65536bytes per hash-recovery.md. ROOT-owned purge retains full nontext triggerCanonical, all lifecycle projections and account tombstones/liability; only private stage/evidence/vector bytes are removed. No recovery tries to invert an aggregate hash.
+# Exact receipt and state contract (design, not installed implementation)
+
+All fields below are REQUIRED; null means unavailable, zero means observed zero. Objects have exactly their named own data keys, recursively; no symbols/accessors/prototype/cycles/sparse arrays/ill-formed Unicode/-0/NaN/Infinity. Use accepted C2 canonical.ts descriptor-first detach/sorted-key JSON. Receipt <=8192 UTF8 bytes, graph <=4096 nodes/depth16; string key/values well-formed. Account state <=524288 bytes with same graph bounds (state <=4096 nodes). Larger evidence stays root-private and is represented by digest. No public caller submits receipts or proof labels. The capture boundary revalidates observer classifications using closed proof APIs.
+
+Types: H=lowercase hex64; ID=well-formed nonempty string <=256 UTF8 bytes, no C0/DEL controls; Ref=H (content addressed proof entry, not arbitrary URL); N=integer 0..9007199254740991, no -0. Epoch=N>=1. Time=N (milliseconds UTC). Nullable<T>=T|null. Categories are a sorted unique subset of EXACT enum ["cache-read","cache-write","cancelled","inference","rejected","routing","surcharge"], <=7, no unknown entries; unknown encountered raw categories cause unsupported/STOP and bounded raw digest rather than inventing enum membership.
+
+```ts
+interface BindingV2 { manifestHash:H; targetHash:H; sourceHash:H; installedClosureHash:H;
+ operatorHash:H; grantHash:H; sourceRecordHash:H; profileHash:H;
+ grantEpoch:Epoch; sourceEpoch:Epoch; sourceRevision:Epoch; profileEpoch:Epoch;
+ windowEpoch:Epoch; validatorRevision:1 }
+interface Counts { input:Nullable<N>; output:Nullable<N> }
+interface ReceiptV2 { version:2; evidenceScope:"actual-experiment-native";
+ binding:BindingV2; scenarioId:CaseId; dispatchIdentity:H; nativeHash:H;
+ expectedWireHash:H; rawDigest:H; method:"generate"|"stream"|"embed";
+ interface:"chat"|"embedding"; requestedModel:"openai/gpt-4o-mini"|"openai/text-embedding-3-small";
+ responseId:Nullable<ID>; actualModel:Nullable<ID>;
+ rawFinish:Nullable<"stop"|"length"|"content_filter">;
+ nativeFinish:Nullable<"stop"|"length"|"content-filter"|"tool-calls"|"error"|"other">;
+ nativeRawFinish:Nullable<ID>; rawCounts:Counts; mappedCounts:Counts;
+ usage:"unknown"|"validated-raw-mapped";
+ lifetime:"unknown"|"validated-provider-terminal";
+ lifetimeProof:Nullable<Ref>; serving:"unknown"|"validated-bound-premises"|"drift";
+ servingProof:Nullable<Ref>; money:"unknown"|"validated-whole-invocation-usd";
+ observedCostDecimal:Nullable<ID>; observedCurrency:Nullable<ID>;
+ observedCategories:Category[]; microUSD:Nullable<N>; moneyProof:Nullable<Ref>;
+ resultHash:Nullable<H>; reason:"none"|"missing-evidence"|"unsupported"|"contradiction"|"bound-violation"|"authority-closed" }
+```
+
+ObservedCostDecimal additionally must match /^\d+(\.\d+)?$/ and <=80 chars, is the outward decimal output of pinned conversion (not an untrusted tariff computation). Unknown unsupported numeric observations produce null + rawDigest/reason, not coercion. CaseId EXACT C01..C10/E11..E14 only registered fixed14. Binding and dispatch/native/expectedWire/method/interface/requestedModel match compiled case/account byte-exact. Receipt rawDigest binds complete bounded sanitized observation transcript; raw bytes larger than observer bound yield unknown STOP, never truncated-to-qualified evidence.
+
+Cross-field matrix:
+
+* generate/stream => chat+gpt-4o-mini; embed => embedding+text-embedding-3-small. No interface/model mismatch tolerated. embed rawFinish/nativeFinish/nativeRawFinish all null; output counts may be null or exact0 only. Chat supported raw->unified map stop->stop,length->length,content_filter->content-filter; unknown native raw string retained, supported rawFinish=null and reason unsupported. Tools/reasoning/schema are excluded: tool-calls/error/other never qualifies lifetime in this stage.
+* usage validated iff raw input and mapped input present/equal, and Chat raw output and mapped output present/equal; embedding output exact0 is a driver semantic assertion only when raw/mapped input correlation succeeds. Require <=case U/M; missing defaults never count. Contradiction or overbound => unknown+reason contradiction/bound-violation; STOP independently of lifetime. Raw known0 matches mapped0; null does not equal0.
+* lifetime validated => nonnull lifetimeProof from resolver; Chat nonnull responseId/actualModel/rawFinish/nativeFinish/nativeRawFinish with exact map/equality; embed nonnull raw responseId/actualModel and source-proven terminal successful shape. Without resolver proof lifetime MUST unknown, proof null. Contradictory evidence is unknown STOP even with installed proof. Genuine qualified terminal with missing usage remains possible; it releases slot, usage failure still STOPs.
+* serving validated => nonnull actualModel+servingProof whose record validates all U/M/decoder/output premises. drift => actualModel nonnull and exact mismatch to compiled requested model; servingProof null. Unknown serving => servingProof null. Do not prefix/alias-substitute raw actualModel. Documented alias/revision premises never replace observed ID; exact raw mismatch remains drift even if a tariff proof covers it.
+* money validated => microUSD nonnull, observedCostDecimal nonnull, observedCurrency="USD", moneyProof nonnull, observedCategories nonempty; resolver verifies complete whole-invocation aggregate USD/all categories including serving drift. microUSD equals exact outward conversion. money unknown => microUSD null and moneyProof null (observedCostDecimal/currency/categories may still be retained as unqualified facts). A qualified zero must have decimal "0" or exact decimal zero, categories/proof; missing cost never zero.
+* reason none only if usage/lifetime/money/serving all validated and resultHash supplied; every other combination must give a non-none reason. Successful raw response without current proof is missing-evidence. Currentness failure closes private authority but cannot discard validated historical charge/terminal facts under historical dispatch-bound proof.
+
+## Stored state
+
+```ts
+interface AttemptV2 { scenarioId:CaseId; dispatchIdentity:H; identityCanonical:string;
+ state:"dispatch_pending"|"inflight"|"unknown"|"terminal"; checkpoint:true;
+ slotReleased:boolean; k:N; known:Nullable<N>;
+ firstCapture:Nullable<string>; refinements:string[]; // each ReceiptV2 canonical, <=2
+ facts:Facts|null; attachment:"pending"|"attached"|"closed"; privateCanonical:Nullable<string>;
+ trigger:"none"|"revoke"|"cancel"; triggerStageHash:Nullable<H>; triggerIdentityHash:Nullable<H> }
+interface AccountV2 { version:2; evidenceScope:"actual-experiment-native"; hypothesis:true;
+ binding:BindingV2; retainedTriggerCanonical:string; retainedTriggerSetHash:H; next:N; active:Nullable<CaseId>; reserved:N; known:N;
+ stopped:boolean; overrun:boolean; revoked:boolean; cancelled:boolean;
+ sourceCurrent:boolean; profileCurrent:boolean; proofCurrent:boolean; windowCurrent:boolean;
+ attempts:AttemptV2[] }
+```
+
+State parser requires exact keys; next0..14, attempts<=14 unique IDs/hash identities matching compiled cases; refinements<=2; firstCapture null iff refinements empty/facts empty; parse all receipt strings recursively; k equals fixed candidate K. Facts is EXACT Omit<ReceiptV2,"rawDigest"|"reason"> plus firstRawDigest:H, refinementRawDigests:H[] (max2), and stopReason:ReceiptV2["reason"]. All other fields have their declared receipt types; classifications are strongest accepted dimensions. Empty facts is null, otherwise fold output, never independently caller-writable. Attempt facts type is Facts|null. firstRawDigest is original receipt.rawDigest; refinementRawDigests exactly ordered accepted refinement digests. stopReason latches first non-none reason, never clears. identityCanonical is exact compiled binding+case canonical (<=65536). privateCanonical null except attached, byte bound/profile validator exact. active is null or exactly the only unreleased attempt; state terminal iff slotReleased. reserved equals sum(k for known=null), known equals sum(known amounts), checked safe arithmetic. next equals attempts.length and attempts follow compiled ORDER; permit identity ordinals remain unchanged. Trigger fields only C09/C10, stage hash and triggerIdentityHash iff trigger non-none; identity hash validated against complete persisted StageIdentity per replay-cleanup.md. stopped/overrun/revoked/cancelled/closed never revert. State graph/canonical bounds failing validation deny all new work; do not overwrite corrupted liability with an empty state. Root must retain corruption digest/account bytes privately for repair review.
+
+## Capture/fact union and writes
+
+Capture parses before update. An invalid first/different receipt commits exactly one account STOP/private-close update, preserves K/known/active/earlier terminal, publishes one account-row update once (format version remains2; Convex OCC, no custom counter); if account is already stopped, attachment closed and active/known/reserved require no transition, any repeated malformed capture returns invalid-retained with zero writes. No malformed receipt overwrites accepted facts. No additional diagnostic ledger is introduced. Contradiction to previously accepted immutable facts is CAPTURE_COLLISION with ZERO writes (earlier STOP/charge/closure remain). Dispatcher catches collision, invokes separate idempotent STOP-control mutation if not already stopped; that mutation one write/closed attachment, no reset. This preserves inherited C2 collision rollback semantics without permitting further dispatch after detected provider contradictions.
+
+Immutable nonnullable fields: version/scope/binding/scenario/dispatch/native/expectedWire/method/interface/requestedModel. For nullable observed facts (responseId, actualModel, raw/native finish, counts, observed cost/currency, resultHash, each proof), once present a later receipt MUST resupply equal values; cannot disappear/change. rawDigest references accumulated transcript, so use firstRawDigest + refinementRawDigests as append-only evidence references in Facts; do not require digest equality when a genuine independent dimension upgrade adds raw evidence. In ReceiptV2 rawDigest is immutable per receipt; prior exact receipt remains replayable. Category facts are an immutable complete sorted observed set once nonempty, never narrowed/expanded in refinement; new raw category creates collision/STOP and separate withheld raw evidence. serving/usage classifications cannot change during capture refinements: observer builds these before first capture, otherwise unknown is irrevocable for this attempt. Their proof/null facts cannot appear later without a lifetime/money dimension upgrade and cannot promote serving readiness on their own.
+
+First receipt stored once. Later exact any historical canonical replay => zero writes. A new receipt requires lifetimeUpgrade (unknown->validated terminal and !released) OR moneyUpgrade (unknown->validated full amount and known=null), max2 refinements. Null facts may fill ONLY alongside one of those independent upgrades, never fact-only. Lifetime/money can't downgrade; a receipt stating unknown after established validated dimension is interpreted as absence of NEW proof only if it resupplies all established observations/proof fields and fold retains known dimension; cross-field parser therefore receives accumulated prior context and validates effective classification, not erasing it. Simpler implementation choice frozen here: later receipt MUST resupply established validated classifications/proofs/amount; this avoids ambiguous downgrade syntax and still permits independent money then lifetime/lifetime then money. Thus full retained known charge stays explicit on later lifetime upgrade. Both upgrades together consume one refinement; third or no-upgrade => collision0writes.
+
+A first unsupported/unknown receipt commits retained liability and STOP, closes attachment permanently. A later permitted proof refinement can settle/release but never clears STOP/reopens private data. A validated terminal releases only its own active slot once; qualified money replaces fullK with full known amount once, never clips >K. Full known on drift requires independent money proof covering exact drift actualModel. Unknown lifetime leaves active even if money known. Unknown money leaves K even if terminal releases slot. All writes use same account-row OCC transaction; no new permit while stopped/active. v1 unchanged nonpaid scope is always denied by v2 parser and v2 denied by original v1 parser.
+
+## Normative parser order
+
+1. Decode JSON with duplicate-object-key rejection; enforce UTF8 byte bound BEFORE parse. Run descriptor-first own-data graph validator, then sorted-key canonical equality to original text. Count nodes/depth and reject sparse/accessor/symbol/proxy-untrusted boundaries as inherited Convex plain-data constraints; never invoke getters.
+2. Exact top-level/nested Binding/Counts keys; check enums and N/Epoch/H/ID/null types (boolean never integer); all IDs/strings scalar Unicode and byte bounds. Check category ordering/uniqueness/finite enums; result/proof/digest hashes exact. Version2 scope exact, never infer version from keys. State firstCapture/refinements strings each reenter same receipt parser.
+3. Resolve scenario from fixed compiled14 and compare binding/case native/wire/method/interface/model/dispatch against checkpoint; validate counts against c.inputU/maximumOutputM whenever supplied, even if classification unknown. Any overbound becomes retained-invalid STOP, not an accepted unqualified fact hidden from bounds. Result size checked separately against c.conditionalPrivateMaximumBytes; raw evidence byte digest does not establish that bound.
+4. Apply complete cross-field matrix above; known amounts require exact decimal rational ceil equality and supported monetary resolver result. State parser recomputes Facts fold/arithmetic/slot owner from immutable accepted receipt sequence; no trusting stored flags/classification. For actual capture, load private transcript and rerun reducer/resolver; a syntactically qualified label with EMPTY/unknown resolver is downgraded to unknown receipt BEFORE storage, removing moneyProof/microUSD and lifetime/serving proof classifications, reason missing-evidence. Preserve observed amounts separately. A false caller label never triggers charge/release. If no prior receipts, publication is conservative STOP1write; if supplied downgrade contradicts prior trusted facts, collision0writes then STOP-control.
+5. Union compare before writes; exact canonical historic receipt replay returns0writes before current result-authority checks, but not before immutable dispatch binding. A now-revoked grant does not discard already recorded charge or reopen attachment. Contradictions return collision, not rollback-plus-new-attempt. Invalid integer aggregate arithmetic overflow is STOP/unknown full liability diagnostic; never clamp, wrap or reset. Amounts beyond safe integer representability remain observed decimal/unqualified (unknown money/fullK), not invented known0. Reviewed extension to larger accounting representation would require independent gate.
+
+checks/design-model.py is a pure illustrative SUBSET of schema and branch algebra for hostile examples, not the deployed normative parser or proof authority. It does not claim descriptor-first JavaScript, complete state validation, native semantics or managed transaction execution. Full implementation must satisfy every normative step and unchanged baseline assertions independently.
+
+C3 storage terminology: version=2 is immutable format version; Convex native OCC validates row concurrency, no custom revision counter. Write assertions count committed insert/patch/replace/delete operations and successful transaction publication, not format-version increments. Historical exact replay comparisons precede live delivery/current-grant fences solely for hash-only persistence/recovery.
+
+C4 account exact schema adds retainedTriggerCanonical and retainedTriggerSetHash as required fields; hash-recovery.md defines exact domain/type/order/hash and per-attempt relation before/after purge. These contain no text/vector/raw bytes, stay stable across late lifetime/money refinement and never freeze current L. Fresh internal stage update adds one item atomically with control; all capture/cleanup mutations preserve T byte-exact.
+# C4 exact canonical hashes and retained trigger recovery
+
+Design-only finite repair. C3 stage identity/replay precedence/ROOT closed lifecycle authority remain unchanged. This document defines every lifecycle hash preimage, stored redundancy and post-purge relation. Hashes establish content consistency within trusted immutable internal records, never provider serving/money truth, arbitrary-DB-rewrite prevention or proof from a digest alone. No actual proof entry is installed.
+
+## Canonical codec and domain rules
+
+C(x)=accepted descriptor-first canonical own-data JSON: string scalar Unicode, sorted OBJECT keys lexicographically by JS UTF16 code units, JSON.stringify numeric/string encoding, arrays retain declared order, reject duplicate JSON keys/non-own/accessor/symbol/prototype/cycle/sparse/-0/nonfinite. Encode UTF8; H(x)=SHA256(UTF8(C(x))), lowercase64hex. Domain strings below EXACT, version integer1. No timestamp/signer/random salt/header/private text/raw/vector values in hash projections. IDs are valid fixture table IDs verified via corresponding v.id at repository entry; ID strings appear only private retained projections, never public summary. N/Epoch/H/ID limits unchanged. Hash algorithm/codec source pinned in installed closure; no interchangeable JSON canonicalization. All retained canonical strings must equal C(parsed) byte-exact. Graph depth<=16/nodes<=4096 per lifecycle object; retained total row <=65536UTF8bytes. Exact listed keys, no extras.
+
+Scope EXACT {tenantHash:H,spaceHash:H,ownerHash:H}. Owned projection O EXACT {accountHash:H,targetHash:H,manifestHash:H,operatorHash:H,scope:Scope,sourceId:SourceID,chunkId:ChunkID,grantId:GrantID}, derived server-side from immutable installed ownership. Below “owned” always this O, no caller replacement.
+
+### Intent preimages
+
+DeleteIntentCanonical=C({domain:"cortex.experiment.delete-intent.v1",version:1,owned:O,intentKey:H,expectedSourceRevision:Epoch,expectedSourceEpoch:Epoch,expectedGrantEpoch:Epoch}). intentKey equals cleanupKey.
+
+RevokeIntentCanonical=C({domain:"cortex.experiment.revoke-intent.v1",version:1,owned:O,intentKey:H,expectedGrantEpoch:Epoch}). intentKey equals revokeKey.
+
+PurgeIntentCanonical=C({domain:"cortex.experiment.purge-intent.v1",version:1,owned:O,intentKey:H,evidenceSnapshotHash:H}). intentKey equals purgeKey; evidenceSnapshotHash is exact prior returned snapshot, checked freshly for new purge.
+
+intentHash=SHA256(UTF8(the exact intentCanonical)). Domain uniquely determines operation; map delete/revoke/purge to their exact domain, NEVER infer from a caller enum that disagrees. Replay compares complete original canonical preimage, including original expected epochs/snapshot/key, before fresh-effect fences. Existing same operation different key is collision, not a second cleanup authority.
+
+### Immutable trigger projection T
+
+```ts
+interface TriggerItem {scenarioId:"C09"|"C10";dispatchIdentity:H;
+ trigger:"revoke"|"cancel";stageHash:H;stageIdentityHash:H;
+ stageIdentityCanonical:string}
+interface TriggerProjection {domain:"cortex.experiment.trigger-set.v1";version:1;
+ accountHash:H;bindingHash:H;triggers:TriggerItem[]}
+```
+
+bindingHash=H(original compiled BindingV2); triggers max2 unique scenario/dispatch, ordered by original compiled ORDER (C09 before C10). Each stageIdentityCanonical is exact C(StageIdentity) from C3 <=4096bytes, stageIdentityHash its exact digest, nested original binding byte-equal account immutable binding; all redundant TriggerItem fields equal nested identity scenario/dispatch/trigger/stageCanonicalHash. Nested sequence0..511/rawPartDigest H retained. TriggerItem contains full nontext part identity, not privateCanonical/text. stageHash equals nested stageCanonicalHash. triggerSetHash=H(T). Empty set is exact T with triggers:[].
+
+AccountV2 gains REQUIRED retainedTriggerCanonical:string, retainedTriggerSetHash:H, initialized canonical empty T at provisioning. StageAndTrigger fresh effect atomically adds immutable item when it inserts StageRow/control; no subsequent capture/refinement/cleanup may edit an existing item. Max2 with preserved serial/cancel/revoke rules, no new inference capability. Account state parser validates canonical/hash/compiled binding/order and each attempt trigger/triggerStageHash/triggerIdentityHash exactly against T: no missing/extra triggered attempt/item. Before purge, compare complete StageRow identity to T; after purge, compare retained canonical T to purge receipt retained T. ROOT can never create T by merely supplying a hash. Account size524288 bound retained; no custom revision.
+
+### Liability projection L (snapshot, mutable over time)
+
+L EXACT {domain:"cortex.experiment.liability.v1",version:1,accountHash:H,bindingHash:H,next:N,active:CaseId|null,reserved:N,known:N,attempts:LiabilityAttempt[]}.
+
+LiabilityAttempt EXACT {scenarioId:CaseId,dispatchIdentity:H,k:N,known:N|null,state:"dispatch_pending"|"inflight"|"unknown"|"terminal",checkpoint:true,slotReleased:boolean,firstCaptureHash:H|null,refinementHashes:H[]} with <=2 refinement hashes, H(canonical complete accepted ReceiptV2) including original actual/raw facts. attempts <=14, ordered by compiled ORDER admitted prefix, unique dispatch/scenario. L contains NO grant activity/tombstones/attachment flags/private bytes/control trigger fields; those are not monetary/lifetime facts. accountLiabilityHash=H(L). Before/after one delete/revoke/purge MUST produce identical L; later valid historical terminal/money refinement may change current L and hash. Never compare CURRENT L to a stored old L as a recovery validity requirement. Validated full charge/terminal may update known/reserved/active after purge; this neither invalidates T nor authorizes output.
+
+### Lifecycle state snapshot S
+
+S EXACT {domain:"cortex.experiment.lifecycle-state.v1",version:1,owned:O,source:SourceProjection,chunk:ChunkProjection,grant:GrantProjection,vectors:VectorProjection[],flags:Flags,triggerSetHash:H,accountLiabilityHash:H}.
+
+SourceProjection EXACT {sourceId:SourceID,sourceHash:H,revision:Epoch,epoch:Epoch,profileHash:H,tombstone:boolean}.
+ChunkProjection EXACT {chunkId:ChunkID,sourceId:SourceID,sourceHash:H,sourceRevision:Epoch,textHash:H,profileHash:H,tombstone:boolean}.
+GrantProjection EXACT {grantId:GrantID,grantHash:H,epoch:Epoch,active:boolean}.
+VectorProjection EXACT {vectorId:VectorID,sourceId:SourceID,chunkId:ChunkID,sourceRevision:Epoch,sourceHash:H,profileHash:H,dispatchIdentity:H,receiptHash:H,writeKey:H,vectorHash:H,tombstone:boolean}. vectorHash=H({domain:"cortex.experiment.vector.v1",version:1,profileHash:H,vector:number[1536]}), finite/no-0 exact stored vector. vectors max1 sorted by writeKey ascending (tie corrupt). Flags EXACT {stopped:boolean,overrun:boolean,revoked:boolean,cancelled:boolean,sourceCurrent:boolean,profileCurrent:boolean,proofCurrent:boolean,windowCurrent:boolean,attachments:{scenarioId:CaseId,attachment:"pending"|"attached"|"closed"}[]} ordered by admitted compiled ORDER, <=14. No mutable ReceiptV2 facts duplicated outside L. beforeHash=H(S_before); afterHash=H(S_after). Retain both exact canonical S values, treated as HISTORICAL snapshots, not compared to later mutable current state. Fresh effect builds post projection before db writes; commit all or none.
+
+### Evidence projection E
+
+E EXACT {domain:"cortex.experiment.evidence-snapshot.v1",version:1,owned:O,triggerSetHash:H,accountLiabilityHash:H,stages:StageEvidence[],evidence:EvidenceItem[],vectors:VectorEvidence[]}.
+
+StageEvidence EXACT {dispatchIdentity:H,scenarioId:"C09"|"C10",stageIdentityHash:H,stageHash:H,privateBytes:N}; privateBytes=UTF8 exact StageRow.privateCanonical bytes, not exposed text. stages max2 ordered compiled C09,C10; verify stage row identity/T and digest before projecting. EvidenceItem EXACT {dispatchIdentity:H,rawDigest:H,transcriptHash:H,privateBytes:N}; transcriptHash=SHA256(UTF8 exact canonical private transcript), must equal expected rawDigest according to observer serial transcript codec; <=42 items ordered dispatchIdentity then rawDigest lexicographically, unique pair. privateBytes<=180000. VectorEvidence EXACT {writeKey:H,vectorHash:H}; max1 ordered writeKey. No StageRow createdAt/provider timestamp/table physical IDs in E. All stage/evidence/vector row immutable ownership equals O/installed account binding. evidenceSnapshotHash=H(E). E is a bounded SANITIZED projection, not private provider attestation. Retain E canonical in lifecycle row; aggregate digest is not used to reconstruct deleted private content.
+
+## Lifecycle receipt/row and load validation
+
+R EXACT {domain:"cortex.experiment.lifecycle-receipt.v1",version:1,accountHash:H,operation:"delete"|"revoke"|"purge",intentKey:H,intentHash:H,outcome:"applied"|"already-tombstoned"|"already-revoked",beforeHash:H,afterHash:H,evidenceSnapshotHash:H,accountLiabilityHash:H,triggerSetHash:H}. receiptCanonical=C(R); receiptHash=H(R). Public result remains kind+receiptHash only.
+
+fixtureLifecycle row EXACT {accountHash:H,operation:Op,intentKey:H,intentCanonical:string,intentHash:H,receiptCanonical:string,receiptHash:H,beforeCanonical:string,afterCanonical:string,evidenceCanonical:string,liabilityCanonical:string,triggerCanonical:string}; canonical string combined+row <=65536bytes. Convex schema uses v.string for each canonical/hash and exact union operation; semantic parser enforces ALL fields before reads/writes. Domain/version schemas exact; installed ROOT ownership separate. Insert at most1immutable receipt/operation/account. No caller authorizes lifecycle by providing receipt fields.
+
+EVERY load (including history/replay/summary/post-purge) rejects canonical/hash/redundancy mismatch0writes/no summary. Parse exact row and each canonical; recompute intentHash and receiptHash; check row account/operation/key equal intent owned.accountHash/domain/key AND R account/operation/key/intentHash. Recompute H(beforeS),H(afterS),H(E),H(L),H(T) equal R corresponding hashes. S_before/S_after/E/L/T all have same installed account/O/binding where applicable; S/E accountLiabilityHash equals H(L), S/E triggerSetHash equals H(T). Validate nested projection keys/types/order/cardinality and stage identity redundancies, not H regex alone. For purge/delete/revoke stored applied receipt require source/control effect appropriate: delete after.source.tombstone/chunk.tombstone true and source revision/epoch=before+1; revoke after.grant.active false/epoch=before+1; purge after.vectors=[] and private E retained prepurge, no source tombstone/grant changes. Account L unchanged across effect. Staging/evidence removal isn't reconstructed from hashes: authoritative operation receipt plus independently retained T gives exact historical relation. Pre/post flags cannot undo STOP/revoke/cancel or open attachment. Wrong operation domain/table redundancy is corrupt. Auth wrong owner denies before canonical disclosure.
+
+No-write already-tombstoned/already-revoked: fresh current ROOT ownership+expected epoch check, derive exact intent; S_before=S_after CURRENT snapshot, E/L/T current validated snapshots; R outcome corresponding already-* with hashes above; return H(R), zero writes/no row insertion. Repeat same unchanged snapshot yields same hash. Legitimate later accounting may yield different snapshot/hash for another observation; never call it mutation/replay or discard that liability. Stored applied exact replay always returns original immutable R hash even after legitimate later accounting, no stale current-snapshot comparison.
+
+## Post-purge recovery and late accounting
+
+purgeOwnedPrivate validates all existing lifecycle rows and current account T before building E. Fresh purge supplied evidenceSnapshotHash=H(current E); root evidence receipt snapshot taken before call, drift/new late fact changes E/L hash and returns stale0writes rather than silently purging changed snapshot. Fresh purge retains row.triggerCanonical=T and row.liabilityCanonical=L plus E/before/after/R, then deletes ONLY private stage/evidence/vector, preserving source/chunk/account/lifecycle tombstones/facts. Trigger projection is nontext bounded immutable recovery evidence, so postpurge does not invert an aggregate digest.
+
+Postpurge inspectTrigger/recoverOwnedEvidence: validate installed ROOT ownership, EVERY lifecycle row, current account canonical T/hash/attempt relation. Locate valid applied purge receipt, parse its triggerCanonical, require canonical current T EXACT equals retained purge T and H(T)=R.triggerSetHash. Because no new stage is allowed after purge/closure, this immutable set must remain equal. Check account per-attempt trigger/content/identity hashes against corresponding retained complete TriggerItem. Changed sequence/rawDigest/binding/hashes/canonical/extra or missing trigger yields corrupt denial0writes/no summary. No check against old stored L/current known/reserved/active equality; instead revalidate CURRENT accounting parser/fold/refinement rules separately. Thus legitimate late terminal+money changes current L but leaves T fixed and recovery succeeds with current liabilities. New corrupt monetary state also denies via independent accounting parser, not via trigger equality. Missing StageRow before purge with no valid purge receipt remains corrupt. Exact stage persistence replay AFTER purge returns denied closed; inspect may report retained recorded hashes but cannot reconstruct or reopen private stage bytes.
+
+Late verifyAtCapture backing: existing typed internal observer may supply bounded ephemeral trusted transcript through a verificationBacking union {kind:"retained",transcriptRef:H}|{kind:"transient",transcriptCanonical:string,transcriptHash:H}. Transient canonical<=180000/depth16/nodes4096, exact observer source/dispatch/raw digest match, same closed proof/reducer API rerun, no public caller field. It is not persisted back into purged private tables; validated minimal ReceiptV2/refinement facts may update ONLY original account under historical binding. Missing backing/EMPTY actual proof resolver still unknown/fullK/STOP. This preserves supported late charge/terminal ability without private-byte resurrection, raw endpoint exposure or fabricated actual qualification.
+
+RootOwned API inputs remain C3 flat tenantHash/spaceHash/ownerHash; exact O canonical adapter maps those three into scope:Scope and preserves all other keys, with no other normalization. This avoids two valid encodings for intent ownership. Returned/no-write hashes always use normalized O, never hash raw API argument order or caller unknown fields. Every stored projection is private implementation evidence; public ROOT summaries remain exact previously allowlisted hash/control/liability fields, not canonical preimages.
+
+Effect validation supplements exact hash checks: delete/revoke/purge before and after must retain identical O and T, identical L hash; unchanged source/chunk/grant fields except stated operation; no tombstone can revert, account stopped/revoked/cancelled true cannot clear, closed attachment never opens. Delete vectors differ only tombstone=true; revoke vectors identical; purge removes vectors, source/chunk tombstones true and grant inactive before/after. Fresh revoke allowed activebefore true; no-write alreadyrevoked inactivebefore/after, no epoch bump; delete applied increments revision/epoch once, alreadytombstoned has equal before/after. Stored receipt outcome only applied (already-* receipts not stored). Nonpurge R/E use pre-effect E; purge R/E necessarily pre-removal evidence. Every projection equality comparison is canonical exact bytes, not JSON member iteration or hash-only equality.
+# Finite C4 design checks and downstream gates
+
+Copied25 C2 schema/branch-model groups and19 C3 stage/cleanup groups remain separate illustrative subsets. New independent hash-recovery examples build canonical revoke/purge/no-write receipts, validate redundant fields and projections, then mutate canonical bytes/hash/account/operation/key/nested identity/binding/currenttrigger to assert denial0writes/no summary. A hypothetical legitimate late full-charge+terminal transition changes current L but preserves T and recovers current known/reserved/active. Exact postpurge stage request is denied closed without recreating bytes. These are pure contract examples with symbolic row IDs, not native driver/parser/managed/proof tests or actual money evidence. Actual resolver EMPTY.
+
+Later implementation must test complete normative codec/graph/key/type/byte/effect/projection schemas, lifecycle row corruptions and postpurge T relation in registered internal handlers, preserve baseline23/hostile6/refinement4/fresh5 unchanged and all prior C3 controls. Test wrong ROOT owner/scope/target before disclosure; new stale intent vs exact historical replay; alreadytombstoned/revoked derived hashes; source/epoch/tombstone currentness; evidence snapshot stale after late accounting; bound owned42privateevidence/2stages/1vector cleanup; transient late backing with no private resurrection, supported proof only. Same historical receipt replay0writes, malformed/collision STOP semantics, max2independent fact refinements and full liabilities never change.
+
+Required sequence unchanged: fresh independent DESIGN -> offline implementation outcomes/types/lint -> root reviewedsource/operator/input/loadfreeze -> fresh nativecontrol target officialcodegen/publication/types/security/nativeOCC/lostresponse/serial/unknown/currentgrant/source/missingdriver/cleanupretirement -> fresh nativecontrolreview/rootacceptance -> root separatefreshpaid target exact14maximum0retries/STOP -> actualserving/wholemoney/decoder/managedreview -> separate fixture-only actualroot/policy/Gateway governedqualification -> cleanup/retirement retained uncertainty. No design mock substitutes for native/control/paid/model/UI/all17 gates; no forced14completion/regrant/reset. Wholeinitial28/$10 remain engineeringbounds only.
+
+Packet evidence: rawUTCargv/cwd/exit/stdoutstderr, no newfailures unless disclosed/preimaged, current frozen sources/uniquepins, exact14copy, complete lineage/nestedmanifests/failureclosure. Own rootmanifest excludesONLYitself. No driverimplementation before freshPASS.
+/** Inspect the entire bounded own-data graph before reading any property values.
+ * Convex deserialized values are plain data. Accessors/symbols/prototypes/sparse arrays
+ * are refused; arbitrary JS Proxy traps are outside Convex's value boundary. */
+export function canonical(value: unknown, maximumBytes = 65536): string {
+  const seen = new Set<object>(); let nodes = 0;
+  function inspect(item: unknown, depth: number): void {
+    if (++nodes > 4096 || depth > 16) throw new Error("GRAPH_LIMIT");
+    if (typeof item === "string") { if (!item.isWellFormed()) throw new Error("UNICODE"); return; }
+    if (item === null || typeof item === "boolean") return;
+    if (typeof item === "number") { if (!Number.isFinite(item) || Object.is(item, -0)) throw new Error("NUMBER"); return; }
+    if (typeof item !== "object" || seen.has(item)) throw new Error("DATA_GRAPH");
+    seen.add(item);
+    const array = Array.isArray(item), proto = Object.getPrototypeOf(item);
+    if (proto !== (array ? Array.prototype : Object.prototype) && !(proto === null && !array)) throw new Error("PROTOTYPE");
+    const descriptors = Object.getOwnPropertyDescriptors(item);
+    if (Reflect.ownKeys(descriptors).some(k => typeof k !== "string")) throw new Error("SYMBOL");
+    for (const [key, d] of Object.entries(descriptors)) {
+      if (!key.isWellFormed() || !("value" in d) || (!d.enumerable && !(array && key === "length"))) throw new Error("OWN_DATA");
+    }
+    if (array) {
+      const length = descriptors.length.value as number;
+      if (length > 4096 || Object.keys(descriptors).length !== length + 1) throw new Error("ARRAY");
+      for (let i = 0; i < length; i++) { if (!descriptors[String(i)]) throw new Error("SPARSE"); inspect(descriptors[String(i)].value, depth + 1); }
+    } else for (const d of Object.values(descriptors)) inspect(d.value, depth + 1);
+  }
+  inspect(value, 0);
+  function ordered(item: unknown): unknown {
+    if (item === null || typeof item !== "object") return item;
+    if (Array.isArray(item)) return item.map(ordered);
+    return Object.fromEntries(Object.keys(item).sort().map(key => [key, ordered((item as Record<string, unknown>)[key])]));
+  }
+  const result = JSON.stringify(ordered(value));
+  if (new TextEncoder().encode(result).length > maximumBytes) throw new Error("BYTE_LIMIT");
+  return result;
+}
+export function parseCanonical(text: string, maximumBytes = 65536): unknown {
+  if (typeof text !== "string" || new TextEncoder().encode(text).length > maximumBytes) throw new Error("BYTE_LIMIT");
+  const value: unknown = JSON.parse(text);
+  if (canonical(value, maximumBytes) !== text) throw new Error("NONCANONICAL");
+  return value;
+}
+export function exact(value: unknown, keys: readonly string[]): asserts value is Record<string, unknown> {
+  canonical(value);
+  if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).sort().join("|") !== [...keys].sort().join("|")) throw new Error("SHAPE");
+}
+export async function digest(value: string): Promise<string> {
+  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2, "0")).join("");
+}
