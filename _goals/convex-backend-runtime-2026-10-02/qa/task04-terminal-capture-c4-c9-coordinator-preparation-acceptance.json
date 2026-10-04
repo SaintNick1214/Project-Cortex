@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-04T08:23:32.839367+00:00",
+  "verdict": "PASS_PREPARATION_ONLY",
+  "scope": "C4 distinct extension/regression and exact restored C9 parent preparation; no native/product aggregate pass",
+  "independentC4": {
+    "reportSHA256": "a425b30f95016625bbbfc21332eb8c4fa4186742229de5f45d79bee0ec211d0c",
+    "manifestSHA256": "41c944d7c530985b5023851c69f7bb1819c415f1038dcfa0795e5f431cd42b50",
+    "rows": 74,
+    "score": 4.2
+  },
+  "independentC9Restoration": {
+    "reportSHA256": "6e018fff7c3ea181700fe11c1402f524796f4c366abb8875285d0473f36a000f",
+    "manifestSHA256": "9c0602007d40338bfdb4f2fd5d66856bbddfe7a7b8c60c0cdcb41a5023f07405",
+    "rows": 16,
+    "score": 4.4
+  },
+  "rootInspection": "Full reports and complete row bytes/hash/actualsets incl nested manifests; no mismatches",
+  "priorC9": "REJECT3.6 remains immutable; exact original bytes restored against original hashes, not rebaselined",
+  "nextGate": "ROOT ONLY two newly owned native profiles, official publication/currentprovenance/cleanup/retirement and fresh aggregate; Gateway HELD",
+  "paidInference": 0
+}

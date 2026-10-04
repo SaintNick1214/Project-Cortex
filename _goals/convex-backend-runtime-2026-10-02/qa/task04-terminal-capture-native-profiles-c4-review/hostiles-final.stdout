@@ -1,0 +1,70 @@
+(node:174438) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ extension independent callback-throw (11.599236ms)
+✔ extension independent bytes-bound (3.375068ms)
+✖ extension independent bad-parent (5.822721ms)
+✔ extension independent observer-created (2.686713ms)
+✔ extension independent observer-written (2.80734ms)
+✔ extension independent observer-durable (5.332309ms)
+✔ extension independent observer-closed (4.771834ms)
+✔ extension independent write-after (3.71662ms)
+✔ extension independent fsync-after (4.374307ms)
+✔ extension independent first-primary-secondary-close (3.405435ms)
+✔ extension independent both-close-before (4.653141ms)
+✔ extension independent write-expiry (3.720397ms)
+✔ extension independent bad-control0 (1.879224ms)
+✔ extension independent bad-control1 (1.964856ms)
+✔ extension independent bad-control2 (2.367783ms)
+✔ extension independent bad-control3 (2.543003ms)
+✔ extension independent bad-control4 (2.039597ms)
+✔ extension independent bad-control5 (2.063512ms)
+✔ extension independent bad-control6 (3.480617ms)
+✔ extension independent bad-control7 (1.915081ms)
+✔ regression independent callback-throw (2.09449ms)
+✔ regression independent bytes-bound (2.220146ms)
+✖ regression independent bad-parent (4.088871ms)
+✔ regression independent observer-created (2.74898ms)
+✔ regression independent observer-written (2.348457ms)
+✔ regression independent observer-durable (3.695771ms)
+✔ regression independent observer-closed (3.783997ms)
+✔ regression independent write-after (2.780359ms)
+✔ regression independent fsync-after (3.758709ms)
+✔ regression independent first-primary-secondary-close (2.267676ms)
+✔ regression independent both-close-before (3.543195ms)
+✔ regression independent write-expiry (4.396589ms)
+✔ regression independent bad-control0 (3.34429ms)
+✔ regression independent bad-control1 (3.554375ms)
+✔ regression independent bad-control2 (1.966498ms)
+✔ regression independent bad-control3 (2.026482ms)
+✔ regression independent bad-control4 (1.90333ms)
+✔ regression independent bad-control5 (1.975836ms)
+✔ regression independent bad-control6 (1.96705ms)
+✔ regression independent bad-control7 (2.097064ms)
+✔ extension exact setup output post-effect expiry (4.722372ms)
+✔ extension exact watcher output post-effect expiry (4.085474ms)
+✔ regression exact setup output post-effect expiry (4.980748ms)
+✔ regression exact watcher output post-effect expiry (4.289979ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 42
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 257.305083
+
+✖ failing tests:
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:14:321
+✖ extension independent bad-parent (5.822721ms)
+  TypeError: Cannot read properties of undefined (reading 'message')
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:212)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:14:321
+✖ regression independent bad-parent (4.088871ms)
+  TypeError: Cannot read properties of undefined (reading 'message')
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:212)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

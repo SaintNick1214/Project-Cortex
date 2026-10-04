@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-04T08:19:03.256488+00:00",
+  "scope": "Exact original byte recovery; no rerun/new outcome or rebaseline; rejected review retained unchanged",
+  "method": {
+    "method": "Enumerated milliseconds only within original recorded successful command interval; retained prior outcome body and original recorded argv. Exact original manifest SHA256 AND byte count required; no outcome execution or manifest change.",
+    "matches": [
+      {
+        "profile": "extension",
+        "candidate": "work/resume/task04-c9-exact-receipt-recovery/effect-matrix-extension.json",
+        "sha256": "835a8c6ab436683e119fd07223c0b4b346692b22c55f53217a0362b3c5b6ec67",
+        "bytes": 34749,
+        "utc": "2026-10-04T08:07:43.091Z",
+        "rangeMs": [
+          1791101262570,
+          1791101263105
+        ]
+      },
+      {
+        "profile": "regression",
+        "candidate": "work/resume/task04-c9-exact-receipt-recovery/effect-matrix-regression.json",
+        "sha256": "d51f026e90abefd915cbfba2e723141ca64548c04daff9d0e48b5b16100eee4d",
+        "bytes": 34750,
+        "utc": "2026-10-04T08:07:46.993Z",
+        "rangeMs": [
+          1791101266473,
+          1791101267001
+        ]
+      }
+    ]
+  },
+  "restorations": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/effect-matrix-extension.json",
+      "overwrittenBytesPreserved": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c9-reviewer-overwrite-extension.json",
+      "overwrittenSHA256": "c1c30da3a05530ed181d85fa550932c03785e369499a8481a1897ff93d829f9f",
+      "restoredSHA256": "835a8c6ab436683e119fd07223c0b4b346692b22c55f53217a0362b3c5b6ec67"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/effect-matrix-regression.json",
+      "overwrittenBytesPreserved": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c9-reviewer-overwrite-regression.json",
+      "overwrittenSHA256": "5b752369b047be050b9e30aea72a81cecf830abbd5a3b673a00b95697e9a4f3e",
+      "restoredSHA256": "d51f026e90abefd915cbfba2e723141ca64548c04daff9d0e48b5b16100eee4d"
+    }
+  ],
+  "completeRows": 207,
+  "mismatches": [],
+  "missing": [],
+  "extra": [],
+  "freshReview": "PENDING"
+}

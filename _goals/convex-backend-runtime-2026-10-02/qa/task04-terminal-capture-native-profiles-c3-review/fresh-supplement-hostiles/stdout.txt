@@ -1,0 +1,293 @@
+{
+  "tests": 36,
+  "passed": 36,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "results": [
+    {
+      "profile": "extension",
+      "name": "healthy",
+      "status": "PASS",
+      "observedError": null,
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "166d2b8c94cd5b1056808a71c6b45a76f7ed34b10a42c7ffefaa2716726dedf3"
+    },
+    {
+      "profile": "extension",
+      "name": "no-supplement",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_BINDING",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "b42153dbc5e3318e6b7cff067797efdbf334ee800040631c95f27bb6ef69f7ac"
+    },
+    {
+      "profile": "extension",
+      "name": "wrong-index-path",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_BINDING",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "c08c32f6b5f7af8073f8358c086d32e179bfdca4219b90edbbf3aae49dd62e06"
+    },
+    {
+      "profile": "extension",
+      "name": "supplement-hash",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_HASH",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "678e8808c72e2ec9cbe01db317f700a129dd87503f0547be5e3d22e56b6c90c2"
+    },
+    {
+      "profile": "extension",
+      "name": "unknown-packet",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_BINDING",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "da3a9361cfa6f13ce4a8191d5d6f76d1868982d0f29f4248900792d4324bd8be"
+    },
+    {
+      "profile": "extension",
+      "name": "original80-drift",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_PRESERVATION",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "c63ddb467e8294ccf0a42c8afac9ab0ec7b0c2ffdea1537389b649f7dc817d60"
+    },
+    {
+      "profile": "extension",
+      "name": "original-index-drift",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_MANIFEST",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "07a4cd3d80bddf2bd0ad5bef534cd7f079fb32017a4acbefadb8f234f13ab4a9"
+    },
+    {
+      "profile": "extension",
+      "name": "extra-file",
+      "status": "PASS",
+      "observedError": "QA_PRESERVATION_INVENTORY",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "504af2266f341edd40f125f5236cc4dd119ad5cf9c1c375329570953f9a81f42"
+    },
+    {
+      "profile": "extension",
+      "name": "missing-file",
+      "status": "PASS",
+      "observedError": "QA_PRESERVATION_INVENTORY",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "fa553c326cc4eb2f60b1cee03559d13bd6c39a2f19444a8cbca0317609561c9d"
+    },
+    {
+      "profile": "extension",
+      "name": "duplicate-index",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "9307afe156ea7e46d081e0ae46035ed0ec37362986b7b7994ee3a51a646f805b"
+    },
+    {
+      "profile": "extension",
+      "name": "reorder-index",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "1b1468a42648b2add948859091884a26cee96ac6e432a876710d4f3faba6e4e0"
+    },
+    {
+      "profile": "extension",
+      "name": "drop-original-row",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "eeeafb36c19adc3cfd320742ad54ca3180a1ea972f8fd39d1b8245f5defb7653"
+    },
+    {
+      "profile": "extension",
+      "name": "replace-addition",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_ORIGINAL",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "d79a34add5b6d505852e5104e0a9e1fbfa8812ccd09cb9154616c18fc84840b9"
+    },
+    {
+      "profile": "extension",
+      "name": "wrong-schema",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "aeac180b8e06974a9a7398f2d5795168dd13a186ff6779b3cae2bd1b085fa035"
+    },
+    {
+      "profile": "extension",
+      "name": "symlink-file",
+      "status": "PASS",
+      "observedError": "QA_PRESERVATION_PATH",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "333e234751c8c41e9562c07416cdc3c38ee5833e8f612492a6e1df2cc0b7a24e"
+    },
+    {
+      "profile": "extension",
+      "name": "hardlink-file",
+      "status": "PASS",
+      "observedError": "QA_LINK",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "f7bfb64467bc32aaf94f1d2b2f1a97d0c954c552d0600a6b145c201fba1673ab"
+    },
+    {
+      "profile": "extension",
+      "name": "dropped-old-self",
+      "status": "PASS",
+      "observedError": "ENOENT: no such file or directory, lstat '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles/76d384bc-9cfc-4d30-9f50-2771aef1e0d5/extension/dropped-old-self/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/qa-manifest.json'",
+      "sourceSHA256": "413dcbb2481d47b5597b622983e2035bb6bf7818131e917a34177364a19ada23",
+      "adaptedSHA256": "43a455ae56b863ff607a9f3f138cbf2efe6c0b19979e514d411f941507465e33"
+    },
+    {
+      "profile": "extension",
+      "name": "source-freeze-supplement-bypass",
+      "status": "PASS",
+      "observedError": "QA_SOURCE_DRIFT"
+    },
+    {
+      "profile": "regression",
+      "name": "healthy",
+      "status": "PASS",
+      "observedError": null,
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "93cf114cf10f6353913f5ae7b0cc817f8d9c90388bd1baee9860be4a0fe0a59f"
+    },
+    {
+      "profile": "regression",
+      "name": "no-supplement",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_BINDING",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "13fc2d5ba6a4a076f1b4e77783625038676b80428db0fbdc5960b9137093707f"
+    },
+    {
+      "profile": "regression",
+      "name": "wrong-index-path",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_BINDING",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "3eda66db8019ae6f439fdb991a9e2091cb6de56f4e2d2f5202a7615600ab2549"
+    },
+    {
+      "profile": "regression",
+      "name": "supplement-hash",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_HASH",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "c7db4ad9947ee4ef81d7819ee8622491777430d46b98c373ef83cdfd63aa4ced"
+    },
+    {
+      "profile": "regression",
+      "name": "unknown-packet",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_BINDING",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "0fb5183d1368910d8dadf4edff030df01fd214108f9c3d6624d1d8e4a09a09e4"
+    },
+    {
+      "profile": "regression",
+      "name": "original80-drift",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_PRESERVATION",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "0091a17f8083b5d2e6e2bbd015929bff09cbf127238ed39691182cf76f58d9ea"
+    },
+    {
+      "profile": "regression",
+      "name": "original-index-drift",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_MANIFEST",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "abf60f6b4eec7968d2df50fd542aa8cfd5f0c803d24afdc57730c1dbc3111a25"
+    },
+    {
+      "profile": "regression",
+      "name": "extra-file",
+      "status": "PASS",
+      "observedError": "QA_PRESERVATION_INVENTORY",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "bbcd7a3121db1bff4cd6b63570541729524606866c4e5429974e1bf3f92d0b85"
+    },
+    {
+      "profile": "regression",
+      "name": "missing-file",
+      "status": "PASS",
+      "observedError": "QA_PRESERVATION_INVENTORY",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "2f656c7514f633f16f1b5722d38d9b834ee286b8ad9fc3f9ecb96450d6b5d570"
+    },
+    {
+      "profile": "regression",
+      "name": "duplicate-index",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "aec3545a2bd348cae4ae5fc18acbebad43f5fd281499848df4c526e566e5aae2"
+    },
+    {
+      "profile": "regression",
+      "name": "reorder-index",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "a7a46dfbef640e5146d7eb7d55c4fc089872ea8444522ce28d9d92ec1ce8c7de"
+    },
+    {
+      "profile": "regression",
+      "name": "drop-original-row",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "43e6375c3608269ebfda85f4120bb5aaf84b9b21c4918612ac8a833a30e51031"
+    },
+    {
+      "profile": "regression",
+      "name": "replace-addition",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_ORIGINAL",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "3871b188b974dac6b0215e8767a25d39feadfa36154e6bf1f9cdd178357ece98"
+    },
+    {
+      "profile": "regression",
+      "name": "wrong-schema",
+      "status": "PASS",
+      "observedError": "QA_HISTORICAL_FULL_SCHEMA",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "98bd94e080fa0416f01fc000cdd2add7f6091e2b3634a759aab1b0a0cc26911c"
+    },
+    {
+      "profile": "regression",
+      "name": "symlink-file",
+      "status": "PASS",
+      "observedError": "QA_PRESERVATION_PATH",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "177eca416f6e85651349c0fadb42975f7228ddbcd59c13587868b185494bd1e1"
+    },
+    {
+      "profile": "regression",
+      "name": "hardlink-file",
+      "status": "PASS",
+      "observedError": "QA_LINK",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "66de07e084ac56d254955d8b7d06e7522b1e5ecf471ee91dcaf60a09ead5b7fa"
+    },
+    {
+      "profile": "regression",
+      "name": "dropped-old-self",
+      "status": "PASS",
+      "observedError": "ENOENT: no such file or directory, lstat '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles/76d384bc-9cfc-4d30-9f50-2771aef1e0d5/regression/dropped-old-self/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/qa-manifest.json'",
+      "sourceSHA256": "afcfbf61a37d20f1b222294b05759f6ee7cdc6526024edd7630e51c00be87600",
+      "adaptedSHA256": "d74b3c11b0277e08cd494096e610c9bbdd3f91e3fbfa92186b2178f913664ba5"
+    },
+    {
+      "profile": "regression",
+      "name": "source-freeze-supplement-bypass",
+      "status": "PASS",
+      "observedError": "QA_SOURCE_DRIFT"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "subject": "c8",
+  "results": [
+    {
+      "name": "expiry-after-key-before-first-sign",
+      "requirement": "PASS",
+      "stats": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 1,
+        "writes": [],
+        "stdout": ""
+      }
+    },
+    {
+      "name": "expiry-after-first-proof-before-other-outputs",
+      "requirement": "PASS",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": ""
+      }
+    }
+  ],
+  "tests": 2,
+  "skipped": 0,
+  "realSigning": 0,
+  "realNetwork": 0,
+  "realPrivateReads": 0
+}

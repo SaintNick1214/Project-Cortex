@@ -1,0 +1,11 @@
+# Root-only invocation contract
+
+All entries remain NOT_RUN and require fresh independent C4 profile and C9 parent PASS tied to final full manifests/freezes, then exact new canonical owned target inputs. These are entrypoint names, not approval or deploy receipts. Use absolute Node24 toolchain PATH prefix `/workspace/Project-Cortex/work/resume/toolchain-bin`, npm12.2, cwd `/workspace/Project-Cortex`.
+
+Extension request is this packet/project-request.json; regression request is regression/project-request.json. Each has its own new purpose/op/run/slugs and `work/backend-runtime/<purpose>/deploy.env`. They cannot share inputs or an old target. Root alone keychecks/provisions/signs/stages/officialdeploys/codegens/reads private inputs/issues RPCs/peer requests/cleans/retires.
+
+Public parent entrypoints are `_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/parent-inputs-extension.mjs` and `parent-inputs-regression.mjs`. Corresponding `current-inputs-extension.mjs` and `current-inputs-regression.mjs` are the watcher entrypoints; optional argv[2] must be exactly `task04-terminal-capture-native-extension-preparation-c4` or `task04-terminal-capture-native-extension-preparation-c4/regression`. All four static imports/guard/request/hash bindings are frozen in each runtime-inputs.json.
+
+Each profile scripts/deploy.mjs accepts only phase `synthetic` or `empty`; scripts/qualify-owned.mjs, scripts/cleanup.mjs and scripts/reconcile.mjs retain original reviewed driver ownership/process/journal/window/publication gates. Stage/official CLI/source/generated/raw/publication/current-ID proofs must resolve before any qualification. Regression retains original43/fault matrix; extension22 has its separate target and full matrix. Neither resets original account/window or budget/deadline.
+
+Public offline terminal verification is `node work/resume/task04-terminal-capture-native-extension-preparation-c4/verify-final.mjs`; it supplies public manifest SHA explicitly to sourcePreflight/preservationPreflight and writes only unique scratch. Native execution never uses synthetic IDs or offline fake DB receipts. Required terminal outcomes include complete fulljournal, owned-only cleanup, preservation postimages, all process reaping and observed DELETE200/GET404 retirement.

@@ -1,0 +1,25 @@
+{
+  "immutableC7Review": "REJECT2.8; unchanged reviewer observational assertions reproduce4 defects; shared unchanged requirements RED_C7_GREEN_C8",
+  "priorProducerExploratoryRaw": "Remains missing exactly as C7 disclosed; no reconstruction",
+  "newExploratoryToolTranscriptOnly": [
+    {
+      "probe": "healthy mock setup",
+      "failure": "ENOENT lstat initial proof because mock ignored throwIfNoEntry:false",
+      "repair": "Updated mock signature to honor actual fs API options; expectations unchanged",
+      "raw": "Tool transcript only, standalone raw/preimages unavailable; not reconstructed"
+    },
+    {
+      "probe": "before-sign-2 matrix",
+      "failure": "0 !=1 due overbroad dot-count matching raw JWT payload issuer",
+      "repair": "Mock instrumentation matches base64url head.payload sign input exactly; signatures expectation unchanged",
+      "raw": "Tool transcript only, standalone raw/preimages unavailable; not reconstructed"
+    },
+    {
+      "probe": "runner setup",
+      "failure": "Missing jest.config.js before child startup",
+      "repair": "Current actual root config is jest.config.mjs; no Jest/dotenv invoked",
+      "raw": "Tool transcript only, standalone raw unavailable; not reconstructed"
+    }
+  ],
+  "finalCommands": "All18 commands have actual raw stdout/stderr, argv/cwd/UTC/preimages and pre/post hashes; RED_C7 exit1 expected and retained"
+}

@@ -1,0 +1,27 @@
+/** Actual frozen handler composition against an OFFLINE fake DB. Never native/OCC certification. */
+import test from 'node:test';import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';import {resolve} from 'node:path';import {pathToFileURL} from 'node:url';import {randomUUID} from 'node:crypto';
+import {SourceTextModule,SyntheticModule,createContext} from 'node:vm';import {build} from 'esbuild';import {getFunctionName} from 'convex/server';
+import {root,repo,fixture,sha256} from './guard.mjs';
+const work=resolve(repo,'work/resume/task04-terminal-capture-native-extension-preparation-c3/actual-handlers-'+randomUUID());mkdirSync(work,{mode:0o700});
+const entry=resolve(work,'entry.ts'),out=resolve(work,'bundle.mjs');writeFileSync(entry,`export * as policy from ${JSON.stringify(resolve(fixture,'convex/runtimeModelPolicy.ts'))};export * as owned from ${JSON.stringify(resolve(fixture,'convex/qualificationOwned.ts'))};export * as capture from ${JSON.stringify(resolve(fixture,'convex/qualificationCapture.ts'))};export * as peer from ${JSON.stringify(resolve(fixture,'convex/qualificationPeer.ts'))};export {MemoryTestDb} from ${JSON.stringify(resolve(repo,'tests/unit/runtimeMemory/fixture.ts'))};`);
+await build({entryPoints:[entry],outfile:out,bundle:true,platform:'node',format:'esm',packages:'external',logLevel:'silent'});const compiled=await import(pathToFileURL(out));
+const plan=JSON.parse(readFileSync(resolve(root,'cases.json'))),inventory=JSON.parse(readFileSync(resolve(root,'registration-inventory.json')));
+const source=readFileSync(resolve(root,'scripts/cases.mjs'),'utf8');
+for(const definition of plan.scenarios)test('frozen native case wiring OFFLINE fake-DB ONLY: '+definition.id,async()=>{
+ const db=new compiled.MemoryTestDb();let time=1_021_000,rpc=0,nested=0,effects=0,peak=0;const originalNow=Date.now;Date.now=()=>time;
+ db.patch=async(table,id,updates)=>{const row=await db.get(table,id);if(!row)throw Error('QA_MISSING');db.writes++;for(const [k,v]of Object.entries(updates))if(v===undefined)delete row[k];else row[k]=structuredClone(v);};
+ db.delete=async(table,id)=>{if(id===undefined){id=table;table=id.split(':')[0];}const rows=db.table(table),index=rows.findIndex(x=>x._id===id);if(index<0)throw Error('QA_MISSING');db.writes++;rows.splice(index,1);};
+ const invoke=async(path,args)=>{const [name,key]=path.split(':'),module={runtimeModelPolicy:compiled.policy,qualificationOwned:compiled.owned,qualificationCapture:compiled.capture,qualificationPeer:compiled.peer}[name];assert.ok(module?.[key],path);return await module[key]._handler(ctx,args);};
+ const ctx={db,runMutation:async(ref,args)=>{nested++;return await db.transaction(()=>invoke(getFunctionName(ref),args));}};
+ let tail=Promise.resolve();const runId=JSON.parse(readFileSync(resolve(root,'project-request.json'))).runId,operation='offline-only';
+ const session={runId,target:{operation},publication:{functions:inventory.registrations},rpc:async(type,path,args)=>{rpc++;const execute=async()=>{const value=type==='mutation'?await db.transaction(()=>invoke(path,args)):await invoke(path,args);peak=Math.max(peak,[...db.rows.values()].reduce((n,a)=>n+a.length,0));return structuredClone(value);};const pending=tail.then(execute);tail=pending.catch(()=>{});return await pending;}};
+ const vm=createContext({Date,Buffer,Error,JSON,setTimeout:(fn,delay)=>{time+=delay;fn();}});
+ const make=(name,values)=>new SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context:vm,identifier:name});
+ const canonical=value=>{if(Array.isArray(value))return '['+value.map(canonical).join(',')+']';if(value&&typeof value==='object')return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+canonical(value[k])).join(',')+'}';return JSON.stringify(value);};
+ const originalCases=await import('./original-b-cases.mjs');
+ const window=await import('./window-evidence.mjs');
+ const module=new SourceTextModule(source,{context:vm,identifier:'exact-frozen-extension-cases'});await module.link(name=>name==='node:assert/strict'?make(name,{default:assert}):name==='node:path'?make(name,{resolve}):name==='./guard.mjs'?make(name,{root,scratch:work,json:p=>p.endsWith('registration-inventory.json')?inventory:{operation,peerSecret:'OFFLINE_ONLY_NOT_A_CREDENTIAL'},sha256,qualifierDeadline:()=>1_021_000+1200000}):name==='./original-b-cases.mjs'?make(name,{canonical,request:originalCases.request}):name==='./window-evidence.mjs'?make(name,{healthyWindow:window.healthyWindow}):name==='./peer.mjs'?make(name,{peer:async(s,dispatch)=>{effects++;nested++;return await invoke('qualificationPeer:record',{run:runId,dispatchDigest:sha256(dispatch)});}}):assert.fail('UNKNOWN_IMPORT '+name));
+ try{await module.evaluate();await module.namespace.scenario(session,definition.id,definition.kind);assert.ok(rpc<=definition.rpcCeiling,`${rpc}>${definition.rpcCeiling}`);assert.ok(db.sequence<=definition.maximumCommittedCreatedRows,`rows ${db.sequence}>${definition.maximumCommittedCreatedRows}`);assert.ok(peak<=320);assert.ok(nested<=1);assert.equal(effects,definition.id==='peer-no-replay'?1:0);console.log(JSON.stringify({id:definition.id,rpc,committedCreates:db.sequence,peakRows:peak,nested,status:'PASS_OFFLINE_HANDLER_COMPOSITION_ONLY'}));}
+ finally{Date.now=originalNow;}
+});

@@ -1,0 +1,67 @@
+{
+  "profile": "extension",
+  "observations": [
+    {
+      "change": {
+        "expireWithinExclusive": 1
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json"
+        ]
+      },
+      "retainedBytes": 5129,
+      "retainedMode": 384,
+      "VIOLATION": "private file created after fixed parent deadline expired within exact exclusive canonical scanner",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "failFsync": 1
+      },
+      "diagnostic": "DUMMY_FSYNC_FAILURE",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "retainedBytes": 5129,
+      "retainedMode": 384,
+      "VIOLATION": "successfully written private file absent from retained effect names",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    }
+  ]
+}

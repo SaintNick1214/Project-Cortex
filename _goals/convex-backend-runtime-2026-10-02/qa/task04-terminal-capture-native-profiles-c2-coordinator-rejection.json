@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-04 07:46:01 UTC",
+  "gate": "REJECT_PREPARATION",
+  "subject": "task04-terminal-capture-native-extension-preparation-c2 and regression",
+  "review": {
+    "path": "task04-terminal-capture-native-profiles-c2-review",
+    "verdict": "REJECT",
+    "score": 2.8,
+    "reportSHA256": "7c53480739fe423b8cccc862a9d33d4d9f3f450e6ae57b8dbd494ef43c93bef4",
+    "manifestSHA256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+    "coordinatorRowsVerified": 4529,
+    "mismatches": 0
+  },
+  "blocker": "Hash-bound C7 parent helpers permit postdeadline signing and subsequent private outputs; separate C7 fresh reviewer reproduced four counterexamples.",
+  "localChecks": {
+    "captureFamilies": 22,
+    "originalFamilies": 43,
+    "strictTypechecks": 2,
+    "adversarialChecks": 34,
+    "skips": 0,
+    "sourceMismatches": 0
+  },
+  "next": "NEW immutable consuming C3 profiles +C8helpers; fresh independent both reviews beforeeffects. Original C2/C7 histories preserved.",
+  "native": "NOT_RUN",
+  "targetsProvisioned": 0,
+  "paidInference": 0
+}

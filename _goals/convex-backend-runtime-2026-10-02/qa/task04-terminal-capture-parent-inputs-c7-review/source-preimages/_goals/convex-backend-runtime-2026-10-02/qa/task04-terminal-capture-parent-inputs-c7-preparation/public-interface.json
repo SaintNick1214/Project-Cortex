@@ -1,0 +1,49 @@
+{
+  "profiles": [
+    {
+      "name": "extension",
+      "parent": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/parent-inputs-extension.mjs",
+      "watcher": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/current-inputs-extension.mjs",
+      "candidateArgument": "task04-terminal-capture-native-extension-preparation-c2",
+      "interfaces": {
+        "parent": "main() exact8 signatures +1 owned peer config ONLY root execution",
+        "watcher": "main() 120s no RPC BOTH created receipts, exact profile scope"
+      },
+      "sources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/parent-inputs-extension.mjs",
+          "bytes": 15496,
+          "sha256": "563632e9c91fbcd7f2613ed120172b93c5bdb4d2ce01c7e89629364bf638575f"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/current-inputs-extension.mjs",
+          "bytes": 5959,
+          "sha256": "541d9d4566d83169154f2c00be45ce9afb82a5d98895e1732c2dd9cfd7fd288e"
+        }
+      ]
+    },
+    {
+      "name": "regression",
+      "parent": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/parent-inputs-regression.mjs",
+      "watcher": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/current-inputs-regression.mjs",
+      "candidateArgument": "task04-terminal-capture-native-extension-preparation-c2/regression",
+      "interfaces": {
+        "parent": "main() exact8 signatures +1 owned peer config ONLY root execution",
+        "watcher": "main() 120s no RPC BOTH created receipts, exact profile scope"
+      },
+      "sources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/parent-inputs-regression.mjs",
+          "bytes": 15531,
+          "sha256": "3660b183ec83e189369f48d0e4234d5d44212ec1018def96af025ce3166c591e"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/current-inputs-regression.mjs",
+          "bytes": 5982,
+          "sha256": "7feea7cafd7b93a11e9dc5faa4a560dd914b96e0f14a2310eb2a2bc9761f2164"
+        }
+      ]
+    }
+  ],
+  "sourceAuthority": "These exact PUBLIC sources are authoritative; inert copied profile reference clones are not execution entries."
+}

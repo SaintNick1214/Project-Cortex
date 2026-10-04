@@ -1,0 +1,63 @@
+{
+  "checks": {
+    "changed-module-syntax": {
+      "exitCode": 0,
+      "command": "evidence/changed-module-syntax/command.json"
+    },
+    "complete-public-preflight": {
+      "exitCode": 1,
+      "command": "evidence/complete-public-preflight/command.json"
+    },
+    "fresh-binding-controls": {
+      "exitCode": 0,
+      "command": "evidence/fresh-binding-controls/command.json"
+    },
+    "historical-fullset-red": {
+      "exitCode": 1,
+      "command": "evidence/historical-fullset-red/command.json"
+    },
+    "inventory-extension": {
+      "exitCode": 0,
+      "command": "evidence/inventory-extension/command.json"
+    },
+    "inventory-regression": {
+      "exitCode": 0,
+      "command": "evidence/inventory-regression/command.json"
+    },
+    "public-fullclosure-green": {
+      "exitCode": 0,
+      "command": "evidence/public-fullclosure-green/command.json"
+    },
+    "refreshed-source-controls": {
+      "exitCode": 0,
+      "command": "evidence/refreshed-source-controls/command.json"
+    },
+    "supplemental-history-controls": {
+      "exitCode": 0,
+      "command": "evidence/supplemental-history-controls/command.json"
+    },
+    "syntax": {
+      "exitCode": 0,
+      "command": "evidence/syntax/command.json"
+    },
+    "types-extension": {
+      "exitCode": 0,
+      "command": "evidence/types-extension/command.json"
+    },
+    "types-regression": {
+      "exitCode": 0,
+      "command": "evidence/types-regression/command.json"
+    }
+  },
+  "freshOfflineCases": 92,
+  "originalCore": 43,
+  "extension": 22,
+  "controls": 27,
+  "supplementControls": 30,
+  "refreshedSourceControls": 6,
+  "product133": "INHERITED_APPROVED_C2_NOT_RERUN",
+  "native": "NOT_RUN",
+  "officialPublication": "NOT_RUN",
+  "effects": 0,
+  "C2C7": "IMMUTABLE_REJECTED_HISTORY"
+}

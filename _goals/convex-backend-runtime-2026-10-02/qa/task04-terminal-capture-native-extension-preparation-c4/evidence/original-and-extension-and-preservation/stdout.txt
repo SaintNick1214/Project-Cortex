@@ -1,0 +1,174 @@
+(node:170795) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"id":"parent-distinct-child-fence","rpc":9,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: parent-distinct-child-fence (57.335039ms)
+{"id":"root-idempotent","rpc":9,"committedCreates":11,"peakRows":11,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: root-idempotent (10.791928ms)
+{"id":"parent-native-rollback","rpc":5,"committedCreates":11,"peakRows":11,"nested":1,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: parent-native-rollback (11.079739ms)
+{"id":"identity-canonical","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: identity-canonical (20.938803ms)
+{"id":"checkpoint-race","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: checkpoint-race (28.457354ms)
+{"id":"money-run-race","rpc":7,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: money-run-race (17.555759ms)
+{"id":"money-tenant-race","rpc":8,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: money-tenant-race (16.532736ms)
+{"id":"slot-race","rpc":7,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: slot-race (14.182445ms)
+{"id":"known-settlement-race","rpc":14,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: known-settlement-race (31.47552ms)
+{"id":"unknown-running-terminal","rpc":14,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: unknown-running-terminal (22.101713ms)
+{"id":"known-overrun","rpc":13,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: known-overrun (30.026004ms)
+{"id":"collision-canonical","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: collision-canonical (15.659934ms)
+{"id":"fence-grant-version","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-grant-version (11.503907ms)
+{"id":"fence-grant-expiry","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-grant-expiry (12.970886ms)
+{"id":"fence-principal-revoke","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-principal-revoke (11.8988ms)
+{"id":"fence-membership-revoke","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-membership-revoke (11.363914ms)
+{"id":"fence-source-edit","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-source-edit (13.458353ms)
+{"id":"fence-source-delete","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-source-delete (13.243268ms)
+{"id":"fence-policy-revoke","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-policy-revoke (13.864517ms)
+{"id":"fence-qualification-revoke","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-qualification-revoke (15.471329ms)
+{"id":"fence-corrupt-counter","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fence-corrupt-counter (16.79561ms)
+{"id":"retired-tenant-overrun","rpc":15,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: retired-tenant-overrun (29.628697ms)
+{"id":"retired-space-overrun","rpc":15,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: retired-space-overrun (21.978908ms)
+{"id":"retired-absence-denial","rpc":10,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: retired-absence-denial (18.029471ms)
+{"id":"cancel-current","rpc":8,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: cancel-current (10.526539ms)
+{"id":"fallback-fresh-money","rpc":12,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fallback-fresh-money (25.365749ms)
+{"id":"fallback-current-query-reserve","rpc":12,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fallback-current-query-reserve (20.443992ms)
+{"id":"fallback-postreserve-revoke","rpc":13,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fallback-postreserve-revoke (26.149153ms)
+{"id":"fallback-postreserve-money","rpc":13,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fallback-postreserve-money (30.990489ms)
+{"id":"held-current-operation","rpc":10,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: held-current-operation (27.748951ms)
+{"id":"held-current-run","rpc":10,"committedCreates":18,"peakRows":18,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: held-current-run (16.907621ms)
+{"id":"held-current-tenant","rpc":11,"committedCreates":19,"peakRows":19,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: held-current-tenant (20.624041ms)
+{"id":"held-current-concurrency","rpc":10,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: held-current-concurrency (18.591519ms)
+{"id":"held-exact-cap","rpc":8,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: held-exact-cap (15.138684ms)
+{"id":"fallback-exact-cap","rpc":12,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: fallback-exact-cap (33.250459ms)
+{"id":"visibility-monotone","rpc":35,"committedCreates":18,"peakRows":18,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: visibility-monotone (80.535866ms)
+{"id":"embedding-single-bound","rpc":11,"committedCreates":13,"peakRows":13,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: embedding-single-bound (24.175291ms)
+{"id":"agent-selector-denial","rpc":12,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: agent-selector-denial (20.419726ms)
+{"id":"window-original-liability","rpc":18,"committedCreates":17,"peakRows":17,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: window-original-liability (26.114988ms)
+{"id":"private-invalid-result","rpc":15,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: private-invalid-result (24.527703ms)
+{"id":"known-private-privacy","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: known-private-privacy (19.18793ms)
+{"id":"predispatch-compatible-fallback","rpc":8,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: predispatch-compatible-fallback (19.608621ms)
+{"id":"private-byte-exact-bound","rpc":12,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: private-byte-exact-bound (25.71171ms)
+(node:170796) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"id":"equal-refinements","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: equal-refinements (82.145735ms)
+{"id":"conflicting-refinements","rpc":14,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: conflicting-refinements (30.121494ms)
+{"id":"revoked-live-origin","rpc":12,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: revoked-live-origin (21.665369ms)
+{"id":"initial-duplicates","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: initial-duplicates (29.31112ms)
+{"id":"final-lost-response","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: final-lost-response (28.032174ms)
+{"id":"parent-refinement-rollback","rpc":12,"committedCreates":15,"peakRows":15,"nested":1,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: parent-refinement-rollback (22.913196ms)
+{"id":"released-slot","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: released-slot (25.267675ms)
+{"id":"late-original-window","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: late-original-window (35.85617ms)
+{"id":"facts-add-absent","rpc":10,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: facts-add-absent (20.45881ms)
+{"id":"facts-change-remove","rpc":23,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: facts-change-remove (32.241161ms)
+{"id":"unknown-intermediate","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: unknown-intermediate (19.028621ms)
+{"id":"malformed-private-raw","rpc":31,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: malformed-private-raw (33.38403ms)
+{"id":"no-checkpoint","rpc":9,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: no-checkpoint (12.945459ms)
+{"id":"closed-renew-ordinary","rpc":24,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: closed-renew-ordinary (36.374635ms)
+{"id":"admin-compatibility","rpc":25,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: admin-compatibility (33.20868ms)
+{"id":"operator-compatibility","rpc":26,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: operator-compatibility (33.875134ms)
+{"id":"partial-marker","rpc":38,"committedCreates":26,"peakRows":26,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: partial-marker (40.442537ms)
+{"id":"legacy-preserve","rpc":32,"committedCreates":26,"peakRows":26,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: legacy-preserve (45.722086ms)
+{"id":"healthy-known-attach","rpc":23,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: healthy-known-attach (36.370879ms)
+{"id":"attachment-current-fences","rpc":75,"committedCreates":61,"peakRows":61,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+{"id":"internal-publication","rpc":0,"committedCreates":0,"peakRows":0,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: attachment-current-fences (107.497437ms)
+✔ frozen native case wiring OFFLINE fake-DB ONLY: internal-publication (2.774258ms)
+{"id":"peer-no-replay","rpc":17,"committedCreates":16,"peakRows":16,"nested":1,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: peer-no-replay (29.067672ms)
+(node:170797) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ extension exact original80 plus complete83 supplement passes (64.185984ms)
+✔ extension supplement rejects old-metadata (6.921268ms)
+✔ extension supplement rejects wrong-path (2.989573ms)
+✔ extension supplement rejects index-tamper (3.717242ms)
+✔ extension supplement rejects duplicate (4.684471ms)
+✔ extension supplement rejects missing (3.581266ms)
+✔ extension supplement rejects schema (2.962202ms)
+✔ extension supplement rejects additional (3.236818ms)
+✔ extension supplement rejects original-binding (3.46171ms)
+✔ extension supplement rejects original-drift (9.652124ms)
+✔ extension supplement rejects original-manifest-drift (2.928227ms)
+✔ extension supplement rejects extra-file (3.624427ms)
+✔ extension supplement rejects missing-file (3.548474ms)
+✔ extension supplement rejects hardlink (2.454847ms)
+✔ extension supplement rejects symlink (2.246566ms)
+✔ regression exact original80 plus complete83 supplement passes (44.417503ms)
+✔ regression supplement rejects old-metadata (5.115442ms)
+✔ regression supplement rejects wrong-path (2.587547ms)
+✔ regression supplement rejects index-tamper (2.483862ms)
+✔ regression supplement rejects duplicate (3.253659ms)
+✔ regression supplement rejects missing (2.697373ms)
+✔ regression supplement rejects schema (2.676324ms)
+✔ regression supplement rejects additional (14.53031ms)
+✔ regression supplement rejects original-binding (3.088249ms)
+✔ regression supplement rejects original-drift (8.656391ms)
+✔ regression supplement rejects original-manifest-drift (2.046749ms)
+✔ regression supplement rejects extra-file (3.469676ms)
+✔ regression supplement rejects missing-file (3.426535ms)
+✔ regression supplement rejects hardlink (2.34457ms)
+✔ regression supplement rejects symlink (2.277333ms)
+ℹ tests 95
+ℹ suites 0
+ℹ pass 95
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1286.832017

@@ -1,0 +1,211 @@
+(node:145497) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"id":"equal-refinements","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: equal-refinements (66.448971ms)
+{"id":"conflicting-refinements","rpc":14,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: conflicting-refinements (29.566024ms)
+{"id":"revoked-live-origin","rpc":12,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: revoked-live-origin (22.99853ms)
+{"id":"initial-duplicates","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: initial-duplicates (29.116181ms)
+{"id":"final-lost-response","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: final-lost-response (24.105683ms)
+{"id":"parent-refinement-rollback","rpc":12,"committedCreates":15,"peakRows":15,"nested":1,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: parent-refinement-rollback (23.655592ms)
+{"id":"released-slot","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: released-slot (24.180183ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: late-original-window (23.786172ms)
+{"id":"facts-add-absent","rpc":10,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: facts-add-absent (19.780167ms)
+{"id":"facts-change-remove","rpc":23,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: facts-change-remove (29.372861ms)
+{"id":"unknown-intermediate","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: unknown-intermediate (18.965385ms)
+{"id":"malformed-private-raw","rpc":31,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: malformed-private-raw (33.164162ms)
+{"id":"no-checkpoint","rpc":9,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: no-checkpoint (11.388222ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: closed-renew-ordinary (25.623708ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: admin-compatibility (20.131537ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: operator-compatibility (26.1823ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: partial-marker (2.513779ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: legacy-preserve (20.715777ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: healthy-known-attach (22.050958ms)
+{"id":"internal-publication","rpc":0,"committedCreates":0,"peakRows":0,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✖ frozen native case wiring OFFLINE fake-DB ONLY: attachment-current-fences (19.937513ms)
+✔ frozen native case wiring OFFLINE fake-DB ONLY: internal-publication (2.479273ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: peer-no-replay (17.101458ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 13
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 737.392139
+
+✖ failing tests:
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: late-original-window (23.786172ms)
+  AssertionError [ERR_ASSERTION]: QA_WINDOW_EXPIRED_OR_AMBIGUOUS
+      at healthyWindow (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/window-evidence.mjs:6:650)
+      at Module.scenario (exact-frozen-extension-cases:66:26)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: closed-renew-ordinary (25.623708ms)
+  AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  {
+    evidenceId: 'd1599a2649a4a0b938faee267be89646ee00b032c9456dbf292697de7430a5e0',
+    overrun: true,
+    settledCostUnits: 150,
+    state: 'settled'
+  }
+  
+      at duplicate (exact-frozen-extension-cases:15:80)
+      at async Module.scenario (exact-frozen-extension-cases:80:159)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { evidenceId: 'd1599a2649a4a0b938faee267be89646ee00b032c9456dbf292697de7430a5e0', state: 'settled', settledCostUnits: 150, overrun: true },
+    expected: { evidenceId: 'd1599a2649a4a0b938faee267be89646ee00b032c9456dbf292697de7430a5e0', state: 'settled', overrun: true, settledCostUnits: 150 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: admin-compatibility (20.131537ms)
+  Error [ConvexError]: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+      at deny (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:156:9)
+      at materialize (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:218:523)
+      at async resolveAuthorityReference (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:266:10)
+      at async recheckAuthority (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:310:10)
+      at async liabilityAuthority (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:2408:21)
+      at async settleAttempt (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:2519:27)
+      at async Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:2678:48)
+      at async invoke (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:15:258)
+      at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:6315:14)
+      at async execute (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:18:178) {
+    data: { version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: operator-compatibility (26.1823ms)
+  AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  {
+    evidenceId: '7db0c1eb443e0497eb255d33a652edc538d99ab72a6b2de02a4ef828304b285b',
+    overrun: true,
+    settledCostUnits: 150,
+    state: 'settled'
+  }
+  
+      at duplicate (exact-frozen-extension-cases:15:80)
+      at async Module.scenario (exact-frozen-extension-cases:80:159)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { evidenceId: '7db0c1eb443e0497eb255d33a652edc538d99ab72a6b2de02a4ef828304b285b', state: 'settled', settledCostUnits: 150, overrun: true },
+    expected: { evidenceId: '7db0c1eb443e0497eb255d33a652edc538d99ab72a6b2de02a4ef828304b285b', state: 'settled', overrun: true, settledCostUnits: 150 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: partial-marker (2.513779ms)
+  Error: QA_OWNERSHIP_REJECTED
+      at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:4137:102)
+      at invoke (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:15:276)
+      at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:18:203
+      at MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:6315:20)
+      at execute (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:18:187)
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: legacy-preserve (20.715777ms)
+  AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  {
+    attached: false,
+    resultWithheld: true
+  }
+  
+      at Module.scenario (exact-frozen-extension-cases:47:405)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { attached: false, resultWithheld: true },
+    expected: { attached: false, resultWithheld: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: healthy-known-attach (22.050958ms)
+  AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  {
+    attached: true,
+    resultWithheld: false
+  }
+  
+      at Module.scenario (exact-frozen-extension-cases:55:177)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { attached: true, resultWithheld: false },
+    expected: { attached: true, resultWithheld: false },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: attachment-current-fences (19.937513ms)
+  AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  {
+    attached: false,
+    resultWithheld: true
+  }
+  
+      at Module.scenario (exact-frozen-extension-cases:40:39)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { attached: false, resultWithheld: true },
+    expected: { attached: false, resultWithheld: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: peer-no-replay (17.101458ms)
+  Error: QA_PEER_INVALID
+      at valid2 (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:4332:107)
+      at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c2/actual-handlers-8030fb2c-f72a-4e28-9f00-f93bd896dfef/bundle.mjs:4335:3)
+      at invoke (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:15:276)
+      at peer (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:24:685)
+      at Module.scenario (exact-frozen-extension-cases:70:171)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

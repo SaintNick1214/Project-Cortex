@@ -1,0 +1,10 @@
+from pathlib import Path
+import subprocess,datetime,json,hashlib,concurrent.futures,os
+R=Path.cwd();W=R/'work/resume/task04-terminal-capture-parent-inputs-c7-review';O=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review'
+def run(name,argv):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=R,capture_output=True,env={**os.environ,'PATH':str(R/'work/resume/toolchain-bin')+':'+os.environ['PATH']})
+ (O/(name+'.stdout')).write_bytes(p.stdout);(O/(name+'.stderr')).write_bytes(p.stderr)
+ x={'argv':argv,'cwd':str(R),'startedAt':start,'finishedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit':p.returncode,'stdoutSHA256':hashlib.sha256(p.stdout).hexdigest(),'stderrSHA256':hashlib.sha256(p.stderr).hexdigest()};(O/(name+'.receipt.json')).write_text(json.dumps(x,indent=2)+'\n');return name,p.returncode,p.stdout.decode()[-1000:],p.stderr.decode()[-500:]
+jobs=[('node',['node','--version']),('npm',[str(R/'work/resume/toolchain-bin/npm'),'--version'])]+[(s+'-'+p,['node','--experimental-vm-modules',str(W/(s+'-'+p+'.mjs'))]) for s in ['offline','hostile'] for p in ['extension','regression']]
+with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+ for result in pool.map(lambda x:run(*x),jobs):print(result)
