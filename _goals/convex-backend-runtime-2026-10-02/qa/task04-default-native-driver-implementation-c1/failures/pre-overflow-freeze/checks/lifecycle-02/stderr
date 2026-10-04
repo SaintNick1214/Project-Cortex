@@ -1,0 +1,17 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:33
+  if (new TextEncoder().encode(result).length > maximumBytes) throw new Error("BYTE_LIMIT");
+                                                                    ^
+
+Error: BYTE_LIMIT
+    at canonical (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:33:69)
+    at exact (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:43:3)
+    at record (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/validate.ts:7:62)
+    at load (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/store.ts:10:155)
+    at async Function.handler [as _handler] (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/guard.ts:16:215)
+    at async Harness.mutation (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/harness.mjs:13:990)
+    at async toStage (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:10:187)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:14:181
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:9:52)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:14:1
+
+Node.js v24.19.0

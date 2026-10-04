@@ -1,0 +1,27 @@
+{
+  "classification": "PURE_HASH_RECOVERY_CONTRACT_EXAMPLES_ONLY",
+  "groups": 19,
+  "outcomes": [
+    "independent ROOT revoke-after-STOP canonical projections/typed row validate",
+    "purge retains exact canonical immutable trigger preimage",
+    "redundant accountHash mismatch denies0writes/nosummary",
+    "redundant operation mismatch denies0writes/nosummary",
+    "redundant intentKey mismatch denies0writes/nosummary",
+    "redundant intentHash mismatch denies0writes/nosummary",
+    "redundant receiptHash mismatch denies0writes/nosummary",
+    "noncanonical whitespace rejects",
+    "changed canonical historical before hash rejects",
+    "nested canonical/identityHash redundancy rejects",
+    "changed immutable dispatch binding denies",
+    "postpurge hash-only trigger recovery",
+    "postpurge changed attempt trigger denies nosummary",
+    "postpurge malformed retained trigger projection rejects",
+    "self-consistent changed current trigger still differs from immutable purge T",
+    "legitimate hypothetical late fullcharge/terminal refinement independent of immutable trigger",
+    "delete already closed exact no-write derived receiptHash",
+    "revoke already closed exact no-write derived receiptHash",
+    "stage exact mutation replay after validated private purge remains denied closed/no recreation"
+  ],
+  "result": "PASS",
+  "nativeProviderManagedPaid": "NOT_RUN"
+}

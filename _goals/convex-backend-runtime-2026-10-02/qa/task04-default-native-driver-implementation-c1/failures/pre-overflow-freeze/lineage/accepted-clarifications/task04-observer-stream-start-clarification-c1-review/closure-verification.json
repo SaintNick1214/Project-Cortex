@@ -1,0 +1,143 @@
+{
+  "utc": "2026-10-04T11:11:20.176131+00:00",
+  "checks": [
+    {
+      "name": "manifest expected sha",
+      "passed": true
+    },
+    {
+      "name": "proposal expected sha",
+      "passed": true
+    },
+    {
+      "name": "recursive exact 10-file closure excludes only root self",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash proposal.md",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/openai-compatible-chat-language-model.ts",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/installed-source-pins.json",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/adapter.mjs",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/index.ts",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/language-model-v4-stream-part.ts",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/adapter-01/stdout",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/adapter-01/source-pre.json",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/adapter-01/stderr",
+      "passed": true
+    },
+    {
+      "name": "subject bytes+hash evidence/adapter-01/run.json",
+      "passed": true
+    },
+    {
+      "name": "current installed source pin node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-stream-part.ts",
+      "passed": true
+    },
+    {
+      "name": "current installed source pin node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts",
+      "passed": true
+    },
+    {
+      "name": "current installed source pin node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+      "passed": true
+    },
+    {
+      "name": "retained fake-fetch14 only",
+      "passed": true
+    },
+    {
+      "name": "retained original dispatch ORDER",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C01",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C02",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C03",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C04",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C05",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C06",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C07",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C08",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire E11",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire E12",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire E13",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire E14",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C09",
+      "passed": true
+    },
+    {
+      "name": "retained expected wire C10",
+      "passed": true
+    },
+    {
+      "name": "six retained leading starts unsupported no eligibility",
+      "passed": true
+    },
+    {
+      "name": "retained stderr empty",
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "historicalLimit": "Retained adapter01 has source-pre only; no immediate historical source-post. Current package equality does not prove historical execution source stability. Mutable fixture dependencies are outside subject and NOT certified."
+}

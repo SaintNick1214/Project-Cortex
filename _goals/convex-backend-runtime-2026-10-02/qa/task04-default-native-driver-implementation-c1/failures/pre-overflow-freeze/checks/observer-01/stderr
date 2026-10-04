@@ -1,0 +1,17 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/observer.mjs:14
+await test('backing repeat/late prefix/warnings/unknownkey/changedtext/rawID conflict STOP/privatewithhold',async()=>{for(const parts of [[['stream-start',{type:'stream-start',warnings:[]}],['stream-start',{type:'stream-start',warnings:[]}],...data],[...data,['stream-start',{type:'stream-start',warnings:[]}]],[['stream-start',{type:'stream-start',warnings:['x']}],...data],[['stream-start',{type:'stream-start',warnings:[],extra:true}],...data],data.map((p,i)=>i===2?['text-delta',{id:'text',delta:'changed'}]:p),data.map((p,i)=>i===3?['raw',{...p[1],id:'other'}]:p)]]){const o=await observeStream(ctx,await events(false,parts),'reader-done');assert.ok(['unsupported','contradiction'].includes(o.receipt.reason));assert.equal(o.receipt.lifetime,'unknown');assert.equal(o.privateResultCanonical,null);assert.equal(o.eligible.length,0)}});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+
+SyntaxError: Unexpected token ']'
+    at compileSourceTextModule (node:internal/modules/esm/utils:318:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:89:18)
+    at #translate (node:internal/modules/esm/loader:434:20)
+    at afterLoad (node:internal/modules/esm/loader:502:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)
+    at afterResolve (node:internal/modules/esm/loader:607:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12)
+    at node:internal/modules/esm/loader:632:32
+    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)
+
+Node.js v24.19.0

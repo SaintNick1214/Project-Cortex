@@ -1,0 +1,19 @@
+{
+  "name": "cortex-isolated-default-native-experiment",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@12.2.0",
+  "dependencies": {
+    "convex": "1.46.0",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@ai-sdk/provider": "4.0.21",
+    "ai": "7.0.127"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

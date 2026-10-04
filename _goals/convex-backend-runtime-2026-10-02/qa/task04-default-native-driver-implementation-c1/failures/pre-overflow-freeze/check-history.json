@@ -1,0 +1,611 @@
+{
+  "checks": [
+    {
+      "name": "adapter-01",
+      "argv": [
+        "node",
+        "checks/adapter.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:05:29.406413+00:00",
+      "endUTC": "2026-10-04T11:05:29.752051+00:00",
+      "exit": 0,
+      "stdoutSHA256": "9954e0f5824cbfade2a739aada1be8d136d81658c8755e23791c6837ee404ca7",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "adapter-02",
+      "argv": [
+        "node",
+        "checks/adapter.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:14:56.208618+00:00",
+      "endUTC": "2026-10-04T11:14:56.571867+00:00",
+      "exit": 0,
+      "stdoutSHA256": "44fd2d055c74d2c526b5b8be4eba1acb78bbbf1e3a664524da78e018073f9e72",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "baseline23",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:07:38.957030+00:00",
+      "endUTC": "2026-10-04T11:07:40.207046+00:00",
+      "exit": 0,
+      "stdoutSHA256": "265b3bf3f6517d99e424d8bcfe7a468114139849c73b2106a61a889fc7ab0dfd",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "controls-01",
+      "argv": [
+        "node",
+        "checks/controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:01:32.177743+00:00",
+      "endUTC": "2026-10-04T11:01:32.316923+00:00",
+      "exit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "754a75bb422aea391390015deb1b5526c7b7366e811e7f25e2a23ca929dc844d"
+    },
+    {
+      "name": "controls-02",
+      "argv": [
+        "node",
+        "checks/controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:01:38.209118+00:00",
+      "endUTC": "2026-10-04T11:01:38.598944+00:00",
+      "exit": 0,
+      "stdoutSHA256": "365064d3f0f926be42a87d6c41f8d84ea3407102f6cf90c75cdac6bc67bd05d2",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-lint-02",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:21:28.543879+00:00",
+      "endUTC": "2026-10-04T11:21:32.088565+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-suite",
+      "argv": [
+        "node",
+        "checks/all.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:18:05.487483+00:00",
+      "endUTC": "2026-10-04T11:18:22.419192+00:00",
+      "exit": 1,
+      "stdoutSHA256": "1eb72facea2db32c20735353061c8ccfda9f5552bc51d5003e2868d8d9e67a70",
+      "stderrSHA256": "b70dfcb89c5421d560089bf8cc99e0f8c0cc66c1ce91fa6fa563048e56a8322a"
+    },
+    {
+      "name": "final-suite-02",
+      "argv": [
+        "node",
+        "checks/all.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:20:50.008485+00:00",
+      "endUTC": "2026-10-04T11:21:06.938456+00:00",
+      "exit": 0,
+      "stdoutSHA256": "74ebf51912ee50e26af0181a5f8baa5455600bdf93f6b46dfbf1a8f1b5f44173",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-types-02",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:21:28.537952+00:00",
+      "endUTC": "2026-10-04T11:21:30.455819+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "fresh5",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:07:44.576488+00:00",
+      "endUTC": "2026-10-04T11:07:44.740226+00:00",
+      "exit": 0,
+      "stdoutSHA256": "fc1d558dcd5e8de7f3508b0e02ee030d732501b2be6ecc210cce1b946d04e389",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "hostile6",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/hostile.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:07:44.565173+00:00",
+      "endUTC": "2026-10-04T11:07:44.730425+00:00",
+      "exit": 0,
+      "stdoutSHA256": "6a779add53bf9401c54908d85fa26c72878aa36746cc07dfa5575edcf6fc5893",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "late-accounting-01",
+      "argv": [
+        "node",
+        "checks/late-accounting.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:11:47.001184+00:00",
+      "endUTC": "2026-10-04T11:11:50.970227+00:00",
+      "exit": 0,
+      "stdoutSHA256": "a9641afbc00559bf6822e6457cd51bb7a7c8f024cda3c55ee1e50c4d177bbcf4",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lifecycle-01",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:02:32.593877+00:00",
+      "endUTC": "2026-10-04T11:02:33.223105+00:00",
+      "exit": 1,
+      "stdoutSHA256": "f3b687b08bc27b3913fa95cd6e6ef9154beed28396fd5ff276a0753721bb72cf",
+      "stderrSHA256": "02f917747180cf55901efecf446f62ff80eac1a3fe719b3fcb6e1ccc9d97d5f6"
+    },
+    {
+      "name": "lifecycle-02",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:02:45.813662+00:00",
+      "endUTC": "2026-10-04T11:02:46.564806+00:00",
+      "exit": 1,
+      "stdoutSHA256": "d8e90600172aa27f935e38613e030259513d7e2efae625256342705d3f1e8544",
+      "stderrSHA256": "b0d6e0ea2c6ed8c1bc44b5d89e812daaef2764938a39e788025de48949e4fb71"
+    },
+    {
+      "name": "lifecycle-03",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:03:14.611400+00:00",
+      "endUTC": "2026-10-04T11:03:15.475156+00:00",
+      "exit": 1,
+      "stdoutSHA256": "d8e90600172aa27f935e38613e030259513d7e2efae625256342705d3f1e8544",
+      "stderrSHA256": "da3d3c631391025d9dfd2664068b9adaa437d0c966db9bc45b7de4507d44a9ea"
+    },
+    {
+      "name": "lifecycle-04",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:03:22.400023+00:00",
+      "endUTC": "2026-10-04T11:03:24.911912+00:00",
+      "exit": 1,
+      "stdoutSHA256": "acfa9563759046e9e9b7978d051125775d1322c088006d5ab487391dababf1c8",
+      "stderrSHA256": "40eb5123a4049078ed8d94383dd34277546e42b51101f6db21fdac25841b6ad7"
+    },
+    {
+      "name": "lifecycle-05",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:04:30.913585+00:00",
+      "endUTC": "2026-10-04T11:04:34.164779+00:00",
+      "exit": 1,
+      "stdoutSHA256": "18077e610ae7941ae6676719ce2c5043e2a2176c824c083c3c6e39942c10e293",
+      "stderrSHA256": "6ae94c2be557b7b2a3e77821bf8f0aa461969d7cf31ae0717d6d93d9067976e5"
+    },
+    {
+      "name": "lifecycle-06",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:04:51.224294+00:00",
+      "endUTC": "2026-10-04T11:04:54.615856+00:00",
+      "exit": 0,
+      "stdoutSHA256": "717198a812d8cf7ab71da6eb259712eaea14a836707a176d43230e12c2063518",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lifecycle-diagnostic-01",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:03:58.703045+00:00",
+      "endUTC": "2026-10-04T11:04:01.191120+00:00",
+      "exit": 1,
+      "stdoutSHA256": "acfa9563759046e9e9b7978d051125775d1322c088006d5ab487391dababf1c8",
+      "stderrSHA256": "22c20e25eeb520408fc405c13e96ce255e60a870a6406699dea416771c0a7c44"
+    },
+    {
+      "name": "lifecycle-diagnostic-02",
+      "argv": [
+        "node",
+        "checks/lifecycle.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:04:09.788777+00:00",
+      "endUTC": "2026-10-04T11:04:12.263966+00:00",
+      "exit": 1,
+      "stdoutSHA256": "acfa9563759046e9e9b7978d051125775d1322c088006d5ab487391dababf1c8",
+      "stderrSHA256": "964a4f008007aff9e6d2797c704259a511121cef4ad519e8df51cb48d1ea6b7d"
+    },
+    {
+      "name": "lint-01",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:08:08.714493+00:00",
+      "endUTC": "2026-10-04T11:08:11.710077+00:00",
+      "exit": 1,
+      "stdoutSHA256": "be38f049613aa848719e0e1d52ee9ec21c12a488a75d758fa5ce70c3be640ed7",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-02",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:08:36.052293+00:00",
+      "endUTC": "2026-10-04T11:08:38.834984+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-03",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:13:01.049818+00:00",
+      "endUTC": "2026-10-04T11:13:04.005100+00:00",
+      "exit": 1,
+      "stdoutSHA256": "10f667405bcb8b22e2d626eba6bb798609febbb7d2bf51f26961afd4e7bfba3e",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-04",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:13:12.200774+00:00",
+      "endUTC": "2026-10-04T11:13:15.114390+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "managed-01",
+      "argv": [
+        "node",
+        "checks/managed.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:10:29.368179+00:00",
+      "endUTC": "2026-10-04T11:10:43.387727+00:00",
+      "exit": 0,
+      "stdoutSHA256": "045e47352fc6f4594b31413dc0954aa01f0396b689e48b7ec1a3091f2fcc4475",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "observer-01",
+      "argv": [
+        "node",
+        "checks/observer.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:14:33.210506+00:00",
+      "endUTC": "2026-10-04T11:14:33.240381+00:00",
+      "exit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "a6f3cc4c0906722a0d64aa997f0f4d9c3d2a1e82fed782a74144df66badcfc1a"
+    },
+    {
+      "name": "observer-02",
+      "argv": [
+        "node",
+        "checks/observer.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:14:39.311807+00:00",
+      "endUTC": "2026-10-04T11:14:39.822334+00:00",
+      "exit": 0,
+      "stdoutSHA256": "196610f52f2f9e0749001cd7a4b840b9c5e1f28d37ef364492c71ed0c3e8145d",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "observer-03",
+      "argv": [
+        "node",
+        "checks/observer.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:16:12.595137+00:00",
+      "endUTC": "2026-10-04T11:16:13.127604+00:00",
+      "exit": 1,
+      "stdoutSHA256": "83249c82d7946d8dc0101cff4fdda67b68e25ad6b1be8995bcd621e35bda0395",
+      "stderrSHA256": "b3d3cbe6c258ff859e082fa0c49e77c55a3b4bb7ab9d6b63d9b2adf124e872d1"
+    },
+    {
+      "name": "observer-04",
+      "argv": [
+        "node",
+        "checks/observer.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:16:23.953814+00:00",
+      "endUTC": "2026-10-04T11:16:24.471028+00:00",
+      "exit": 0,
+      "stdoutSHA256": "b30ff7d263feb8552c59dd97b7656da6e66d773bd3af882503dbd54bdb6abc5e",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "proofs-02",
+      "argv": [
+        "node",
+        "checks/proofs.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:18:42.100572+00:00",
+      "endUTC": "2026-10-04T11:18:42.208947+00:00",
+      "exit": 0,
+      "stdoutSHA256": "afb8125940ee4b5ed94d6e522bd10d68c6e90172616380c3f97622242066018a",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "refinement4",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/refinement-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:07:44.587367+00:00",
+      "endUTC": "2026-10-04T11:07:44.763646+00:00",
+      "exit": 0,
+      "stdoutSHA256": "5c700af963794686bc74fbb07523c1b0376e814ceb175841f0863c616f240a6c",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "runner-01",
+      "argv": [
+        "node",
+        "checks/runner.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:12:44.043394+00:00",
+      "endUTC": "2026-10-04T11:12:49.688907+00:00",
+      "exit": 0,
+      "stdoutSHA256": "699f57996e7977794fe519ba5c2c6d1bbacf00402f527f92a2db74c79988a583",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "runner-02",
+      "argv": [
+        "node",
+        "checks/runner.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:15:23.172919+00:00",
+      "endUTC": "2026-10-04T11:15:29.527965+00:00",
+      "exit": 0,
+      "stdoutSHA256": "699f57996e7977794fe519ba5c2c6d1bbacf00402f527f92a2db74c79988a583",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "schema-adverse-01",
+      "argv": [
+        "node",
+        "checks/schema-adverse.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:20:24.584060+00:00",
+      "endUTC": "2026-10-04T11:20:24.972341+00:00",
+      "exit": 0,
+      "stdoutSHA256": "274e040d83e5ec4c6ce6c4804ab9f5550122e916316b0d4ac8f2fe150c61a93a",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-03",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T10:56:28.210418+00:00",
+      "endUTC": "2026-10-04T10:56:29.523698+00:00",
+      "exit": 2,
+      "stdoutSHA256": "2d3884c93722d72390ef7709a6cb11f4bb399f14f12a2bc6d5f7d345cce7d988",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-04",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T10:58:41.943589+00:00",
+      "endUTC": "2026-10-04T10:58:43.521900+00:00",
+      "exit": 2,
+      "stdoutSHA256": "4fb1b662c388178f8d75ae4691e4da13a1fecd027600053200000bbc8e125c51",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-05",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T10:58:59.727181+00:00",
+      "endUTC": "2026-10-04T10:59:01.269044+00:00",
+      "exit": 2,
+      "stdoutSHA256": "fd6864c63cc471826b343f6ec034bec0a620bb480d499551cc2396e152481c02",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-06",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T10:59:17.927115+00:00",
+      "endUTC": "2026-10-04T10:59:19.441823+00:00",
+      "exit": 2,
+      "stdoutSHA256": "6e634ef9a2338258008c72cfc6e44287241db87d2191e6b5731e4ec7d29c2117",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-07",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T10:59:30.440355+00:00",
+      "endUTC": "2026-10-04T10:59:32.008252+00:00",
+      "exit": 2,
+      "stdoutSHA256": "2d3884c93722d72390ef7709a6cb11f4bb399f14f12a2bc6d5f7d345cce7d988",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-08",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:00:23.571424+00:00",
+      "endUTC": "2026-10-04T11:00:25.125756+00:00",
+      "exit": 2,
+      "stdoutSHA256": "2d3884c93722d72390ef7709a6cb11f4bb399f14f12a2bc6d5f7d345cce7d988",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-09",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:06:20.510004+00:00",
+      "endUTC": "2026-10-04T11:06:22.148535+00:00",
+      "exit": 2,
+      "stdoutSHA256": "2d3884c93722d72390ef7709a6cb11f4bb399f14f12a2bc6d5f7d345cce7d988",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-10",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:09:42.991541+00:00",
+      "endUTC": "2026-10-04T11:09:44.738558+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-11",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:11:11.482012+00:00",
+      "endUTC": "2026-10-04T11:11:13.106102+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck-final",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture",
+      "startUTC": "2026-10-04T11:17:13.256063+00:00",
+      "endUTC": "2026-10-04T11:17:15.079462+00:00",
+      "exit": 0,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "earlyExplorations": "failures/history.json retains two startUTC NOT_CAPTURED and summarized early compiler diagnostics; no fabricated complete raw receipt",
+  "newExplorationMissingPathProbes": [
+    "rg missing fixture/tsconfig root path",
+    "rg absent provider dist index paths",
+    "rg checkplan spelling mismatch",
+    "rg absent review/checks/*.mjs",
+    "ls relative fixture node_modules/.bin/eslint"
+  ],
+  "probeStartUTC": "NOT_CAPTURED; terminal conversation logs preserved externally; no native/service activity"
+}

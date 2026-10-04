@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: owned native error and persistence continuation must both be joined
+
+1 !== 0
+
+    at file:///workspace/Project-Cortex/work/resume/task04-default-native-driver-implementation-c1-review/fixture/checks/independent-async.mjs:6:653 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
