@@ -30,10 +30,12 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchema";
 import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
+import { runtimePolicyTables } from "./runtimePolicySchema";
 
 export default defineSchema({
   ...runtimeAuthTables,
   ...runtimeMemoryTables,
+  ...runtimePolicyTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
