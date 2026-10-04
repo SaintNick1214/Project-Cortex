@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;b=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture\");print((b/\"convex/observer.ts\").read_text()); print((b/\"checks/c2-capability.mjs\").read_text()[:11000]);print((b/\"checks/observer.mjs\").read_text()[:5000]);print(\"STORE\", \"\\n\".join(s for s in (b/\"convex/store.ts\").read_text().splitlines() if \"capture\" in s or \"observeTranscript\" in s)); print(\"RUNNER VERSION\", \"\\n\".join(s for s in (b/\"convex/runner.ts\").read_text().splitlines() if \"version:1\" in s or \"STAGE_PRIVATE\" in s))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:20:11.554542+00:00",
+  "endUtc": "2026-10-04T14:20:11.583194+00:00",
+  "exit": 0
+}

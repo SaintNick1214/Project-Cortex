@@ -905,3 +905,39 @@ Tier C1 independent NEEDS FIXES DESIGN3.8 full report/93QA/11scratch verified an
 Native C4 same import controls12PASS; original51 remains50PASS/1 historical instrumentationFAIL. Source audit discovered trusted cleanup maydelete late knownownedrows before owning snapshot; original exactdriver witness0created vs2expected failed and preserved. Narrow exact owning cleanup nowrecords created-before-deleted under same per-IDcaps/durability; unknownP staysHELD. New source controls/maps/custody/calibration/finalclosures pending, no actual native or paid work.
 
 Checkpoint30 current CI packed/browser, Neo4j/Memgraph and fourdemo buildsPASS; SDK/CLI/provider/lint-type and deploy-purge skipped. SignaturesFAIL, CodeQLinprogress at14:17, supplychain skipped. No blanket fullcore/UI/actualmoneyPASS. Checkpoint31 selects ONLY frozen metadata designs/reviews/corrections/acceptance, tierC1rejection/C2proposal and prior30receipts/CI. Mutable nativeC4, metadataimplementation and fresh tierC2review excluded. This progress file freezes until tree/source/commit/ref verification completes.
+
+
+### 2026-10-04 14:55 UTC — checkpoint31 verified; fresh implementation and native gates
+
+Commit 1db53a3b41c52bc84e2070db353523025383302c / tree 217bb1cd4db8721275f142a47c8225e0a6e8a3c0 exactly matches isolated expected tree. All1107paths and399binaryblobs verified,3treecalls, forcefalse push; independent branch comparison identical0ahead/behind. PR134 remains draft/dev; update response cached priorhead, independent ref comparison verifiesnewhead. LiveHEAD/index unchanged. Progress freeze ends.
+
+MetadataC1 full reportread2497QA/11scratch exact byteclosures/nlink1 ROOTverified. Freshjudge reproduces30newcontrols; prospectivewitness sharedconstructionbudget compliance underinvestigation, no release. Original40=37PASS3historicalFAIL/moneydiagnosticFAIL and actualkeynull/proofsEMPTY/installationfalse remain.
+
+NativeC4 ROOT complete8248QA/735runtime/133251scratch30literalsymlink closureverified. ROOTglobalorder scratch assumptionfail preserved; newhelper corrects onlynoncontract assumption, originalQA/runtime sortedguards intact. SOURCEindependently finds47 omitted receiverRPCs inregression, corrected2758 stilloriginalcapsfit butproposalproof notestablished. FreshSOURCE/PARENT completegates active; no pins/newtargets/paidcalls/timingacceptance. Compiler tierC2 conditionalDESIGNonly accepted, notadopted.
+
+Storage nearlyfull. CompletedROOTupload31encodings8,015,428B safelydisposedafteroriginalsource+remoteSHA proof;3completedderivedpayloadJSONs4,300,352B retainedlosslesslyin958,805B archive. Separate /tmp filesystemverified8.5GBfree; completedROOTisolatedGitindexes30/31losslesslyarchivedwithoriginalbytes/hash/metadata, liveindexuntouched, archivesretainedQA. Additionaluserstorage/UI/signing/billingaccessstillpending, no missingevidence inferred.
+
+Timestamp clarification: preceding14:55 heading was authored during actual14:54:24–14:54:25 UTC; tool UTC retained, no backdated execution proof. Security checkpoint30 latest firstpage/latestattempt at14:54:50: CodeQL CANCELLED, signaturesFAIL, summaryFAIL; six listed scannersPASS, scorecardSKIPPED. New source gate and fullcore CI coverage remain incomplete. Verified separate /tmp capacity means local scratch capacity is now available, additional storage answer is no longer required for the current bounded work.
+
+
+### 2026-10-04 14:59 UTC — metadata C1 independently rejected, C2 repair released
+
+Fresh metadata implementation review NEEDS_FIXES3.6/5 full report27bb470291ef36bf664c4bb1e2a01ceda1ba38579e70d28fc991398fe210792a read;276QA/4scratch exact self-only seals verified. Sole boundedfinding is early completeprospective shared-envelope construction. New30controls andallretained scoped suites/TS/lint independentlyPASS; original40=37PASS3FAIL/moneydiagnosticFAIL unchanged. ROOT64hexhash copy/count65hex mistake failedbeforeclosure result, originaltoolfailure kept, actual64hex seal endingbaa independentlyverified. Coordinator rejection preservesgates and releasesONLYnewisolated metadata implementationC2, not current default/native/sourcekeys/product. Executor active withno caps/assertion changes, actualproofsEMPTY.
+
+Native independent SOURCE/PARENT both find composedfailedterminalfsync +laterowningsnapshot canreportcustodyComplete withoutfreshsync ofoldticket/ownedIDreceipts. Parent all3 original106+16/watcher17/body18/management/lifecycle controlsPASS butexactcomposition gap remainsblocked. SOURCE correctedregression2758caller/journal4660 andalluniversalencodedjournal boundsfit originalcaps; resourcefitdoesnotrepairdurabilityor20mfeasibility. Reviewscontinuefullscope beforefreshrepair release.
+
+ROOTcompleted20olderisolatedGitindexes385,947,047B retainedlosslesslyinverified50,758,637B archive; net335,188,410Bfreed. No liveindex/HEAD/source/sealedagentworkchanges. Reviewer ownnewfixture/evidencecompression remainshonestlymapped; /tmpverifiedseparatevolumeavailable, exact referencedarchives require materializationbeforeliteraloriginalpathclaims.
+
+
+### 2026-10-04 15:09 UTC — C4 rejected, bounded C5 repair and lossless transport active
+
+ROOT fullread/source17QA4709scratch andparent2009QA83scratch exactallbytes/self-only manifests verified. SOURCE REJECT2.6, PARENT NEEDSFIXES3.2, bothindependentlyall3failedfsyncsame7IDs custodyackdefect. NewC5executorreleasedONLYdurableticket/existingreceipt validationfsynccloseand47receiver-expression regproof correction, allcaps/currentcompiler/source/assertions/historicalfailures preserved. No actualROOTpins/targets/native/paid/default/product change; timingNOT_PROVEDstillheld. SOURCE originalobservationaldefectprobe asserts nooldfsync; successfulrepair makesitsoldexpectationfail. Exactoriginaldiagnostic retained/runFAILwithdistinctstrongeractualfreshpersistence assertions, no waiveroforiginalfunctionalacceptance.
+
+NewtransportC4C1executoractive alongside metadataC2andnativeC5 (ROOTtotal4). EightexactfrozenQA/work allowlistedroots preserveC4andfreshSOURCE/PARENTreviewbytebackinginclliteralabsolutebrokenlinkswithoutfollow. Newboundeddecodedlimitsderivedimmutablemax, encodedparts<=5MiB, independentmaterializationjudgemandatory. Genuineall8prospectivecapture/nooldmods. /tmpseparate8.5GBavailable, overlay~273MB.
+
+PR134 actualhead1db53a3b41c52bc84e2070db353523025383302c open/draft/dev freshlyconfirmed. Checkpoint31PRChecks workflowSUCCESS, SecurityScansinprogress; firstpagewrapperandjobskipsnotfullcorePASS.
+
+
+### 2026-10-04 15:12 UTC — checkpoint32 frozen evidence selection
+
+Checkpoint32 selects frozenmetadataC1/rejectionreview, conditionaltierC2freshreview/acceptance, SOURCEC4physical17filepacket/PARENTfullreport, associatedsmallfrozenROOTnotes/31receipts/CI and19literalmetadata/tierworkhelperfiles. FullC4plusSOURCE/PARENTreferencedbacking is separately losslesstransporting; thisselectiondoesnotclaimremotecompleteC4/source-review/nativeclosure. MutablemetadataC2/nativeC5/transportC4C1 excluded, allgatespending. Executionprogress freezes until32expectedtree/source/remotehead/commit/refverification. All originalcaps/assertions/historicalfails/actualkeynull/moneyEMPTY retained.

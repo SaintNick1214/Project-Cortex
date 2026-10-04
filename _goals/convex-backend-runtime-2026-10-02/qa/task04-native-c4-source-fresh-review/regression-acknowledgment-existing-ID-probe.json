@@ -1,0 +1,41 @@
+{
+  "kind": "regression",
+  "status": "FAIL",
+  "defect": "TERMINAL_FSYNC_FAILURE_BECOMES_COMPLETE_AFTER_EXISTING_ID_SNAPSHOT_WITHOUT_TICKET_OR_ID_PERSISTENCE",
+  "calls": 2,
+  "before": {
+    "rpc": 1,
+    "cleanupRpc": 0,
+    "unknownCreationCalls": 0,
+    "knownUndurableCreationCalls": 1,
+    "uncertainCreationCalls": 1,
+    "peerEffects": 0,
+    "peerOther": 0,
+    "cumulativeCreatedRows": 7,
+    "cumulativeDeletedRows": 0
+  },
+  "after": {
+    "rpc": 2,
+    "cleanupRpc": 0,
+    "unknownCreationCalls": 0,
+    "knownUndurableCreationCalls": 0,
+    "uncertainCreationCalls": 0,
+    "peerEffects": 0,
+    "peerOther": 0,
+    "cumulativeCreatedRows": 7,
+    "cumulativeDeletedRows": 0
+  },
+  "newFsyncEvents": [
+    {
+      "phase": "armed",
+      "path": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-edb75145-6e99-4dcf-ad38-072e5942c808/2967d828-4394-44bc-a608-9193cde3e14c/work/backend-runtime/task04-model-drift-native-regression-c4/ticket-native-0002.json"
+    },
+    {
+      "phase": "armed",
+      "path": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-edb75145-6e99-4dcf-ad38-072e5942c808/2967d828-4394-44bc-a608-9193cde3e14c/work/backend-runtime/task04-model-drift-native-regression-c4/journal-admission-dbc272e3c86c4ca98528ea76b1f08615-e5d85e7c-9f38-4a36-8d05-b47a0dfb1c8f.jsonl"
+    }
+  ],
+  "originalErrorPreserved": true,
+  "actualNative": "NOT_RUN",
+  "actualNetwork": 0
+}

@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-04T15:01:27.860455+00:00",
+  "status": "FROZEN_MANIFEST_TRANSPORT_SIZE_INVENTORY_ONLY",
+  "manifestRows": 141499,
+  "literalSymlinks": 30,
+  "payloadBytes": 2940555916,
+  "uniqueRegularContentHashes": 16595,
+  "uniqueRegularContentBytes": 1164807915,
+  "largestUniqueRegularBytes": 49217478,
+  "manifests": [
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+      "manifest": "qa-manifest.json",
+      "sha256": "5f68caca72ff8b5792efabe135d31430451cd4b9147fc672393a750bceddf53f",
+      "rows": 3853,
+      "manifestBytes": 874160
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4",
+      "manifest": "qa-manifest.json",
+      "sha256": "c7c6c1ace7b2df60ab29181dcf007ed0805956ed10282410d7598abc1447c552",
+      "rows": 2073,
+      "manifestBytes": 445215
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4",
+      "manifest": "qa-manifest.json",
+      "sha256": "56cc58bf63375ef7913fe38ef59ecf19947dfeeb205983e0cb941b27efc19c8f",
+      "rows": 2322,
+      "manifestBytes": 491271
+    },
+    {
+      "root": "work/resume/task04-model-drift-native-preparation-c4",
+      "manifest": "work-manifest.json",
+      "sha256": "0e3575cdb2978556896a4fa41e78a370d417d2b3352367717ad0a274b81e1901",
+      "rows": 133251,
+      "manifestBytes": 39219107
+    }
+  ],
+  "basis": "Exact manifests already independently byte-verified by ROOT/SOURCE/PARENT; this inventory reads pinned manifests, not a new payload byte audit or semantic/source gate.",
+  "needs": "New bounded lossless transport preserving exact original manifests/symlinks/recursive literal closure, independent materialization review; no sealed source edit/repin."
+}

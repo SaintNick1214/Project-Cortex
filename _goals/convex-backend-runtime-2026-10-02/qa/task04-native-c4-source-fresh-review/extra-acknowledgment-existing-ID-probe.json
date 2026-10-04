@@ -1,0 +1,41 @@
+{
+  "kind": "extra",
+  "status": "FAIL",
+  "defect": "TERMINAL_FSYNC_FAILURE_BECOMES_COMPLETE_AFTER_EXISTING_ID_SNAPSHOT_WITHOUT_TICKET_OR_ID_PERSISTENCE",
+  "calls": 2,
+  "before": {
+    "rpc": 1,
+    "cleanupRpc": 0,
+    "unknownCreationCalls": 0,
+    "knownUndurableCreationCalls": 1,
+    "uncertainCreationCalls": 1,
+    "peerEffects": 0,
+    "peerOther": 0,
+    "cumulativeCreatedRows": 7,
+    "cumulativeDeletedRows": 0
+  },
+  "after": {
+    "rpc": 2,
+    "cleanupRpc": 0,
+    "unknownCreationCalls": 0,
+    "knownUndurableCreationCalls": 0,
+    "uncertainCreationCalls": 0,
+    "peerEffects": 0,
+    "peerOther": 0,
+    "cumulativeCreatedRows": 7,
+    "cumulativeDeletedRows": 0
+  },
+  "newFsyncEvents": [
+    {
+      "phase": "armed",
+      "path": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-45534ac8-1bcc-4496-938e-748c8f6cb74c/633c6ee8-51a2-4346-8937-70f0a25c4702/work/backend-runtime/task04-model-drift-native-extra-c4/ticket-native-0002.json"
+    },
+    {
+      "phase": "armed",
+      "path": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-45534ac8-1bcc-4496-938e-748c8f6cb74c/633c6ee8-51a2-4346-8937-70f0a25c4702/work/backend-runtime/task04-model-drift-native-extra-c4/journal-admission-2ad096c5ab8c4c54b4e3b818b97cda85-d1993474-635b-4b4b-aca5-5da3a7d73e2a.jsonl"
+    }
+  ],
+  "originalErrorPreserved": true,
+  "actualNative": "NOT_RUN",
+  "actualNetwork": 0
+}
