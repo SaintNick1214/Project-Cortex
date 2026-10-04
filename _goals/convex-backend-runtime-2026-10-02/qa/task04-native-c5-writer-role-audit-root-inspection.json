@@ -1,0 +1,673 @@
+{
+  "utc": "2026-10-04T22:30:56.816371+00:00",
+  "scope": "ROOT_READ_ONLY_SOURCE_AID_INSPECTION_NOT_C5_READINESS",
+  "observationUTC": "2026-10-04T22:21:33.565293+00:00",
+  "seals": [
+    {
+      "root": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-writer-role-audit",
+      "sha256": "6214c1957bff340a4981a01bbd67d14beccbf1c166b8e1f0dfaa69a68512da90",
+      "members": 2
+    },
+    {
+      "root": "/workspace/Project-Cortex/work/resume/task04-native-c5-writer-role-audit",
+      "sha256": "2c58bdd0e6ad7c303cfe083bac7170db47326ba96b7e2728df11f9f01f358163",
+      "members": 1
+    },
+    {
+      "root": "/tmp/cortex-native-c5-writer-role-audit",
+      "sha256": "3b24df7e232fae1a144ea91eb293e8a4f7bd2a264229c98d4b968647a52a9060",
+      "members": 1
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-finite-recipe-audit-c3/per-id-inventory.json",
+      "bytes": 982839,
+      "sha256": "08bacf5e64ee89dab3ffc7fb78a92fa71c05a38836393454fcd469eca582f4ef",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-finite-recipe-audit-c3/per-id-inventory.json",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/mirror-source-transform-map.json",
+      "bytes": 1057887,
+      "sha256": "11b4452f9803231beb4dd2eaa27dda9176479c4b99532e317b2059db98768bf8",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/mirror-source-transform-map.json",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/prepared-source-inputs.json",
+      "bytes": 1356,
+      "sha256": "febdea64b2d55e2d82012a623b639e73903d557555a46391d3b8c9a777f9432b",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/prepared-source-inputs.json",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/command-registry.mjs",
+      "bytes": 4746,
+      "sha256": "de248f89ac0ec3b0621a00cf648daa7541e3800827751579caaad0d2b7b260fa",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/command-registry.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/ancestor-controls.mjs",
+      "bytes": 3039,
+      "sha256": "916931858eb70f18141a954c00869871753122f0bfce9095aa3292b280e5bfb9",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/ancestor-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/body-controls.mjs",
+      "bytes": 4911,
+      "sha256": "89b242add490ed15f0f0e32d8c287a0739f18f2dd0e053bd09baacca03cef863",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/body-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/cleanup-known-custody-controls.mjs",
+      "bytes": 2787,
+      "sha256": "ae63a122a82564997b6d09c44f6d6e58e268de097c0b7536e1ff740a7b8b90e9",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/cleanup-known-custody-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/creation-dispatch-controls.mjs",
+      "bytes": 4380,
+      "sha256": "b3edec575c2cc581f1e8b82d1d550b58dd57770705dbbf16778fa783e6fb59f8",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/creation-dispatch-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/creation-durability-controls.mjs",
+      "bytes": 3319,
+      "sha256": "3f1ba275b983763202c6938fb367e3ce2eaa255e044ced30180cd89e25bef650",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/creation-durability-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/creation-marker-controls.mjs",
+      "bytes": 3597,
+      "sha256": "90e5dbeb81ba03d91ae4f224fd9b4461869ae1d73808b2c9c042fa78830a639e",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/creation-marker-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/deleted-recovery-controls.mjs",
+      "bytes": 7803,
+      "sha256": "2bc3186616c7d5b0a0840b1e304b82c6a1f9810de671cbf6ddf2cf7e06ddfd02",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/deleted-recovery-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/dispatch-controls.mjs",
+      "bytes": 5510,
+      "sha256": "83d485c6071ccd26df206b6bf6d4cf3df7cb77a57d5cb6ab210495d5553ea8d1",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/dispatch-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/driver-error-controls.mjs",
+      "bytes": 4650,
+      "sha256": "8435cf9558ca9d74713a5c3fdc584cccb3c5427d2d7e325874d43140a3f6f1b0",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/driver-error-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-admissible-controls.mjs",
+      "bytes": 2307,
+      "sha256": "1f23b172c04a2a23b5060c3fba233f5cec18585e0059cfe494320a8280475a89",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-admissible-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-controls.mjs",
+      "bytes": 3528,
+      "sha256": "181791fd01cea63dcff2042af287fac3eae4f024de601fbd6565187b268c8e4a",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-domain-controls.mjs",
+      "bytes": 2510,
+      "sha256": "519bf1910e4716e0f6b0c894b327e4adc9a5318a6803524ff0ffec3576934b75",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-domain-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-profile-domain-controls.mjs",
+      "bytes": 2391,
+      "sha256": "e7acf8adb4f2cc653e43e4a9120634fb911e811382a1943372768f390e116d42",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-profile-domain-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-controls.mjs",
+      "bytes": 4338,
+      "sha256": "b04e7dabf8fd85a6c2a6ebe3c13abea4739fde2472dd0956f19834d6913c50ae",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-custody-controls.mjs",
+      "bytes": 4689,
+      "sha256": "f9f7ad54d2f341f6f857e8f0b39013e7ffa25308dbbd6f4f05332ede46cb3ece",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-custody-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-entry-controls.mjs",
+      "bytes": 5198,
+      "sha256": "56aae9cf4997ae31fa697dd8ea0541effe1c3212c002493c71646c1cf8771093",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-entry-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-reserve-controls.mjs",
+      "bytes": 2576,
+      "sha256": "6c7ad2f0e58bc77b923d2ebff555e4a0b3c4df369246e7d7a5587c47891466c6",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/management-reserve-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-c2-peer-body-controls.mjs",
+      "bytes": 3096,
+      "sha256": "a82e5c73c165a66c569fb43fdf3247162b02558d8ea39b453e3f63dd6103fc8f",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-c2-peer-body-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-c2-peer-source-drift.mjs",
+      "bytes": 7255,
+      "sha256": "98ff224b7cd64ce727a3cb64c58ac68b23fa77cb84c9889bcfa1add9b971ce80",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-c2-peer-source-drift.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-parent-acknowledgment-existing-ID-probe.mjs",
+      "bytes": 2560,
+      "sha256": "781c2d0540fb172d627eecaeabc5ab065e113bf0aaeb6f9614ca6c228725b352",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-parent-acknowledgment-existing-ID-probe.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-source-acknowledgment-existing-ID-probe.mjs",
+      "bytes": 2876,
+      "sha256": "544584764ced40f2b4e12fcf1b69f92bd2f3395a348b1f048caa43ce53852b66",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/original-source-acknowledgment-existing-ID-probe.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/publication-controls.mjs",
+      "bytes": 5349,
+      "sha256": "e7b73abca93c72b8350e0d26a1f6bf6e41df5b895a68f558a38e1f8a3910d294",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/publication-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/recovery-controls.mjs",
+      "bytes": 7641,
+      "sha256": "098638b1958fb56043b540a11c132f2cfe2cb161a957b90a22027d2dd7145b5d",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/recovery-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/reviewer-journal-short-write.mjs",
+      "bytes": 1704,
+      "sha256": "1981544b25744f6c64745de86cb25020b271f2b3e3951a60c8d68c2f77754cd7",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/reviewer-journal-short-write.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/reviewer-queue-controls.mjs",
+      "bytes": 5148,
+      "sha256": "0400f7c7729c0355e6a3a8339274768f6b6d2de1d6a496992a64da458f1fb2f6",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/reviewer-queue-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/router-import-controls.mjs",
+      "bytes": 2838,
+      "sha256": "c43e3bbd738024af7d557d4016fb6790dd4ef227bab15949fff24364db5360ab",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/router-import-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/rpc-binding-controls.mjs",
+      "bytes": 5677,
+      "sha256": "aaee20f7ddd45ff580c7d6bea9df39b838105d4007e130e5003f7f5877ad6539",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/rpc-binding-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/rpc-binding-c4-three-controls.mjs",
+      "bytes": 5675,
+      "sha256": "c45d0d33440d3a441bbffcd2577a73258d6518f3c8ae6d1e555b89d8422c4613",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/rpc-binding-c4-three-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/same-source-review-denial.mjs",
+      "bytes": 6478,
+      "sha256": "885703f53d2bd4543b220b02540cefd5c60a84787786b71cc83aebedf976ac49",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/same-source-review-denial.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/sdk-supported-controls.mjs",
+      "bytes": 4748,
+      "sha256": "ee32d519f18e8598a1e096f1ecb4130ec05fb0688807c7823ed6118aeb8806f7",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/sdk-supported-controls.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extension/parent-proof/actual-chain.mjs",
+      "bytes": 22162,
+      "sha256": "aeb9de924acf5ce243b271c4ac0f580090a0081a82125fb98fe93f167771608a",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extension/parent-proof/actual-chain.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extension/parent-proof/adversarial-chain.mjs",
+      "bytes": 24758,
+      "sha256": "096fc072e05de0398abe6159459125c259b4142e85269dba0aa7e2690cdb0a53",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extension/parent-proof/adversarial-chain.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extension/parent-proof/independent-watch17.mjs",
+      "bytes": 21792,
+      "sha256": "f2a36ebac1581ec1de99f4cd5bc689343a839e64a89ffcd5136cef19b5727957",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extension/parent-proof/independent-watch17.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "bytes": 14801,
+      "sha256": "dc65b5d2c802a8e2a951f23dd026a2e40badb075ca68fbc7e48aa73d16c95061",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-extension.mjs",
+      "bytes": 5356,
+      "sha256": "96505cbffe607e4472b631e4167ec582a9807483ae29bdc6852ebc1d35883b1e",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-extension.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/inventory.mjs",
+      "bytes": 5844,
+      "sha256": "9d4f7aef76bf89099706d92965a8196068e8ea499f42f5c8271d8055282967de",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/inventory.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/independent-body18.mjs",
+      "bytes": 5688,
+      "sha256": "60a88932812996c44c6037e7f016d9e0cca1f44e3d4db36212164b57a6616101",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/independent-body18.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/regression/parent-proof/actual-chain.mjs",
+      "bytes": 22170,
+      "sha256": "63bcf7dc964ef28dee40df070b42be7f900076da6ed05609dfd1974cf7a60cfd",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/regression/parent-proof/actual-chain.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/regression/parent-proof/adversarial-chain.mjs",
+      "bytes": 24764,
+      "sha256": "5921280897ed95307092d405a59cdd9cbd307fcc0774cad059a142ea1b0bde0d",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/regression/parent-proof/adversarial-chain.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/regression/parent-proof/independent-watch17.mjs",
+      "bytes": 21797,
+      "sha256": "321b37543468147a9fd635c76f27e7025c945cc9962807a93df6aaa3f5f83183",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/regression/parent-proof/independent-watch17.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "bytes": 14802,
+      "sha256": "67bbecc73b085ecf3aad604d1fbef2938c31e8f13ef9736c22ed355daf0ddd3c",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-actual-core.mjs",
+      "bytes": 5451,
+      "sha256": "fbdbff99bd2a848690a6276b9d8fb9200f60fe2fef3bd07afbade23d9082761f",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-actual-core.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/inventory.mjs",
+      "bytes": 5845,
+      "sha256": "6f0855b0adcf1f9cf7bd02135dda031be5514838524ee282b41064fb991445d4",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/inventory.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extra/parent-proof/actual-chain.mjs",
+      "bytes": 22138,
+      "sha256": "e29308b0b29e2ef08698779716e47e91692f417bd5483acc66848a62d001fe41",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extra/parent-proof/actual-chain.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extra/parent-proof/adversarial-chain.mjs",
+      "bytes": 24734,
+      "sha256": "59400306b8430c2aa5186ba7171ab926f8d8c590ccc3f3bab5f3e2efb46f0e3d",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extra/parent-proof/adversarial-chain.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extra/parent-proof/independent-watch17.mjs",
+      "bytes": 21772,
+      "sha256": "a25be16d47bded6affab41d865b4204acf9e4aa45e941fe92ece3eccd9d525b2",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/extra/parent-proof/independent-watch17.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "bytes": 15091,
+      "sha256": "9feded3470386654992edd82c07b615bd278b0e5d45758d9609fcbd41a0d30b9",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-extension.mjs",
+      "bytes": 5966,
+      "sha256": "7374cc3e8b81be463d1a8c4ba5eb08c0647d0ce22fc257c6a0c4d314efda2dfe",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-extension.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/inventory.mjs",
+      "bytes": 5953,
+      "sha256": "9e443218bfd249cb138d776eefbd8f78d7a865f263037801e24ca5cab75ca768",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/inventory.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/runner-closure.mjs",
+      "bytes": 1507,
+      "sha256": "c7b28cd5325d8cbbf5458d644504e36d7b3e1fc1f366142e6b05d7a47bce42e6",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/runner-closure.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/dependency-tiers.mjs",
+      "bytes": 2949,
+      "sha256": "ae72ed6c37755da73ca4f3f4dbf1e95b480ef5f643128c3a9b5641484f388c2d",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/dependency-tiers.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/temp-public-freeze.mjs",
+      "bytes": 1333,
+      "sha256": "8fc39800167947bb8fde5910034d2fb71b43080936b738c8c36513d8c1354153",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/temp-public-freeze.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/freeze-after-scratch.mjs",
+      "bytes": 2543,
+      "sha256": "11431eaf94e402bd8929f53f148947e5c138950072f0da8a3b4acd78f7edc961",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/freeze-after-scratch.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/actual-guard-calibration.mjs",
+      "bytes": 5050,
+      "sha256": "5ab3795fef0ee982731306b4732cfc4d217569b23897686f59eeccaba75a4dfa",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/actual-guard-calibration.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/actual-guard-profiler.mjs",
+      "bytes": 6376,
+      "sha256": "de3a36e11b6e70a6c5c142b32a876bb46616b765bdf1eff3d7070ef414f6cda4",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/actual-guard-profiler.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/source-calibration.mjs",
+      "bytes": 2515,
+      "sha256": "26caf7cc57c1364ee5c3808fd83ed9753ceb677b76616806da753dd385df4a4b",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/source-calibration.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/rpc-tier-calibration.mjs",
+      "bytes": 2506,
+      "sha256": "3f27576c70901b04ff0410d2e249e8b93a68c9f062ae825b2536b2e0d6e5c960",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/rpc-tier-calibration.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/caller-proof.mjs",
+      "bytes": 11740,
+      "sha256": "f79d3bc817bc35e4f39fc52f4ab28393e5030f5c06b9e7967c67ba0bd27f1cd6",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/caller-proof.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-proof.mjs",
+      "bytes": 4889,
+      "sha256": "24d83652247d7dbddf367cd7092e3c9bcb8ffbee0397bb23a9c8b9137dd1d7a7",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-proof.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-semantic-domains.mjs",
+      "bytes": 7101,
+      "sha256": "8ba86172b189ab553640faa3d484ebd7538077ca52a74b253c3c18543cf6b228",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/journal-semantic-domains.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/composition-engine.mjs",
+      "bytes": 9204,
+      "sha256": "a99e38d0949fe6a500d5a38e3706a6a0849c3f51b5e7b86339806f7a3310476e",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/composition-engine.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/input-ledger.mjs",
+      "bytes": 4171,
+      "sha256": "ff5f25fc34d222ea76db45f0479415bf6f318c426622f1f1bca4cbad0bdcc637",
+      "verifiedFrom": "/tmp/cortex-native-c5-closed-launcher-c5/prebytes/ff5f25fc34d222ea76db45f0479415bf6f318c426622f1f1bca4cbad0bdcc637.gz",
+      "currentBytesEqual": false,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/bridge-preload.cjs",
+      "bytes": 10442,
+      "sha256": "1a9ea8feb77c8dd273411700019798fd510f40bee6e8f474cff78766ad66c341",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/bridge-preload.cjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/root-launcher.mjs",
+      "bytes": 8615,
+      "sha256": "65b23e135c437f8a3dd185e8d7b8e5a161a37bd1080a2d6302075eecc1199665",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/root-launcher.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/root-child-bootstrap.mjs",
+      "bytes": 4154,
+      "sha256": "05f46d9a481c387bf45ea4df0325598cdef7bb2ee2d04eb4f4933321d3ba7138",
+      "verifiedFrom": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/root-child-bootstrap.mjs",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/compiler-session.mjs",
+      "bytes": 6693,
+      "sha256": "d158d0f83d8ffcb9f3d43e88d846bd5f3985cef0b8514d79d3326246d0cdd15f",
+      "verifiedFrom": "/tmp/cortex-native-c5-closed-launcher-c5/prebytes/d158d0f83d8ffcb9f3d43e88d846bd5f3985cef0b8514d79d3326246d0cdd15f.gz",
+      "currentBytesEqual": false,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/AGENTS.md",
+      "bytes": 4486,
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e",
+      "verifiedFrom": "/workspace/Project-Cortex/AGENTS.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/.agents/CODEX-RUNTIME.md",
+      "bytes": 5824,
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895",
+      "verifiedFrom": "/workspace/Project-Cortex/.agents/CODEX-RUNTIME.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/.agents/PROJECT-PROFILE.md",
+      "bytes": 14706,
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12",
+      "verifiedFrom": "/workspace/Project-Cortex/.agents/PROJECT-PROFILE.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/.agents/roles/pessimistic-judge.md",
+      "bytes": 6919,
+      "sha256": "71e0e99d0709275056fbd15125eeffa71f6ed87d9a9114ea325e3c6efcf29f9a",
+      "verifiedFrom": "/workspace/Project-Cortex/.agents/roles/pessimistic-judge.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "bytes": 3682,
+      "sha256": "4667290be427310c4d6988c666925344b8f86b043c09db392542991de0ce0104",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "bytes": 2759,
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "bytes": 11937,
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4",
+      "verifiedFrom": "/workspace/Project-Cortex/_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "bytes": 30372,
+      "sha256": "d53e18355904cfd7d9db43951468bc4b0aca0de568008ac4c27d7fa783390c8e",
+      "verifiedFrom": "/workspace/Project-Cortex/_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-finite-recipe-audit-c3/report.md",
+      "bytes": 8657,
+      "sha256": "0304dce6f5cacaac7d22db0d0c486082afb1eab594952ffb9078f38e663d1f5d",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-finite-recipe-audit-c3/report.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-composition-c4-fresh-review/report.md",
+      "bytes": 16660,
+      "sha256": "6d6789aa245c6a18be15ce7e08832ec426a9e658ff976b10b0219a1a8181fbf9",
+      "verifiedFrom": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-composition-c4-fresh-review/report.md",
+      "currentBytesEqual": true,
+      "custody": "CONTENT_ONLY_NO_OLD_INODE_OR_TIME_CLAIM"
+    }
+  ],
+  "lineHashesVerified": 255,
+  "exactHostMetadataOutputsVerified": 24,
+  "unclassifiedMappedHostOutputCount": 0,
+  "limitations": [
+    "Conservative direct-entry writer scan is not transitive semantic completeness.",
+    "Mutable source snapshots are checked against authentic archived observed bytes when current bytes differ.",
+    "No candidate/original module executed; no C5 or original-122 acceptance awarded.",
+    "Generic eligible-writer-root capture is not exact per-command producer lineage."
+  ]
+}
