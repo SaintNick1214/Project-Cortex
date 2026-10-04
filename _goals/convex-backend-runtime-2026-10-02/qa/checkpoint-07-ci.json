@@ -1,0 +1,66 @@
+{
+  "commit": "8156165ebb3a419a1cacd270941ca49ba5d4f459",
+  "scope": "first-page PR-triggered workflow runs and combined legacy status only; not full jobs coverage",
+  "results": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "workflow_runs": [
+            {
+              "id": 37183436497,
+              "name": "Security Scans",
+              "status": "in_progress",
+              "conclusion": null,
+              "run_number": 669,
+              "jobs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37183436497/jobs",
+              "logs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37183436497/logs",
+              "workflow_id": 209496276
+            },
+            {
+              "id": 37183436506,
+              "name": "PR Checks",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 351,
+              "jobs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37183436506/jobs",
+              "logs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37183436506/logs",
+              "workflow_id": 208281348
+            }
+          ]
+        },
+        "isError": false
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "statuses": [
+            {
+              "context": "security/snyk (nicholasgeil)",
+              "state": "success",
+              "target_url": "https://app.snyk.io/org/nicholasgeil/pr-checks/6fe40ec3-06de-49a7-8f11-25ffc9c4415d"
+            }
+          ]
+        },
+        "isError": false
+      }
+    }
+  ],
+  "fullGate": "INCOMPLETE; signature CI previously failed unsigned connector ancestry",
+  "recordedAt": "2026-10-04T06:49:12.383230+00:00",
+  "readTiming": "Tool transcript carries actual read time; no independent pre-read UTC receipt was captured"
+}

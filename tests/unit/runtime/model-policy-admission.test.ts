@@ -554,3 +554,425 @@ describe("native structured PURE denial boundary", () => {
     expect(state(f)).toBe(before); expect(f.db.writes).toBe(writes);
   });
 });
+
+/** Terminal capture extension: fake transactions/serialization are offline logic, never native OCC evidence. */
+describe("trusted terminal capture and current private attachment", () => {
+  type Capture = { evidenceId: string; state: string; settledCostUnits?: number; overrun: boolean };
+  function charge(f: ReturnType<typeof fixture>, a: Reserved, cost?: string, extra: Record<string, unknown> = {}) {
+    const parsed = JSON.parse(f.receipt(a, cost ?? "0.000040")) as Record<string, unknown>;
+    delete parsed.privateResultCanonical;
+    if (cost === undefined) { delete parsed.aggregateCostUsd; parsed.costSource = "unavailable"; }
+    return canonicalModelJson({ ...parsed, ...extra });
+  }
+  async function capture(f: ReturnType<typeof fixture>, a: Reserved, encoded: string) {
+    return await f.invoke<Capture>("captureTerminalEvidence", { attemptId: a.attemptId,
+      dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical: encoded });
+  }
+  async function attach(f: ReturnType<typeof fixture>, a: Reserved, evidenceId: string, result = canonicalModelJson({ text: "answer" }), reference = f.reference) {
+    return await f.invoke("attachTerminalResult", { reference, attemptId: a.attemptId, evidenceId, privateResultCanonical: result });
+  }
+  function ledgerState(f: ReturnType<typeof fixture>) { return JSON.stringify([...f.db.rows]); }
+  async function unchanged(f: ReturnType<typeof fixture>, call: () => Promise<unknown>) {
+    const before = ledgerState(f), writes = f.db.writes;
+    await expect(call()).rejects.toThrow(); expect(ledgerState(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  }
+  it("healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a);
+    const encoded = charge(f, a, "0.000040"), captured = await capture(f, a, encoded);
+    expect(captured).toMatchObject({ state: "settled", settledCostUnits: 40, overrun: false });
+    expect(f.attempt(a.attemptId)).toMatchObject({ resultAttachmentState: "pending", resultWithheld: true, outputVisible: false, terminalEvidenceCanonical: encoded });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    const money = JSON.stringify(f.db.table("runtimeBudgetAccounts")), writes = f.db.writes;
+    expect(await capture(f, a, encoded)).toEqual(captured); expect(f.db.writes).toBe(writes);
+    expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: true, resultWithheld: false });
+    expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
+    expect(f.attempt(a.attemptId)).toMatchObject({ resultAttachmentState: "attached", outputVisible: true });
+    expect(await f.admit(b)).toMatchObject({ status: "replay", resultCanonical: canonicalModelJson({ text: "answer" }) });
+    const attachedWrites = f.db.writes;
+    expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: true, resultWithheld: false });
+    expect(await capture(f, a, encoded)).toEqual(captured); expect(f.db.writes).toBe(attachedWrites);
+    await unchanged(f, () => attach(f, a, captured.evidenceId, canonicalModelJson({ text: "changed" })));
+    f.grant.revokedAt = clock;
+    expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.db.writes).toBe(attachedWrites); await expect(f.admit(b)).rejects.toThrow();
+  });
+  it("live revoked origin unknown100 refines full150 once without admin, slot decrement or reopened attachment", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const initial = charge(f, a), first = await capture(f, a, initial);
+    expect(first).toMatchObject({ state: "uncertain", overrun: false });
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 0, uncertainUnits: 100, activeConcurrency: 0 });
+    const originalHash = f.attempt(a.attemptId).terminalEvidenceHash, before = f.db.writes;
+    expect(await capture(f, a, initial)).toEqual(first); expect(f.db.writes).toBe(before);
+    f.grant.revokedAt = clock;
+    const final = charge(f, a, "0.000150", { actualModel: "openai/gpt-4o-mini", usage: { inputTokens: 15, outputTokens: 20 } });
+    const refined = await capture(f, a, final);
+    expect(refined).toEqual({ evidenceId: first.evidenceId, state: "settled", settledCostUnits: 150, overrun: true });
+    for (const kind of ["run", "tenant"]) expect(f.account(kind)).toMatchObject({ reservedUnits: 0, uncertainUnits: 0, settledUnits: 150, activeConcurrency: 0, overrun: true });
+    expect(f.db.table("runtimeModelOperations")[0]).toMatchObject({ settledUnits: 150, uncertainUnits: 0, overrun: true });
+    expect(f.attempt(a.attemptId)).toMatchObject({ terminalEvidenceCanonical: initial, terminalEvidenceHash: originalHash, receiptCanonical: final, resultAttachmentState: "closed" });
+    const writes = f.db.writes;
+    expect(await capture(f, a, initial)).toEqual(refined); expect(await capture(f, a, final)).toEqual(refined); expect(f.db.writes).toBe(writes);
+    delete f.grant.revokedAt;
+    expect(await attach(f, a, first.evidenceId)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined(); expect(f.db.writes).toBe(writes);
+    await unchanged(f, () => capture(f, a, charge(f, a, "0.000151", { actualModel: "openai/gpt-4o-mini", usage: { inputTokens: 15, outputTokens: 20 } })));
+  });
+  it.each(["settle", "recover", "reconcileDeploymentLiability"] as const)("%s compatible refinement preserves immutable closed capture and discards receipt private payload", async (route) => {
+    const { f, a } = await admitted(); await f.checkpoint(a); const initial = charge(f, a);
+    const first = await capture(f, a, initial); f.grant.revokedAt = clock; delete f.grant.revokedAt;
+    if (route === "reconcileDeploymentLiability") f.db.seed("runtimeAuthTombstones", { tenantId: f.reference.tenantId, resourceType: "tenant", resourceId: f.reference.tenantId, deletedAt: clock });
+    const args = { attemptId: a.attemptId, receiptCanonical: f.receipt(a, "0.000150"), ...(route !== "reconcileDeploymentLiability" ? { reference: f.reference } : {}) };
+    expect(await f.invoke(route, args)).toMatchObject({ settledCostUnits: 150, overrun: true, resultWithheld: true });
+    expect(f.attempt(a.attemptId)).toMatchObject({ terminalEvidenceCanonical: initial, resultAttachmentState: "closed" });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    const writes = f.db.writes;
+    expect(await capture(f, a, initial)).toMatchObject({ evidenceId: first.evidenceId, settledCostUnits: 150 });
+    await f.invoke(route, args); expect(f.db.writes).toBe(writes);
+  });
+  it("writeUnknown/recover cannot overwrite initial unknown or downgrade captured known liability", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); const initial = charge(f, a); await capture(f, a, initial);
+    let writes = f.db.writes;
+    await f.invoke("recover", { reference: f.reference, attemptId: a.attemptId });
+    await f.invoke("settle", { reference: f.reference, attemptId: a.attemptId, receiptCanonical: canonicalModelJson({ bad: true }) });
+    expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).terminalEvidenceCanonical).toBe(initial);
+    await capture(f, a, charge(f, a, "0.000040")); writes = f.db.writes;
+    await f.invoke("recover", { reference: f.reference, attemptId: a.attemptId }); expect(f.db.writes).toBe(writes);
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 0, settledUnits: 40, activeConcurrency: 0 });
+  });
+  it.each(["receiptId", "outcome", "actualModel", "usageChanged", "usageRemoved", "unknownVariant"])("rejects incompatible %s with zero ledger effects", async (variant) => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    await capture(f, a, charge(f, a, undefined, { actualModel: "openai/gpt-4o-mini", usage: { inputTokens: 15 } }));
+    const extra: Record<string, unknown> = { actualModel: "openai/gpt-4o-mini", usage: { inputTokens: 15 } };
+    if (variant === "receiptId") extra.receiptId = "different";
+    if (variant === "outcome") extra.outcome = "confirmed_rejected";
+    if (variant === "actualModel") extra.actualModel = "foreign/model";
+    if (variant === "usageChanged") extra.usage = { inputTokens: 14 };
+    if (variant === "usageRemoved") delete extra.usage;
+    if (variant === "unknownVariant") extra.usage = { inputTokens: 15, outputTokens: 20 };
+    await unchanged(f, () => capture(f, a, charge(f, a, variant === "unknownVariant" ? undefined : "0.000040", extra)));
+  });
+  it.each(["private", "raw", "proof", "identity", "usage", "noncanonical", "oversized"])("invalid first capture %s cannot create terminal proof or release slot", async (variant) => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    let encoded = charge(f, a, "0.000040"); const data = JSON.parse(encoded) as Record<string, unknown>;
+    if (variant === "private") data.privateResultCanonical = canonicalModelJson({ text: "secret" });
+    if (variant === "raw") data.rawProviderResponse = "secret";
+    if (variant === "proof") data.proof = "claimed";
+    if (variant === "identity") data.dispatchIdentity = "foreign";
+    if (variant === "usage") data.usage = { inputTokens: -1 };
+    encoded = canonicalModelJson(data);
+    if (variant === "noncanonical") encoded = " " + encoded;
+    if (variant === "oversized") encoded = '"' + "x".repeat(180001) + '"';
+    await unchanged(f, () => capture(f, a, encoded));
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 100, activeConcurrency: 1 });
+  });
+  it("no checkpoint, no-dispatch and wrong producer dispatch identity deny with zero writes", async () => {
+    const { f, a } = await admitted(); await unchanged(f, () => capture(f, a, charge(f, a, "0.000040")));
+    await f.invoke("releaseNotDispatched", { reference: f.reference, attemptId: a.attemptId });
+    await unchanged(f, () => capture(f, a, charge(f, a, "0.000040")));
+    const second = await admitted(); await second.f.checkpoint(second.a);
+    await unchanged(second.f, () => second.f.invoke("captureTerminalEvidence", { attemptId: second.a.attemptId, dispatchIdentity: "wrong", receiptCanonical: charge(second.f, second.a, "0.000040") }));
+  });
+  it.each(["tenant", "memorySpace", "cancelled", "revoked"])("first charge after %s closes attachment while accounting full original-window cost", async (kind) => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const ids = [f.account("tenant")._id, f.account("run")._id], windows = [f.account("tenant").windowId, f.account("run").windowId];
+    if (kind === "revoked") f.grant.revokedAt = clock;
+    else if (kind === "cancelled") await f.invoke("cancelBudget", { reference: f.reference, runBudgetId: f.account("run").runBudgetId });
+    else f.db.seed("runtimeAuthTombstones", { tenantId: f.reference.tenantId, ...(kind === "memorySpace" ? { memorySpaceId: f.reference.memorySpaceId } : {}), resourceType: kind, resourceId: kind === "tenant" ? f.reference.tenantId : f.reference.memorySpaceId, deletedAt: clock });
+    jest.spyOn(Date, "now").mockReturnValue(clock + 120000);
+    const captured = await capture(f, a, charge(f, a, "0.000150"));
+    expect(captured).toMatchObject({ settledCostUnits: 150, overrun: true });
+    expect([f.account("tenant")._id, f.account("run")._id]).toEqual(ids); expect([f.account("tenant").windowId, f.account("run").windowId]).toEqual(windows);
+    expect(f.attempt(a.attemptId)).toMatchObject({ resultAttachmentState: "closed", slotReleased: true });
+    expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: false, resultWithheld: true });
+  });
+  it("source deletion after healthy capture withholds attachment and money is retained", async () => {
+    const f = fixture(); await f.install(); const b = await f.bind(); const contentHash = await semanticHash("hello");
+    const source = f.db.seed("runtimeMemorySources", { tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.reference.principalId,
+      lineage: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, role: "user", trust: "user_assertion" }, content: "hello", contentHash, createdAt: clock });
+    const a = await f.admit(b, 0, "hello", { source: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, contentHash } });
+    await f.checkpoint(a); const captured = await capture(f, a, charge(f, a, "0.000040")); source.tombstonedAt = clock;
+    const writes = f.db.writes; expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.db.writes).toBe(writes + 1); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed");
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined(); expect(f.account("tenant").settledUnits).toBe(40);
+  });
+  it("legacy terminal private result survives exact capture acknowledgment without new attachment privilege", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); await f.settle(a);
+    const before = ledgerState(f), writes = f.db.writes;
+    const captured = await capture(f, a, charge(f, a, "0.000040"));
+    expect(ledgerState(f)).toBe(before); expect(f.db.writes).toBe(writes);
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBe(canonicalModelJson({ text: "answer" }));
+    expect(await attach(f, a, captured.evidenceId, canonicalModelJson({ text: "different" }))).toEqual({ attached: false, resultWithheld: true });
+    await unchanged(f, () => capture(f, a, charge(f, a, "0.000041")));
+  });
+  it.each(["hashOnly", "stateOnly"])("partial marker %s fails closed on capture, attachment, ordinary settle and recovery", async (variant) => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    if (variant === "hashOnly") f.attempt(a.attemptId).terminalEvidenceHash = hash;
+    else f.attempt(a.attemptId).resultAttachmentState = "pending";
+    await unchanged(f, () => capture(f, a, charge(f, a, "0.000040")));
+    await unchanged(f, () => attach(f, a, hash)); await unchanged(f, () => f.settle(a));
+    await unchanged(f, () => f.invoke("recover", { reference: f.reference, attemptId: a.attemptId }));
+  });
+  it("legacy unknown terminal evidence cannot receive pending result privilege", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    await f.invoke("settle", { reference: f.reference, attemptId: a.attemptId, receiptCanonical: charge(f, a) });
+    const writes = f.db.writes, before = ledgerState(f);
+    const captured = await capture(f, a, charge(f, a));
+    expect(f.attempt(a.attemptId).resultAttachmentState).toBeUndefined();
+    expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: false, resultWithheld: true });
+    await unchanged(f, () => capture(f, a, charge(f, a, "0.000040")));
+    expect(f.db.writes).toBe(writes); expect(ledgerState(f)).toBe(before);
+  });
+  it("invalid result/current reference/evidence cannot attach and never writes money", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); const captured = await capture(f, a, charge(f, a, "0.000040"));
+    const before = ledgerState(f), writes = f.db.writes;
+    expect(await attach(f, a, captured.evidenceId, canonicalModelJson({ rawReasoning: "secret" }))).toEqual({ attached: false, resultWithheld: true });
+    expect(await attach(f, a, captured.evidenceId, canonicalModelJson({ text: "answer" }), { ...f.reference, grantVersion: 2 })).toEqual({ attached: false, resultWithheld: true });
+    await unchanged(f, () => attach(f, a, "wrong")); expect(ledgerState(f)).toBe(before); expect(f.db.writes).toBe(writes);
+  });
+  it("rejected terminal captures close attachment and known charge remains exact", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); const captured = await capture(f, a, charge(f, a, "0.000010", { outcome: "confirmed_rejected" }));
+    expect(captured).toMatchObject({ state: "confirmed_rejected", settledCostUnits: 10 });
+    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed"); expect(await attach(f, a, captured.evidenceId)).toEqual({ attached: false, resultWithheld: true });
+  });
+  it("offline parent fault rolls back refinement; exact lost-response retry has one delta", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); const initial = charge(f, a), first = await capture(f, a, initial), final = charge(f, a, "0.000150");
+    const before = ledgerState(f), writes = f.db.writes;
+    // JSON snapshots retain this fixture's plain object realm; native rollback remains a separate gate.
+    const transaction = async <T,>(run: () => Promise<T>) => {
+      const snapshot = JSON.parse(JSON.stringify([...f.db.rows])) as [string, ReturnType<typeof f.db.table>][];
+      const oldWrites = f.db.writes;
+      try { return await run(); } catch (error) { f.db.rows = new Map(snapshot); f.db.writes = oldWrites; throw error; }
+    };
+    await expect(transaction(async () => { await capture(f, a, final); throw new Error("parent fault"); })).rejects.toThrow("parent fault");
+    expect(ledgerState(f)).toBe(before); expect(f.db.writes).toBe(writes);
+    const refined = await transaction(() => capture(f, a, final));
+    expect(refined).toMatchObject({ evidenceId: first.evidenceId, settledCostUnits: 150 });
+    const post = ledgerState(f), postWrites = f.db.writes;
+    expect(await capture(f, a, final)).toEqual(refined); expect(ledgerState(f)).toBe(post); expect(f.db.writes).toBe(postWrites);
+  });
+  it("offline serialized equal/conflicting candidates account once (not native OCC)", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); await capture(f, a, charge(f, a));
+    const final = charge(f, a, "0.000150"); await capture(f, a, final); const writes = f.db.writes;
+    await capture(f, a, final); await unchanged(f, () => capture(f, a, charge(f, a, "0.000151")));
+    expect(f.db.writes).toBe(writes); expect(f.account("run")).toMatchObject({ settledUnits: 150, uncertainUnits: 0, activeConcurrency: 0 });
+  });
+  it("forced digest equality never admits conflicting final canonical bytes", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); const first = await capture(f, a, charge(f, a)), final = charge(f, a, "0.000150"); await capture(f, a, final);
+    const conflicting = charge(f, a, "0.000151"), finalHash = f.attempt(a.attemptId).receiptHash!;
+    const original = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
+    jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+      if (new TextDecoder().decode(data as ArrayBuffer) === conflicting) return Uint8Array.from(Buffer.from(finalHash, "hex")).buffer;
+      return await original(algorithm, data);
+    });
+    await unchanged(f, () => capture(f, a, conflicting));
+    expect(await capture(f, a, charge(f, a))).toMatchObject({ evidenceId: first.evidenceId, settledCostUnits: 150 });
+  });
+  it("only two new registrations are internal and the ledger still has exactly five tables/eleven indexes", () => {
+    for (const name of ["captureTerminalEvidence", "attachTerminalResult"] as const) {
+      const registration = ledger[name] as unknown as Registration;
+      expect(registration.isInternal).toBe(true); expect(registration.isPublic).not.toBe(true);
+    }
+    const tables = JSON.parse(schema.export()) as { tables: { tableName: string; indexes: unknown[] }[] };
+    const policy = tables.tables.filter((table) => ["runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"].includes(table.tableName));
+    expect(policy).toHaveLength(5); expect(policy.reduce((sum, table) => sum + table.indexes.length, 0)).toBe(11);
+  });
+});
+
+// Further terminal outcome regressions, still appended after the exact accepted 76-test prefix.
+describe("terminal attachment closure and strict monetary truth", () => {
+  async function prepared(cost: string | null = "0.000040") {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const data = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete data.privateResultCanonical;
+    if (cost === null) { delete data.aggregateCostUsd; data.costSource = "unavailable"; } else data.aggregateCostUsd = cost;
+    const encoded = canonicalModelJson(data);
+    const args = { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical: encoded };
+    const captured = await f.invoke<{ evidenceId: string; settledCostUnits?: number }>("captureTerminalEvidence", args);
+    const attachArgs = { reference: f.reference, attemptId: a.attemptId, evidenceId: captured.evidenceId, privateResultCanonical: canonicalModelJson({ text: "answer" }) };
+    return { f, a, data, encoded, args, captured, attachArgs };
+  }
+  it.each(["revoked", "cancelled", "retired", "policyNarrowed"])("pending attachment %s closes permanently before renewal with zero monetary delta", async (kind) => {
+    const { f, a, captured, attachArgs } = await prepared(); const money = JSON.stringify(f.db.table("runtimeBudgetAccounts"));
+    if (kind === "revoked") f.grant.revokedAt = clock;
+    if (kind === "cancelled") f.db.table("runtimeModelOperations")[0]!.cancelled = true;
+    if (kind === "retired") f.db.seed("runtimeAuthTombstones", { tenantId: f.reference.tenantId, resourceType: "tenant", resourceId: f.reference.tenantId, deletedAt: clock });
+    if (kind === "policyNarrowed") {
+      delete f.grant.memorySpaceId; delete f.grant.memorySpaceEpoch; f.grant.resourceAccess = "tenant";
+      const reference = { ...f.reference }; delete reference.memorySpaceId; delete reference.memorySpaceEpoch;
+      await f.invoke("provisionTenantPolicy", { reference, policyId: "attachment-limit", expectedVersion: 0,
+        policyCanonical: canonicalModelJson({ policyId: "attachment-limit", version: 1, scope: "tenant", tenantId: reference.tenantId, rules: { limits: { outputTokens: 1 } } }) });
+    }
+    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed");
+    delete f.grant.revokedAt; f.db.table("runtimeModelOperations")[0]!.cancelled = false;
+    f.db.rows.set("runtimeAuthTombstones", []);
+    const writes = f.db.writes;
+    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money); expect(captured.settledCostUnits).toBe(40);
+  });
+  it("forced initial hash equality cannot replace immutable initial nonmoney facts", async () => {
+    const { f, a, args, data, encoded } = await prepared(null); const initialHash = f.attempt(a.attemptId).terminalEvidenceHash!;
+    const conflicting = canonicalModelJson({ ...data, receiptId: "other-terminal" });
+    const original = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
+    jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, bytes) => {
+      if (new TextDecoder().decode(bytes as ArrayBuffer) === conflicting) return Uint8Array.from(Buffer.from(initialHash, "hex")).buffer;
+      return await original(algorithm, bytes);
+    });
+    const before = JSON.stringify([...f.db.rows]), writes = f.db.writes;
+    await expect(f.invoke("captureTerminalEvidence", { ...args, receiptCanonical: conflicting })).rejects.toThrow();
+    expect(JSON.stringify([...f.db.rows])).toBe(before); expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).terminalEvidenceCanonical).toBe(encoded);
+  });
+  it("known usage additions are allowed only with complete money and absent facts never erase existing known values", async () => {
+    const { f, a, args, captured } = await prepared(null);
+    const initial = JSON.parse(args.receiptCanonical) as Record<string, unknown>;
+    const final = canonicalModelJson({ ...initial, costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040", actualModel: "openai/gpt-4o-mini", usage: { totalTokens: 35, inputTokens: 15, outputTokens: 20, cachedInputTokens: 0, reasoningTokens: 0 } });
+    expect(await f.invoke("captureTerminalEvidence", { ...args, receiptCanonical: final })).toMatchObject({ evidenceId: captured.evidenceId, settledCostUnits: 40 });
+    const writes = f.db.writes;
+    await expect(f.invoke("captureTerminalEvidence", { ...args, receiptCanonical: canonicalModelJson({ ...initial, costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040" }) })).rejects.toThrow();
+    expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed");
+  });
+  it("historical root without complete monetary support cannot be upgraded by producer claims", async () => {
+    root = { ...root, dispatchEvidence: root.dispatchEvidence.map((proof) => ({ ...proof, terminalCost: "unavailable" as const })) };
+    const f = fixture(); await f.install(); const b = await f.bind(); const a = await f.admit(b); await f.checkpoint(a);
+    const data = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete data.privateResultCanonical;
+    const args = { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical: canonicalModelJson(data) };
+    expect(await f.invoke("captureTerminalEvidence", args)).toMatchObject({ state: "uncertain", overrun: false });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, settledUnits: 0, activeConcurrency: 0 });
+    const writes = f.db.writes, before = JSON.stringify([...f.db.rows]);
+    await expect(f.invoke("captureTerminalEvidence", { ...args, receiptCanonical: canonicalModelJson({ ...data, aggregateCostUsd: "0.000150" }) })).rejects.toThrow();
+    expect(f.db.writes).toBe(writes); expect(JSON.stringify([...f.db.rows])).toBe(before);
+  });
+  it("bounded but overflowing terminal money conservatively retains uncertain reserve and releases one genuine slot", async () => {
+    const { f, a, captured, args } = await prepared("9007199254740992");
+    expect(captured.settledCostUnits).toBeUndefined(); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed");
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, reservedUnits: 0, activeConcurrency: 0 });
+    const writes = f.db.writes; await f.invoke("captureTerminalEvidence", args); expect(f.db.writes).toBe(writes);
+  });
+});
+
+describe("terminal root delivery bounds", () => {
+  async function captured() {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const data = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete data.privateResultCanonical;
+    const receiptCanonical = canonicalModelJson(data);
+    const result = await f.invoke<{ evidenceId: string }>("captureTerminalEvidence", { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical });
+    return { f, a, evidenceId: result.evidenceId };
+  }
+  it("immutable root result byte ceiling is enforced independently from the storage maximum", async () => {
+    root = { ...root, dispatchEvidence: root.dispatchEvidence.map((proof) => ({ ...proof, resultBound: { ...proof.resultBound, maximumPrivateResultBytes: 16 } })) };
+    const { f, a, evidenceId } = await captured(); const writes = f.db.writes;
+    const args = { reference: f.reference, attemptId: a.attemptId, evidenceId, privateResultCanonical: canonicalModelJson({ text: "answer" }) };
+    expect(await f.invoke("attachTerminalResult", args)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    expect(await f.invoke("attachTerminalResult", { ...args, privateResultCanonical: canonicalModelJson({ text: "a" }) })).toEqual({ attached: true, resultWithheld: false });
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 40, activeConcurrency: 0 });
+  });
+  it("expired current qualification closes pending attachment while preserving historical incurred charge", async () => {
+    const { f, a, evidenceId } = await captured(); const args = { reference: f.reference, attemptId: a.attemptId, evidenceId, privateResultCanonical: canonicalModelJson({ text: "answer" }) };
+    jest.spyOn(Date, "now").mockReturnValue(root.dispatchEvidence[0]!.expiresAt);
+    expect(await f.invoke("attachTerminalResult", args)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed"); expect(f.account("tenant").settledUnits).toBe(40);
+    jest.spyOn(Date, "now").mockReturnValue(clock); const writes = f.db.writes;
+    expect(await f.invoke("attachTerminalResult", args)).toEqual({ attached: false, resultWithheld: true }); expect(f.db.writes).toBe(writes);
+  });
+});
+
+describe("terminal embedding result profile fence", () => {
+  it("known embedding capture accepts only one current matching profile vector, with zero attachment charge delta", async () => {
+    const originalQualification = root.qualifications[0]!, originalProof = root.dispatchEvidence[0]!;
+    root = { ...root, policies: [{ ...deployment, rules: { ...deployment.rules, modelId: DEFAULT_EMBEDDING_PROFILE.modelId, nativeInterface: "embedding", capabilities: ["embedding"], interfaces: ["embedding"] } }],
+      qualifications: [{ ...originalQualification, receiptId: "synthetic-embedding", modelId: DEFAULT_EMBEDDING_PROFILE.modelId, nativeInterface: "embedding", capabilities: ["embedding"] }],
+      dispatchEvidence: [{ ...originalProof, receiptId: "synthetic-embedding", modelId: DEFAULT_EMBEDDING_PROFILE.modelId, nativeInterface: "embedding",
+        inputBound: { ...originalProof.inputBound, ruleId: "default-embedding-utf8-v1", featureEnvelope: "default-embedding-v1" } }] };
+    const f = fixture(); await f.install();
+    const b = await f.invoke<Bound>("ensureBudget", { reference: f.reference, operationKey: "embedding.query", requestId: "embedding", requestCanonical: canonicalModelJson({ text: "hello" }) });
+    const embeddingRequest = request(); delete embeddingRequest.messages; embeddingRequest.outputTokens = 0;
+    embeddingRequest.profile = DEFAULT_EMBEDDING_PROFILE; embeddingRequest.batch = { ordinal: 0, start: 0, end: 1 };
+    const a = await f.invoke<Reserved>("admit", { reference: f.reference, operationKey: "embedding.query", runBudgetId: b.runBudgetId, semanticId: "semantic", ordinal: 0, requestCanonical: canonicalModelJson(embeddingRequest) });
+    await f.checkpoint(a);
+    const dispatchIdentity = f.attempt(a.attemptId).dispatchIdentity;
+    const receiptCanonical = canonicalModelJson({ version: 1, dispatchIdentity, receiptId: "embedding-terminal", modelId: DEFAULT_EMBEDDING_PROFILE.modelId, nativeInterface: "embedding", outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040" });
+    const captured = await f.invoke<{ evidenceId: string }>("captureTerminalEvidence", { attemptId: a.attemptId, dispatchIdentity, receiptCanonical });
+    const attachArgs = { reference: f.reference, attemptId: a.attemptId, evidenceId: captured.evidenceId };
+    const vector = Array.from({ length: DEFAULT_EMBEDDING_PROFILE.dimensions }, () => 0.1);
+    const money = JSON.stringify(f.db.table("runtimeBudgetAccounts")), writes = f.db.writes;
+    for (const result of [{ profile: { ...DEFAULT_EMBEDDING_PROFILE, profileId: "wrong" }, vectors: [vector] }, { profile: DEFAULT_EMBEDDING_PROFILE, vectors: [vector, vector] }, { profile: DEFAULT_EMBEDDING_PROFILE, vectors: [[0.1]] }]) {
+      expect(await f.invoke("attachTerminalResult", { ...attachArgs, privateResultCanonical: canonicalModelJson(result) })).toEqual({ attached: false, resultWithheld: true });
+      expect(f.db.writes).toBe(writes);
+    }
+    const privateResultCanonical = canonicalModelJson({ profile: DEFAULT_EMBEDDING_PROFILE, vectors: [vector] });
+    expect(await f.invoke("attachTerminalResult", { ...attachArgs, privateResultCanonical })).toEqual({ attached: true, resultWithheld: false });
+    expect(f.attempt(a.attemptId)).toMatchObject({ resultAttachmentState: "attached", privateResultCanonical });
+    expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
+  });
+});
+
+/** C2 repair: inability to read eligibility is retryable persistence failure, not positive revocation. */
+describe("terminal eligibility unexpected errors preserve exact persistence retry", () => {
+  async function prepared(captureFirst = true) {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const receipt = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete receipt.privateResultCanonical;
+    const captureArgs = { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical: canonicalModelJson(receipt) };
+    const result = captureFirst ? await f.invoke<{ evidenceId: string }>("captureTerminalEvidence", captureArgs) : undefined;
+    const attachArgs = { reference: f.reference, attemptId: a.attemptId, evidenceId: result?.evidenceId ?? "not-yet-captured", privateResultCanonical: canonicalModelJson({ text: "answer" }) };
+    return { f, a, captureArgs, attachArgs };
+  }
+  function inject(f: ReturnType<typeof fixture>, error: unknown) {
+    const query = f.db.query.bind(f.db);
+    return jest.spyOn(f.db, "query").mockImplementation((table: string) => { if (table === "runtimeModelPolicies") throw error; return query(table); });
+  }
+  async function identicalFailure(f: ReturnType<typeof fixture>, error: unknown, run: () => Promise<unknown>) {
+    const before = JSON.stringify([...f.db.rows]), writes = f.db.writes;
+    await expect(run()).rejects.toBe(error); expect(JSON.stringify([...f.db.rows])).toBe(before); expect(f.db.writes).toBe(writes);
+  }
+  it("faulted pending attachment preserves all rows and original error/cause; exact retry attaches once after read recovery", async () => {
+    const { f, a, attachArgs } = await prepared(); const cause = new Error("synthetic cause"), error = new Error("synthetic transient database read failure", { cause });
+    const spy = inject(f, error); await identicalFailure(f, error, () => f.invoke("attachTerminalResult", attachArgs));
+    expect(error.cause).toBe(cause); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("pending");
+    spy.mockRestore(); const money = JSON.stringify(f.db.table("runtimeBudgetAccounts"));
+    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: true, resultWithheld: false });
+    const writes = f.db.writes; expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: true, resultWithheld: false });
+    expect(f.db.writes).toBe(writes); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
+    expect(f.attempt(a.attemptId)).toMatchObject({ resultAttachmentState: "attached", privateResultCanonical: attachArgs.privateResultCanonical });
+  });
+  it("faulted first known capture has zero writes/charge/marker/closure; same receipt retry settles full cost once pending", async () => {
+    const { f, a, captureArgs } = await prepared(false); const error = new Error("synthetic eligibility read fault");
+    const spy = inject(f, error); await identicalFailure(f, error, () => f.invoke("captureTerminalEvidence", captureArgs));
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 100, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 1 });
+    expect(f.attempt(a.attemptId)).toMatchObject({ state: "dispatch_pending", slotReleased: false });
+    expect(f.attempt(a.attemptId).terminalEvidenceHash).toBeUndefined(); expect(f.attempt(a.attemptId).resultAttachmentState).toBeUndefined();
+    spy.mockRestore(); const captured = await f.invoke("captureTerminalEvidence", captureArgs);
+    expect(captured).toMatchObject({ state: "settled", settledCostUnits: 40, overrun: false });
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 0, settledUnits: 40, uncertainUnits: 0, activeConcurrency: 0 });
+    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("pending"); const writes = f.db.writes;
+    expect(await f.invoke("captureTerminalEvidence", captureArgs)).toEqual(captured); expect(f.db.writes).toBe(writes);
+  });
+  it.each(["domainMessage", "structuredLookingPlainObject", "unknownConvexCode", "malformedConvexData", "dataAccessor", "codeAccessor", "messageAccessor", "inspectionFailure"])("unexpected %s propagates exact identity without getter calls or state change", async (kind) => {
+    const { ConvexError } = await import("convex/values"); const { f, a, attachArgs } = await prepared(); let getterCalls = 0;
+    const structured = { version: 1, code: "FORBIDDEN", message: "Access denied", retryable: false, outcome: "not_dispatched" };
+    let error: unknown;
+    if (kind === "domainMessage") error = new Error("POLICY_DENIED: unexpected runtime failure");
+    if (kind === "structuredLookingPlainObject") error = { data: structured };
+    if (kind === "unknownConvexCode") error = new ConvexError({ ...structured, code: "UNEXPECTED_STORAGE_FAILURE" });
+    if (kind === "malformedConvexData") error = new ConvexError({ ...structured, retryable: true });
+    if (kind === "dataAccessor") error = Object.defineProperty(new ConvexError(structured), "data", { get: () => { getterCalls++; return structured; } });
+    if (kind === "codeAccessor") {
+      const native = new ConvexError(structured);
+      Object.defineProperty(native.data, "code", { get: () => { getterCalls++; return "FORBIDDEN"; } }); error = native;
+    }
+    if (kind === "messageAccessor") error = Object.defineProperty(new Error(), "message", { get: () => { getterCalls++; return "POLICY_DENIED: forged"; } });
+    if (kind === "inspectionFailure") error = new Proxy(new Error("original unexpected runtime failure"), { getPrototypeOf: () => { throw new Error("inspection also failed"); } });
+    const spy = inject(f, error); await identicalFailure(f, error, () => f.invoke("attachTerminalResult", attachArgs));
+    expect(getterCalls).toBe(0); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("pending"); spy.mockRestore();
+    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: true, resultWithheld: false });
+  });
+  it("recognized native policy denial closes pending and preserves monetary accounts without message matching", async () => {
+    const { ConvexError } = await import("convex/values"); const { f, a, attachArgs } = await prepared();
+    const error = new ConvexError({ version: 1, code: "POLICY_DENIED", message: "structured control denial", retryable: false, outcome: "uncertain" });
+    const money = JSON.stringify(f.db.table("runtimeBudgetAccounts")), spy = inject(f, error);
+    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed"); spy.mockRestore(); const writes = f.db.writes;
+    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
+    expect(f.db.writes).toBe(writes); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
+  });
+});

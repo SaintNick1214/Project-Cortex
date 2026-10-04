@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {unchanged,moneyDelta,refined,captureArgs,attachArgs,publication} from './assertions.mjs';
+const plan=JSON.parse(readFileSync(fileURLToPath(new URL('../cases.json',import.meta.url)),'utf8'));
+assert.equal(plan.cases.length,22);assert.equal(new Set(plan.cases.map(x=>x.id)).size,22);assert.ok(plan.cases.every(x=>x.status==='NOT_RUN'));
+assert.equal(plan.allocation.totalNativeUpper,22*64+400+256+1);assert.ok(plan.allocation.totalNativeUpper<plan.caps.rpc);assert.ok(plan.allocation.extensionCreateUpper<plan.caps.cumulativeCreatesAndDeletes);
+const before={_id:'owned',kind:'run',tenantId:'owned',runBudgetId:'original',windowStart:0,windowEnd:60000,reservedUnits:0,uncertainUnits:100,settledUnits:0,activeConcurrency:0};
+const after={...before,uncertainUnits:0,settledUnits:150};moneyDelta(before,after,150);
+for(const broken of [{...after,settledUnits:100},{...after,activeConcurrency:-1},{...after,windowEnd:120000},{...after,uncertainUnits:100}])assert.throws(()=>moneyDelta(before,broken,150));
+const initial={terminalEvidenceCanonical:'original',terminalEvidenceHash:'digest',resultAttachmentState:'closed'};
+const final={...initial,state:'settled',settledCostUnits:150,overrun:true,slotReleased:true,receiptCanonical:'final',receiptHash:'finaldigest'};refined(initial,final,150);
+for(const broken of [{...final,terminalEvidenceCanonical:'overwrite'},{...final,resultAttachmentState:'pending'},{...final,privateResultCanonical:'secret'},{...final,slotReleased:false}])assert.throws(()=>refined(initial,broken,150));
+unchanged([before],[before]);assert.throws(()=>unchanged([before],[after]));
+assert.deepEqual(Object.keys(captureArgs('id','dispatch','canonical')).sort(),['attemptId','dispatchIdentity','receiptCanonical']);assert.deepEqual(Object.keys(attachArgs({},'id','evidence','result')).sort(),['attemptId','evidenceId','privateResultCanonical','reference']);
+const functions=['captureTerminalEvidence','attachTerminalResult'].map(name=>({identifier:'runtimeModelPolicy.js:'+name,functionType:'Mutation',visibility:{kind:'internal'}}));publication(functions);assert.throws(()=>publication(functions.map(x=>({...x,visibility:'public'}))));
+console.log(JSON.stringify({status:'PASS_OFFLINE_ORACLE_ONLY',caseFamilies:22,negativeOracleControls:10,native:'NOT_RUN',product:'NOT_FROZEN'}));

@@ -1,0 +1,206 @@
+{
+  "configs": [
+    {
+      "automock": false,
+      "cache": true,
+      "cacheDirectory": "/tmp/jest_rs",
+      "clearMocks": false,
+      "collectCoverage": false,
+      "collectCoverageFrom": [
+        "src/**/*.ts",
+        "!src/**/*.d.ts"
+      ],
+      "coverageDirectory": "/workspace/Project-Cortex/coverage",
+      "coveragePathIgnorePatterns": [
+        "/node_modules/"
+      ],
+      "coverageProvider": "babel",
+      "cwd": "/workspace/Project-Cortex",
+      "detectLeaks": false,
+      "detectOpenHandles": false,
+      "errorOnDeprecated": false,
+      "extensionsToTreatAsEsm": [
+        ".ts"
+      ],
+      "fakeTimers": {
+        "enableGlobally": false
+      },
+      "forceCoverageMatch": [],
+      "globals": {},
+      "haste": {
+        "computeSha1": false,
+        "enableSymlinks": false,
+        "forceNodeFilesystemAPI": true,
+        "throwOnModuleCollision": false
+      },
+      "id": "2ea1a913644a8fb6d20ad5eea3382f36",
+      "injectGlobals": true,
+      "moduleDirectories": [
+        "node_modules"
+      ],
+      "moduleFileExtensions": [
+        "js",
+        "mjs",
+        "cjs",
+        "jsx",
+        "ts",
+        "mts",
+        "cts",
+        "tsx",
+        "json",
+        "node"
+      ],
+      "moduleNameMapper": [
+        [
+          "^@/(.*)$",
+          "/workspace/Project-Cortex/src/$1"
+        ],
+        [
+          "^(\\.{1,2}/.*)\\.js$",
+          "$1"
+        ],
+        [
+          "^/workspace/Project-Cortex/convex-dev/runtimeModelPolicy$",
+          "/workspace/Project-Cortex/work/resume/task04-terminal-capture-implementation-c2/c1/convex-dev/runtimeModelPolicy.ts"
+        ]
+      ],
+      "modulePathIgnorePatterns": [],
+      "openHandlesTimeout": 1000,
+      "prettierPath": "prettier",
+      "resetMocks": false,
+      "resetModules": false,
+      "restoreMocks": false,
+      "rootDir": "/workspace/Project-Cortex",
+      "roots": [
+        "/workspace/Project-Cortex/work/resume/task04-terminal-capture-implementation-c2"
+      ],
+      "runner": "/workspace/Project-Cortex/node_modules/jest-runner/build/index.js",
+      "runnerOptions": {},
+      "sandboxInjectedGlobals": [],
+      "setupFiles": [],
+      "setupFilesAfterEnv": [],
+      "skipFilter": false,
+      "slowTestThreshold": 5,
+      "snapshotFormat": {
+        "escapeString": false,
+        "printBasicPrototype": false
+      },
+      "snapshotSerializers": [],
+      "testEnvironment": "/workspace/Project-Cortex/node_modules/jest-environment-node/build/index.js",
+      "testEnvironmentOptions": {},
+      "testLocationInResults": false,
+      "testMatch": [
+        "**/hostile.test.ts"
+      ],
+      "testPathIgnorePatterns": [
+        "/node_modules/"
+      ],
+      "testRegex": [],
+      "testRunner": "/workspace/Project-Cortex/node_modules/jest-circus/build/runner.js",
+      "testTimeout": 60000,
+      "transform": [
+        [
+          "^.+\\.(ts|tsx|js)$",
+          "/workspace/Project-Cortex/node_modules/ts-jest/dist/index.js",
+          {
+            "useESM": true,
+            "tsconfig": {
+              "allowJs": true,
+              "module": "ESNext",
+              "moduleResolution": "bundler"
+            }
+          }
+        ],
+        [
+          "^.+\\.m?tsx?$",
+          "/workspace/Project-Cortex/node_modules/ts-jest/dist/index.js",
+          {
+            "useESM": true
+          }
+        ]
+      ],
+      "transformIgnorePatterns": [
+        "node_modules/(?!(convex|openai))"
+      ],
+      "waitForUnhandledRejections": false,
+      "watchPathIgnorePatterns": []
+    }
+  ],
+  "globalConfig": {
+    "bail": 0,
+    "changedFilesWithAncestor": false,
+    "ci": false,
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.d.ts"
+    ],
+    "collectTests": false,
+    "coverageDirectory": "/workspace/Project-Cortex/coverage",
+    "coverageProvider": "babel",
+    "coverageReporters": [
+      "json",
+      "text",
+      "lcov",
+      "clover"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 65,
+        "functions": 80,
+        "lines": 70,
+        "statements": 70
+      }
+    },
+    "detectLeaks": false,
+    "detectOpenHandles": false,
+    "errorOnDeprecated": false,
+    "expand": false,
+    "findRelatedTests": false,
+    "forceExit": true,
+    "json": false,
+    "lastCommit": false,
+    "listTests": false,
+    "logHeapUsage": false,
+    "maxConcurrency": 10,
+    "maxWorkers": 1,
+    "noStackTrace": false,
+    "nonFlagArgs": [],
+    "notify": false,
+    "notifyMode": "failure-change",
+    "onlyChanged": false,
+    "onlyFailures": false,
+    "openHandlesTimeout": 1000,
+    "passWithNoTests": false,
+    "projects": [],
+    "reporters": [
+      [
+        "default",
+        {}
+      ]
+    ],
+    "rootDir": "/workspace/Project-Cortex",
+    "runInBand": true,
+    "runTestsByPath": false,
+    "seed": 1297787886,
+    "skipFilter": false,
+    "snapshotFormat": {
+      "escapeString": false,
+      "printBasicPrototype": false
+    },
+    "testFailureExitCode": 1,
+    "testNamePattern": "unexpected eligibility read failure must propagate without permanently closing pending attachment",
+    "testPathPatterns": [],
+    "testSequencer": "/workspace/Project-Cortex/node_modules/@jest/test-sequencer/build/index.js",
+    "testTimeout": 60000,
+    "updateSnapshot": "new",
+    "useStderr": false,
+    "waitForUnhandledRejections": false,
+    "watch": false,
+    "watchAll": false,
+    "watchman": true,
+    "workerGracefulExitTimeout": 500,
+    "workerThreads": false
+  },
+  "version": "30.5.2"
+}
