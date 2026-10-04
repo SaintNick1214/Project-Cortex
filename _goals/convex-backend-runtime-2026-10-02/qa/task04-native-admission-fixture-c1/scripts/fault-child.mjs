@@ -1,0 +1,14 @@
+/** Parent-owned crash child. Real peer HTTPS only; never invent provider receipts. */
+import assert from 'node:assert/strict';import {resolve} from 'node:path';
+import {session} from './driver.mjs';import {canonical,request} from './cases.mjs';import {peer} from './peer.mjs';import {scratch,json,exclusive,sha256} from './guard.mjs';
+const mode=process.argv[2];if(!['before-peer','lost-receipt','before-settle'].includes(mode))throw Error('QA_FAULT_MODE');const s=await session('synthetic');const input=json(resolve(scratch,'fault-input-'+mode+'.json'),scratch,true);if(input.operation!==s.target.operation||input.runId!==s.runId||input.mode!==mode||input.costClassification!=='fixture-synthetic-no-paid-inference')throw Error('QA_FAULT_INPUT');
+const permit=await s.rpc('mutation','runtimeModelPolicy:checkpoint',{reference:input.reference,attemptId:input.attemptId,requestCanonical:input.requestCanonical});assert.equal(permit.dispatchPermit,true);
+exclusive(resolve(scratch,'fault-checkpoint-'+mode+'.json'),{operation:s.target.operation,mode,attemptId:input.attemptId,dispatchIdentity:permit.dispatchIdentity,phase:'checkpoint-committed',observedAt:new Date().toISOString()});
+if(mode!=='before-peer'){if(!input.peerSecret||input.peerSecret.length<32)throw Error('QA_PEER_SECRET');await peer(s,permit.dispatchIdentity,input.peerSecret);const counter=await s.rpc('query','qualificationPeer:counter',{run:s.runId,dispatchDigest:sha256(permit.dispatchIdentity)});assert.deepEqual(counter,{requestCount:1,effectCount:1});
+ exclusive(resolve(scratch,'fault-effect-'+mode+'.json'),{operation:s.target.operation,mode,attemptId:input.attemptId,dispatchDigest:sha256(permit.dispatchIdentity),phase:'external-effect-confirmed',counts:counter,observedAt:new Date().toISOString()});
+ if(mode==='before-settle'){const receiptCanonical=canonical({version:1,dispatchIdentity:permit.dispatchIdentity,receiptId:'qa-peer-bookkeeping-'+mode,modelId:permit.snapshot.modelId,nativeInterface:permit.snapshot.nativeInterface,outcome:'confirmed',proof:'provider-terminal-v1',costSource:'gateway-aggregate-usd-v1',aggregateCostUsd:'0.000040',privateResultCanonical:canonical({text:'synthetic-peer-answer'})});
+ // Explicit synthetic bookkeeping input, NEVER provider terminal/charge evidence.
+ exclusive(resolve(scratch,'fault-synthetic-bookkeeping-'+mode+'.json'),{operation:s.target.operation,classification:'fixture-synthetic-no-provider-terminal-proof',attemptId:input.attemptId,reference:input.reference,receiptCanonical});}
+}
+process.stdout.write(JSON.stringify({mode,phase:mode==='before-peer'?'checkpoint-committed':'external-effect-confirmed',status:'AWAIT_PARENT_KILL'})+'\n');
+const deadline=Date.now()+12000;while(Date.now()<deadline)await new Promise(done=>setTimeout(done,100));s.close();throw Error('QA_EXPECTED_PARENT_KILL_NOT_OBSERVED');
