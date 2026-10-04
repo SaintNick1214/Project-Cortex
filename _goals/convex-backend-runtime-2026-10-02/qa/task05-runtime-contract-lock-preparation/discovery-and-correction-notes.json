@@ -1,0 +1,16 @@
+{
+  "classification": "interactive tool transcript provenance; not application execution",
+  "missingShorthandPaths": ["qa", ".codex", "src/domain/authority.ts", "jest.config.js", "node_modules/@convex-dev/agent/src/vercel/types.ts"],
+  "corrections": ["Authoritative goal qa tree used", "src/auth/verified.ts read", "jest.config.mjs retained", "Agent src/vercel/index.ts retained"],
+  "broadDiscovery": "Initial recursive filename search produced truncated unrelated names; no private target scratch contents were read. Subsequent searches narrowed to goal artifacts and named source files.",
+  "refinementScriptFailure": {
+    "argv": ["node", "work/resume/task05-runtime-contract-lock-preparation/refine.mjs"],
+    "cwd": "/workspace/Project-Cortex",
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "TypeError: s.index is not a function at refine.mjs:9 (full raw tool transcript retained in conversation)",
+    "timing": "Start/end UTC not captured for this interactive command; no retrospective timestamp invented",
+    "effects": "Script failed before writing report or source; only new scratch script existed",
+    "repair": "Corrected s.index to s.indexOf with declared const indices; next interactive execution exit0. Only new report/additional-source-discovery/preimages changed. No product change."
+  }
+}

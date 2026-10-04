@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-native-admission-c8-aggregate-review/verify.py", line 13, in <module>
+    for name,p in [('execution',E),('faultSupplement',S),('fixture',F)]:results[name]=checkmanifest(p)
+                                                                                      ^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-native-admission-c8-aggregate-review/verify.py", line 9, in checkmanifest
+    m=j(p/'qa-manifest.json'); paths=[x['path'] for x in m['files']];actual=sorted(str(x.relative_to(p)) for x in p.rglob('*') if x.is_file() and x.name!='qa-manifest.json');assert sorted(paths)==actual and len(paths)==len(set(paths))
+                                                                                                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

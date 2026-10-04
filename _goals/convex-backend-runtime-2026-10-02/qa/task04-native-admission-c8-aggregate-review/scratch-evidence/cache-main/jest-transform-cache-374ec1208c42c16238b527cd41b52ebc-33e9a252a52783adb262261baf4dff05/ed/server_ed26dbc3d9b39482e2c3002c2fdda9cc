@@ -1,0 +1,86 @@
+c0b98ce44f0af6f6f3194d41b8a88276
+/* eslint-disable */
+/**
+ * Generated utilities for implementing server-side Convex query and mutation functions.
+ *
+ * THIS CODE IS AUTOMATICALLY GENERATED.
+ *
+ * To regenerate, run `npx convex dev`.
+ * @module
+ */
+import { actionGeneric, httpActionGeneric, queryGeneric, mutationGeneric, internalActionGeneric, internalMutationGeneric, internalQueryGeneric, } from "convex/server";
+/**
+ * Define a query in this Convex app's public API.
+ *
+ * This function will be allowed to read your Convex database and will be accessible from the client.
+ *
+ * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
+ * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
+ */
+export const query = queryGeneric;
+/**
+ * Define a query that is only accessible from other Convex functions (but not from the client).
+ *
+ * This function will be allowed to read from your Convex database. It will not be accessible from the client.
+ *
+ * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
+ * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
+ */
+export const internalQuery = internalQueryGeneric;
+/**
+ * Define a mutation in this Convex app's public API.
+ *
+ * This function will be allowed to modify your Convex database and will be accessible from the client.
+ *
+ * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
+ * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
+ */
+export const mutation = mutationGeneric;
+/**
+ * Define a mutation that is only accessible from other Convex functions (but not from the client).
+ *
+ * This function will be allowed to modify your Convex database. It will not be accessible from the client.
+ *
+ * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
+ * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
+ */
+export const internalMutation = internalMutationGeneric;
+/**
+ * Define an action in this Convex app's public API.
+ *
+ * An action is a function which can execute any JavaScript code, including non-deterministic
+ * code and code with side-effects, like calling third-party services.
+ * They can be run in Convex's JavaScript environment or in Node.js using the "use node" directive.
+ * They can interact with the database indirectly by calling queries and mutations using the {@link ActionCtx}.
+ *
+ * @param func - The action. It receives an {@link ActionCtx} as its first argument.
+ * @returns The wrapped action. Include this as an `export` to name it and make it accessible.
+ */
+export const action = actionGeneric;
+/**
+ * Define an action that is only accessible from other Convex functions (but not from the client).
+ *
+ * @param func - The function. It receives an {@link ActionCtx} as its first argument.
+ * @returns The wrapped function. Include this as an `export` to name it and make it accessible.
+ */
+export const internalAction = internalActionGeneric;
+/**
+ * Define an HTTP action.
+ *
+ * The wrapped function will be used to respond to HTTP requests received
+ * by a Convex deployment if the requests matches the path and method where
+ * this action is routed. Be sure to route your httpAction in `convex/http.js`.
+ *
+ * @param func - The function. It receives an {@link ActionCtx} as its first argument
+ * and a Fetch API `Request` object as its second.
+ * @returns The wrapped function. Import this function from `convex/http.js` and route it to hook it up.
+ */
+export const httpAction = httpActionGeneric;
+/**
+ * Typesafe environment variables.
+ *
+ * This includes platform-provided env vars and any variables declared in
+ * `convex.config.ts`.
+ */
+export const env = process.env;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL3dvcmtzcGFjZS9Qcm9qZWN0LUNvcnRleC9jb252ZXgtZGV2L19nZW5lcmF0ZWQvc2VydmVyLmpzIiwibWFwcGluZ3MiOiJBQUFBLG9CQUFvQjtBQUNwQjs7Ozs7OztHQU9HO0FBRUgsT0FBTyxFQUNMLGFBQWEsRUFDYixpQkFBaUIsRUFDakIsWUFBWSxFQUNaLGVBQWUsRUFDZixxQkFBcUIsRUFDckIsdUJBQXVCLEVBQ3ZCLG9CQUFvQixHQUNyQixNQUFNLGVBQWUsQ0FBQztBQUV2Qjs7Ozs7OztHQU9HO0FBQ0gsTUFBTSxDQUFDLE1BQU0sS0FBSyxHQUFHLFlBQVksQ0FBQztBQUVsQzs7Ozs7OztHQU9HO0FBQ0gsTUFBTSxDQUFDLE1BQU0sYUFBYSxHQUFHLG9CQUFvQixDQUFDO0FBRWxEOzs7Ozs7O0dBT0c7QUFDSCxNQUFNLENBQUMsTUFBTSxRQUFRLEdBQUcsZUFBZSxDQUFDO0FBRXhDOzs7Ozs7O0dBT0c7QUFDSCxNQUFNLENBQUMsTUFBTSxnQkFBZ0IsR0FBRyx1QkFBdUIsQ0FBQztBQUV4RDs7Ozs7Ozs7OztHQVVHO0FBQ0gsTUFBTSxDQUFDLE1BQU0sTUFBTSxHQUFHLGFBQWEsQ0FBQztBQUVwQzs7Ozs7R0FLRztBQUNILE1BQU0sQ0FBQyxNQUFNLGNBQWMsR0FBRyxxQkFBcUIsQ0FBQztBQUVwRDs7Ozs7Ozs7OztHQVVHO0FBQ0gsTUFBTSxDQUFDLE1BQU0sVUFBVSxHQUFHLGlCQUFpQixDQUFDO0FBRTVDOzs7OztHQUtHO0FBQ0gsTUFBTSxDQUFDLE1BQU0sR0FBRyxHQUFHLE9BQU8sQ0FBQyxHQUFHLENBQUMiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiL3dvcmtzcGFjZS9Qcm9qZWN0LUNvcnRleC9jb252ZXgtZGV2L19nZW5lcmF0ZWQvc2VydmVyLmpzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qIGVzbGludC1kaXNhYmxlICovXG4vKipcbiAqIEdlbmVyYXRlZCB1dGlsaXRpZXMgZm9yIGltcGxlbWVudGluZyBzZXJ2ZXItc2lkZSBDb252ZXggcXVlcnkgYW5kIG11dGF0aW9uIGZ1bmN0aW9ucy5cbiAqXG4gKiBUSElTIENPREUgSVMgQVVUT01BVElDQUxMWSBHRU5FUkFURUQuXG4gKlxuICogVG8gcmVnZW5lcmF0ZSwgcnVuIGBucHggY29udmV4IGRldmAuXG4gKiBAbW9kdWxlXG4gKi9cblxuaW1wb3J0IHtcbiAgYWN0aW9uR2VuZXJpYyxcbiAgaHR0cEFjdGlvbkdlbmVyaWMsXG4gIHF1ZXJ5R2VuZXJpYyxcbiAgbXV0YXRpb25HZW5lcmljLFxuICBpbnRlcm5hbEFjdGlvbkdlbmVyaWMsXG4gIGludGVybmFsTXV0YXRpb25HZW5lcmljLFxuICBpbnRlcm5hbFF1ZXJ5R2VuZXJpYyxcbn0gZnJvbSBcImNvbnZleC9zZXJ2ZXJcIjtcblxuLyoqXG4gKiBEZWZpbmUgYSBxdWVyeSBpbiB0aGlzIENvbnZleCBhcHAncyBwdWJsaWMgQVBJLlxuICpcbiAqIFRoaXMgZnVuY3Rpb24gd2lsbCBiZSBhbGxvd2VkIHRvIHJlYWQgeW91ciBDb252ZXggZGF0YWJhc2UgYW5kIHdpbGwgYmUgYWNjZXNzaWJsZSBmcm9tIHRoZSBjbGllbnQuXG4gKlxuICogQHBhcmFtIGZ1bmMgLSBUaGUgcXVlcnkgZnVuY3Rpb24uIEl0IHJlY2VpdmVzIGEge0BsaW5rIFF1ZXJ5Q3R4fSBhcyBpdHMgZmlyc3QgYXJndW1lbnQuXG4gKiBAcmV0dXJucyBUaGUgd3JhcHBlZCBxdWVyeS4gSW5jbHVkZSB0aGlzIGFzIGFuIGBleHBvcnRgIHRvIG5hbWUgaXQgYW5kIG1ha2UgaXQgYWNjZXNzaWJsZS5cbiAqL1xuZXhwb3J0IGNvbnN0IHF1ZXJ5ID0gcXVlcnlHZW5lcmljO1xuXG4vKipcbiAqIERlZmluZSBhIHF1ZXJ5IHRoYXQgaXMgb25seSBhY2Nlc3NpYmxlIGZyb20gb3RoZXIgQ29udmV4IGZ1bmN0aW9ucyAoYnV0IG5vdCBmcm9tIHRoZSBjbGllbnQpLlxuICpcbiAqIFRoaXMgZnVuY3Rpb24gd2lsbCBiZSBhbGxvd2VkIHRvIHJlYWQgZnJvbSB5b3VyIENvbnZleCBkYXRhYmFzZS4gSXQgd2lsbCBub3QgYmUgYWNjZXNzaWJsZSBmcm9tIHRoZSBjbGllbnQuXG4gKlxuICogQHBhcmFtIGZ1bmMgLSBUaGUgcXVlcnkgZnVuY3Rpb24uIEl0IHJlY2VpdmVzIGEge0BsaW5rIFF1ZXJ5Q3R4fSBhcyBpdHMgZmlyc3QgYXJndW1lbnQuXG4gKiBAcmV0dXJucyBUaGUgd3JhcHBlZCBxdWVyeS4gSW5jbHVkZSB0aGlzIGFzIGFuIGBleHBvcnRgIHRvIG5hbWUgaXQgYW5kIG1ha2UgaXQgYWNjZXNzaWJsZS5cbiAqL1xuZXhwb3J0IGNvbnN0IGludGVybmFsUXVlcnkgPSBpbnRlcm5hbFF1ZXJ5R2VuZXJpYztcblxuLyoqXG4gKiBEZWZpbmUgYSBtdXRhdGlvbiBpbiB0aGlzIENvbnZleCBhcHAncyBwdWJsaWMgQVBJLlxuICpcbiAqIFRoaXMgZnVuY3Rpb24gd2lsbCBiZSBhbGxvd2VkIHRvIG1vZGlmeSB5b3VyIENvbnZleCBkYXRhYmFzZSBhbmQgd2lsbCBiZSBhY2Nlc3NpYmxlIGZyb20gdGhlIGNsaWVudC5cbiAqXG4gKiBAcGFyYW0gZnVuYyAtIFRoZSBtdXRhdGlvbiBmdW5jdGlvbi4gSXQgcmVjZWl2ZXMgYSB7QGxpbmsgTXV0YXRpb25DdHh9IGFzIGl0cyBmaXJzdCBhcmd1bWVudC5cbiAqIEByZXR1cm5zIFRoZSB3cmFwcGVkIG11dGF0aW9uLiBJbmNsdWRlIHRoaXMgYXMgYW4gYGV4cG9ydGAgdG8gbmFtZSBpdCBhbmQgbWFrZSBpdCBhY2Nlc3NpYmxlLlxuICovXG5leHBvcnQgY29uc3QgbXV0YXRpb24gPSBtdXRhdGlvbkdlbmVyaWM7XG5cbi8qKlxuICogRGVmaW5lIGEgbXV0YXRpb24gdGhhdCBpcyBvbmx5IGFjY2Vzc2libGUgZnJvbSBvdGhlciBDb252ZXggZnVuY3Rpb25zIChidXQgbm90IGZyb20gdGhlIGNsaWVudCkuXG4gKlxuICogVGhpcyBmdW5jdGlvbiB3aWxsIGJlIGFsbG93ZWQgdG8gbW9kaWZ5IHlvdXIgQ29udmV4IGRhdGFiYXNlLiBJdCB3aWxsIG5vdCBiZSBhY2Nlc3NpYmxlIGZyb20gdGhlIGNsaWVudC5cbiAqXG4gKiBAcGFyYW0gZnVuYyAtIFRoZSBtdXRhdGlvbiBmdW5jdGlvbi4gSXQgcmVjZWl2ZXMgYSB7QGxpbmsgTXV0YXRpb25DdHh9IGFzIGl0cyBmaXJzdCBhcmd1bWVudC5cbiAqIEByZXR1cm5zIFRoZSB3cmFwcGVkIG11dGF0aW9uLiBJbmNsdWRlIHRoaXMgYXMgYW4gYGV4cG9ydGAgdG8gbmFtZSBpdCBhbmQgbWFrZSBpdCBhY2Nlc3NpYmxlLlxuICovXG5leHBvcnQgY29uc3QgaW50ZXJuYWxNdXRhdGlvbiA9IGludGVybmFsTXV0YXRpb25HZW5lcmljO1xuXG4vKipcbiAqIERlZmluZSBhbiBhY3Rpb24gaW4gdGhpcyBDb252ZXggYXBwJ3MgcHVibGljIEFQSS5cbiAqXG4gKiBBbiBhY3Rpb24gaXMgYSBmdW5jdGlvbiB3aGljaCBjYW4gZXhlY3V0ZSBhbnkgSmF2YVNjcmlwdCBjb2RlLCBpbmNsdWRpbmcgbm9uLWRldGVybWluaXN0aWNcbiAqIGNvZGUgYW5kIGNvZGUgd2l0aCBzaWRlLWVmZmVjdHMsIGxpa2UgY2FsbGluZyB0aGlyZC1wYXJ0eSBzZXJ2aWNlcy5cbiAqIFRoZXkgY2FuIGJlIHJ1biBpbiBDb252ZXgncyBKYXZhU2NyaXB0IGVudmlyb25tZW50IG9yIGluIE5vZGUuanMgdXNpbmcgdGhlIFwidXNlIG5vZGVcIiBkaXJlY3RpdmUuXG4gKiBUaGV5IGNhbiBpbnRlcmFjdCB3aXRoIHRoZSBkYXRhYmFzZSBpbmRpcmVjdGx5IGJ5IGNhbGxpbmcgcXVlcmllcyBhbmQgbXV0YXRpb25zIHVzaW5nIHRoZSB7QGxpbmsgQWN0aW9uQ3R4fS5cbiAqXG4gKiBAcGFyYW0gZnVuYyAtIFRoZSBhY3Rpb24uIEl0IHJlY2VpdmVzIGFuIHtAbGluayBBY3Rpb25DdHh9IGFzIGl0cyBmaXJzdCBhcmd1bWVudC5cbiAqIEByZXR1cm5zIFRoZSB3cmFwcGVkIGFjdGlvbi4gSW5jbHVkZSB0aGlzIGFzIGFuIGBleHBvcnRgIHRvIG5hbWUgaXQgYW5kIG1ha2UgaXQgYWNjZXNzaWJsZS5cbiAqL1xuZXhwb3J0IGNvbnN0IGFjdGlvbiA9IGFjdGlvbkdlbmVyaWM7XG5cbi8qKlxuICogRGVmaW5lIGFuIGFjdGlvbiB0aGF0IGlzIG9ubHkgYWNjZXNzaWJsZSBmcm9tIG90aGVyIENvbnZleCBmdW5jdGlvbnMgKGJ1dCBub3QgZnJvbSB0aGUgY2xpZW50KS5cbiAqXG4gKiBAcGFyYW0gZnVuYyAtIFRoZSBmdW5jdGlvbi4gSXQgcmVjZWl2ZXMgYW4ge0BsaW5rIEFjdGlvbkN0eH0gYXMgaXRzIGZpcnN0IGFyZ3VtZW50LlxuICogQHJldHVybnMgVGhlIHdyYXBwZWQgZnVuY3Rpb24uIEluY2x1ZGUgdGhpcyBhcyBhbiBgZXhwb3J0YCB0byBuYW1lIGl0IGFuZCBtYWtlIGl0IGFjY2Vzc2libGUuXG4gKi9cbmV4cG9ydCBjb25zdCBpbnRlcm5hbEFjdGlvbiA9IGludGVybmFsQWN0aW9uR2VuZXJpYztcblxuLyoqXG4gKiBEZWZpbmUgYW4gSFRUUCBhY3Rpb24uXG4gKlxuICogVGhlIHdyYXBwZWQgZnVuY3Rpb24gd2lsbCBiZSB1c2VkIHRvIHJlc3BvbmQgdG8gSFRUUCByZXF1ZXN0cyByZWNlaXZlZFxuICogYnkgYSBDb252ZXggZGVwbG95bWVudCBpZiB0aGUgcmVxdWVzdHMgbWF0Y2hlcyB0aGUgcGF0aCBhbmQgbWV0aG9kIHdoZXJlXG4gKiB0aGlzIGFjdGlvbiBpcyByb3V0ZWQuIEJlIHN1cmUgdG8gcm91dGUgeW91ciBodHRwQWN0aW9uIGluIGBjb252ZXgvaHR0cC5qc2AuXG4gKlxuICogQHBhcmFtIGZ1bmMgLSBUaGUgZnVuY3Rpb24uIEl0IHJlY2VpdmVzIGFuIHtAbGluayBBY3Rpb25DdHh9IGFzIGl0cyBmaXJzdCBhcmd1bWVudFxuICogYW5kIGEgRmV0Y2ggQVBJIGBSZXF1ZXN0YCBvYmplY3QgYXMgaXRzIHNlY29uZC5cbiAqIEByZXR1cm5zIFRoZSB3cmFwcGVkIGZ1bmN0aW9uLiBJbXBvcnQgdGhpcyBmdW5jdGlvbiBmcm9tIGBjb252ZXgvaHR0cC5qc2AgYW5kIHJvdXRlIGl0IHRvIGhvb2sgaXQgdXAuXG4gKi9cbmV4cG9ydCBjb25zdCBodHRwQWN0aW9uID0gaHR0cEFjdGlvbkdlbmVyaWM7XG5cbi8qKlxuICogVHlwZXNhZmUgZW52aXJvbm1lbnQgdmFyaWFibGVzLlxuICpcbiAqIFRoaXMgaW5jbHVkZXMgcGxhdGZvcm0tcHJvdmlkZWQgZW52IHZhcnMgYW5kIGFueSB2YXJpYWJsZXMgZGVjbGFyZWQgaW5cbiAqIGBjb252ZXguY29uZmlnLnRzYC5cbiAqL1xuZXhwb3J0IGNvbnN0IGVudiA9IHByb2Nlc3MuZW52O1xuIl0sInZlcnNpb24iOjN9

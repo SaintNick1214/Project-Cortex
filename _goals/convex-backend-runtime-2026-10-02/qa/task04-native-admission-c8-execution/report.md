@@ -1,0 +1,3 @@
+# C8 actual native execution
+
+Actual outcomes, exact command receipts, native journals, available full diagnostics, official generated bindings and physical retirement receipts are preserved here. Qualification status is reported per phase; cleanup and retirement do not upgrade a failed scenario. Whole Task04/native B acceptance requires fresh independent review. Target-only credentials were removed after verified delete200/GET404; shared signing key/team access remain. No paid inference or storage objects. Physical identifiers/credentials are kept private; available originals are bound by exact byte hashes.
