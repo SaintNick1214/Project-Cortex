@@ -1,0 +1,211 @@
+{
+  "observedAt": "2026-10-05T01:05:37.634549+00:00",
+  "status": "ROOT_READ_ONLY_GENERATED_DELTA_AND_CONTROL_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "aec65aef1fd14c359b0ea8ffd7f504f0",
+      "receiptSHA256": "738ccad421461495a7a6752da4d56e311cd295095fd9fe521f6df85bce302642",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 17991,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 32685124,
+        "st_mtime_ns": 1791161977996657450,
+        "st_ctime_ns": 1791161977996657450
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/refresh-fork-metadata.mjs"
+          ],
+          "utcStart": "2026-10-05T00:58:15.848006+00:00",
+          "utcEnd": "2026-10-05T00:58:16.138735+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/fork-metadata-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:58:19.155847+00:00",
+          "utcEnd": "2026-10-05T00:58:19.401264+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/compiler-copy-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:58:22.321986+00:00",
+          "utcEnd": "2026-10-05T00:58:22.595928+00:00",
+          "exitCode": 1
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/root-delivery-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:58:25.485583+00:00",
+          "utcEnd": "2026-10-05T00:58:25.772034+00:00",
+          "exitCode": 1
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/compiler-copy-controls.mjs.stderr",
+          "bytes": 1135,
+          "sha256": "3e973cb2abeef33ffb544f2d75e6749e5fbbb83b5e1f71040819823420f8f4de",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17898,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 1135,
+            "st_mtime_ns": 1791161903250056053,
+            "st_ctime_ns": 1791161903250056053
+          },
+          "text": "file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/command-registry.mjs:9\n const sourceRefs=JSON.parse(fs.readFileSync(path.join(W,'prepared-source-inputs.json')));for(const r of sourceRefs.files){const b=fs.readFileSync(r.path);if(b.length!==r.bytes||H(b)!==r.sha256)throw Error('QA_BRIDGE_PREPARED_INPUT_DRIFT');}\n                                                                                                                                                                                                        ^\n\nError: QA_BRIDGE_PREPARED_INPUT_DRIFT\n    at prepareRegistry (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/command-registry.mjs:9:201)\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/compiler-copy-controls.mjs:2:397\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/compiler-copy-controls.mjs.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17897,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791161903247426811,
+            "st_ctime_ns": 1791161903247426811
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/fork-metadata-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17895,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791161900049252094,
+            "st_ctime_ns": 1791161900049252094
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/fork-metadata-controls.mjs.stdout",
+          "bytes": 507,
+          "sha256": "5abd8a6e1b7adfd70605e0d746616c16814fd0b94a5bb4dcb6a05692d7c4841b",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17894,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 507,
+            "st_mtime_ns": 1791161900049252094,
+            "st_ctime_ns": 1791161900049252094
+          },
+          "text": "{\"PASS\":\"ALL_THREE_EXACT_FORK_VERSIONS_TIER_MEMBERSHIP_AND_HELD_ARCHIVES_NONMEMBER_SOURCE_DRIFT_DENIALS\",\"profiles\":[{\"kind\":\"extension\",\"membership\":116,\"rpc\":98,\"boundaryOnly\":18,\"heldLineages\":49},{\"kind\":\"regression\",\"membership\":113,\"rpc\":97,\"boundaryOnly\":16,\"heldLineages\":46},{\"kind\":\"extra\",\"membership\":118,\"rpc\":100,\"boundaryOnly\":18,\"heldLineages\":51}],\"proof\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/metadata-controls-7ovSJ0/proof.json\",\"originalGuards\":\"UNCHANGED\",\"original122\":\"HELD\"}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/refresh-fork-metadata.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17890,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791161896801447721,
+            "st_ctime_ns": 1791161896801447721
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/refresh-fork-metadata.mjs.stdout",
+          "bytes": 417,
+          "sha256": "ccd3c7e7dcd5eaa7172cf23d4e6782611ffb3135b2af1fe4c822c3a9c3a08e8f",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17889,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 417,
+            "st_mtime_ns": 1791161896801447721,
+            "st_ctime_ns": 1791161896801447721
+          },
+          "text": "{\"status\":\"OWN_FORK_METADATA_SETUP_COMPLETE\",\"proof\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/fork-metadata-setup-ROi2Re/proof.json\",\"profiles\":[{\"kind\":\"extension\",\"membership\":116,\"changed\":0,\"domains\":{\"rpc\":98,\"boundaryOnly\":18}},{\"kind\":\"regression\",\"membership\":113,\"changed\":0,\"domains\":{\"rpc\":97,\"boundaryOnly\":16}},{\"kind\":\"extra\",\"membership\":118,\"changed\":0,\"domains\":{\"rpc\":100,\"boundaryOnly\":18}}]}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/root-delivery-controls.mjs.stderr",
+          "bytes": 1071,
+          "sha256": "70fad231a95e6029bac114508c0c7897f34a40753a757cccad891df05156cb8b",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17900,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 1071,
+            "st_mtime_ns": 1791161906428087581,
+            "st_ctime_ns": 1791161906428087581
+          },
+          "text": "file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/command-registry.mjs:9\n const sourceRefs=JSON.parse(fs.readFileSync(path.join(W,'prepared-source-inputs.json')));for(const r of sourceRefs.files){const b=fs.readFileSync(r.path);if(b.length!==r.bytes||H(b)!==r.sha256)throw Error('QA_BRIDGE_PREPARED_INPUT_DRIFT');}\n                                                                                                                                                                                                        ^\n\nError: QA_BRIDGE_PREPARED_INPUT_DRIFT\n    at prepareRegistry (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/command-registry.mjs:9:201)\n    at cohort (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/root-gate.mjs:4:41)\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/root-delivery-controls.mjs:2:497\n\nNode.js v24.19.0\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/aec65aef1fd14c359b0ea8ffd7f504f0/root-delivery-controls.mjs.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17899,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791161906423488859,
+            "st_ctime_ns": 1791161906423488859
+          },
+          "text": ""
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5370,
+      "uniqueBeforeByteBackingsDecoded": 3364,
+      "beforeByteBackingRawBytes": 300048631,
+      "declaredSetupChangedPaths": [
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/mirror-source-transform-map.json"
+      ],
+      "assessment": "Setup/metadata controls exit0; compiler-copy/delivery exit1 prepared-input drift. No whole route attempted. Map generated delta only; no current readiness. Process bindings are historical, not a fresh census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

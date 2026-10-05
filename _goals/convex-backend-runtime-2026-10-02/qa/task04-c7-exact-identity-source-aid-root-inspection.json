@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-05T04:19:58.773136+00:00",
+  "status": "ROOT_SOURCE_AID_FULL_CONTENT_AND_MICROCONTROL_INSPECTION_ONLY",
+  "checks": [
+    {
+      "root": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c7-exact-identity-source-aid",
+      "sealSHA256": "b5d12b3410abc8c0c267db5b12652b6871db7dadddfbfa77fb781342655d85e9",
+      "files": 1,
+      "regularBytes": 24108,
+      "plainContentManifestNotDirectoryHistoricalIdentity": true
+    },
+    {
+      "root": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-source-aid",
+      "sealSHA256": "ceaee4219712f8e8d7c6f6e592099d264d546ccaefce037bcb251bf4f34d3e0a",
+      "files": 134,
+      "regularBytes": 3444108,
+      "plainContentManifestNotDirectoryHistoricalIdentity": true
+    }
+  ],
+  "sourceCopiesVerified": 119,
+  "sourceCopyBytes": 2684169,
+  "sourceMapFiles": 111,
+  "exactLineSitesVerified": 501,
+  "recordedOwnBuiltinMicrocontrolExit": 0,
+  "raws": [
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-source-aid/microcontrol.stdout",
+      "bytes": 1284,
+      "sha256": "ce98e472352b737fccbc02396743eb21c6e96b66f0ad3ce2c206136c0fd2858d",
+      "text": "{\"name\":\"inode_collision\",\"exactA\":\"9223372036855902365\",\"exactB\":\"9223372036855902366\",\"rounded\":9223372036855902000,\"nodeRoundedDecimal\":\"9223372036855902000\",\"jsonA\":\"9223372036855902000\"}\n{\"label\":\"SOURCE_AID_ONLY\",\"node\":\"v24.19.0\",\"identity\":{\"schema\":\"FS_IDENTITY_DECIMAL_V1\",\"fields\":{\"dev\":\"27\",\"ino\":\"869895\",\"mode\":\"33152\",\"uid\":\"1000\",\"gid\":\"1000\",\"nlink\":\"1\",\"size\":\"18\",\"mtime_ns\":\"1791172967479982684\",\"ctime_ns\":\"1791172967479982684\"}},\"controls\":[{\"name\":\"adjacent_unsafe_inode_collision\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"adjacent_nanosecond_collision_and_ms_rounding\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"python_exact_json_tokens_lossless_vs_plain_parse\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"held_fd_path_exact_nine_and_native_stats_fidelity\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"exact_persist_load_and_all_nine_reject_changed\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"safe_small_values_do_not_authorize_numeric_schema\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"same_byte_hash_not_identity_authority\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"},{\"name\":\"own_model_primary_secondary_error_preservation\",\"status\":\"PASS_OWN_MICROCONTROL_ONLY\"}],\"count\":8,\"scope\":\"NO_CANDIDATE_IMPORT_EXECUTION_OR_QUALIFICATION\"}\n"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-source-aid/microcontrol.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text": ""
+    }
+  ],
+  "candidateRuntime": "NOT_RUN_NOT_IMPLEMENTED",
+  "original122SourceParentNativePrivatePaidTiming": "HELD",
+  "limits": "Plain exact file-content manifests only, not historical directory identity seals. Current original/copy/tool rereads verify preservation; never retroactive custody. Pure own builtin controls do not certify proposed strict schema/parser/consumer implementation or whole120s."
+}
