@@ -13,6 +13,11 @@ queries: []
 
 # Paths to ignore during analysis
 paths-ignore:
+  # Planning, frozen QA fixtures and source captures are evidence, not shipped code.
+  # Scan the active SDK, CLI, provider, demos and scripts at their canonical paths.
+  - "_goals/**"
+  - "_research/**"
+  - "work/**"
   - "_DEPRECATED/**"
   # Build artifacts and dependencies
   - "**/node_modules/**"
