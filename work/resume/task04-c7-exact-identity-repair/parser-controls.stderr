@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/parser-controls.py", line 8, in <module>
+    raw=json.dumps({'rows':[value]},ensure_ascii=True).encode();actual,_=parse(raw);assert actual['rows']==[value]
+                                                                         ^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/parser-controls.py", line 6, in parse
+    reader=Reader((raw[i:i+step] for i in range(0,len(raw),step)),valueLimit=len(raw));items=[];result=reader.top(arrayKeys=('rows',),item=lambda key,row:items.append(row));result['rows']=items;return result,reader
+                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/stream_json.py", line 64, in top
+    self.char(',')
+  File "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/stream_json.py", line 34, in char
+    if self.peek()!=expected:raise ValueError('C7_JSON_DELIMITER '+expected)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: C7_JSON_DELIMITER ,

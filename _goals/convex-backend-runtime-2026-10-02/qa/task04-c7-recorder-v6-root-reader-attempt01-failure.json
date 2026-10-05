@@ -1,0 +1,12 @@
+{
+  "status": "ROOT_READER_SCHEMA_FAILURE_NOT_SUBJECT_FAILURE",
+  "sourcePath": "work/resume/root-c7-recorder-v6-source-inspection-attempt01.py",
+  "sourceBytes": 1504,
+  "sourceSHA256": "375ea8fd3c6ab4ca43daadbb9b852a543fe092625a1c9aa77b28f1fb2306b078",
+  "error": "KeyError: 'childExecuted' at line12 after source/backing held9/fullhash checks",
+  "actualSchema": {
+    "scope": "STATIC_SOURCE_ONLY_NO_CHILD",
+    "childExecutedField": "ABSENT"
+  },
+  "correction": "Use actual explicit scope marker, do not infer missing Boolean; source/backing integrity separately rechecked. No source/capture edit or execution inferred."
+}

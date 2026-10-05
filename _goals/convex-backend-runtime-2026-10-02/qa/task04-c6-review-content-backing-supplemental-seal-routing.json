@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-05T04:44:29.741875+00:00",
+  "scope": "NEW_ROOT_CONTENT_COPY_NOT_PHYSICAL_IDENTITY_RESTORATION",
+  "source": "/dev/shm/cortex-root-c6-review-content-backing/selfseal.json",
+  "sourceSHA256": "7a054e4f23e1bd9e4f406048159806fb693160b19c4821ca36efa15c4376e388",
+  "bytes": 155154,
+  "sourceCurrentExactIdentity": {
+    "dev": "26",
+    "ino": "19090",
+    "mode": "33152",
+    "uid": "1000",
+    "gid": "1000",
+    "nlink": "1",
+    "size": "155154",
+    "mtime_ns": "1791173684247676280",
+    "ctime_ns": "1791173684247676280"
+  },
+  "destination": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c6-review-content-backing-temporary-root-selfseal.json",
+  "reason": "Frozen supplement virtual mapping publishes archive parts and gzip indexes but omits own temporary-root selfseal. Retain exact body in next incremental checkpoint without editing frozen map or prior packet.",
+  "frozenPacketMutation": false,
+  "runtimeQualification": false
+}
