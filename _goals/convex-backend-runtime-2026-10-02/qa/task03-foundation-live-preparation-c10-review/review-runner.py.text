@@ -1,0 +1,44 @@
+from pathlib import Path
+import json,re,subprocess,hashlib,time,shutil
+from datetime import datetime,timezone
+root=Path.cwd(); scratch=root/'work/backend-runtime/task03-foundation-live-c10-review'; qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c10'; report=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c10-review'
+freeze=(qa/'runtime-freeze.json').read_bytes(); assert hashlib.sha256(freeze).hexdigest()=='add765ab1aca3ee385a55e632801672c9587d37458a99826feb2fddb7622bf88'
+def verify():
+ for entry in json.loads(freeze)['files']:assert hashlib.sha256((root/entry['path']).read_bytes()).hexdigest()==entry['sha256'],entry['path']
+verify()
+def imports(s):
+ def rewrite(m):
+  path=(qa/'scripts'/m[3]).resolve()
+  if path==qa/'scripts/guard.mjs':path=scratch/'guard.mjs'
+  return m[1]+m[2]+str(path)+m[2]
+ return re.sub(r"(from |import |import\(|new URL\()(['\"])((?:\./|\.\./)[^'\"]+)\2",rewrite,s)
+guard=(qa/'scripts/guard.mjs').read_text().replace("export const preparation = resolve(dirname(fileURLToPath(import.meta.url)), '..');",f"export const preparation = {json.dumps(str(qa))};").replace("export const scratch = resolve(repo, 'work/backend-runtime/task03-foundation-live-c10');",f"export const scratch = {json.dumps(str(scratch))};")
+(scratch/'guard.mjs').write_text(guard)
+topology=guard.replace('return selected;}','if(directory===fixture)selected.push(relative(repo,resolve(fixture,\'fixture/convex/qualificationUnreviewedSynthetic.ts\')));return selected;}')
+(scratch/'guard-topology.mjs').write_text(topology)
+mirror=scratch/'offline-fixture';shutil.copytree(root/'work/backend-runtime/task03-foundation-live-c10/offline-fixture',mirror,ignore=shutil.ignore_patterns('node_modules'),dirs_exist_ok=True)
+(mirror/'node_modules').symlink_to(root/'node_modules',target_is_directory=True)
+(scratch/'mra').mkdir(exist_ok=True)
+checks=json.loads((qa/'offline-receipts.json').read_text())['checks']; results=[]
+for index,check in enumerate(checks):
+ argv=check['argv'].copy(); label=Path(argv[-1]).name
+ if label.endswith('.mjs') and str(qa.relative_to(root))+'/scripts/' in argv[-1]:
+  s=(qa/'scripts'/label).read_text()
+  if label=='native-validator-check.mjs':s=s.replace("writeFileSync(resolve(preparation,'native-registration-schemas.json'),", "assert.equal(readFileSync(resolve(preparation,'native-registration-schemas.json'),'utf8'),")
+  if label=='freeze.mjs':s="import assert from 'node:assert/strict';\n"+s.replace("writeFileSync(resolve(preparation,'runtime-freeze.json'),", "assert.equal(readFileSync(resolve(preparation,'runtime-freeze.json'),'utf8'),")
+  if label=='offline-check.mjs':
+   s=s.replace('work/backend-runtime/task03-foundation-live-c10/preflight-','work/backend-runtime/task03-foundation-live-c10-review/preflight-')
+   start=s.index('const extra=resolve(fixture,');end=s.index('\n',start)
+   s=s[:start]+f"const synthetic=await import({json.dumps(str(scratch/'guard-topology.mjs'))});assert.throws(()=>synthetic.sourcePreflight());negatives++;"+s[end:]
+  if label=='diagnostics-check.mjs':s=s.replace('work/backend-runtime/task03-foundation-live-c10/diagnostic-controls-','work/backend-runtime/task03-foundation-live-c10-review/diagnostic-controls-')
+  s=imports(s);dest=scratch/label;dest.write_text(s);argv[-1]=str(dest)
+ elif label=='offline-mwd.ts':
+  s=(root/argv[-1]).read_text().replace("'../../../convex-dev/schema'",json.dumps(str(root/'convex-dev/schema.ts'))).replace("'../../../_goals/", "'/workspace/Project-Cortex/_goals/").replace('work/backend-runtime/task03-foundation-live-c10/mwd-revised-offline-receipt.json','work/backend-runtime/task03-foundation-live-c10-review/mwd-revised-offline-receipt.json');dest=scratch/label;dest.write_text(s);argv[-1]=str(dest)
+ elif label=='offline-mra.mjs':
+  s=(root/argv[-1]).read_text().replace('/work/backend-runtime/task03-foundation-live-c10/mra-revised/','/work/backend-runtime/task03-foundation-live-c10-review/mra/');dest=scratch/label;dest.write_text(s);argv[-1]=str(dest)
+ if index==8:argv[3]=str(mirror/'convex/tsconfig.json')
+ startedUtc=datetime.now(timezone.utc).isoformat();started=time.time();p=subprocess.run(argv,cwd=root,text=True,capture_output=True,timeout=120)
+ row={'selection':index+1,'declaredArgv':check['argv'],'argv':argv,'cwd':str(root),'startedAtUtc':startedUtc,'finishedAtUtc':datetime.now(timezone.utc).isoformat(),'exitCode':p.returncode,'elapsedSeconds':round(time.time()-started,3),'stdout':p.stdout,'stderr':p.stderr};results.append(row)
+ (report/'independent-offline-receipts.json').write_text(json.dumps(results,indent=2)+'\n');print(json.dumps({'selection':index+1,'exitCode':p.returncode,'stdout':p.stdout,'stderr':p.stderr}),flush=True)
+ assert p.returncode==0,(index,label)
+assert freeze==(qa/'runtime-freeze.json').read_bytes();verify();print('ALL19PASS_FINAL542BYTES_IDENTICAL',flush=True)

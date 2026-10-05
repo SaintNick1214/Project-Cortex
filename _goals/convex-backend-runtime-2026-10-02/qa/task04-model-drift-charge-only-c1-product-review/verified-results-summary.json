@@ -1,0 +1,90 @@
+{
+  "probe": {
+    "passed": 14,
+    "failed": 0,
+    "skips": 0,
+    "todo": 0,
+    "runtimeErrors": 0,
+    "suites": [
+      {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-product-review/independent-probe.test.ts",
+        "assertions": 14
+      }
+    ]
+  },
+  "native": {
+    "passed": 190,
+    "failed": 0,
+    "skips": 0,
+    "todo": 0,
+    "runtimeErrors": 0,
+    "suites": [
+      {
+        "path": "/workspace/Project-Cortex/tests/unit/runtime/model-policy-admission.test.ts",
+        "assertions": 133
+      },
+      {
+        "path": "/workspace/Project-Cortex/tests/unit/runtime/model-policy-model-drift.test.ts",
+        "assertions": 57
+      }
+    ]
+  },
+  "current": {
+    "passed": 160,
+    "failed": 0,
+    "skips": 0,
+    "todo": 0,
+    "runtimeErrors": 0,
+    "suites": [
+      {
+        "path": "/workspace/Project-Cortex/tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "assertions": 160
+      }
+    ]
+  },
+  "historical/historical": {
+    "passed": 78,
+    "failed": 0,
+    "skips": 0,
+    "todo": 0,
+    "runtimeErrors": 0,
+    "suites": [
+      {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/tests/unit/runtime/gateway-dispatch.test.ts",
+        "assertions": 74
+      },
+      {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2-review/additional.test.ts",
+        "assertions": 2
+      },
+      {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-c2.test.ts",
+        "assertions": 1
+      },
+      {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/hostile.test.ts",
+        "assertions": 1
+      }
+    ]
+  },
+  "imports": {
+    "verifiedObservations": 1483,
+    "currentGatewayAndRegisteredPolicy": true,
+    "noHistoricalMapping": true
+  },
+  "protectedSourcePins": {
+    "convex-dev/runtimeModelPolicy.ts": "c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "9d5fe93afe4d55bdbe5181ddadfd48639057f8c5357f0e753b9cd9e3bb21d379",
+    "convex-dev/runtimePolicySchema.ts": "4467a4d4e424fa57cd07de95bce702108765747cfb6afa8a0756fea253926534",
+    "convex-dev/schema.ts": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+    "tests/unit/runtime/model-policy-admission.test.ts": "817def96244c30f0eb176afa90163f38d5c9deac842d714c9ad3c3d69829e967",
+    "convex-dev/runtimeGateway.ts": "e796e43aafe70c37d8af7330a969e5b643eb58e86be7621cc7c08991ff1224be",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts": "d324b1a85beb20fc98c1d81bc9fc592969be452ddd2d3a00886df464edc8dba1",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "fc58a25d9c5cf9526e65838ab1b25c4fcf5cda024885082a560e3cf6faa029f2"
+  },
+  "classifierByteExact": true,
+  "registrations": 16,
+  "productionRoots": "EMPTY",
+  "nativeChangedSource": "NOT_RUN",
+  "monetary": "SYNTHETIC_ONLY"
+}

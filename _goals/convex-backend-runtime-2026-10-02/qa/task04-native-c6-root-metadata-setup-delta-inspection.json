@@ -1,0 +1,60 @@
+{
+  "observedAt": "2026-10-05T00:51:11.504944+00:00",
+  "status": "ROOT_OWN_SETUP_DELTA_INSPECTION_ONLY",
+  "batch": "24a610653f8247cfa3f44c9371f59f2f",
+  "receiptSHA256": "060f1a92bea9d993d3a40187a217805f92fbb1bdd3e874be0769f1c2553163d4",
+  "receiptIdentity": {
+    "dev": 26,
+    "ino": 17871,
+    "mode": 33152,
+    "uid": 1000,
+    "gid": 1000,
+    "nlink": 1,
+    "size": 10090688,
+    "mtime_ns": 1791161361763345697,
+    "ctime_ns": 1791161361763345697
+  },
+  "sourceRowMembershipEqual": 5369,
+  "changedPaths": [
+    "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/dependency-tiers.json",
+    "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runner-dependency-inventory.json",
+    "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/dependency-tiers.json",
+    "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/runner-dependency-inventory.json",
+    "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/dependency-tiers.json",
+    "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/runner-dependency-inventory.json",
+    "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/mirror-source-transform-map.json"
+  ],
+  "profiles": [
+    {
+      "kind": "extension",
+      "inputRows": 116,
+      "rpcRows": 98,
+      "boundaryRows": 18,
+      "changedHashSizeRows": 17,
+      "toolRowsUnchanged": true,
+      "inventoryTierExact": true
+    },
+    {
+      "kind": "regression",
+      "inputRows": 113,
+      "rpcRows": 97,
+      "boundaryRows": 16,
+      "changedHashSizeRows": 16,
+      "toolRowsUnchanged": true,
+      "inventoryTierExact": true
+    },
+    {
+      "kind": "extra",
+      "inputRows": 118,
+      "rpcRows": 100,
+      "boundaryRows": 18,
+      "changedHashSizeRows": 17,
+      "toolRowsUnchanged": true,
+      "inventoryTierExact": true
+    }
+  ],
+  "originalFixtureLiteralRowsEqual": 148325,
+  "sourceEqual": false,
+  "limits": "Setup generated exactly six metadata files and map changes. Actual held lineage-before-write deficiency remains; source/body/current readiness and independent judgment are not awarded. Current POST metadata identities inspected, not all changed mutable code.",
+  "original122": "HELD"
+}

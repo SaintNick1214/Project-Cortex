@@ -1,0 +1,13 @@
+{
+  "directAttempt": "full-preservation01",
+  "errorObserved": "QA_PRESERVATION_INVENTORY",
+  "rawCapture": "Direct original process stderr appeared in tool output but no independent raw stderr file was saved. No reconstructed stack is represented as exact raw capture.",
+  "exactPreimages": [
+    "scripts--guard.mjs.text",
+    "runtime-freeze.json",
+    "qa-manifest.json",
+    "full-preservation.mjs.text"
+  ],
+  "followup": "runtime04 exact-source regression preserves old error and tests corrected historical-only copied path ordering; fresh full-preservation02 records exact stdout/stderr before finalization",
+  "native": "NOT_RUN"
+}

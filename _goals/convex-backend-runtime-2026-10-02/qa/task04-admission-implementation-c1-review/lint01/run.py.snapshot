@@ -1,0 +1,11 @@
+import json,hashlib,subprocess,sys,datetime,pathlib
+root=pathlib.Path('/workspace/Project-Cortex'); out=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c1-review'
+name=sys.argv[1]; argv=sys.argv[2:]; d=out/name; d.mkdir(exist_ok=False)
+def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+files=set(p for p in root.glob('convex-dev/**/*.ts'))|set(root.glob('src/**/*.ts'))|set(root.glob('tests/unit/domain/*.ts'))|set(root.glob('tests/unit/runtime*/*.ts'))|set(root.glob('work/resume/task04-admission-c1-review/*'))
+files|={root/p for p in ['package.json','package-lock.json','tsconfig.json','tsconfig.lint.json','eslint.config.js']}
+files|={root/'node_modules/jest/bin/jest.js',root/'node_modules/typescript/bin/tsc',root/'node_modules/eslint/bin/eslint.js'}
+def hashes():return [{'path':str(p.relative_to(root)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(files) if p.is_file()]
+pre=hashes(); (d/'pre-execution.json').write_text(json.dumps({'startedUTC':utc(),'cwd':str(root),'argv':argv,'discoveredTestFiles':[str(p.relative_to(root)) for p in sorted(files) if p.name.endswith('.test.ts')],'sourcesAndConfigs':pre},indent=2))
+r=subprocess.run(argv,cwd=root,capture_output=True,text=True); (d/'stdout.txt').write_text(r.stdout);(d/'stderr.txt').write_text(r.stderr)
+post=hashes();(d/'post-execution-sources.json').write_text(json.dumps(post,indent=2));(d/'result.json').write_text(json.dumps({'exitCode':r.returncode,'finishedUTC':utc(),'sourceChangedDuringExecution':[p for p in post if p not in pre]},indent=2));print(name,r.returncode);print(r.stdout[-2000:]);print(r.stderr[-3500:])

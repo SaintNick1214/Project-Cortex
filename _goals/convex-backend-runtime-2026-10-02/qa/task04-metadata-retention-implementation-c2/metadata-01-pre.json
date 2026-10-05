@@ -1,0 +1,1406 @@
+{
+  "utc": "2026-10-04T15:02:55.430179+00:00",
+  "files": {
+    "work/resume/task04-metadata-retention-implementation-c2/inputs.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126175153559371,
+        "inode": 911108
+      },
+      "objectBytes": 816,
+      "sha256": "0b33702a590623b8db66856a1dbb9ca07cf2ffe6834f8b17d13ccf3109b043db",
+      "bytes": 12368,
+      "beforeByteObject": "source-byte-store/0b33702a590623b8db66856a1dbb9ca07cf2ffe6834f8b17d13ccf3109b043db.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "e91e5e0ba3656e543151e4343271aab23780d2ff55548e7dea58369c4d6310bb"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/tsconfig.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529499813673,
+        "inode": 910927
+      },
+      "objectBytes": 204,
+      "sha256": "2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6",
+      "bytes": 311,
+      "beforeByteObject": "source-byte-store/2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "80e73e93a11e20070b17859f3a069f070137e4ab32a7be4b0b34aa454abb2b64"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791111980477100119,
+        "inode": 910928
+      },
+      "objectBytes": 44,
+      "sha256": "fb9e9c070c7e86f79b2bd46222300f9a42c52c9714dbb94ff668fc8608241243",
+      "bytes": 24,
+      "beforeByteObject": "source-byte-store/fb9e9c070c7e86f79b2bd46222300f9a42c52c9714dbb94ff668fc8608241243.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "08a1b48bf25e4408c94462d030de93c548c0794e6acd6efcc7ee1dbabf93a9c2"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/package.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529500021093,
+        "inode": 910989
+      },
+      "objectBytes": 251,
+      "sha256": "93cb824f4d1f69da8b8b421ec3852cbb9a88c81c12d127bdacfaa83ff96f284b",
+      "bytes": 396,
+      "beforeByteObject": "source-byte-store/93cb824f4d1f69da8b8b421ec3852cbb9a88c81c12d127bdacfaa83ff96f284b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cced477fcda14566ab98dae8b2b61b3b83d6cc0b797f2aa412c3187b086b611e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/schema.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112182900030625,
+        "inode": 910930
+      },
+      "objectBytes": 817,
+      "sha256": "114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7",
+      "bytes": 2901,
+      "beforeByteObject": "source-byte-store/114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "a1a11ddc944b2dcdb0faa93f9b9fce93176d9a7dd0b50a784111e664fd524159"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/lifecycle.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791117656119067671,
+        "inode": 910931
+      },
+      "objectBytes": 7391,
+      "sha256": "fcd9e057a86a894156f291aa83e67ca71b5184908a70f11c92ef8f74f0b2e36a",
+      "bytes": 28234,
+      "beforeByteObject": "source-byte-store/fcd9e057a86a894156f291aa83e67ca71b5184908a70f11c92ef8f74f0b2e36a.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "42355ffef2cb6e26285bc73cc581915377329e7036693eab27f287fb7ac31fb6"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/stage-pins.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174879510669,
+        "inode": 910932
+      },
+      "objectBytes": 243,
+      "sha256": "c9e82a0574accadc8015f22c52c77793e68623520075614be87551ee48678d72",
+      "bytes": 331,
+      "beforeByteObject": "source-byte-store/c9e82a0574accadc8015f22c52c77793e68623520075614be87551ee48678d72.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "14628c9133b6b6bde548bca047484558b7bdc5f2bd90c410cb82a5df56b1120a"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/runner.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147484905268,
+        "inode": 910933
+      },
+      "objectBytes": 6028,
+      "sha256": "52913cbb9aba896756268a579d6e9a51b5ae28b53b18c5e4a826bd20ce55a224",
+      "bytes": 19457,
+      "beforeByteObject": "source-byte-store/52913cbb9aba896756268a579d6e9a51b5ae28b53b18c5e4a826bd20ce55a224.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "290a9b751e42064e3fb903855a9c4614b6d57fb142adaad89e23bc1b98847b39"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/proofs.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791123756542397595,
+        "inode": 910934
+      },
+      "objectBytes": 3134,
+      "sha256": "a91d4b78e505f3b204f41f38e21096922f10444ca37c40ab4b9cc2c5dd7a41c1",
+      "bytes": 9133,
+      "beforeByteObject": "source-byte-store/a91d4b78e505f3b204f41f38e21096922f10444ca37c40ab4b9cc2c5dd7a41c1.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "796ef55760571c3bc02141ea2b6e12f98003e9d2d68254d3d05d621fd0274b36"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/store.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791111980476747986,
+        "inode": 910935
+      },
+      "objectBytes": 1909,
+      "sha256": "af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8",
+      "bytes": 5648,
+      "beforeByteObject": "source-byte-store/af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "471bb01e423c4ccfc04d1cabe3bf1adfd11f151f944e1c4c18aaaec3d1b2e434"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/guard.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115038276508760,
+        "inode": 910936
+      },
+      "objectBytes": 3634,
+      "sha256": "7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3",
+      "bytes": 11821,
+      "beforeByteObject": "source-byte-store/7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "605a41a65ab23dc3fd613e3ae81d3f79c267122e66d55723ec6bc615a7b711e8"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/canonical.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114930910138674,
+        "inode": 910937
+      },
+      "objectBytes": 1306,
+      "sha256": "7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860",
+      "bytes": 3300,
+      "beforeByteObject": "source-byte-store/7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "417b99e2171ab344f3e189d20bc2e0683fb8f7108f9c9a940199479c28ca2492"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observation-builder.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147208070486,
+        "inode": 911057
+      },
+      "objectBytes": 786,
+      "sha256": "9177ca05b01de96d176a42377e7f730c458738d9bf3676475ed42ac1efaee635",
+      "bytes": 1621,
+      "beforeByteObject": "source-byte-store/9177ca05b01de96d176a42377e7f730c458738d9bf3676475ed42ac1efaee635.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "1a112d62ab6f054caa4fb2c0f913081d2b6e672b99c1798324d0841188bafa9b"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/observer.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147484794515,
+        "inode": 910938
+      },
+      "objectBytes": 4937,
+      "sha256": "ac173303ee11ecd434a2d5f9930cabd915d7ce815de2f4c05602c6eae525b785",
+      "bytes": 17695,
+      "beforeByteObject": "source-byte-store/ac173303ee11ecd434a2d5f9930cabd915d7ce815de2f4c05602c6eae525b785.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "721aaee345fe537424fd23e5b1a7b4db6aff9764c767262f049eeefaaa9cfe20"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/managed.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112229306220954,
+        "inode": 910939
+      },
+      "objectBytes": 2823,
+      "sha256": "95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106",
+      "bytes": 11065,
+      "beforeByteObject": "source-byte-store/95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "79b123a084d209401dffd4920787f39cbeef5745bd2fcbecd3b9f5e8d5ebc8ac"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/installed.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174879386215,
+        "inode": 910940
+      },
+      "objectBytes": 1590,
+      "sha256": "0624068b08face2597763de8cf9ef8c4ee29bfe57ef6459a8895c2412e3eff36",
+      "bytes": 2925,
+      "beforeByteObject": "source-byte-store/0624068b08face2597763de8cf9ef8c4ee29bfe57ef6459a8895c2412e3eff36.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "aeb14b622f2f8703a71ac49e1a5bf8c60e2d02eab93bc7c959de04feac5574ff"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/validate.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115136627582196,
+        "inode": 910941
+      },
+      "objectBytes": 4791,
+      "sha256": "b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab",
+      "bytes": 14593,
+      "beforeByteObject": "source-byte-store/b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "b247517b53ac590d3a7aa21f05fe506fe55d608e36cd4dfe5f633135271eaa1e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/provider-cost.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147484497200,
+        "inode": 910942
+      },
+      "objectBytes": 1785,
+      "sha256": "6eca67ac8d6a6193b295cc09a66085d25cca66403b2c23d65d9958b6b7d49bcb",
+      "bytes": 5487,
+      "beforeByteObject": "source-byte-store/6eca67ac8d6a6193b295cc09a66085d25cca66403b2c23d65d9958b6b7d49bcb.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "bab0f8e07c563c6ac1c3b5b40d461141969c7b8e836aab37370efd778cb27b6f"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/repository-codec.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112182861884971,
+        "inode": 910943
+      },
+      "objectBytes": 588,
+      "sha256": "1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930",
+      "bytes": 1196,
+      "beforeByteObject": "source-byte-store/1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "59e8b5c197f009c8f8063c143fc7c8c81a2e7010ba202aa0a311dbfd655cb47a"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/contracts.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110624314966721,
+        "inode": 910944
+      },
+      "objectBytes": 1347,
+      "sha256": "f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031",
+      "bytes": 3550,
+      "beforeByteObject": "source-byte-store/f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "4a61c614978b1c3b20de00249c467ad83c0a3323916bd9fe6566e4ca8558dc35"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/cases.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529500217022,
+        "inode": 910945
+      },
+      "objectBytes": 2118,
+      "sha256": "be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248",
+      "bytes": 9008,
+      "beforeByteObject": "source-byte-store/be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "7dfae19fc31facf95693fa98884ae8175ee72fe4f0eef8dfae31b941f260402e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/requests.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529502079545,
+        "inode": 910946
+      },
+      "objectBytes": 1269,
+      "sha256": "24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f",
+      "bytes": 37191,
+      "beforeByteObject": "source-byte-store/24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "aeaa35641f5ace1b8e2adacb4a4719b954941dc459ddc2bf49a490ee761fe830"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex/convex.config.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791111980477048141,
+        "inode": 910947
+      },
+      "objectBytes": 135,
+      "sha256": "83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b",
+      "bytes": 148,
+      "beforeByteObject": "source-byte-store/83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "dae49a22d906d7065acb20b35cbbf0f7759dfea1f71b6c188812ae5db0a90333"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/schema-adverse.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112849965453784,
+        "inode": 910949
+      },
+      "objectBytes": 976,
+      "sha256": "be90d3f7b4ede588de4ac7ca9e4aa7bf856b454b89daf8530d197e9ac4ac1690",
+      "bytes": 2073,
+      "beforeByteObject": "source-byte-store/be90d3f7b4ede588de4ac7ca9e4aa7bf856b454b89daf8530d197e9ac4ac1690.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "68abfaeb3c8e1bf9a67f425fc6d469f0803c523cc2ec88a6d9f025279aa0ee66"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-stage-phase.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115256071779770,
+        "inode": 910950
+      },
+      "objectBytes": 1214,
+      "sha256": "fcc3b56e6697b4cb6e08e7e1d7876eb75cd7f5e5b33c5ab22b542bd81bbcc66a",
+      "bytes": 2633,
+      "beforeByteObject": "source-byte-store/fcc3b56e6697b4cb6e08e7e1d7876eb75cd7f5e5b33c5ab22b542bd81bbcc66a.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c493f5149ead15bcfcd9a2f02616457542f0b9a9ca92f08d185b0f900f39033a"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174607115589,
+        "inode": 910951
+      },
+      "objectBytes": 4139,
+      "sha256": "bd1a7016217cb13668b21b8b6a4144ea3b5e4b958d3e29e0547e52e94decfd96",
+      "bytes": 14805,
+      "beforeByteObject": "source-byte-store/bd1a7016217cb13668b21b8b6a4144ea3b5e4b958d3e29e0547e52e94decfd96.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "38087da4d311660e2b2b76d6776c831573b3b55665a14cc54685c2455666e367"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-late.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114307728320742,
+        "inode": 910952
+      },
+      "objectBytes": 1696,
+      "sha256": "84942735f8a0e9f5b4bbe1c2b007ecb5e50790777f2a813afd0443dfa4544536",
+      "bytes": 4413,
+      "beforeByteObject": "source-byte-store/84942735f8a0e9f5b4bbe1c2b007ecb5e50790777f2a813afd0443dfa4544536.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "9e371e10e4f47fd995e532864e25b02db3c484c7e36d81b76d7e92aba37092d8"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-resource.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791124926204304755,
+        "inode": 910953
+      },
+      "objectBytes": 1879,
+      "sha256": "db6a0d0eefa561c9de54b9d9203cafad349fbde330a5009228538797b1ae6b71",
+      "bytes": 4992,
+      "beforeByteObject": "source-byte-store/db6a0d0eefa561c9de54b9d9203cafad349fbde330a5009228538797b1ae6b71.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "fd28e104e40b9deac46a9070e88d886bf480cc3d4bbb5f47126951716d5643bf"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-stage-window.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114097049953365,
+        "inode": 910955
+      },
+      "objectBytes": 926,
+      "sha256": "0be6ff3834ca6d18aabc06a5821fa522e8a1f366c8d2a683359dec68a343791e",
+      "bytes": 1745,
+      "beforeByteObject": "source-byte-store/0be6ff3834ca6d18aabc06a5821fa522e8a1f366c8d2a683359dec68a343791e.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "65d7b19e7cd06771d3f42907ec1dd65dc1f0abeee28199c3c2b762809b0af213"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-owned.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115334501992391,
+        "inode": 910956
+      },
+      "objectBytes": 2119,
+      "sha256": "be679cb8312f01c66e624595ae1182db9aac87e4942ca2a366d1eb2f94f99f8c",
+      "bytes": 5644,
+      "beforeByteObject": "source-byte-store/be679cb8312f01c66e624595ae1182db9aac87e4942ca2a366d1eb2f94f99f8c.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cc5a31a836708b825b17c48c4dcac0af95ab29c7cebc03768de1c7330ce86346"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-codec.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114172387704009,
+        "inode": 910957
+      },
+      "objectBytes": 451,
+      "sha256": "78e95553d5e41a755f54850b56400f0b2a95e6f7c5056e4075f85a9fa9663106",
+      "bytes": 769,
+      "beforeByteObject": "source-byte-store/78e95553d5e41a755f54850b56400f0b2a95e6f7c5056e4075f85a9fa9663106.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c38fed2dd2092a8994a30508858a31cbac12e2048c129aace46dee89cbbf5d8c"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-account-load.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114141224580296,
+        "inode": 910958
+      },
+      "objectBytes": 1144,
+      "sha256": "cef2db9eb213601980017cb5530003acd3760340759d056d4ad0f3795c657188",
+      "bytes": 2530,
+      "beforeByteObject": "source-byte-store/cef2db9eb213601980017cb5530003acd3760340759d056d4ad0f3795c657188.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "0351360834b4b81fbb4aa307625030cf06ebc1a7594b0a3734c40f4cb63060b3"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-money.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114273083752108,
+        "inode": 910959
+      },
+      "objectBytes": 1261,
+      "sha256": "6921ac95e275024ce5cacbb3e8d46d94079545e5bebca4e4e1d5ac64fa7937c6",
+      "bytes": 2772,
+      "beforeByteObject": "source-byte-store/6921ac95e275024ce5cacbb3e8d46d94079545e5bebca4e4e1d5ac64fa7937c6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "d9f0a197e77f79d0031416df1233c12c39ddbc58ceb2a885a3a35b85d302f45c"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/managed.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112392164536353,
+        "inode": 910960
+      },
+      "objectBytes": 1937,
+      "sha256": "9f773be684c650fc6f475702d0d302b088d738aef07a36917f963045e18144a6",
+      "bytes": 5874,
+      "beforeByteObject": "source-byte-store/9f773be684c650fc6f475702d0d302b088d738aef07a36917f963045e18144a6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cf24bada6cccced24c8308f17f8be78777c3a5304ef35dbaef9cb681d6264f8d"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-async.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114060660290465,
+        "inode": 910961
+      },
+      "objectBytes": 571,
+      "sha256": "0ee326a2a03069ae72a88646f72d39a09edc457a3a4e0b5211c016688079b870",
+      "bytes": 1013,
+      "beforeByteObject": "source-byte-store/0ee326a2a03069ae72a88646f72d39a09edc457a3a4e0b5211c016688079b870.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "3272f6368ae11f9a886b380b43c6c1a3a49204aec6b5cb894052e7e16c3504ec"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-prefix-helpers.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118424263730229,
+        "inode": 910962
+      },
+      "objectBytes": 931,
+      "sha256": "b78e8bafbcdbf16047cd0bced78fcbda9c78c52ef0c56c23eaf8e730b2f60e0a",
+      "bytes": 2090,
+      "beforeByteObject": "source-byte-store/b78e8bafbcdbf16047cd0bced78fcbda9c78c52ef0c56c23eaf8e730b2f60e0a.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "8e2d6abb82df3ebfdd8d7088155b9a5bd0393e2fdd1cf0204177b19b43e4a014"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-stage-wait.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114503729824134,
+        "inode": 910963
+      },
+      "objectBytes": 964,
+      "sha256": "8809505382d99e38ca0550715d52f3ddf7d6295f3f4b9a9ad602dd85ab11306b",
+      "bytes": 1791,
+      "beforeByteObject": "source-byte-store/8809505382d99e38ca0550715d52f3ddf7d6295f3f4b9a9ad602dd85ab11306b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c00ccb5525777e37baec642b9a6517ba315e011fa39b4a19276ce07ddb1268d6"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/lifecycle.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112381010410736,
+        "inode": 910964
+      },
+      "objectBytes": 2170,
+      "sha256": "69dcf8fa9af0b56a71d5a2aebf33bd75ab9b511549bab3d796db7f326f5d3f58",
+      "bytes": 6540,
+      "beforeByteObject": "source-byte-store/69dcf8fa9af0b56a71d5a2aebf33bd75ab9b511549bab3d796db7f326f5d3f58.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cca8204f53478a5b5fe69ee5519c977ee68e5f67d88a4c89816cf481137c5e8f"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/proofs.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112722057738797,
+        "inode": 910965
+      },
+      "objectBytes": 1842,
+      "sha256": "5312eb0705a2e33656697cb2e00e2c87751b815917376aac4c9f62d4601441a1",
+      "bytes": 4659,
+      "beforeByteObject": "source-byte-store/5312eb0705a2e33656697cb2e00e2c87751b815917376aac4c9f62d4601441a1.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "223cf1ac316a54098f51b03c2e2cf4f9d17f07dc1bbe0145b16f6a23ed6e37a6"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/adapter.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791111929378781044,
+        "inode": 910966
+      },
+      "objectBytes": 1416,
+      "sha256": "b9b9ec095819e35107c9a52f8f62c6fa3f66df8e182251f038d64c860dcfb2b4",
+      "bytes": 3041,
+      "beforeByteObject": "source-byte-store/b9b9ec095819e35107c9a52f8f62c6fa3f66df8e182251f038d64c860dcfb2b4.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c7b2823ae1e04a3b41a9478caf22f315fa7e8143df5c3e59c03031cd7a7b9b76"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-prefix.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114097045620091,
+        "inode": 910968
+      },
+      "objectBytes": 1167,
+      "sha256": "42d6959ff24717a11924cd5ebef30e8ad882bf0714fc9e60364933b7133668c1",
+      "bytes": 2688,
+      "beforeByteObject": "source-byte-store/42d6959ff24717a11924cd5ebef30e8ad882bf0714fc9e60364933b7133668c1.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "4f614ded25048ebddc6088a2dcecaa6044653e0049f594b02ed2c5c835fa2167"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-retained-refinements.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118424268070117,
+        "inode": 910969
+      },
+      "objectBytes": 975,
+      "sha256": "6fe7f5ec05d5abc54a342281cb812825f164695f0bcfb596c8bb353a1388de99",
+      "bytes": 2021,
+      "beforeByteObject": "source-byte-store/6fe7f5ec05d5abc54a342281cb812825f164695f0bcfb596c8bb353a1388de99.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "1cb5ddfb3641860efe572741c1abdd468b799e3d035c2146170194f54596981d"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/controls.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791113301515980145,
+        "inode": 910970
+      },
+      "objectBytes": 3397,
+      "sha256": "f56e5030a6231bfaa3c561059e13a6506a6e74a7712a5de62be597c7102b0552",
+      "bytes": 9214,
+      "beforeByteObject": "source-byte-store/f56e5030a6231bfaa3c561059e13a6506a6e74a7712a5de62be597c7102b0552.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cf9fe8b1d470964cb419582646a517d970b642188a854dc3e823cb86179f79aa"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/harness.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791113487722811501,
+        "inode": 910971
+      },
+      "objectBytes": 1690,
+      "sha256": "c9a9441d7976c7fa5f9cdc432e9b2898008d3673bafe0b3828ba2039f88de1cc",
+      "bytes": 4445,
+      "beforeByteObject": "source-byte-store/c9a9441d7976c7fa5f9cdc432e9b2898008d3673bafe0b3828ba2039f88de1cc.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "a60b0ab490dc966ad85c015e82b8747b97454445890a570e92d26f4dcd054162"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-stream.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114012587805682,
+        "inode": 910972
+      },
+      "objectBytes": 1230,
+      "sha256": "ae4a97826e23b10c9fc09fed7384c3adb7328e3f72f53b632cd2f8ff6b773ac9",
+      "bytes": 2678,
+      "beforeByteObject": "source-byte-store/ae4a97826e23b10c9fc09fed7384c3adb7328e3f72f53b632cd2f8ff6b773ac9.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c3c3ec62850afe65192a48cf196813dfb7de533c6b5e994465d1af3a7ffcbf15"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-reader.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114594871234134,
+        "inode": 910973
+      },
+      "objectBytes": 1092,
+      "sha256": "e7b815b963c43e965d9ebbd886c2ab9d4716e13828ec7b7ce4719e49b43b9a33",
+      "bytes": 2201,
+      "beforeByteObject": "source-byte-store/e7b815b963c43e965d9ebbd886c2ab9d4716e13828ec7b7ce4719e49b43b9a33.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "9bf827f29e6b6cfb9a4582ee94afa51a9cf6374205689a4baf536cefba48be99"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-admission.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118345558236786,
+        "inode": 910974
+      },
+      "objectBytes": 1688,
+      "sha256": "b4611f3300c30ea85bf12680b06d2fe7077c2562575ac790855fd888ae8a8a41",
+      "bytes": 4127,
+      "beforeByteObject": "source-byte-store/b4611f3300c30ea85bf12680b06d2fe7077c2562575ac790855fd888ae8a8a41.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "fa662776b292fdba01146ed091315abf6a9c03f296a05b3644e9755090443f36"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-stream.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115290246529029,
+        "inode": 910975
+      },
+      "objectBytes": 1241,
+      "sha256": "0184ae4717c0b5aa9523c51ba169c841e6456a200b9c6c125c0a9a8cb84cee24",
+      "bytes": 2907,
+      "beforeByteObject": "source-byte-store/0184ae4717c0b5aa9523c51ba169c841e6456a200b9c6c125c0a9a8cb84cee24.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "9ca3dbc620ae0cdba89d4c9b6cc9bf42a0bb126313b99826aeae81f07175744c"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/late-accounting.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112306951494776,
+        "inode": 910976
+      },
+      "objectBytes": 1168,
+      "sha256": "5d3b4fa479b2d037c9a67759680dc7c7227d83d6f942282d2a9bf25bf134d42f",
+      "bytes": 3094,
+      "beforeByteObject": "source-byte-store/5d3b4fa479b2d037c9a67759680dc7c7227d83d6f942282d2a9bf25bf134d42f.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c3a1d5aeff602c5c4421b96ecd7458c230548ef0803e4e2bc5718bbc5b951ba3"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/reader-wrapper.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114992537639243,
+        "inode": 910977
+      },
+      "objectBytes": 120,
+      "sha256": "881a011133e7e2f74bb6e5deea41928e18540df21fcd570e13f583f164df4cff",
+      "bytes": 121,
+      "beforeByteObject": "source-byte-store/881a011133e7e2f74bb6e5deea41928e18540df21fcd570e13f583f164df4cff.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "8172a7b89e8e96f0b20b6c4a8bcd98f052b1ddf08b69ee443b6a36033a76e836"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-collect-original-groups.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118424263576910,
+        "inode": 910978
+      },
+      "objectBytes": 1370,
+      "sha256": "a377f2a7e559daaaae1b38751c2d11f2e3705f102bd9d9da31e5be2496750afd",
+      "bytes": 3006,
+      "beforeByteObject": "source-byte-store/a377f2a7e559daaaae1b38751c2d11f2e3705f102bd9d9da31e5be2496750afd.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "5dd53d2d187a8a2d784a8aee022f7b1bf06c0b602eb2553cee850fae166bd015"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-staging.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791113985554680558,
+        "inode": 910979
+      },
+      "objectBytes": 1577,
+      "sha256": "a20dd71d7fa7904bf06945fd26d6635a1a15969f1d43b7802d8e5a0c50665e32",
+      "bytes": 3641,
+      "beforeByteObject": "source-byte-store/a20dd71d7fa7904bf06945fd26d6635a1a15969f1d43b7802d8e5a0c50665e32.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "f99832e254ed99e6d0a3c38b15f10f405e3c88153f0b8370e5bb2ed38eaddb55"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/runner.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791113487722979106,
+        "inode": 910980
+      },
+      "objectBytes": 2354,
+      "sha256": "08e53192902c0f971456e5583d6184439762d21c72c0831d5d4aef221c654787",
+      "bytes": 7493,
+      "beforeByteObject": "source-byte-store/08e53192902c0f971456e5583d6184439762d21c72c0831d5d4aef221c654787.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "ea8af6baf0371ff37231e0a6b6b1b89c25b97947353a392914dbf1ab76145e6c"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/all.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112849965600751,
+        "inode": 910981
+      },
+      "objectBytes": 162,
+      "sha256": "01fabe953bc8cd609708aa7ee2142d49ff5e3f53256d11338846bec01b0e350e",
+      "bytes": 312,
+      "beforeByteObject": "source-byte-store/01fabe953bc8cd609708aa7ee2142d49ff5e3f53256d11338846bec01b0e350e.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "8a461d00b0a5084e2aa36e72500f7a8898220cd74d7995176bec9aac602da39b"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/observer.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791113421061476681,
+        "inode": 910982
+      },
+      "objectBytes": 2723,
+      "sha256": "7b3168395516b0a0470336306679f7a8c9f90a6bcb5b6c1929a8def2f3e8cd06",
+      "bytes": 8130,
+      "beforeByteObject": "source-byte-store/7b3168395516b0a0470336306679f7a8c9f90a6bcb5b6c1929a8def2f3e8cd06.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "8e05e4a8846280e7e74259f29674d2531f9b582413899b3d3df6e2412fa19a38"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-purge.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147485582498,
+        "inode": 910983
+      },
+      "objectBytes": 1712,
+      "sha256": "c7a1c10086058be1cf6c4ccb9a0911fe93594462c30642c0d12bf34b47be1aaa",
+      "bytes": 4996,
+      "beforeByteObject": "source-byte-store/c7a1c10086058be1cf6c4ccb9a0911fe93594462c30642c0d12bf34b47be1aaa.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "8e16cc355b0b9a41127d63c454a1b5bf094f4bc2b50bc958ab9e056b9757140d"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791113956281998554,
+        "inode": 910984
+      },
+      "objectBytes": 1291,
+      "sha256": "c21e1bede9bb877f336ab8df8d864a1f931dd047b47ba638fb4bcf708a886696",
+      "bytes": 3032,
+      "beforeByteObject": "source-byte-store/c21e1bede9bb877f336ab8df8d864a1f931dd047b47ba638fb4bcf708a886696.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "6de48c14789175240b6909f1b2557eb910c68b571383cbc3ef0f05a60f3faf4a"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118605183711113,
+        "inode": 910985
+      },
+      "objectBytes": 4486,
+      "sha256": "0a51d46d2e0347d48e36d803e573df73eb66a579c8c0075f4c57ba63a79401bd",
+      "bytes": 15727,
+      "beforeByteObject": "source-byte-store/0a51d46d2e0347d48e36d803e573df73eb66a579c8c0075f4c57ba63a79401bd.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "4d25f7a7ebed6524cc760368789cbb537a3b1f290c52fb695281b0c3b16fbdf2"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-stage.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147485186873,
+        "inode": 910986
+      },
+      "objectBytes": 2560,
+      "sha256": "190c2848d87545c8f8fa814317f608052d6b1007bb0ac9ce9f265792879beb37",
+      "bytes": 6501,
+      "beforeByteObject": "source-byte-store/190c2848d87545c8f8fa814317f608052d6b1007bb0ac9ce9f265792879beb37.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "fb29257ba80b541701ca61c71132d66ca9dae48a79a43320c8e0e9abaf031aec"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-reader-dependencies.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118173741866121,
+        "inode": 910987
+      },
+      "objectBytes": 1106,
+      "sha256": "9c8686338f9e5821ffe168be5d4577852a66fa4e9700dc1d354d0f714243e56b",
+      "bytes": 2226,
+      "beforeByteObject": "source-byte-store/9c8686338f9e5821ffe168be5d4577852a66fa4e9700dc1d354d0f714243e56b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "d1eb07cee9e043f591a252d3c4c16807182d96d9bddf52d8ad271f1a460a6598"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability-c10.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791118605183873358,
+        "inode": 910988
+      },
+      "objectBytes": 986,
+      "sha256": "3254cffee9093b902b5b66cd5e5afa93d2471aad557f1ba6ad90ab7662bb95b5",
+      "bytes": 1919,
+      "beforeByteObject": "source-byte-store/3254cffee9093b902b5b66cd5e5afa93d2471aad557f1ba6ad90ab7662bb95b5.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "90f1e90f4a9b0d7979fae51aef0ee8858a38fa3f44a8a3db4da226386c3198af"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/tsconfig.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791124319324718545,
+        "inode": 911009
+      },
+      "objectBytes": 204,
+      "sha256": "2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6",
+      "bytes": 311,
+      "beforeByteObject": "source-byte-store/2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "80e73e93a11e20070b17859f3a069f070137e4ab32a7be4b0b34aa454abb2b64"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/source-map.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174884533664,
+        "inode": 911031
+      },
+      "objectBytes": 968,
+      "sha256": "a5f785dc827aacef3d23c0671519d3653c3008ae9722c52df4f7e5f70678f04d",
+      "bytes": 1667,
+      "beforeByteObject": "source-byte-store/a5f785dc827aacef3d23c0671519d3653c3008ae9722c52df4f7e5f70678f04d.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "e123fd9d21ad69de45801ebf072e9fbe9835d519f253cbbed4e1ec377bf75e1f"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/package.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529500021093,
+        "inode": 911032
+      },
+      "objectBytes": 251,
+      "sha256": "93cb824f4d1f69da8b8b421ec3852cbb9a88c81c12d127bdacfaa83ff96f284b",
+      "bytes": 396,
+      "beforeByteObject": "source-byte-store/93cb824f4d1f69da8b8b421ec3852cbb9a88c81c12d127bdacfaa83ff96f284b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cced477fcda14566ab98dae8b2b61b3b83d6cc0b797f2aa412c3187b086b611e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/schema.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112182900030625,
+        "inode": 911011
+      },
+      "objectBytes": 817,
+      "sha256": "114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7",
+      "bytes": 2901,
+      "beforeByteObject": "source-byte-store/114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "a1a11ddc944b2dcdb0faa93f9b9fce93176d9a7dd0b50a784111e664fd524159"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/lifecycle.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791117656119067671,
+        "inode": 911012
+      },
+      "objectBytes": 7391,
+      "sha256": "fcd9e057a86a894156f291aa83e67ca71b5184908a70f11c92ef8f74f0b2e36a",
+      "bytes": 28234,
+      "beforeByteObject": "source-byte-store/fcd9e057a86a894156f291aa83e67ca71b5184908a70f11c92ef8f74f0b2e36a.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "42355ffef2cb6e26285bc73cc581915377329e7036693eab27f287fb7ac31fb6"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/stage-pins.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174879510669,
+        "inode": 911013
+      },
+      "objectBytes": 243,
+      "sha256": "c9e82a0574accadc8015f22c52c77793e68623520075614be87551ee48678d72",
+      "bytes": 331,
+      "beforeByteObject": "source-byte-store/c9e82a0574accadc8015f22c52c77793e68623520075614be87551ee48678d72.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "14628c9133b6b6bde548bca047484558b7bdc5f2bd90c410cb82a5df56b1120a"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/runner.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174884397078,
+        "inode": 911014
+      },
+      "objectBytes": 6038,
+      "sha256": "d11612fde9c41238374152959c2a76a6bf98129eb587f804f5dc7a20a732f04d",
+      "bytes": 19471,
+      "beforeByteObject": "source-byte-store/d11612fde9c41238374152959c2a76a6bf98129eb587f804f5dc7a20a732f04d.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "a8c68ca115137f3d71220aed21be6c7373c486b2ee2226cd0305896db1c51812"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/proofs.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791123756542397595,
+        "inode": 911015
+      },
+      "objectBytes": 3134,
+      "sha256": "a91d4b78e505f3b204f41f38e21096922f10444ca37c40ab4b9cc2c5dd7a41c1",
+      "bytes": 9133,
+      "beforeByteObject": "source-byte-store/a91d4b78e505f3b204f41f38e21096922f10444ca37c40ab4b9cc2c5dd7a41c1.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "796ef55760571c3bc02141ea2b6e12f98003e9d2d68254d3d05d621fd0274b36"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/store.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791111980476747986,
+        "inode": 911016
+      },
+      "objectBytes": 1909,
+      "sha256": "af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8",
+      "bytes": 5648,
+      "beforeByteObject": "source-byte-store/af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "471bb01e423c4ccfc04d1cabe3bf1adfd11f151f944e1c4c18aaaec3d1b2e434"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/guard.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115038276508760,
+        "inode": 911017
+      },
+      "objectBytes": 3634,
+      "sha256": "7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3",
+      "bytes": 11821,
+      "beforeByteObject": "source-byte-store/7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "605a41a65ab23dc3fd613e3ae81d3f79c267122e66d55723ec6bc615a7b711e8"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/canonical.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791114930910138674,
+        "inode": 911018
+      },
+      "objectBytes": 1306,
+      "sha256": "7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860",
+      "bytes": 3300,
+      "beforeByteObject": "source-byte-store/7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "417b99e2171ab344f3e189d20bc2e0683fb8f7108f9c9a940199479c28ca2492"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/observation-builder.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147208070486,
+        "inode": 911100
+      },
+      "objectBytes": 786,
+      "sha256": "9177ca05b01de96d176a42377e7f730c458738d9bf3676475ed42ac1efaee635",
+      "bytes": 1621,
+      "beforeByteObject": "source-byte-store/9177ca05b01de96d176a42377e7f730c458738d9bf3676475ed42ac1efaee635.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "1a112d62ab6f054caa4fb2c0f913081d2b6e672b99c1798324d0841188bafa9b"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/dummy-port.d.mts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791117656150826129,
+        "inode": 911019
+      },
+      "objectBytes": 95,
+      "sha256": "8f6bb4b5cc0f6a0b06d900e5090c6a688522afe650bb159b0e1df25b16593d53",
+      "bytes": 95,
+      "beforeByteObject": "source-byte-store/8f6bb4b5cc0f6a0b06d900e5090c6a688522afe650bb159b0e1df25b16593d53.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "6f30747f333f6762652e33a3b7b032f199dfabe97a5af189c48138bcac2fff82"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/observer.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147484794515,
+        "inode": 911020
+      },
+      "objectBytes": 4937,
+      "sha256": "ac173303ee11ecd434a2d5f9930cabd915d7ce815de2f4c05602c6eae525b785",
+      "bytes": 17695,
+      "beforeByteObject": "source-byte-store/ac173303ee11ecd434a2d5f9930cabd915d7ce815de2f4c05602c6eae525b785.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "721aaee345fe537424fd23e5b1a7b4db6aff9764c767262f049eeefaaa9cfe20"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/managed.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112229306220954,
+        "inode": 911021
+      },
+      "objectBytes": 2823,
+      "sha256": "95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106",
+      "bytes": 11065,
+      "beforeByteObject": "source-byte-store/95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "79b123a084d209401dffd4920787f39cbeef5745bd2fcbecd3b9f5e8d5ebc8ac"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/installed.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174879386215,
+        "inode": 911022
+      },
+      "objectBytes": 1590,
+      "sha256": "0624068b08face2597763de8cf9ef8c4ee29bfe57ef6459a8895c2412e3eff36",
+      "bytes": 2925,
+      "beforeByteObject": "source-byte-store/0624068b08face2597763de8cf9ef8c4ee29bfe57ef6459a8895c2412e3eff36.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "aeb14b622f2f8703a71ac49e1a5bf8c60e2d02eab93bc7c959de04feac5574ff"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/validate.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791115136627582196,
+        "inode": 911023
+      },
+      "objectBytes": 4791,
+      "sha256": "b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab",
+      "bytes": 14593,
+      "beforeByteObject": "source-byte-store/b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "b247517b53ac590d3a7aa21f05fe506fe55d608e36cd4dfe5f633135271eaa1e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/dummy-port.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126174607473161,
+        "inode": 911024
+      },
+      "objectBytes": 342,
+      "sha256": "5c4a41112ce66ce898fa37b7ea494763c6a7818b4e2852fa04a5228fac1a9ed8",
+      "bytes": 760,
+      "beforeByteObject": "source-byte-store/5c4a41112ce66ce898fa37b7ea494763c6a7818b4e2852fa04a5228fac1a9ed8.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "85d46db2d22e97766aefa2bb2c06f7ef98c5fedb3aa02577e75d9d5f93af0a2d"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/provider-cost.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126147484497200,
+        "inode": 911025
+      },
+      "objectBytes": 1785,
+      "sha256": "6eca67ac8d6a6193b295cc09a66085d25cca66403b2c23d65d9958b6b7d49bcb",
+      "bytes": 5487,
+      "beforeByteObject": "source-byte-store/6eca67ac8d6a6193b295cc09a66085d25cca66403b2c23d65d9958b6b7d49bcb.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "bab0f8e07c563c6ac1c3b5b40d461141969c7b8e836aab37370efd778cb27b6f"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/repository-codec.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791112182861884971,
+        "inode": 911026
+      },
+      "objectBytes": 588,
+      "sha256": "1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930",
+      "bytes": 1196,
+      "beforeByteObject": "source-byte-store/1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "59e8b5c197f009c8f8063c143fc7c8c81a2e7010ba202aa0a311dbfd655cb47a"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/contracts.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110624314966721,
+        "inode": 911027
+      },
+      "objectBytes": 1347,
+      "sha256": "f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031",
+      "bytes": 3550,
+      "beforeByteObject": "source-byte-store/f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "4a61c614978b1c3b20de00249c467ad83c0a3323916bd9fe6566e4ca8558dc35"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/cases.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529500217022,
+        "inode": 911028
+      },
+      "objectBytes": 2118,
+      "sha256": "be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248",
+      "bytes": 9008,
+      "beforeByteObject": "source-byte-store/be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "7dfae19fc31facf95693fa98884ae8175ee72fe4f0eef8dfae31b941f260402e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/requests.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791110529502079545,
+        "inode": 911029
+      },
+      "objectBytes": 1269,
+      "sha256": "24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f",
+      "bytes": 37191,
+      "beforeByteObject": "source-byte-store/24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "aeaa35641f5ace1b8e2adacb4a4719b954941dc459ddc2bf49a490ee761fe830"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex/convex.config.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791111980477048141,
+        "inode": 911030
+      },
+      "objectBytes": 135,
+      "sha256": "83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b",
+      "bytes": 148,
+      "beforeByteObject": "source-byte-store/83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "dae49a22d906d7065acb20b35cbbf0f7759dfea1f71b6c188812ae5db0a90333"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/eslint.config.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106370034115433,
+        "inode": 910992
+      },
+      "objectBytes": 458,
+      "sha256": "ff4e17e06639d00231a544f48b9431e41895e6f589ab5aa07883a915f158ddd8",
+      "bytes": 972,
+      "beforeByteObject": "source-byte-store/ff4e17e06639d00231a544f48b9431e41895e6f589ab5aa07883a915f158ddd8.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "a4a36d341e80c1247a3b1980f6f089855d17d61a642d6ccf86a9d551f452970e"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/initial14-manifest.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106370034007751,
+        "inode": 911007
+      },
+      "objectBytes": 5393,
+      "sha256": "6588994a04a5d7a2ead13bf80c82b1e5b0a11c4bf44a5cc1f40d0b85cc16d1ae",
+      "bytes": 21298,
+      "beforeByteObject": "source-byte-store/6588994a04a5d7a2ead13bf80c82b1e5b0a11c4bf44a5cc1f40d0b85cc16d1ae.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "60aa72287a75697a8adb04e300d1ccf9ed00b83f5213e6ca68623c327d596860"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/offline-check.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106370034232002,
+        "inode": 910994
+      },
+      "objectBytes": 5123,
+      "sha256": "e04d5f128fa16da8ec96dfb8862d405a9c170a15130b9b1076df0fdbff1fb2ce",
+      "bytes": 19665,
+      "beforeByteObject": "source-byte-store/e04d5f128fa16da8ec96dfb8862d405a9c170a15130b9b1076df0fdbff1fb2ce.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "194f4ccd1bc726c719449c455d12207ba43655b489bc1225b6ed228cf930178c"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/refinement-check.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106370034445223,
+        "inode": 910995
+      },
+      "objectBytes": 2715,
+      "sha256": "63031b77418daf4bc0265e33a5a2af0a611dd0cf6e3e44ba25e4799db964a7c6",
+      "bytes": 8929,
+      "beforeByteObject": "source-byte-store/63031b77418daf4bc0265e33a5a2af0a611dd0cf6e3e44ba25e4799db964a7c6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "0e6f7c950a2242161cfb6f79ae1d773179f098912519c8e522b55c9b5da6a724"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/independent.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106440335105720,
+        "inode": 910996
+      },
+      "objectBytes": 2676,
+      "sha256": "a059cdbc8a750cfa48cdc2e05df11cbcd9e84be23ad98102e11cac8161291ecb",
+      "bytes": 8639,
+      "beforeByteObject": "source-byte-store/a059cdbc8a750cfa48cdc2e05df11cbcd9e84be23ad98102e11cac8161291ecb.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c9722dbacc8a830120fdb8d47cae30518acb5cac2363f9b890700fb661ef2b66"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/hostile.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106370034355866,
+        "inode": 910997
+      },
+      "objectBytes": 2334,
+      "sha256": "fbf1bbfa41bb378a385321cdb49030a808b0988ec4e78ed523d5d3454eba1d8e",
+      "bytes": 6579,
+      "beforeByteObject": "source-byte-store/fbf1bbfa41bb378a385321cdb49030a808b0988ec4e78ed523d5d3454eba1d8e.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "cbec9156e64c63d8e1b4d4bd7bcccf71e6c8608ccb4f10edee6e948e7132d21d"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/tsconfig.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791105156682019846,
+        "inode": 910999
+      },
+      "objectBytes": 204,
+      "sha256": "2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6",
+      "bytes": 311,
+      "beforeByteObject": "source-byte-store/2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "80e73e93a11e20070b17859f3a069f070137e4ab32a7be4b0b34aa454abb2b64"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/package.json": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791105412749588737,
+        "inode": 911006
+      },
+      "objectBytes": 281,
+      "sha256": "58f0c93393f5f1dcbd72fd813353fe96109b95754d9ffaefb3608713e19a6583",
+      "bytes": 521,
+      "beforeByteObject": "source-byte-store/58f0c93393f5f1dcbd72fd813353fe96109b95754d9ffaefb3608713e19a6583.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c9782f72fad6108e8df0101350559acc3a03af270b501f370ad38e2db54128cf"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/schema.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791105086762622071,
+        "inode": 911001
+      },
+      "objectBytes": 240,
+      "sha256": "9708cf57a155968f185f044d13e0e822cb0a4fcbc4a52c20130eacbb5442d3ae",
+      "bytes": 340,
+      "beforeByteObject": "source-byte-store/9708cf57a155968f185f044d13e0e822cb0a4fcbc4a52c20130eacbb5442d3ae.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "c07a944d5c0cafbb2954ee0e9e7bc23624919d3ec72a28997e713e5dcf1042f7"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/runner.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791105290467213507,
+        "inode": 911002
+      },
+      "objectBytes": 1709,
+      "sha256": "b7dcf40969231afe4b813b93c3a8d35a0f5bbf15fd270bf27cc12c73ad30181b",
+      "bytes": 4166,
+      "beforeByteObject": "source-byte-store/b7dcf40969231afe4b813b93c3a8d35a0f5bbf15fd270bf27cc12c73ad30181b.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "06620b21f46a1886932f37a842a71ed21f9d5f59ad74ade16ef885ce7d5eaeef"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/compiled.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791105333925194966,
+        "inode": 911003
+      },
+      "objectBytes": 2342,
+      "sha256": "316e64e513049dd401758f2d74b61f7c7a09c5f50e24344438627178c5ccf354",
+      "bytes": 9400,
+      "beforeByteObject": "source-byte-store/316e64e513049dd401758f2d74b61f7c7a09c5f50e24344438627178c5ccf354.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "276111549f978689a1dc82e17b389a4165b89b7a1a69cd8e04b5cf64c0f832e6"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/guard.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791106099187090146,
+        "inode": 911004
+      },
+      "objectBytes": 4172,
+      "sha256": "5bcb1c1de8c449673cf5756bd6c8fb0acbae46fb187cb900b83779369059b979",
+      "bytes": 13936,
+      "beforeByteObject": "source-byte-store/5bcb1c1de8c449673cf5756bd6c8fb0acbae46fb187cb900b83779369059b979.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "293e711470f62d8d53a026aded644de90ac915c49efaee297ee99770cf295e90"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/canonical.ts": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791105086757309481,
+        "inode": 911005
+      },
+      "objectBytes": 1279,
+      "sha256": "ac599b8b2bd1a917f1e9b5b8c6e90565fe4ddbc9d660d99c4b9faffa450fb8b6",
+      "bytes": 3206,
+      "beforeByteObject": "source-byte-store/ac599b8b2bd1a917f1e9b5b8c6e90565fe4ddbc9d660d99c4b9faffa450fb8b6.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "09b5555802798cfa2852dbf5722a40be529ff8fa95cbdd01f8ba2faf062c10ce"
+    },
+    "work/resume/task04-metadata-retention-implementation-c2/capture.py": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791125975178664394,
+        "inode": 910891
+      },
+      "objectBytes": 1181,
+      "sha256": "96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901",
+      "bytes": 2487,
+      "beforeByteObject": "source-byte-store/96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "466ea21b3129d61c38c7da88008156f6eb517ca6a3842b2abd82dfe2f92efe68"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/eslint.config.mjs": {
+      "metadata": {
+        "mode": "0o600",
+        "nlink": 1,
+        "mtimeNs": 1791126030518781459,
+        "inode": 911033
+      },
+      "objectBytes": 475,
+      "sha256": "2fbb3a26bd13c2560824d5be4cf595b3ec4898283abe58086ab90f23810f0600",
+      "bytes": 1014,
+      "beforeByteObject": "source-byte-store/2fbb3a26bd13c2560824d5be4cf595b3ec4898283abe58086ab90f23810f0600.gz",
+      "encoding": "gzip, original bytes independently decompressed/equal before command",
+      "objectSha256": "8ecc804e079ea99a60e5a24c0e73a53361f2f864c687acbbea44fb7e15f9c7f9"
+    }
+  },
+  "layout": "normal nlink1 lossless exact-hash byte store; no hardlinks or caller assertions"
+}

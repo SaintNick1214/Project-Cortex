@@ -1,0 +1,1728 @@
+{
+  "scope": "UTF16_STATIC_CALLEE_SPAN_NOT_AST_EXECUTION",
+  "checks": [
+    {
+      "id": "ancestor-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "ancestor-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:name})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(readFileSync(resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "cleanup-known-custody-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "cleanup-known-custody-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-durability-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-durability-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-marker-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/peer.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "driver-error-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:path})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-admissible-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-domain-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-profile-domain-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/management-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/management-transport.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extension",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-custody-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-custody-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-entry-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-entry-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-artifacts.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extension",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-body-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(path.dirname(sourcePath),'bounded-response.mjs'),'utf8'),{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-body-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-parent-acknowledgment-existing-ID-probe-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-parent-acknowledgment-existing-ID-probe-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-source-acknowledgment-existing-ID-probe-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-source-acknowledgment-existing-ID-probe-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extension",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-journal-short-write-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-queue-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-queue-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "router-import-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:path.resolve(root,'scripts/cli-prerequisites.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts/cli-prerequisites.mjs'),importModuleDynamically:async()=>{imports++;const m=synth({router,effect});await m.link(()=>{});await m.evaluate();return m;}})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "router-import-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "rpc-binding-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:root+'/scripts/driver.mjs'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "rpc-binding-c4-three-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:root+'/scripts/driver.mjs'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "same-source-review-denial-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "sdk-supported-controls-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "sdk-supported-controls-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extension",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extension",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extension",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extension",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extension",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extension",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extension",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extension",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extension",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extension",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extension",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extension",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extension",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-runtime-freeze-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-runtime-freeze-extension",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:c})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-extension-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vm,identifier:'exact-frozen-extension-cases'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body18-extension",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(source,{context,identifier:sourcePath,initializeImportMeta:meta=>meta.url='file://'+sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "ancestor-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "ancestor-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:name})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(readFileSync(resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "cleanup-known-custody-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "cleanup-known-custody-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-durability-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-durability-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-marker-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/peer.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "driver-error-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:path})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-admissible-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-domain-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-profile-domain-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/management-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/management-transport.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-regression",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-custody-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-custody-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-entry-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-entry-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-artifacts.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-regression",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-body-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(path.dirname(sourcePath),'bounded-response.mjs'),'utf8'),{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-body-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-parent-acknowledgment-existing-ID-probe-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-parent-acknowledgment-existing-ID-probe-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-source-acknowledgment-existing-ID-probe-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-source-acknowledgment-existing-ID-probe-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-regression",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-journal-short-write-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-queue-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-queue-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "router-import-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:path.resolve(root,'scripts/cli-prerequisites.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts/cli-prerequisites.mjs'),importModuleDynamically:async()=>{imports++;const m=synth({router,effect});await m.link(()=>{});await m.evaluate();return m;}})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "router-import-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "rpc-binding-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:root+'/scripts/driver.mjs'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "rpc-binding-c4-three-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:root+'/scripts/driver.mjs'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "same-source-review-denial-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "sdk-supported-controls-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "sdk-supported-controls-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-regression",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-regression",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-regression",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-regression",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-regression",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-regression",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-regression",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-regression",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-regression",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-regression",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-regression",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-regression",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-regression",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-runtime-freeze-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-runtime-freeze-regression",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:c})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-actual-core-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vm,identifier:'exact-frozen-extension-cases'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body18-regression",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(source,{context,identifier:sourcePath,initializeImportMeta:meta=>meta.url='file://'+sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "ancestor-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "ancestor-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:name})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(readFileSync(resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "cleanup-known-custody-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "cleanup-known-custody-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-dispatch-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-durability-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-durability-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "creation-marker-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "deleted-recovery-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/peer.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "dispatch-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "driver-error-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:path})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-admissible-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-domain-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "journal-profile-domain-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/management-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/management-transport.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-controls-extra",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-custody-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-custody-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-entry-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-entry-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-artifacts.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "management-reserve-controls-extra",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-body-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(path.dirname(sourcePath),'bounded-response.mjs'),'utf8'),{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-body-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-c2-peer-source-drift-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-parent-acknowledgment-existing-ID-probe-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-parent-acknowledgment-existing-ID-probe-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-source-acknowledgment-existing-ID-probe-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "original-source-acknowledgment-existing-ID-probe-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication-contract.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/publication.mjs'),'utf8'),{context:h.vmContext})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "publication-controls-extra",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8'),{context:h.vmContext,identifier:path.resolve(h.packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(h.packet,'scripts/guard.mjs')})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "recovery-controls-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-journal-short-write-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-queue-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "reviewer-queue-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "router-import-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:h.vmContext,identifier:path.resolve(root,'scripts/cli-prerequisites.mjs'),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts/cli-prerequisites.mjs'),importModuleDynamically:async()=>{imports++;const m=synth({router,effect});await m.link(()=>{});await m.evaluate();return m;}})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "router-import-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "rpc-binding-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:root+'/scripts/driver.mjs'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "rpc-binding-c4-three-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:root+'/scripts/driver.mjs'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "same-source-review-denial-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "sdk-supported-controls-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts',name),'utf8'),{context:h.vmContext,identifier:path.resolve(root,'scripts',name),initializeImportMeta:m=>m.url='file://'+path.resolve(root,'scripts',name)})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "sdk-supported-controls-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,importModuleDynamically:async name=>{assert.equal(name,'node:fs');const m=new SyntheticModule(Object.keys(fs),function(){for(const[k,v]of Object.entries(fs))this.setExport(k,v);},{context:vmContext});await m.link(()=>{});await m.evaluate();return m;},identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extra",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extra",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extra",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-chain-extra",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extra",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extra",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extra",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "adversarial-chain-extra",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extra",
+      "index": 0,
+      "kind": "runInContext",
+      "span": "vm.runInContext('const lstatSync=provided.lstatSync,realpathSync=provided.realpathSync,resolve=provided.resolve,sep=provided.sep;'+canonicalSource,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extra",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extra",
+      "index": 2,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(guardSource,{context,identifier:actualGuardPath,initializeImportMeta:meta=>meta.url='file://'+actualGuardPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extra",
+      "index": 3,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(vmParentSource,{context,identifier:parentPath,initializeImportMeta:meta=>meta.url='file://'+parentPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "independent-watch17-extra",
+      "index": 4,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(fs.readFileSync(watchPath,'utf8'),{context,identifier:watchPath,initializeImportMeta:meta=>meta.url='file://'+watchPath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-runtime-freeze-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-runtime-freeze-extra",
+      "index": 1,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:c})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "offline-extension-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context:vm,identifier:'exact-prepared-drift-cases'})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "body18-extra",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(source,{context,identifier:sourcePath,initializeImportMeta:meta=>meta.url='file://'+sourcePath})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-guard-calibration",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:path.join(root,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.join(root,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "actual-guard-profiler",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new SourceTextModule(source,{context,identifier:path.join(root,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.join(root,'scripts/guard.mjs')).href})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "OWN_VM_CONSUMER_CONTROL",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(source,options)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "OWN_VM_CONSUMER_CONTROL",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext(source,context)",
+      "calleeAnchor": true
+    },
+    {
+      "id": "OWN_EXTERNAL_REVIEW",
+      "index": 0,
+      "kind": "SourceTextModule",
+      "span": "new vm.SourceTextModule(source,{context})",
+      "calleeAnchor": true
+    },
+    {
+      "id": "OWN_EXTERNAL_REVIEW",
+      "index": 1,
+      "kind": "runInContext",
+      "span": "vm.runInContext('JSON',context)",
+      "calleeAnchor": true
+    }
+  ],
+  "all246Anchors": true
+}

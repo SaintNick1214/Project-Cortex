@@ -1,0 +1,58 @@
+{
+  "utc": "2026-10-03T14:41:38.837385+00:00",
+  "initialExploratoryToolReadsWithoutIndividualUtcRawFiles": [
+    "initial prompt/skill/AGENT reads",
+    "initial pwd/rg and unique tmp directory/setup/profile reads",
+    "initial exploratory cache-location read"
+  ],
+  "notReadOrCopied": [
+    "credential files",
+    "private RSA",
+    "deploy.env",
+    "private JWTs",
+    "unrelated private targets",
+    "private ledger payload copied to output (only binding/counts inspected)"
+  ],
+  "historicalPrivateReproducibleOmissionsNotReread": {
+    "cycle1": 199,
+    "cycle2-final": 400
+  },
+  "syntheticOriginalLabels": [
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/initial-direct-provisioning-observation.json"
+    },
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/report.md"
+    },
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/source-bindings.json"
+    }
+  ],
+  "parentMissingRaw": [
+    "first direct provisioning exact UTC/raw/exit unavailable",
+    "first wrapper deploy/codegen diagnostics discarded",
+    "successful guarded CLI diagnostics discarded by unchanged wrapper"
+  ],
+  "reviewerNotRerun": [
+    "original41 live cases",
+    "whole root compiler/lint/tests/module QA",
+    "historical SDK/metadata test suites",
+    "CI jobs"
+  ],
+  "ownScriptSourceLineage": {
+    "notCaptured": "required-assertion invocation pre-count-only-edit whole-script SHA",
+    "exactMetadataOnlyDelta": "discovered:modeArg==='required-assertion'?4:14 -> discovered:modeArg==='required-assertion'?4:modeArg==='immediate'?13:14",
+    "assertionsChanged": false,
+    "misnumberedComment": "own script mentions source317; actual qualified recovery source310"
+  },
+  "executionMultiplicity": "31 named check executions comprise15 unique fullNames; native check processes3; original live cases not replayed",
+  "gitSignatureAndPush": "git %G? E observed; no independent cryptographic signature or remote push verification",
+  "finalizationBookkeeping": "report generation/tool manifest display do not each have preexisting independent wrapper UTC/raw streams; manifest finalizer writes its own recorded phase stream before hashing and excludes only manifest/detached hash to avoid recursion",
+  "initialManifestBookkeepingUtc": "Initial failed seal tool call had no explicit UTC capture; tool-returned exact error stream, argv/cwd/exit and initial source are retained, null timestamps disclosed."
+}

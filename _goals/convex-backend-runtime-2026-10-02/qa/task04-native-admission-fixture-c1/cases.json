@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "scope": "NONPAID_NATIVE_PREPARATION_ONLY",
+  "scenarios": [
+    {
+      "id": "parent-distinct-child-fence",
+      "kind": "parent-cancel",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "root-idempotent",
+      "kind": "install",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 12,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "parent-native-rollback",
+      "kind": "rollback",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 12,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "identity-canonical",
+      "kind": "identity",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "checkpoint-race",
+      "kind": "checkpoint",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "money-run-race",
+      "kind": "run-race",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "money-tenant-race",
+      "kind": "tenant-race",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "slot-race",
+      "kind": "slots",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "known-settlement-race",
+      "kind": "known",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "unknown-running-terminal",
+      "kind": "unknown",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "known-overrun",
+      "kind": "overrun",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "collision-canonical",
+      "kind": "collision",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-grant-version",
+      "kind": "grant-version",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-grant-expiry",
+      "kind": "grant-expiry",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-principal-revoke",
+      "kind": "principal-revoke",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-membership-revoke",
+      "kind": "membership-revoke",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-source-edit",
+      "kind": "source-edit",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-source-delete",
+      "kind": "source-delete",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-policy-revoke",
+      "kind": "policy-revoke",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-qualification-revoke",
+      "kind": "qualification-revoke",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fence-corrupt-counter",
+      "kind": "corrupt-counter",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "retired-tenant-overrun",
+      "kind": "tenant-delete",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "retired-space-overrun",
+      "kind": "space-delete",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "retired-absence-denial",
+      "kind": "scope-absence",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "cancel-current",
+      "kind": "cancel",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fallback-fresh-money",
+      "kind": "fallback-money",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fallback-current-query-reserve",
+      "kind": "fallback-revoke",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fallback-postreserve-revoke",
+      "kind": "fallback-postrevoke",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fallback-postreserve-money",
+      "kind": "fallback-postmoney",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "held-current-operation",
+      "kind": "held-operation",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "held-current-run",
+      "kind": "held-run",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 19,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "held-current-tenant",
+      "kind": "held-tenant",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 20,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "held-current-concurrency",
+      "kind": "held-concurrency",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "held-exact-cap",
+      "kind": "held-positive",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "fallback-exact-cap",
+      "kind": "fallback-positive",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "visibility-monotone",
+      "kind": "visible",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 19,
+      "rpcCeiling": 35,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "embedding-single-bound",
+      "kind": "embedding",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "agent-selector-denial",
+      "kind": "agent",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "window-original-liability",
+      "kind": "window",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 18,
+      "rpcCeiling": 18,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "private-invalid-result",
+      "kind": "private",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "known-private-privacy",
+      "kind": "privacy",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "predispatch-compatible-fallback",
+      "kind": "fallback-no-dispatch",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    },
+    {
+      "id": "private-byte-exact-bound",
+      "kind": "private-bound",
+      "status": "PREPARED_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 16,
+      "assertionSource": "scripts/cases.mjs"
+    }
+  ],
+  "additionalScenarios": [
+    "current-public-security-matrix",
+    "empty-production-root",
+    "real-peer-before-request-crash",
+    "real-peer-lost-receipt-crash",
+    "real-peer-before-settle-crash",
+    "public-peer-denials"
+  ],
+  "budgets": {
+    "logicalScenarios": 49,
+    "simultaneouslyLiveRows": 320,
+    "cumulativeRows": 783,
+    "cumulativeRowComputation": {
+      "core": 716,
+      "security": 15,
+      "fault": 40,
+      "empty": 12,
+      "recovery": 0
+    },
+    "nativeRpc": 3000,
+    "rpcWorstCase": 2981,
+    "cleanupRpc": 256,
+    "cleanupWorstCase": 51,
+    "qualifierMs": 1200000,
+    "parentDriverMs": 1440000,
+    "requestMs": 12000,
+    "peerEffectRequests": 8,
+    "peerOtherRequests": 24,
+    "processes": 6,
+    "groups": 2,
+    "storageFiles": 0,
+    "nativeClientRpc": 2991,
+    "nestedNativeInvocations": 9,
+    "rpcComputation": {
+      "coreAssertions": 709,
+      "coreCleanupAndSnapshots": 129,
+      "security": 2032,
+      "fault": 70,
+      "empty": 20,
+      "publication": 2,
+      "finalAndRecovery": 10,
+      "nestedNative": 9
+    },
+    "cumulativeDeletions": 783,
+    "cumulativeCreationAndDeletionEvents": 1566
+  },
+  "security": {
+    "publicPaths": 200,
+    "negativeIdentities": 7,
+    "authorizationObservations": 1400,
+    "completeStateSnapshots": 400,
+    "internalPaths": 81,
+    "internalVisibilityObservations": 162,
+    "privateTableMaintenanceNegatives": 20,
+    "healthyPublicControl": "mutable:set/get",
+    "publicPeerDenials": 5
+  },
+  "costClassification": "FIXTURE_SYNTHETIC_NO_PROVIDER_TERMINAL_OR_PRICE_QUALIFICATION"
+}

@@ -1,0 +1,102 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    24.0s | 40/40 passed | /tests/unit/auth/credentials.test.ts
+  ✅     5.2s | 79/79 passed | /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+  ✅     5.2s | 187/187 passed | /tests/unit/runtimeMetadataAuth/handlers.test.ts
+  ✅     2.9s | 88/88 passed | /tests/unit/runtimeWorkerAuth/graph.test.ts
+  ✅     1.7s | 58/58 passed | /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ✅     1.4s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ✅     1.4s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ✅     1.2s | 106/106 passed | /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+  ✅     1.1s | 39/39 passed | /tests/unit/runtimeWorkerAuth/governance.test.ts
+  ✅     1.1s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     0.4s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+  ✅     0.3s | 28/28 passed | /tests/unit/runtimeWorkerClient/governance.test.ts
+  ✅     0.3s | 27/27 passed | /tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.47s ( 1.0%) - actual registered visibility and canonical schema/AST catalog AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+ 2. [32m✓[0m    0.30s ( 0.7%) - portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.28s ( 0.6%) - import-aware AST and native Convex registration visibility retained import-aware AST finds the exact baseline paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 4. [32m✓[0m    0.26s ( 0.6%) - portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 5. [32m✓[0m    0.17s ( 0.4%) - nine scoped internal worker registrations queueForSync performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 6. [32m✓[0m    0.12s ( 0.3%) - nine scoped internal worker registrations markSynced performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 7. [32m✓[0m    0.10s ( 0.2%) - open-review essential worker regressions markSynced rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.1%) - open-review essential worker regressions queueForSync rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.1%) - open-review essential worker regressions clearSyncedItems rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+10. [32m✓[0m    0.04s ( 0.1%) - open-review essential worker regressions getUnsyncedItems rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+11. [32m✓[0m    0.03s ( 0.1%) - nine scoped internal worker registrations markFailed performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+12. [32m✓[0m    0.02s ( 0.0%) - open-review essential worker regressions getHighPriorityItems filters actual own owner before limit/processing/count/cleanup
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+13. [32m✓[0m    0.02s ( 0.0%) - nine scoped internal worker registrations clearSyncedItems performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+14. [32m✓[0m    0.01s ( 0.0%) - 36 registered modern public handlers immutable:store authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+15. [32m✓[0m    0.01s ( 0.0%) - 36 registered modern public handlers immutable:store rejects missing verified identity without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+16. [32m✓[0m    0.01s ( 0.0%) - Installed Convex reactive authentication error outcomes actual Cortex constructor contains rejecting host callbacks, resumes unauthenticated and recovers
+    /tests/unit/auth/credentials.test.ts
+
+17. [32m✓[0m    0.01s ( 0.0%) - metadata consumers (resilience=absent) maps only the hydrated backend profile and preserves deep merge and tenant injection
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+18. [32m✓[0m    0.01s ( 0.0%) - nine scoped internal worker registrations bad-source-time fences later reads/marks/recreation
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+19. [32m✓[0m    0.01s ( 0.0%) - nine scoped internal worker registrations exhausted failures remain failed, and a synced item cannot be reopened
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+20. [32m✓[0m    0.01s ( 0.0%) - open-review essential worker regressions invalid optional validity time Infinity denies admission and existing private delivery
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.01s (4.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      46.56s
+  Test suites:        13
+  Individual tests:   496
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 13
+════════════════════════════════════════════════════════════════════════════════
+

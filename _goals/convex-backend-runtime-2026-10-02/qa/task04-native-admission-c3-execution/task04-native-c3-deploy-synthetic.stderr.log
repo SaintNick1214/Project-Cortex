@@ -1,0 +1,8 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3/scripts/deploy.mjs:14
+ if(result.code!==0||result.timedOut||result.overflow)throw Error('QA_DEPLOY_FAILED');status='PASS';
+                                                            ^
+
+Error: QA_DEPLOY_FAILED
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3/scripts/deploy.mjs:14:61
+
+Node.js v24.19.0

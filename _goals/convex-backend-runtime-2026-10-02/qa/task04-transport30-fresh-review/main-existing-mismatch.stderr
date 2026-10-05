@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 116, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 108, in main
+    present={r[0] for r in rows if existing(target,r)};created=0
+                                   ^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 67, in existing
+    require(len(b)==size and digest(b)==h,'existing original mismatch: '+path)
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 10, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: existing original mismatch: adverse30-receipt.json

@@ -1,0 +1,22 @@
+ReferenceError: URL is not defined
+    at Object.fetch (vm:module(9):6:2129)
+    at Client.query (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/publication-controls.mjs:2:2685)
+    at vm:module(9):7:95
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 1
+
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/publication-controls.mjs:3:946 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

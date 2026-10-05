@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import shutil; a=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/regression/v1-c2\");b=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2\");shutil.copytree(a,b);[print(\"FILE \"+p.name+\"\\n\"+\"\\n\".join(p.read_text().splitlines()[:16])) for p in (a/\"scripts\").glob(\"*.mjs\")]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:32:26.762535+00:00",
+  "endUtc": "2026-10-04T14:32:26.789126+00:00",
+  "exit": 0
+}

@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import hashlib;a=Path(\"work/resume/task04-metadata-retention-design-c2/resource-controls-v4.mjs\");b=Path(\"work/resume/task04-metadata-retention-design-c2-fresh-review/resource-controls-v4.mjs\");assert a.read_bytes()==b.read_bytes();p=Path(\"work/resume/task04-metadata-retention-c2-fresh-review/resource-controls-v4.mjs\");p.write_bytes(a.read_bytes());print(\"byte-identical control copied\",len(p.read_bytes()),hashlib.sha256(p.read_bytes()).hexdigest())"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:16:54.270770+00:00",
+  "endUtc": "2026-10-04T14:16:54.294557+00:00",
+  "exit": 0
+}

@@ -1,0 +1,21 @@
+from pathlib import Path
+import json,hashlib,re
+r=Path('/workspace/Project-Cortex');qa=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-c2-review';author=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-c2'
+h=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+manifest=json.loads((author/'source-preservation.json').read_text());rows=[]
+for row in manifest['archive_rows']:
+ archive=author/'archive'/row['path'];assert h(archive)==row['pre_sha256'];
+ if row['path']!='convex-dev/runtimeMemory.ts':assert h(r/row['path'])==h(archive)
+ rows.append({'path':row['path'],'archive_sha256':h(archive),'unchanged_current':row['path']=='convex-dev/runtimeMemory.ts' or h(r/row['path'])==h(archive)})
+old=(author/'archive/convex-dev/runtimeMemory.ts').read_text();new=(r/'convex-dev/runtimeMemory.ts').read_text()
+old_internal=old[old.index('const scopedArgs'):old.index('const authorize')];new_internal=new[new.index('const scopedArgs'):new.index('const authorize')];assert old_internal==new_internal
+for begin in ['return await rememberMemory','return await recallMemory']:
+ o=old[old.index(begin):];n=new[new.index(begin):]
+ if begin=='return await rememberMemory':o=o[:o.index('} });')+5];n=n[:n.index('} });')+5]
+ assert o==n
+assert len(re.findall(r'export const \w+ = (?:internalQuery|internalMutation|action)\(',new))==8
+for begin,end in [('const requestArgs','export const remember'),('export const remember','\n  const'),('export const recall','\n  const')]:
+ o=old[old.index(begin):];n=new[new.index(begin):];assert o[:o.index(end)]==n[:n.index(end)]
+files=['convex-dev/runtimeMemory.ts','tests/unit/runtimeMemory/public-boundary.test.ts','tests/unit/runtimeMemory/public-closure.test.ts','tests/unit/runtimeMemory/services.test.ts']
+summary={'archive_entries_independently_verified':len(rows),'internal6_byte_exact':True,'registered8_preserved':True,'public_native_validator_source_preserved':True,'functional_suffixes_exact':True,'archive_rows':rows,'current_hashes':{p:h(r/p) for p in files}}
+(qa/'source-verification.json').write_text(json.dumps(summary,indent=2));print(json.dumps({k:v for k,v in summary.items() if k!='archive_rows'},indent=2))

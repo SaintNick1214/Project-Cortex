@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/bundler/serverOnly.ts"],
+  "sourcesContent": ["import { Plugin } from \"esbuild\";\n\n// Stub `import \"server-only\"` to an empty module so user code that uses\n// Next.js's server-only can be bundled and analyzed correctly:\n// https://nextjs.org/docs/app/getting-started/server-and-client-components#preventing-environment-poisoning\nexport const serverOnlyPlugin: Plugin = {\n  name: \"convex-server-only\",\n  setup(build) {\n    build.onResolve({ filter: /^server-only$/ }, (args) => ({\n      path: args.path,\n      namespace: \"server-only-stub\",\n    }));\n    build.onLoad({ filter: /.*/, namespace: \"server-only-stub\" }, () => ({\n      contents: \"\",\n      loader: \"js\",\n    }));\n  },\n};\n"],
+  "mappings": ";AAKO,aAAM,mBAA2B;AAAA,EACtC,MAAM;AAAA,EACN,MAAM,OAAO;AACX,UAAM,UAAU,EAAE,QAAQ,gBAAgB,GAAG,CAAC,UAAU;AAAA,MACtD,MAAM,KAAK;AAAA,MACX,WAAW;AAAA,IACb,EAAE;AACF,UAAM,OAAO,EAAE,QAAQ,MAAM,WAAW,mBAAmB,GAAG,OAAO;AAAA,MACnE,UAAU;AAAA,MACV,QAAQ;AAAA,IACV,EAAE;AAAA,EACJ;AACF;",
+  "names": []
+}

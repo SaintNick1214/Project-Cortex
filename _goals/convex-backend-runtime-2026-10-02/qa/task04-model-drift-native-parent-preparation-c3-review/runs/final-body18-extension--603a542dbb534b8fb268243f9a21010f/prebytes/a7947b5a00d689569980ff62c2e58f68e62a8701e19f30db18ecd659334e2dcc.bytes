@@ -1,0 +1,10 @@
+from pathlib import Path
+r=Path.cwd();old=r/'work/resume/task04-model-drift-native-preparation-c3';w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review'
+(w/'dispatch-proof').mkdir(exist_ok=True)
+for name in ['dispatch-context','prepared-guard','management-controls','management-entry-controls','management-reserve-controls']:
+ s=(old/(name+'.mjs')).read_text().replace('work/resume/task04-model-drift-native-preparation-c3/dispatch-proof','work/resume/task04-model-drift-native-parent-preparation-c3-review/dispatch-proof')
+ for output in ['c3-management-guards.json','c3-management-entry-controls.json','c3-management-reserve-controls.json']:
+  s=s.replace("path.resolve(root,'evidence/"+output+"')", "path.resolve('"+str(q)+"',kind+'-"+output+"')")
+ (w/(name+'.mjs')).write_text(s)
+assert 'writeFileSync(path.resolve(root,' not in (w/'management-entry-controls.mjs').read_text()
+print('adapted owned output ports only')

@@ -1,0 +1,53 @@
+(node:78795) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-dispatch.test.ts (6.36 s)
+  ● bounded governed Gateway middleware › unqualified cost undefined is unavailable, never zero
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "TERMINAL_RESULT_WITHHELD",
+    +   "code": "UNQUALIFIED_TERMINAL",
+      }
+
+      152 |   it.each([undefined, -1, Infinity, "not-money"])("unqualified cost %s is unavailable, never zero", async (cost) => {
+      153 |     const f = fixture(); const body = raw(); body.usage.cost = cost; f.model.doGenerate = async () => generated("answer", body); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    > 154 |     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); const receipt = JSON.parse(f.receipts[0]!); expect(receipt.costSource).toBe("unavailable"); expect(receipt).not.toHaveProperty("aggregateCostUsd");
+          |                                                        ^
+      155 |   });
+      156 |   it("root currency/aggregate rule unavailable retains cost even with a numeric field", async () => {
+      157 |     const f = fixture(); f.r.dispatchEvidence.terminalCost = "unavailable"; const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); expect(JSON.parse(f.receipts[0]!).costSource).toBe("unavailable");
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/gateway-dispatch.test.ts:154:56
+
+  ● bounded governed Gateway middleware › unqualified cost Infinity is unavailable, never zero
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "TERMINAL_RESULT_WITHHELD",
+    +   "code": "UNQUALIFIED_TERMINAL",
+      }
+
+      152 |   it.each([undefined, -1, Infinity, "not-money"])("unqualified cost %s is unavailable, never zero", async (cost) => {
+      153 |     const f = fixture(); const body = raw(); body.usage.cost = cost; f.model.doGenerate = async () => generated("answer", body); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    > 154 |     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); const receipt = JSON.parse(f.receipts[0]!); expect(receipt.costSource).toBe("unavailable"); expect(receipt).not.toHaveProperty("aggregateCostUsd");
+          |                                                        ^
+      155 |   });
+      156 |   it("root currency/aggregate rule unavailable retains cost even with a numeric field", async () => {
+      157 |     const f = fixture(); f.r.dispatchEvidence.terminalCost = "unavailable"; const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); expect(JSON.parse(f.receipts[0]!).costSource).toBe("unavailable");
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/gateway-dispatch.test.ts:154:56
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 45 passed, 47 total
+Snapshots:   0 total
+Time:        6.605 s

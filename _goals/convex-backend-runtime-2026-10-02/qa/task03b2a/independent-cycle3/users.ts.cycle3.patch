@@ -1,0 +1,12 @@
+--- cycle2/convex-dev/users.ts
++++ cycle3/convex-dev/users.ts
+@@ -24,7 +24,8 @@
+ } });
+ export const getAtTimestamp = query({ args: { ...userArgs, timestamp: v.number() }, handler: async (ctx, args) => {
+   const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+-  const version = row ? versions(row).filter((value) => value.timestamp <= args.timestamp).at(-1) : undefined;
++  const history = row ? versions(row).filter((value) => value.timestamp <= args.timestamp) : [];
++  const version = history[history.length - 1];
+   return version ? { version: version.version, data: version.data, timestamp: version.timestamp } : null;
+ } });
+ export const exists = query({ args: userArgs, handler: async (ctx, args) => (await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read")) !== null });

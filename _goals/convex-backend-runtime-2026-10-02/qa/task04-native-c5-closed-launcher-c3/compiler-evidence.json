@@ -1,0 +1,407 @@
+{
+  "services": [
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/prepared-inventory-extra-19f57a05-9463-4b6c-877f-be9641a78bd7/compiler-0001/service-receipt.json",
+        "bytes": 2592,
+        "sha256": "7e9cc899ade00b04f89a97d0b7dfb15756bc497f1586577c785869ecf6ca9220"
+      },
+      "dispatches": 1,
+      "events": [
+        {
+          "kind": "BUILD",
+          "options": {
+            "stdin": {
+              "contents": "export const preparedCompositionValue=17;",
+              "loader": "js"
+            },
+            "outfile": "/tmp/cortex-native-c5-closed-launcher-c3/prepared-inventory-extra-19f57a05-9463-4b6c-877f-be9641a78bd7/bundle.mjs",
+            "format": "esm",
+            "platform": "node",
+            "logLevel": "silent"
+          }
+        },
+        {
+          "argv": [
+            "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+            "--service=0.27.0",
+            "--ping"
+          ],
+          "cwd": "/workspace/Project-Cortex",
+          "utcStart": "2026-10-04T18:27:10.564Z",
+          "TMPDIR": "/tmp/cortex-native-c5-closed-launcher-c3/child-tmp",
+          "utcEnd": "2026-10-04T18:27:11.649Z",
+          "code": 0,
+          "signal": null
+        }
+      ],
+      "rawComplete": true,
+      "streams": [
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/prepared-inventory-extra-19f57a05-9463-4b6c-877f-be9641a78bd7/compiler-0001/service.stdout.gz",
+          "rawBytes": 55,
+          "rawSHA256": "dc8d2d20b5702b44a20128e01db8bf74aa184dab0d92d14e8a7cd63d14328c95",
+          "encodedBytes": 68,
+          "encodedSHA256": "2bbeb0169bd22daf737eccba697a719a380f0751097591295e2573813a0ce33b",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/prepared-inventory-extra-19f57a05-9463-4b6c-877f-be9641a78bd7/compiler-0001/service.stderr.gz",
+          "rawBytes": 0,
+          "rawSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedBytes": 0,
+          "encodedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/prepared-inventory-extra-19f57a05-9463-4b6c-877f-be9641a78bd7/compiler-0001/service.stdin.gz",
+          "rawBytes": 470,
+          "rawSHA256": "e4a467ca3b45e346ea4a92cb70a562caaaebb281a2f32454bdcea5ca21e7a87b",
+          "encodedBytes": 351,
+          "encodedSHA256": "d7d46df20827bfe204c234ebfbd993d16d78eca750591ff3c921b6837535754d",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        }
+      ],
+      "rawLimit": 357621120,
+      "encodedLimit": 357971392,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/noemit/service-receipt.json",
+        "bytes": 2458,
+        "sha256": "7291784cbd99ce5ae1813548b711443c10ffeae5cef6cef261bf39fea283df65"
+      },
+      "dispatches": 1,
+      "events": [
+        {
+          "kind": "BUILD",
+          "options": {
+            "stdin": {
+              "contents": "export const noEmission=1;",
+              "loader": "js"
+            },
+            "write": false,
+            "platform": "node",
+            "format": "esm",
+            "logLevel": "silent",
+            "outdir": "/tmp/NOT_WRITTEN_NATIVE_PREPARATION_GRAPH"
+          }
+        },
+        {
+          "argv": [
+            "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+            "--service=0.27.0",
+            "--ping"
+          ],
+          "cwd": "/workspace/Project-Cortex",
+          "utcStart": "2026-10-04T17:23:59.163Z",
+          "TMPDIR": "/tmp/cortex-native-c5-closed-launcher-c3/child-tmp",
+          "utcEnd": "2026-10-04T17:23:59.185Z",
+          "code": 0,
+          "signal": null
+        }
+      ],
+      "rawComplete": true,
+      "streams": [
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/noemit/service.stdout.gz",
+          "rawBytes": 231,
+          "rawSHA256": "83a322c2ed0618de6fa57a1e7bce3a5a0eedff116256921d9b2a9bd5550a72ad",
+          "encodedBytes": 203,
+          "encodedSHA256": "bb7478fbded64b2fc1205ca173f8a626535169354df0d4fbe542b824c18046a2",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/noemit/service.stderr.gz",
+          "rawBytes": 0,
+          "rawSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedBytes": 0,
+          "encodedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/noemit/service.stdin.gz",
+          "rawBytes": 382,
+          "rawSHA256": "c63d1af5821a27ec61be586e4b204a843b6f3f506e10eeb0a364bf348052c130",
+          "encodedBytes": 297,
+          "encodedSHA256": "f2b5d5b3c0f31e2f8cc684c53c703836b2a856a48240c2c5c8a5ec0c0e88aef8",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        }
+      ],
+      "rawLimit": 357618752,
+      "encodedLimit": 357969024,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/own-write/service-receipt.json",
+        "bytes": 2535,
+        "sha256": "b4dafa681288bc8f14f6df094ff89a1594ab3a055bf3001f504792a9fea4c787"
+      },
+      "dispatches": 1,
+      "events": [
+        {
+          "kind": "BUILD",
+          "options": {
+            "stdin": {
+              "contents": "export const serviceOwned=17;",
+              "loader": "js"
+            },
+            "outfile": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c3/service-fixture-CMuOd0/actual.mjs",
+            "platform": "node",
+            "format": "esm",
+            "logLevel": "silent"
+          }
+        },
+        {
+          "argv": [
+            "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+            "--service=0.27.0",
+            "--ping"
+          ],
+          "cwd": "/workspace/Project-Cortex",
+          "utcStart": "2026-10-04T17:23:59.098Z",
+          "TMPDIR": "/tmp/cortex-native-c5-closed-launcher-c3/child-tmp",
+          "utcEnd": "2026-10-04T17:23:59.127Z",
+          "code": 0,
+          "signal": null
+        }
+      ],
+      "rawComplete": true,
+      "streams": [
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/own-write/service.stdout.gz",
+          "rawBytes": 55,
+          "rawSHA256": "dc8d2d20b5702b44a20128e01db8bf74aa184dab0d92d14e8a7cd63d14328c95",
+          "encodedBytes": 68,
+          "encodedSHA256": "2bbeb0169bd22daf737eccba697a719a380f0751097591295e2573813a0ce33b",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/own-write/service.stderr.gz",
+          "rawBytes": 0,
+          "rawSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedBytes": 0,
+          "encodedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/own-write/service.stdin.gz",
+          "rawBytes": 476,
+          "rawSHA256": "a7ef4396f943a30311610ecbd7c2cff2a07df94211d7b1da2b363fc8ac9ce419",
+          "encodedBytes": 338,
+          "encodedSHA256": "ef97f08aee702ea6c54a1777c20063f172b0ce022175b48f5a8389b9b7551b2e",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        }
+      ],
+      "rawLimit": 357621312,
+      "encodedLimit": 357971584,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-130c1b25-7853-47a8-be3e-bdc379c76b16/plugin/service-receipt.json",
+        "bytes": 412,
+        "sha256": "8f2831fcece72aec366d825146040f8daef2cb64b359adabbf40bdc081f29323"
+      },
+      "dispatches": 0,
+      "events": [],
+      "rawComplete": false,
+      "streams": [],
+      "rawLimit": 357614944,
+      "encodedLimit": 357965216,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": "QA_BUILD_ROUTE",
+      "secondary": []
+    },
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/noemit/service-receipt.json",
+        "bytes": 2458,
+        "sha256": "94879e8568a1696a9184e00d3c8f925f30c11d235f7e701f026c1687c271351c"
+      },
+      "dispatches": 1,
+      "events": [
+        {
+          "kind": "BUILD",
+          "options": {
+            "stdin": {
+              "contents": "export const noEmission=1;",
+              "loader": "js"
+            },
+            "write": false,
+            "platform": "node",
+            "format": "esm",
+            "logLevel": "silent",
+            "outdir": "/tmp/NOT_WRITTEN_NATIVE_PREPARATION_GRAPH"
+          }
+        },
+        {
+          "argv": [
+            "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+            "--service=0.27.0",
+            "--ping"
+          ],
+          "cwd": "/workspace/Project-Cortex",
+          "utcStart": "2026-10-04T18:07:47.722Z",
+          "TMPDIR": "/tmp/cortex-native-c5-closed-launcher-c3/child-tmp",
+          "utcEnd": "2026-10-04T18:07:47.745Z",
+          "code": 0,
+          "signal": null
+        }
+      ],
+      "rawComplete": true,
+      "streams": [
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/noemit/service.stdout.gz",
+          "rawBytes": 231,
+          "rawSHA256": "83a322c2ed0618de6fa57a1e7bce3a5a0eedff116256921d9b2a9bd5550a72ad",
+          "encodedBytes": 203,
+          "encodedSHA256": "bb7478fbded64b2fc1205ca173f8a626535169354df0d4fbe542b824c18046a2",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/noemit/service.stderr.gz",
+          "rawBytes": 0,
+          "rawSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedBytes": 0,
+          "encodedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/noemit/service.stdin.gz",
+          "rawBytes": 382,
+          "rawSHA256": "c63d1af5821a27ec61be586e4b204a843b6f3f506e10eeb0a364bf348052c130",
+          "encodedBytes": 297,
+          "encodedSHA256": "f2b5d5b3c0f31e2f8cc684c53c703836b2a856a48240c2c5c8a5ec0c0e88aef8",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        }
+      ],
+      "rawLimit": 357618752,
+      "encodedLimit": 357969024,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/own-write/service-receipt.json",
+        "bytes": 2535,
+        "sha256": "e26f1fbdaac9660c322e5eedfbe012e33afbe54ca9ea7a5de5c2d7fdf92f3156"
+      },
+      "dispatches": 1,
+      "events": [
+        {
+          "kind": "BUILD",
+          "options": {
+            "stdin": {
+              "contents": "export const serviceOwned=17;",
+              "loader": "js"
+            },
+            "outfile": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c3/service-fixture-GixGd6/actual.mjs",
+            "platform": "node",
+            "format": "esm",
+            "logLevel": "silent"
+          }
+        },
+        {
+          "argv": [
+            "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+            "--service=0.27.0",
+            "--ping"
+          ],
+          "cwd": "/workspace/Project-Cortex",
+          "utcStart": "2026-10-04T18:07:47.655Z",
+          "TMPDIR": "/tmp/cortex-native-c5-closed-launcher-c3/child-tmp",
+          "utcEnd": "2026-10-04T18:07:47.686Z",
+          "code": 0,
+          "signal": null
+        }
+      ],
+      "rawComplete": true,
+      "streams": [
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/own-write/service.stdout.gz",
+          "rawBytes": 55,
+          "rawSHA256": "dc8d2d20b5702b44a20128e01db8bf74aa184dab0d92d14e8a7cd63d14328c95",
+          "encodedBytes": 68,
+          "encodedSHA256": "2bbeb0169bd22daf737eccba697a719a380f0751097591295e2573813a0ce33b",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/own-write/service.stderr.gz",
+          "rawBytes": 0,
+          "rawSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedBytes": 0,
+          "encodedSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        },
+        {
+          "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/own-write/service.stdin.gz",
+          "rawBytes": 476,
+          "rawSHA256": "22c40f895b70d7a5935bb3348b7d43dce10c92b117d89a1a4f1755847949db5d",
+          "encodedBytes": 338,
+          "encodedSHA256": "e65b571e48876089ee7b0fac75465f8b3a85d9315f1b0b77753786888db70f6c",
+          "encoding": "CONCATENATED_GZIP_MEMBERS_EXACT_65536_BYTE_BLOCKS",
+          "exactDecompressionVerified": true
+        }
+      ],
+      "rawLimit": 357621312,
+      "encodedLimit": 357971584,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": null,
+      "secondary": []
+    },
+    {
+      "receipt": {
+        "path": "/tmp/cortex-native-c5-closed-launcher-c3/service-49e1cf45-dc27-48d3-b0ec-46ca595c089d/plugin/service-receipt.json",
+        "bytes": 412,
+        "sha256": "8f2831fcece72aec366d825146040f8daef2cb64b359adabbf40bdc081f29323"
+      },
+      "dispatches": 0,
+      "events": [],
+      "rawComplete": false,
+      "streams": [],
+      "rawLimit": 357614944,
+      "encodedLimit": 357965216,
+      "admittedGraphBytes": 11174121,
+      "quotaMeaning": "FINITE_GRAPH_SIZED_ALLOCATION_NOT_ORIGINAL122_UPPER_PROOF; overflow FAIL/incomplete; ProcessOwner256000 unchanged",
+      "primary": "QA_BUILD_ROUTE",
+      "secondary": []
+    }
+  ],
+  "meaning": "Actual service raw capture for OWN authored controls, never original eight compiler entries execution/qualification. Lossless gzip members, finite graph-derived allocation; overflow FAIL/incomplete, not an upper-bound theorem. Original ProcessOwner256000/20m/24m caps untouched.",
+  "exactArgv": [
+    "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+    "--service=0.27.0",
+    "--ping"
+  ],
+  "currentPositive": "/tmp/cortex-native-c5-closed-launcher-c3/runs/bb5771e9ba7a4b8f9261beab4687b8f8/receipt.json"
+}

@@ -1,0 +1,11 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/provision.mjs
++++ /workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/scripts/provision.mjs
+@@ -69,7 +69,7 @@
+   deploymentUrl: deployment.deploymentUrl,
+   active: true, retired: false, deleted: false, isolationVerified: true,
+   createdAt: startedAt, userAuthorization: "authorized nonpaid fixture only",
+-  privateEnvironmentFile: "work/backend-runtime/task04-native-admission-c7/deploy.env",
++  privateEnvironmentFile: "work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/native-not-run/deploy.env",
+ };
+ validateTarget(target, request, values, process.env);
+ writeFileSync(envFile, Object.entries(values).map(([name, value]) => `${name}=${value}`).join("\n") + "\n", { flag: "wx", mode: 0o600 });

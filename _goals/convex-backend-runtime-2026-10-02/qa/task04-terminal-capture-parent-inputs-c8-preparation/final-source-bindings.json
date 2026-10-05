@@ -1,0 +1,129 @@
+{
+  "status": "FINAL_STABLE_C3_SOURCE_BOUND",
+  "profiles": [
+    {
+      "name": "extension",
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3",
+      "manifestSHA256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "manifestRows": 5576,
+      "runtimeFreezeSHA256": "7082ba620e6667af63a3b485d152af03fe1ba29079c7cfde0c73e790b0ba4080",
+      "runtimeRows": 201,
+      "sourcePreflight": "PASS_PUBLIC_ONLY",
+      "completePreservation": "PASS_EXPLICIT_PUBLIC_DIGEST",
+      "wrongDigest": "EXPECTED_DENIAL",
+      "preserved": {
+        "files": 5576,
+        "historicalPackets": 8
+      },
+      "registrations": 287,
+      "public": 200,
+      "internal": 87,
+      "request": {
+        "version": 1,
+        "operation": "ea2619f0-5b60-4b3d-b75d-df584d938c12",
+        "purpose": "task04-terminal-capture-native-extension-c3",
+        "projectName": "cortex-task04-admission-disposable-6b012c584158",
+        "projectSlug": "cortex-task04-admission-disposable-6b012c584158",
+        "kind": "cloud",
+        "deploymentType": "dev",
+        "productionDeployment": false,
+        "sharedCiTarget": false,
+        "privateEnvironmentFile": "work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env",
+        "provisionCalls": 5,
+        "provisionDeadlineMs": 150000,
+        "retirementCalls": 5,
+        "retirementDeadlineMs": 180000,
+        "runId": "admission-29147d663f2c402681aa661193585216"
+      },
+      "externalSources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/parent-inputs-extension.mjs",
+          "bytes": 16815,
+          "sha256": "e799de4ce925b2f3220a11e42f66e5da6d79f8935145362e2104bf4d361de727"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/current-inputs-extension.mjs",
+          "bytes": 5959,
+          "sha256": "f58d17c0bf1e3157219e5bb0b443d297342364044c30104377d0d907ed25d115"
+        }
+      ],
+      "C7HistoricalClosure": {
+        "originalRows": 80,
+        "fullRows": 83,
+        "originalManifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+        "fullIndexSHA256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+        "additionalPaths": [
+          "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+          "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json",
+          "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json"
+        ],
+        "oldManifestGap": "RETAINED_IMMUTABLE_NO_RETROSPECTIVE_PASS",
+        "tamperControls": 3
+      }
+    },
+    {
+      "name": "regression",
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression",
+      "manifestSHA256": "7b0cc8215d66304d5db6997d4a4a20fc0abd07cc063e02e97eaba6e52f4393ad",
+      "manifestRows": 247,
+      "runtimeFreezeSHA256": "678caa05d3aaf26f7777b511a2d0e417e2fb5f5fc7c736617f43ca530dc00286",
+      "runtimeRows": 199,
+      "sourcePreflight": "PASS_PUBLIC_ONLY",
+      "completePreservation": "PASS_EXPLICIT_PUBLIC_DIGEST",
+      "wrongDigest": "EXPECTED_DENIAL",
+      "preserved": {
+        "files": 247,
+        "historicalPackets": 9
+      },
+      "registrations": 287,
+      "public": 200,
+      "internal": 87,
+      "request": {
+        "version": 1,
+        "operation": "e4077318-c2cf-4e9d-8916-06c1f74bbac2",
+        "purpose": "task04-terminal-capture-native-regression-c3",
+        "projectName": "cortex-task04-admission-disposable-9cf565f286b0",
+        "projectSlug": "cortex-task04-admission-disposable-9cf565f286b0",
+        "kind": "cloud",
+        "deploymentType": "dev",
+        "productionDeployment": false,
+        "sharedCiTarget": false,
+        "privateEnvironmentFile": "work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env",
+        "provisionCalls": 5,
+        "provisionDeadlineMs": 150000,
+        "retirementCalls": 5,
+        "retirementDeadlineMs": 180000,
+        "runId": "admission-e77b05c4e8c140e7b0608d139a09ba67"
+      },
+      "externalSources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/parent-inputs-regression.mjs",
+          "bytes": 16850,
+          "sha256": "474e0c27896e1ad740b5c2ae2eff46d0d1085e60904823498857bbdc138528c7"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/current-inputs-regression.mjs",
+          "bytes": 5982,
+          "sha256": "9ee3b5eeb43c3066fbee58f833b1b13e9aa8dd777ecbff5b8f0e227eb19c3a31"
+        }
+      ],
+      "C7HistoricalClosure": {
+        "originalRows": 80,
+        "fullRows": 83,
+        "originalManifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+        "fullIndexSHA256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+        "additionalPaths": [
+          "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+          "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json",
+          "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json"
+        ],
+        "oldManifestGap": "RETAINED_IMMUTABLE_NO_RETROSPECTIVE_PASS",
+        "tamperControls": 3
+      }
+    }
+  ],
+  "helperInterface": "public-interface.json",
+  "changedGuardComparison": "final-consumed-source-comparison.json",
+  "historyCorrection": "original80/full83 exact source-frozen supplement, old gap/REJECT retained",
+  "requires": "Fresh independent parent C8 and native C3 judges before any root effects"
+}

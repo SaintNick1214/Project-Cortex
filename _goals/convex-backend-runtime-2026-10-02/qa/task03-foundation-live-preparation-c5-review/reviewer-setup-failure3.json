@@ -1,0 +1,194 @@
+[
+  {
+    "selection": 1,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/native-validator-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.253,
+    "stdout": "{\"status\":\"PASS\",\"registered\":259,\"public\":200,\"internal\":59,\"validatorMismatches\":0,\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 2,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.855,
+    "stdout": "{\"scope\":\"OFFLINE_ONLY\",\"status\":\"PASS\",\"negativeControls\":25,\"registered\":259,\"public\":200,\"internal\":59,\"liveQualification\":\"BLOCKED\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 3,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-arguments-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.058,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 4,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-closure-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.155,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CURRENT_TABLE_SHAPES\",\"status\":\"PASS\",\"rows\":12,\"tables\":4,\"realIds\":\"NOT_RUN_REQUIRES_OWNED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 5,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/auth-classifier-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.105,
+    "stdout": "{\"scope\":\"OFFLINE_AUTH_CLASSIFIER\",\"status\":\"PASS\",\"negativeControls\":44,\"arbitraryDeniedAccepted\":false,\"privateDiagnosticAccepted\":false,\"opaqueFailureIsAuthDenial\":false,\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 6,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/callback-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.254,
+    "stdout": "{\"scope\":\"OFFLINE_HOST_CALLBACK_PAYLOAD\",\"status\":\"PASS\",\"malformedRejected\":9,\"serviceCalls\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 7,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/management-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.042,
+    "stdout": "{\"scope\":\"OFFLINE_MANAGEMENT_CONTRACT\",\"status\":\"PASS\",\"partialRecoveryPrepared\":true,\"negativeControls\":10,\"dispatches\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 8,
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--skipLibCheck",
+      "--moduleResolution",
+      "Bundler",
+      "--module",
+      "ESNext",
+      "--target",
+      "ES2022",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/contracts.ts"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.47,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "selection": 9,
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "work/resume/current-guard-live-c5/offline-fixture/convex/tsconfig.json",
+      "--noEmit"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 7.969,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "selection": 10,
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/eslint.config.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/cases"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.226,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "selection": 11,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-mwd.ts"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.225,
+    "stdout": "{\"scope\":\"OFFLINE_AUTHOR_ONLY\",\"status\":\"PASS\",\"syntax\":\"node --check module\",\"actualSchemaRowsValidated\":19,\"tableTypes\":[\"immutable\",\"mutable\",\"sessions\",\"runtimeAuthPrincipals\",\"runtimeAuthMemberships\",\"runtimeAuthGrants\",\"runtimeMemorySources\",\"facts\"],\"registeredPaths\":74,\"metadata\":41,\"worker\":25,\"domain\":8,\"descriptorSuites\":8,\"liveStatus\":\"NOT_RUN\",\"liveDispatches\":0,\"signatures\":0,\"servicesStarted\":0,\"seededRows\":0,\"idValidation\":\"schema-only synthetic string references; actual v.id identity is live prerequisite\"}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 12,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-mra.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.459,
+    "stdout": "{\"status\":\"PASS\",\"scope\":\"OFFLINE_AUTHORING_ONLY\",\"registeredPaths\":117,\"caseDescriptors\":122,\"seedRows\":66,\"nativeSchemaValidated\":true,\"nativeArgumentsValidated\":true,\"serviceCalls\":0,\"signatures\":0,\"liveStatus\":\"NOT_RUN\"}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 13,
+    "argv": [
+      "node",
+      "-e",
+      "import('./_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/cases/mf-registry-artifacts.mjs').then(m=>console.log(JSON.stringify(m.offlineDenialControls())))"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.112,
+    "stdout": "{\"scope\":\"OFFLINE_DENIAL_ASSERTIONS\",\"positiveControls\":2,\"malformedRejected\":10,\"serviceCalls\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 14,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/forwarded-native-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.541,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_ACTUAL_SERIALIZED_FOREGROUND_CONTROL\",\"status\":\"PASS\",\"healthyCases\":[{\"path\":\"runtimeMemory:remember\",\"forwardedReferenceFields\":10,\"nativeSchemaAccepted\":true,\"noBusinessWrites\":true,\"noPrivateHydration\":true,\"extraFieldNegatives\":4},{\"path\":\"runtimeMemory:recall\",\"forwardedReferenceFields\":10,\"nativeSchemaAccepted\":true,\"noBusinessWrites\":true,\"noPrivateHydration\":true,\"extraFieldNegatives\":4}],\"unknownForwardedControls\":4,\"knownFixedDenialControls\":4,\"extraFieldNegatives\":8,\"handlerOnlyBypass\":false,\"serviceCalls\":0,\"signatures\":0,\"live\":\"NOT_RUN\"}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 15,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/first-preservation-check.mjs"
+    ],
+    "exitCode": 1,
+    "elapsedSeconds": 0.032,
+    "stdout": "",
+    "stderr": "node:internal/modules/esm/resolve:271\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/cycle4-preservation-check.mjs' imported from /workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/first-preservation-check.mjs\n    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n    at moduleResolve (node:internal/modules/esm/resolve:865:10)\n    at defaultResolve (node:internal/modules/esm/resolve:992:11)\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)\n    at #resolve (node:internal/modules/esm/loader:683:17)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)\n    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)\n    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/cycle4-preservation-check.mjs'\n}\n\nNode.js v24.19.0\n"
+  }
+]

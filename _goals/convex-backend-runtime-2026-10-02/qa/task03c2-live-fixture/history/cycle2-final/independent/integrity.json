@@ -1,0 +1,250 @@
+{
+  "observedAt": "2026-10-03T12:55:04.459260+00:00",
+  "checks": [
+    {
+      "name": "final-freeze-binding",
+      "pass": true,
+      "details": "2026-10-03T12:43:43.267462+00:00"
+    },
+    {
+      "name": "freeze-files",
+      "pass": true,
+      "details": {
+        "count": 54,
+        "bad": []
+      }
+    },
+    {
+      "name": "freeze-privateExecutorFiles",
+      "pass": true,
+      "details": {
+        "count": 15,
+        "bad": []
+      }
+    },
+    {
+      "name": "file-inventory.json",
+      "pass": true,
+      "details": {
+        "count": 511,
+        "bad": []
+      }
+    },
+    {
+      "name": "private-file-inventory.json",
+      "pass": true,
+      "details": {
+        "count": 214,
+        "bad": []
+      }
+    },
+    {
+      "name": "archive-preservation.json",
+      "pass": true,
+      "details": {
+        "count": 107,
+        "bad": []
+      }
+    },
+    {
+      "name": "14-fixture-copies-exact",
+      "pass": true,
+      "details": [
+        {
+          "source": "convex-dev/runtimeAuth.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/runtimeAuthSchema.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/runtimeMetadataAuth.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/immutable.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/mutable.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/users.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/sessions.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/schema.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/runtimeMemorySchema.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/tsconfig.json",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/_generated/server.js",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/_generated/server.d.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "convex-dev/_generated/dataModel.d.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        },
+        {
+          "source": "src/auth/verified.ts",
+          "exactAccepted": true,
+          "exactBackend": true,
+          "hash": true
+        }
+      ]
+    },
+    {
+      "name": "SDK-provenance-199-and-sources129",
+      "pass": true,
+      "details": {
+        "count": 199,
+        "sources": 129,
+        "bad": []
+      }
+    },
+    {
+      "name": "pack53-exact",
+      "pass": true,
+      "details": {
+        "sha256": "cd97dabc1428e2dc7f217bf316aff0d7bf4ebf0d843a214a5777a2228275193d",
+        "entries": 53
+      }
+    },
+    {
+      "name": "preservation-manifest-hash",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "cycle1-preserved280",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "cycle1-omission199-current-private-exact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "all407-original-independent-manifest-bindings",
+      "pass": true,
+      "details": {
+        "count": 407,
+        "bad": [],
+        "preserved": 208,
+        "privateOmissions": 199
+      }
+    },
+    {
+      "name": "41-live-outcomes-unexecuted-byte-exact",
+      "pass": true,
+      "details": [
+        "operator-provisioning",
+        "valid-owned-metadata",
+        "missing-identity",
+        "forged-signature",
+        "wrong-issuer",
+        "wrong-audience",
+        "expired-token",
+        "wrong-tenant",
+        "wrong-space",
+        "owner-denied",
+        "explicit-space-read",
+        "admin-alone-read-denied",
+        "admin-alone-write-denied",
+        "ambiguous-omission-denied",
+        "actor-binding-denied",
+        "caller-metadata-no-principal",
+        "public-internal-provision-denied",
+        "public-internal-maintenance-denied",
+        "immutable-delete-read-denied",
+        "immutable-delete-write-denied",
+        "mutable-delete-read-denied",
+        "mutable-delete-write-denied",
+        "negative-effect-counts",
+        "reactive-wrong-tenant",
+        "reactive-wrong-space",
+        "resource-deletion-subscription",
+        "grant-revocation",
+        "principal-deletion",
+        "membership-revocation",
+        "space-deletion",
+        "tenant-deletion",
+        "sdk-metadata-consumers",
+        "sdk-refresh",
+        "sdk-logout",
+        "sdk-labels-no-authority",
+        "background-after-ordinary-logout",
+        "late-credential-fencing",
+        "sanitized-host-callback",
+        "sdk-session-capability",
+        "background-after-revocation",
+        "session-end-not-grant-revocation"
+      ]
+    },
+    {
+      "name": "no-handwritten-generated-api",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "no-live-target-or-env",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "private-0700-and-key0600-owned-unlinked",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "public-secret-patterns",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "allPass": true
+}

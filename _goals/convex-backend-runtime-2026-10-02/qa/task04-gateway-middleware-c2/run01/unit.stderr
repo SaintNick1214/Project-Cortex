@@ -1,0 +1,70 @@
+(node:81886) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-dispatch.test.ts (7.048 s)
+  ● bounded governed Gateway middleware › missing durable capture withholds output, retains checkpoint and never assumes admin recovery
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "UNCERTAIN_OR_INFLIGHT",
+    +   "code": "RUN_CANCELLED",
+      }
+
+      148 |     const f = fixture(); f.captureFail(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+      149 |     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" }); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture"]); expect(f.receipts).toEqual([]);
+    > 150 |     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" });
+          |                                                        ^
+      151 |   });
+      152 |   it.each([undefined, -1, "Infinity", "not-money"])("unqualified cost %s is unavailable, never zero", async (cost) => {
+      153 |     const f = fixture(); const body = raw(); if (cost === undefined) { delete (body.usage as { cost?: unknown }).cost; } else { body.usage.cost = cost; } f.model.doGenerate = async () => generated("answer", body); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/gateway-dispatch.test.ts:150:56)
+
+  ● bounded governed Gateway middleware › stream terminal capture failure remains pending and cannot trigger another native invocation
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "TERMINAL_CAPTURE_PENDING",
+    +   "code": "STREAM_INTERRUPTED",
+      }
+
+      226 |     const f = fixture(); f.captureFail(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params());
+      227 |     const reader = result.stream.getReader(); const consume = async () => { for (;;) { const item = await reader.read(); if (item.done) return; } };
+    > 228 |     await expect(consume()).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" }); await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" });
+          |                                     ^
+      229 |     await expect(h.model.doStream(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1); expect(f.events.filter((e) => e === "capture")).toHaveLength(1); expect(f.events).not.toContain("settle");
+      230 |   });
+      231 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/gateway-dispatch.test.ts:228:37)
+
+  ● bounded governed Gateway middleware › owner retries retained sanitized terminal persistence without inference or unauthorized settlement
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      70 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      71 | }
+    > 72 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      73 | const utf8 = (text: string): number => {
+      74 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      75 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:72:44)
+      at capturePending (convex-dev/runtimeGateway.ts:306:51)
+      at Object.terminal (convex-dev/runtimeGateway.ts:356:5)
+      at convex-dev/runtimeGateway.ts:392:13
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 55 passed, 58 total
+Snapshots:   0 total
+Time:        7.283 s, estimated 8 s

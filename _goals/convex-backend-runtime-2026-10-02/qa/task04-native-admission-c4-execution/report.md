@@ -1,0 +1,5 @@
+# Task04 C4 actual native attempt
+
+FAIL: official deployment, enabled codegen/typechecking and stage/router prerequisites passed. The sole native publication query completed its argument comparison, then saving the formatted evidence exceeded the unchanged256000-byte artifact ceiling (QA_BYTES). No complete raw apiSpec response was retained. No behavioral suite was started, no owned fixture rows or storage were created, and no model was invoked. Publication/native acceptance remains incomplete.
+
+One CLI process group was verified terminal. Exact owned project3139060/helpful-possum-136 was retired through five management calls with deletion200/absence404. Three target-only credential files were removed afterward; existing RSA/team credentials remain. Source freeze244 rows stayed unchanged. Original failures and raw command/process/codegen/retirement evidence are retained. A separate bounded artifact-format repair and fresh independent review/new target are required; no budget increase or assertion removal is authorized by this failure.

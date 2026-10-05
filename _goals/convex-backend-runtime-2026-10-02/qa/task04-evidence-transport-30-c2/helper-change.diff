@@ -1,0 +1,60 @@
+--- lineage/c1/materialize.py
++++ materialize.py
+@@ -27,13 +27,18 @@
+     except BaseException:
+         os.close(fd);raise
+ 
+-def read_at(base,path):
++def read_at(base,path,maxbytes):
+     path=safe(path);parent,name=os.path.split(path);fd=directory(base/parent)
+     try:f=os.open(name,os.O_RDONLY|os.O_NOFOLLOW,dir_fd=fd)
+     finally:os.close(fd)
+     with os.fdopen(f,'rb') as stream:
+-        require(stat.S_ISREG(os.fstat(stream.fileno()).st_mode),'nonregular input')
+-        return stream.read()
++        metadata=os.fstat(stream.fileno())
++        require(stat.S_ISREG(metadata.st_mode),'nonregular input')
++        require(isinstance(maxbytes,int) and maxbytes>=0,'invalid read bound')
++        require(metadata.st_size<=maxbytes,'input exceeds trusted byte bound')
++        data=stream.read(maxbytes+1)
++        require(len(data)<=maxbytes,'input exceeds trusted byte bound')
++        return data
+ 
+ class Parts(io.RawIOBase):
+     def __init__(self,base,chunks):self.base=base;self.chunks=iter(chunks);self.current=io.BytesIO()
+@@ -45,7 +50,7 @@
+             if b:out.extend(b);continue
+             try:c=next(self.chunks)
+             except StopIteration:break
+-            b=read_at(self.base,c['path']);require(len(b)==c['bytes'] and digest(b)==c['sha256'],'chunk changed');self.current=io.BytesIO(b)
++            b=read_at(self.base,c['path'],c['bytes']);require(len(b)==c['bytes'] and digest(b)==c['sha256'],'chunk changed');self.current=io.BytesIO(b)
+         return bytes(out)
+ 
+ def entries(base,mapping):
+@@ -62,7 +67,7 @@
+ 
+ def existing(base,row):
+     path,h,size=row
+-    try:b=read_at(base,path)
++    try:b=read_at(base,path,size)
+     except FileNotFoundError:return False
+     require(len(b)==size and digest(b)==h,'existing original mismatch: '+path)
+     return True
+@@ -90,7 +95,7 @@
+ def main():
+     p=argparse.ArgumentParser();p.add_argument('--target',required=True,type=Path);p.add_argument('--materialize',action='store_true');a=p.parse_args()
+     base=Path(__file__).absolute().parent;directory_fd=directory(base);os.close(directory_fd)
+-    packed=read_at(base,'transport-map.json.gz');require(len(packed)<=LIMIT and digest(packed)==MAP_SHA256,'transport map changed')
++    packed=read_at(base,'transport-map.json.gz',LIMIT);require(len(packed)<=LIMIT and digest(packed)==MAP_SHA256,'transport map changed')
+     m=json.loads(gzip.decompress(packed));require(m['format']=='cortex-lossless-content-addressed-targzip-v1','format mismatch')
+     rows=m['files'];require(len({r[0] for r in rows})==len(rows),'duplicate allowed paths');byhash={}
+     for path,h,size in rows:
+@@ -100,7 +105,7 @@
+     archivehash=hashlib.sha256();archivebytes=0;chunkpaths=set()
+     for c in m['chunks']:
+         safe(c['path']);require(c['path'].startswith('blobs/') and c['path'] not in chunkpaths,'duplicate/invalid chunk path');chunkpaths.add(c['path'])
+-        require(0<c['bytes']<=LIMIT,'oversize chunk');b=read_at(base,c['path']);require(len(b)==c['bytes'] and digest(b)==c['sha256'],'chunk mismatch');archivehash.update(b);archivebytes+=len(b)
++        require(0<c['bytes']<=LIMIT,'oversize chunk');b=read_at(base,c['path'],c['bytes']);require(len(b)==c['bytes'] and digest(b)==c['sha256'],'chunk mismatch');archivehash.update(b);archivebytes+=len(b)
+     require(archivehash.hexdigest()==m['archiveSha256'] and archivebytes==m['archiveBytes'],'archive stream mismatch')
+     # Validate every member before creating any original file.
+     for h,b in entries(base,m):pass

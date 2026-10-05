@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "originalCoreScenarios": 43,
+  "nativeScenarios": 49,
+  "rpcSum": 2987,
+  "rowsSum": 783,
+  "coreRpc": 709,
+  "coreRows": 716,
+  "unchangedSoleDivergence": [
+    "convex-dev/runtimeModelPolicyBootstrap.ts"
+  ],
+  "acceptedGates": 16,
+  "sourceMappings": 136,
+  "C3ActualFailureManifestSelfExcludedRows": 28,
+  "C3ActualFailureActualFiles": 29,
+  "priorReviewDigestsVerified": true,
+  "budget": {
+    "logicalScenarios": 49,
+    "simultaneouslyLiveRows": 320,
+    "cumulativeRows": 783,
+    "cumulativeRowComputation": {
+      "core": 716,
+      "security": 15,
+      "fault": 40,
+      "empty": 12,
+      "recovery": 0
+    },
+    "nativeRpc": 3000,
+    "rpcWorstCase": 2987,
+    "cleanupRpc": 256,
+    "cleanupWorstCase": 51,
+    "qualifierMs": 1200000,
+    "parentDriverMs": 1440000,
+    "requestMs": 12000,
+    "peerEffectRequests": 8,
+    "peerOtherRequests": 24,
+    "processes": 6,
+    "groups": 2,
+    "storageFiles": 0,
+    "nativeClientRpc": 2991,
+    "nestedNativeInvocations": 9,
+    "rpcComputation": {
+      "coreAssertions": 709,
+      "coreCleanupAndSnapshots": 129,
+      "security": 2032,
+      "fault": 76,
+      "empty": 20,
+      "publication": 2,
+      "finalAndRecovery": 10,
+      "nestedNative": 9
+    },
+    "cumulativeDeletions": 783,
+    "cumulativeCreationAndDeletionEvents": 1566
+  }
+}

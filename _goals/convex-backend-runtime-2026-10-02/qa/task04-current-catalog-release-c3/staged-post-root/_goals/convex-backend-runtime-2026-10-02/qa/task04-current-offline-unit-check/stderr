@@ -1,0 +1,640 @@
+(node:211505) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts (11.144 s)
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+PASS tests/unit/runtimeArtifactAuth/handlers.test.ts
+PASS tests/unit/runtimeEndpointAuth/facts.test.ts
+PASS tests/unit/runtimeEndpointAuth/memory.test.ts
+PASS tests/unit/runtimeRegistryAuth/adversarial.test.ts
+PASS tests/unit/artifacts/backend.test.ts
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+PASS tests/unit/artifacts/validators.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/auth/credentials.test.ts (13.558 s)
+FAIL tests/unit/attachments/sdk.test.ts
+  ● AttachmentsAPI.generateUploadUrl › should generate upload URL successfully
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:143:30)
+
+  ● AttachmentsAPI.generateUploadUrl › should pass tenant ID when auth context provided
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:158:21)
+
+  ● AttachmentsAPI.generateUploadUrl › should use resilience layer when available
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:167:15)
+
+  ● AttachmentsAPI.getUrl › should return signed download URL
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      192 |   async getUrl(attachmentId: string): Promise<string | null> {
+      193 |     void attachmentId;
+    > 194 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+      195 |   }
+      196 |
+      197 |   /**
+
+      at AttachmentsAPI.getUrl (src/attachments/index.ts:194:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:456:30)
+
+  ● AttachmentsAPI.getUrl › should return null for non-existent attachment
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      192 |   async getUrl(attachmentId: string): Promise<string | null> {
+      193 |     void attachmentId;
+    > 194 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+      195 |   }
+      196 |
+      197 |   /**
+
+      at AttachmentsAPI.getUrl (src/attachments/index.ts:194:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:468:30)
+
+PASS tests/unit/attachments/validators.test.ts
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+FAIL tests/unit/artifacts/sdk.test.ts
+  ● ArtifactsAPI › getFileUrl() › should return file URL
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      1045 |   async getFileUrl(artifactId: string): Promise<string | null> {
+      1046 |     void artifactId;
+    > 1047 |     throw new AssetCapabilityUnavailableError();
+           |           ^
+      1048 |   }
+      1049 |
+      1050 |   /**
+
+      at ArtifactsAPI.getFileUrl (src/artifacts/index.ts:1047:11)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:651:41)
+
+  ● ArtifactsAPI › getFileUrl() › should throw validation error for empty artifactId
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected constructor: ArtifactValidationError
+    Received constructor: AssetCapabilityUnavailableError
+
+    Received message: "Authenticated asset upload and delivery are unavailable in this SDK deployment."
+
+          1045 |   async getFileUrl(artifactId: string): Promise<string | null> {
+          1046 |     void artifactId;
+        > 1047 |     throw new AssetCapabilityUnavailableError();
+               |           ^
+          1048 |   }
+          1049 |
+          1050 |   /**
+
+      at ArtifactsAPI.getFileUrl (src/artifacts/index.ts:1047:11)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:658:22)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:659:17)
+
+PASS tests/unit/runtimeAuth/authority.test.ts
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/schema.ts
++ actual - expected
+
++ 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2'
+- '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d'
+
+    at verify (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2',
+  expected: '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs /tmp/cortex-asset-index-preservation-Z5zpH0
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/schema.ts
+    + actual - expected
+
+    + 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2'
+    - '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d'
+
+      46 |     const expected = name === 'convex-dev/schema.ts' ? before.replace(needle, '')
+      47 |       : before.replace(needle, '.withIndex("by_tenant_space",');
+    > 48 |     assert.equal(hash(current[name]), expectedHash, `Exact current source hash ${name}`);
+         |            ^
+      49 |     assert.equal(current[name], expected, `Whole-byte sole authorized edit ${name}`);
+      50 |   }
+      51 | }
+
+      at verify (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2',
+        expected: '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+        operator: 'strictEqual',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:211:36)
+
+PASS tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+PASS tests/unit/users/schemas.test.ts
+PASS tests/unit/memory/recall/resultProcessor.test.ts
+PASS tests/unit/auth/context.test.ts
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeMetadataAuth/native-errors.test.ts
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/types.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts (5.743 s)
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/memory/recall/graphEnhancement.test.ts
+PASS tests/unit/memory/graph-enhancement-limits.test.ts
+PASS tests/unit/graph-enhancement-limits.test.ts
+FAIL tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● actual registered visibility and canonical schema/AST catalog › AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 30
+
+      Object {
+    -   "status": 0,
+    -   "stderr": "",
+    +   "status": 1,
+    +   "stderr": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220
+    + if (unresolved.length) throw new Error(JSON.stringify(unresolved, null, 2));
+    +                              ^
+    +
+    + Error: [
+    +   \"runtimeModelPolicy:ensureBudget: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:installDeploymentPolicy: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:provisionTenantPolicy: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:resolve: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:admit: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:checkpoint: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:markVisible: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:captureTerminalEvidence: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:attachTerminalResult: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:reconcileDeploymentLiability: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:settle: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:recover: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:releaseNotDispatched: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:cancelBudget: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:admitFallback: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:checkFallback: missing explicit module resource policy\"
+    + ]
+    +     at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220:30
+    +     at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    +     at async node:internal/modules/esm/loader:643:26
+    +     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      152 |     try {
+      153 |       const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+    > 154 |       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
+          |                                                          ^
+      155 |       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
+      156 |         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
+      157 |       };
+
+      at Object.<anonymous> (tests/unit/runtimeWorkerAuth/admin-catalog.test.ts:154:58)
+
+PASS tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+PASS tests/unit/auth/validators.test.ts
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts (5.963 s)
+PASS tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts (5.901 s)
+PASS tests/unit/sessions/validators.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeRegistryAuth/registered.test.ts
+PASS tests/unit/model-resolution.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+PASS tests/unit/recall-limits.test.ts
+PASS tests/unit/runtimeRegistryStats/registered.test.ts
+PASS tests/unit/runtimeHistoryClient/operator-bridge.test.ts (5.765 s)
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts (5.757 s)
+PASS tests/unit/runtimeRegistryAuth/catalog.test.ts
+PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+PASS tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+PASS tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts
+PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+PASS tests/unit/runtimeWorkerClient/governance.test.ts
+PASS tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+PASS tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts
+PASS tests/unit/domain/profile.test.ts
+PASS tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+FAIL tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ● deployable native schema indexes › all exported tables, including runtime schema fragments, have unique index field sequences
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 26
+    Received length: 31
+    Received array:  ["runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts", "runtimeModelPolicies", …]
+
+      23 |
+      24 |   test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
+    > 25 |     expect(Object.keys(schema.tables)).toHaveLength(26);
+         |                                        ^
+      26 |     for (const [table, definition] of Object.entries(schema.tables)) {
+      27 |       expect({ table, duplicates: duplicateIndexes(definition[" indexes"]()) })
+      28 |         .toEqual({ table, duplicates: [] });
+
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/schema-indexes.test.ts:25:40)
+
+PASS tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/attachments/upload.test.ts
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/schema.ts
++ actual - expected
+
++ 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2'
+- '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d'
+
+    at verify (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2',
+  expected: '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● native catalog composes accepted selected22 and later five file closures while preserving historical inventory
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs /tmp/cortex-artifact-inventory-fnonXh
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/schema.ts
+    + actual - expected
+
+    + 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2'
+    - '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d'
+
+      46 |     const expected = name === 'convex-dev/schema.ts' ? before.replace(needle, '')
+      47 |       : before.replace(needle, '.withIndex("by_tenant_space",');
+    > 48 |     assert.equal(hash(current[name]), expectedHash, `Exact current source hash ${name}`);
+         |            ^
+      49 |     assert.equal(current[name], expected, `Whole-byte sole authorized edit ${name}`);
+      50 |   }
+      51 | }
+
+      at verify (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2',
+        expected: '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+        operator: 'strictEqual',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:11:20)
+
+PASS tests/unit/tenant-scope.test.ts
+PASS tests/unit/lifecycle.test.ts
+
+Summary of all failing tests
+FAIL tests/unit/attachments/sdk.test.ts
+  ● AttachmentsAPI.generateUploadUrl › should generate upload URL successfully
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:143:30)
+
+  ● AttachmentsAPI.generateUploadUrl › should pass tenant ID when auth context provided
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:158:21)
+
+  ● AttachmentsAPI.generateUploadUrl › should use resilience layer when available
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:167:15)
+
+  ● AttachmentsAPI.getUrl › should return signed download URL
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      192 |   async getUrl(attachmentId: string): Promise<string | null> {
+      193 |     void attachmentId;
+    > 194 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+      195 |   }
+      196 |
+      197 |   /**
+
+      at AttachmentsAPI.getUrl (src/attachments/index.ts:194:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:456:30)
+
+  ● AttachmentsAPI.getUrl › should return null for non-existent attachment
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      192 |   async getUrl(attachmentId: string): Promise<string | null> {
+      193 |     void attachmentId;
+    > 194 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+      195 |   }
+      196 |
+      197 |   /**
+
+      at AttachmentsAPI.getUrl (src/attachments/index.ts:194:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:468:30)
+
+FAIL tests/unit/artifacts/sdk.test.ts
+  ● ArtifactsAPI › getFileUrl() › should return file URL
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      1045 |   async getFileUrl(artifactId: string): Promise<string | null> {
+      1046 |     void artifactId;
+    > 1047 |     throw new AssetCapabilityUnavailableError();
+           |           ^
+      1048 |   }
+      1049 |
+      1050 |   /**
+
+      at ArtifactsAPI.getFileUrl (src/artifacts/index.ts:1047:11)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:651:41)
+
+  ● ArtifactsAPI › getFileUrl() › should throw validation error for empty artifactId
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected constructor: ArtifactValidationError
+    Received constructor: AssetCapabilityUnavailableError
+
+    Received message: "Authenticated asset upload and delivery are unavailable in this SDK deployment."
+
+          1045 |   async getFileUrl(artifactId: string): Promise<string | null> {
+          1046 |     void artifactId;
+        > 1047 |     throw new AssetCapabilityUnavailableError();
+               |           ^
+          1048 |   }
+          1049 |
+          1050 |   /**
+
+      at ArtifactsAPI.getFileUrl (src/artifacts/index.ts:1047:11)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:658:22)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:659:17)
+
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs /tmp/cortex-asset-index-preservation-Z5zpH0
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/schema.ts
+    + actual - expected
+
+    + 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2'
+    - '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d'
+
+      46 |     const expected = name === 'convex-dev/schema.ts' ? before.replace(needle, '')
+      47 |       : before.replace(needle, '.withIndex("by_tenant_space",');
+    > 48 |     assert.equal(hash(current[name]), expectedHash, `Exact current source hash ${name}`);
+         |            ^
+      49 |     assert.equal(current[name], expected, `Whole-byte sole authorized edit ${name}`);
+      50 |   }
+      51 | }
+
+      at verify (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2',
+        expected: '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+        operator: 'strictEqual',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:211:36)
+
+FAIL tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● actual registered visibility and canonical schema/AST catalog › AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 30
+
+      Object {
+    -   "status": 0,
+    -   "stderr": "",
+    +   "status": 1,
+    +   "stderr": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220
+    + if (unresolved.length) throw new Error(JSON.stringify(unresolved, null, 2));
+    +                              ^
+    +
+    + Error: [
+    +   \"runtimeModelPolicy:ensureBudget: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:installDeploymentPolicy: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:provisionTenantPolicy: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:resolve: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:admit: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:checkpoint: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:markVisible: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:captureTerminalEvidence: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:attachTerminalResult: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:reconcileDeploymentLiability: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:settle: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:recover: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:releaseNotDispatched: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:cancelBudget: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:admitFallback: missing explicit module resource policy\",
+    +   \"runtimeModelPolicy:checkFallback: missing explicit module resource policy\"
+    + ]
+    +     at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220:30
+    +     at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    +     at async node:internal/modules/esm/loader:643:26
+    +     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      152 |     try {
+      153 |       const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+    > 154 |       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
+          |                                                          ^
+      155 |       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
+      156 |         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
+      157 |       };
+
+      at Object.<anonymous> (tests/unit/runtimeWorkerAuth/admin-catalog.test.ts:154:58)
+
+FAIL tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ● deployable native schema indexes › all exported tables, including runtime schema fragments, have unique index field sequences
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 26
+    Received length: 31
+    Received array:  ["runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts", "runtimeModelPolicies", …]
+
+      23 |
+      24 |   test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
+    > 25 |     expect(Object.keys(schema.tables)).toHaveLength(26);
+         |                                        ^
+      26 |     for (const [table, definition] of Object.entries(schema.tables)) {
+      27 |       expect({ table, duplicates: duplicateIndexes(definition[" indexes"]()) })
+      28 |         .toEqual({ table, duplicates: [] });
+
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/schema-indexes.test.ts:25:40)
+
+FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● native catalog composes accepted selected22 and later five file closures while preserving historical inventory
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs /tmp/cortex-artifact-inventory-fnonXh
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/schema.ts
+    + actual - expected
+
+    + 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2'
+    - '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d'
+
+      46 |     const expected = name === 'convex-dev/schema.ts' ? before.replace(needle, '')
+      47 |       : before.replace(needle, '.withIndex("by_tenant_space",');
+    > 48 |     assert.equal(hash(current[name]), expectedHash, `Exact current source hash ${name}`);
+         |            ^
+      49 |     assert.equal(current[name], expected, `Whole-byte sole authorized edit ${name}`);
+      50 |   }
+      51 | }
+
+      at verify (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: 'b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2',
+        expected: '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+        operator: 'strictEqual',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:11:20)
+
+
+Test Suites: 6 failed, 64 passed, 70 total
+Tests:       11 failed, 5768 passed, 5779 total
+Snapshots:   0 total
+Time:        132.869 s
+Ran all test suites within paths "/workspace/Project-Cortex/tests/unit/runtime/model-policy-admission.test.ts", "/workspace/Project-Cortex/tests/unit/runtime/gateway-terminal-composition.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/handlers.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/adversarial.test.ts", "/workspace/Project-Cortex/tests/unit/artifacts/backend.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMetadataAuth/handlers.test.ts", "/workspace/Project-Cortex/tests/unit/artifacts/validators.test.ts", "/workspace/Project-Cortex/tests/unit/runtime/model-policy-model-drift.test.ts", "/workspace/Project-Cortex/tests/unit/domain/model-policy.test.ts", "/workspace/Project-Cortex/tests/unit/auth/credentials.test.ts", "/workspace/Project-Cortex/tests/unit/attachments/sdk.test.ts", "/workspace/Project-Cortex/tests/unit/attachments/validators.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeWorkerAuth/graph.test.ts", "/workspace/Project-Cortex/tests/unit/artifacts/sdk.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/closureRepair.test.ts", "/workspace/Project-Cortex/tests/unit/users/schemas.test.ts", "/workspace/Project-Cortex/tests/unit/memory/recall/resultProcessor.test.ts", "/workspace/Project-Cortex/tests/unit/auth/context.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeUnavailableAuth/closure.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMetadataAuth/native-errors.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMemory/repository.test.ts", "/workspace/Project-Cortex/tests/unit/types.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeWorkerClient/metadata-consumers.test.ts", "/workspace/Project-Cortex/tests/unit/domain/sources.test.ts", "/workspace/Project-Cortex/tests/unit/memory/recall/graphEnhancement.test.ts", "/workspace/Project-Cortex/tests/unit/memory/graph-enhancement-limits.test.ts", "/workspace/Project-Cortex/tests/unit/graph-enhancement-limits.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts", "/workspace/Project-Cortex/tests/unit/auth/validators.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMemory/public-boundary.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/failureBoundary.test.ts", "/workspace/Project-Cortex/tests/unit/sessions/validators.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMemory/services.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/registered.test.ts", "/workspace/Project-Cortex/tests/unit/model-resolution.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMemory/public-closure.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeWorkerAuth/governance.test.ts", "/workspace/Project-Cortex/tests/unit/recall-limits.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/catalog.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/admission-errors.test.ts", "/workspace/Project-Cortex/tests/unit/domain/outcomes.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeWorkerClient/governance.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/admissionFailure.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts", "/workspace/Project-Cortex/tests/unit/domain/profile.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeMetadataAuth/registrations.test.ts", "/workspace/Project-Cortex/tests/unit/attachments/upload.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/inventory.test.ts", "/workspace/Project-Cortex/tests/unit/tenant-scope.test.ts", "/workspace/Project-Cortex/tests/unit/lifecycle.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryClient/registry-bridge.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeHistoryClient/operator-bridge.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeRegistryStats/registered.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/facts.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeAuth/inventory.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/memory.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeAuth/authority.test.ts", "/workspace/Project-Cortex/tests/unit/runtimeAuth/provisioning.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-current-offline-unit-check/outcomes.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

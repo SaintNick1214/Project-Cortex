@@ -1,0 +1,76 @@
+{
+  "observedAt": "2026-10-05T02:16:34.383624+00:00",
+  "status": "ROOT_READ_ONLY_RETAINED_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "debac301bb4e46bdb4da9c7670aee655",
+      "receiptSHA256": "673e9556885ede86019ddd3333b152a29fc054dccd79e5a7e2d91385a9d9352a",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 18563,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 10121673,
+        "st_mtime_ns": 1791166510386799378,
+        "st_ctime_ns": 1791166510386799378
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-seam-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T02:13:36.011124+00:00",
+          "utcEnd": "2026-10-05T02:13:59.808697+00:00",
+          "exitCode": 1
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/debac301bb4e46bdb4da9c7670aee655/external-seam-controls.mjs.stderr",
+          "bytes": 3576,
+          "sha256": "bf07c08a7a9c1a44aa7fda471b73be72dd4403a846241408ce84fc87e93173ab",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18561,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 3576,
+            "st_mtime_ns": 1791166440471399028,
+            "st_ctime_ns": 1791166440471399028
+          },
+          "text": "file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-seam-controls.mjs:5\nconst raw={};for(const [name,t]of Object.entries(tapes))try{raw[name]=actualRow(t.p);}catch(e){secondary.push(e);}let sourcePOST;try{sourcePOST=prepared.closure.map(r=>actualRow(r.path));assert.ok(sourcePOST.every((r,i)=>r.sha256===prepared.closure[i].sha256&&r.bytes===prepared.closure[i].bytes),'OWN_EXTERNAL_SOURCE_POST');}catch(e){primary??=e;}const remaining=[];if(initial)for(const name of fs.readdirSync('/proc').filter(n=>/^[1-9][0-9]*$/.test(n)))try{const row=proc(Number(name));if(row.pgid===initial.pgid&&row.state!=='Z')remaining.push(row);}catch(e){if(e.code!=='ENOENT')secondary.push(e);}if(remaining.length)primary??=Error('OWN_EXTERNAL_GROUP_NOT_EMPTY');const error=e=>({name:e.name,message:e.message,stack:e.stack});const receipt={root,startUTC,endUTC:utc(),argv,cwd:R,env,absoluteDeadline:deadline,before:root+'/before-node.json',initial,exitCode:code,signal,closed,raw,sourcePOST,remaining,primary:primary&&error(primary),secondary:secondary.map(error),evidenceComplete:!primary&&!secondary.length&&closed,original122:'HELD'};fs.writeFileSync(root+'/outer-receipt.json',JSON.stringify(receipt)+'\\n',{flag:'wx',mode:0o600});if(primary||secondary.length)throw new AggregateError([...(primary?[primary]:[]),...secondary],'OWN_EXTERNAL_PRIMARY_AND_ALL_SECONDARY',{cause:primary});assert.match(fs.readFileSync(tapes.stdout.p,'utf8'),/PASS_CURRENT_OWN_EXTERNAL_VM_FS_COMPILER_AND_RESTORATION/);console.log(JSON.stringify({status:'PASS_CURRENT_EXTERNAL_SEAM',root,receipt:root+'/outer-receipt.json',original122:'HELD'}));\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            \n\nAggregateError: OWN_EXTERNAL_PRIMARY_AND_ALL_SECONDARY\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-seam-controls.mjs:5:1178\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {\n  [cause]: Error: OWN_EXTERNAL_CHILD_EXIT_1_null\n      at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-seam-controls.mjs:4:1633\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5),\n  [errors]: [\n    Error: OWN_EXTERNAL_CHILD_EXIT_1_null\n        at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-seam-controls.mjs:4:1633\n        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n  ]\n}\n\nNode.js v24.19.0\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/debac301bb4e46bdb4da9c7670aee655/external-seam-controls.mjs.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18560,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791166440465419670,
+            "st_ctime_ns": 1791166440465419670
+          },
+          "text": ""
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5385,
+      "uniqueBeforeByteBackingsDecoded": 3378,
+      "beforeByteBackingRawBytes": 298753000,
+      "assessment": "Focused external seam actualexit1/output-family denial observed. No service dispatch or full external qualification inferred. No whole body in this batch; no full qualification inferred. Recorded cleanup is historical, not a fresh process census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

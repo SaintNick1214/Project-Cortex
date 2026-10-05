@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: independent-private-mode-denial exact denial
+    at judgeCase (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/provisional-watch-prefix.mjs:35:58)
+    at async file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/provisional-watch-prefix.mjs:49:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'QA_PRIVATE',
+  expected: /PRIVATE_FILE/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

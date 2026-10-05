@@ -1,0 +1,27 @@
+diff --git a/convex-dev/schema.ts b/convex-dev/schema.ts
+index c52a3381..4f0f8e46 100644
+--- a/convex-dev/schema.ts
++++ b/convex-dev/schema.ts
+@@ -1022,6 +1022,11 @@ export default defineSchema({
+     // Multi-tenancy
+     tenantId: v.optional(v.string()),
+ 
++    // Fresh trusted ownership; caller user/participant labels never grant access.
++    ownerPrincipalId: v.optional(v.string()),
++    lastActorPrincipalId: v.optional(v.string()),
++    tombstonedAt: v.optional(v.number()),
++
+     // Ownership
+     userId: v.optional(v.string()),
+     agentId: v.optional(v.string()),
+@@ -1171,6 +1176,10 @@ export default defineSchema({
+     deletedAt: v.optional(v.number()),
+     deletedBy: v.optional(v.string()),
+   })
++    // Fresh canonical selection; constrain owner before hydration/limit.
++    .index("by_runtime_scope", ["tenantId", "memorySpaceId"])
++    .index("by_runtime_key", ["tenantId", "memorySpaceId", "artifactId"])
++
+     // Unique lookups
+     .index("by_artifactId", ["artifactId"])
+ 

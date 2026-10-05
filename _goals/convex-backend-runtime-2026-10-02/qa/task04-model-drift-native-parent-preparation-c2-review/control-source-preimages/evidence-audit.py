@@ -1,0 +1,24 @@
+from pathlib import Path
+import json,hashlib,re,sys,datetime
+r=Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa';own=q/'task04-model-drift-native-parent-preparation-c2-review';H=lambda b:hashlib.sha256(b).hexdigest();rows=[];normalized=[];requests=[];watches=[];hist=[];receipts=[]
+for profile in ['extension','regression','extra']:
+ d=q/f'task04-model-drift-native-{profile}-preparation-c2';parent=(d/'scripts/parent-inputs.mjs').read_text();watch=(d/'scripts/current-inputs.mjs').read_bytes();request=json.loads((d/'project-request.json').read_bytes());requests.append(request)
+ declaration=re.search(r'export const profileContract=Object.freeze\((.*?)\);',parent).group(1);assert json.loads(declaration)==request
+ normalized.append(re.sub(r'task04-model-drift-native-(extension|regression|extra)-preparation-c[12]','DUMMY_PREPARATION',re.sub(r'export const profileContract=Object.freeze\(.*?\);','DUMMY_PROFILE',parent)))
+ watches.append(H(watch))
+ h=[re.search(r'export const '+name+r'=Object.freeze\((.*?)\);',parent,re.S).group(1) for name in ['historicalSources','historicalLocatorHashes']];hist.append(h)
+ prior=(q/f'task04-model-drift-native-{profile}-preparation-c1/scripts/parent-inputs.mjs').read_text();assert all(text==re.search(r'export const '+name+r'=Object.freeze\((.*?)\);',prior,re.S).group(1) for name,text in zip(['historicalSources','historicalLocatorHashes'],h))
+ verification=json.loads((d/'evidence/final-command-source-verification.json').read_bytes())
+ for item in verification['checks']:
+  receipt=json.loads((d/'evidence'/item['receipt']).read_bytes());p=Path(receipt['sourcePath']);b=p.read_bytes();digest=H(b);assert digest==receipt['sourceSHA256']==receipt['sourcePostSHA256']==item['before']==item['after']==item['current'];assert receipt['exitCode']==0;assert receipt['cwd']==str(r);assert datetime.datetime.fromisoformat(receipt['startedAt'])<=datetime.datetime.fromisoformat(receipt['observedAt']);receipts.append({'profile':profile,'receipt':item['receipt'],'path':str(p),'sha256':digest,'sourcePrePostCurrentEqual':True})
+ rows.append({'profile':profile,'exactContractEqualsRequest':True,'parentSHA256':H(parent.encode()),'watchSHA256':H(watch),'historicalConstantsExactC1':True,'candidateArgument':re.search(r'export const candidateArgument=(.*?);',parent).group(1),'oldCLIlabelOnly':'equality assertion only; no path/target selection','completeClosure':'independently checked separate full-closure-results.json'})
+assert len(set(watches))==1
+# Template bodies differ only fixed contract and profile-root/optional CLI labels; otherwise byte exact.
+assert len(set(normalized))==1
+assert all(x==hist[0] for x in hist)
+for key in ['operation','projectName','projectSlug','privateEnvironmentFile','runId']:assert len({x[key] for x in requests})==3
+assert len(receipts)==26
+recorder=r/'work/resume/task04-model-drift-native-preparation-c2/final-offline.py';src=recorder.read_text();assert src.index('preSourceSHA=')<src.index('res=subprocess.run(')<src.index("'sourcePostSHA256':hashlib.sha256(p.read_bytes())")
+(own/'final-offline-recorder-source.py.text').write_bytes(recorder.read_bytes())
+result={'status':'PASS','profiles':rows,'identicalNormalizedParentBodies':True,'identicalExactWatchBodies':True,'fourHistoricalSourcesAndNineLocatorsUnchanged':True,'uniqueNewIdentityFields':True,'finalReceiptsVerified':len(receipts),'receipts':receipts,'recorderSHA256':H(recorder.read_bytes()),'earlierEvidence':'NON_CERTIFYING retained failures/c2-receipt-instrumentation and c2-receipt-shadow; some exploratory UTC NOT_CAPTURED','observerHelpers':'read-only syntax inspection, not invoked/native-certified'}
+(own/'evidence-audit-results.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'status':'PASS','finalReceiptsVerified':len(receipts),'identicalParentBodies':True,'identicalWatchBodies':True}))

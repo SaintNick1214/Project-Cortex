@@ -1,0 +1,17 @@
+import ts from "typescript";
+import { execFileSync } from "node:child_process";
+import path from "node:path";
+const tracked = new Set(execFileSync("git", ["ls-tree", "-r", "--name-only", "c0c40423"], { encoding: "utf8" }).trim().split("\n").map((name) => path.resolve(name)));
+const overrides = new Map(["convex-dev/artifacts.ts", "convex-dev/schema.ts"].map((name) => [path.resolve(name), execFileSync("git", ["show", `c0c40423:${name}`], { encoding: "utf8" })]));
+const config = ts.readConfigFile("tsconfig.json", ts.sys.readFile);
+const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, process.cwd());
+const host = ts.createCompilerHost({ ...parsed.options, noEmit: true });
+const getSourceFile = host.getSourceFile.bind(host);
+host.getSourceFile = (file, language, onError, createNew) => overrides.has(path.resolve(file))
+  ? ts.createSourceFile(file, overrides.get(path.resolve(file)), language, true)
+  : getSourceFile(file, language, onError, createNew);
+const program = ts.createProgram(parsed.fileNames.filter((file) => tracked.has(path.resolve(file))), { ...parsed.options, noEmit: true }, host);
+const diagnostics = ts.getPreEmitDiagnostics(program);
+process.stdout.write(ts.formatDiagnostics(diagnostics, { getCanonicalFileName: (name) => name, getCurrentDirectory: () => process.cwd(), getNewLine: () => "\n" }));
+process.stdout.write(JSON.stringify({ baseline: "c0c40423b52e133b9a51f04d07fd21d38f27c7f2", method: "original tracked root inputs, original artifacts/schema compiler-host overlay; no source mutation", diagnostics: diagnostics.length }) + "\n");
+process.exitCode = diagnostics.length ? 2 : 0;

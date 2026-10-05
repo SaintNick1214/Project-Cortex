@@ -1,0 +1,116 @@
+{
+  "kind": "STATIC_SUBREVIEW_CURRENT_HELD9_SHA_MEMBERSHIP_SEAL",
+  "memberFiles": {
+    "/workspace/Project-Cortex/work/resume/task04-c7-recorder-v4-review": [
+      "capture.json",
+      "run-phase-v4.py",
+      "run-phase-v4.py.raw",
+      "source-verification.json"
+    ],
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c7-recorder-v4-review": [
+      "review.md",
+      "selfseal.json"
+    ]
+  },
+  "payloadFiles": [
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c7-recorder-v4-review/review.md",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870264",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "7189",
+          "mtime_ns": "1791179140981827159",
+          "ctime_ns": "1791179140981827159"
+        }
+      },
+      "bytes": 7189,
+      "sha256": "203b34016a92b1cf057985d858918354f7dd55439d37c697da935017ef9bf439"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-recorder-v4-review/capture.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870262",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2863",
+          "mtime_ns": "1791179036921858772",
+          "ctime_ns": "1791179036921858772"
+        }
+      },
+      "bytes": 2863,
+      "sha256": "e05d704cc38a6e827c1301d415d8f816b9640cce8efa482056e4cd44a8f4d51b"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-recorder-v4-review/run-phase-v4.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870260",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "11234",
+          "mtime_ns": "1791179036921552086",
+          "ctime_ns": "1791179036921552086"
+        }
+      },
+      "bytes": 11234,
+      "sha256": "c2054d7931b414bb41c1317f20aa990349e6e95467e743372dda7d030377661d"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-recorder-v4-review/run-phase-v4.py.raw",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870261",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "11234",
+          "mtime_ns": "1791179036921781517",
+          "ctime_ns": "1791179036921781517"
+        }
+      },
+      "bytes": 11234,
+      "sha256": "c2054d7931b414bb41c1317f20aa990349e6e95467e743372dda7d030377661d"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-recorder-v4-review/source-verification.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870263",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2626",
+          "mtime_ns": "1791179140981490095",
+          "ctime_ns": "1791179140981490095"
+        }
+      },
+      "bytes": 2626,
+      "sha256": "9e56597bf47b1d0b2802a9e9db3a57318ad54f14aa0fcdfa06f992e1ec4f1b32"
+    }
+  ],
+  "selfSealRule": "selfseal.json excluded from payload hashes to avoid recursion; literal own held9/hash transmitted separately to ROOT",
+  "childExecuted": false,
+  "verdict": "REJECT",
+  "fullTask04Verdict": "NOT_REVIEWED"
+}

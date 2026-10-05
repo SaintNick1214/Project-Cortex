@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-04T10:48:27.311878+00:00",
+  "status": "PENDING_BOUNDED_CURRENT_COMPOSITION_REPAIR",
+  "counts": {
+    "offlineSuites": 70,
+    "passed": 5768,
+    "failed": 11,
+    "skipped": 0
+  },
+  "currentCatalogFailures": [
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+    "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts"
+  ],
+  "evidence": "task04-current-offline-unit-check/report.json",
+  "schemaSupplement": "task04-current-schema-index-offline-check/receipt.json",
+  "exactSchemaPreservation": {
+    "originalAcceptedPostIndexRemovalSHA256": "07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d",
+    "currentSHA256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+    "soleAdditiveLines": [
+      "import { runtimePolicyTables } from \"./runtimePolicySchema\";",
+      "  ...runtimePolicyTables,"
+    ],
+    "currentInstalledSchemaTables": 31,
+    "normalIndexes": 184,
+    "noDuplicateNormalIndexFieldSequences": true
+  },
+  "constraints": [
+    "Do not edit old frozen strict-compose/inventory scripts or failures, rebaseline oldhashes, simply skip failingtests, or weaken original26-table/22declaration/17validator assertions.",
+    "A NEW current composition must verify exact accepted baseline projection + exactly approved5tablefragment/16internalpolicy registrations; preserve all old endpoints/validators/visibility and original closedauthority checks.",
+    "Source-serialized bounded executor and fresh independent review required before current assertions route to NEW runner.",
+    "Seven legacy SDKasset expectations remain pending scoped authenticatedasset Task11 and finalSDKintegration; live memoryobserver requiresverifieddisposabletarget."
+  ],
+  "limits": "Supplemental31-table duplicate check doesnot repair full unit gate or certify native/services/goal."
+}

@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "status": "PASS",
+  "observedAt": "2026-10-03T09:10:16.787Z",
+  "networkCalls": 0,
+  "paidCalls": 0,
+  "deployments": 0,
+  "deniedCases": 29,
+  "cases": [
+    {
+      "name": "deploy.mjs-directory-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "deploy.mjs-nonexistent-suffix-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "gateway-check.mjs-directory-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "gateway-check.mjs-nonexistent-suffix-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "qualify.mjs-directory-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "qualify.mjs-nonexistent-suffix-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "effect-secret.mjs-directory-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "effect-secret.mjs-nonexistent-suffix-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "verify.mjs-directory-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "verify.mjs-nonexistent-suffix-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "keys-check.mjs-directory-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "keys-check.mjs-nonexistent-suffix-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "deploy.mjs-deploy.txt-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "gateway-check.mjs-gateway-chat.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "qualify.mjs-live-receipts.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "effect-secret.mjs-effect-secret-setup.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "verify.mjs-check-commands.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "verify.mjs-transport.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "verify.mjs-live-receipts.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "keys-check.mjs-key-generator.json-archive-file-alias-before-effects",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "dangling-output-symlink-fails-before-deploy",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "hardlinked-output-fails-before-deploy",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "private-parent-symlink-nonexistent-suffix-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "private-parent-symlink-into-QA-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "existing-private-file-symlink-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "internal-private-file-symlink-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "dangling-private-file-symlink-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "hardlinked-private-file-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "existing-private-secret-mode-0644-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "interceptedEffects": 0
+    },
+    {
+      "name": "deploy.mjs-positive-control-interception-active",
+      "status": "PASS",
+      "interceptedEffects": 1,
+      "liveEffects": 0
+    },
+    {
+      "name": "gateway-check.mjs-positive-control-interception-active",
+      "status": "PASS",
+      "interceptedEffects": 2,
+      "liveEffects": 0
+    },
+    {
+      "name": "secure-private-secret-create-and-reuse-no-overwrite",
+      "status": "PASS",
+      "interceptedEffects": 2,
+      "mode": "0600",
+      "liveEffects": 0
+    }
+  ],
+  "archiveLiveReceiptUnchanged": true,
+  "noArchiveDirectoriesOrSecretsCreated": true,
+  "privateTestSecretsCleaned": true,
+  "realQualificationKeyNotRead": true,
+  "interceptionPositiveControls": true
+}

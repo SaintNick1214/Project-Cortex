@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const frozen=fs.readFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task01/contracts.md','utf8');
+const proposal=fs.readFileSync(process.argv[2],'utf8');
+assert(frozen.includes('`TextSubmitV1` has `version:1`, `agentId`, immutable `agentVersion`, optional'));
+assert(frozen.includes('`conversationId` (absence requests a new conversation), `clientRequestId` and'));
+assert(frozen.includes('`parts:[{type:"text",text:string}]`'));
+assert(proposal.includes('src/domain/transcript.ts defines strict canonical TextSubmitV1'));
+assert(proposal.includes('validatedTextSubmit is strict `{version:1,clientRequestId,conversation:'));
+console.log('OBSERVED frozen public TextSubmitV1 flat agentId/agentVersion/conversationId/parts and proposed strict nested conversation/agent/messages both version1');
+assert(proposal.includes('preserve frozen public TextSubmitV1') && proposal.includes('internal normalized admission'), 'BLOCKING_DESIGN_CONFLICT: no explicit preserved frozen public TextSubmitV1 adapter; nested strict DTO currently assigned same public v1 type');

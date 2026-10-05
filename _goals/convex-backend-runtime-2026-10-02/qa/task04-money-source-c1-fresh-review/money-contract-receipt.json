@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-04T13:20:11.268638+00:00",
+  "argv": [
+    "bash",
+    "-c",
+    "nl -ba _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/proofs.ts; sed -n \"27,40p\" _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts; rg -n \"conservativeUsdDecimal|4096|depth|ACTUAL_PROOFS\" _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/{validate,proofs}.ts; cat _goals/convex-backend-runtime-2026-10-02/qa/task04-supported-money-source-design-c1/{failure-history.json,verification.json}; cat node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "exit": 0,
+  "unchanged": true
+}

@@ -1,0 +1,82 @@
+{
+  "implementation": "READY_FOR_FRESH_COMBINED_REVIEW",
+  "qualityGate": "OBSERVED_SELECTED_OFFLINE_CHECKS_COMPLETE_REVIEW_PENDING",
+  "tests": {
+    "numTotalTestSuites": 4,
+    "numPassedTestSuites": 4,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 361,
+    "numPassedTests": 361,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "priorTests": 356,
+  "newNativeSchemaRegression": 5,
+  "discoveredSuites": [
+    "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/handlers.test.ts",
+    "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/admission-errors.test.ts",
+    "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+    "/workspace/Project-Cortex/tests/unit/runtimeArtifactAuth/inventory.test.ts"
+  ],
+  "checks": {
+    "final-lint-types": 0,
+    "final-root-types": 0,
+    "final-scoped-lint": 0,
+    "final-discovery": 0,
+    "final-backend-types": 0,
+    "final-native-tests": 0,
+    "composer-lint": 0
+  },
+  "before": {
+    "tables": 26,
+    "fullNativeIndexes": 174,
+    "mainSourceIndexChains": 162,
+    "duplicateSequences": 1
+  },
+  "after": {
+    "tables": 26,
+    "fullNativeIndexes": 173,
+    "mainSourceIndexChains": 161,
+    "duplicateSequences": 0
+  },
+  "initialFailureRetained": "native-tests.json + stderr/stdout/receipt",
+  "remainingBlocker": "Fresh independent repair judgment required",
+  "liveCases": "NOT_RUN",
+  "Task03": "INCOMPLETE",
+  "Task04": "HELD",
+  "composition": {
+    "originalAssertions": "UNCHANGED",
+    "testEdit": "SOLE_SCRIPT_PATH_CHANGE",
+    "immutableOldComposer": "UNCHANGED",
+    "originalNegativeControls": 4,
+    "additionalCurrentTamperControls": 5,
+    "exactCurrentProductEdits": 3
+  },
+  "operationalScratchDependencies": 0,
+  "publicOperationalManifest": "operational-dependencies.json",
+  "expandedArtifactAssetTests": {
+    "numTotalTestSuites": 5,
+    "numPassedTestSuites": 5,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 751,
+    "numPassedTests": 751,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "artifactOriginalTests": 356,
+  "newArtifactNativeRegression": 5,
+  "originalAssetTests": 390,
+  "expandedChecks": {
+    "final-asset-composition-scoped-lint": 0,
+    "asset-composition-backend-types": 0,
+    "asset-composition-discovery": 0,
+    "final-asset-composition-native-tests": 0,
+    "asset-composition-native-tests": 1,
+    "asset-composition-lint-types": 0,
+    "final-asset-composition-discovery": 0,
+    "asset-composition-scoped-lint": 0,
+    "asset-composition-root-types": 0
+  },
+  "preservedInitialExpandedFailure": "asset-composition-native-tests.json:750PASS/1FAIL/751",
+  "finalExpandedNativeReceipt": "final-asset-composition-native-tests.receipt.json"
+}

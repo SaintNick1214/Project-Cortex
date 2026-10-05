@@ -1,0 +1,10 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/scripts/guard.mjs:22
+function assertCompleteManifest(directory,manifest,excluded,historical=false){const paths=completePaths(directory).filter(name=>name!==excluded),expected=manifest.files.map(row=>row.path);if(historical)expected.sort();if(JSON.stringify(paths)!==JSON.stringify(expected)||new Set(expected).size!==expected.length)throw Error('QA_PRESERVATION_INVENTORY');}
+                                                                                                                                                                                                                                                                                                                              ^
+
+Error: QA_PRESERVATION_INVENTORY
+    at assertCompleteManifest (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/scripts/guard.mjs:22:319)
+    at Module.preservationPreflight (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/scripts/guard.mjs:23:310)
+    at file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-extension-preparation-c3/verify-final.mjs:3:320
+
+Node.js v24.19.0

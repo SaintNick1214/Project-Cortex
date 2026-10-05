@@ -1,0 +1,31 @@
+{
+  "status": "PASS_STANDALONE_OFFLINE_ONLY",
+  "UTC": "2026-10-04T10:15:05.466972+00:00",
+  "all26TracesVerified": true,
+  "adverseControls": [
+    {
+      "name": "dropped-case",
+      "result": "CORRECTLY_REJECTED"
+    },
+    {
+      "name": "RPC-overrun",
+      "result": "CORRECTLY_REJECTED"
+    },
+    {
+      "name": "created-overrun",
+      "result": "CORRECTLY_REJECTED"
+    },
+    {
+      "name": "authority-denial-masquerade",
+      "result": "CORRECTLY_REJECTED"
+    },
+    {
+      "name": "cleanup-omitted",
+      "result": "CORRECTLY_REJECTED"
+    }
+  ],
+  "targetRPC": 2961,
+  "createdUpper": 444,
+  "journalBytesUpper": 7143424,
+  "augmentedNewRunWindowOwnershipAssertions": "26/26 PASS_OFFLINE"
+}

@@ -1,0 +1,11 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex/validate.ts:6
+export function fail(code       )      {throw new Error(code)}
+                                              ^
+
+Error: CAPTURE_COLLISION
+    at fail (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex/validate.ts:6:47)
+    at Function.handler [as _handler] (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex/guard.ts:19:476)
+    at async Harness.mutation (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/harness.mjs:13:1002)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/metadata-purge.mjs:30:1
+
+Node.js v24.19.0

@@ -1,0 +1,43 @@
+--- exact-candidate
++++ review-only-copy
+@@ -2,20 +2,20 @@
+ import { ConvexError, v } from "convex/values";
+ import type { Infer } from "convex/values";
+ import { z } from "zod";
+-import { internalMutation, internalQuery } from "./_generated/server";
+-import type { MutationCtx, QueryCtx } from "./_generated/server";
+-import type { Doc, Id } from "./_generated/dataModel";
+-import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
+-import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+-import { createAuthorityReader, recheckAuthority } from "./runtimeAuth";
+-import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
+-import { sameAuthority } from "./runtimeWorkerAuth";
+-import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
+-import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest } from "../src/domain/model-policy";
+-import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
+-import { isTrustedDeploymentManifest, lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
+-import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
+-import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
++import { internalMutation, internalQuery } from "/workspace/Project-Cortex/convex-dev/_generated/server";
++import type { MutationCtx, QueryCtx } from "/workspace/Project-Cortex/convex-dev/_generated/server";
++import type { Doc, Id } from "/workspace/Project-Cortex/convex-dev/_generated/dataModel";
++import type { RuntimeAuthorityReference, RuntimeCapability } from "/workspace/Project-Cortex/src/auth/verified";
++import { runtimeAuthorityReference } from "/workspace/Project-Cortex/convex-dev/runtimeAuthSchema";
++import { createAuthorityReader, recheckAuthority } from "/workspace/Project-Cortex/convex-dev/runtimeAuth";
++import { ConvexMemoryRepository, memoryScope } from "/workspace/Project-Cortex/convex-dev/runtimeMemoryRepository";
++import { sameAuthority } from "/workspace/Project-Cortex/convex-dev/runtimeWorkerAuth";
++import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, semanticHash } from "/workspace/Project-Cortex/src/domain/profile";
++import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest } from "/workspace/Project-Cortex/src/domain/model-policy";
++import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "/workspace/Project-Cortex/src/domain/model-policy";
++import { isTrustedDeploymentManifest, lookupDeploymentManifest } from "/workspace/Project-Cortex/convex-dev/runtimeModelPolicyBootstrap";
++import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "/workspace/Project-Cortex/convex-dev/runtimeModelPolicyBootstrap";
++import { modelOperationKey, modelSource, visibilityFields } from "/workspace/Project-Cortex/convex-dev/runtimePolicySchema";
+ 
+ type ReadCtx = Pick<QueryCtx, "db">;
+ type WriteCtx = Pick<MutationCtx, "db">;
+@@ -801,3 +801,5 @@
+   const checked = await currentOperation(ctx, args.reference, operation);
+   return { allowed: fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) && fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId) };
+ } });
++
++export { domainControl };

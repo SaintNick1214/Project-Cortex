@@ -1,0 +1,153 @@
+{
+  "result": {
+    "manifestId": "qa-task04-synthetic-v1",
+    "revision": 1
+  },
+  "rows": [
+    {
+      "table": "runtimeModelPolicies",
+      "_id": "dummy-1",
+      "policyId": "qa-deployment",
+      "version": 1,
+      "scope": "deployment",
+      "canonical": "{\"policyId\":\"qa-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[\"fixture/fallback\"],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1}",
+      "root": {
+        "manifestId": "qa-task04-synthetic-v1",
+        "revision": 1,
+        "canonical": "{\"acceptanceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"artifactRevision\":\"qa-c2-ledger-only\",\"budgetWindowMs\":60000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-chat\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-fallback\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"manifestId\":\"qa-task04-synthetic-v1\",\"policies\":[{\"policyId\":\"qa-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[\"fixture/fallback\"],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1},{\"agentId\":\"qa-agent\",\"agentVersion\":7,\"policyId\":\"qa-agent-policy\",\"rules\":{\"limits\":{\"outputTokens\":100}},\"scope\":\"agent\",\"tenantId\":\"admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-chat\"},{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":80,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-fallback\"}],\"revision\":1}",
+        "hash": "b9255d18764521ce1085ad20786c0648943a0a8f28e6882c896f65c14334ccb7",
+        "artifactRevision": "qa-c2-ledger-only",
+        "evidenceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "acceptanceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "active": true,
+      "createdAt": 1791091852121
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "_id": "dummy-2",
+      "policyId": "qa-agent-policy",
+      "version": 1,
+      "scope": "agent",
+      "tenantId": "admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial",
+      "agentId": "qa-agent",
+      "agentVersion": 7,
+      "canonical": "{\"agentId\":\"qa-agent\",\"agentVersion\":7,\"policyId\":\"qa-agent-policy\",\"rules\":{\"limits\":{\"outputTokens\":100}},\"scope\":\"agent\",\"tenantId\":\"admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial\",\"version\":1}",
+      "root": {
+        "manifestId": "qa-task04-synthetic-v1",
+        "revision": 1,
+        "canonical": "{\"acceptanceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"artifactRevision\":\"qa-c2-ledger-only\",\"budgetWindowMs\":60000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-chat\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-fallback\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"manifestId\":\"qa-task04-synthetic-v1\",\"policies\":[{\"policyId\":\"qa-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[\"fixture/fallback\"],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1},{\"agentId\":\"qa-agent\",\"agentVersion\":7,\"policyId\":\"qa-agent-policy\",\"rules\":{\"limits\":{\"outputTokens\":100}},\"scope\":\"agent\",\"tenantId\":\"admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-chat\"},{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":80,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-fallback\"}],\"revision\":1}",
+        "hash": "b9255d18764521ce1085ad20786c0648943a0a8f28e6882c896f65c14334ccb7",
+        "artifactRevision": "qa-c2-ledger-only",
+        "evidenceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "acceptanceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "active": true,
+      "createdAt": 1791091852121
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "_id": "dummy-3",
+      "receiptId": "qa-chat",
+      "version": 1,
+      "canonical": "{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-chat\"}",
+      "root": {
+        "manifestId": "qa-task04-synthetic-v1",
+        "revision": 1,
+        "canonical": "{\"acceptanceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"artifactRevision\":\"qa-c2-ledger-only\",\"budgetWindowMs\":60000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-chat\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-fallback\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"manifestId\":\"qa-task04-synthetic-v1\",\"policies\":[{\"policyId\":\"qa-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[\"fixture/fallback\"],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1},{\"agentId\":\"qa-agent\",\"agentVersion\":7,\"policyId\":\"qa-agent-policy\",\"rules\":{\"limits\":{\"outputTokens\":100}},\"scope\":\"agent\",\"tenantId\":\"admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-chat\"},{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":80,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-fallback\"}],\"revision\":1}",
+        "hash": "b9255d18764521ce1085ad20786c0648943a0a8f28e6882c896f65c14334ccb7",
+        "artifactRevision": "qa-c2-ledger-only",
+        "evidenceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "acceptanceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "active": true,
+      "createdAt": 1791091852121
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "_id": "dummy-4",
+      "receiptId": "qa-fallback",
+      "version": 1,
+      "canonical": "{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":80,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-fallback\"}",
+      "root": {
+        "manifestId": "qa-task04-synthetic-v1",
+        "revision": 1,
+        "canonical": "{\"acceptanceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"artifactRevision\":\"qa-c2-ledger-only\",\"budgetWindowMs\":60000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-chat\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-fallback\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"manifestId\":\"qa-task04-synthetic-v1\",\"policies\":[{\"policyId\":\"qa-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[\"fixture/fallback\"],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1},{\"agentId\":\"qa-agent\",\"agentVersion\":7,\"policyId\":\"qa-agent-policy\",\"rules\":{\"limits\":{\"outputTokens\":100}},\"scope\":\"agent\",\"tenantId\":\"admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-chat\"},{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"text\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":80,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"fixture/fallback\",\"nativeInterface\":\"chat\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-fallback\"}],\"revision\":1}",
+        "hash": "b9255d18764521ce1085ad20786c0648943a0a8f28e6882c896f65c14334ccb7",
+        "artifactRevision": "qa-c2-ledger-only",
+        "evidenceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "acceptanceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "active": true,
+      "createdAt": 1791091852121
+    }
+  ],
+  "calls": [
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_scope_active",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_policy_version",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "kind": "insert"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_policy_version",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "kind": "insert"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "index": "by_receipt",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "kind": "insert"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "index": "by_receipt",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "kind": "insert"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_scope_active",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_policy_version",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_policy_version",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "index": "by_receipt",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "index": "by_receipt",
+      "kind": "read"
+    }
+  ]
+}

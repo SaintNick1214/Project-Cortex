@@ -1,0 +1,368 @@
+import {
+  createJsonErrorResponseHandler,
+  createJsonResponseHandler,
+  getErrorMessage,
+  getFromApi,
+  lazySchema,
+  resolve,
+  zodSchema,
+} from '@ai-sdk/provider-utils';
+import { z } from './zod';
+import { asGatewayError } from './errors';
+import type { GatewayConfig } from './gateway-config';
+
+export interface GatewayGenerationInfoParams {
+  /** The generation ID to look up (format: gen_<ulid>) */
+  id: string;
+}
+
+export interface GatewayGenerationInfo {
+  /** The generation ID */
+  id: string;
+  /** Total cost in USD */
+  totalCost: number;
+  /** Upstream inference cost in USD (BYOK only) */
+  upstreamInferenceCost: number;
+  /** Usage cost in USD (same as totalCost) */
+  usage: number;
+  /** ISO 8601 timestamp when the generation was created */
+  createdAt: string;
+  /** Model identifier */
+  model: string;
+  /** Whether BYOK credentials were used */
+  isByok: boolean;
+  /** Provider that served this generation */
+  providerName: string;
+  /** Whether streaming was used */
+  streamed: boolean;
+  /** Finish reason (e.g. 'stop') */
+  finishReason: string;
+  /** Time to first token in milliseconds */
+  latency: number;
+  /** Total generation time in milliseconds */
+  generationTime: number;
+  /** Number of prompt tokens */
+  promptTokens: number;
+  /** Number of completion tokens */
+  completionTokens: number;
+  /** Reasoning tokens used */
+  reasoningTokens: number;
+  /** Cached tokens used */
+  cachedTokens: number;
+  /** Cache creation input tokens */
+  cacheCreationTokens: number;
+  /** Billable web search calls */
+  billableWebSearchCalls: number;
+}
+
+export class GatewayGenerationInfoFetcher {
+  constructor(private readonly config: GatewayConfig) {}
+
+  async getGenerationInfo(
+    params: GatewayGenerationInfoParams,
+  ): Promise<GatewayGenerationInfo> {
+    try {
+      const baseUrl = new URL(this.config.baseURL);
+
+      const { value } = await getFromApi({
+        url: `${baseUrl.origin}/v1/generation?id=${encodeURIComponent(params.id)}`,
+        validateUrl: false,
+        headers: this.config.headers
+          ? await resolve(this.config.headers)
+          : undefined,
+        successfulResponseHandler: createJsonResponseHandler(
+          gatewayGenerationInfoResponseSchema,
+        ),
+        failedResponseHandler: createJsonErrorResponseHandler({
+          errorSchema: z.any(),
+          errorToMessage: data => getErrorMessage(data) ?? 'unknown error',
+        }),
+        fetch: this.config.fetch,
+      });
+
+      return value;
+    } catch (error) {
+      throw await asGatewayError(error);
+    }
+  }
+}
+
+const gatewayGenerationInfoResponseSchema = lazySchema(() =>
+  zodSchema(
+    z
+      .object({
+        data: z
+          .object({
+            id: z.string(),
+            total_cost: z.number(),
+            upstream_inference_cost: z.number(),
+            usage: z.number(),
+            created_at: z.string(),
+            model: z.string(),
+            is_byok: z.boolean(),
+            provider_name: z.string(),
+            streamed: z.boolean(),
+            finish_reason: z.string(),
+            latency: z.number(),
+            generation_time: z.number(),
+            native_tokens_prompt: z.number(),
+            native_tokens_completion: z.number(),
+            native_tokens_reasoning: z.number(),
+            native_tokens_cached: z.number(),
+            native_tokens_cache_creation: z.number(),
+            billable_web_search_calls: z.number(),
+          })
+          .transform(
+            ({
+              total_cost,
+              upstream_inference_cost,
+              created_at,
+              is_byok,
+              provider_name,
+              finish_reason,
+              generation_time,
+              native_tokens_prompt,
+              native_tokens_completion,
+              native_tokens_reasoning,
+              native_tokens_cached,
+              native_tokens_cache_creation,
+              billable_web_search_calls,
+              ...rest
+            }) => ({
+              ...rest,
+              totalCost: total_cost,
+              upstreamInferenceCost: upstream_inference_cost,
+              createdAt: created_at,
+              isByok: is_byok,
+              providerName: provider_name,
+              finishReason: finish_reason,
+              generationTime: generation_time,
+              promptTokens: native_tokens_prompt,
+              completionTokens: native_tokens_completion,
+              reasoningTokens: native_tokens_reasoning,
+              cachedTokens: native_tokens_cached,
+              cacheCreationTokens: native_tokens_cache_creation,
+              billableWebSearchCalls: billable_web_search_calls,
+            }),
+          ),
+      })
+      .transform(({ data }) => data),
+  ),
+);
+
+# Present finite money domain and future extraction gate
+
+Current exact frozen observer→closed-money admissible domain is EMPTY: official reviewed observer predicates define raw usage.cost and token counts but no exact category extraction schema. Therefore observedCategories=[] and closed createResolver.money must return UNKNOWN/missing-evidence; cost0 is not qualified zero. Capture reruns observer and preserves UNKNOWN/fullK/STOP. Do not copy diagnostic raw usage.categories, infer inference, accept caller categories/proof, or amend actual registry EMPTY. Mock-resolver full-money positives remain conditional algebra tests, not supported closed pipeline proof. This is an explicit unresolved actual-money pipeline/qualification blocker for ultimate Task04, not removal of required functionality.
+
+Before ANY positive observer-money admissions a separately reviewed finite source-evidence extraction contract must provide: exact official provider/adapter/type source SHA+locations/version; method-specific supported raw result/chunk paths; exact own-data field/type/scalar categories schema; sorted enum/duplicate/conflict/unknown semantics; completeness across cache-read/cache-write/cancelled/inference/rejected/routing/surcharge and all attempts; correlation to raw ID/model/dispatch; usage-tail ordering; rejected/cancelled evidence without inferred local outcome; amount/currency semantic provenance; drift coverage; capture transcript revalidation. A hash-only categorySemanticProof without its exact predicate is insufficient. The future interface remains module-private extractMoneyNomination(ctx, verifiedTranscript, compiledAcceptedCategorySemantics), returning UNKNOWN(reason) or exact immutable categories bound to rawDigest/transcriptRef and actual raw amount/currency. It accepts no public label or proof choice. Until concrete official supported bytes and predicate pass independent design+source gates, only UNKNOWN is admissible. No present synthetic schema is asserted to be official.
+
+{
+  "argv": [
+    "python",
+    "work/resume/task04-money-source-read.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startedAt": "2026-10-04T12:56:18.720243+00:00",
+  "endedAt": "2026-10-04T12:56:19.571971+00:00",
+  "sourceBefore": [
+    {
+      "path": "node_modules/@ai-sdk/gateway/package.json",
+      "bytes": 1957,
+      "sha256": "1a8b88db7b6a7d8d30531f0605788a25c251a4cf967b5399d1f63cb01b67c3a0"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.js",
+      "bytes": 120197,
+      "sha256": "0db6213cd7bce40298f8e11954aa99da73a3cb816591dc5851184aa373261a52"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.d.ts",
+      "bytes": 66417,
+      "sha256": "c45b3896686598e7033464a5529fd5ed898668d501453d78060d0e310fe6e7d5"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-generation-info.ts",
+      "bytes": 4709,
+      "sha256": "af9d77a6b0c9cda77d798a4e3f4ea931ef823ba1c672d637532a4eac2468f802"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-language-model.ts",
+      "bytes": 7385,
+      "sha256": "093808f7d0117949585dea596df438fa6bd35a7eebf427646972f83633ec0c8d"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts",
+      "bytes": 4119,
+      "sha256": "e320be6dbe2941f9ad552cefee10c4414893bb760ecebcb218b4f5a9755254e3"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "node_modules/@ai-sdk/gateway/package.json",
+      "bytes": 1957,
+      "sha256": "1a8b88db7b6a7d8d30531f0605788a25c251a4cf967b5399d1f63cb01b67c3a0"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.js",
+      "bytes": 120197,
+      "sha256": "0db6213cd7bce40298f8e11954aa99da73a3cb816591dc5851184aa373261a52"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.d.ts",
+      "bytes": 66417,
+      "sha256": "c45b3896686598e7033464a5529fd5ed898668d501453d78060d0e310fe6e7d5"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-generation-info.ts",
+      "bytes": 4709,
+      "sha256": "af9d77a6b0c9cda77d798a4e3f4ea931ef823ba1c672d637532a4eac2468f802"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-language-model.ts",
+      "bytes": 7385,
+      "sha256": "093808f7d0117949585dea596df438fa6bd35a7eebf427646972f83633ec0c8d"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts",
+      "bytes": 4119,
+      "sha256": "e320be6dbe2941f9ad552cefee10c4414893bb760ecebcb218b4f5a9755254e3"
+    }
+  ],
+  "publicDocumentationOnly": true,
+  "noCredentialsOrPaidCalls": true,
+  "result": {
+    "status": 200,
+    "url": "https://ai-sdk.dev/providers/ai-sdk-providers/ai-gateway",
+    "contentType": "text/markdown",
+    "bytes": 70918,
+    "sha256": "ef607898f92882f45636250be07f3298915b4feea73dea9df38154c96d2bee23"
+  },
+  "qualificationAcceptance": false
+}
+
+600: ## Generation Lookup
+601: 
+602: Look up detailed information about a specific generation by its ID, including cost, token usage, latency, and provider details. Generation IDs are available in `providerMetadata.gateway.generationId` on both `generateText` and `streamText` responses.
+603: 
+604: When streaming, the generation ID is injected on the first content chunk, so you can capture it early in the stream without waiting for completion. This is especially useful in cases where a network interruption or mid-stream error could prevent you from receiving the final response — since the gateway records the final status server-side, you can use the generation ID to look up the results (including cost, token usage, and finish reason) later via `getGenerationInfo()`.
+605: 
+606: ```ts
+607: import { gateway, generateText } from 'ai';
+608: 
+609: // Make a request
+610: const result = await generateText({
+611:   model: gateway('anthropic/claude-sonnet-5.5'),
+612:   prompt: 'Explain quantum entanglement briefly',
+613: });
+614: 
+615: // Get the generation ID from provider metadata
+616: const generationId = result.providerMetadata?.gateway?.generationId as
+617:   | string
+618:   | undefined;
+619: 
+620: // Look up detailed generation info
+621: if (generationId) {
+622:   const generation = await gateway.getGenerationInfo({ id: generationId });
+623: 
+624:   console.log(`Model: ${generation.model}`);
+625:   console.log(`Cost: $${generation.totalCost.toFixed(6)}`);
+626:   console.log(`Latency: ${generation.latency}ms`);
+627:   console.log(`Prompt tokens: ${generation.promptTokens}`);
+628:   console.log(`Completion tokens: ${generation.completionTokens}`);
+629: }
+630: ```
+631: 
+632: With `streamText`, you can capture the generation ID from the first chunk via `stream`:
+633: 
+634: ```ts
+635: import { gateway, streamText } from 'ai';
+636: 
+637: const result = streamText({
+638:   model: gateway('anthropic/claude-sonnet-5.5'),
+639:   prompt: 'Explain quantum entanglement briefly',
+640: });
+641: 
+642: let generationId: string | undefined;
+643: 
+644: for await (const part of result.stream) {
+645:   if (!generationId && part.providerMetadata?.gateway?.generationId) {
+646:     generationId = part.providerMetadata.gateway.generationId as string;
+647:     console.log(`Generation ID (early): ${generationId}`);
+648:   }
+649: }
+650: 
+651: // Look up cost and usage after the stream completes
+652: if (generationId) {
+653:   const generation = await gateway.getGenerationInfo({ id: generationId });
+654:   console.log(`Cost: $${generation.totalCost.toFixed(6)}`);
+655:   console.log(`Finish reason: ${generation.finishReason}`);
+656: }
+657: ```
+658: 
+659: You can also capture the generation ID for every completed model call with
+660: `onLanguageModelCallEnd`. The callback runs before client-side tools execute,
+661: so the metadata remains available even if the operation is later aborted while
+662: a tool is running:
+663: 
+664: ```ts
+665: import { gateway, generateText } from 'ai';
+666: 
+667: await generateText({
+668:   model: gateway('anthropic/claude-sonnet-5.5'),
+669:   prompt: 'Explain quantum entanglement briefly',
+670:   onLanguageModelCallEnd({ providerMetadata }) {
+671:     const generationId = providerMetadata?.gateway?.generationId as
+672:       | string
+673:       | undefined;
+674: 
+675:     if (generationId) {
+676:       console.log(`Completed Gateway generation: ${generationId}`);
+677:     }
+678:   },
+679: });
+680: ```
+681: 
+682: The `getGenerationInfo()` method accepts:
+683: 
+684: - **id** *string* - The generation ID to look up (format: `gen_<ulid>`, required)
+685: 
+686: It returns a `GatewayGenerationInfo` object with the following fields:
+687: 
+688: - **id** *string* - The generation ID
+689: - **totalCost** *number* - Total cost in USD
+690: - **upstreamInferenceCost** *number* - Upstream inference cost in USD (relevant for BYOK)
+691: - **usage** *number* - Usage cost in USD (same as totalCost)
+692: - **createdAt** *string* - ISO 8601 timestamp when the generation was created
+693: - **model** *string* - Model identifier used
+694: - **isByok** *boolean* - Whether Bring Your Own Key credentials were used
+695: - **providerName** *string* - The provider that served this generation
+696: - **streamed** *boolean* - Whether streaming was used
+697: - **finishReason** *string* - Finish reason (e.g. `'stop'`)
+698: - **latency** *number* - Time to first token in milliseconds
+699: - **generationTime** *number* - Total generation time in milliseconds
+700: - **promptTokens** *number* - Number of prompt tokens
+701: - **completionTokens** *number* - Number of completion tokens
+702: - **reasoningTokens** *number* - Reasoning tokens used (if applicable)
+703: - **cachedTokens** *number* - Cached tokens used (if applicable)
+704: - **cacheCreationTokens** *number* - Cache creation input tokens
+705: - **billableWebSearchCalls** *number* - Number of billable web search calls
+706: 
+707: ## Examples
+1659: // The model that produced the answers, the fallback when the condition matched.
+1660: console.log(result.response.modelId);
+1661: console.log(JSON.stringify(result.providerMetadata?.gateway?.routing, null, 2));
+1662: ```
+1663: 
+1664: When the condition matches, `result.response.modelId` names the fallback model,
+1665: and `providerMetadata.gateway.routing.modelAttempts` lists the primary and
+1666: fallback attempts. The successful attempt of each stage carries its own
+1667: `generationId`, `usage`, and cost fields, and the first fallback attempt lists
+1668: the questions that triggered it in `triggeredBy`.
+1669: 
+1670: #### Zero Data Retention Example
+1671: 
+1672: Set `zeroDataRetention` to true to route requests to providers with zero data retention agreements with Vercel for AI Gateway. BYOK credentials are skipped by default, since your provider agreements differ from Vercel's. When this filter is on, AI Gateway routes only to providers Vercel has ZDR agreements with for the model. If you have BYOK keys marked as ZDR, those keys are tried first, then AI Gateway falls back to its system credentials. You are responsible for the accuracy of that marking. Applies to both account-wide and request-level ZDR. The request fails if no ZDR-eligible credentials are available. When `zeroDataRetention` is `false` or not specified, there is no enforcement of restricting routing. Request-level ZDR is only available for Vercel Pro and Enterprise plans.
+1673: 
+1674: ```ts
+1675: import type { GatewayProviderOptions } from '@ai-sdk/gateway';
+1676: import { generateText } from 'ai';

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "recordedAtUTC": "2026-10-04T02:18:40.811104+00:00",
+  "provenance": "Observed cloud_environment.environment_status and executor policy in this resumed turn; readiness observations are not service qualification or paid authorization.",
+  "observationsCurrent": true,
+  "networkPolicy": {
+    "mode": "unrestricted",
+    "state": "enforced"
+  },
+  "runtimeVariables": [
+    {
+      "name": "OPENAI_API_KEY",
+      "state": "ready"
+    },
+    {
+      "name": "CONVEX_TEAM_ID",
+      "state": "ready"
+    },
+    {
+      "name": "CONVEX_TEAM_API_KEY",
+      "state": "ready"
+    }
+  ],
+  "executorPolicySha256": "266ee47b22dd736206e1454a525c3003a458e742c7fca6b13765f4d8b5289275",
+  "vpnConfigured": false,
+  "tcpNetworkAccess": {
+    "domains": [],
+    "ip_ranges": []
+  },
+  "nativeBrowserToolDiscovery": "No callable CUA/browser/computer-use tool in current ALL_TOOLS; Sites capabilities do not provide repository UI interaction.",
+  "serviceCoverage": "NOT_RUN_BY_THIS_READINESS_CHECK",
+  "paidInferenceAuthorization": "NOT_INFERRED"
+}

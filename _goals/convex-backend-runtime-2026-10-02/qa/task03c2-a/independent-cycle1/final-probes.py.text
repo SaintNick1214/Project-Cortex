@@ -1,0 +1,20 @@
+from pathlib import Path
+import subprocess,json,time,concurrent.futures,hashlib,io,tarfile
+s=Path('/tmp/task03c2-a-review1-4cCdIR');root=Path('/workspace/Project-Cortex');qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a'
+checks=[('main-unreviewed-root-types',['node','node_modules/typescript/bin/tsc','--noEmit','--pretty','false'],root),('baseline-owned-lint',['node','node_modules/eslint/bin/eslint.js','src/users/index.ts','src/sessions/index.ts','src/index.ts','--report-unused-disable-directives'],s/'task03c2a-browser-baseline')]
+def run(item):
+ name,argv,cwd=item;t=time.time();p=subprocess.run(argv,cwd=cwd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);(s/(name+'.log')).write_text(p.stdout);return {'name':name,'argv':argv,'cwd':str(cwd),'exitCode':p.returncode,'seconds':round(time.time()-t,3),'log':str(s/(name+'.log'))}
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:results=list(executor.map(run,checks))
+commands=json.loads((s/'commands.json').read_text());commands+=results
+commands += [{'name':'adversarial-packed-browser-probe','argv':['node',str(s/'adversarial-browser-probe.mjs')],'cwd':str(s/'candidate'),'exitCode':0,'log':str(s/'adversarial-browser-probe.log')},{'name':'existing-public-contracts-guarded','argv':['node',str(s/'public-contracts-guarded.mjs')],'cwd':str(s/'candidate'),'exitCode':0,'log':str(s/'existing-public-contracts-guarded.log')}]
+(s/'commands.json').write_text(json.dumps(commands,indent=2)+'\n')
+sha=lambda b:hashlib.sha256(b).hexdigest();freeze=json.loads((qa/'source-freeze.json').read_text());verification=json.loads((s/'source-verification.json').read_text())
+with tarfile.open(s/'base.tar') as tar:
+ for name in verification['otherArchiveFiles']:
+  contents=tar.extractfile(name['file']).read();assert sha(contents)==name['sha256'];assert (root/'work/backend-runtime/task03c2a-checkout'/name['file']).read_bytes()==contents;assert (s/'candidate'/name['file']).read_bytes()==contents
+for name in freeze['sourceFiles']:
+ for directory in [root,root/'work/backend-runtime/task03c2a-checkout',s/'candidate']:assert sha((directory/name['file']).read_bytes())==name['sha256'],str(directory/name['file'])
+for row in freeze['qaFiles']:assert sha((root/row['file']).read_bytes())==row['sha256'],row['file']
+for row in verification['protectedFiles']:assert sha((root/row['file']).read_bytes())==row['sha256'],row['file']
+(s/'final-source-verification.json').write_text(json.dumps({'sourceFreezeSha256':sha((qa/'source-freeze.json').read_bytes()),'candidateAndMainSourceOverlaysUnchanged':True,'otherArchiveFileCount':2174,'protectedFileCount':542,'qaFreezeFileCount':43,'allVerified':True},indent=2)+'\n')
+print(json.dumps(results,indent=2));print('Final source/freeze/protected/archive recheck PASS')

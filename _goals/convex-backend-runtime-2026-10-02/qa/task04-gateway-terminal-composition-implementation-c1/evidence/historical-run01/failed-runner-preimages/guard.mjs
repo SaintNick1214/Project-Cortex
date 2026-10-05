@@ -1,0 +1,16 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import assert from 'node:assert/strict';
+export const root="/workspace/Project-Cortex";export const qa="/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical";export const work="/workspace/Project-Cortex/work/resume/task04-gateway-terminal-composition-implementation-c1/historical";
+const expectedResolverHash="9d9b4f56d4a2ab4b6699efba260cfae9f8ec1960070c2a6e1896fcde519c6d38";
+const expectedFreezeHash="eab4b3bf55a6abf062c88d71298ec9cc1bf3623b4417e8b089368c2d64946a96";
+export const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+export function inventory(folder){const out=[];for(const d of fs.readdirSync(folder,{withFileTypes:true})){const p=path.join(folder,d.name);if(d.isSymbolicLink())throw Error('SYMLINK_DENIED');if(d.isDirectory())out.push(...inventory(p));else if(d.isFile())out.push(p);else throw Error('FILE_TYPE_DENIED');}return out.sort();}
+export function loadFreeze(){assert.equal(hash(path.join(qa,'freeze.json')),expectedFreezeHash,'FREEZE_CHANGED');return JSON.parse(fs.readFileSync(path.join(qa,'freeze.json'),'utf8'));}
+export function verify(config=JSON.parse(fs.readFileSync(path.join(qa,'jest.historical.json'),'utf8'))){
+ assert.equal(hash(path.join(qa,'resolver.cjs')),expectedResolverHash,'RESOLVER_SOURCE_CHANGED');const f=loadFreeze();assert.deepEqual(config,f.config,'MAPPING_OR_CONFIG_CHANGED');assert.deepEqual(inventory(path.join(qa,'catalog')),f.local.map(r=>path.join(qa,r.catalog)).sort(),'MISSING_OR_EXTRA_CATALOG_FILE');
+ assert.deepEqual(inventory(path.join(qa,'official-preimages')),f.official.map(r=>path.join(qa,r.snapshot)).sort(),'MISSING_OR_EXTRA_OFFICIAL_FILE');
+ for(const r of f.local){assert.equal(hash(path.join(qa,r.catalog)),r.sha256,'CATALOG_SOURCE_OR_TEST_CHANGED');if(r.original.endsWith('.test.ts'))assert.equal(hash(path.join(root,r.original)),r.sha256,'ORIGINAL_TEST_CHANGED');}
+ for(const r of f.official){assert.equal(hash(r.path),r.sha256,'OFFICIAL_DEPENDENCY_CHANGED');assert.equal(hash(path.join(qa,r.snapshot)),r.sha256,'OFFICIAL_PREIMAGE_CHANGED');}
+ return {scope:'HISTORICAL_ONLY',files:f.local.length+f.official.length,tests:f.expectedTests};
+}
+export function assertResolved(request,resolved){const f=loadFreeze();const row=f.local.find(r=>path.join(qa,r.catalog)===resolved)??f.official.find(r=>r.path===resolved);assert.ok(row,'UNCATALOGED_MODULE_RESOLUTION');assert.equal(hash(resolved),row.sha256,'RESOLVED_MODULE_CHANGED');return {request,resolved,sha256:row.sha256,verified:true};}
+export function guardCurrentConfig(config){assert.equal((config.setupFiles??[]).length,0);assert.equal((config.setupFilesAfterEnv??[]).length,0);assert.ok(!config.resolver,'CURRENT_RESOLVER_MUST_BE_SEPARATELY_REVIEWED');assert.equal(Object.keys(config.moduleNameMapper??{}).length,0,'CURRENT_NO_HISTORICAL_ALIAS');for(const value of [...(config.roots??[]),...(config.testMatch??[])])assert.ok(!value.includes('historical')&&!value.includes('/catalog/'),'CURRENT_NO_HISTORICAL_SOURCE');return {scope:'CURRENT_GUARD_TEMPLATE_ONLY',testsExecuted:0};}

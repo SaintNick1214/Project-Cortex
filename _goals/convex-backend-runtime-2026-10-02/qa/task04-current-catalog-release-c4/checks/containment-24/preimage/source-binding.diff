@@ -1,0 +1,82 @@
+--- C3/current-compose.mjs
++++ C4/current-compose.mjs
+@@ -6,9 +6,9 @@
+ import {readExact,inspectAncestors} from './containment.mjs';
+ import {execute} from './private-compose.mjs';
+ const base=path.dirname(fileURLToPath(import.meta.url));
+-const root='/workspace/Project-Cortex';
++import {repositoryRoot as root} from './repository-location.mjs';
+ inspectAncestors(base);
+-const pinned=JSON.parse(readExact(path.join(base,'source-runtime.json'),'410dd9bc4624ebe4e63590a829342874dfa8c47749048ce15b81875a75dc47be').toString()).sources;
++const pinned=JSON.parse(readExact(path.join(base,'source-runtime.json'),'0b95c86c703e9b73d1ed707e0dcd38805e5a3f3c408e2bbaa1a1ba3d7c532792').toString()).sources;
+ const H=text=>crypto.createHash('sha256').update(text).digest('hex');
+ const pins=new Map(pinned.map(r=>[r.path,r.sha256]));
+ const approvedBytes=readExact(path.join(base,'approved-additions.json'),'0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b');
+@@ -55,7 +55,7 @@
+  assert.ok(controls&&Object.getPrototypeOf(controls)===Object.prototype);
+  for(const key of Reflect.ownKeys(controls)){assert.ok(typeof key==='string'&&['sourceRoot','instrument','failAt','childFault'].includes(key),'UNKNOWN_CONTROL_OPTION');assert.ok('value' in Object.getOwnPropertyDescriptor(controls,key),'CONTROL_ACCESSOR_DENIED')}
+  const sourceRoot=controls.sourceRoot??root;
+- assert.equal(typeof sourceRoot,'string');if(sourceRoot!==root)assert.ok(path.resolve(sourceRoot).startsWith(base+path.sep)||path.resolve(sourceRoot).startsWith(root+'/work/resume/task04-current-catalog-release-c3/'),'CONTROL_SOURCE_SCOPE');
++ assert.equal(typeof sourceRoot,'string');if(sourceRoot!==root)assert.ok(path.resolve(sourceRoot).startsWith(base+path.sep)||path.resolve(sourceRoot).startsWith(root+'/work/resume/task04-current-catalog-release-c4/'),'CONTROL_SOURCE_SCOPE');
+  inspectAncestors(sourceRoot);
+  // Immutable pin/metadata reads happen before execute performs any allocations.
+  const sources=Object.fromEntries(['convex-dev/schema.ts','convex-dev/runtimePolicySchema.ts','convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeGateway.ts'].map(name=>[name,readExact(path.join(sourceRoot,name),pins.get(name)).toString()]));
+--- C3/private-compose.mjs
++++ C4/private-compose.mjs
+@@ -8,7 +8,7 @@
+ export function execute({base,root,pinned,destination,buildResult,projection,policy,sourceRoot=root,instrument,failAt,childFault}){
+  assert.ok(childFault===undefined||['native-import','baseline-output','inventory-output'].includes(childFault),'UNKNOWN_CHILD_FAULT');
+  assert.ok(failAt===undefined||STAGES.includes(failAt),'UNKNOWN_CONTROL_STAGE');
+- if(sourceRoot!==root)assert.ok(path.resolve(sourceRoot).startsWith(base+path.sep)||path.resolve(sourceRoot).startsWith(root+'/work/resume/task04-current-catalog-release-c3/'),'CONTROL_SOURCE_SCOPE');
++ if(sourceRoot!==root)assert.ok(path.resolve(sourceRoot).startsWith(base+path.sep)||path.resolve(sourceRoot).startsWith(root+'/work/resume/task04-current-catalog-release-c4/'),'CONTROL_SOURCE_SCOPE');
+  const buffers=new Map();const preimageExpected=new Map(pinned.map(r=>[r.path,r.sha256]));
+  // No allocation or other filesystem mutation occurs before every source/tree fence.
+  verifyTree(path.join(base,'preimages'),preimageExpected);
+@@ -16,8 +16,8 @@
+  const dynamicExtensions=/\.(?:[cm]?[jt]sx?|json)$/;
+  const liveConvex=new Map(pinned.filter(r=>r.path.startsWith('convex-dev/')).map(r=>[r.path.slice('convex-dev/'.length),r.sha256]));
+  const observed=[];function walk(dir){for(const name of fs.readdirSync(dir)){const p=path.join(dir,name),s=fs.lstatSync(p);assert.ok(!s.isSymbolicLink(),'UNEXPECTED_LIVE_SOURCE_SYMLINK');if(s.isDirectory())walk(p);else if(dynamicExtensions.test(name)){assert.ok(s.isFile(),'UNEXPECTED_LIVE_SOURCE_TYPE');observed.push(path.relative(path.join(sourceRoot,'convex-dev'),p))}}}walk(path.join(sourceRoot,'convex-dev'));assert.deepEqual(observed.sort(),[...liveConvex.keys()].sort(),'UNEXPECTED_DYNAMIC_SOURCE_TREE');
+- const output=verifyOutput(destination,[base,root+'/work/resume/task04-current-catalog-release-c3']);
+- const workRoot=path.join(root,'work/resume/task04-current-catalog-release-c3');const workParents=inspectAncestors(workRoot);assert.ok(fs.lstatSync(workRoot).isDirectory());
++ const output=verifyOutput(destination,[base,root+'/work/resume/task04-current-catalog-release-c4']);
++ const workRoot=path.join(root,'work/resume/task04-current-catalog-release-c4');const workParents=inspectAncestors(workRoot);assert.ok(fs.lstatSync(workRoot).isDirectory());
+  const selected=new Map([...buffers].filter(([name])=>name.startsWith('convex-dev/')||name.startsWith('src/')||name.startsWith('_goals/')||['package.json','convex.json'].includes(name)));
+  const expected=new Map([...selected].map(([name,bytes])=>[name,hash(bytes)]));
+  let workspace,identity,replica,stage='source',committed=false;const outputRecords=[],logs=[];
+--- C3/fixture-entry.mjs
++++ C4/fixture-entry.mjs
+@@ -1,3 +1,5 @@
++import path from 'node:path';
++import {fileURLToPath} from 'node:url';
+ import {composeForControls} from './current-compose.mjs';
+-const sourceRoot='/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c3/staged-post-root';
++const sourceRoot=path.join(path.dirname(fileURLToPath(import.meta.url)),'staged-post-root');
+ console.log(JSON.stringify(composeForControls(process.argv[2],{sourceRoot})));
+--- C3/release-preconditions.mjs
++++ C4/release-preconditions.mjs
+@@ -3,8 +3,8 @@
+ import {fileURLToPath} from 'node:url';
+ import {readExact} from './containment.mjs';
+ const base=path.dirname(fileURLToPath(import.meta.url));
+-const root='/workspace/Project-Cortex';
+-const transition=JSON.parse(readExact(path.join(base,'source-transition.json'),'9b3e09f74a4ba500f2c61cf5e471929dec978faacfe6327cd17f939685dfae88').toString());
++import {repositoryRoot as root} from './repository-location.mjs';
++const transition=JSON.parse(readExact(path.join(base,'source-transition.json'),'c949a17de6a6da5a109bbccad3323079c97bf232c54015c95902d1f4967e832c').toString());
+ export function verifyReleaseState(phase){
+  assert.ok(phase==='PRE'||phase==='POST','EXACT_PHASE_REQUIRED');
+  const file=phase==='PRE'?'source-before.json':'source-runtime.json';
+--- C3/repository-location.mjs
++++ C4/repository-location.mjs
+@@ -0,0 +1,12 @@
++import assert from 'node:assert/strict';
++import path from 'node:path';
++import {fileURLToPath} from 'node:url';
++import {inspectAncestors} from './containment.mjs';
++const base=path.dirname(fileURLToPath(import.meta.url));
++assert.equal(path.basename(base),'task04-current-catalog-release-c4','FIXED_PACKET_ANCESTRY');
++assert.equal(path.basename(path.dirname(base)),'qa','FIXED_QA_ANCESTRY');
++assert.equal(path.basename(path.resolve(base,'../..')),'convex-backend-runtime-2026-10-02','FIXED_GOAL_ANCESTRY');
++assert.equal(path.basename(path.resolve(base,'../../..')),'_goals','FIXED_GOALS_ANCESTRY');
++inspectAncestors(base);
++export const repositoryRoot=path.resolve(base,'../../../..');
++inspectAncestors(repositoryRoot);

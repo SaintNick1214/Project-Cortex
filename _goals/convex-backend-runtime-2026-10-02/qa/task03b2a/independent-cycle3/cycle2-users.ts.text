@@ -1,0 +1,36 @@
+/** User metadata is immutable data, never a runtime control principal or grant. */
+import { query, mutation } from "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/_generated/server";
+import { v } from "convex/values";
+import { versions } from "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/immutable";
+import { scopeArgs, authority, immutableRow, candidates, check, fresh, tombstone, page } from "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/runtimeMetadataAuth";
+const userArgs = { userId: v.string(), ...scopeArgs };
+export const get = query({ args: userArgs, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+  return row ? { id: row.id, data: row.data, version: row.version, createdAt: row.createdAt, updatedAt: row.updatedAt } : null;
+} });
+export const list = query({ args: { ...scopeArgs, limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const rows = (await candidates(ctx, "immutable", await authority(ctx, "read", args), "read")).filter((row) => row.type === "user");
+  return rows.slice(0, page(args.limit, rows.length)).map((row) => ({ id: row.id, data: row.data, version: row.version, createdAt: row.createdAt, updatedAt: row.updatedAt }));
+} });
+export const count = query({ args: scopeArgs, handler: async (ctx, args) => (await candidates(ctx, "immutable", await authority(ctx, "read", args), "read")).filter((row) => row.type === "user").length });
+export const getVersion = query({ args: { ...userArgs, version: v.number() }, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read"); page(args.version, 1);
+  const version = row ? versions(row).find((value) => value.version === args.version) : undefined;
+  return version ? { version: version.version, data: version.data, timestamp: version.timestamp } : null;
+} });
+export const getHistory = query({ args: userArgs, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+  return row ? versions(row).reverse().map((version) => ({ version: version.version, data: version.data, timestamp: version.timestamp })) : [];
+} });
+export const getAtTimestamp = query({ args: { ...userArgs, timestamp: v.number() }, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+  const version = row ? versions(row).filter((value) => value.timestamp <= args.timestamp).at(-1) : undefined;
+  return version ? { version: version.version, data: version.data, timestamp: version.timestamp } : null;
+} });
+export const exists = query({ args: userArgs, handler: async (ctx, args) => (await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read")) !== null });
+export const deleteUserProfile = mutation({ args: userArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await immutableRow(ctx, auth, "user", args.userId, "write");
+  if (!row) { await fresh(ctx, auth, "write"); return { deleted: false }; }
+  await check(ctx, "immutable", row, auth, "write"); await tombstone(ctx, "immutable", row); await fresh(ctx, auth, "write");
+  return { deleted: true };
+} });

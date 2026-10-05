@@ -1,0 +1,30 @@
+from pathlib import Path
+import hashlib,json,subprocess,os,datetime
+r=Path.cwd();b=r/'_goals/convex-backend-runtime-2026-10-02/qa';q=b/'task04-parent-native-inputs-c6-review';w=r/'work/resume/task04-parent-native-inputs-c6-review';c=b/'task04-native-admission-fixture-c8';p=b/'task04-parent-native-inputs-c6-preparation'
+def sha(f):return hashlib.sha256(f.read_bytes()).hexdigest()
+def row(f):return {'path':str(f.relative_to(r)),'sha256':sha(f),'bytes':f.stat().st_size}
+checks=[]; protected=set()
+for d,expected,freeze in [(p,'e92325fc6de576f293573346e809193deef2574af68c8169ea7eee920be701db','632ad42964123da5b4ee64853ac223e6f1fb88984dbc199c05b89a9da86e29dc'),(c,'befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9','1264ebbc92de50dbc0b55833e2ec1e30d09c48ccd4f0c6a63680134a63277d3f')]:
+ assert sha(d/'qa-manifest.json')==expected;assert sha(d/'runtime-freeze.json')==freeze
+ m=json.loads((d/'qa-manifest.json').read_text()); actual=sorted(str(f.relative_to(d)) for f in d.rglob('*') if f.is_file() and str(f.relative_to(d))!='qa-manifest.json');assert actual==sorted(x['path'] for x in m['files'])
+ for x in m['files']:
+  f=d/x['path'];assert sha(f)==x['sha256'] and f.stat().st_size==x['bytes'];protected.add(f)
+ protected.add(d/'qa-manifest.json');checks.append({'packet':str(d.relative_to(r)),'rows':len(m['files']),'manifestSHA256':expected,'freezeSHA256':freeze})
+for packet in json.loads((c/'historical-preservation.json').read_text())['packets']:
+ d=r/packet['path'];f=d/packet['manifest'];assert sha(f)==packet['manifestSHA256'];m=json.loads(f.read_text());assert len(m['files'])==packet['rows']; assert sorted(str(f.relative_to(d)) for f in d.rglob('*') if f.is_file() and str(f.relative_to(d))!=packet['manifest'])==sorted(x['path'] for x in m['files'])
+ for x in m['files']:
+  f=d/x['path'];assert sha(f)==x['sha256'] and f.stat().st_size==x['bytes'];protected.add(f)
+ protected.add(d/packet['manifest'])
+se=json.loads((p/'source-evidence.json').read_text())
+for k,v in se.items():
+ if isinstance(v,list):
+  for x in v:
+   if isinstance(x,dict) and all(t in x for t in ['path','sha256','bytes']):
+    f=r/x['path'];assert sha(f)==x['sha256'] and f.stat().st_size==x['bytes'];protected.add(f)
+source=set([r/'work/resume/task04-native-c8-parent-inputs.mjs',r/'work/resume/task04-native-current-inputs-c6.mjs',w/'fresh.mjs',w/'run.py',w/'prepare.py'])
+source.update(c/x['path'] for x in json.loads((c/'runtime-freeze.json').read_text())['files']);source.update(r/x['path'] for x in json.loads((c/'runtime-inputs.json').read_text())['externalSources'])
+for f in source:
+ dest=q/'source-preimages'/f.relative_to(r);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(f.read_bytes())
+pre=[row(f) for f in sorted(protected|source)];argv=['node','--experimental-vm-modules',str(w/'fresh.mjs')];start=datetime.datetime.now(datetime.timezone.utc).isoformat();(q/'pre.json').write_text(json.dumps({'utc':start,'argv':argv,'cwd':str(r),'protected':pre,'manifestChecks':checks,'configuration':{'realCredentialReads':0,'realNetwork':0,'realSigning':0,'VM':'actual modules; controlled imports; isolated dummy key only'}},indent=2)+'\n')
+with (q/'fresh.stdout').open('x') as out,(q/'fresh.stderr').open('x') as err:result=subprocess.run(argv,cwd=r,env={'PATH':str(r/'work/resume/toolchain-bin')+':'+os.environ['PATH'],'LANG':'C.UTF-8'},stdout=out,stderr=err,timeout=90)
+post=[row(f) for f in sorted(protected|source)];assert post==pre;(q/'post.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'protected':post},indent=2)+'\n');(q/'execution.json').write_text(json.dumps({'argv':argv,'cwd':str(r),'startedAt':start,'exitCode':result.returncode,'protectedStable':True,'protectedFiles':len(pre)},indent=2)+'\n');print(result.returncode);raise SystemExit(result.returncode)

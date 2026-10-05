@@ -1,0 +1,592 @@
+[
+  {
+    "operation": "remember",
+    "scenario": "healthy",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "ownerless-private",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "malformed-semantics",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-delete-principal",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-delete-membership",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-delete-grant",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-delete-space",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-remove-capability",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-version-grant",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "initial-bad-issuer",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "healthy",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "ownerless-private",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "malformed-semantics",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-delete-principal",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-delete-membership",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-delete-grant",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-delete-space",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-remove-capability",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-version-grant",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ],
+    "writes": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "initial-bad-issuer",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "calls": [
+      "runtimeAuth:authorize"
+    ],
+    "reads": [
+      "runtimeAuthPrincipals"
+    ],
+    "writes": 0
+  }
+]

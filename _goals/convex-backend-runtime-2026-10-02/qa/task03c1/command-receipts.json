@@ -1,0 +1,294 @@
+[
+  {
+    "id": "jest-auth-final",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/auth",
+      "--runInBand",
+      "--forceExit",
+      "--json",
+      "--outputFile=work/backend-runtime/task03c1/jest-results-final.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {
+      "CONVEX_URL": "https://example.convex.cloud"
+    },
+    "started": "2026-10-03T09:21:18.276Z",
+    "ended": "2026-10-03T09:21:34.344Z",
+    "exitCode": 0,
+    "rawOutput": "jest-auth-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "scoped-lint-final",
+    "command": [
+      "npx",
+      "--no-install",
+      "eslint",
+      "src/auth/credentials.ts",
+      "src/auth/index.ts",
+      "src/index.ts",
+      "tests/unit/auth/credentials.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:21:18.279Z",
+    "ended": "2026-10-03T09:21:27.064Z",
+    "exitCode": 0,
+    "rawOutput": "scoped-lint-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "browser-typecheck-final",
+    "command": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--project",
+      "work/backend-runtime/task03c1/tsconfig.browser.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:21:18.280Z",
+    "ended": "2026-10-03T09:21:20.152Z",
+    "exitCode": 0,
+    "rawOutput": "browser-typecheck-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "browser-bundle-final",
+    "command": [
+      "node_modules/.bin/esbuild",
+      "src/auth/credentials.ts",
+      "--bundle",
+      "--platform=browser",
+      "--format=esm",
+      "--metafile=work/backend-runtime/task03c1/browser-metafile-final.json",
+      "--outfile=work/backend-runtime/task03c1/credentials-browser-final.js"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:21:18.281Z",
+    "ended": "2026-10-03T09:21:18.335Z",
+    "exitCode": 0,
+    "rawOutput": "browser-bundle-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "root-typecheck-final",
+    "command": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:21:18.282Z",
+    "ended": "2026-10-03T09:21:38.844Z",
+    "exitCode": 2,
+    "rawOutput": "root-typecheck-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "root-lint-final",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:21:18.282Z",
+    "ended": "2026-10-03T09:22:08.777Z",
+    "exitCode": 0,
+    "rawOutput": "root-lint-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "build-final",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:21:18.289Z",
+    "ended": "2026-10-03T09:21:36.848Z",
+    "exitCode": 0,
+    "rawOutput": "build-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "public-contracts-final",
+    "command": [
+      "npm",
+      "run",
+      "test:contracts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "started": "2026-10-03T09:22:08.778Z",
+    "ended": "2026-10-03T09:22:10.539Z",
+    "exitCode": 1,
+    "rawOutput": "public-contracts-final.txt",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "build-coherent",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "build-coherent.txt",
+    "sequencing": "Observed sequentially after coordinator serialized dist ownership; output files completed before next check.",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "public-contracts-coherent",
+    "command": [
+      "npm",
+      "run",
+      "test:contracts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "public-contracts-coherent.txt",
+    "sequencing": "Observed sequentially after coordinator serialized dist ownership; output files completed before next check.",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "public-host-contract-packed",
+    "command": [
+      "node",
+      "work/backend-runtime/task03c1/public-host-contract.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "public-host-contract-packed.txt",
+    "sequencing": "Observed sequentially after coordinator serialized dist ownership; output files completed before next check.",
+    "sourcePhase": "pre-review historical snapshot"
+  },
+  {
+    "id": "jest-auth-review-freeze",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/auth",
+      "--runInBand",
+      "--forceExit",
+      "--json",
+      "--outputFile=work/backend-runtime/task03c1/jest-results-review-freeze.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {
+      "CONVEX_URL": "https://example.convex.cloud"
+    },
+    "exitCode": 0,
+    "rawOutput": "jest-auth-review-freeze.txt",
+    "sourcePhase": "first-review essential fix final freeze",
+    "sourceFreeze": "sourcehashes.json"
+  },
+  {
+    "id": "scoped-lint-review-freeze",
+    "command": [
+      "npx",
+      "--no-install",
+      "eslint",
+      "src/auth/credentials.ts",
+      "src/auth/index.ts",
+      "src/index.ts",
+      "tests/unit/auth/credentials.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "scoped-lint-review-freeze.txt",
+    "sourcePhase": "first-review essential fix final freeze",
+    "sourceFreeze": "sourcehashes.json"
+  },
+  {
+    "id": "scoped-types-review-freeze",
+    "command": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "scoped-types-review-freeze.txt",
+    "sourcePhase": "first-review essential fix final freeze",
+    "sourceFreeze": "sourcehashes.json"
+  },
+  {
+    "id": "browser-types-review-freeze",
+    "command": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--project",
+      "work/backend-runtime/task03c1/tsconfig.browser.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "browser-types-review-freeze.txt",
+    "sourcePhase": "first-review essential fix final freeze",
+    "sourceFreeze": "sourcehashes.json"
+  },
+  {
+    "id": "browser-bundle-review-freeze",
+    "command": [
+      "node_modules/.bin/esbuild",
+      "src/auth/credentials.ts",
+      "--bundle",
+      "--platform=browser",
+      "--format=esm",
+      "--metafile=work/backend-runtime/task03c1/browser-metafile-review-freeze.json",
+      "--outfile=work/backend-runtime/task03c1/credentials-browser-review-freeze.js"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {},
+    "exitCode": 0,
+    "rawOutput": "browser-bundle-review-freeze.txt",
+    "sourcePhase": "first-review essential fix final freeze",
+    "sourceFreeze": "sourcehashes.json"
+  },
+  {
+    "id": "essential-fix-first-wire-probe",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/auth",
+      "--runInBand",
+      "--forceExit",
+      "--json",
+      "--outputFile=work/backend-runtime/task03c1/jest-results-reactive-fix.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environmentOverrides": {
+      "CONVEX_URL": "https://example.convex.cloud"
+    },
+    "exitCode": 1,
+    "rawOutput": "jest-auth-reactive-fix.txt",
+    "sourcePhase": "historical initial reactive adapter before None wire workaround",
+    "observedResult": "95 tests;93 passed,2 failed requiring actual Authenticate(None) delivery; fixed without assertion relaxation"
+  }
+]

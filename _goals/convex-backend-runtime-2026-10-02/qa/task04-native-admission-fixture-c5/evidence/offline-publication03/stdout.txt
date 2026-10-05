@@ -1,0 +1,19 @@
+{"case":"preserved-C4-writer-red","basis":"SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":281,"rawBaselineBytes":198852,"rawWorstBytes":256000,"functionsCompactBytes":191397,"equalityCompactBytes":56265,"C4FormattedReceiptBytes":564697,"perArtifactCeiling":256000}
+{"case":"full281-publication-writer-reader","phase":"synthetic","source":"OFFLINE_SYNTHETIC_NOT_NATIVE","basis":"SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":281,"rawBaselineBytes":198852,"rawWorstBytes":256000,"functionsCompactBytes":191397,"equalityCompactBytes":56265,"C4FormattedReceiptBytes":564697,"perArtifactCeiling":256000,"bundleBytes":304965,"chunks":[128000,128000,48965],"receiptBytes":1190,"phaseEvidenceBytes":563800}
+{"case":"full281-publication-writer-reader","phase":"empty","source":"OFFLINE_SYNTHETIC_NOT_NATIVE","basis":"SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":281,"rawBaselineBytes":198852,"rawWorstBytes":256000,"functionsCompactBytes":191397,"equalityCompactBytes":56265,"C4FormattedReceiptBytes":564697,"perArtifactCeiling":256000,"bundleBytes":304961,"chunks":[128000,128000,48961],"receiptBytes":1178,"phaseEvidenceBytes":1127556}
+(node:94896) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ C4 actual formatted exclusive writer reproduces QA_BYTES with FULL281 validator/equality records before any file write (4.436142ms)
+✔ actual C5 writer/reader retains FULL281 tuple+args/equalities/opaque HTTP and exact256000 raw in BOTH phases without cap growth (429.301847ms)
+✔ actual bounded raw capture precedes comparison failure, preserves every byte and fails closed on overwrite or257000-byte response (101.862816ms)
+✔ actual strict reader rejects truncation/altered chunk/order/hash/phase/source/operation/opaque metadata/args after adversarial rehash (1309.323404ms)
+✔ actual driver session independently reconstructs and compares full281 BOTH phases, rejects corrupted artifact before any RPC/client/journal (332.80425ms)
+✔ source-bound publication/driver preserve exactly1 query; aggregate journal reserves bounded publication bytes/rows under unchanged8MiB/6000 (0.370818ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2327.284487

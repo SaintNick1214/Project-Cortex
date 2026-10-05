@@ -36,6 +36,27 @@ import {
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
 
+/**
+ * Manual enforcement requires a trusted backend worker. The current worker
+ * adapter records simulations; actual retention deletion is not implemented.
+ */
+export class GovernanceCapabilityError extends Error {
+  readonly code = "BACKEND_ENFORCEMENT_ONLY";
+  readonly retryable = false;
+  readonly outcome = "not_dispatched";
+  readonly requiredExecution = "trusted_backend_worker";
+  readonly enforcementAdapter = "SIMULATION";
+
+  constructor() {
+    super(
+      "Manual governance enforcement requires a trusted backend worker. " +
+        "No operation was dispatched. The current backend enforcement adapter " +
+        "performs simulation only; automatic retention deletion is not implemented.",
+    );
+    this.name = "GovernanceCapabilityError";
+  }
+}
+
 export class GovernanceAPI {
   constructor(
     private readonly client: ConvexClient,
@@ -54,26 +75,6 @@ export class GovernanceAPI {
       return this.resilience.execute(operation, operationName);
     }
     return operation();
-  }
-
-  /**
-   * Handle ConvexError from direct Convex calls
-   */
-  private handleConvexError(error: unknown): never {
-    if (
-      error &&
-      typeof error === "object" &&
-      "data" in error &&
-      (error as { data: unknown }).data !== undefined
-    ) {
-      const convexError = error as { data: unknown };
-      const errorData =
-        typeof convexError.data === "string"
-          ? convexError.data
-          : JSON.stringify(convexError.data);
-      throw new Error(errorData);
-    }
-    throw error;
   }
 
   /**
@@ -351,40 +352,23 @@ export class GovernanceAPI {
   }
 
   /**
-   * Manually enforce governance policy
+   * Validate a manual enforcement request and reject client-side execution.
    *
-   * Triggers immediate policy enforcement across specified layers and rules.
-   * Normally enforcement is automatic, but this allows manual triggering.
+   * Enforcement is internal to trusted backend workers. This client method
+   * dispatches no request and does not enter the resilience layer. The current
+   * backend adapter records simulations only; actual retention deletion,
+   * including automatic retention enforcement, is not implemented.
    *
    * @param options - Enforcement options (layers, rules)
-   * @returns Enforcement result with counts
-   *
-   * @example
-   * ```typescript
-   * const result = await cortex.governance.enforce({
-   *   layers: ["vector", "immutable"],
-   *   rules: ["retention", "purging"]
-   * });
-   * console.log(`Deleted ${result.versionsDeleted} versions`);
-   * ```
+   * @throws {GovernanceValidationError} If the options are invalid.
+   * @throws {GovernanceCapabilityError} For valid options; requires a trusted
+   * backend worker, is not retryable, and has outcome `not_dispatched`.
    */
   async enforce(options: EnforcementOptions): Promise<EnforcementResult> {
     // Validate enforcement options
     validateEnforcementOptions(options);
 
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return await this.executeWithResilience(
-        () =>
-          this.client.mutation(
-            api.governance.enforce as FunctionReference<"mutation">,
-            { options },
-          ),
-        "governance:enforce",
-      );
-    } catch (error) {
-      this.handleConvexError(error);
-    }
+    throw new GovernanceCapabilityError();
   }
 
   /**

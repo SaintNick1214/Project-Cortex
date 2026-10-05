@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import json,hashlib;q=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-design-c2\");r=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-c1-fresh-review/report.md\");assert hashlib.sha256(r.read_bytes()).hexdigest()==\"ae0da221338d40c55165230e2e80e65734f7b0a0d64b0798da80f318233fead5\";pairs=[];[(pairs.append(p.name),None if json.loads(p.read_text())[\"files\"]==json.loads((q/(p.name[:-9]+\"-post.json\")).read_text())[\"files\"] else (_ for _ in ()).throw(AssertionError(p.name))) for p in q.glob(\"*-pre.json\") if (q/(p.name[:-9]+\"-post.json\")).exists()];out={\"status\":\"PASS\",\"sourceComparisons\":len(pairs),\"proposalSha256\":hashlib.sha256((q/\"proposal.md\").read_bytes()).hexdigest(),\"reportSha256\":hashlib.sha256((q/\"report.md\").read_bytes()).hexdigest(),\"finalControls\":16,\"frozenCanonicalComparisons\":4232,\"preservedControlFailure\":\"resource-controls-v2 exit1\",\"actualMoney\":\"EMPTY\",\"designReview\":\"PENDING\"};(q/\"verification.json\").write_text(json.dumps(out,indent=2)+\"\\n\");print(json.dumps(out))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:09:49.032831+00:00",
+  "endUtc": "2026-10-04T14:09:49.066924+00:00",
+  "exit": 0
+}

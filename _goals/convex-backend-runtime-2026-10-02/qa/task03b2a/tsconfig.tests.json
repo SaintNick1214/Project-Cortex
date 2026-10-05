@@ -1,0 +1,16 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "rootDir": "../../../.."
+  },
+  "include": [
+    "../../../../tests/unit/runtimeMetadataAuth/**/*.ts"
+  ],
+  "exclude": []
+}

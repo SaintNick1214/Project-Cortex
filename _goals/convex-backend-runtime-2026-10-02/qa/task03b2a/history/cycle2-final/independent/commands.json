@@ -1,0 +1,219 @@
+[
+  {
+    "name": "types-scoped",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/tsconfig.backend.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:04.789099+00:00",
+    "endedAt": "2026-10-03T10:46:08.843994+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/types-scoped.log"
+  },
+  {
+    "name": "types-tests",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/tsconfig.tests.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:04.789562+00:00",
+    "endedAt": "2026-10-03T10:46:09.749502+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/types-tests.log"
+  },
+  {
+    "name": "types-actual-es2021",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/tsconfig.backend.es2021.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:04.789887+00:00",
+    "endedAt": "2026-10-03T10:46:09.231927+00:00",
+    "exitCode": 2,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/types-actual-es2021.log"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/schema.ts",
+      "convex-dev/immutable.ts",
+      "convex-dev/mutable.ts",
+      "convex-dev/users.ts",
+      "convex-dev/sessions.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeMetadataAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:04.790301+00:00",
+    "endedAt": "2026-10-03T10:46:18.776696+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/lint.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/jest.config.mjs",
+      "--testPathPatterns=tests/unit/runtimeMetadataAuth",
+      "--listTests",
+      "--json",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:08.844131+00:00",
+    "endedAt": "2026-10-03T10:46:09.271818+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/discovery.log"
+  },
+  {
+    "name": "jest",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/jest.config.mjs",
+      "--testPathPatterns=tests/unit/runtimeMetadataAuth",
+      "--runInBand",
+      "--forceExit",
+      "--silent",
+      "--json",
+      "--outputFile=/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/jest-results.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:09.232226+00:00",
+    "endedAt": "2026-10-03T10:46:22.029710+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/jest.log"
+  },
+  {
+    "name": "inventory",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:09.271895+00:00",
+    "endedAt": "2026-10-03T10:46:09.818819+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/inventory.log"
+  },
+  {
+    "name": "registration",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/registration.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:09.749592+00:00",
+    "endedAt": "2026-10-03T10:46:09.980198+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/registration.log"
+  },
+  {
+    "name": "baseline",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/baseline.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:09.818926+00:00",
+    "endedAt": "2026-10-03T10:46:29.217738+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/baseline.log"
+  },
+  {
+    "name": "full-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:09.980286+00:00",
+    "endedAt": "2026-10-03T10:46:28.509386+00:00",
+    "exitCode": 2,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/full-root-types.log"
+  },
+  {
+    "name": "known-probes",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:18.776825+00:00",
+    "endedAt": "2026-10-03T10:46:19.052841+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/known-probes.log"
+  },
+  {
+    "name": "known-additional",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/additional-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:19.052932+00:00",
+    "endedAt": "2026-10-03T10:46:19.374076+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/known-additional.log"
+  },
+  {
+    "name": "known-numeric",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/numeric-probe.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:19.374167+00:00",
+    "endedAt": "2026-10-03T10:46:19.593675+00:00",
+    "exitCode": 1,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/known-numeric.log"
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:46:19.593794+00:00",
+    "endedAt": "2026-10-03T10:46:19.603473+00:00",
+    "exitCode": 0,
+    "log": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/diff-check.log"
+  }
+]

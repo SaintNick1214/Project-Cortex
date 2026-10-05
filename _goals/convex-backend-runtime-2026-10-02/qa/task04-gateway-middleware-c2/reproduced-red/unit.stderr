@@ -1,0 +1,71 @@
+(node:81271) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-dispatch.test.ts (7.719 s)
+  ● C2 owned cancellation and finite RPC lifetime › cancel during paused visibility suppresses every subsequent part while buffered terminal charge is captured
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 11
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "id": "governed-text",
+    +     "type": "text-start",
+    +   },
+    +   Object {
+    +     "delta": "answer",
+    +     "id": "governed-text",
+    +     "type": "text-delta",
+    +   },
+    + ]
+
+      275 |     await entered.promise; h.lifecycle.cancel(); release.resolve();
+      276 |     const parts = await collectParts(result.stream); await h.lifecycle.complete().catch(() => undefined);
+    > 277 |     expect(parts).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
+          |                   ^
+      278 |   });
+      279 |   it("deadline bounds an unreleased authority RPC; late completion cannot reopen the observer", async () => {
+      280 |     const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-dispatch.test.ts:277:19)
+
+  ● C2 owned cancellation and finite RPC lifetime › deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 12
+
+      Object {
+    -   "finishedAtDeadline": true,
+    -   "parts": Array [],
+    +   "finishedAtDeadline": false,
+    +   "parts": Array [
+    +     Object {
+    +       "id": "governed-text",
+    +       "type": "text-start",
+    +     },
+    +     Object {
+    +       "delta": "answer",
+    +       "id": "governed-text",
+    +       "type": "text-delta",
+    +     },
+    +   ],
+      }
+
+      283 |     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
+      284 |     await pause(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
+    > 285 |     expect(h.lifecycle.signal.aborted).toBe(true); expect({ finishedAtDeadline, parts }).toEqual({ finishedAtDeadline: true, parts: [] });
+          |                                                                                          ^
+      286 |     expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+      287 |   });
+      288 | });
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-dispatch.test.ts:285:90)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 56 passed, 58 total
+Snapshots:   0 total
+Time:        7.962 s

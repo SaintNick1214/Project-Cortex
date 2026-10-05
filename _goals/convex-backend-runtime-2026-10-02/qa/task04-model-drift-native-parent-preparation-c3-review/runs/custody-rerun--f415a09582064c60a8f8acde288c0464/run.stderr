@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/custody.py", line 15, in <module>
+    pre=json.loads((r/d['sourcePreimages']/'index.json').read_bytes());assert pre==d['sourceBefore'];assert d['sourceBeforeScope'].startswith('FULL_');assert len(pre)==len({p['path'] for p in pre});assert d['sourceAfter'] and len(d['sourceAfter'])==len(pre)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

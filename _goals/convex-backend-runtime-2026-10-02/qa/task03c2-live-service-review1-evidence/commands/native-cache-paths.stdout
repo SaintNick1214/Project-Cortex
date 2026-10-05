@@ -1,0 +1,621 @@
+node_modules/convex/src/browser/sync/local_state.ts-196-  isCurrentOrNewerAuthVersion(version: IdentityVersion): boolean {
+node_modules/convex/src/browser/sync/local_state.ts-197-    return version >= this.identityVersion;
+node_modules/convex/src/browser/sync/local_state.ts-198-  }
+node_modules/convex/src/browser/sync/local_state.ts-199-
+node_modules/convex/src/browser/sync/local_state.ts-200-  getAuth(): AuthState | undefined {
+node_modules/convex/src/browser/sync/local_state.ts-201-    return this.auth;
+node_modules/convex/src/browser/sync/local_state.ts-202-  }
+node_modules/convex/src/browser/sync/local_state.ts-203-
+node_modules/convex/src/browser/sync/local_state.ts:204:  setAuth(value: string): Authenticate {
+node_modules/convex/src/browser/sync/local_state.ts-205-    this.auth = {
+node_modules/convex/src/browser/sync/local_state.ts-206-      tokenType: "User" as const,
+node_modules/convex/src/browser/sync/local_state.ts-207-      value: value,
+node_modules/convex/src/browser/sync/local_state.ts-208-    };
+node_modules/convex/src/browser/sync/local_state.ts-209-    const baseVersion = this.identityVersion;
+node_modules/convex/src/browser/sync/local_state.ts-210-    if (!this.paused) {
+node_modules/convex/src/browser/sync/local_state.ts-211-      this.identityVersion = baseVersion + 1;
+node_modules/convex/src/browser/sync/local_state.ts-212-    }
+node_modules/convex/src/browser/sync/local_state.ts-213-    return {
+node_modules/convex/src/browser/sync/local_state.ts-214-      type: "Authenticate",
+node_modules/convex/src/browser/sync/local_state.ts-215-      baseVersion: baseVersion,
+node_modules/convex/src/browser/sync/local_state.ts-216-      ...this.auth,
+node_modules/convex/src/browser/sync/local_state.ts-217-    };
+node_modules/convex/src/browser/sync/local_state.ts-218-  }
+node_modules/convex/src/browser/sync/local_state.ts-219-
+node_modules/convex/src/browser/sync/local_state.ts-220-  setAdminAuth(
+node_modules/convex/src/browser/sync/local_state.ts-221-    value: string,
+node_modules/convex/src/browser/sync/local_state.ts-222-    actingAs?: UserIdentityAttributes,
+node_modules/convex/src/browser/sync/local_state.ts-223-  ): AdminAuthentication {
+node_modules/convex/src/browser/sync/local_state.ts-224-    const auth: typeof this.auth & {
+node_modules/convex/src/browser/sync/local_state.ts-225-      tokenType: "Admin";
+node_modules/convex/src/browser/sync/local_state.ts-226-    } = {
+node_modules/convex/src/browser/sync/local_state.ts-227-      tokenType: "Admin",
+node_modules/convex/src/browser/sync/local_state.ts-228-      value,
+node_modules/convex/src/browser/sync/local_state.ts-229-      impersonating: actingAs,
+node_modules/convex/src/browser/sync/local_state.ts-230-    };
+node_modules/convex/src/browser/sync/local_state.ts-231-    this.auth = auth;
+node_modules/convex/src/browser/sync/local_state.ts-232-    const baseVersion = this.identityVersion;
+--
+node_modules/convex/src/browser/sync/local_state.ts-235-    }
+node_modules/convex/src/browser/sync/local_state.ts-236-    return {
+node_modules/convex/src/browser/sync/local_state.ts-237-      type: "Authenticate",
+node_modules/convex/src/browser/sync/local_state.ts-238-      baseVersion: baseVersion,
+node_modules/convex/src/browser/sync/local_state.ts-239-      ...auth,
+node_modules/convex/src/browser/sync/local_state.ts-240-    };
+node_modules/convex/src/browser/sync/local_state.ts-241-  }
+node_modules/convex/src/browser/sync/local_state.ts-242-
+node_modules/convex/src/browser/sync/local_state.ts:243:  clearAuth(): Authenticate {
+node_modules/convex/src/browser/sync/local_state.ts-244-    this.auth = undefined;
+node_modules/convex/src/browser/sync/local_state.ts-245-    this.markAuthCompletion();
+node_modules/convex/src/browser/sync/local_state.ts-246-    const baseVersion = this.identityVersion;
+node_modules/convex/src/browser/sync/local_state.ts-247-    if (!this.paused) {
+node_modules/convex/src/browser/sync/local_state.ts-248-      this.identityVersion = baseVersion + 1;
+node_modules/convex/src/browser/sync/local_state.ts-249-    }
+node_modules/convex/src/browser/sync/local_state.ts-250-    return {
+node_modules/convex/src/browser/sync/local_state.ts-251-      type: "Authenticate",
+node_modules/convex/src/browser/sync/local_state.ts-252-      tokenType: "None",
+node_modules/convex/src/browser/sync/local_state.ts-253-      baseVersion: baseVersion,
+node_modules/convex/src/browser/sync/local_state.ts-254-    };
+node_modules/convex/src/browser/sync/local_state.ts-255-  }
+node_modules/convex/src/browser/sync/local_state.ts-256-
+node_modules/convex/src/browser/sync/local_state.ts:257:  hasAuth(): boolean {
+node_modules/convex/src/browser/sync/local_state.ts-258-    return !!this.auth;
+node_modules/convex/src/browser/sync/local_state.ts-259-  }
+node_modules/convex/src/browser/sync/local_state.ts-260-
+node_modules/convex/src/browser/sync/local_state.ts-261-  isNewAuth(value: string): boolean {
+node_modules/convex/src/browser/sync/local_state.ts-262-    return this.auth?.value !== value;
+node_modules/convex/src/browser/sync/local_state.ts-263-  }
+node_modules/convex/src/browser/sync/local_state.ts-264-
+node_modules/convex/src/browser/sync/local_state.ts-265-  queryPath(queryId: QueryId): string | null {
+node_modules/convex/src/browser/sync/local_state.ts-266-    const pathAndArgs = this.queryIdToToken.get(queryId);
+node_modules/convex/src/browser/sync/local_state.ts-267-    if (pathAndArgs) {
+node_modules/convex/src/browser/sync/local_state.ts-268-      return this.querySet.get(pathAndArgs)!.canonicalizedUdfPath;
+node_modules/convex/src/browser/sync/local_state.ts-269-    }
+node_modules/convex/src/browser/sync/local_state.ts-270-    return null;
+node_modules/convex/src/browser/sync/local_state.ts-271-  }
+node_modules/convex/src/browser/sync/local_state.ts-272-
+node_modules/convex/src/browser/sync/local_state.ts-273-  queryArgs(queryId: QueryId): Record<string, Value> | null {
+node_modules/convex/src/browser/sync/local_state.ts-274-    const pathAndArgs = this.queryIdToToken.get(queryId);
+node_modules/convex/src/browser/sync/local_state.ts-275-    if (pathAndArgs) {
+node_modules/convex/src/browser/sync/local_state.ts-276-      return this.querySet.get(pathAndArgs)!.args;
+node_modules/convex/src/browser/sync/local_state.ts-277-    }
+node_modules/convex/src/browser/sync/local_state.ts-278-    return null;
+node_modules/convex/src/browser/sync/local_state.ts-279-  }
+node_modules/convex/src/browser/sync/local_state.ts-280-
+node_modules/convex/src/browser/sync/local_state.ts-281-  queryToken(queryId: QueryId): QueryToken | null {
+node_modules/convex/src/browser/sync/local_state.ts-282-    return this.queryIdToToken.get(queryId) ?? null;
+node_modules/convex/src/browser/sync/local_state.ts-283-  }
+node_modules/convex/src/browser/sync/local_state.ts-284-
+node_modules/convex/src/browser/sync/local_state.ts-285-  queryJournal(queryToken: QueryToken): QueryJournal | undefined {
+--
+node_modules/convex/src/browser/sync/client.ts-231- *
+node_modules/convex/src/browser/sync/client.ts-232- * @public
+node_modules/convex/src/browser/sync/client.ts-233- */
+node_modules/convex/src/browser/sync/client.ts-234-export type QueryModification =
+node_modules/convex/src/browser/sync/client.ts-235-  // `undefined` generally comes from an optimistic update setting the query to be loading
+node_modules/convex/src/browser/sync/client.ts-236-  { kind: "Updated"; result: FunctionResult | undefined } | { kind: "Removed" };
+node_modules/convex/src/browser/sync/client.ts-237-
+node_modules/convex/src/browser/sync/client.ts-238-/**
+node_modules/convex/src/browser/sync/client.ts:239: * Object describing a transition passed into the `onTransition` handler.
+node_modules/convex/src/browser/sync/client.ts-240- *
+node_modules/convex/src/browser/sync/client.ts-241- * These can be from receiving a transition from the server, or from applying an
+node_modules/convex/src/browser/sync/client.ts-242- * optimistic update locally.
+node_modules/convex/src/browser/sync/client.ts-243- *
+node_modules/convex/src/browser/sync/client.ts-244- * @public
+node_modules/convex/src/browser/sync/client.ts-245- */
+node_modules/convex/src/browser/sync/client.ts-246-export type Transition = {
+node_modules/convex/src/browser/sync/client.ts-247-  queries: Array<{ token: QueryToken; modification: QueryModification }>;
+node_modules/convex/src/browser/sync/client.ts-248-  reflectedMutations: Array<{ requestId: RequestId; result: FunctionResult }>;
+node_modules/convex/src/browser/sync/client.ts-249-  timestamp: TS;
+node_modules/convex/src/browser/sync/client.ts-250-};
+node_modules/convex/src/browser/sync/client.ts-251-
+node_modules/convex/src/browser/sync/client.ts-252-/**
+node_modules/convex/src/browser/sync/client.ts-253- * Low-level client for directly integrating state management libraries
+node_modules/convex/src/browser/sync/client.ts-254- * with Convex.
+node_modules/convex/src/browser/sync/client.ts-255- *
+node_modules/convex/src/browser/sync/client.ts-256- * Most developers should use higher level clients, like
+node_modules/convex/src/browser/sync/client.ts-257- * the {@link ConvexHttpClient} or the React hook based {@link react.ConvexReactClient}.
+node_modules/convex/src/browser/sync/client.ts-258- *
+node_modules/convex/src/browser/sync/client.ts-259- * @public
+node_modules/convex/src/browser/sync/client.ts-260- */
+node_modules/convex/src/browser/sync/client.ts-261-export class BaseConvexClient {
+node_modules/convex/src/browser/sync/client.ts-262-  private readonly address: string;
+node_modules/convex/src/browser/sync/client.ts-263-  private readonly state: LocalSyncState;
+node_modules/convex/src/browser/sync/client.ts-264-  private readonly requestManager: RequestManager;
+node_modules/convex/src/browser/sync/client.ts-265-  private readonly webSocketManager: WebSocketManager;
+node_modules/convex/src/browser/sync/client.ts-266-  private readonly authenticationManager: AuthenticationManager;
+node_modules/convex/src/browser/sync/client.ts-267-  private remoteQuerySet: RemoteQuerySet;
+node_modules/convex/src/browser/sync/client.ts-268-  private readonly optimisticQueryResults: OptimisticQueryResults;
+node_modules/convex/src/browser/sync/client.ts-269-  private _transitionHandlerCounter = 0;
+node_modules/convex/src/browser/sync/client.ts-270-  private _nextRequestId: RequestId;
+node_modules/convex/src/browser/sync/client.ts:271:  private _onTransitionFns: Map<number, (transition: Transition) => void> =
+node_modules/convex/src/browser/sync/client.ts-272-    new Map();
+node_modules/convex/src/browser/sync/client.ts-273-  private readonly _sessionId: string;
+node_modules/convex/src/browser/sync/client.ts-274-  private firstMessageReceived = false;
+node_modules/convex/src/browser/sync/client.ts-275-  private readonly debug: boolean;
+node_modules/convex/src/browser/sync/client.ts-276-  private readonly logger: Logger;
+node_modules/convex/src/browser/sync/client.ts-277-  private maxObservedTimestamp: TS | undefined;
+node_modules/convex/src/browser/sync/client.ts-278-  private connectionStateSubscribers = new Map<
+node_modules/convex/src/browser/sync/client.ts-279-    number,
+node_modules/convex/src/browser/sync/client.ts-280-    (connectionState: ConnectionState) => void
+node_modules/convex/src/browser/sync/client.ts-281-  >();
+node_modules/convex/src/browser/sync/client.ts-282-  private nextConnectionStateSubscriberId: number = 0;
+node_modules/convex/src/browser/sync/client.ts-283-  private _lastPublishedConnectionState: ConnectionState | undefined;
+node_modules/convex/src/browser/sync/client.ts-284-
+node_modules/convex/src/browser/sync/client.ts-285-  /**
+node_modules/convex/src/browser/sync/client.ts-286-   * @param address - The url of your Convex deployment, often provided
+node_modules/convex/src/browser/sync/client.ts-287-   * by an environment variable. E.g. `https://small-mouse-123.convex.cloud`.
+node_modules/convex/src/browser/sync/client.ts:288:   * @param onTransition - A callback receiving an array of query tokens
+node_modules/convex/src/browser/sync/client.ts-289-   * corresponding to query results that have changed -- additional handlers
+node_modules/convex/src/browser/sync/client.ts-290-   * can be added via `addOnTransitionHandler`.
+node_modules/convex/src/browser/sync/client.ts-291-   * @param options - See {@link BaseConvexClientOptions} for a full description.
+node_modules/convex/src/browser/sync/client.ts-292-   */
+node_modules/convex/src/browser/sync/client.ts-293-  constructor(
+node_modules/convex/src/browser/sync/client.ts-294-    address: string,
+node_modules/convex/src/browser/sync/client.ts:295:    onTransition: (updatedQueries: QueryToken[]) => void,
+node_modules/convex/src/browser/sync/client.ts-296-    options?: BaseConvexClientOptions,
+node_modules/convex/src/browser/sync/client.ts-297-  ) {
+node_modules/convex/src/browser/sync/client.ts-298-    if (typeof address === "object") {
+node_modules/convex/src/browser/sync/client.ts-299-      throw new Error(
+node_modules/convex/src/browser/sync/client.ts-300-        "Passing a ClientConfig object is no longer supported. Pass the URL of the Convex deployment as a string directly.",
+node_modules/convex/src/browser/sync/client.ts-301-      );
+node_modules/convex/src/browser/sync/client.ts-302-    }
+node_modules/convex/src/browser/sync/client.ts-303-    if (options?.skipConvexDeploymentUrlCheck !== true) {
+node_modules/convex/src/browser/sync/client.ts-304-      validateDeploymentUrl(address);
+node_modules/convex/src/browser/sync/client.ts-305-    }
+node_modules/convex/src/browser/sync/client.ts-306-    options = { ...options };
+node_modules/convex/src/browser/sync/client.ts-307-    const authRefreshTokenLeewaySeconds =
+node_modules/convex/src/browser/sync/client.ts-308-      options.authRefreshTokenLeewaySeconds ?? 10;
+node_modules/convex/src/browser/sync/client.ts-309-    let webSocketConstructor = options.webSocketConstructor;
+node_modules/convex/src/browser/sync/client.ts-310-    if (!webSocketConstructor && typeof WebSocket === "undefined") {
+node_modules/convex/src/browser/sync/client.ts-311-      throw new Error(
+node_modules/convex/src/browser/sync/client.ts-312-        "No WebSocket global variable defined! To use Convex in an environment without WebSocket try the HTTP client: https://docs.convex.dev/api/classes/browser.ConvexHttpClient",
+node_modules/convex/src/browser/sync/client.ts-313-      );
+node_modules/convex/src/browser/sync/client.ts-314-    }
+node_modules/convex/src/browser/sync/client.ts-315-    webSocketConstructor = webSocketConstructor || WebSocket;
+node_modules/convex/src/browser/sync/client.ts-316-    this.debug = options.reportDebugInfoToConvex ?? false;
+node_modules/convex/src/browser/sync/client.ts-317-    this.address = address;
+node_modules/convex/src/browser/sync/client.ts-318-    this.logger =
+node_modules/convex/src/browser/sync/client.ts-319-      options.logger === false
+node_modules/convex/src/browser/sync/client.ts-320-        ? instantiateNoopLogger({ verbose: options.verbose ?? false })
+node_modules/convex/src/browser/sync/client.ts-321-        : options.logger !== true && options.logger
+node_modules/convex/src/browser/sync/client.ts-322-          ? options.logger
+node_modules/convex/src/browser/sync/client.ts-323-          : instantiateDefaultLogger({ verbose: options.verbose ?? false });
+--
+node_modules/convex/src/browser/sync/client.ts-354-    const pauseSocket = () => {
+node_modules/convex/src/browser/sync/client.ts-355-      this.webSocketManager.pause();
+node_modules/convex/src/browser/sync/client.ts-356-      this.state.pause();
+node_modules/convex/src/browser/sync/client.ts-357-    };
+node_modules/convex/src/browser/sync/client.ts-358-    this.authenticationManager = new AuthenticationManager(
+node_modules/convex/src/browser/sync/client.ts-359-      this.state,
+node_modules/convex/src/browser/sync/client.ts-360-      {
+node_modules/convex/src/browser/sync/client.ts-361-        authenticate: (token) => {
+node_modules/convex/src/browser/sync/client.ts:362:          const message = this.state.setAuth(token);
+node_modules/convex/src/browser/sync/client.ts-363-          this.webSocketManager.sendMessage(message);
+node_modules/convex/src/browser/sync/client.ts-364-          return message.baseVersion;
+node_modules/convex/src/browser/sync/client.ts-365-        },
+node_modules/convex/src/browser/sync/client.ts-366-        stopSocket: () => this.webSocketManager.stop(),
+node_modules/convex/src/browser/sync/client.ts-367-        tryRestartSocket: () => this.webSocketManager.tryRestart(),
+node_modules/convex/src/browser/sync/client.ts-368-        pauseSocket,
+node_modules/convex/src/browser/sync/client.ts-369-        resumeSocket: () => this.webSocketManager.resume(),
+node_modules/convex/src/browser/sync/client.ts-370-        clearAuth: () => {
+node_modules/convex/src/browser/sync/client.ts:371:          this.clearAuth();
+node_modules/convex/src/browser/sync/client.ts-372-        },
+node_modules/convex/src/browser/sync/client.ts-373-      },
+node_modules/convex/src/browser/sync/client.ts-374-      {
+node_modules/convex/src/browser/sync/client.ts-375-        logger: this.logger,
+node_modules/convex/src/browser/sync/client.ts-376-        refreshTokenLeewaySeconds: authRefreshTokenLeewaySeconds,
+node_modules/convex/src/browser/sync/client.ts-377-        initialAuthTokenReuse: options.initialAuthTokenReuse ?? false,
+node_modules/convex/src/browser/sync/client.ts-378-      },
+node_modules/convex/src/browser/sync/client.ts-379-    );
+node_modules/convex/src/browser/sync/client.ts-380-    this.optimisticQueryResults = new OptimisticQueryResults();
+node_modules/convex/src/browser/sync/client.ts-381-    this.addOnTransitionHandler((transition) => {
+node_modules/convex/src/browser/sync/client.ts:382:      onTransition(transition.queries.map((q) => q.token));
+node_modules/convex/src/browser/sync/client.ts-383-    });
+node_modules/convex/src/browser/sync/client.ts-384-    this._nextRequestId = 0;
+node_modules/convex/src/browser/sync/client.ts-385-    this._sessionId = newSessionId();
+node_modules/convex/src/browser/sync/client.ts-386-
+node_modules/convex/src/browser/sync/client.ts-387-    const { unsavedChangesWarning } = options;
+node_modules/convex/src/browser/sync/client.ts-388-    if (
+node_modules/convex/src/browser/sync/client.ts-389-      typeof window === "undefined" ||
+node_modules/convex/src/browser/sync/client.ts-390-      typeof window.addEventListener === "undefined"
+node_modules/convex/src/browser/sync/client.ts-391-    ) {
+node_modules/convex/src/browser/sync/client.ts-392-      if (unsavedChangesWarning === true) {
+node_modules/convex/src/browser/sync/client.ts-393-        throw new Error(
+node_modules/convex/src/browser/sync/client.ts-394-          "unsavedChangesWarning requested, but window.addEventListener not found! Remove {unsavedChangesWarning: true} from Convex client options.",
+node_modules/convex/src/browser/sync/client.ts-395-        );
+node_modules/convex/src/browser/sync/client.ts-396-      }
+node_modules/convex/src/browser/sync/client.ts-397-    } else if (unsavedChangesWarning !== false) {
+node_modules/convex/src/browser/sync/client.ts-398-      // Listen for tab close events and notify the user on unsaved changes.
+node_modules/convex/src/browser/sync/client.ts-399-      window.addEventListener("beforeunload", (e) => {
+node_modules/convex/src/browser/sync/client.ts-400-        if (this.requestManager.hasIncompleteRequests()) {
+node_modules/convex/src/browser/sync/client.ts-401-          // There are 3 different ways to trigger this pop up so just try all of
+node_modules/convex/src/browser/sync/client.ts-402-          // them.
+node_modules/convex/src/browser/sync/client.ts-403-
+node_modules/convex/src/browser/sync/client.ts-404-          e.preventDefault();
+node_modules/convex/src/browser/sync/client.ts-405-          // This confirmation message doesn't actually appear in most modern
+node_modules/convex/src/browser/sync/client.ts-406-          // browsers but we tried.
+node_modules/convex/src/browser/sync/client.ts-407-          const confirmationMessage =
+node_modules/convex/src/browser/sync/client.ts-408-            "Are you sure you want to leave? Your changes may not be saved.";
+node_modules/convex/src/browser/sync/client.ts-409-          // Recommended method for legacy (IE) browsers.
+node_modules/convex/src/browser/sync/client.ts-410-          // casts to avoid deprecation notices
+--
+node_modules/convex/src/browser/sync/client.ts-461-          if (!this.firstMessageReceived) {
+node_modules/convex/src/browser/sync/client.ts-462-            this.firstMessageReceived = true;
+node_modules/convex/src/browser/sync/client.ts-463-            this.mark("convexFirstMessageReceived");
+node_modules/convex/src/browser/sync/client.ts-464-            this.reportMarks();
+node_modules/convex/src/browser/sync/client.ts-465-          }
+node_modules/convex/src/browser/sync/client.ts-466-          switch (serverMessage.type) {
+node_modules/convex/src/browser/sync/client.ts-467-            case "Transition": {
+node_modules/convex/src/browser/sync/client.ts-468-              this.observedTimestamp(serverMessage.endVersion.ts);
+node_modules/convex/src/browser/sync/client.ts:469:              this.authenticationManager.onTransition(serverMessage);
+node_modules/convex/src/browser/sync/client.ts-470-              this.remoteQuerySet.transition(serverMessage);
+node_modules/convex/src/browser/sync/client.ts-471-              this.state.transition(serverMessage);
+node_modules/convex/src/browser/sync/client.ts-472-              const completedRequests = this.requestManager.removeCompleted(
+node_modules/convex/src/browser/sync/client.ts-473-                this.remoteQuerySet.timestamp(),
+node_modules/convex/src/browser/sync/client.ts-474-              );
+node_modules/convex/src/browser/sync/client.ts-475-              this.notifyOnQueryResultChanges(completedRequests);
+node_modules/convex/src/browser/sync/client.ts-476-              break;
+node_modules/convex/src/browser/sync/client.ts-477-            }
+node_modules/convex/src/browser/sync/client.ts-478-            case "MutationResponse": {
+node_modules/convex/src/browser/sync/client.ts-479-              if (serverMessage.success) {
+node_modules/convex/src/browser/sync/client.ts-480-                this.observedTimestamp(serverMessage.ts);
+node_modules/convex/src/browser/sync/client.ts-481-              }
+node_modules/convex/src/browser/sync/client.ts-482-              const completedMutationInfo =
+node_modules/convex/src/browser/sync/client.ts-483-                this.requestManager.onResponse(serverMessage);
+node_modules/convex/src/browser/sync/client.ts-484-              if (completedMutationInfo !== null) {
+node_modules/convex/src/browser/sync/client.ts-485-                this.notifyOnQueryResultChanges(
+node_modules/convex/src/browser/sync/client.ts-486-                  new Map([
+node_modules/convex/src/browser/sync/client.ts-487-                    [
+node_modules/convex/src/browser/sync/client.ts-488-                      completedMutationInfo.requestId,
+node_modules/convex/src/browser/sync/client.ts-489-                      completedMutationInfo.result,
+node_modules/convex/src/browser/sync/client.ts-490-                    ],
+node_modules/convex/src/browser/sync/client.ts-491-                  ]),
+node_modules/convex/src/browser/sync/client.ts-492-                );
+node_modules/convex/src/browser/sync/client.ts-493-              }
+node_modules/convex/src/browser/sync/client.ts-494-              break;
+node_modules/convex/src/browser/sync/client.ts-495-            }
+node_modules/convex/src/browser/sync/client.ts-496-            case "ActionResponse": {
+node_modules/convex/src/browser/sync/client.ts-497-              this.requestManager.onResponse(serverMessage);
+--
+node_modules/convex/src/browser/sync/client.ts-552-  }
+node_modules/convex/src/browser/sync/client.ts-553-
+node_modules/convex/src/browser/sync/client.ts-554-  getMaxObservedTimestamp() {
+node_modules/convex/src/browser/sync/client.ts-555-    return this.maxObservedTimestamp;
+node_modules/convex/src/browser/sync/client.ts-556-  }
+node_modules/convex/src/browser/sync/client.ts-557-
+node_modules/convex/src/browser/sync/client.ts-558-  /**
+node_modules/convex/src/browser/sync/client.ts-559-   * Compute the current query results based on the remoteQuerySet and the
+node_modules/convex/src/browser/sync/client.ts:560:   * current optimistic updates and call `onTransition` for all the changed
+node_modules/convex/src/browser/sync/client.ts-561-   * queries.
+node_modules/convex/src/browser/sync/client.ts-562-   *
+node_modules/convex/src/browser/sync/client.ts-563-   * @param completedMutations - A set of mutation IDs whose optimistic updates
+node_modules/convex/src/browser/sync/client.ts-564-   * are no longer needed.
+node_modules/convex/src/browser/sync/client.ts-565-   */
+node_modules/convex/src/browser/sync/client.ts-566-  private notifyOnQueryResultChanges(
+node_modules/convex/src/browser/sync/client.ts-567-    completedRequests: Map<RequestId, FunctionResult>,
+node_modules/convex/src/browser/sync/client.ts-568-  ) {
+node_modules/convex/src/browser/sync/client.ts-569-    const remoteQueryResults: Map<QueryId, FunctionResult> =
+node_modules/convex/src/browser/sync/client.ts-570-      this.remoteQuerySet.remoteQueryResults();
+node_modules/convex/src/browser/sync/client.ts-571-    const queryTokenToValue: QueryResultsMap = new Map();
+node_modules/convex/src/browser/sync/client.ts-572-    for (const [queryId, result] of remoteQueryResults) {
+node_modules/convex/src/browser/sync/client.ts-573-      const queryToken = this.state.queryToken(queryId);
+node_modules/convex/src/browser/sync/client.ts-574-      // It's possible that we've already unsubscribed to this query but
+node_modules/convex/src/browser/sync/client.ts-575-      // the server hasn't learned about that yet. If so, ignore this one.
+node_modules/convex/src/browser/sync/client.ts-576-
+node_modules/convex/src/browser/sync/client.ts-577-      if (queryToken !== null) {
+node_modules/convex/src/browser/sync/client.ts-578-        const query = {
+node_modules/convex/src/browser/sync/client.ts-579-          result,
+node_modules/convex/src/browser/sync/client.ts-580-          udfPath: this.state.queryPath(queryId)!,
+node_modules/convex/src/browser/sync/client.ts-581-          args: this.state.queryArgs(queryId)!,
+node_modules/convex/src/browser/sync/client.ts-582-        };
+node_modules/convex/src/browser/sync/client.ts-583-        queryTokenToValue.set(queryToken, query);
+node_modules/convex/src/browser/sync/client.ts-584-      }
+node_modules/convex/src/browser/sync/client.ts-585-    }
+node_modules/convex/src/browser/sync/client.ts-586-
+node_modules/convex/src/browser/sync/client.ts-587-    // Query tokens that are new (because of new server results or new local optimistic updates)
+node_modules/convex/src/browser/sync/client.ts-588-    // or differ from old values (because of changes from local optimistic updates or new results
+node_modules/convex/src/browser/sync/client.ts-589-    // from the server).
+node_modules/convex/src/browser/sync/client.ts-590-    const changedQueryTokens =
+node_modules/convex/src/browser/sync/client.ts:591:      this.optimisticQueryResults.ingestQueryResultsFromServer(
+node_modules/convex/src/browser/sync/client.ts-592-        queryTokenToValue,
+node_modules/convex/src/browser/sync/client.ts-593-        new Set(completedRequests.keys()),
+node_modules/convex/src/browser/sync/client.ts-594-      );
+node_modules/convex/src/browser/sync/client.ts-595-
+node_modules/convex/src/browser/sync/client.ts-596-    this.handleTransition({
+node_modules/convex/src/browser/sync/client.ts-597-      queries: changedQueryTokens.map((token) => {
+node_modules/convex/src/browser/sync/client.ts-598-        const optimisticResult =
+node_modules/convex/src/browser/sync/client.ts-599-          this.optimisticQueryResults.rawQueryResult(token);
+node_modules/convex/src/browser/sync/client.ts-600-        return {
+node_modules/convex/src/browser/sync/client.ts-601-          token,
+node_modules/convex/src/browser/sync/client.ts-602-          modification: {
+node_modules/convex/src/browser/sync/client.ts-603-            kind: "Updated" as const,
+node_modules/convex/src/browser/sync/client.ts-604-            result: optimisticResult,
+node_modules/convex/src/browser/sync/client.ts-605-          },
+node_modules/convex/src/browser/sync/client.ts-606-        };
+node_modules/convex/src/browser/sync/client.ts-607-      }),
+node_modules/convex/src/browser/sync/client.ts-608-      reflectedMutations: Array.from(completedRequests).map(
+node_modules/convex/src/browser/sync/client.ts-609-        ([requestId, result]) => ({
+node_modules/convex/src/browser/sync/client.ts-610-          requestId,
+node_modules/convex/src/browser/sync/client.ts-611-          result,
+node_modules/convex/src/browser/sync/client.ts-612-        }),
+node_modules/convex/src/browser/sync/client.ts-613-      ),
+node_modules/convex/src/browser/sync/client.ts-614-      timestamp: this.remoteQuerySet.timestamp(),
+node_modules/convex/src/browser/sync/client.ts-615-    });
+node_modules/convex/src/browser/sync/client.ts-616-  }
+node_modules/convex/src/browser/sync/client.ts-617-
+node_modules/convex/src/browser/sync/client.ts-618-  private handleTransition(transition: Transition) {
+node_modules/convex/src/browser/sync/client.ts:619:    for (const fn of this._onTransitionFns.values()) {
+node_modules/convex/src/browser/sync/client.ts-620-      fn(transition);
+node_modules/convex/src/browser/sync/client.ts-621-    }
+node_modules/convex/src/browser/sync/client.ts-622-  }
+node_modules/convex/src/browser/sync/client.ts-623-
+node_modules/convex/src/browser/sync/client.ts-624-  /**
+node_modules/convex/src/browser/sync/client.ts-625-   * Add a handler that will be called on a transition.
+node_modules/convex/src/browser/sync/client.ts-626-   *
+node_modules/convex/src/browser/sync/client.ts-627-   * Any external side effects (e.g. setting React state) should be handled here.
+node_modules/convex/src/browser/sync/client.ts-628-   *
+node_modules/convex/src/browser/sync/client.ts-629-   * @param fn
+node_modules/convex/src/browser/sync/client.ts-630-   *
+node_modules/convex/src/browser/sync/client.ts-631-   * @returns
+node_modules/convex/src/browser/sync/client.ts-632-   */
+node_modules/convex/src/browser/sync/client.ts-633-  addOnTransitionHandler(fn: (transition: Transition) => void) {
+node_modules/convex/src/browser/sync/client.ts-634-    const id = this._transitionHandlerCounter++;
+node_modules/convex/src/browser/sync/client.ts:635:    this._onTransitionFns.set(id, fn);
+node_modules/convex/src/browser/sync/client.ts:636:    return () => this._onTransitionFns.delete(id);
+node_modules/convex/src/browser/sync/client.ts-637-  }
+node_modules/convex/src/browser/sync/client.ts-638-
+node_modules/convex/src/browser/sync/client.ts-639-  /**
+node_modules/convex/src/browser/sync/client.ts-640-   * Get the current JWT auth token and decoded claims.
+node_modules/convex/src/browser/sync/client.ts-641-   */
+node_modules/convex/src/browser/sync/client.ts-642-  getCurrentAuthClaims():
+node_modules/convex/src/browser/sync/client.ts-643-    | { token: string; decoded: Record<string, any> }
+node_modules/convex/src/browser/sync/client.ts-644-    | undefined {
+node_modules/convex/src/browser/sync/client.ts-645-    const authToken = this.state.getAuth();
+node_modules/convex/src/browser/sync/client.ts-646-    let decoded: Record<string, any> = {};
+node_modules/convex/src/browser/sync/client.ts-647-    if (authToken && authToken.tokenType === "User") {
+node_modules/convex/src/browser/sync/client.ts-648-      try {
+node_modules/convex/src/browser/sync/client.ts-649-        decoded = authToken ? jwtDecode(authToken.value) : {};
+node_modules/convex/src/browser/sync/client.ts-650-      } catch {
+node_modules/convex/src/browser/sync/client.ts-651-        decoded = {};
+node_modules/convex/src/browser/sync/client.ts-652-      }
+node_modules/convex/src/browser/sync/client.ts-653-    } else {
+node_modules/convex/src/browser/sync/client.ts-654-      return undefined;
+node_modules/convex/src/browser/sync/client.ts-655-    }
+node_modules/convex/src/browser/sync/client.ts-656-    return { token: authToken.value, decoded };
+node_modules/convex/src/browser/sync/client.ts-657-  }
+node_modules/convex/src/browser/sync/client.ts-658-
+node_modules/convex/src/browser/sync/client.ts-659-  /**
+node_modules/convex/src/browser/sync/client.ts-660-   * Set the authentication token to be used for subsequent queries and mutations.
+node_modules/convex/src/browser/sync/client.ts-661-   * `fetchToken` will be called automatically again if a token expires.
+node_modules/convex/src/browser/sync/client.ts-662-   * `fetchToken` should return `null` if the token cannot be retrieved, for example
+node_modules/convex/src/browser/sync/client.ts-663-   * when the user's rights were permanently revoked.
+node_modules/convex/src/browser/sync/client.ts-664-   * @param fetchToken - an async function returning the JWT-encoded OpenID Connect Identity Token
+node_modules/convex/src/browser/sync/client.ts-665-   * @param onChange - a callback that will be called when the authentication status changes
+node_modules/convex/src/browser/sync/client.ts-666-   * @param onRefreshChange - a callback called with `true` when the socket is paused to fetch a replacement token after a server rejection, and `false` when refresh completes
+node_modules/convex/src/browser/sync/client.ts-667-   */
+node_modules/convex/src/browser/sync/client.ts:668:  setAuth(
+node_modules/convex/src/browser/sync/client.ts-669-    fetchToken: AuthTokenFetcher,
+node_modules/convex/src/browser/sync/client.ts-670-    onChange: (isAuthenticated: boolean) => void,
+node_modules/convex/src/browser/sync/client.ts-671-    onRefreshChange?: (isRefreshing: boolean) => void,
+node_modules/convex/src/browser/sync/client.ts-672-  ) {
+node_modules/convex/src/browser/sync/client.ts-673-    void this.authenticationManager.setConfig(
+node_modules/convex/src/browser/sync/client.ts-674-      fetchToken,
+node_modules/convex/src/browser/sync/client.ts-675-      onChange,
+node_modules/convex/src/browser/sync/client.ts-676-      onRefreshChange,
+node_modules/convex/src/browser/sync/client.ts-677-    );
+node_modules/convex/src/browser/sync/client.ts-678-  }
+node_modules/convex/src/browser/sync/client.ts-679-
+node_modules/convex/src/browser/sync/client.ts:680:  hasAuth() {
+node_modules/convex/src/browser/sync/client.ts:681:    return this.state.hasAuth();
+node_modules/convex/src/browser/sync/client.ts-682-  }
+node_modules/convex/src/browser/sync/client.ts-683-
+node_modules/convex/src/browser/sync/client.ts-684-  /** @internal */
+node_modules/convex/src/browser/sync/client.ts-685-  setAdminAuth(value: string, fakeUserIdentity?: UserIdentityAttributes) {
+node_modules/convex/src/browser/sync/client.ts-686-    const message = this.state.setAdminAuth(value, fakeUserIdentity);
+node_modules/convex/src/browser/sync/client.ts-687-    this.webSocketManager.sendMessage(message);
+node_modules/convex/src/browser/sync/client.ts-688-  }
+node_modules/convex/src/browser/sync/client.ts-689-
+node_modules/convex/src/browser/sync/client.ts:690:  clearAuth() {
+node_modules/convex/src/browser/sync/client.ts:691:    const message = this.state.clearAuth();
+node_modules/convex/src/browser/sync/client.ts-692-    this.webSocketManager.sendMessage(message);
+node_modules/convex/src/browser/sync/client.ts-693-  }
+node_modules/convex/src/browser/sync/client.ts-694-
+node_modules/convex/src/browser/sync/client.ts-695-  /**
+node_modules/convex/src/browser/sync/client.ts-696-   * Subscribe to a query function.
+node_modules/convex/src/browser/sync/client.ts-697-   *
+node_modules/convex/src/browser/sync/client.ts:698:   * Whenever this query's result changes, the `onTransition` callback
+node_modules/convex/src/browser/sync/client.ts-699-   * passed into the constructor will be called.
+node_modules/convex/src/browser/sync/client.ts-700-   *
+node_modules/convex/src/browser/sync/client.ts-701-   * @param name - The name of the query.
+node_modules/convex/src/browser/sync/client.ts-702-   * @param args - An arguments object for the query. If this is omitted, the
+node_modules/convex/src/browser/sync/client.ts-703-   * arguments will be `{}`.
+node_modules/convex/src/browser/sync/client.ts-704-   * @param options - A {@link SubscribeOptions} options object for this query.
+node_modules/convex/src/browser/sync/client.ts-705-
+node_modules/convex/src/browser/sync/client.ts-706-   * @returns An object containing a {@link QueryToken} corresponding to this
+node_modules/convex/src/browser/sync/client.ts-707-   * query and an `unsubscribe` callback.
+node_modules/convex/src/browser/sync/client.ts-708-   */
+node_modules/convex/src/browser/sync/client.ts-709-  subscribe(
+node_modules/convex/src/browser/sync/client.ts-710-    name: string,
+node_modules/convex/src/browser/sync/client.ts-711-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-712-    options?: SubscribeOptions,
+node_modules/convex/src/browser/sync/client.ts-713-  ): { queryToken: QueryToken; unsubscribe: () => void } {
+node_modules/convex/src/browser/sync/client.ts-714-    const argsObject = parseArgs(args);
+node_modules/convex/src/browser/sync/client.ts-715-
+node_modules/convex/src/browser/sync/client.ts-716-    const { modification, queryToken, unsubscribe } = this.state.subscribe(
+node_modules/convex/src/browser/sync/client.ts-717-      name,
+node_modules/convex/src/browser/sync/client.ts-718-      argsObject,
+node_modules/convex/src/browser/sync/client.ts-719-      options?.journal,
+node_modules/convex/src/browser/sync/client.ts-720-      options?.componentPath,
+node_modules/convex/src/browser/sync/client.ts-721-    );
+node_modules/convex/src/browser/sync/client.ts-722-    if (modification !== null) {
+node_modules/convex/src/browser/sync/client.ts-723-      this.webSocketManager.sendMessage(modification);
+node_modules/convex/src/browser/sync/client.ts-724-    }
+node_modules/convex/src/browser/sync/client.ts-725-    return {
+node_modules/convex/src/browser/sync/client.ts-726-      queryToken,
+--
+node_modules/convex/src/browser/sync/client.ts-734-  }
+node_modules/convex/src/browser/sync/client.ts-735-
+node_modules/convex/src/browser/sync/client.ts-736-  /**
+node_modules/convex/src/browser/sync/client.ts-737-   * A query result based only on the current, local state.
+node_modules/convex/src/browser/sync/client.ts-738-   *
+node_modules/convex/src/browser/sync/client.ts-739-   * The only way this will return a value is if we're already subscribed to the
+node_modules/convex/src/browser/sync/client.ts-740-   * query or its value has been set optimistically.
+node_modules/convex/src/browser/sync/client.ts-741-   */
+node_modules/convex/src/browser/sync/client.ts:742:  localQueryResult(
+node_modules/convex/src/browser/sync/client.ts-743-    udfPath: string,
+node_modules/convex/src/browser/sync/client.ts-744-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-745-  ): Value | undefined {
+node_modules/convex/src/browser/sync/client.ts-746-    const argsObject = parseArgs(args);
+node_modules/convex/src/browser/sync/client.ts-747-    const queryToken = serializePathAndArgs(udfPath, argsObject);
+node_modules/convex/src/browser/sync/client.ts-748-    return this.optimisticQueryResults.queryResult(queryToken);
+node_modules/convex/src/browser/sync/client.ts-749-  }
+node_modules/convex/src/browser/sync/client.ts-750-
+node_modules/convex/src/browser/sync/client.ts-751-  /**
+node_modules/convex/src/browser/sync/client.ts-752-   * Get query result by query token based on current, local state
+node_modules/convex/src/browser/sync/client.ts-753-   *
+node_modules/convex/src/browser/sync/client.ts-754-   * The only way this will return a value is if we're already subscribed to the
+node_modules/convex/src/browser/sync/client.ts-755-   * query or its value has been set optimistically.
+node_modules/convex/src/browser/sync/client.ts-756-   *
+node_modules/convex/src/browser/sync/client.ts-757-   * @internal
+node_modules/convex/src/browser/sync/client.ts-758-   */
+node_modules/convex/src/browser/sync/client.ts:759:  localQueryResultByToken(queryToken: QueryToken): Value | undefined {
+node_modules/convex/src/browser/sync/client.ts-760-    return this.optimisticQueryResults.queryResult(queryToken);
+node_modules/convex/src/browser/sync/client.ts-761-  }
+node_modules/convex/src/browser/sync/client.ts-762-
+node_modules/convex/src/browser/sync/client.ts-763-  /**
+node_modules/convex/src/browser/sync/client.ts-764-   * Whether local query result is available for a token.
+node_modules/convex/src/browser/sync/client.ts-765-   *
+node_modules/convex/src/browser/sync/client.ts-766-   * This method does not throw if the result is an error.
+node_modules/convex/src/browser/sync/client.ts-767-   *
+node_modules/convex/src/browser/sync/client.ts-768-   * @internal
+node_modules/convex/src/browser/sync/client.ts-769-   */
+node_modules/convex/src/browser/sync/client.ts:770:  hasLocalQueryResultByToken(queryToken: QueryToken): boolean {
+node_modules/convex/src/browser/sync/client.ts-771-    return this.optimisticQueryResults.hasQueryResult(queryToken);
+node_modules/convex/src/browser/sync/client.ts-772-  }
+node_modules/convex/src/browser/sync/client.ts-773-
+node_modules/convex/src/browser/sync/client.ts-774-  /**
+node_modules/convex/src/browser/sync/client.ts-775-   * @internal
+node_modules/convex/src/browser/sync/client.ts-776-   */
+node_modules/convex/src/browser/sync/client.ts-777-  localQueryLogs(
+node_modules/convex/src/browser/sync/client.ts-778-    udfPath: string,
+node_modules/convex/src/browser/sync/client.ts-779-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-780-  ): string[] | undefined {
+node_modules/convex/src/browser/sync/client.ts-781-    const argsObject = parseArgs(args);
+node_modules/convex/src/browser/sync/client.ts-782-    const queryToken = serializePathAndArgs(udfPath, argsObject);
+node_modules/convex/src/browser/sync/client.ts-783-    return this.optimisticQueryResults.queryLogs(queryToken);
+node_modules/convex/src/browser/sync/client.ts-784-  }
+node_modules/convex/src/browser/sync/client.ts-785-
+node_modules/convex/src/browser/sync/client.ts-786-  /**
+node_modules/convex/src/browser/sync/client.ts-787-   * Retrieve the current {@link QueryJournal} for this query function.
+node_modules/convex/src/browser/sync/client.ts-788-   *
+node_modules/convex/src/browser/sync/client.ts-789-   * If we have not yet received a result for this query, this will be `undefined`.
+node_modules/convex/src/browser/sync/client.ts-790-   *
+node_modules/convex/src/browser/sync/client.ts-791-   * @param name - The name of the query.
+node_modules/convex/src/browser/sync/client.ts-792-   * @param args - The arguments object for this query.
+node_modules/convex/src/browser/sync/client.ts-793-   * @returns The query's {@link QueryJournal} or `undefined`.
+node_modules/convex/src/browser/sync/client.ts-794-   */
+node_modules/convex/src/browser/sync/client.ts-795-  queryJournal(
+node_modules/convex/src/browser/sync/client.ts-796-    name: string,
+node_modules/convex/src/browser/sync/client.ts-797-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-798-  ): QueryJournal | undefined {
+--
+node_modules/convex/src/browser/sync/client.ts-942-
+node_modules/convex/src/browser/sync/client.ts-943-        const changedQueryTokens =
+node_modules/convex/src/browser/sync/client.ts-944-          this.optimisticQueryResults.applyOptimisticUpdate(
+node_modules/convex/src/browser/sync/client.ts-945-            wrappedUpdate,
+node_modules/convex/src/browser/sync/client.ts-946-            requestId,
+node_modules/convex/src/browser/sync/client.ts-947-          );
+node_modules/convex/src/browser/sync/client.ts-948-
+node_modules/convex/src/browser/sync/client.ts-949-        const changedQueries = changedQueryTokens.map((token) => {
+node_modules/convex/src/browser/sync/client.ts:950:          const localResult = this.localQueryResultByToken(token);
+node_modules/convex/src/browser/sync/client.ts-951-          return {
+node_modules/convex/src/browser/sync/client.ts-952-            token,
+node_modules/convex/src/browser/sync/client.ts-953-            modification: {
+node_modules/convex/src/browser/sync/client.ts-954-              kind: "Updated" as const,
+node_modules/convex/src/browser/sync/client.ts-955-              result:
+node_modules/convex/src/browser/sync/client.ts-956-                localResult === undefined
+node_modules/convex/src/browser/sync/client.ts-957-                  ? undefined
+node_modules/convex/src/browser/sync/client.ts-958-                  : {
+node_modules/convex/src/browser/sync/client.ts-959-                      success: true as const,
+node_modules/convex/src/browser/sync/client.ts-960-                      value: localResult,
+node_modules/convex/src/browser/sync/client.ts-961-                      logLines: [],
+node_modules/convex/src/browser/sync/client.ts-962-                    },
+node_modules/convex/src/browser/sync/client.ts-963-            },
+node_modules/convex/src/browser/sync/client.ts-964-          };
+node_modules/convex/src/browser/sync/client.ts-965-        });
+node_modules/convex/src/browser/sync/client.ts-966-        this.handleTransition({
+node_modules/convex/src/browser/sync/client.ts-967-          queries: changedQueries,
+node_modules/convex/src/browser/sync/client.ts-968-          reflectedMutations: [],
+node_modules/convex/src/browser/sync/client.ts-969-          timestamp: this.remoteQuerySet.timestamp(),
+node_modules/convex/src/browser/sync/client.ts-970-        });
+node_modules/convex/src/browser/sync/client.ts-971-      }
+node_modules/convex/src/browser/sync/client.ts-972-    }
+node_modules/convex/src/browser/sync/client.ts-973-
+node_modules/convex/src/browser/sync/client.ts-974-    const message: MutationRequest = {
+node_modules/convex/src/browser/sync/client.ts-975-      type: "Mutation",
+node_modules/convex/src/browser/sync/client.ts-976-      requestId,
+node_modules/convex/src/browser/sync/client.ts-977-      udfPath,
+node_modules/convex/src/browser/sync/client.ts-978-      componentPath,
+--
+node_modules/convex/src/browser/sync/client.ts-1130-/**
+node_modules/convex/src/browser/sync/client.ts-1131- * The public API of {@link BaseConvexClient}.
+node_modules/convex/src/browser/sync/client.ts-1132- *
+node_modules/convex/src/browser/sync/client.ts-1133- * @internal
+node_modules/convex/src/browser/sync/client.ts-1134- */
+node_modules/convex/src/browser/sync/client.ts-1135-export interface BaseConvexClientInterface {
+node_modules/convex/src/browser/sync/client.ts-1136-  addOnTransitionHandler(fn: (transition: Transition) => void): () => void;
+node_modules/convex/src/browser/sync/client.ts-1137-
+node_modules/convex/src/browser/sync/client.ts:1138:  setAuth(
+node_modules/convex/src/browser/sync/client.ts-1139-    fetchToken: AuthTokenFetcher,
+node_modules/convex/src/browser/sync/client.ts-1140-    onChange: (isAuthenticated: boolean) => void,
+node_modules/convex/src/browser/sync/client.ts-1141-    onRefreshChange?: (isRefreshing: boolean) => void,
+node_modules/convex/src/browser/sync/client.ts-1142-  ): void;
+node_modules/convex/src/browser/sync/client.ts-1143-
+node_modules/convex/src/browser/sync/client.ts-1144-  /** @internal */
+node_modules/convex/src/browser/sync/client.ts-1145-  setAdminAuth(value: string, fakeUserIdentity?: UserIdentityAttributes): void;
+node_modules/convex/src/browser/sync/client.ts-1146-
+node_modules/convex/src/browser/sync/client.ts:1147:  clearAuth(): void;
+node_modules/convex/src/browser/sync/client.ts-1148-
+node_modules/convex/src/browser/sync/client.ts-1149-  subscribe(
+node_modules/convex/src/browser/sync/client.ts-1150-    name: string,
+node_modules/convex/src/browser/sync/client.ts-1151-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-1152-    options?: SubscribeOptions,
+node_modules/convex/src/browser/sync/client.ts-1153-  ): { queryToken: QueryToken; unsubscribe: () => void };
+node_modules/convex/src/browser/sync/client.ts-1154-
+node_modules/convex/src/browser/sync/client.ts:1155:  localQueryResult(
+node_modules/convex/src/browser/sync/client.ts-1156-    udfPath: string,
+node_modules/convex/src/browser/sync/client.ts-1157-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-1158-  ): Value | undefined;
+node_modules/convex/src/browser/sync/client.ts-1159-
+node_modules/convex/src/browser/sync/client.ts:1160:  localQueryResultByToken(queryToken: QueryToken): Value | undefined;
+node_modules/convex/src/browser/sync/client.ts-1161-
+node_modules/convex/src/browser/sync/client.ts:1162:  hasLocalQueryResultByToken(queryToken: QueryToken): boolean;
+node_modules/convex/src/browser/sync/client.ts-1163-
+node_modules/convex/src/browser/sync/client.ts-1164-  localQueryLogs(
+node_modules/convex/src/browser/sync/client.ts-1165-    udfPath: string,
+node_modules/convex/src/browser/sync/client.ts-1166-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-1167-  ): string[] | undefined;
+node_modules/convex/src/browser/sync/client.ts-1168-
+node_modules/convex/src/browser/sync/client.ts-1169-  queryJournal(
+node_modules/convex/src/browser/sync/client.ts-1170-    name: string,
+node_modules/convex/src/browser/sync/client.ts-1171-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-1172-  ): QueryJournal | undefined;
+node_modules/convex/src/browser/sync/client.ts-1173-
+node_modules/convex/src/browser/sync/client.ts-1174-  connectionState(): ConnectionState;
+node_modules/convex/src/browser/sync/client.ts-1175-
+node_modules/convex/src/browser/sync/client.ts-1176-  subscribeToConnectionState(
+node_modules/convex/src/browser/sync/client.ts-1177-    cb: (connectionState: ConnectionState) => void,
+node_modules/convex/src/browser/sync/client.ts-1178-  ): () => void;
+node_modules/convex/src/browser/sync/client.ts-1179-
+node_modules/convex/src/browser/sync/client.ts-1180-  mutation(
+node_modules/convex/src/browser/sync/client.ts-1181-    name: string,
+node_modules/convex/src/browser/sync/client.ts-1182-    args?: Record<string, Value>,
+node_modules/convex/src/browser/sync/client.ts-1183-    options?: MutationOptions,
+node_modules/convex/src/browser/sync/client.ts-1184-  ): Promise<any>;
+node_modules/convex/src/browser/sync/client.ts-1185-
+node_modules/convex/src/browser/sync/client.ts-1186-  action(name: string, args?: Record<string, Value>): Promise<any>;
+node_modules/convex/src/browser/sync/client.ts-1187-
+node_modules/convex/src/browser/sync/client.ts-1188-  close(): Promise<void>;
+node_modules/convex/src/browser/sync/client.ts-1189-
+node_modules/convex/src/browser/sync/client.ts-1190-  readonly url: string;

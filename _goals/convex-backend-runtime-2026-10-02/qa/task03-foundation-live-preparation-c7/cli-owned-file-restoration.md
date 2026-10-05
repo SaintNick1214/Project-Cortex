@@ -1,0 +1,13 @@
+# Parent-owned post-CLI fixture restoration
+
+The installed official CLI was actually observed creating `.env.local` and `.gitignore` in the cycle2 fixture despite the explicit private `--env-file`. These are new unfrozen files, and the strict source/topology guard correctly rejects them. They must remain subject to that guard. This procedure creates no provider protocol exception and does not weaken or modify operational wrappers.
+
+Before the parent starts the reviewed official CLI, record actual UTC, exact candidate digest, canonical fixture directory and `lstat` absence for precisely `fixture/.env.local` and `fixture/.gitignore`. Verify neither path belongs to the frozen file manifest. Record all frozen file hashes and normal private target/deploy selectors. Do not pre-create either file, infer absence from the manifest alone, or reuse cycle2 observations.
+
+After the owned CLI has exited and all owned process groups are confirmed terminal, inspect only these exact paths. If a path exists, require canonical parent/path without symlinks or aliases; regular file, one link, current UID owner and size at most65536 bytes each. Reject special files, additional paths, changed frozen files or missing ownership/provenance. Private CLI output and both incidental files may contain credentials; never print/read their contents into public evidence.
+
+Preserve each proven new file byte-for-byte to a unique `work/backend-runtime/task03-foundation-live-c7/` file with `wx`, mode0600, inside the existing0700 owned directory. Record only safe metadata (operation, candidate digest, observed UTC, exact basename, byte count, hash, process-terminal proof and restricted preservation path) in redacted receipts. Verify private preservation bytes/hash and restrictive mode before removing the corresponding exact new fixture file. Remove only these two proven new regular files; never frozen files or unproven paths. A file that remained absent is recorded as absent, not removed.
+
+Recheck every frozen file hash, exact operational topology, candidate identity and canonical private selectors. `sourcePreflight()` must pass again before either driver or retirement runs. Official generated bindings remain subject to the existing separate official codegen receipt/hash requirements for qualification. A failed CLI does not produce codegen/typecheck/live acceptance. If any required proof is missing, report BLOCKED/FAIL and retain restricted evidence; do not declare restoration, cleanup or qualification complete.
+
+Actual cycle2 failure/restoration/retirement observations are archived inert under provenance/cycle2-actual-deployment-failure. They do not establish any cycle3 file absence, ownership, restoration, deployment or retirement.

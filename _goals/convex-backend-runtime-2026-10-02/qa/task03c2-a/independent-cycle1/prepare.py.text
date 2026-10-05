@@ -1,0 +1,47 @@
+from pathlib import Path
+import hashlib,io,json,subprocess,tarfile,shutil
+root=Path('/workspace/Project-Cortex'); scratch=Path('/tmp/task03c2-a-review1-4cCdIR'); qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a'; candidate=root/'work/backend-runtime/task03c2a-checkout'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+freeze_bytes=(qa/'source-freeze.json').read_bytes(); freeze=json.loads(freeze_bytes); base=freeze['base']
+assert sha(freeze_bytes)=='76ced4206a6f5f8d2d638a016574ed4969c5cfd932d2f41da20693f010a715fb'
+archive=subprocess.check_output(['git','archive',base],cwd=root); (scratch/'base.tar').write_bytes(archive)
+with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+    baseline={m.name:tar.extractfile(m).read() for m in tar.getmembers() if m.isfile()}
+    for directory in [scratch/'candidate',scratch/'task03c2a-browser-baseline']:
+        directory.mkdir(); tar.extractall(directory,filter='data'); (directory/'node_modules').symlink_to(root/'node_modules',target_is_directory=True)
+allowed={r['file']:r['sha256'] for r in freeze['sourceFiles']}
+other=[]; changed=[]
+for name,contents in baseline.items():
+    actual=(candidate/name).read_bytes()
+    if name in allowed:
+        assert sha(actual)==allowed[name]
+        assert actual==(root/name).read_bytes()
+        (scratch/'candidate'/name).write_bytes(actual)
+        if contents!=actual:changed.append(name)
+    else:
+        assert actual==contents,name
+        other.append({'file':name,'sha256':sha(actual)})
+for name,expected in allowed.items():
+    if name not in baseline:
+        actual=(candidate/name).read_bytes(); assert sha(actual)==expected; assert actual==(root/name).read_bytes()
+        (scratch/'candidate'/name).parent.mkdir(parents=True,exist_ok=True);(scratch/'candidate'/name).write_bytes(actual);changed.append(name)
+protected=lambda name: name.startswith(('_goals/convex-backend-runtime-2026-10-02/qa/task03a/','_goals/convex-backend-runtime-2026-10-02/qa/task03c1/','tests/unit/runtimeAuth/','_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/','_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/','tests/unit/runtimeMetadataAuth/','tests/unit/runtimeWorkerAuth/')) or name in ['convex-dev/runtimeAuth.ts','convex-dev/runtimeAuthSchema.ts','convex-dev/runtimeWorkerAuth.ts','src/governance/index.ts','tests/unit/runtimeWorkerClient/governance.test.ts','convex-dev/immutable.ts','convex-dev/mutable.ts','convex-dev/runtimeMetadataAuth.ts','convex-dev/sessions.ts','convex-dev/users.ts']
+protection=[]
+for name,contents in baseline.items():
+    if protected(name):
+        assert (root/name).read_bytes()==contents,name
+        protection.append({'file':name,'sha256':sha(contents)})
+qa_checks=[]
+for row in freeze['qaFiles']:
+    actual=(root/row['file']).read_bytes(); assert sha(actual)==row['sha256'],row['file'];qa_checks.append(row)
+provenance=json.loads((qa/'snapshot-provenance.json').read_text())
+assert len(other)==2174; assert len(protection)==542
+for row in provenance['otherTracked']:assert sha(baseline[row['file']])==row['sha256'],row['file']
+assert sha(archive)==provenance['archiveSha256']
+result={'base':base,'sourceFreezeSha256':sha(freeze_bytes),'archiveSha256':sha(archive),'baseFileCount':len(baseline),'allowedOverlays':freeze['sourceFiles'],'changedFiles':sorted(changed),'otherArchiveFileCount':len(other),'otherArchiveFiles':other,'protectedFileCount':len(protection),'protectedFiles':protection,'qaFreezeFileCount':len(qa_checks),'qaFreezeFiles':qa_checks,'allVerified':True}
+(scratch/'source-verification.json').write_text(json.dumps(result,indent=2)+'\n')
+for name in ['packed-browser-contract.mjs','jest.scoped.cjs','tsconfig.scoped.json']:
+    shutil.copyfile(qa/name,scratch/name)
+for directory in [scratch/'candidate',scratch/'task03c2a-browser-baseline']:
+    (directory/'work').mkdir(exist_ok=True)
+print(json.dumps({k:v for k,v in result.items() if k not in ['otherArchiveFiles','protectedFiles','qaFreezeFiles']},indent=2))

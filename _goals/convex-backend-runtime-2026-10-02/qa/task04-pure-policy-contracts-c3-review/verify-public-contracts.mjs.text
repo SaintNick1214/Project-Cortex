@@ -1,0 +1,63 @@
+import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { join, resolve } from 'node:path';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import vm from 'node:vm';
+import { build } from 'esbuild';
+
+// Extract the npm tarball: source imports cannot validate the package export map.
+const temporary = mkdtempSync(resolve('contracts-'));
+try {
+  const packResult = JSON.parse(execFileSync(process.execPath, ['/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js', 'pack', '--workspaces=false', '--ignore-scripts', '--json', '--pack-destination', temporary], {encoding:'utf8'}));
+  const packed = Array.isArray(packResult) ? packResult[0] : packResult['@cortexmemory/sdk'];
+  const destination = join(temporary, 'node_modules/@cortexmemory/sdk');
+  mkdirSync(destination, {recursive:true});
+  execFileSync('tar', ['-xzf', join(temporary, packed.filename), '--strip-components=1', '-C', destination]);
+  const entry = join(destination, 'dist/index.js');
+  const esm = await import(pathToFileURL(entry));
+  const cjs = createRequire(join(temporary, 'consumer.cjs'))('@cortexmemory/sdk');
+  for (const sdk of [esm,cjs]) {
+    assert.equal(typeof sdk.Cortex, 'function');
+    assert.equal(typeof sdk.getPresetForPlan, 'function');
+    assert.equal(typeof sdk.MemoryValidationError, 'function');
+    for (const style of ['query','path']) {
+      for (const id of ['literal%2Fvalue','percent%','space and + plus','café/雪?&=']) {
+        assert.equal(sdk.extractShareId(sdk.buildShareUrl(id, {baseUrl:'https://example.com',style}), {style}), id);
+      }
+    }
+  }
+  writeFileSync(join(temporary, 'consumer.mts'), `
+    import {Cortex, MemoryValidationError, getPresetForPlan} from '@cortexmemory/sdk';
+    const cortex = new Cortex({convexUrl:'https://example.convex.cloud'});
+    const preset = getPresetForPlan('free');
+    const error = new MemoryValidationError('example', 'EXAMPLE');
+    async function verify(dynamic: boolean) {
+      const raw = await cortex.memory.get('space','memory'); raw?.content;
+      const enriched = await cortex.memory.get('space','memory',{includeConversation:true}); enriched?.memory.content;
+      const found = await cortex.memory.search('space','query'); found[0]?.content;
+      const rich = await cortex.memory.search('space','query',{enrichConversation:true}); rich[0]?.memory.content;
+      const listed = await cortex.memory.list({memorySpaceId:'space'}); listed[0]?.content;
+      const facts = await cortex.memory.list({memorySpaceId:'space',enrichFacts:true}); facts[0]?.memory.content;
+      const context = await cortex.contexts.get('ctx-example'); context?.contextId;
+      const chain = await cortex.contexts.get('ctx-example',{includeChain:true}); chain?.current.contextId;
+      const conditional = await cortex.memory.get('space','memory',{includeConversation:dynamic});
+      if (conditional && 'memory' in conditional) conditional.memory.content;
+    }
+    void preset; void error; void verify;
+  `);
+  execFileSync(resolve('node_modules/.bin/tsc'), ['--ignoreConfig','--noEmit','--strict','--skipLibCheck','--module','NodeNext','--moduleResolution','NodeNext','--target','ES2022',join(temporary,'consumer.mts')], {stdio:'inherit'});
+  const bundled = await build({entryPoints:[entry],platform:'browser',bundle:true,format:'iife',globalName:'CortexSDK',write:false});
+  const sandbox = {crypto:globalThis.crypto,TextEncoder,TextDecoder,URL,URLSearchParams,Headers,Response,Request,fetch,WebSocket:globalThis.WebSocket,setTimeout,clearTimeout,setInterval,clearInterval,console};
+  const context = vm.createContext(sandbox);
+  vm.runInContext(bundled.outputFiles[0].text,context);
+  await vm.runInContext(`(async () => {
+    if (typeof process !== 'undefined' || typeof require !== 'undefined') throw Error('Node globals must be unavailable');
+    const cortex = new CortexSDK.Cortex({convexUrl:'https://example.convex.cloud'});
+    await cortex.shutdown();
+  })()`,context);
+  console.log('Packed ESM/CJS exports, consumer declarations, URL round trips and browser execution passed.');
+} finally {
+  rmSync(temporary,{recursive:true,force:true});
+}

@@ -1,0 +1,64 @@
+{
+  "status": "EXPLICIT_PARTIAL_EXACT_BYTE_RECOVERY",
+  "operationalFreezeUnchanged": true,
+  "verifiedRecipes": "installation02 reverse fallbackCandidates to fallbackChain; diagnostics01 reverse two-row publication-first chain to original one-row final chain; both SHA256 exactly match immutable pre receipts",
+  "unverifiedReconstructions": "not stored as exact evidence; installation01 test and earlier diagnostic helper recovery incomplete",
+  "rows": [
+    {
+      "attempt": "installation01",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-installation.mjs",
+      "recordedSHA256": "c287656765214c478c01a7ff692b00fa4eddd7c4122ccde37d107dc95e6f848d",
+      "exactRecovered": false,
+      "path": null
+    },
+    {
+      "attempt": "installation01",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/qualifier-diagnostics.mjs",
+      "recordedSHA256": "d37c4a137da2fdefbba386aeba4cdb0615735d15dc704f801239932b021ea6af",
+      "exactRecovered": false,
+      "path": null
+    },
+    {
+      "attempt": "installation02",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-diagnostics.mjs",
+      "recordedSHA256": "0036dcd88a5086b4d7e4f16d93053b74d8a0d442d695fec281e00005cbf05882",
+      "exactRecovered": true,
+      "path": "scripts/offline-diagnostics.mjs"
+    },
+    {
+      "attempt": "installation02",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-installation.mjs",
+      "recordedSHA256": "41ec7695e36387c1b692cd123acdbd2ecb63cc4a26e36d1123d823c9e52a729e",
+      "exactRecovered": true,
+      "path": "evidence/preimage-recovery/installation02-offline-installation.mjs.text"
+    },
+    {
+      "attempt": "installation02",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/qualifier-diagnostics.mjs",
+      "recordedSHA256": "3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb",
+      "exactRecovered": true,
+      "path": "scripts/qualifier-diagnostics.mjs"
+    },
+    {
+      "attempt": "diagnostics01",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-diagnostics.mjs",
+      "recordedSHA256": "42a6e9a34918b0d83569836b6b24e5b9af99b9eec7adc74649e586a8a4d8792d",
+      "exactRecovered": true,
+      "path": "evidence/preimage-recovery/diagnostics01-offline-diagnostics.mjs.text"
+    },
+    {
+      "attempt": "diagnostics01",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-installation.mjs",
+      "recordedSHA256": "c287656765214c478c01a7ff692b00fa4eddd7c4122ccde37d107dc95e6f848d",
+      "exactRecovered": false,
+      "path": null
+    },
+    {
+      "attempt": "diagnostics01",
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/qualifier-diagnostics.mjs",
+      "recordedSHA256": "d37c4a137da2fdefbba386aeba4cdb0615735d15dc704f801239932b021ea6af",
+      "exactRecovered": false,
+      "path": null
+    }
+  ]
+}

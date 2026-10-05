@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-04T18:37:23.939843+00:00",
+  "reportReadFully": true,
+  "status": "ROOT_INSPECTED_FROZEN_INCOMPLETE_SUBJECT_NOT_GATE_PASS",
+  "checks": [
+    {
+      "scope": "QA",
+      "sealSHA256": "ffff1d0c88b66437b3f8fbd069a20e5c4c402abc200ef33cacf9e51a80ed4d96",
+      "exactRows": 9,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 1351019,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    },
+    {
+      "scope": "work",
+      "sealSHA256": "1cad81581eaccce6dfee140440fd0032c16c43cf128f3dc21a2cd99a7213cd7e",
+      "exactRows": 70,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 1520593,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    },
+    {
+      "scope": "tmp",
+      "sealSHA256": "88d0273651681cd10f2f3dbbe6fe3c29604bd5778be04297b0393322c01616a8",
+      "exactRows": 8022,
+      "literalSymlinksNeverFollowed": 4,
+      "regularBytesVerified": 428955477,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    }
+  ],
+  "referencedSealsAndGraphMapVerified": true,
+  "original122": "HELD",
+  "remainingRequiredReadiness": [
+    "reviewed ROOT finite launch mechanism",
+    "every generated consumed inner child preimage captured before launch"
+  ],
+  "initialReportedQaSealSupersededBeforeRootVerification": "b41addde0cb65bb7ef29d0e703a65c02ee1c0ddd390f6c1603a02b38ef3d3c52"
+}

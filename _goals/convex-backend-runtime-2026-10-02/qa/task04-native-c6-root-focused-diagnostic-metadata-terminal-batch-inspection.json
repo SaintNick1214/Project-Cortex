@@ -1,0 +1,164 @@
+{
+  "observedAt": "2026-10-05T01:45:15.300111+00:00",
+  "status": "ROOT_READ_ONLY_RETAINED_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "7f41f41d6f1d4b8b83cc123264b8bec2",
+      "receiptSHA256": "8ffbac6aa221667ee85774b1dfc71d306e55cf44c7e15d48cc255ac816b8cfd6",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 18460,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 25187975,
+        "st_mtime_ns": 1791164675756748974,
+        "st_ctime_ns": 1791164675756748974
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/diagnostic-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T01:42:04.201695+00:00",
+          "utcEnd": "2026-10-05T01:42:04.253446+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/metadata-input-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T01:42:07.134354+00:00",
+          "utcEnd": "2026-10-05T01:42:41.885196+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/root-terminal-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T01:42:44.805157+00:00",
+          "utcEnd": "2026-10-05T01:43:22.591579+00:00",
+          "exitCode": 0
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/7f41f41d6f1d4b8b83cc123264b8bec2/diagnostic-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18397,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791164524899056707,
+            "st_ctime_ns": 1791164524899056707
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/7f41f41d6f1d4b8b83cc123264b8bec2/diagnostic-controls.mjs.stdout",
+          "bytes": 257,
+          "sha256": "7eb064a066916820de9414b42c807e908d40cc7831e878bdabdad62d4ba4078c",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18396,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 257,
+            "st_mtime_ns": 1791164524899056707,
+            "st_ctime_ns": 1791164524899056707
+          },
+          "text": "{\"status\":\"PASS_ACTUAL_PATCHED_PORT_ZERO_REENTRY_SAMEBYTE_INODE_CAP_FROZEN_PRIMARY_ALL_SECONDARY\",\"effects\":0,\"attempts\":[\"write\",\"sync\",\"close\"],\"root\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/prepared-diagnostic-control-vVabo9\",\"original122\":\"HELD\"}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/7f41f41d6f1d4b8b83cc123264b8bec2/metadata-input-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18426,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791164562539546704,
+            "st_ctime_ns": 1791164562539546704
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/7f41f41d6f1d4b8b83cc123264b8bec2/metadata-input-controls.mjs.stdout",
+          "bytes": 1615,
+          "sha256": "07d3d381b13b4423afb7e4f94f577a82453316b8981fba61d66cd61f961660b4",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18425,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 1615,
+            "st_mtime_ns": 1791164562539546704,
+            "st_ctime_ns": 1791164562539546704
+          },
+          "text": "{\"stage\":\"START\",\"name\":\"reproduce-C4-writable-metadata-omission-and-C5-predispatch-capture\",\"utc\":\"2026-10-05T01:42:08.183Z\"}\n{\"stage\":\"START\",\"name\":\"immutable-executable-drift-still-denied-on-OWN-not-executed-fence-probe\",\"utc\":\"2026-10-05T01:42:08.234Z\"}\n{\"stage\":\"START\",\"name\":\"exact-declared-extension-runtime-freeze-and-qa-manifest-before-return-capture\",\"utc\":\"2026-10-05T01:42:10.416Z\"}\n{\"stage\":\"START\",\"name\":\"same-metadata-real-read-and-actual-compiler-sourcePRE-exactbytes\",\"utc\":\"2026-10-05T01:42:10.420Z\"}\n{\"stage\":\"START\",\"name\":\"new-owned-generated-version-sync-callback-promises-FH-each-before-consumption\",\"utc\":\"2026-10-05T01:42:26.419Z\"}\n{\"stage\":\"START\",\"name\":\"historical-unclosed-read-denied-no-route-expansion\",\"utc\":\"2026-10-05T01:42:41.729Z\"}\n{\"status\":\"PASS_METADATA_VERSION_INPUT_CONTROLS_ONLY\",\"results\":[{\"name\":\"reproduce-C4-writable-metadata-omission-and-C5-predispatch-capture\",\"status\":\"PASS\"},{\"name\":\"immutable-executable-drift-still-denied-on-OWN-not-executed-fence-probe\",\"status\":\"PASS\"},{\"name\":\"exact-declared-extension-runtime-freeze-and-qa-manifest-before-return-capture\",\"status\":\"PASS\"},{\"name\":\"same-metadata-real-read-and-actual-compiler-sourcePRE-exactbytes\",\"status\":\"PASS\"},{\"name\":\"new-owned-generated-version-sync-callback-promises-FH-each-before-consumption\",\"status\":\"PASS\"},{\"name\":\"historical-unclosed-read-denied-no-route-expansion\",\"status\":\"PASS\"}],\"ledger\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/prepared-dependency-tiers-6d7864a9-d83e-4d29-99e8-e205882c2c72/consumed-version-ledger.jsonl\",\"original122\":\"HELD\",\"actualOriginalEntriesExecuted\":0}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/7f41f41d6f1d4b8b83cc123264b8bec2/root-terminal-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18458,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791164603245158721,
+            "st_ctime_ns": 1791164603245158721
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/7f41f41d6f1d4b8b83cc123264b8bec2/root-terminal-controls.mjs.stdout",
+          "bytes": 320,
+          "sha256": "1c911855bab86aaa2b2105b93ee02aeb10fd854e9ee3df16606671caee697e91",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18457,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 320,
+            "st_mtime_ns": 1791164603245158721,
+            "st_ctime_ns": 1791164603245158721
+          },
+          "text": "{\"status\":\"PASS_ACTUAL_CHILD_BODY_PRIMARY_PLUS_TERMINAL_RECEIPT_FAILURE_QUIESCENT\",\"receiptPath\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/launcher-fixture/child-VIt19e/receipt.json\",\"primary\":\"QA_BRIDGE_PREIMAGE_BINDING\",\"closureErrors\":[\"QA_BRIDGE_PREIMAGE_BINDING\"],\"evidenceComplete\":false,\"original122\":\"HELD\"}\n"
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5377,
+      "uniqueBeforeByteBackingsDecoded": 3370,
+      "beforeByteBackingRawBytes": 298723735,
+      "assessment": "Focused diagnostic/metadata/terminal-adverse command exits all0 observed. No whole body in this batch; no full qualification inferred. Recorded cleanup is historical, not a fresh process census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

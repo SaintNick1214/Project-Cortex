@@ -1,0 +1,19 @@
+from pathlib import Path
+import json, hashlib, datetime
+r=Path(__file__).parent
+p=Path('/workspace/Project-Cortex')
+before=json.loads((r/'extra-before-bindings.json').read_text())
+checked=[]
+for row in before:
+ f=p/row['path'];b=f.read_bytes()
+ checked.append({'path':row['path'],'match':hashlib.sha256(b).hexdigest()==row['sha256'] and len(b)==row['bytes']})
+context=[]
+for f in (r/'source-context').rglob('*'):
+ if not f.is_file():continue
+ original=p/f.relative_to(r/'source-context')
+ if original.is_file():
+  context.append({'path':str(original.relative_to(p)),'copySha256':hashlib.sha256(f.read_bytes()).hexdigest(),'matchesCurrent':f.read_bytes()==original.read_bytes()})
+results={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'extraBindings':len(checked),'extraMismatches':[v for v in checked if not v['match']],'contextOriginals':len(context),'contextMismatches':[v for v in context if not v['matchesCurrent']],'sourceContext':context}
+(r/'extra-preservation-after.json').write_text(json.dumps(results,indent=2)+'\n')
+assert not results['extraMismatches'] and not results['contextMismatches']
+print(json.dumps({k:v for k,v in results.items() if k!='sourceContext'},indent=2))

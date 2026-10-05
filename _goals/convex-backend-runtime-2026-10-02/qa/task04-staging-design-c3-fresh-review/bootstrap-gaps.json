@@ -1,0 +1,15 @@
+{
+  "scope": "Explicit bootstrap/discovery gaps; no invented capture or qualifying execution",
+  "actual_utc": "NOT_CAPTURED",
+  "source_pre_for_shell_wrapper": "NOT_CAPTURED",
+  "source_post_for_shell_wrapper": "NOT_CAPTURED",
+  "commands": [
+    {"cmd":"pwd","cwd":"/workspace","exit":0,"stdout":"/workspace\n","stderr":"","raw_shell_argv":"NOT_CAPTURED"},
+    {"cmd":"python3 bootstrap here-document reading AGENTS.md/.agents/CODEX-RUNTIME.md/incorrect PROJECT-PROFILE.md","cwd":"/workspace/Project-Cortex","exit":1,"failure":"FileNotFoundError: /workspace/Project-Cortex/PROJECT-PROFILE.md","raw_argv":"NOT_CAPTURED; original partial bytes/raw subprocess stdout and stderr retained in scratch/bootstrap","note":"Inner subprocess preimages exist for two real files; invalid third path meant source-post record construction failed. No success inferred."},
+    {"cmd":"cat scratch/bootstrap/stdout; rg --files selected instruction and incorrectly repo-root subject paths","exit":2,"failure":"qa/task04-default-native-driver-implementation-c2/design-clarification-c3 missing at repository root","stdout_file":"NOT_CAPTURED","stderr_file":"NOT_CAPTURED"},
+    {"cmd":"rg --files qa | head -40; rg --files .agents/skills | rg feature-orchestrator; cat profile/judge","exit":0,"raw_stdout_file":"NOT_CAPTURED","raw_stderr_file":"NOT_CAPTURED"},
+    {"cmd":"rg --files _goals | rg broad task04 patterns; cat feature-orchestrator skill","exit":0,"raw_stdout_file":"NOT_CAPTURED; tool display heavily truncated","raw_stderr_file":"NOT_CAPTURED","note":"Overbroad filename discovery only; no private file material intentionally read."},
+    {"cmd":"python3 bounded discovery subject immediate filenames and review directory names","exit":0,"raw_stdout_file":"NOT_CAPTURED","raw_stderr_file":"NOT_CAPTURED"}
+  ],
+  "qualified_commands": "All commands after recorder establishment have genuine consumed-dependency/control source-pre bytes, actual UTC/raw argv/stdout/stderr/exit/source-post retained under scratch/commands. Historical reviewer gaps remain untouched in frozen history."
+}

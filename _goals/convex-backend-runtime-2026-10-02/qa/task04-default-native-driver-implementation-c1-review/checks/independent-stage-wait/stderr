@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: reader stage wait must honor original10ms phase (60ms generous scheduling allowance), not native500ms
+    at file:///workspace/Project-Cortex/work/resume/task04-default-native-driver-implementation-c1-review/fixture/checks/independent-stage-wait.mjs:10:319 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,4210 @@
+{
+  "discovered": 41,
+  "executed": 40,
+  "passed": 39,
+  "skipped": 1,
+  "status": "FAIL",
+  "effects": [
+    {
+      "type": "metric",
+      "name": "sdk-logout",
+      "baseline": 41,
+      "updated": 42,
+      "before": 1,
+      "after": 1,
+      "quietMs": 750,
+      "payloadFields": [
+        "value"
+      ],
+      "observedValues": [
+        41
+      ]
+    },
+    {
+      "type": "metric",
+      "name": "late-credential-fencing",
+      "baseline": 42,
+      "updated": 43,
+      "before": 1,
+      "after": 1,
+      "quietMs": 750,
+      "payloadFields": [
+        "value"
+      ],
+      "observedValues": [
+        42
+      ]
+    }
+  ],
+  "completed": true,
+  "terminalReason": "completed",
+  "phase": "live",
+  "runId": "b72a6d27-50fb-43bb-8442-81ec494125fa",
+  "ownedProcessGroups": 33,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 33,
+  "processCleanup": "REAPED",
+  "ledgerCheckpoint": "saved",
+  "startedAt": "2026-10-03T14:20:57.052Z",
+  "completedAt": "2026-10-03T14:21:44.287Z",
+  "deploymentName": "helpful-iguana-708",
+  "cleanupLedger": "owned-b72a6d27-50fb-43bb-8442-81ec494125fa.json",
+  "scope": "accepted03A/03C1/03B2A and metadata SDK consumers",
+  "whole03Certified": false,
+  "whole09Certified": false,
+  "requestMs": 12000,
+  "operatorMs": 25000,
+  "wholeMs": 600000,
+  "quietMs": 750,
+  "isolation": "code/import/env/IPC boundary; same-UID filesystem is not an OS sandbox",
+  "limitations": [
+    "Tasks05/12/13 and UI remain pending",
+    "No inference supplied"
+  ]
+}
+1 {"name": "operator-provisioning", "status": "PASS", "reason": "observed_assertions"}
+2 {"name": "valid-owned-metadata", "status": "PASS", "reason": "observed_assertions"}
+3 {"name": "missing-identity", "status": "PASS", "reason": "observed_assertions"}
+4 {"name": "forged-signature", "status": "PASS", "reason": "observed_assertions"}
+5 {"name": "wrong-issuer", "status": "PASS", "reason": "observed_assertions"}
+6 {"name": "wrong-audience", "status": "PASS", "reason": "observed_assertions"}
+7 {"name": "expired-token", "status": "PASS", "reason": "observed_assertions"}
+8 {"name": "wrong-tenant", "status": "PASS", "reason": "observed_assertions"}
+9 {"name": "wrong-space", "status": "PASS", "reason": "observed_assertions"}
+10 {"name": "owner-denied", "status": "PASS", "reason": "observed_assertions"}
+11 {"name": "explicit-space-read", "status": "PASS", "reason": "observed_assertions"}
+12 {"name": "admin-alone-read-denied", "status": "PASS", "reason": "observed_assertions"}
+13 {"name": "admin-alone-write-denied", "status": "PASS", "reason": "observed_assertions"}
+14 {"name": "ambiguous-omission-denied", "status": "PASS", "reason": "observed_assertions"}
+15 {"name": "actor-binding-denied", "status": "PASS", "reason": "observed_assertions"}
+16 {"name": "caller-metadata-no-principal", "status": "PASS", "reason": "observed_assertions"}
+17 {"name": "public-internal-provision-denied", "status": "PASS", "reason": "observed_assertions"}
+18 {"name": "public-internal-maintenance-denied", "status": "PASS", "reason": "observed_assertions"}
+19 {"name": "immutable-delete-read-denied", "status": "PASS", "reason": "observed_assertions"}
+20 {"name": "immutable-delete-write-denied", "status": "PASS", "reason": "observed_assertions"}
+21 {"name": "mutable-delete-read-denied", "status": "PASS", "reason": "observed_assertions"}
+22 {"name": "mutable-delete-write-denied", "status": "PASS", "reason": "observed_assertions"}
+23 {"name": "negative-effect-counts", "status": "PASS", "reason": "observed_assertions"}
+24 {"name": "reactive-wrong-tenant", "status": "PASS", "reason": "observed_assertions"}
+25 {"name": "reactive-wrong-space", "status": "PASS", "reason": "observed_assertions"}
+26 {"name": "resource-deletion-subscription", "status": "PASS", "reason": "observed_assertions"}
+27 {"name": "grant-revocation", "status": "PASS", "reason": "observed_assertions"}
+28 {"name": "principal-deletion", "status": "PASS", "reason": "observed_assertions"}
+29 {"name": "membership-revocation", "status": "PASS", "reason": "observed_assertions"}
+30 {"name": "space-deletion", "status": "PASS", "reason": "observed_assertions"}
+31 {"name": "tenant-deletion", "status": "PASS", "reason": "observed_assertions"}
+32 {"name": "sdk-metadata-consumers", "status": "PASS", "reason": "observed_assertions"}
+33 {"name": "sdk-refresh", "status": "PASS", "reason": "observed_assertions"}
+34 {"name": "sdk-logout", "status": "PASS", "reason": "observed_assertions"}
+35 {"name": "sdk-labels-no-authority", "status": "PASS", "reason": "observed_assertions"}
+36 {"name": "background-after-ordinary-logout", "status": "PASS", "reason": "observed_assertions"}
+37 {"name": "late-credential-fencing", "status": "PASS", "reason": "observed_assertions"}
+38 {"name": "sanitized-host-callback", "status": "FAIL", "reason": "unexpected_unauthenticated"}
+39 {"name": "sdk-session-capability", "status": "PASS", "reason": "observed_assertions"}
+40 {"name": "background-after-revocation", "status": "PASS", "reason": "observed_assertions"}
+41 {"name": "session-end-not-grant-revocation", "status": "BLOCKED", "reason": "dependency_blocked"}
+ENDPOINT_REQUIREMENTS
+[
+  {
+    "path": "immutable:store",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:store",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "data": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": false
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "metadata": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:store authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:store rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:store rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:get",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:get authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:get rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:get rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:getVersion",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:getVersion",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "version": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getVersion authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getVersion rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getVersion rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:getHistory",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:getHistory",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getHistory authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getHistory rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getHistory rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:getAtTimestamp",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:getAtTimestamp",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "timestamp": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getAtTimestamp authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:list",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "createdAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "createdBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "offset": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "sortBy": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "sortOrder": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:list authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:list rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:list rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:count",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "createdAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "createdBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:count authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:count rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:count rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:search",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:search",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "createdAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "createdBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "query": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:search authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:search rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:search rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:purge",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:purge",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purge authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purge rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purge rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:purgeMany",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:purgeMany",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "createdAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "createdBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purgeMany authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purgeMany rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:purgeVersions",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "nativeRegistration": {
+      "path": "immutable:purgeVersions",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "type": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "keepLatest": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purgeVersions authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "immutable:purgeAll",
+    "visibility": "internal",
+    "requiredCapability": "trusted deployment-operator internal invocation",
+    "scope": "deployment-operator",
+    "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+    "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+    "resourceLookup": "immutable deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+    "nativeRegistration": {
+      "path": "immutable:purgeAll",
+      "visibility": "internal",
+      "args": {
+        "type": "object",
+        "value": {}
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations mutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations idle expiry checks every pinned target before effects and after commits",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:set",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:set",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "key": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "value": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": false
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "metadata": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:set authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:set rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:set rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:update",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:update",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "key": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "operation": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "increment"
+                },
+                {
+                  "type": "literal",
+                  "value": "decrement"
+                },
+                {
+                  "type": "literal",
+                  "value": "append"
+                },
+                {
+                  "type": "literal",
+                  "value": "custom"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "operand": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:update authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:update rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:update rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:get",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "key": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:get authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:get rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:get rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:exists",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:exists",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "key": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:exists authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:exists rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:exists rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:list",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "keyPrefix": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "offset": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "sortBy": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "sortOrder": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:list authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:list rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:list rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:count",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "keyPrefix": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:count authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:count rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:count rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:deleteKey",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:deleteKey",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "key": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:deleteKey authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:deleteKey rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:deleteKey rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:purgeMany",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:purgeMany",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "keyPrefix": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "updatedBefore": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "updatedAfter": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:purgeMany authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:purgeMany rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:purgeNamespace",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:purgeNamespace",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "namespace": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "dryRun": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:purgeNamespace authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:purgeNamespace rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:purgeNamespace rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:transaction",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "nativeRegistration": {
+      "path": "mutable:transaction",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "operations": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "op": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "set"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "update"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "delete"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "increment"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "decrement"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  },
+                  "namespace": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "key": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "value": {
+                    "fieldType": {
+                      "type": "any"
+                    },
+                    "optional": true
+                  },
+                  "amount": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  }
+                }
+              }
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:transaction authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:transaction rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers mutable:transaction rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "mutable:purgeAll",
+    "visibility": "internal",
+    "requiredCapability": "trusted deployment-operator internal invocation",
+    "scope": "deployment-operator",
+    "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+    "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+    "resourceLookup": "mutable deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+    "nativeRegistration": {
+      "path": "mutable:purgeAll",
+      "visibility": "internal",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations mutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations idle expiry checks every pinned target before effects and after commits",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:create",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:create",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "metadata": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": true
+          },
+          "startedAt": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "expiresAt": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:create authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:create rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:create rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:get",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:get authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:get rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:get rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:touch",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:touch",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:touch authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:touch rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:touch rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:end",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:end",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:end authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:end rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:end rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:endAll",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:endAll",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:endAll authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:endAll rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:endAll rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:list",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "status": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "active"
+                },
+                {
+                  "type": "literal",
+                  "value": "idle"
+                },
+                {
+                  "type": "literal",
+                  "value": "ended"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "offset": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:list authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:list rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:list rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:count",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "status": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "active"
+                },
+                {
+                  "type": "literal",
+                  "value": "idle"
+                },
+                {
+                  "type": "literal",
+                  "value": "ended"
+                }
+              ]
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:count authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:count rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers sessions:count rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:incrementMessageCount",
+    "visibility": "internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:incrementMessageCount",
+      "visibility": "internal",
+      "args": {
+        "type": "object",
+        "value": {
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations mutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations idle expiry checks every pinned target before effects and after commits",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:incrementMemoryCount",
+    "visibility": "internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:incrementMemoryCount",
+      "visibility": "internal",
+      "args": {
+        "type": "object",
+        "value": {
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations mutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations idle expiry checks every pinned target before effects and after commits",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "sessions:expireIdle",
+    "visibility": "internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "nativeRegistration": {
+      "path": "sessions:expireIdle",
+      "visibility": "internal",
+      "args": {
+        "type": "object",
+        "value": {
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          },
+          "idleTimeout": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations mutable operator purge preserves control/tombstone rows",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations background counter (ctx, args) => {\n        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \\`export const foo = ${funcType}(...); await foo(ctx);\\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);\n        return handler(ctx, args);\n    } uses stored current reference",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "five actual internal registrations idle expiry checks every pinned target before effects and after commits",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical owner with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical user with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry rejects mismatched canonical both with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background message allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background memory allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "cycle2 independent-review regressions background expiry allows exact creator/user/reference with broad space grant",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:get",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:get authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:get rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:get rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:list",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:list authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:list rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:list rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:count",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:count authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:count rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:count rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:getVersion",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:getVersion",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "version": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getVersion authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getVersion rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getVersion rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:getHistory",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:getHistory",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getHistory authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getHistory rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getHistory rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:getAtTimestamp",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:getAtTimestamp",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "timestamp": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getAtTimestamp authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:exists",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:exists",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:exists authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:exists rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:exists rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  },
+  {
+    "path": "users:deleteUserProfile",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "nativeRegistration": {
+      "path": "users:deleteUserProfile",
+      "visibility": "public",
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "outcomes": [
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:deleteUserProfile authorized outcomes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:deleteUserProfile rejects missing verified identity without writes",
+        "status": "passed"
+      },
+      {
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "name": "36 registered modern public handlers users:deleteUserProfile rejects forged tenant without writes",
+        "status": "passed"
+      }
+    ],
+    "status": "PASS bounded offline",
+    "sharedEvidence": [
+      "original189 + affected03A133 + worker185 + historical151/72/19",
+      "native-errors106 exact bounded/private/control/infrastructure",
+      "scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback",
+      "current-required18-outcomes + six required denial predicates"
+    ],
+    "liveEvidence": "PENDING; no service/JWT/subscription/byte/callback/UI certification"
+  }
+]
+
+COMMANDS_SUMMARY
+[
+  {
+    "label": "actual-receipts",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/report.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:24.392409+00:00",
+    "endUtc": "2026-10-03T14:28:24.414158+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "actual-sdk-index",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "work/backend-runtime/task03c2-live-fixture/sdk/src/index.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/report.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:29:19.474357+00:00",
+    "endUtc": "2026-10-03T14:29:19.496418+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "approved-context",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "_goals/convex-backend-runtime-2026-10-02/goal.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:27:48.694443+00:00",
+    "endUtc": "2026-10-03T14:27:48.712855+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "architecture-goal",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "_goals/convex-backend-runtime-2026-10-02/goal.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:27:55.891390+00:00",
+    "endUtc": "2026-10-03T14:27:55.910768+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "authority-source",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-review-2.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:31:07.650412+00:00",
+    "endUtc": "2026-10-03T14:31:07.677056+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "cache-and-operation-evidence",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:29:01.308155+00:00",
+    "endUtc": "2026-10-03T14:29:01.330452+00:00",
+    "exit": 1,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "cache-operation-evidence-corrected",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:29:11.701300+00:00",
+    "endUtc": "2026-10-03T14:29:11.722320+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "citation-locations",
+    "argv": [
+      "rg",
+      "-n",
+      "sanitized-host-callback|session-end-not-grant-revocation|notifySessionChanged|configureReactiveAuth|queryResult\\(|localQueryResult\\(|setConfig\\(|testsetup|test setup|For QA issues|later valid|recover|SessionMaintenance|BACKEND_MAINTENANCE_ONLY",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+      "src/auth/credentials.ts",
+      "src/sessions/index.ts",
+      "node_modules/convex/src/browser/simple_client.ts",
+      "node_modules/convex/src/browser/sync/client.ts",
+      "node_modules/convex/src/browser/sync/authentication_manager.ts",
+      "node_modules/convex/src/browser/sync/optimistic_updates_impl.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md",
+      ".agents/skills/judge-task/SKILL.md",
+      ".agents/skills/feature-orchestrator/SKILL.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:33.537519+00:00",
+    "endUtc": "2026-10-03T14:35:33.547678+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "contract-citations-complete",
+    "argv": [
+      "python",
+      "-c",
+      "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"node_modules/convex/src/browser/sync/optimistic_updates_impl.ts\",225,260),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md\",43,104),(\".agents/skills/feature-orchestrator/SKILL.md\",43,81),(\".agents/skills/judge-task/SKILL.md\",186,250)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files]"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:54.254306+00:00",
+    "endUtc": "2026-10-03T14:35:54.275814+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "contracts-inventory",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:08.001304+00:00",
+    "endUtc": "2026-10-03T14:28:08.024489+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "credential-contracts",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/report.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c1-review-1.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/contracts.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/contracts.md",
+      "src/auth/credentials.ts",
+      "tests/unit/auth/credentials.test.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:13.868817+00:00",
+    "endUtc": "2026-10-03T14:28:13.888100+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "credential-source",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "work/backend-runtime/task03c2-live-fixture/sdk/src/auth/credentials.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c1-review-1.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/contracts.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/contracts.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:18.773080+00:00",
+    "endUtc": "2026-10-03T14:28:18.793529+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "exact-history-report",
+    "argv": [
+      "rg",
+      "--files",
+      "-g",
+      "*task03c2*review*.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:36:00.894793+00:00",
+    "endUtc": "2026-10-03T14:36:00.907522+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "final-context",
+    "argv": [
+      "python",
+      "-c",
+      "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_research/convex-ai-gateway-2026-10-02/architecture.md\",125,190),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts\",1,100),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/lib/runtimeAuth.ts\",390,490),(\"tests/unit/auth/credentials.test.ts\",270,410),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",1,180)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files if (p/f).exists()]"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:26.610030+00:00",
+    "endUtc": "2026-10-03T14:35:26.630510+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "freeze-before-corrected",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/freeze.py",
+      "before"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:27:40.856979+00:00",
+    "endUtc": "2026-10-03T14:27:41.037627+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "freeze-before",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:27:09.730921+00:00",
+    "endUtc": "2026-10-03T14:27:09.768838+00:00",
+    "exit": 1,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "harness-history",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-1.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/README.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:33.269751+00:00",
+    "endUtc": "2026-10-03T14:28:33.299198+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "harness-reviews2-3",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:37.698745+00:00",
+    "endUtc": "2026-10-03T14:28:37.720800+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "history-report-location",
+    "argv": [
+      "rg",
+      "--files",
+      "_goals/convex-backend-runtime-2026-10-02/qa"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:57.428388+00:00",
+    "endUtc": "2026-10-03T14:35:57.448920+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "installed-simple-auth",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "node_modules/convex/src/browser/simple_client.ts",
+      "node_modules/convex/src/browser/sync/authentication_manager.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:28.226619+00:00",
+    "endUtc": "2026-10-03T14:28:28.248691+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "inventory",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:26:40.958074+00:00",
+    "endUtc": "2026-10-03T14:26:40.986832+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "ledger-and-binding-structure",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:31:21.440566+00:00",
+    "endUtc": "2026-10-03T14:31:21.469301+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "maintenance-and-tail",
+    "argv": [
+      "python",
+      "-c",
+      "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts\",390,480),(\"tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts\",1,500),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",180,700)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files];f=p/files[1][0];d=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context\")/files[1][0];d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(f.read_bytes())"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:44.818833+00:00",
+    "endUtc": "2026-10-03T14:35:44.839689+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "metadata-contract-source",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/contracts.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:31:02.223358+00:00",
+    "endUtc": "2026-10-03T14:31:02.246360+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "metadata-endpoints",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/immutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/mutable.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:31:40.149374+00:00",
+    "endUtc": "2026-10-03T14:31:40.170170+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "native-cache-details",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:53.950254+00:00",
+    "endUtc": "2026-10-03T14:28:53.969702+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "native-cache-paths",
+    "argv": [
+      "rg",
+      "-n",
+      "-A",
+      "28",
+      "-B",
+      "8",
+      "setAuth\\(|clearAuth\\(|hasAuth\\(|localQueryResult\\(|localQueryResultByToken\\(|hasLocalQueryResultByToken\\(|ingestQueryResultsFromServer|onTransition|removeQuery",
+      "node_modules/convex/src/browser/sync/client.ts",
+      "node_modules/convex/src/browser/sync/local_state.ts",
+      "node_modules/convex/src/browser/sync/remote_query_set.ts",
+      "node_modules/convex/src/browser/sync/optimistic_updates.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:46.730751+00:00",
+    "endUtc": "2026-10-03T14:28:46.735262+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "native-contract-citations",
+    "argv": [
+      "python",
+      "-c",
+      "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts\",250,330),(\"src/auth/credentials.ts\",88,245),(\"node_modules/convex/src/browser/simple_client.ts\",530,565),(\"node_modules/convex/src/browser/sync/authentication_manager.ts\",145,210),(\"node_modules/convex/src/browser/sync/client.ts\",660,705),(\"node_modules/convex/src/browser/sync/optimistic_updates_impl.ts\",225,260),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md\",43,104),(\".agents/skills/feature-orchestrator/SKILL.md\",43,81),(\".agents/skills/judge-task/SKILL.md\",1,190)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files]"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:44.812247+00:00",
+    "endUtc": "2026-10-03T14:35:44.831297+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "offline-deferred",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+      "deferred"
+    ],
+    "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+    "startUtc": "2026-10-03T14:30:46.524932+00:00",
+    "endUtc": "2026-10-03T14:30:46.785993+00:00",
+    "exit": 0,
+    "environment": {
+      "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+      "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+    },
+    "boundSeconds": 15
+  },
+  {
+    "label": "offline-immediate",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+      "immediate"
+    ],
+    "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+    "startUtc": "2026-10-03T14:30:46.519232+00:00",
+    "endUtc": "2026-10-03T14:30:46.785989+00:00",
+    "exit": 0,
+    "environment": {
+      "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+      "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+    },
+    "boundSeconds": 15
+  },
+  {
+    "label": "offline-required-assertion",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+      "required-assertion"
+    ],
+    "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+    "startUtc": "2026-10-03T14:30:31.619221+00:00",
+    "endUtc": "2026-10-03T14:30:31.867469+00:00",
+    "exit": 1,
+    "environment": {
+      "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+      "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+    },
+    "boundSeconds": 15
+  },
+  {
+    "label": "original17",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:27:48.690699+00:00",
+    "endUtc": "2026-10-03T14:27:48.716348+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "own-results-and-history-sha",
+    "argv": [
+      "python",
+      "-c",
+      "from pathlib import Path;import json,hashlib;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");print((r/\"native-recovery.mjs\").read_text());[(print(f.name),print(f.read_text())) for f in sorted(r.glob(\"native-*.json\"))];p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review3.md\");print(\"THIRD_REPORT\",str(p),hashlib.sha256(p.read_bytes()).hexdigest());assert hashlib.sha256(p.read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:54.441168+00:00",
+    "endUtc": "2026-10-03T14:35:54.466848+00:00",
+    "exit": 1,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "provenance-history-native-bindings",
+    "argv": [
+      "python3",
+      "/tmp/task03c2-live-service-review-gkwkb7lc/verify-extra.py"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:32:14.936613+00:00",
+    "endUtc": "2026-10-03T14:32:15.617951+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "relevant-file-list",
+    "argv": [
+      "rg",
+      "--files",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex",
+      "tests/unit/runtimeWorkerClient",
+      "tests/unit/sessions"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:35:33.709286+00:00",
+    "endUtc": "2026-10-03T14:35:33.714926+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "remaining-context",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:33:09.450758+00:00",
+    "endUtc": "2026-10-03T14:33:09.475537+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "review-histories-final",
+    "argv": [
+      "python",
+      "-c",
+      "from pathlib import Path;import hashlib;p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa\");names=[\"task03c2-live-harness-review-1.md\",\"task03c2-live-harness-review-2.md\",\"task03c2-live-harness-review-3.md\"];[(print(n,\"SHA\",hashlib.sha256((p/n).read_bytes()).hexdigest(),\"lines\",len((p/n).read_text().splitlines())),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/n).read_text().splitlines(),1) if (n==names[1] and i>=180) or (n==names[2] and i<=42)))) for n in names];assert hashlib.sha256((p/names[2]).read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:36:07.512587+00:00",
+    "endUtc": "2026-10-03T14:36:07.536975+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "second-history-complete",
+    "argv": [
+      "cat",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:36:25.286797+00:00",
+    "endUtc": "2026-10-03T14:36:25.287873+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  },
+  {
+    "label": "tasks01-11",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T14:28:00.556582+00:00",
+    "endUtc": "2026-10-03T14:28:00.587229+00:00",
+    "exit": 0,
+    "environment": "inherited for read-only context command; no env dump"
+  }
+]

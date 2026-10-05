@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "node",
+    "--experimental-vm-modules",
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/first-binding-hostile.mjs",
+    "regression"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startedAt": "2026-10-04T10:58:36.973744+00:00",
+  "finishedAt": "2026-10-04T10:58:37.039097+00:00",
+  "exitCode": 1,
+  "sourcePre": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": "b8491b55f4423f44653dbad909530ae91f68c253bfe528d612f1695ac17b718b",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/runtime-freeze.json": "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/first-binding-hostile.mjs": "d11b027fd2e6cff557a716ead102e4ce514538d833bc105d21d49b3b88c7777a"
+  },
+  "sourcePost": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": "b8491b55f4423f44653dbad909530ae91f68c253bfe528d612f1695ac17b718b",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/runtime-freeze.json": "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/first-binding-hostile.mjs": "d11b027fd2e6cff557a716ead102e4ce514538d833bc105d21d49b3b88c7777a"
+  },
+  "sourceUnchanged": true,
+  "network": "NOT_RUN",
+  "native": "NOT_RUN",
+  "fixture": "OWNED_DUMMY_VM_WITH_EXACT_UNMODIFIED_GUARD",
+  "observed": "ACCEPTED_SELF_CONSISTENT_FIRST_SUBSTITUTION",
+  "expected": "REJECTED",
+  "testDiscovery": {
+    "hostileAssertions": 1,
+    "skipped": 0
+  },
+  "stdoutSHA256": "4351301d83f24a86398e7fb2c02130ab3f16ff7b9179011415fad97d641f073e",
+  "stderrSHA256": "46fd58ce8a5ec554869c1aa593900f6ccbd4296162b2cef1c142f3afce0d4fe9"
+}

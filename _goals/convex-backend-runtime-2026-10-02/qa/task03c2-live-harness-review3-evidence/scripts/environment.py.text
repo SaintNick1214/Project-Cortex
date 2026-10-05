@@ -1,0 +1,11 @@
+import os,sys,subprocess,json,datetime
+from pathlib import Path
+P=Path('/tmp/task03c2-live-harness-review3-01t5pzfe');bootstrap=P/'replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs';rows=[]
+for label,extra,body,expected in [('minimal',{},'',0),('provider-before-import',{'OPENAI_API_KEY':'OFFLINE_ENVIRONMENT_STANDIN'},'process.stdout.write("UNEXPECTED_CALLBACK")',1),('deployment-before-import',{'CONVEX_DEPLOY_KEY':'OFFLINE_ENVIRONMENT_STANDIN'},'process.stdout.write("UNEXPECTED_CALLBACK")',1),('provider-at-exit',{},'process.env.ANTHROPIC_API_KEY="OFFLINE_ENVIRONMENT_STANDIN"',1)]:
+ env={'PATH':os.environ['PATH'],'LANG':'C.UTF-8',**extra};argv=['node','--import',str(bootstrap),'-e',body];start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=P/'replay-repo',env=env,capture_output=True,timeout=12)
+ (P/'logs'/f'env-{label}.stdout').write_bytes(p.stdout);(P/'logs'/f'env-{label}.stderr').write_bytes(p.stderr)
+ assert p.returncode==expected and not p.stdout and b'OFFLINE_ENVIRONMENT_STANDIN' not in p.stderr
+ rows.append(dict(name=label,argv=argv,cwd=str(P/'replay-repo'),startedAt=start,completedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),expectedExitCode=expected,exitCode=p.returncode,environmentNames=sorted(env),stdout=f'logs/env-{label}.stdout',stderr=f'logs/env-{label}.stderr'))
+(P/'results/environment.json').write_text(json.dumps(dict(discovered=4,passed=4,skipped=0,networkCalls=0,callbackEffects=0,credentialFilesSupplied=0,keyValuesPrinted=0,rows=rows),indent=2)+'\n')
+print(json.dumps(dict(discovered=4,passed=4,skipped=0,networkCalls=0)))
+

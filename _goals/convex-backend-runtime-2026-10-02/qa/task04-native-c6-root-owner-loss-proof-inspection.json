@@ -1,0 +1,157 @@
+{
+  "utc": "2026-10-05T01:58:28.303080+00:00",
+  "status": "ROOT_ACTUAL_RETAINED_OWNER_LOSS_CHAIN_AND_FRESH_CENSUS_VERIFIED",
+  "proofSHA256": "46182d6f9f8565ece7802842e15ea012145e12439b8dd8fbd9a1ef8686c29d4f",
+  "proofFreshIdentity": {
+    "st_dev": 26,
+    "st_ino": 18529,
+    "st_mode": 33152,
+    "st_uid": 1000,
+    "st_gid": 1000,
+    "st_nlink": 1,
+    "st_size": 4483,
+    "st_mtime_ns": 1791165346811582202,
+    "st_ctime_ns": 1791165346811582202
+  },
+  "receiptSHA256": "d69132f6ddc89e0772dd8d89fad001902b0f404413b4548f3f508b4dc951c83e",
+  "receiptFreshIdentity": {
+    "st_dev": 26,
+    "st_ino": 18528,
+    "st_mode": 33152,
+    "st_uid": 1000,
+    "st_gid": 1000,
+    "st_nlink": 1,
+    "st_size": 8382161,
+    "st_mtime_ns": 1791165346779581680,
+    "st_ctime_ns": 1791165346779581680
+  },
+  "beforeSignalRecordedBindings": {
+    "utcBeforeSignal": "2026-10-05T01:55:45.983Z",
+    "middle": {
+      "pid": 387799,
+      "ppid": 387792,
+      "pgid": 387799,
+      "state": "S",
+      "startTime": "10868678",
+      "argvHex": "2f6f70742f636f6465782f72756e74696d65732f636f6465782d7072696d6172792d72756e74696d652f646570656e64656e636965732f6e6f64652f62696e2f6e6f6465002d2d6578706572696d656e74616c2d766d2d6d6f64756c6573002f776f726b73706163652f50726f6a6563742d436f727465782f776f726b2f726573756d652f7461736b30342d6d6f64656c2d64726966742d6e61746976652d7072657061726174696f6e2d63362f636c6f7365642d6c61756e636865722d63362f6f776e65722d6c6f73732d6d6964646c652e6d6a7300",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/owner-loss-middle.mjs"
+      ]
+    },
+    "launcher": {
+      "pid": 387806,
+      "ppid": 387799,
+      "pgid": 387799,
+      "state": "S",
+      "startTime": "10869000",
+      "argvHex": "2f6f70742f636f6465782f72756e74696d65732f636f6465782d7072696d6172792d72756e74696d652f646570656e64656e636965732f6e6f64652f62696e2f6e6f6465002d2d6578706572696d656e74616c2d766d2d6d6f64756c6573002f776f726b73706163652f50726f6a6563742d436f727465782f776f726b2f726573756d652f7461736b30342d6d6f64656c2d64726966742d6e61746976652d7072657061726174696f6e2d63362f636c6f7365642d6c61756e636865722d63362f6f776e65722d6c6f73732d6c61756e63682e6d6a7300",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/owner-loss-launch.mjs"
+      ]
+    },
+    "inner": {
+      "pid": 387813,
+      "ppid": 387806,
+      "pgid": 387813,
+      "state": "R",
+      "startTime": "10869389",
+      "argvHex": "2f6f70742f636f6465782f72756e74696d65732f636f6465782d7072696d6172792d72756e74696d652f646570656e64656e636965732f6e6f64652f62696e2f6e6f6465002d2d6578706572696d656e74616c2d766d2d6d6f64756c6573002f6465762f73686d2f636f727465782d6e61746976652d63362d636c6f7365642d6c61756e636865722d63362f6c61756e636865722d666978747572652f656e7472792e6d6a7300",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "/dev/shm/cortex-native-c6-closed-launcher-c6/launcher-fixture/entry.mjs"
+      ]
+    },
+    "service": {
+      "pid": 387820,
+      "ppid": 387813,
+      "pgid": 387813,
+      "state": "S",
+      "startTime": "10871758",
+      "argvHex": "2f776f726b73706163652f50726f6a6563742d436f727465782f6e6f64655f6d6f64756c65732f4065736275696c642f6c696e75782d7836342f62696e2f65736275696c64002d2d736572766963653d302e32372e30002d2d70696e6700",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/@esbuild/linux-x64/bin/esbuild",
+        "--service=0.27.0",
+        "--ping"
+      ]
+    },
+    "signal": "SIGKILL_MIDDLE_PID_ONLY"
+  },
+  "streams": [
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/owner-loss-control-P7yz4q/stdout.raw",
+      "bytes": 1139,
+      "sha256": "615f1935ca1c37402c7179aff98fddf18400ab4e6fa25f30515ae55ed192bc98",
+      "freshIdentity": {
+        "st_dev": 26,
+        "st_ino": 18496,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 1139,
+        "st_mtime_ns": 1791165346783581745,
+        "st_ctime_ns": 1791165346783581745
+      }
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/owner-loss-control-P7yz4q/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "freshIdentity": {
+        "st_dev": 26,
+        "st_ino": 18497,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 0,
+        "st_mtime_ns": 1791165315171064594,
+        "st_ctime_ns": 1791165315171064594
+      }
+    }
+  ],
+  "freshProcessCensus": [
+    {
+      "pid": 387799,
+      "absent": true
+    },
+    {
+      "pid": 387806,
+      "observedState": "Z",
+      "observedStartTime": "10869000",
+      "originalBindingNoLongerLive": true
+    },
+    {
+      "pid": 387813,
+      "absent": true
+    },
+    {
+      "pid": 387820,
+      "observedState": "Z",
+      "observedStartTime": "10871758",
+      "originalBindingNoLongerLive": true
+    }
+  ],
+  "actualMiddleExit": null,
+  "actualMiddleSignal": "SIGKILL",
+  "actualChildExit": null,
+  "actualChildSignal": "SIGTERM",
+  "evidenceComplete": false,
+  "secondaryFailures": [
+    {
+      "stage": "outer.owner.loss",
+      "error": "ENOENT: no such file or directory, open '/proc/387799/stat'"
+    },
+    {
+      "stage": "child.restoration",
+      "error": "ENOENT: no such file or directory, lstat '/dev/shm/cortex-native-c6-closed-launcher-c6/launcher-fixture/child-DmRHg2/tmp/child-resource-close.json'"
+    }
+  ],
+  "qualification": "FOCUSED_OWNER_LOSS_ONLY_ORIGINAL122_AND_FULL_GATE_HELD",
+  "limitation": "Before-signal process bindings are historical recorded observations; current census independently establishes those bound processes are no longer live. Missing child restoration is retained, not repaired retroactively."
+}

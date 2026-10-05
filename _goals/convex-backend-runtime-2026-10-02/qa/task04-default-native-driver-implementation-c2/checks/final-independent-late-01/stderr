@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'denied' !== 'purged'
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/independent-late.mjs:9:1048 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'denied',
+  expected: 'purged',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,18 @@
+import sys
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+# Ensure the full original service mapping is present exactly once and in canonical order.
+report=(O/'report.md').read_text();matrix=json.loads((Q/'service-outcomes.json').read_text());names=[x['name'] for x in matrix['cases']]
+start=report.index('## All41 original service case mapping');end=report.index('The separate accepted metadata original41 endpoint mapping',start);part=report[start:end]
+positions=[part.index('| '+n+' |') for n in names];assert positions==sorted(positions) and len(set(positions))==41
+assert all(x['status']=='UNEXECUTED' for x in matrix['cases'])
+q=json.loads((O/'results/quality.json').read_text());assert all(x.get('exitCode',0)==0 for x in q)
+rs=json.loads((O/'results/replays.json').read_text());assert len(rs)==10 and all(x['exitCode']==0 for x in rs)
+assert json.loads((O/'results/environment.json').read_text())['passed']==4
+assert json.loads((O/'results/three-original-counterexamples.json').read_text())['passed']==3
+assert json.loads((O/'results/operator-integration.json').read_text())['passed']==20
+assert json.loads((O/'results/preservation.json').read_text())['filesUnchanged']==4068
+for n,h in {'source-freeze.json':'301a0b9a6f08112544e79d49656021d39c31ed28d1e08adb8274db382e5d213f','report.md':'9f3d0213e60187d2464c794d01c8ab39c64d6b462df66c51cfca7f161189eb89','file-inventory.json':'70781efe0fec0e514a1b3921472aa693bfa013bf2bf81b41f2276a67fa25d96e','private-file-inventory.json':'55c0e28feffd66c565003ba3f58a22df72cbbbb6ae27ffae4fcb2f8a34e8261f'}.items():assert sha((Q/n).read_bytes())==h,n
+write(O/'results/report-completeness.json',dict(original41NamesAndOrderExact=True,allServiceUnexecuted=True,expectedControlDiscoveryMatches=True,allRecordedChecksComplete=True,reportExists=True))
+print(json.dumps({'reportOriginalServiceCases':41,'complete':True}))
+

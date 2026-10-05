@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-terminal-capture-parent-inputs-c9-restoration-review/finalcheck.py", line 13, in <module>
+    g=json.loads((v/('shared-c9-'+profile+'.stdout')).read_bytes());r=json.loads((v/('shared-c8-'+profile+'.stdout')).read_bytes());print(profile, 'GREEN',g.get('defined'),g.get('failed'), 'RED',r.get('defined'),r.get('failed'));assert g['defined']==10 and g['failed']==0;assert r['defined']==10 and r['failed']==10
+                                                                                                                                                                                                                                            ~^^^^^^^^^^^
+KeyError: 'defined'

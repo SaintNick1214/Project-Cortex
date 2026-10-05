@@ -1,0 +1,43 @@
+{
+  "observedAt": "2026-10-03T10:03:51.207238+00:00",
+  "environmentStatus": {
+    "observationsCurrent": true,
+    "phase": "running",
+    "networkPolicy": "unrestricted/enforced",
+    "runtimeVariables": {
+      "OPENAI_API_KEY": "ready",
+      "CONVEX_TEAM_ID": "ready",
+      "CONVEX_TEAM_API_KEY": "ready"
+    }
+  },
+  "networkSnapshot": {
+    "version": 1,
+    "vpn_configured": false,
+    "http_proxy": "http://proxy:8080",
+    "http_network_policy": {
+      "type": "unrestricted"
+    },
+    "tcp_connect_proxy": "http://proxy:8088",
+    "tcp_network_access": {
+      "domains": [],
+      "ip_ranges": []
+    }
+  },
+  "docker": {
+    "socket": "unix:///var/run/docker.sock",
+    "serverVersion": "28.4.0",
+    "selectorsCleared": true,
+    "containersStarted": false
+  },
+  "nativeBrowser": {
+    "availableTools": 0,
+    "asyncAccessRequestSent": true,
+    "gate": "incomplete until actual requested browser coverage"
+  },
+  "authorization": {
+    "disposableInstance": "create a fresh instance, no cap",
+    "productionDeploy": false,
+    "merge": false,
+    "publish": false
+  }
+}

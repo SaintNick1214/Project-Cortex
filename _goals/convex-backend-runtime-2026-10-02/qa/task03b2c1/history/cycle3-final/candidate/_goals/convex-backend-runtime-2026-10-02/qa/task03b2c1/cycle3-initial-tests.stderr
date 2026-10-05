@@ -1,0 +1,159 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --config _goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/jest.scoped.cjs --runInBand --json --outputFile _goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-initial-tests.json
+(node:55063) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeArtifactAuth/handlers.test.ts
+  ● cycle3 private error output admission › absent finalizeStreaming state error contains only a safe typed code and no stored details
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_STATE_TRANSITION",
+    +   "code": "STREAMING_SESSION_INVALID",
+        "message": "Artifact operation denied.",
+      }
+
+      518 |         await f.invoke(name, { artifactId: "artifact-a", memorySpaceId: "space-a", sessionId: "caller guess", chunk: "caller chunk",
+      519 |           errorCode: "caller-error", errorMessage: "caller error", streamingState: "paused" }).catch((error) => { caught = error; });
+    > 520 |         expect(caught?.data).toEqual({ code, message: "Artifact operation denied." });
+          |                              ^
+      521 |         const output = JSON.stringify(caught?.data);
+      522 |         for (const privateValue of [row._id, row.content, "unread canonical session", "unread canonical error", "unread canonical configuration", state]) {
+      523 |           expect(output).not.toContain(privateValue);
+
+      at tests/unit/runtimeArtifactAuth/handlers.test.ts:520:30
+
+  ● cycle3 private error output admission › absent purgeVersions static availability error preserves its existing code and zero effects
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 4
+
+      Object {
+    -   "data": "KEEP_LATEST_MUST_BE_POSITIVE",
+    +   "data": Object {
+    +     "code": "INVALID_ARGUMENT",
+    +     "message": "Artifact operation denied.",
+    +   },
+      }
+
+      535 |       f.row({ ownerPrincipalId: "other-canonical-owner", versionPointer: name === "undo" ? 1 : 2 });
+      536 |       const code = name === "undo" ? "UNDO_NOT_AVAILABLE" : name === "redo" ? "REDO_NOT_AVAILABLE" : "KEEP_LATEST_MUST_BE_POSITIVE";
+    > 537 |       await expect(f.invoke(name, { artifactId: "artifact-a", keepLatest: 0 })).rejects.toMatchObject({ data: code });
+          |                                                                                         ^
+      538 |       expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
+      539 |     });
+      540 |   }
+
+      at Object.toMatchObject (../../../node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeArtifactAuth/handlers.test.ts:537:89
+
+  ● cycle3 private error output admission › scope-owner-denied finalizeStreaming state error contains only a safe typed code and no stored details
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_STATE_TRANSITION",
+    +   "code": "STREAMING_SESSION_INVALID",
+        "message": "Artifact operation denied.",
+      }
+
+      518 |         await f.invoke(name, { artifactId: "artifact-a", memorySpaceId: "space-a", sessionId: "caller guess", chunk: "caller chunk",
+      519 |           errorCode: "caller-error", errorMessage: "caller error", streamingState: "paused" }).catch((error) => { caught = error; });
+    > 520 |         expect(caught?.data).toEqual({ code, message: "Artifact operation denied." });
+          |                              ^
+      521 |         const output = JSON.stringify(caught?.data);
+      522 |         for (const privateValue of [row._id, row.content, "unread canonical session", "unread canonical error", "unread canonical configuration", state]) {
+      523 |           expect(output).not.toContain(privateValue);
+
+      at tests/unit/runtimeArtifactAuth/handlers.test.ts:520:30
+
+  ● cycle3 private error output admission › scope-owner-denied purgeVersions static availability error preserves its existing code and zero effects
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 4
+
+      Object {
+    -   "data": "KEEP_LATEST_MUST_BE_POSITIVE",
+    +   "data": Object {
+    +     "code": "INVALID_ARGUMENT",
+    +     "message": "Artifact operation denied.",
+    +   },
+      }
+
+      535 |       f.row({ ownerPrincipalId: "other-canonical-owner", versionPointer: name === "undo" ? 1 : 2 });
+      536 |       const code = name === "undo" ? "UNDO_NOT_AVAILABLE" : name === "redo" ? "REDO_NOT_AVAILABLE" : "KEEP_LATEST_MUST_BE_POSITIVE";
+    > 537 |       await expect(f.invoke(name, { artifactId: "artifact-a", keepLatest: 0 })).rejects.toMatchObject({ data: code });
+          |                                                                                         ^
+      538 |       expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
+      539 |     });
+      540 |   }
+
+      at Object.toMatchObject (../../../node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeArtifactAuth/handlers.test.ts:537:89
+
+  ● cycle3 private error output admission › resource-admitted finalizeStreaming state error contains only a safe typed code and no stored details
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_STATE_TRANSITION",
+    +   "code": "STREAMING_SESSION_INVALID",
+        "message": "Artifact operation denied.",
+      }
+
+      518 |         await f.invoke(name, { artifactId: "artifact-a", memorySpaceId: "space-a", sessionId: "caller guess", chunk: "caller chunk",
+      519 |           errorCode: "caller-error", errorMessage: "caller error", streamingState: "paused" }).catch((error) => { caught = error; });
+    > 520 |         expect(caught?.data).toEqual({ code, message: "Artifact operation denied." });
+          |                              ^
+      521 |         const output = JSON.stringify(caught?.data);
+      522 |         for (const privateValue of [row._id, row.content, "unread canonical session", "unread canonical error", "unread canonical configuration", state]) {
+      523 |           expect(output).not.toContain(privateValue);
+
+      at tests/unit/runtimeArtifactAuth/handlers.test.ts:520:30
+
+  ● cycle3 private error output admission › resource-admitted purgeVersions static availability error preserves its existing code and zero effects
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 4
+
+      Object {
+    -   "data": "KEEP_LATEST_MUST_BE_POSITIVE",
+    +   "data": Object {
+    +     "code": "INVALID_ARGUMENT",
+    +     "message": "Artifact operation denied.",
+    +   },
+      }
+
+      535 |       f.row({ ownerPrincipalId: "other-canonical-owner", versionPointer: name === "undo" ? 1 : 2 });
+      536 |       const code = name === "undo" ? "UNDO_NOT_AVAILABLE" : name === "redo" ? "REDO_NOT_AVAILABLE" : "KEEP_LATEST_MUST_BE_POSITIVE";
+    > 537 |       await expect(f.invoke(name, { artifactId: "artifact-a", keepLatest: 0 })).rejects.toMatchObject({ data: code });
+          |                                                                                         ^
+      538 |       expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
+      539 |     });
+      540 |   }
+
+      at Object.toMatchObject (../../../node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeArtifactAuth/handlers.test.ts:537:89
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       6 failed, 210 passed, 216 total
+Snapshots:   0 total
+Time:        4.641 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-initial-tests.json

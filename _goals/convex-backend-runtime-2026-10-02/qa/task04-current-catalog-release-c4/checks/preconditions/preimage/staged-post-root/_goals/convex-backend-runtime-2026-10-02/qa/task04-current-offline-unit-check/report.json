@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-04T10:30:02.342476+00:00",
+  "status": "FAILED_CURRENT_OFFLINE_UNIT_GATE",
+  "counts": {
+    "numTotalTestSuites": 70,
+    "numPassedTestSuites": 64,
+    "numFailedTestSuites": 6,
+    "numPendingTestSuites": 0,
+    "numTotalTests": 5779,
+    "numPassedTests": 5768,
+    "numFailedTests": 11,
+    "numPendingTests": 0
+  },
+  "failures": [
+    {
+      "path": "unit/attachments/sdk.test.ts",
+      "failures": [
+        "AttachmentsAPI.generateUploadUrl should generate upload URL successfully",
+        "AttachmentsAPI.generateUploadUrl should pass tenant ID when auth context provided",
+        "AttachmentsAPI.generateUploadUrl should use resilience layer when available",
+        "AttachmentsAPI.getUrl should return signed download URL",
+        "AttachmentsAPI.getUrl should return null for non-existent attachment"
+      ]
+    },
+    {
+      "path": "unit/artifacts/sdk.test.ts",
+      "failures": [
+        "ArtifactsAPI getFileUrl() should return file URL",
+        "ArtifactsAPI getFileUrl() should throw validation error for empty artifactId"
+      ]
+    },
+    {
+      "path": "unit/runtimeAssetUnavailableAuth/closure.test.ts",
+      "failures": [
+        "accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added"
+      ]
+    },
+    {
+      "path": "unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "failures": [
+        "actual registered visibility and canonical schema/AST catalog AST inventory resolves exact 25 frozen paths with seven public and eighteen internal"
+      ]
+    },
+    {
+      "path": "unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "failures": [
+        "deployable native schema indexes all exported tables, including runtime schema fragments, have unique index field sequences"
+      ]
+    },
+    {
+      "path": "unit/runtimeArtifactAuth/inventory.test.ts",
+      "failures": [
+        "native catalog composes accepted selected22 and later five file closures while preserving historical inventory"
+      ]
+    }
+  ],
+  "classification": [
+    "Seven legacy directassetURL/upload expectations contradict currentlyclosed authenticated asset capability; retained pending scoped asset implementation (Task11) and final SDK integration.",
+    "Four catalog/schema tests invoke source-specific historical hardpins/assert26tables or historical ASTclassifier missing16newmodel-policy registrations. Current31table/287registration/native originals already accepted precisely; need NEW current composition runner/test without rewriting original frozen QA or weakening historical assertions.",
+    "memory-observer real backend suite pending safe disposable target, not executed."
+  ],
+  "next": "Bounded delegated currentcatalog composition repair and independent review when product/source serialization permits; scoped asset APIs later perapproved text-first ordering; repeat failedchecks after fixes.",
+  "limits": "Offline config substitutes envsetup to avoid dotenv services and blocksrealglobalfetch; unchanged assertion sources; no native/service/UI/fullcore/wholeTask04/goal acceptance. Historical childcomposition refusals occurred beforetheirwrites; captured rawfailures retained."
+}

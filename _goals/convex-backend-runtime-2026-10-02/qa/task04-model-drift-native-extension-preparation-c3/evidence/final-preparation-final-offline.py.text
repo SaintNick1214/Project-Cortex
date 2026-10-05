@@ -1,0 +1,22 @@
+from pathlib import Path
+import subprocess,json,datetime,time,hashlib
+repo=Path('/workspace/Project-Cortex');base=repo/'_goals/convex-backend-runtime-2026-10-02/qa';w=repo/'work/resume/task04-model-drift-native-preparation-c2'
+tasks=[]
+for k in ['extension','regression','extra']:
+ r=base/f'task04-model-drift-native-{k}-preparation-c2'
+ for name,path in [('parent-original',w/k/'parent-proof/actual-chain.mjs'),('parent-adversarial',w/k/'parent-proof/adversarial-chain.mjs'),('parent-watch17',w/k/'parent-proof/independent-watch17.mjs'),('runtime-freeze',r/'scripts/offline-runtime-freeze.mjs'),('inventory',r/'scripts/inventory.mjs'),('outcomes',r/'scripts'/('offline-actual-core.mjs' if k=='regression' else 'offline-extension.mjs'))]:
+  cmd=['node','--experimental-vm-modules',str(path)]+(['--verify'] if name=='inventory' else [str(r/'evidence/final-watch17-results.json')] if name=='parent-watch17' else [])
+  tasks.append((r,name,cmd,path))
+for k in ['extension','regression','extra']:
+ r=base/f'task04-model-drift-native-{k}-preparation-c2'
+ tasks.append((r,'body18',['node','--experimental-vm-modules',str(w/'independent-body18.mjs'),str(r/'scripts/parent-inputs.mjs'),str(r/'evidence/final-body18-results.json')],r/'scripts/parent-inputs.mjs'))
+ tasks.append((r,'original-first-review-denial',['node','--experimental-vm-modules',str(w/'same-source-review-denial.mjs'),k],r/'scripts/guard.mjs'))
+for name in ['driver-error-controls','rpc-binding-controls']:
+ tasks.append((base/'task04-model-drift-native-extra-preparation-c2',name,['node','--experimental-vm-modules',str(w/f'{name}.mjs')],w/f'{name}.mjs'))
+for r,name,cmd,p in tasks:
+ if (r/'evidence'/f'final-{name}.receipt.json').exists():
+  keep=r/'failures/c1-offline-evidence';keep.mkdir(exist_ok=True)
+  for ext in ['receipt.json','stdout','stderr']:
+   previous=r/'evidence'/f'final-{name}.{ext}'
+   if previous.exists(): (keep/previous.name).write_bytes(previous.read_bytes())
+ preSourceSHA=hashlib.sha256(p.read_bytes()).hexdigest(); start=datetime.datetime.now(datetime.timezone.utc).isoformat(); t=time.monotonic();res=subprocess.run(cmd,cwd=repo,capture_output=True,text=True,timeout=120);d=r/'evidence';(d/f'final-{name}.stdout').write_text(res.stdout);(d/f'final-{name}.stderr').write_text(res.stderr);(d/f'final-{name}.receipt.json').write_text(json.dumps({'argv':cmd,'cwd':str(repo),'sourcePath':str(p),'sourceSHA256':preSourceSHA,'startedAt':start,'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'elapsedMs':round((time.monotonic()-t)*1000),'sourcePostSHA256':hashlib.sha256(p.read_bytes()).hexdigest(),'exitCode':res.returncode,'native':'NOT_RUN'},indent=2)+'\n');print(r.name,name,res.returncode,res.stdout[-250:],res.stderr[-200:],flush=True)

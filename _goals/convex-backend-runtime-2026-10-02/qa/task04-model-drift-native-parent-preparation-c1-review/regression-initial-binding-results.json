@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/independent-initial-binding-v2.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-source-preimages/regression/scripts/guard.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/regression-initial-binding-results.json",
+    "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad",
+    "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T11:00:24.379Z",
+  "source": {
+    "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-source-preimages/regression/scripts/guard.mjs",
+    "bytes": 20417,
+    "sha256": "b8491b55f4423f44653dbad909530ae91f68c253bfe528d612f1695ac17b718b"
+  },
+  "DUMMYArea": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-source-preimages/regression/scripts/DUMMY-binding-2yu77E",
+  "externallyReviewedROOTPins": {
+    "freezeSha256": "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad",
+    "manifestSha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c"
+  },
+  "DUMMYSubstitutedPins": {
+    "freezeSha256": "285bf9e1193266cd54ba34ab5c663ea46bee37e247ae568a1c470cd0432d6b8c",
+    "manifestSha256": "72094c8b2dcf0bfb4f1d7ef1e19f4be87352e3165051f0a9f28b3169215a5896"
+  },
+  "firstCall": {
+    "substitutedBeforeFirstCall": true,
+    "accepted": true,
+    "error": null,
+    "frozenInputsReturned": 16
+  },
+  "laterCall": {
+    "privateReviewChanged": true,
+    "denied": true,
+    "error": "QA_REVIEW_SUBSTITUTION"
+  },
+  "scope": "EXACT_FINAL_GUARD_SOURCE_VM_OWN_DUMMY_PUBLIC_PRIVATE_FILES_ONLY",
+  "actualPrivateReads": 0,
+  "actualNetwork": 0,
+  "actualSigning": 0,
+  "native": "NOT_RUN",
+  "paid": "NOT_RUN",
+  "finding": "MISSING_INITIAL_EXTERNAL_TRUST_ANCHOR"
+}

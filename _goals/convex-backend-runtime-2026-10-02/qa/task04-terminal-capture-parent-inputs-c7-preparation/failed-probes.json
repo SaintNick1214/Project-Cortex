@@ -1,0 +1,28 @@
+{
+  "exploratoryFailures": [
+    {
+      "stage": "VM initial valid profile probe",
+      "diagnostic": "legitimate-two-current-receipts: PARENT_PROFILE_CONTRACT; false !== true",
+      "cause": "Node assert.deepEqual compared JSON objects across VM realms; identical primitive data had different prototype objects",
+      "repair": "Exact serialized request comparison preserves every field and order. All62 original assertions unchanged.",
+      "raw": "Tool transcript only; separate raw streams/source preimages were not captured before this exploratory run. Missing evidence is not reconstructed."
+    },
+    {
+      "stage": "builder Python syntax after optional argv guard addition",
+      "diagnostic": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+      "cause": "Nested PARENT_CANDIDATE quoting in generated Python literal",
+      "repair": "Corrected literal quoting; final helpers syntax verified with node --check",
+      "raw": "Tool transcript only; separate raw stream was not captured."
+    }
+  ],
+  "finalCommands": "evidence/*.stdout/*.stderr + execution.json complete source preimages",
+  "earlierSuccessfulExploratory82": "results-extension-exploratory82.json and results-regression-exploratory82.json preserved",
+  "mutableCandidateReadProbes": [
+    {
+      "probe": "public sourcePreflight extension + regression before producer freeze",
+      "observation": "ENOENT runtime-freeze.json for both; candidates explicitly mutable",
+      "outcome": "INCOMPLETE_EXPECTED_BEFORE_FINAL_REFRESH",
+      "raw": "tool transcript only; final frozen probes will have captured raw"
+    }
+  ]
+}

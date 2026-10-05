@@ -1,0 +1,22 @@
+{
+  "observedAtUTC": "2026-10-04T02:54:52.077274+00:00",
+  "scope": "first unwired Gateway helper C1 only",
+  "verdict": "REJECT",
+  "average": 2.8,
+  "requirements": 2,
+  "reportSha256": "bd4d066faaee188e58291d788d0976c58648e9e93d59135c9e8119705512e433",
+  "reviewManifestRowsVerified": 48,
+  "candidateTests": {
+    "passed": 56,
+    "skipped": 0,
+    "qualification": "offline only"
+  },
+  "hostileFailures": [
+    "post-cancel text delivery after awaited markVisible",
+    "deadline abort leaves completion waiting on visibility; late response emits text"
+  ],
+  "repair": "Owned two-file C2 repair; preserve original assertions, red outcomes and sink contract",
+  "acceptedLedgerC2": "UNCHANGED_OFFLINE_PASS",
+  "nativeModels": "NOT_RUN",
+  "wholeTask04": "INCOMPLETE"
+}

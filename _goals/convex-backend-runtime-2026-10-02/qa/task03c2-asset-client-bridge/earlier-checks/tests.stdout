@@ -1,0 +1,84 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.2s | 21/21 passed | /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.1%) - asset safety bridge resilience=absent artifact-upload uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=absent artifact-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=absent attachment-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=absent neighboring attachment and artifact get methods retain their public transport
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=disabled artifact-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=absent attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=absent an actual supplied Blob is not inspected or read by uploadFile
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=absent unavailable capability is uniform even for empty IDs
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=disabled artifact-upload uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=disabled attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=disabled attachment-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=disabled unavailable capability is uniform even for empty IDs
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=disabled neighboring attachment and artifact get methods retain their public transport
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=enabled artifact-upload uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=enabled artifact-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=enabled attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=enabled unavailable capability is uniform even for empty IDs
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - asset safety bridge resilience=enabled neighboring attachment and artifact get methods retain their public transport
+    /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (0.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.44s
+  Test suites:        1
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

@@ -1,0 +1,21 @@
+from pathlib import Path
+import shutil,json,hashlib,subprocess,datetime,os
+r=Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c3-review';q.mkdir(exist_ok=False)
+s=r/'work/resume/task04-pure-policy-c3-review/run01';s.mkdir(exist_ok=False)
+old=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c2-review'
+for p in ['src','tests/unit/domain','convex-dev']: shutil.copytree(r/p,s/p)
+for p in ['package.json','tsconfig.json','eslint.config.js','tsconfig.lint.json','README.md','LICENSE.md']:shutil.copy2(r/p,s/p)
+(s/'node_modules').symlink_to(r/'node_modules',target_is_directory=True)
+(s/'tmp').mkdir();(s/'npm-cache').mkdir()
+(s/'tsconfig.scoped.json').write_text(json.dumps({'extends':'./tsconfig.json','compilerOptions':{'noEmit':True},'include':['src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts']}))
+(s/'jest.scoped.mjs').write_bytes((old/'jest.scoped.mjs.text').read_bytes())
+for name,oldname in [('original-c1-probes.mjs','original-c1-probes.mjs.text'),('original-c2-probes.mjs','run05-fresh-probes.mjs.text'),('prior-broad-probes.mjs','run03-fresh-probes.mjs.text'),('verify-public-contracts.mjs','verify-public-contracts.mjs.text')]: (s/name).write_bytes((old/oldname).read_bytes())
+paths=['src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts','src/index.ts','package.json','tsconfig.json','eslint.config.js','tsconfig.lint.json']
+paths+= [str(p.relative_to(r)) for p in (r/'src/domain').glob('*.ts') if str(p.relative_to(r)) not in paths]
+paths+=['scripts/verify-public-contracts.mjs']
+def hashes():return [{'path':p,'sha256':hashlib.sha256((r/p).read_bytes()).hexdigest(),'bytes':(r/p).stat().st_size} for p in paths]
+(q/'source-before.json').write_text(json.dumps(hashes(),indent=2)+'\n')
+(q/'source').mkdir()
+for p in paths: (q/'source'/ (p.replace('/','--')+'.text')).write_bytes((r/p).read_bytes())
+for p in ['jest.scoped.mjs','tsconfig.scoped.json','verify-public-contracts.mjs','original-c1-probes.mjs','original-c2-probes.mjs','prior-broad-probes.mjs']:shutil.copy2(s/p,q/(p+'.text'))
+shutil.copy2(__file__,q/'setup.py.text')

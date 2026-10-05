@@ -1,1497 +1,224 @@
-/**
- * Cortex SDK - Context Chains API
- *
- * Hierarchical workflow coordination
- * Multi-agent task delegation with shared context
- */
-
-import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Backward Compatibility Helpers
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get version number with backward compatibility for legacy contexts
- */
-function getContextVersion(context: any): number {
-  return context.version ?? 1;
+/** Scoped context graphs. Descriptive access and participant labels never provision authority. */
+import { v } from "convex/values";
+import { internalMutation, mutation, query, type MutationCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import { RegistryAccess, selectors, type Selectors, type RegistryCtx, contextAt, contextsIn, spaceAt, resource, integer, distinct, json, mergeValue, receipt, nextVersion, tombstone, conversationAt, conflict, insertionShape, inserted, nativeJson, snapshot, deny, operation, effect } from "./runtimeRegistryAuth";
+const status = v.union(v.literal("active"), v.literal("completed"), v.literal("cancelled"), v.literal("blocked"));
+const filters = { ...selectors, userId: v.optional(v.string()), status: v.optional(status) };
+type Context = Doc<"contexts">;
+type Filter = Selectors & { userId?: string; status?: Context["status"]; parentId?: string; rootId?: string; depth?: number; completedBefore?: number };
+function matching(rows: Context[], args: Filter) {
+  return rows.filter((row) => (args.userId === undefined || row.userId === args.userId) && (args.status === undefined || row.status === args.status)
+    && (args.parentId === undefined || row.parentId === args.parentId) && (args.rootId === undefined || row.rootId === args.rootId)
+    && (args.depth === undefined || row.depth === args.depth) && (args.completedBefore === undefined || row.completedAt !== undefined && row.completedAt < args.completedBefore));
 }
-
-/**
- * Get previous versions array with backward compatibility for legacy contexts
- */
-function getContextPreviousVersions(context: any): any[] {
-  return context.previousVersions ?? [];
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Mutations (Write Operations)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Create a new context (root or child)
- */
-export const create = mutation({
-  args: {
-    purpose: v.string(),
-    memorySpaceId: v.string(), // Memory space creating this context
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-    description: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    parentId: v.optional(v.string()),
-    conversationRef: v.optional(
-      v.object({
-        conversationId: v.string(),
-        messageIds: v.optional(v.array(v.string())),
-      }),
-    ),
-    data: v.optional(v.any()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-  },
-  handler: async (ctx, args) => {
-    const now = Date.now();
-    const contextId = `ctx-${now}-${Math.random().toString(36).substring(2, 11)}`;
-
-    let rootId: string;
-    let depth: number;
-    let parentContext = null;
-
-    if (args.parentId) {
-      // Child context - find parent
-      parentContext = await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", args.parentId!),
-        )
-        .first();
-
-      if (!parentContext) {
-        throw new ConvexError("PARENT_NOT_FOUND");
-      }
-
-      rootId = parentContext.rootId! || parentContext.contextId;
-      depth = parentContext.depth + 1;
-    } else {
-      // Root context
-      rootId = contextId;
-      depth = 0;
-    }
-
-    // Create context - only include tenantId if it has a value
-    const contextData: any = {
-      contextId,
-      memorySpaceId: args.memorySpaceId,
-      purpose: args.purpose,
-      description: args.description,
-      userId: args.userId,
-      parentId: args.parentId,
-      rootId,
-      depth,
-      childIds: [],
-      status: args.status || "active",
-      conversationRef: args.conversationRef,
-      participants: [args.memorySpaceId], // Creator is first participant
-      grantedAccess: [],
-      data: args.data,
-      metadata: {},
-      version: 1, // Initialize versioning
-      previousVersions: [],
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    // Only add tenantId if it has a value (don't store undefined)
-    if (args.tenantId) {
-      contextData.tenantId = args.tenantId;
-    }
-
-    const _id = await ctx.db.insert("contexts", contextData);
-
-    // Update parent's childIds
-    if (parentContext) {
-      await ctx.db.patch(parentContext._id, {
-        childIds: [...parentContext.childIds, contextId],
-      });
-    }
-
-    return await ctx.db.get(_id);
-  },
-});
-
-/**
- * Update a context (creates new version)
- */
-export const update = mutation({
-  args: {
-    contextId: v.string(),
-    tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    description: v.optional(v.string()),
-    data: v.optional(v.any()),
-    completedAt: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    // Tenant-aware lookup
-    let context;
-    if (args.tenantId) {
-      // For multi-tenant: check within tenant's namespace
-      context = await ctx.db
-        .query("contexts")
-        .withIndex("by_tenant_contextId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("contextId", args.contextId),
-        )
-        .first();
-    } else {
-      // For non-tenant: check globally but only match records without tenantId
-      const candidate = await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", args.contextId),
-        )
-        .first();
-      // SECURITY: Only match truly global records (no tenantId set)
-      // Check for undefined, null, or empty string to handle all falsy cases
-      const candidateTenantId = candidate?.tenantId;
-      const hasNoTenant =
-        candidateTenantId === undefined ||
-        candidateTenantId === null ||
-        candidateTenantId === "";
-      context = candidate && hasNoTenant ? candidate : null;
-    }
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    const now = Date.now();
-
-    // Merge data (don't replace)
-    const newData = {
-      ...context.data,
-      ...args.data,
-    };
-
-    // Create version snapshot (with backward compatibility)
-    const currentVersion = getContextVersion(context);
-    const previousVersions = getContextPreviousVersions(context);
-
-    const newVersion = {
-      version: currentVersion,
-      status: context.status,
-      data: context.data,
-      timestamp: context.updatedAt,
-      updatedBy: context.memorySpaceId, // Track which space made the update
-    };
-
-    const newStatus = args.status !== undefined ? args.status : context.status;
-
-    await ctx.db.patch(context._id, {
-      status: newStatus,
-      description:
-        args.description !== undefined ? args.description : context.description,
-      data: newData,
-      version: currentVersion + 1,
-      previousVersions: [...previousVersions, newVersion],
-      updatedAt: now,
-      completedAt:
-        args.completedAt !== undefined
-          ? args.completedAt
-          : args.status === "completed"
-            ? now
-            : context.completedAt,
-    });
-
-    return await ctx.db.get(context._id);
-  },
-});
-
-/**
- * Delete a context
- */
-export const deleteContext = mutation({
-  args: {
-    contextId: v.string(),
-    tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
-    cascadeChildren: v.optional(v.boolean()),
-    orphanChildren: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    // Tenant-aware lookup
-    let context;
-    if (args.tenantId) {
-      context = await ctx.db
-        .query("contexts")
-        .withIndex("by_tenant_contextId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("contextId", args.contextId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", args.contextId),
-        )
-        .first();
-      // SECURITY: Only match truly global records (no tenantId set)
-      // Check for undefined, null, or empty string to handle all falsy cases
-      const candidateTenantId = candidate?.tenantId;
-      const hasNoTenant =
-        candidateTenantId === undefined ||
-        candidateTenantId === null ||
-        candidateTenantId === "";
-      context = candidate && hasNoTenant ? candidate : null;
-    }
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    // Check for children - allow if cascadeChildren or orphanChildren is true
-    if (
-      context.childIds.length > 0 &&
-      !args.cascadeChildren &&
-      !args.orphanChildren
-    ) {
-      throw new ConvexError("HAS_CHILDREN");
-    }
-
-    let deletedCount = 0;
-    const orphanedChildren: string[] = [];
-
-    // Delete children if cascade
-    if (args.cascadeChildren) {
-      for (const childId of context.childIds) {
-        const result = await deleteContextRecursive(ctx, childId);
-        deletedCount += result;
-      }
-    }
-
-    // Orphan children - promote them to new roots or attach to grandparent
-    if (args.orphanChildren && context.childIds.length > 0) {
-      for (const childId of context.childIds) {
-        const child = await ctx.db
-          .query("contexts")
-          .withIndex("by_contextId", (q: any) => q.eq("contextId", childId))
-          .first();
-
-        if (child) {
-          // If context has a parent, attach children to grandparent
-          // Otherwise, make children new root contexts
-          const newParentId = context.parentId || undefined;
-          const newRootId = context.parentId ? context.rootId : child.contextId;
-          const newDepth = context.parentId ? context.depth : 0;
-
-          await ctx.db.patch(child._id, {
-            parentId: newParentId,
-            rootId: newRootId,
-            depth: newDepth,
-            updatedAt: Date.now(),
-          });
-
-          orphanedChildren.push(childId);
-
-          // If attaching to grandparent, update grandparent's childIds
-          if (context.parentId) {
-            const grandparent = await ctx.db
-              .query("contexts")
-              .withIndex("by_contextId", (q: any) =>
-                q.eq("contextId", context.parentId!),
-              )
-              .first();
-
-            if (grandparent) {
-              await ctx.db.patch(grandparent._id, {
-                childIds: [...grandparent.childIds, childId],
-                updatedAt: Date.now(),
-              });
-            }
-          }
-        }
-      }
-    }
-
-    // Remove this context from parent's childIds if it has a parent
-    if (context.parentId) {
-      const parent = await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", context.parentId!),
-        )
-        .first();
-
-      if (parent) {
-        await ctx.db.patch(parent._id, {
-          childIds: parent.childIds.filter(
-            (id: string) => id !== context.contextId,
-          ),
-          updatedAt: Date.now(),
-        });
-      }
-    }
-
-    // Delete this context
-    await ctx.db.delete(context._id);
-    deletedCount += 1;
-
-    return {
-      deleted: true,
-      contextId: args.contextId,
-      descendantsDeleted: deletedCount - 1,
-      orphanedChildren:
-        orphanedChildren.length > 0 ? orphanedChildren : undefined,
-    };
-  },
-});
-
-/**
- * Helper: Recursive delete
- */
-async function deleteContextRecursive(
-  ctx: any,
-  contextId: string,
-): Promise<number> {
-  const context = await ctx.db
-    .query("contexts")
-    .withIndex("by_contextId", (q: any) => q.eq("contextId", contextId))
-    .first();
-
-  if (!context) return 0;
-
-  let count = 0;
-
-  // Delete children first
-  for (const childId of context.childIds) {
-    count += await deleteContextRecursive(ctx, childId);
+/** Preflight the whole referenced graph, with a bounded visited set and exact bidirectional topology. */
+async function graph(access: RegistryAccess, current: Context) {
+  const root = (await contextAt(access, current.rootId!, true))!;
+  if (root.parentId !== undefined || root.rootId !== root.contextId || root.depth !== 0) deny();
+  const nodes = new Map<string, Context>(); const queue: { row: Context; parent?: Context }[] = [{ row: root }];
+  while (queue.length) {
+    const { row, parent } = queue.shift()!;
+    if (nodes.has(row.contextId) || nodes.size >= 100 || row.rootId !== root.contextId
+      || row.parentId !== parent?.contextId || row.depth !== (parent ? parent.depth + 1 : 0)) deny();
+    nodes.set(row.contextId, row);
+    if (row.conversationRef) await conversationAt(access, row.conversationRef, row.memorySpaceId);
+    for (const grant of row.grantedAccess ?? []) await spaceAt(access, grant.memorySpaceId, access.capability);
+    for (const childId of row.childIds) queue.push({ row: (await contextAt(access, childId, true))!, parent: row });
   }
-
-  // Delete this one
-  await ctx.db.delete(context._id);
-  count += 1;
-
-  return count;
+  if (!nodes.has(current.contextId) || snapshot(nodes.get(current.contextId)) !== snapshot(current)) deny();
+  return nodes;
 }
-
-/**
- * Add participant to context
- */
-export const addParticipant = mutation({
-  args: {
-    contextId: v.string(),
-    participantId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    if (context.participants.includes(args.participantId)) {
-      return context; // Already exists
-    }
-
-    await ctx.db.patch(context._id, {
-      participants: [...context.participants, args.participantId],
-      updatedAt: Date.now(),
-    });
-
-    return await ctx.db.get(context._id);
-  },
-});
-
-/**
- * Grant cross-space access
- */
-export const grantAccess = mutation({
-  args: {
-    contextId: v.string(),
-    targetMemorySpaceId: v.string(),
-    scope: v.string(), // 'read-only', 'context-only', etc.
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    const grant = {
-      memorySpaceId: args.targetMemorySpaceId,
-      scope: args.scope,
-      grantedAt: Date.now(),
-    };
-
-    const existing = context.grantedAccess || [];
-    const updated = existing.filter(
-      (g) => g.memorySpaceId !== args.targetMemorySpaceId,
-    );
-    updated.push(grant);
-
-    await ctx.db.patch(context._id, {
-      grantedAccess: updated,
-      updatedAt: Date.now(),
-    });
-
-    return await ctx.db.get(context._id);
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Queries (Read Operations)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get context by ID
- */
-export const get = query({
-  args: {
-    contextId: v.string(),
-    tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
-    includeChain: v.optional(v.boolean()),
-    includeConversation: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    // Tenant-aware lookup
-    let context;
-    if (args.tenantId) {
-      context = await ctx.db
-        .query("contexts")
-        .withIndex("by_tenant_contextId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("contextId", args.contextId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", args.contextId),
-        )
-        .first();
-      // SECURITY: Only match truly global records (no tenantId set)
-      // Check for undefined, null, or empty string to handle all falsy cases
-      const candidateTenantId = candidate?.tenantId;
-      const hasNoTenant =
-        candidateTenantId === undefined ||
-        candidateTenantId === null ||
-        candidateTenantId === "";
-      context = candidate && hasNoTenant ? candidate : null;
-    }
-
-    if (!context) {
-      return null;
-    }
-
-    if (!args.includeChain) {
-      return context;
-    }
-
-    // Build complete chain
-    const chain = await buildContextChain(ctx, context);
-
-    // If includeConversation is requested, fetch the conversation
-    if (args.includeConversation && context.conversationRef?.conversationId) {
-      const conversation = await ctx.db
-        .query("conversations")
-        .withIndex("by_conversationId", (q: any) =>
-          q.eq("conversationId", context.conversationRef!.conversationId),
-        )
-        .first();
-
-      if (conversation) {
-        // Filter trigger messages if messageIds are specified
-        const triggerMessages = context.conversationRef.messageIds
-          ? conversation.messages.filter((m: any) =>
-              context.conversationRef!.messageIds!.includes(m.id),
-            )
-          : [];
-
-        return {
-          ...chain,
-          conversation,
-          triggerMessages,
-        };
-      }
-    }
-
-    return chain;
-  },
-});
-
-/**
- * Helper: Build context chain
- */
-async function buildContextChain(ctx: any, context: any) {
-  // Get root
-  const root = context.rootId
-    ? await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", context.rootId),
-        )
-        .first()
-    : context;
-
-  // Get parent
-  const parent = context.parentId
-    ? await ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) =>
-          q.eq("contextId", context.parentId),
-        )
-        .first()
-    : null;
-
-  // Get children
-  const children = await Promise.all(
-    context.childIds.map((id: string) =>
-      ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
-        .first(),
-    ),
-  );
-
-  // Get siblings
-  const siblings = parent
-    ? await Promise.all(
-        parent.childIds
-          .filter((id: string) => id !== context.contextId)
-          .map((id: string) =>
-            ctx.db
-              .query("contexts")
-              .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
-              .first(),
-          ),
-      )
-    : [];
-
-  // Get ancestors
-  const ancestors: any[] = [];
-  let node = parent;
-
-  while (node) {
-    ancestors.unshift(node);
-    node = node.parentId
-      ? await ctx.db
-          .query("contexts")
-          .withIndex("by_contextId", (q: any) =>
-            q.eq("contextId", node.parentId),
-          )
-          .first()
-      : null;
+function descendants(nodes: Map<string, Context>, current: Context): Context[] {
+  const result: Context[] = []; const queue = [...current.childIds];
+  while (queue.length) { const row = nodes.get(queue.shift()!)!; result.push(row); queue.push(...row.childIds); }
+  return result;
+}
+function chain(nodes: Map<string, Context>, current: Context) {
+  const ancestors: Context[] = []; let parent = current.parentId ? nodes.get(current.parentId)! : null;
+  while (parent) { ancestors.unshift(parent); parent = parent.parentId ? nodes.get(parent.parentId)! : null; }
+  const directParent = current.parentId ? nodes.get(current.parentId)! : null;
+  const children = current.childIds.map((id) => nodes.get(id)!);
+  const siblings = directParent ? directParent.childIds.filter((id) => id !== current.contextId).map((id) => nodes.get(id)!) : [];
+  return { current, root: nodes.get(current.rootId!)!, parent: directParent, children, siblings, ancestors,
+    descendants: descendants(nodes, current), depth: current.depth, totalNodes: nodes.size };
+}
+async function selected(access: RegistryAccess, args: Filter) {
+  if (args.depth !== undefined) integer(args.depth, 0, 100);
+  if (args.completedBefore !== undefined && (!Number.isFinite(args.completedBefore) || args.completedBefore < 0)) deny("INVALID_INPUT");
+  const rows = matching(await contextsIn(access), args); distinct(rows.map((row) => row.contextId));
+  // A filter referencing a canonical context is an edge, not a caller-owned resource assertion.
+  if (args.parentId) await graph(access, (await contextAt(access, args.parentId, true))!);
+  if (args.rootId) { const root = (await contextAt(access, args.rootId, true))!; if (root.parentId !== undefined) deny(); await graph(access, root); }
+  for (const row of rows) await graph(access, row);
+  return rows;
+}
+function revision(row: Context, principalId: string, patch: Partial<Context>): Partial<Context> {
+  const version = nextVersion(row.version); if (row.previousVersions.length >= 1000) deny("INVALID_INPUT");
+  return { ...patch, version, lastUpdatedBy: principalId, updatedAt: Date.now(), previousVersions: [...row.previousVersions,
+    { version: row.version, status: row.status, data: row.data, timestamp: row.updatedAt, updatedBy: row.lastUpdatedBy }] };
+}
+async function apply(ctx: MutationCtx, access: RegistryAccess, plans: { row: Context; patch: Partial<Context> }[]) {
+  distinct(plans.map((plan) => plan.row.contextId));
+  await access.fence();
+  for (const { row, patch } of plans) { await effect(ctx, async () => await ctx.db.patch("contexts", row._id, patch)); access.expect(`contexts:${row._id}`, { ...row, ...patch }); }
+  await access.fence();
+}
+async function edit(ctx: MutationCtx, args: Selectors & { contextId: string }, update: (row: Context) => Partial<Context>, targetSpace?: string) {
+  const access = await RegistryAccess.open(ctx, "write", args); const row = (await contextAt(access, args.contextId))!;
+  const readable = await access.optionalRead(resource("contexts", row)); await graph(access, row);
+  if (targetSpace) await spaceAt(access, targetSpace, "write");
+  const patch = revision(row, access.authority.principalId, update(row));
+  await apply(ctx, access, [{ row, patch }]); return readable ? { ...row, ...patch } : receipt("contexts", row.contextId);
+}
+export const create = mutation({ args: { ...selectors, memorySpaceId: v.string(), purpose: v.string(), description: v.optional(v.string()), userId: v.optional(v.string()), parentId: v.optional(v.string()), conversationRef: v.optional(v.object({ conversationId: v.string(), messageIds: v.optional(v.array(v.string())) })), data: v.optional(v.any()), status: v.optional(status) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const a = access.authority; await spaceAt(access, args.memorySpaceId, "write");
+  if (args.userId !== undefined && args.userId !== a.userId) deny();
+  const contextId = `ctx-${Date.now()}-${Math.random().toString(36).slice(2, 14)}`; const candidate = { contextId, tenantId: a.tenantId, memorySpaceId: args.memorySpaceId, ownerPrincipalId: a.principalId };
+  await access.admit(resource("contexts", candidate)); await conflict(access, "contexts", contextId); const readable = await access.optionalRead(resource("contexts", candidate));
+  if (await contextAt(access, contextId, false, false)) deny();
+  const parent = args.parentId ? (await contextAt(access, args.parentId, true))! : null;
+  if (parent && (await graph(access, parent)).size >= 100) deny("INVALID_INPUT");
+  if (args.conversationRef) await conversationAt(access, args.conversationRef, args.memorySpaceId);
+  const now = Date.now(); const depth = parent ? integer(parent.depth + 1, 0, 100) : 0;
+  const value = { ...candidate, purpose: args.purpose, description: args.description, userId: a.userId,
+    parentId: parent?.contextId, rootId: parent?.rootId ?? contextId, depth, childIds: [], status: args.status ?? "active",
+    conversationRef: args.conversationRef, participants: [args.memorySpaceId], grantedAccess: [], data: args.data === undefined ? {} : args.data, metadata: {}, lastUpdatedBy: a.principalId, version: 1, previousVersions: [], createdAt: now, updatedAt: now };
+  const parentPatch = parent ? revision(parent, a.principalId, { childIds: [...parent.childIds, contextId] }) : null;
+  insertionShape("contexts", value); await access.fence(); const id = await effect(ctx, async () => await ctx.db.insert("contexts", value)); access.expect(`conflict:contexts:${contextId}`, true);
+  await inserted(access, "contexts", id, value);
+  if (parent && parentPatch) { await effect(ctx, async () => await ctx.db.patch("contexts", parent._id, parentPatch)); access.expect(`contexts:${parent._id}`, { ...parent, ...parentPatch }); }
+  const created = readable ? await contextAt(access, contextId) : null; await access.fence(); return readable ? created : receipt("contexts", contextId);
+}) });
+export const update = mutation({ args: { ...selectors, contextId: v.string(), status: v.optional(status), description: v.optional(v.string()), data: v.optional(v.any()), completedAt: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => (await edit(ctx, args, (row) => {
+  if (args.completedAt !== undefined && (!Number.isFinite(args.completedAt) || args.completedAt < row.createdAt || args.completedAt > Date.now())) deny("INVALID_INPUT");
+  return { ...(args.status === undefined ? {} : { status: args.status }), ...(args.description === undefined ? {} : { description: args.description }),
+    ...(args.data === undefined ? {} : { data: mergeValue(row.data, args.data) }), ...(args.completedAt === undefined && args.status !== "completed" ? {} : { completedAt: args.completedAt ?? Date.now() }) };
+}))) });
+export const addParticipant = mutation({ args: { ...selectors, contextId: v.string(), participantId: v.string() }, handler: async (ctx, args) => operation(ctx, "mutation", async () => (await edit(ctx, args, (row) => {
+  if (!args.participantId.trim()) deny("INVALID_INPUT"); return { participants: row.participants.includes(args.participantId) ? row.participants : [...row.participants, args.participantId] };
+}))) });
+export const removeParticipant = mutation({ args: { ...selectors, contextId: v.string(), participantId: v.string() }, handler: async (ctx, args) => operation(ctx, "mutation", async () => (await edit(ctx, args, (row) => ({ participants: row.participants.filter((value) => value !== args.participantId) })))) });
+export const grantAccess = mutation({ args: { ...selectors, contextId: v.string(), targetMemorySpaceId: v.string(), scope: v.string() }, handler: async (ctx, args) => operation(ctx, "mutation", async () => (await edit(ctx, args, (row) => {
+  if (!args.scope.trim()) deny("INVALID_INPUT"); return { grantedAccess: [...(row.grantedAccess ?? []).filter((grant) => grant.memorySpaceId !== args.targetMemorySpaceId), { memorySpaceId: args.targetMemorySpaceId, scope: args.scope, grantedAt: Date.now() }] };
+}, args.targetMemorySpaceId))) });
+async function deletion(ctx: MutationCtx, access: RegistryAccess, roots: Context[], cascade: boolean, orphan: boolean, discloseDeleted = false) {
+  if (cascade && orphan) deny("INVALID_INPUT");
+  const nodes = new Map<string, Context>(); const deleting = new Set<string>(); const patches = new Map<string, Partial<Context>>();
+  for (const root of roots) {
+    const tree = await graph(access, root); for (const [id, row] of tree) nodes.set(id, row);
+    if (root.childIds.length && !cascade && !orphan) deny("INVALID_INPUT");
+    deleting.add(root.contextId); if (cascade) for (const row of descendants(tree, root)) deleting.add(row.contextId);
   }
-
-  // Get all descendants recursively
-  const descendants = await getAllDescendants(ctx, context.contextId);
-
-  // Calculate total nodes in the chain
-  // Total = 1 (current) + ancestors + children + siblings + descendants (excluding direct children to avoid double counting)
-  const validChildren = children.filter((c) => c !== null);
-  const validSiblings = siblings.filter((s) => s !== null);
-  const totalNodes =
-    1 +
-    ancestors.length +
-    validChildren.length +
-    validSiblings.length +
-    descendants.length;
-
-  return {
-    current: context,
-    parent,
-    root,
-    children: validChildren,
-    siblings: validSiblings,
-    ancestors,
-    descendants,
-    depth: context.depth,
-    totalNodes,
-  };
+  const orphanedChildren: string[] = [];
+  if (orphan) for (const root of roots) {
+    if (root.parentId && deleting.has(root.parentId)) deny("INVALID_INPUT");
+    for (const childId of root.childIds) {
+      const child = nodes.get(childId)!; orphanedChildren.push(childId);
+      const newRootId = root.parentId ? root.rootId! : child.contextId; const newDepth = root.parentId ? root.depth : 0;
+      patches.set(childId, { parentId: root.parentId, rootId: newRootId, depth: newDepth });
+      for (const row of descendants(nodes, child)) patches.set(row.contextId, { rootId: newRootId, depth: row.depth - child.depth + newDepth });
+    }
+  }
+  for (const row of nodes.values()) {
+    if (deleting.has(row.contextId)) continue;
+    const kept = row.childIds.filter((id) => !deleting.has(id));
+    const adopted = orphan ? roots.filter((root) => root.parentId === row.contextId).flatMap((root) => root.childIds) : [];
+    if (kept.length !== row.childIds.length || adopted.length) patches.set(row.contextId, { ...patches.get(row.contextId), childIds: [...kept, ...adopted] });
+  }
+  const plans = [...patches].filter(([id]) => !deleting.has(id)).map(([id, patch]) => ({ row: nodes.get(id)!, patch: revision(nodes.get(id)!, access.authority.principalId, patch) }));
+  for (const plan of plans) if (plan.patch.childIds) distinct(plan.patch.childIds);
+  const retirements = [...deleting].map((id) => ({ row: nodes.get(id)!, patch: revision(nodes.get(id)!, access.authority.principalId, { tombstonedAt: Date.now() }) }));
+  const disclosed = discloseDeleted ? [...deleting] : orphanedChildren;
+  const readable = await access.readAll(disclosed.map((id) => resource("contexts", nodes.get(id)!)));
+  await access.fence();
+  for (const { row, patch } of plans) { await effect(ctx, async () => await ctx.db.patch("contexts", row._id, patch)); access.expect(`contexts:${row._id}`, { ...row, ...patch }); }
+  for (const { row, patch } of retirements) {
+    await tombstone(ctx, resource("contexts", row), patch.tombstonedAt!); await effect(ctx, async () => await ctx.db.patch("contexts", row._id, patch));
+    access.expect(`contexts:${row._id}`, { ...row, ...patch }); access.retire(resource("contexts", row), patch.tombstonedAt!);
+  }
+  // Retired row snapshots, exact resource tombstones, all scopes/grants and surviving graph witnesses remain checked.
+  await access.fence(); return { deleting, orphanedChildren, readable };
 }
-
-/**
- * List contexts with filters
- */
-export const list = query({
-  args: {
-    memorySpaceId: v.optional(v.string()),
-    tenantId: v.optional(v.string()), // Multi-tenancy: scope to tenant
-    userId: v.optional(v.string()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    parentId: v.optional(v.string()),
-    rootId: v.optional(v.string()),
-    depth: v.optional(v.number()),
-    limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    let contexts;
-
-    // Use best index based on available filters
-    if (args.tenantId && args.memorySpaceId) {
-      // Tenant + space - use composite index
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_tenant_space", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .take(args.limit || 100);
-    } else if (args.tenantId) {
-      // Tenant only
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .take(args.limit || 100);
-    } else if (args.memorySpaceId && args.status) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace_status", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!).eq("status", args.status!),
-        )
-        .take(args.limit || 100);
-    } else if (args.memorySpaceId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .take(args.limit || 100);
-    } else if (args.status) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .take(args.limit || 100);
-    } else if (args.parentId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_parentId", (q) => q.eq("parentId", args.parentId!))
-        .take(args.limit || 100);
-    } else if (args.rootId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_rootId", (q) => q.eq("rootId", args.rootId!))
-        .take(args.limit || 100);
-    } else {
-      contexts = await ctx.db
-        .query("contexts")
-        .order("desc")
-        .take(args.limit || 100);
-    }
-
-    // SECURITY: For non-tenant queries, filter out tenant-owned records
-    if (!args.tenantId) {
-      contexts = contexts.filter((c) => !c.tenantId);
-    }
-
-    // Apply remaining filters
-    if (args.userId) {
-      contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-
-    if (args.depth !== undefined) {
-      contexts = contexts.filter((c) => c.depth === args.depth);
-    }
-
-    // Apply status filter if not already indexed
-    if (args.status && !(args.memorySpaceId && args.status)) {
-      contexts = contexts.filter((c) => c.status === args.status);
-    }
-
-    return contexts;
-  },
-});
-
-/**
- * Count contexts
- */
-export const count = query({
-  args: {
-    memorySpaceId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-  },
-  handler: async (ctx, args) => {
-    let contexts;
-
-    // Use best index based on available filters (matching list function behavior)
-    if (args.memorySpaceId && args.status) {
-      // Use composite index for memorySpace + status
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace_status", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!).eq("status", args.status!),
-        )
-        .collect();
-    } else if (args.memorySpaceId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else if (args.status) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .collect();
-    } else {
-      contexts = await ctx.db.query("contexts").collect();
-    }
-
-    // Apply remaining filters (userId is not indexed)
-    if (args.userId) {
-      contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-
-    return contexts.length;
-  },
-});
-
-/**
- * Get context chain (full hierarchy)
- */
-export const getChain = query({
-  args: {
-    contextId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    return await buildContextChain(ctx, context);
-  },
-});
-
-/**
- * Get root context of a chain
- */
-export const getRoot = query({
-  args: {
-    contextId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    const rootId = context.rootId || context.contextId;
-    const root = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", rootId))
-      .first();
-
-    return root;
-  },
-});
-
-/**
- * Get children of a context
- */
-export const getChildren = query({
-  args: {
-    contextId: v.string(),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    recursive: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      return [];
-    }
-
-    let children: any[] = [];
-
-    if (args.recursive) {
-      // Get all descendants recursively
-      children = await getAllDescendants(ctx, context.contextId);
-    } else {
-      // Get direct children only
-      children = await Promise.all(
-        context.childIds.map((id: string) =>
-          ctx.db
-            .query("contexts")
-            .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
-            .first(),
-        ),
-      );
-      children = children.filter((c) => c !== null);
-    }
-
-    // Filter by status
-    if (args.status) {
-      children = children.filter((c) => c.status === args.status);
-    }
-
-    return children;
-  },
-});
-
-/**
- * Helper: Get all descendants recursively
- */
-async function getAllDescendants(ctx: any, contextId: string): Promise<any[]> {
-  const context = await ctx.db
-    .query("contexts")
-    .withIndex("by_contextId", (q: any) => q.eq("contextId", contextId))
-    .first();
-
-  if (!context) return [];
-
-  const children = await Promise.all(
-    context.childIds.map((id: string) =>
-      ctx.db
-        .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
-        .first(),
-    ),
-  );
-
-  const validChildren = children.filter((c) => c !== null);
-
-  // Recursively get grandchildren
-  const grandchildren = await Promise.all(
-    validChildren.map((child) => getAllDescendants(ctx, child.contextId)),
-  );
-
-  return [...validChildren, ...grandchildren.flat()];
+export const deleteContext = mutation({ args: { ...selectors, contextId: v.string(), cascadeChildren: v.optional(v.boolean()), orphanChildren: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const row = (await contextAt(access, args.contextId))!;
+  const result = await deletion(ctx, access, [row], args.cascadeChildren ?? false, args.orphanChildren ?? false);
+  return { deleted: true, contextId: args.contextId, descendantsDeleted: result.deleting.size - 1, ...(result.readable && result.orphanedChildren.length ? { orphanedChildren: result.orphanedChildren } : {}) };
+}) });
+export const updateMany = mutation({ args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), updates: v.object({ status: v.optional(status), data: v.optional(v.any()) }) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const rows = await selected(access, args);
+  const data = args.updates.data; json(data);
+  const plans = rows.map((row) => ({ row, patch: revision(row, access.authority.principalId, {
+    ...(args.updates.status === undefined ? {} : { status: args.updates.status }), ...(data === undefined ? {} : { data: mergeValue(row.data, data) }),
+  }) }));
+  const readable = await access.readAll(rows.map((row) => resource("contexts", row)));
+  await apply(ctx, access, plans); return { updated: rows.length, ...(readable ? { contextIds: rows.map((row) => row.contextId) } : {}) };
+}) });
+export const deleteMany = mutation({ args: { ...filters, completedBefore: v.optional(v.number()), cascadeChildren: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const rows = await selected(access, args);
+  const result = await deletion(ctx, access, rows, args.cascadeChildren ?? false, false, true); return { deleted: result.deleting.size, ...(result.readable ? { contextIds: [...result.deleting] } : {}) };
+}) });
+export const get = query({ args: { ...selectors, contextId: v.string(), includeChain: v.optional(v.boolean()), includeConversation: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = await contextAt(access, args.contextId, false, false);
+  if (!row) { await access.fence(); return null; } const nodes = await graph(access, row);
+  const conversation = args.includeConversation && row.conversationRef ? await conversationAt(access, row.conversationRef, row.memorySpaceId) : undefined;
+  await access.fence(); return args.includeChain ? { ...chain(nodes, row), ...(conversation ? { conversation, triggerMessages: conversation.messageAnchors } : {}) }
+    : { ...row, ...(conversation ? { conversation, triggerMessages: conversation.messageAnchors } : {}) };
+}) });
+export const list = query({ args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), depth: v.optional(v.number()), limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);
+}) });
+export const search = query({ args: { ...filters, limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);
+}) });
+export const count = query({ args: filters, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const rows = await selected(access, args); await access.fence(); return rows.length;
+}) });
+export const getChain = query({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return chain(nodes, row);
+}) });
+export const getRoot = query({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return nodes.get(row.rootId!)!;
+}) });
+export const getChildren = query({ args: { ...selectors, contextId: v.string(), status: v.optional(status), recursive: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row);
+  const children = args.recursive ? descendants(nodes, row) : row.childIds.map((id) => nodes.get(id)!); await access.fence(); return children.filter((child) => args.status === undefined || child.status === args.status);
+}) });
+export const getByConversation = query({ args: { ...selectors, conversationId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); if (!access.authority.memorySpaceId) deny();
+  await conversationAt(access, { conversationId: args.conversationId }, access.authority.memorySpaceId);
+  const rows = (await selected(access, args)).filter((row) => row.conversationRef?.conversationId === args.conversationId); await access.fence(); return rows;
+}) });
+export const findOrphaned = query({ args: selectors, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); await selected(access, args); await access.fence();
+  // Missing/malformed links deny rather than deliver a partially authorized orphan graph.
+  return [];
+}) });
+function history(row: Context) { return [...row.previousVersions, { version: row.version, status: row.status, data: row.data, timestamp: row.updatedAt, updatedBy: row.lastUpdatedBy }]; }
+async function historical(ctx: RegistryCtx, args: Selectors & { contextId: string }) {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; await graph(access, row); await access.fence(); return history(row);
 }
-
-/**
- * Search contexts (same as list)
- */
-export const search = query({
-  args: {
-    memorySpaceId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    // Delegate to list
-    let contexts;
-
-    if (args.memorySpaceId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace", (q: any) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .take(args.limit || 100);
-    } else {
-      contexts = await ctx.db
-        .query("contexts")
-        .order("desc")
-        .take(args.limit || 100);
-    }
-
-    // Apply filters
-    if (args.userId) {
-      contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-
-    if (args.status) {
-      contexts = contexts.filter((c) => c.status === args.status);
-    }
-
-    return contexts;
-  },
-});
-
-/**
- * Update many contexts matching filters
- */
-/**
- * Update many contexts matching filters
- *
- * IMPORTANT: Uses indexed queries to avoid OCC conflicts with parallel workers.
- */
-export const updateMany = mutation({
-  args: {
-    memorySpaceId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    parentId: v.optional(v.string()),
-    rootId: v.optional(v.string()),
-    updates: v.object({
-      status: v.optional(
-        v.union(
-          v.literal("active"),
-          v.literal("completed"),
-          v.literal("cancelled"),
-          v.literal("blocked"),
-        ),
-      ),
-      data: v.optional(v.any()),
-    }),
-  },
-  handler: async (ctx, args) => {
-    let contexts;
-
-    // CRITICAL: Use indexed query when memorySpaceId is provided to avoid
-    // full table scan OCC conflicts.
-    if (args.memorySpaceId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace", (q: any) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
-    } else {
-      // Fallback to full scan only when no memorySpaceId filter
-      contexts = await ctx.db.query("contexts").collect();
-    }
-
-    // Apply remaining filters in-memory
-    if (args.userId) {
-      contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-    if (args.status) {
-      contexts = contexts.filter((c) => c.status === args.status);
-    }
-    if (args.parentId) {
-      contexts = contexts.filter((c) => c.parentId === args.parentId);
-    }
-    if (args.rootId) {
-      contexts = contexts.filter((c) => c.rootId === args.rootId);
-    }
-
-    const now = Date.now();
-    const contextIds: string[] = [];
-
-    // Update each context
-    for (const context of contexts) {
-      // Backward compatibility for version tracking
-      const currentVersion = getContextVersion(context);
-      const previousVersions = getContextPreviousVersions(context);
-
-      const newVersion = {
-        version: currentVersion,
-        status: context.status,
-        data: context.data,
-        timestamp: context.updatedAt,
-        updatedBy: context.memorySpaceId,
-      };
-
-      const newData = args.updates.data
-        ? { ...context.data, ...args.updates.data }
-        : context.data;
-
-      await ctx.db.patch(context._id, {
-        status:
-          args.updates.status !== undefined
-            ? args.updates.status
-            : context.status,
-        data: newData,
-        version: currentVersion + 1,
-        previousVersions: [...previousVersions, newVersion],
-        updatedAt: now,
-      });
-
-      contextIds.push(context.contextId);
-    }
-
-    return {
-      updated: contextIds.length,
-      contextIds,
-    };
-  },
-});
-
-/**
- * Delete many contexts matching filters
- *
- * IMPORTANT: Uses indexed queries to avoid OCC conflicts with parallel workers.
- * Full table scans create read dependencies on the entire table, causing infinite
- * retry loops when other workers are creating/updating contexts simultaneously.
- */
-export const deleteMany = mutation({
-  args: {
-    memorySpaceId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    completedBefore: v.optional(v.number()),
-    cascadeChildren: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    let contexts;
-
-    // CRITICAL: Use indexed query when memorySpaceId is provided to avoid
-    // full table scan OCC conflicts. This is the common case for test cleanup.
-    if (args.memorySpaceId) {
-      contexts = await ctx.db
-        .query("contexts")
-        .withIndex("by_memorySpace", (q: any) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
-    } else {
-      // Fallback to full scan only when no memorySpaceId filter
-      // This should be rare and caller should be aware of OCC risks
-      contexts = await ctx.db.query("contexts").collect();
-    }
-
-    // Apply remaining filters in-memory (these are less common)
-    if (args.userId) {
-      contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-    if (args.status) {
-      contexts = contexts.filter((c) => c.status === args.status);
-    }
-    if (args.completedBefore) {
-      contexts = contexts.filter(
-        (c) => c.completedAt && c.completedAt < args.completedBefore!,
-      );
-    }
-
-    let totalDeleted = 0;
-    const contextIds: string[] = [];
-
-    // Delete each context
-    for (const context of contexts) {
-      if (context.childIds.length > 0 && !args.cascadeChildren) {
-        continue; // Skip if has children and no cascade
-      }
-
-      if (args.cascadeChildren) {
-        // Delete with cascade
-        const count = await deleteContextRecursive(ctx, context.contextId);
-        totalDeleted += count;
-      } else {
-        await ctx.db.delete(context._id);
-        totalDeleted += 1;
-      }
-
-      contextIds.push(context.contextId);
-    }
-
-    return {
-      deleted: totalDeleted,
-      contextIds,
-    };
-  },
-});
-
-/**
- * Remove participant from context
- */
-export const removeParticipant = mutation({
-  args: {
-    contextId: v.string(),
-    participantId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      throw new ConvexError("CONTEXT_NOT_FOUND");
-    }
-
-    await ctx.db.patch(context._id, {
-      participants: context.participants.filter(
-        (p) => p !== args.participantId,
-      ),
-      updatedAt: Date.now(),
-    });
-
-    return await ctx.db.get(context._id);
-  },
-});
-
-/**
- * Get contexts by conversation ID
- */
-export const getByConversation = query({
-  args: {
-    conversationId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const allContexts = await ctx.db.query("contexts").collect();
-
-    return allContexts.filter(
-      (c) =>
-        c.conversationRef &&
-        c.conversationRef.conversationId === args.conversationId,
-    );
-  },
-});
-
-/**
- * Find orphaned contexts (parent no longer exists)
- */
-export const findOrphaned = query({
-  args: {},
-  handler: async (ctx) => {
-    const allContexts = await ctx.db.query("contexts").collect();
-    const orphaned: any[] = [];
-
-    for (const context of allContexts) {
-      if (context.parentId) {
-        // Check if parent exists
-        const parent = await ctx.db
-          .query("contexts")
-          .withIndex("by_contextId", (q: any) =>
-            q.eq("contextId", context.parentId!),
-          )
-          .first();
-
-        if (!parent) {
-          orphaned.push(context);
-        }
-      }
-    }
-
-    return orphaned;
-  },
-});
-
-/**
- * Get specific version of a context
- */
-export const getVersion = query({
-  args: {
-    contextId: v.string(),
-    version: v.number(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      return null;
-    }
-
-    // Backward compatibility for version tracking
-    const currentVersion = getContextVersion(context);
-    const previousVersions = getContextPreviousVersions(context);
-
-    // Check if it's the current version
-    if (currentVersion === args.version) {
-      return {
-        version: currentVersion,
-        status: context.status,
-        data: context.data,
-        timestamp: context.updatedAt,
-        updatedBy: context.memorySpaceId,
-      };
-    }
-
-    // Check previous versions
-    const versionRecord = previousVersions.find(
-      (v: any) => v.version === args.version,
-    );
-
-    return versionRecord || null;
-  },
-});
-
-/**
- * Get all versions of a context
- */
-export const getHistory = query({
-  args: {
-    contextId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      return [];
-    }
-
-    // Backward compatibility for version tracking
-    const currentVersion = getContextVersion(context);
-    const previousVersions = getContextPreviousVersions(context);
-
-    // Return all previous versions + current version
-    const versions = [
-      ...previousVersions,
-      {
-        version: currentVersion,
-        status: context.status,
-        data: context.data,
-        timestamp: context.updatedAt,
-        updatedBy: context.memorySpaceId,
-      },
-    ];
-
-    return versions;
-  },
-});
-
-/**
- * Get context version at specific timestamp
- */
-export const getAtTimestamp = query({
-  args: {
-    contextId: v.string(),
-    timestamp: v.number(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
-
-    if (!context) {
-      return null;
-    }
-
-    // Backward compatibility for version tracking
-    const currentVersion = getContextVersion(context);
-    const previousVersions = getContextPreviousVersions(context);
-
-    // If timestamp is after current version, return current
-    if (args.timestamp >= context.updatedAt) {
-      return {
-        version: currentVersion,
-        status: context.status,
-        data: context.data,
-        timestamp: context.updatedAt,
-        updatedBy: context.memorySpaceId,
-      };
-    }
-
-    // Find the version that was current at the timestamp
-    // Walk backwards through versions
-    const allVersions = [
-      ...previousVersions,
-      {
-        version: currentVersion,
-        status: context.status,
-        data: context.data,
-        timestamp: context.updatedAt,
-        updatedBy: context.memorySpaceId,
-      },
-    ].sort((a, b) => b.timestamp - a.timestamp);
-
-    for (const version of allVersions) {
-      if (args.timestamp >= version.timestamp) {
-        return version;
-      }
-    }
-
-    // If timestamp is before all versions, return null
-    return null;
-  },
-});
-
-/**
- * Export contexts to JSON or CSV
- */
-export const exportContexts = query({
-  args: {
-    memorySpaceId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("completed"),
-        v.literal("cancelled"),
-        v.literal("blocked"),
-      ),
-    ),
-    format: v.union(v.literal("json"), v.literal("csv")),
-    includeChain: v.optional(v.boolean()),
-    includeVersionHistory: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    // Get all matching contexts
-    let contexts = await ctx.db.query("contexts").collect();
-
-    // Apply filters
-    if (args.memorySpaceId) {
-      contexts = contexts.filter((c) => c.memorySpaceId === args.memorySpaceId);
-    }
-    if (args.userId) {
-      contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-    if (args.status) {
-      contexts = contexts.filter((c) => c.status === args.status);
-    }
-
-    let data: string;
-
-    if (args.format === "json") {
-      // Build JSON export
-      const exportData = contexts.map((c) => {
-        const base: any = {
-          contextId: c.contextId,
-          memorySpaceId: c.memorySpaceId,
-          purpose: c.purpose,
-          status: c.status,
-          depth: c.depth,
-          parentId: c.parentId,
-          rootId: c.rootId,
-          userId: c.userId,
-          data: c.data,
-          createdAt: c.createdAt,
-          updatedAt: c.updatedAt,
-        };
-
-        if (args.includeVersionHistory) {
-          base.version = c.version;
-          base.previousVersions = c.previousVersions;
-        }
-
-        return base;
-      });
-
-      data = JSON.stringify(exportData, null, 2);
-    } else {
-      // CSV export
-      const headers = [
-        "contextId",
-        "memorySpaceId",
-        "purpose",
-        "status",
-        "depth",
-        "parentId",
-        "userId",
-        "createdAt",
-        "updatedAt",
-      ];
-
-      const rows = contexts.map((c) => [
-        c.contextId,
-        c.memorySpaceId,
-        c.purpose,
-        c.status,
-        c.depth.toString(),
-        c.parentId || "",
-        c.userId || "",
-        new Date(c.createdAt).toISOString(),
-        new Date(c.updatedAt).toISOString(),
-      ]);
-
-      data = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
-    }
-
-    return {
-      format: args.format,
-      data,
-      count: contexts.length,
-      exportedAt: Date.now(),
-    };
-  },
-});
-
-/**
- * Purge all contexts (TEST/DEV ONLY)
- */
-export const purgeAll = mutation({
-  args: {},
-  handler: async (ctx) => {
-    // Safety check: Only allow in test/dev environments
-    const siteUrl = process.env.CONVEX_SITE_URL || "";
-    const isLocal =
-      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    const isDevDeployment =
-      siteUrl.includes(".convex.site") ||
-      siteUrl.includes("dev-") ||
-      siteUrl.includes("convex.cloud");
-    const isTestEnv =
-      process.env.NODE_ENV === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "test";
-
-    if (!isLocal && !isDevDeployment && !isTestEnv) {
-      throw new Error(
-        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
-      );
-    }
-
-    const allContexts = await ctx.db.query("contexts").collect();
-
-    for (const context of allContexts) {
-      await ctx.db.delete(context._id);
-    }
-
-    return { deleted: allContexts.length };
-  },
-});
+export const getVersion = query({ args: { ...selectors, contextId: v.string(), version: v.number() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  integer(args.version, 1, Number.MAX_SAFE_INTEGER); const versions = await historical(ctx, args); return versions.find((value) => value.version === args.version) ?? null;
+}) });
+export const getHistory = query({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => (await historical(ctx, args))) });
+export const getAtTimestamp = query({ args: { ...selectors, contextId: v.string(), timestamp: v.number() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  if (!Number.isFinite(args.timestamp) || args.timestamp < 0) deny("INVALID_INPUT");
+  const versions = await historical(ctx, args); return versions.reverse().find((value) => value.timestamp <= args.timestamp) ?? null;
+}) });
+export const exportContexts = query({ args: { ...filters, format: v.union(v.literal("json"), v.literal("csv")), includeChain: v.optional(v.boolean()), includeVersionHistory: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const rows = await selected(access, args); const exported: unknown[] = [];
+  for (const row of rows) exported.push({ contextId: row.contextId, memorySpaceId: row.memorySpaceId, purpose: row.purpose, status: row.status,
+    depth: row.depth, parentId: row.parentId, rootId: row.rootId, userId: row.userId, data: row.data, createdAt: row.createdAt, updatedAt: row.updatedAt,
+    ...(args.includeVersionHistory ? { version: row.version, previousVersions: row.previousVersions } : {}), ...(args.includeChain ? { chain: chain(await graph(access, row), row) } : {}) });
+  const csv = (value: string | number | undefined) => JSON.stringify(String(value ?? ""));
+  const data = args.format === "json" ? JSON.stringify(nativeJson(exported), null, 2) : ["contextId,memorySpaceId,purpose,status,depth,parentId,userId,createdAt,updatedAt",
+    ...rows.map((row) => [row.contextId, row.memorySpaceId, row.purpose, row.status, row.depth, row.parentId, row.userId, row.createdAt, row.updatedAt].map(csv).join(","))].join("\n");
+  await access.fence(); return { format: args.format, data, count: rows.length, exportedAt: Date.now() };
+}) });
+/** Trusted operator retirement preserves canonical metadata and tombstone controls. */
+export const purgeAll = internalMutation({ args: {}, handler: async (ctx) => operation(ctx, "mutation", async () => {
+  const rows = await ctx.db.query("contexts").collect();
+  for (const row of rows) if (row.tenantId && row.ownerPrincipalId) await tombstone(ctx, resource("contexts", row));
+  for (const row of rows) await effect(ctx, async () => await ctx.db.patch("contexts", row._id, { tombstonedAt: row.tombstonedAt ?? Date.now(), updatedAt: Date.now() })); return { deleted: rows.length };
+}) });

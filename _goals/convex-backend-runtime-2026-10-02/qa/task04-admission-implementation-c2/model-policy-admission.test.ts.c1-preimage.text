@@ -1,0 +1,402 @@
+/** Offline native-handler fixtures. This fake database does NOT prove Convex OCC/isolation/rollback. */
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import type { MutationCtx } from "../../../convex-dev/_generated/server";
+import type { Doc, Id } from "../../../convex-dev/_generated/dataModel";
+import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../../convex-dev/runtimeModelPolicyBootstrap";
+import type { ModelCallRequest, TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
+import { canonicalModelJson } from "../../../src/domain/model-policy";
+import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
+import { memoryFixture } from "../runtimeMemory/fixture";
+
+const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
+jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
+const ledger = await import("../../../convex-dev/runtimeModelPolicy");
+const schema = (await import("../../../convex-dev/schema")).default;
+const hash = "a".repeat(64);
+const clock = 1_000_000;
+const limits = { inputTokens: 1000, contextTokens: 2000, outputTokens: 500, toolSteps: 4, timeoutMs: 10000,
+  operationBudgetUnits: 200, runBudgetUnits: 300, tenantBudgetUnits: 500, concurrency: 2 };
+const pins = { promptVersion: "prompt-1", schemaVersion: "schema-1", extractionVersion: "extract-1", toolRegistryVersion: "tools-1", priceRevision: "price-1", boundRevision: "bound-1" };
+const deployment: TrustedModelPolicyRecord = { policyId: "deployment", version: 1, scope: "deployment", rules: {
+  modelId: "openai/gpt-4o-mini", nativeInterface: "chat", allowedModels: ["openai/gpt-4o-mini", DEFAULT_EMBEDDING_PROFILE.modelId], interfaces: ["chat", "embedding"],
+  capabilities: ["text", "embedding"], allowedOptions: ["temperature"], allowedTools: [], fallbackModels: [], limits, pins } };
+/** Synthetic trust-root mock ONLY; no production manifest or actual price qualification is created. */
+function manifest(): DeploymentPolicyManifest {
+  const qualification = { receiptId: "synthetic-chat", modelId: "openai/gpt-4o-mini", nativeInterface: "chat" as const, capabilities: ["text" as const], allowedOptions: ["temperature" as const],
+    limits, costBound: { kind: "qualified-call-ceiling" as const, maximumCostUnits: 100, provenance: "synthetic-test-only", coversAllProviderCharges: true as const }, priceRevision: "price-1", boundRevision: "bound-1" };
+  const proof: QualifiedDispatchEvidence = { receiptId: qualification.receiptId, evidenceHash: hash, providerVersion: "synthetic-0", modelId: qualification.modelId, nativeInterface: "chat",
+    inputBound: { ruleId: "plain-chat-cookbook-utf8-v1", revision: 1, featureEnvelope: "plain-chat-v1", nativeTransformHash: hash, documentHash: hash, proofHash: hash },
+    resultBound: { maximumPrivateResultBytes: 60_000, maximumOutputTokens: 500, maximumEmbeddingValues: 1, proofHash: hash },
+    checkedAt: clock - 1, expiresAt: clock + 1_000_000, terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", priceRevision: "price-1", boundRevision: "bound-1" };
+  return { manifestId: "synthetic-test-root", revision: 1, artifactRevision: "synthetic-test-artifact", evidenceHash: hash, acceptanceHash: hash, classification: "fixture-synthetic",
+    budgetWindowMs: 60_000, policies: [deployment], qualifications: [qualification], dispatchEvidence: [proof] };
+}
+type Bound = { runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts"> };
+type Reserved = { status: "reserved"; operationId: Id<"runtimeModelOperations">; attemptId: Id<"runtimeModelAttempts">; requestCanonical: string };
+type Registration = { _handler: (ctx: MutationCtx, args: unknown) => Promise<unknown>; isInternal?: boolean; isPublic?: boolean; exportArgs?: () => string };
+function request(text = "hello"): ModelCallRequest {
+  return { semanticId: "semantic", childCallId: "untrusted-estimate", texts: [text], messages: [{ role: "user", parts: [{ type: "text", text }] }],
+    inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: 1, promptVersion: pins.promptVersion, schemaVersion: pins.schemaVersion, extractionVersion: pins.extractionVersion, toolRegistryVersion: pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+}
+let root: DeploymentPolicyManifest;
+beforeEach(() => {
+  root = manifest(); lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
+  jest.spyOn(Date, "now").mockReturnValue(clock);
+});
+afterEach(() => { jest.restoreAllMocks(); });
+function fixture() {
+  const f = memoryFixture(); f.grant.capabilities = ["read", "write", "run", "admin"]; 
+  const db = Object.assign(f.db, { patch: async (table: string, id: string, updates: Record<string, unknown>) => {
+    const row = await f.db.get(table, id); if (!row) throw new Error("Missing patch row"); f.db.writes++; Object.assign(row, JSON.parse(JSON.stringify(updates)) as Record<string, unknown>);
+  } });
+  db.insert = async (table: string, value: Record<string, unknown>) => { db.writes++; return db.seed(table, JSON.parse(JSON.stringify(value)) as Record<string, unknown>)._id; };
+  const invoke = async <Result = unknown>(name: keyof typeof ledger, args: unknown): Promise<Result> => {
+    const registration = ledger[name] as unknown as Registration;
+    return await registration._handler(f.ctx, args) as Result;
+  };
+  const install = async () => await invoke("installDeploymentPolicy", { manifestId: root.manifestId, expectedRevision: root.revision });
+  const bind = async (id = "request", identity = canonicalModelJson({ text: "hello" })) => await invoke<Bound>("ensureBudget", {
+    reference: f.reference, operationKey: "agent.respond", requestId: id, requestCanonical: identity,
+  });
+  const admit = async (binding: Bound, ordinal = 0, text = "hello", extra: Record<string, unknown> = {}) => await invoke<Reserved>("admit", {
+    reference: f.reference, operationKey: "agent.respond", runBudgetId: binding.runBudgetId, semanticId: "semantic", ordinal,
+    requestCanonical: canonicalModelJson(request(text)), ...extra,
+  });
+  const checkpoint = async (attempt: Reserved) => await invoke("checkpoint", { reference: f.reference, attemptId: attempt.attemptId, requestCanonical: attempt.requestCanonical });
+  const account = (kind: string): Doc<"runtimeBudgetAccounts"> => db.table("runtimeBudgetAccounts").find((row) => row.kind === kind) as unknown as Doc<"runtimeBudgetAccounts">;
+  const attempt = (id: string): Doc<"runtimeModelAttempts"> => db.table("runtimeModelAttempts").find((row) => row._id === id) as unknown as Doc<"runtimeModelAttempts">;
+  const receipt = (submission: Reserved, cost = "0.000040", extra: Record<string, unknown> = {}) => canonicalModelJson({ version: 1,
+    dispatchIdentity: attempt(submission.attemptId).dispatchIdentity, receiptId: "terminal-1", modelId: "openai/gpt-4o-mini", nativeInterface: "chat",
+    outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: cost,
+    privateResultCanonical: canonicalModelJson({ text: "answer" }), ...extra });
+  const settle = async (submission: Reserved, cost = "0.000040", extra: Record<string, unknown> = {}) => await invoke("settle", { reference: f.reference,
+    attemptId: submission.attemptId, receiptCanonical: receipt(submission, cost, extra) });
+  return { ...f, db, invoke, install, bind, admit, checkpoint, account, attempt, receipt, settle };
+}
+async function admitted() { const f = fixture(); await f.install(); const b = await f.bind(); const a = await f.admit(b); return { f, b, a }; }
+
+describe("native private policy ledger — offline logic only", () => {
+  it("production root is empty, and arbitrary operator manifest selectors cannot attest prices", async () => {
+    expect(readFileSync(resolve("convex-dev/runtimeModelPolicyBootstrap.ts"), "utf8")).toContain("Object.freeze([])");
+    const f = fixture(); lookup.mockReturnValue(undefined);
+    await expect(f.install()).rejects.toThrow(); expect(f.db.writes).toBe(0);
+    await expect(f.bind()).rejects.toThrow(); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(0);
+  });
+  it("installs the exact compiled root idempotently and refuses mutated same-version evidence", async () => {
+    const f = fixture(); await f.install(); const writes = f.db.writes; await f.install(); expect(f.db.writes).toBe(writes);
+    expect(f.db.table("runtimeModelPolicies")).toHaveLength(1); expect(f.db.table("runtimeModelQualifications")).toHaveLength(1);
+    root = { ...root, artifactRevision: "changed" }; await expect(f.install()).rejects.toThrow();
+  });
+  it.each(["classification", "acceptance", "expiry", "model", "proof"])("rejects an invalid root %s before accounts/dispatch", async (field) => {
+    if (field === "classification") root = { ...root, classification: "reviewed-actual" };
+    if (field === "acceptance") root = { ...root, acceptanceHash: "claim" };
+    if (field === "expiry") root = { ...root, dispatchEvidence: root.dispatchEvidence.map((proof) => ({ ...proof, expiresAt: clock - 2 })) };
+    if (field === "model") root = { ...root, dispatchEvidence: root.dispatchEvidence.map((proof) => ({ ...proof, modelId: "foreign/model" })) };
+    if (field === "proof") root = { ...root, dispatchEvidence: root.dispatchEvidence.map((proof) => ({ ...proof, inputBound: { ...proof.inputBound, proofHash: "claim" } })) };
+    const f = fixture(); await expect(f.install()).rejects.toThrow(); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(0);
+  });
+  it("binds one backend account per exact trusted request and rejects changed request/owner", async () => {
+    const f = fixture(); await f.install(); const a = await f.bind(); expect(await f.bind()).toEqual(a);
+    expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(2);
+    await expect(f.bind("request", canonicalModelJson({ text: "changed" }))).rejects.toThrow();
+    await expect(f.invoke("resolve", { reference: { ...f.reference, principalVersion: 2 }, operationKey: "agent.respond", runBudgetId: a.runBudgetId })).rejects.toThrow();
+  });
+  it("forced account-key hash collisions compare the complete trusted binding tuple", async () => {
+    const f = fixture(); await f.install(); const b = await f.bind(); const before = f.db.writes;
+    const collision = Uint8Array.from(Buffer.from(b.runBudgetId, "hex")).buffer;
+    jest.spyOn(globalThis.crypto.subtle, "digest").mockResolvedValue(collision);
+    await expect(f.bind("different-request-id")).rejects.toThrow();
+    await expect(f.invoke("ensureBudget", { reference: f.reference, operationKey: "conversation.title", requestId: "request", requestCanonical: canonicalModelJson({ text: "hello" }) })).rejects.toThrow();
+    expect(f.db.writes).toBe(before); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(2);
+  });
+  it("derives actual normalized input and full trusted ceiling, overriding untrusted estimates", async () => {
+    const { f, a } = await admitted(); const dispatched: unknown = JSON.parse(a.requestCanonical);
+    expect(dispatched).toMatchObject({ inputTokens: 15, reservationUnits: 100 });
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 100, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 1 });
+    expect(f.account("run")).toMatchObject({ reservedUnits: 100, activeConcurrency: 1 });
+  });
+  it("same child canonical replay does not reserve again; changed text/hash collision rejects", async () => {
+    const { f, b, a } = await admitted(); const before = f.db.writes;
+    expect(await f.admit(b)).toMatchObject({ status: "inflight", attemptId: a.attemptId }); expect(f.db.writes).toBe(before);
+    await expect(f.admit(b, 0, "changed")).rejects.toThrow(); expect(f.account("tenant").reservedUnits).toBe(100);
+    f.attempt(a.attemptId).canonical = canonicalModelJson({ forcedCollision: true });
+    await expect(f.admit(b)).rejects.toThrow(); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+  });
+  it("one checkpoint winner returns a permit and subsequent attempts cannot dispatch", async () => {
+    const { f, a } = await admitted(); expect(await f.checkpoint(a)).toMatchObject({ dispatchPermit: true });
+    expect(await f.checkpoint(a)).toMatchObject({ dispatchPermit: false, state: "dispatch_pending", replayAllowed: false });
+    await expect(f.invoke("releaseNotDispatched", { reference: f.reference, attemptId: a.attemptId })).rejects.toThrow();
+    expect(f.account("tenant").reservedUnits).toBe(100);
+  });
+  it("changed final native request/proof and expired qualifications deny checkpoint", async () => {
+    const { f, a } = await admitted(); const changed: ModelCallRequest = JSON.parse(a.requestCanonical) as ModelCallRequest; changed.outputTokens++;
+    await expect(f.invoke("checkpoint", { reference: f.reference, attemptId: a.attemptId, requestCanonical: canonicalModelJson(changed) })).rejects.toThrow();
+    jest.spyOn(Date, "now").mockReturnValue(root.dispatchEvidence[0]!.expiresAt);
+    await expect(f.checkpoint(a)).rejects.toThrow(); expect(f.attempt(a.attemptId).state).toBe("reserved");
+  });
+  it("last operation/concurrency capacity applies across distinct children without partial rejection writes", async () => {
+    const { f, b } = await admitted(); await f.admit(b, 1, "second"); const before = f.db.writes;
+    await expect(f.admit(b, 2, "third")).rejects.toThrow(); expect(f.db.writes).toBe(before);
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 200, activeConcurrency: 2 });
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(2);
+  });
+  it("different backend request accounts share one tenant quota and concurrency", async () => {
+    const { f } = await admitted(); const second = await f.bind("request2"); await f.admit(second, 0, "hello", { semanticId: "semantic-2" });
+    const third = await f.bind("request3"); const before = f.db.writes; await expect(f.admit(third, 0, "hello", { semanticId: "semantic-3" })).rejects.toThrow();
+    expect(f.db.writes).toBe(before); expect(f.account("tenant").activeConcurrency).toBe(2);
+  });
+  it("known cost settles exactly once and eligible result replay needs no new reservation", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a); expect(await f.settle(a)).toMatchObject({ state: "settled", settledCostUnits: 40, resultWithheld: false });
+    const before = f.db.writes; await f.settle(a); expect(f.db.writes).toBe(before);
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 40, reservedUnits: 0, uncertainUnits: 0, activeConcurrency: 0 });
+    expect(await f.admit(b)).toMatchObject({ status: "replay", resultCanonical: canonicalModelJson({ text: "answer" }) });
+    await expect(f.settle(a, "0.000041")).rejects.toThrow(); expect(f.account("tenant").settledUnits).toBe(40);
+  });
+  it("invalid private results are withheld without erasing a known complete charge", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a);
+    expect(await f.settle(a, "0.000040", { privateResultCanonical: canonicalModelJson({ rawReasoning: "private" }) })).toMatchObject({ state: "settled", settledCostUnits: 40, resultWithheld: true });
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 40, reservedUnits: 0 });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    expect(JSON.stringify(f.db.table("runtimeModelAttempts"))).not.toContain("rawReasoning");
+    await expect(f.admit(b)).rejects.toThrow();
+  });
+  it("overrun accounts full spend and blocks further admission without rollback of charge", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a); expect(await f.settle(a, "0.000150")).toMatchObject({ settledCostUnits: 150, overrun: true });
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 150, overrun: true, activeConcurrency: 0 });
+    await expect(f.admit(b, 1)).rejects.toThrow();
+  });
+  it("malformed/missing cost remains unknown liability; qualified terminal proof releases slot only", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a);
+    expect(await f.invoke("settle", { reference: f.reference, attemptId: a.attemptId, receiptCanonical: "{\"bad\":true}" })).toMatchObject({ state: "uncertain", replayAllowed: false });
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 0, uncertainUnits: 100, activeConcurrency: 1 });
+    const unknown = f.receipt(a); const parsed = JSON.parse(unknown) as Record<string, unknown>; delete parsed.aggregateCostUsd; parsed.costSource = "unavailable";
+    await f.invoke("settle", { reference: f.reference, attemptId: a.attemptId, receiptCanonical: canonicalModelJson(parsed) });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, activeConcurrency: 0 });
+    expect(await f.admit(b)).toMatchObject({ status: "uncertain", replayAllowed: false });
+    await f.settle(a); expect(f.account("tenant")).toMatchObject({ uncertainUnits: 0, settledUnits: 40, activeConcurrency: 0 });
+  });
+  it("postcheckpoint crash recovery cannot claim no dispatch or zero cost", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    await f.invoke("recover", { reference: f.reference, attemptId: a.attemptId });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, activeConcurrency: 1 });
+    expect(f.attempt(a.attemptId)).toMatchObject({ state: "uncertain", slotReleased: false });
+    await expect(f.invoke("releaseNotDispatched", { reference: f.reference, attemptId: a.attemptId })).rejects.toThrow();
+  });
+  it("proved precheckpoint refusal releases balances and slots exactly once", async () => {
+    const { f, a } = await admitted(); await f.invoke("releaseNotDispatched", { reference: f.reference, attemptId: a.attemptId });
+    const before = f.db.writes; await f.invoke("releaseNotDispatched", { reference: f.reference, attemptId: a.attemptId }); expect(f.db.writes).toBe(before);
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 0, settledUnits: 0, activeConcurrency: 0 });
+    expect(await f.invoke("checkFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "unqualified/model" })).toEqual({ allowed: false });
+  });
+  it("current admin may release proved precheckpoint liability after origin revocation without delivery", async () => {
+    const { f, a } = await admitted(); f.grant.revokedAt = clock;
+    const grant = f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:current-admin", version: 2 }); delete grant.revokedAt;
+    const reference = { ...f.reference, grantId: grant._id, grantVersion: 2 };
+    expect(await f.invoke("recover", { reference, attemptId: a.attemptId })).toEqual({ state: "not_dispatched", replayAllowed: false });
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 0, uncertainUnits: 0, settledUnits: 0, activeConcurrency: 0 });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    await expect(f.checkpoint(a)).rejects.toThrow();
+  });
+  it("unknown liability blocks rollover; late receipt charges original immutable window", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a); await f.invoke("recover", { reference: f.reference, attemptId: a.attemptId });
+    const original = f.account("tenant").windowId;
+    jest.spyOn(Date, "now").mockReturnValue(f.account("tenant").windowEnd + 1);
+    await expect(f.bind("nextwindow")).rejects.toThrow(); await f.settle(a);
+    expect(f.account("tenant")).toMatchObject({ windowId: original, settledUnits: 40, uncertainUnits: 0 });
+    await f.bind("nextwindow"); expect(f.db.table("runtimeBudgetAccounts").filter((row) => row.kind === "tenant")).toHaveLength(2);
+    const old = f.db.table("runtimeBudgetAccounts").find((row) => row.windowId === original && row.kind === "tenant"); expect(old?.settledUnits).toBe(40);
+  });
+  it("revoked originating grant requires current admin liability-only recovery", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    // Tenant tombstone denies original actor; only current separate admin recovery can account later.
+    f.grant.revokedAt = clock;
+    await expect(f.settle(a)).rejects.toThrow(); expect(f.account("tenant").reservedUnits).toBe(100);
+    const secondGrant = f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:admin2", revokedAt: undefined, version: 2 });
+    delete secondGrant.revokedAt;
+    const adminReference = { ...f.reference, grantId: secondGrant._id, grantVersion: 2 };
+    const receipt = f.receipt(a);
+    expect(await f.invoke("recover", { reference: adminReference, attemptId: a.attemptId, receiptCanonical: receipt })).toMatchObject({ settledCostUnits: 40, resultWithheld: true });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 40, reservedUnits: 0 });
+  });
+  it("monotone visibility flags and cancellation prevent later dispatch and safe fallback", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a);
+    const flags = { outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false };
+    await f.invoke("markVisible", { reference: f.reference, attemptId: a.attemptId, ...flags });
+    await f.invoke("markVisible", { reference: f.reference, attemptId: a.attemptId, ...flags, outputVisible: false });
+    expect(f.attempt(a.attemptId).outputVisible).toBe(true);
+    await f.invoke("cancelBudget", { reference: f.reference, runBudgetId: b.runBudgetId });
+    await expect(f.admit(b, 1)).rejects.toThrow();
+    await expect(f.invoke("checkFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "unqualified/model" })).rejects.toThrow();
+  });
+  it("space admin cannot change global/root policy or install own tenant-wide constraints", async () => {
+    const f = fixture(); await f.install(); const policy = { policyId: "tenant-rule", version: 1, scope: "deployment", rules: { limits: { tenantBudgetUnits: 999999 } } };
+    await expect(f.invoke("provisionTenantPolicy", { reference: f.reference, policyCanonical: canonicalModelJson(policy) })).rejects.toThrow();
+    expect(f.db.table("runtimeModelPolicies")).toHaveLength(1);
+  });
+  it("healthy tenant admin may narrow own rules but cannot forge prices or broaden caps", async () => {
+    const f = fixture(); await f.install(); delete f.grant.memorySpaceId; delete f.grant.memorySpaceEpoch; f.grant.resourceAccess = "tenant";
+    const reference = { ...f.reference }; delete reference.memorySpaceId; delete reference.memorySpaceEpoch;
+    const policy = { policyId: "tenant-rule", version: 1, scope: "tenant", tenantId: "tenant-a", rules: { limits: { concurrency: 1 } } };
+    expect(await f.invoke("provisionTenantPolicy", { reference, policyCanonical: canonicalModelJson(policy) })).toEqual({ policyId: "tenant-rule", version: 1 });
+    for (const bad of [{ ...policy, tenantId: "foreign" }, { ...policy, version: 2, rules: { limits: { concurrency: 9 } } },
+      { ...policy, version: 2, rules: { pins: { priceRevision: "made-up" } } }, { ...policy, scope: "deployment" }]) {
+      await expect(f.invoke("provisionTenantPolicy", { reference, policyCanonical: canonicalModelJson(bad) })).rejects.toThrow();
+    }
+    expect(f.db.table("runtimeModelQualifications")).toHaveLength(1);
+  });
+  it("trusted own tenant override is backend-versioned and never broadens deployment hard bounds", async () => {
+    const f = fixture(); await f.install(); delete f.grant.memorySpaceId; delete f.grant.memorySpaceEpoch; f.grant.resourceAccess = "tenant";
+    const adminReference = { ...f.reference }; delete adminReference.memorySpaceId; delete adminReference.memorySpaceEpoch;
+    await f.invoke("provisionTenantPolicy", { reference: adminReference, overrideRequested: true,
+      policyCanonical: canonicalModelJson({ policyId: "override", version: 1, scope: "tenant", tenantId: "tenant-a", rules: { limits: { concurrency: 1 } } }) });
+    // A tenant-wide grant is valid when narrowed to the concrete caller space by reference resolution.
+    const b = await f.bind();
+    const snapshot = await f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: b.runBudgetId });
+    expect(snapshot).toMatchObject({ snapshot: { limits: { concurrency: 1 }, policyVersions: [{ policyId: "deployment", version: 1 }, { policyId: "override", version: 1,
+      override: { actorPrincipalId: f.reference.principalId, changeRevision: 1 } }] } });
+    await expect(f.invoke("provisionTenantPolicy", { reference: adminReference, overrideRequested: true,
+      policyCanonical: canonicalModelJson({ policyId: "override", version: 2, scope: "tenant", tenantId: "tenant-a", rules: { limits: { concurrency: 3 } } }) })).rejects.toThrow();
+  });
+  it("a current source tombstone blocks replay/delivery but retains already incurred charge", async () => {
+    const f = fixture(); await f.install(); const b = await f.bind();
+    const contentHash = await semanticHash("hello");
+    const source = f.db.seed("runtimeMemorySources", { tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.reference.principalId,
+      lineage: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, role: "user", trust: "user_assertion" }, content: "hello", contentHash, createdAt: clock });
+    const a = await f.admit(b, 0, "hello", { source: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, contentHash } });
+    await f.checkpoint(a); source.tombstonedAt = clock;
+    expect(await f.settle(a)).toMatchObject({ settledCostUnits: 40, resultWithheld: true });
+    expect(f.account("tenant").settledUnits).toBe(40); expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    await expect(f.admit(b, 0, "hello", { source: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, contentHash } })).rejects.toThrow();
+  });
+  it("source revision changes before checkpoint cannot dispatch or recreate source", async () => {
+    const f = fixture(); await f.install(); const b = await f.bind(); const contentHash = await semanticHash("hello");
+    const source = f.db.seed("runtimeMemorySources", { tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.reference.principalId,
+      lineage: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, role: "user", trust: "user_assertion" }, content: "hello", contentHash, createdAt: clock });
+    const a = await f.admit(b, 0, "hello", { source: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, contentHash } });
+    source.lineage = { sourceId: "source", sourceEventId: "event", sourceRevision: 2, role: "user", trust: "user_assertion" };
+    await expect(f.checkpoint(a)).rejects.toThrow(); expect(f.attempt(a.attemptId).state).toBe("reserved"); expect(f.db.table("runtimeMemorySources")).toHaveLength(1);
+  });
+  it("child operation inherits exact parent account and cancellation/current authority fences", async () => {
+    const { f, b, a } = await admitted();
+    const child = await f.invoke<Reserved>("admit", { reference: f.reference, operationKey: "artifact.text", runBudgetId: b.runBudgetId, semanticId: "secondary", ordinal: 0,
+      requestCanonical: canonicalModelJson(request()), parentOperationId: a.operationId });
+    const operation = f.db.table("runtimeModelOperations").find((row) => row._id === a.operationId)!; operation.cancelled = true;
+    await expect(f.checkpoint(child)).rejects.toThrow(); expect(f.attempt(child.attemptId).state).toBe("reserved");
+    expect(f.account("tenant").reservedUnits).toBe(200);
+    const foreign = await f.bind("another"); await expect(f.admit(foreign, 0, "hello", { semanticId: "foreignchild", parentOperationId: a.operationId })).rejects.toThrow();
+  });
+  it("trusted compiled versioned agent specialization is consumed only by its matching tenant/version", async () => {
+    root = { ...root, policies: [...root.policies, { policyId: "agent-policy", version: 1, scope: "agent", tenantId: "tenant-a", agentId: "agent", agentVersion: 7,
+      rules: { limits: { outputTokens: 100 } } }] };
+    const f = fixture(); await f.install();
+    const binding = await f.invoke<Bound>("ensureBudget", { reference: f.reference, operationKey: "agent.respond", requestId: "agent-request", requestCanonical: canonicalModelJson({ text: "hello" }), agentId: "agent", agentVersion: 7 });
+    expect(await f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: binding.runBudgetId })).toMatchObject({ snapshot: { agent: { agentId: "agent", version: 7 }, limits: { outputTokens: 100 } } });
+    await expect(f.invoke("ensureBudget", { reference: f.reference, operationKey: "agent.respond", requestId: "invalid-version", requestCanonical: canonicalModelJson({ text: "hello" }), agentId: "agent", agentVersion: 8 })).rejects.toThrow();
+  });
+  it("native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider", () => {
+    const proof = root.dispatchEvidence[0]!;
+    expect(ledger.deriveQualifiedInputBound(proof, request("é"))).toBe(12);
+    expect(() => ledger.deriveQualifiedInputBound(proof, request("\ud800"))).toThrow();
+    expect(() => ledger.deriveQualifiedInputBound(proof, { ...request(), messages: [{ role: "user", parts: [{ type: "text", text: "hello" }, { type: "text", text: "more" }] }] })).toThrow();
+    expect(() => ledger.deriveQualifiedInputBound(proof, { ...request(), outputSchema: { type: "object" } })).toThrow();
+  });
+  it("embedding bound treats per-value and aggregate caps separately and counts normalized UTF8", () => {
+    const proof: QualifiedDispatchEvidence = { ...root.dispatchEvidence[0]!, nativeInterface: "embedding", modelId: DEFAULT_EMBEDDING_PROFILE.modelId,
+      inputBound: { ...root.dispatchEvidence[0]!.inputBound, ruleId: "default-embedding-utf8-v1", featureEnvelope: "default-embedding-v1" } };
+    const embedding = { ...request(), messages: undefined, texts: ["é"], outputTokens: 0, profile: DEFAULT_EMBEDDING_PROFILE, batch: { ordinal: 0, start: 0, end: 1 } };
+    expect(ledger.deriveQualifiedInputBound(proof, embedding)).toBe(2);
+    expect(() => ledger.deriveQualifiedInputBound(proof, { ...embedding, texts: ["x".repeat(8193)] })).toThrow();
+    expect(() => ledger.deriveQualifiedInputBound(proof, { ...embedding, texts: Array<string>(513).fill("x") })).toThrow();
+    expect(() => ledger.deriveQualifiedInputBound(proof, { ...embedding, texts: Array<string>(40).fill("x".repeat(8192)) })).toThrow();
+  });
+  it("invalid terminal cost overflow remains unknown without refund or invented zero", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    expect(await f.settle(a, "9007199254740992")).toMatchObject({ state: "uncertain", replayAllowed: false });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, settledUnits: 0, activeConcurrency: 0 });
+  });
+  it("post-admission source/account corruption fails closed before checkpoint", async () => {
+    const { f, a } = await admitted(); f.account("run").windowId = "substituted-window";
+    await expect(f.checkpoint(a)).rejects.toThrow(); expect(f.attempt(a.attemptId).state).toBe("reserved");
+  });
+  it("explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend", async () => {
+    const q = root.qualifications[0]!; const proof = root.dispatchEvidence[0]!;
+    root = { ...root, policies: [{ ...deployment, rules: { ...deployment.rules, allowedModels: [...deployment.rules.allowedModels!, "fixture/fallback"], fallbackModels: ["fixture/fallback"] } }],
+      qualifications: [...root.qualifications, { ...q, receiptId: "synthetic-fallback", modelId: "fixture/fallback", costBound: { ...q.costBound, maximumCostUnits: 80 } }],
+      dispatchEvidence: [...root.dispatchEvidence, { ...proof, receiptId: "synthetic-fallback", modelId: "fixture/fallback" }] };
+    const { f, b, a } = await admitted();
+    await f.invoke("releaseNotDispatched", { reference: f.reference, attemptId: a.attemptId });
+    expect(await f.invoke("checkFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "fixture/fallback" })).toEqual({ allowed: true });
+    const fallback = await f.invoke<Reserved>("admitFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "fixture/fallback" });
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 80, activeConcurrency: 1, settledUnits: 0 });
+    expect(await f.invoke("admitFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "fixture/fallback" })).toMatchObject({ status: "inflight", attemptId: fallback.attemptId });
+    expect(await f.checkpoint(fallback)).toMatchObject({ dispatchPermit: true });
+    expect(await f.admit(b)).toMatchObject({ status: "uncertain", replayAllowed: false });
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(2);
+  });
+  it("visible output, unknown outcome and unqualified candidates deny fallback reservation", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    await f.invoke("markVisible", { reference: f.reference, attemptId: a.attemptId, outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false });
+    await f.invoke("recover", { reference: f.reference, attemptId: a.attemptId });
+    const before = f.db.writes;
+    await expect(f.invoke("admitFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "fixture/fallback" })).rejects.toThrow();
+    expect(f.db.writes).toBe(before); expect(f.account("tenant").uncertainUnits).toBe(100);
+  });
+  it("storage bounds deny multi-vector calls and unbounded output before reservation", async () => {
+    const proof = { ...root.dispatchEvidence[0]!, nativeInterface: "embedding" as const,
+      inputBound: { ...root.dispatchEvidence[0]!.inputBound, ruleId: "default-embedding-utf8-v1" as const, featureEnvelope: "default-embedding-v1" as const } };
+    expect(() => ledger.deriveQualifiedInputBound(proof, { ...request(), outputTokens: 0, texts: ["one", "two"] })).toThrow();
+    root = { ...root, dispatchEvidence: root.dispatchEvidence.map((entry) => ({ ...entry, resultBound: { ...entry.resultBound, maximumOutputTokens: 10 } })) };
+    const f = fixture(); await f.install(); const b = await f.bind(); const before = f.db.writes;
+    await expect(f.admit(b)).rejects.toThrow(); expect(f.db.writes).toBe(before);
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  });
+  it("usage exceeding trusted input/output caps fully charges and blocks the faulty qualification", async () => {
+    const { f, a, b } = await admitted(); await f.checkpoint(a);
+    expect(await f.settle(a, "0.000040", { usage: { inputTokens: 100, outputTokens: 21 } })).toMatchObject({ settledCostUnits: 40, overrun: true });
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 40, overrun: true }); await expect(f.admit(b, 1)).rejects.toThrow();
+  });
+  it.each(["tenant", "memorySpace"])("retired %s blocks scoped actors while operator records full private overrun exactly once", async (kind) => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    f.db.seed("runtimeAuthTombstones", { tenantId: f.reference.tenantId, ...(kind === "memorySpace" ? { memorySpaceId: f.reference.memorySpaceId } : {}), resourceType: kind,
+      resourceId: kind === "tenant" ? f.reference.tenantId : f.reference.memorySpaceId, deletedAt: clock });
+    await expect(f.settle(a, "0.000150")).rejects.toThrow();
+    await expect(f.invoke("recover", { reference: f.reference, attemptId: a.attemptId, receiptCanonical: f.receipt(a, "0.000150") })).rejects.toThrow();
+    const args = { attemptId: a.attemptId, receiptCanonical: f.receipt(a, "0.000150", { privateResultCanonical: "secret-unparsed-private" }) };
+    expect(await f.invoke("reconcileDeploymentLiability", args)).toMatchObject({ settledCostUnits: 150, overrun: true, resultWithheld: true });
+    await f.invoke("reconcileDeploymentLiability", args);
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 150, reservedUnits: 0, overrun: true, activeConcurrency: 0 });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    expect(JSON.stringify(f.db.table("runtimeModelAttempts"))).not.toContain("secret-unparsed-private");
+  });
+  it("deployment liability route refuses live scopes and preserves retired unknown charge liability", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const args = { attemptId: a.attemptId, receiptCanonical: f.receipt(a, "0.000040", { costSource: "unavailable" }) };
+    await expect(f.invoke("reconcileDeploymentLiability", args)).rejects.toThrow();
+    f.db.seed("runtimeAuthTombstones", { tenantId: f.reference.tenantId, resourceType: "tenant", resourceId: f.reference.tenantId, deletedAt: clock });
+    expect(await f.invoke("reconcileDeploymentLiability", args)).toMatchObject({ state: "uncertain", replayAllowed: false });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, activeConcurrency: 0 });
+  });
+  it("all registrations are internal and their native argument schemas have no arbitrary payload escape", () => {
+    const names = ["ensureBudget", "installDeploymentPolicy", "provisionTenantPolicy", "resolve", "admit", "checkpoint", "markVisible", "settle", "recover", "reconcileDeploymentLiability", "releaseNotDispatched", "cancelBudget", "checkFallback", "admitFallback"] as const;
+    for (const name of names) {
+      const reg = ledger[name] as unknown as Registration; expect(reg.isInternal).toBe(true); expect(reg.isPublic).toBeUndefined();
+      expect(reg.exportArgs?.()).not.toContain('"type":"any"');
+    }
+  });
+  it("all five additive native tables have unique index field configurations", () => {
+    expect(Object.keys(schema.tables)).toHaveLength(31);
+    for (const definition of Object.values(schema.tables)) {
+      const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
+      expect(new Set(configurations).size).toBe(configurations.length);
+    }
+  });
+  it.each([["0", 0], ["0.0000001", 1], ["0.000001", 1], ["1.23456789", 1234568]])("rounds authoritative %s USD upward to %s microUSD", (usd, expected) => {
+    expect(ledger.costMicroUnits(usd)).toBe(expected);
+  });
+  it.each(["NaN", "Infinity", "-1", "1e4", "9007199254740992"])("rejects invalid or overflowing money %s", (value) => {
+    expect(() => ledger.costMicroUnits(value)).toThrow();
+  });
+});

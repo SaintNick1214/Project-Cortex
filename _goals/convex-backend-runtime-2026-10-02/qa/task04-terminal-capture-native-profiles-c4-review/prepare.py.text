@@ -1,0 +1,26 @@
+import pathlib,json,hashlib,shutil
+r=pathlib.Path('/workspace/Project-Cortex');qa=r/'_goals/convex-backend-runtime-2026-10-02/qa';sub=qa/'task04-terminal-capture-native-extension-preparation-c4';out=qa/'task04-terminal-capture-native-profiles-c4-review';work=r/'work/resume/task04-terminal-capture-native-profiles-c4-review';clone=work/'clone';clone.mkdir(exist_ok=True)
+h=lambda b:hashlib.sha256(b).hexdigest()
+def snap():
+ rows=[]
+ for base in [sub,sub/'regression']:
+  m=json.loads((base/'qa-manifest.json').read_text());actual=sorted(str(p.relative_to(base)) for p in base.rglob('*') if p.is_file() and p!=base/'qa-manifest.json');assert actual==[x['path'] for x in m['files']]
+  for row in m['files']:
+   p=base/row['path'];assert not p.is_symlink() and p.stat().st_nlink==1;b=p.read_bytes();assert len(b)==row['bytes'] and h(b)==row['sha256']
+  rows.append(dict(path=str(base.relative_to(r)),rows=len(actual),manifestSHA256=h((base/'qa-manifest.json').read_bytes()),freezeSHA256=h((base/'runtime-freeze.json').read_bytes()),reportSHA256=h((base/'report.md').read_bytes()) if (base/'report.md').exists() else None))
+ return rows
+(out/'subject-pre.json').write_text(json.dumps(snap(),indent=2))
+adapt=[]
+for suffix in ['', 'regression']:
+ base=sub/suffix;dest=clone/suffix;dest.mkdir(exist_ok=True)
+ freeze=json.loads((base/'runtime-freeze.json').read_text())
+ for name in freeze['operationalPaths']:
+  p=base/name;q=dest/name;q.parent.mkdir(parents=True,exist_ok=True);b=p.read_bytes();new=b
+  if name.startswith('scripts/'):
+   s=b.decode();s=s.replace("repo=resolve(root,'../../../..')",f"repo={json.dumps(str(r))}").replace("repo=resolve(root,'../../../../..')",f"repo={json.dumps(str(r))}")
+   s=s.replace('work/resume/task04-terminal-capture-native-extension-preparation-c4','work/resume/task04-terminal-capture-native-profiles-c4-review').replace('work/resume/task04-terminal-capture-native-regression-c4','work/resume/task04-terminal-capture-native-profiles-c4-review')
+   new=s.encode()
+  q.write_bytes(new)
+  adapt.append(dict(path=(suffix+'/' if suffix else '')+name,sourceSHA256=h(b),cloneSHA256=h(new),changed=b!=new))
+(out/'clone-adaptations.json').write_text(json.dumps(adapt,indent=2))
+shutil.copyfile(__file__,out/'prepare.py.text')

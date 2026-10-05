@@ -1,0 +1,66 @@
+{
+  "provenance": "Exact independently observed final review commands, recorded during evidence preservation; not rerun and not a new judge cycle.",
+  "checks": [
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/transcript-repair-judge/rejected.config.mjs --runInBand --json --outputFile work/resume/transcript-repair-judge/rejected330.json > work/resume/transcript-repair-judge/rejected330.txt 2>&1",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 1,
+      "rawText": "rejected330.txt",
+      "rawJestJson": "rejected330.json"
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/transcript-repair-judge/current.config.mjs --runInBand --json --outputFile work/resume/transcript-repair-judge/current330.json > work/resume/transcript-repair-judge/current330.txt 2>&1",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "current330.txt",
+      "rawJestJson": "current330.json"
+    },
+    {
+      "command": "CORTEX_UNAVAILABLE_RECEIPT=work/resume/transcript-repair-judge/positive48.json node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/transcript-repair-judge/native.config.mjs --runInBand --json --outputFile work/resume/transcript-repair-judge/native1124.json > work/resume/transcript-repair-judge/native1124.txt 2>&1",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "native1124.txt",
+      "rawJestJson": "native1124.json"
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/transcript-repair-judge/fresh.config.mjs --runInBand --json --outputFile work/resume/transcript-repair-judge/fresh451.json > work/resume/transcript-repair-judge/fresh451.txt 2>&1",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "fresh451.txt",
+      "rawJestJson": "fresh451.json"
+    },
+    {
+      "command": "npx --no-install tsc --noEmit -p work/resume/transcript-repair/tsconfig.json",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "types.txt"
+    },
+    {
+      "command": "npx --no-install eslint convex-dev/conversations.ts convex-dev/conversationShares.ts convex-dev/conversationSnapshots.ts convex-dev/factHistory.ts convex-dev/a2a.ts convex-dev/runtimeUnavailableAuth.ts tests/unit/runtimeUnavailableAuth/closure.test.ts",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "lint.txt"
+    },
+    {
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/resume-dependency-refinement-c2/inventory.mjs work/resume/transcript-repair-judge/inventory",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "inventory.txt"
+    },
+    {
+      "command": "node work/resume/transcript-repair-judge/verify.mjs",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "rawText": "verify.txt"
+    },
+    {
+      "command": "git diff --check -- convex-dev/conversations.ts convex-dev/conversationShares.ts convex-dev/conversationSnapshots.ts convex-dev/factHistory.ts convex-dev/a2a.ts convex-dev/runtimeUnavailableAuth.ts tests/unit/runtimeUnavailableAuth",
+      "cwd": "/workspace/Project-Cortex",
+      "observedExitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "note": "Observed tool exit0; no separate redirected text file was created."
+    }
+  ],
+  "setupCorrection": "Initial rejected config referenced nonexistent generated/server.ts and failed before discovering tests. Corrected to generated/server.js, then discovered330 and reproduced exactly2 original failures. Final raw logs are retained; overwritten initial setup output is described in original report rather than reconstructed."
+}

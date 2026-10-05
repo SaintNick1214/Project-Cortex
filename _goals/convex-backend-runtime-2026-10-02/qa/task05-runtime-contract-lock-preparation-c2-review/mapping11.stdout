@@ -1,0 +1,12 @@
+PASS 1: frozen flat publicv1 accepted; absent ->create, immutable selector, all text parts/order/exact Unicode preserved
+PASS 2: present conversationId maps existing without changing public fields
+PASS 3: detached internal user input does not mutate public payload
+PASS 4: object key order canonicalizes; substantive values and array boundaries retained
+PASS 5: same omitted-conversation retry stable identity/canonical payload; digest fits ledger max256
+PASS 6: changed agent/text/part order/boundaries retains identity but conflicts exact canonical payload
+PASS 7: distinct conversations/create and tenant/space/principal remain isolated under same original client key
+PASS 8: reference dedup retains resolved create conversation and changed payload cannot allocate second creation
+PASS 9: rejected nested old proposal and every undeclared rich/authority public field rejected
+PASS 10: invalid present ID/version/type/Unicode/empty/oversize parts denied
+PASS 11: prototype/accessor payload denied before evaluating untrusted getter
+{"assertedOutcomeGroups":11,"classification":"prospective standalone reference DTO validator/mapping/dedup, not product code or Convex native proof","skips":[],"native":"NOT_RUN"}

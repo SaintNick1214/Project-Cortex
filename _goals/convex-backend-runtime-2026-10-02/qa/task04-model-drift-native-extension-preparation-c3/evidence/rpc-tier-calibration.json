@@ -1,0 +1,17 @@
+{
+  "scope": "REVIEW_PROPOSED_RPC_TIER_EXACT_INPUT_READ_CANONICAL_HASH_WARM_FILESYSTEM_ONLY_NO_FREEZE_OR_NATIVE",
+  "rowsWithRepeatedChecks": 455,
+  "bytesPerCheck": 16763666,
+  "samplesMs": [
+    79.123874,
+    59.539878,
+    58.629165,
+    53.42420900000002,
+    52.742907
+  ],
+  "maxMs": 79.123874,
+  "projected2961CallsMs": 234285.790914,
+  "sourceFreeze": "NOT_CREATED_CALIBRATION_INPUT_LIST_ONLY",
+  "limitations": "Warm local measurements, not native network/SDK/server throughput. Deadlines fail closed; no max-latency success guarantee, no cache substituted for later native perRPC checks.",
+  "native": "NOT_RUN"
+}

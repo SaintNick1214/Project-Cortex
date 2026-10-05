@@ -1,0 +1,30 @@
+from pathlib import Path
+import shutil,json,hashlib,uuid
+repo=Path('/workspace/Project-Cortex');b=repo/'_goals/convex-backend-runtime-2026-10-02/qa';w=repo/'work/resume/task04-model-drift-native-preparation-c2';oldw=repo/'work/resume/task04-model-drift-native-preparation-c1';H=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for k in ['extension','regression','extra']:
+ old=b/f'task04-model-drift-native-{k}-preparation-c1';r=b/f'task04-model-drift-native-{k}-preparation-c2';shutil.copytree(old,r);fail=r/'failures/c1-operational-preimages';fail.mkdir(parents=True)
+ req=json.loads((old/'project-request.json').read_text());new=dict(req);new.update(operation=str(uuid.uuid4()),purpose=f'task04-model-drift-native-{k}-c2',projectName='cortex-task04-admission-disposable-'+uuid.uuid4().hex[:12],runId='admission-'+uuid.uuid4().hex,privateEnvironmentFile=f'work/backend-runtime/task04-model-drift-native-{k}-c2/deploy.env');new['projectSlug']=new['projectName']
+ replacements=[(str(old.relative_to(repo)),str(r.relative_to(repo))),('task04-model-drift-native-preparation-c1','task04-model-drift-native-preparation-c2'),(req['purpose'],new['purpose']),(req['runId'],new['runId']),(req['operation'],new['operation']),(req['projectName'],new['projectName']),(req['privateEnvironmentFile'],new['privateEnvironmentFile'])]
+ for p in list((r/'scripts').glob('*.mjs'))+[r/'fixture/convex/qualificationManifest.ts',r/'fixture/convex/qualificationPeer.ts']:
+  s=p.read_text();t=s
+  for a,c in replacements:t=t.replace(a,c)
+  if t!=s:shutil.copyfile(p,fail/p.name);p.write_text(t)
+ for n in ['project-request.json','profile.json','parent-input-contract.json','preservation-map.json','source-inventory.json','runtime-inputs.json']:
+  p=r/n;s=p.read_text();t=s
+  for a,c in replacements:t=t.replace(a,c)
+  if t!=s:shutil.copyfile(p,fail/n);p.write_text(t)
+ (r/'project-request.json').write_text(json.dumps(new,indent=2)+'\n')
+ hist=json.loads((r/'historical-preservation.json').read_text())
+ for name in [f'task04-model-drift-native-{x}-preparation-c1' for x in ['extension','regression','extra']]+['task04-model-drift-native-source-preparation-c1-review','task04-model-drift-native-parent-preparation-c1-review']:
+  p=b/name;manifest=p/'qa-manifest.json';hist['packets'].append({'path':str(p.relative_to(repo)),'manifest':'qa-manifest.json','manifestSHA256':H(manifest),'rows':len(json.loads(manifest.read_text())['files'])})
+ (r/'historical-preservation.json').write_text(json.dumps(hist,indent=2)+'\n')
+ (w/k/'parent-proof').mkdir(parents=True)
+ for name in ['actual-chain.mjs','adversarial-chain.mjs']:
+  src=oldw/k/'parent-proof'/name;s=src.read_text()
+  for a,c in replacements:s=s.replace(a,c)
+  (w/k/'parent-proof'/name).write_text(s)
+for p in oldw.iterdir():
+ if p.is_file() and p.suffix in ['.mjs','.py']:
+  s=p.read_text().replace('task04-model-drift-native-preparation-c1','task04-model-drift-native-preparation-c2').replace('-preparation-c1','-preparation-c2');(w/p.name).write_text(s)
+(w/'scope-incident.json').write_text(json.dumps({'incident':'Initial empty script mistakenly created one path outside own scratch then immediately moved into own C2 scratch before edits. No prior file existed, no source or evidence overwritten. All subsequent writes restricted owned C2 paths.','originalPath':'work/resume/task04-model-drift-native-preparation-c2-init.py','retainedPath':'initial-empty-script.py','bytes':0},indent=2)+'\n')
+print('three C2 copies + C1 whole-history references prepared')

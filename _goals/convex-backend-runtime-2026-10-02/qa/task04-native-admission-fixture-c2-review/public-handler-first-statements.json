@@ -1,0 +1,1580 @@
+[
+  {
+    "path": "a2a:send",
+    "source": "convex-dev/a2a.ts",
+    "line": 42,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "if (!args.from || args.from.trim() === \"\") { throw new Error(\"INVALID_AGENT_ID: 'from' agent ID is required\"); }"
+    ]
+  },
+  {
+    "path": "a2a:request",
+    "source": "convex-dev/a2a.ts",
+    "line": 258,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "if (!args.from || args.from.trim() === \"\") { throw new Error(\"INVALID_AGENT_ID: 'from' agent ID is required\"); }"
+    ]
+  },
+  {
+    "path": "a2a:broadcast",
+    "source": "convex-dev/a2a.ts",
+    "line": 396,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "if (!args.from || args.from.trim() === \"\") { throw new Error(\"INVALID_AGENT_ID: 'from' agent ID is required\"); }"
+    ]
+  },
+  {
+    "path": "a2a:getConversation",
+    "source": "convex-dev/a2a.ts",
+    "line": 654,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "if (!args.agent1 || args.agent1.trim() === \"\") { throw new Error(\"INVALID_AGENT_ID: 'agent1' is required\"); }"
+    ]
+  },
+  {
+    "path": "agents:get",
+    "source": "convex-dev/agents.ts",
+    "line": 13,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await agentAt(access, args.agentId, false);\n  if (row) await access.admit(resource(\"agents\", row), \"admin\"); await access.fence(); return row;\n})"
+  },
+  {
+    "path": "agents:exists",
+    "source": "convex-dev/agents.ts",
+    "line": 17,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await agentAt(access, args.agentId, false);\n  if (row) await access.admit(resource(\"agents\", row), \"admin\"); await access.fence(); return row !== null;\n})"
+  },
+  {
+    "path": "agents:list",
+    "source": "convex-dev/agents.ts",
+    "line": 21,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);\n  const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status).sort((a, b) => b.registeredAt - a.registeredAt);\n  await access.fence(); return rows.slice(offset, offset + limit);\n})"
+  },
+  {
+    "path": "agents:count",
+    "source": "convex-dev/agents.ts",
+    "line": 26,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status);\n  await access.fence(); return rows.length;\n})"
+  },
+  {
+    "path": "agents:register",
+    "source": "convex-dev/agents.ts",
+    "line": 30,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const a = access.authority;\n  const candidate = { agentId: args.agentId, tenantId: a.tenantId, memorySpaceId: a.memorySpaceId, ownerPrincipalId: a.principalId };\n  await access.admit(resource(\"agents\", candidate), \"admin\"); await conflict(access, \"agents\", args.agentId); const readable = await access.optionalRead(resource(\"agents\", candidate));\n  if (await agentAt(access, args.agentId, false)) throw new ConvexError(\"AGENT_ALREADY_REGISTERED\");\n  json(args.metadata); json(args.config); const now = Date.now();\n  const value = { ...candidate, name: args.name, description: args.description, metadata: args.metadata === undefined ? {} : args.metadata, config: args.config === undefined ? {} : args.config, status: \"active\" as const, registeredAt: now, updatedAt: now };\n  insertionShape(\"agents\", value); await access.fence(); const id = await effect(ctx, async () => await ctx.db.insert(\"agents\", value));\n  access.expect(`conflict:agents:${args.agentId}`, true); await inserted(access, \"agents\", id, value); await access.fence();\n  const created = readable ? await agentAt(access, args.agentId) : null; await access.fence();\n  return readable ? created : receipt(\"agents\", args.agentId);\n})"
+  },
+  {
+    "path": "agents:update",
+    "source": "convex-dev/agents.ts",
+    "line": 47,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await agentAt(access, args.agentId))!;\n  await access.admit(resource(\"agents\", row), \"admin\"); const readable = await access.optionalRead(resource(\"agents\", row)); const patch = changes(args);\n  await access.fence(); await effect(ctx, async () => await ctx.db.patch(\"agents\", row._id, patch)); access.expect(`agents:${row._id}`, { ...row, ...patch }); await access.fence();\n  return readable ? { ...row, ...patch } : receipt(\"agents\", args.agentId);\n})"
+  },
+  {
+    "path": "agents:updateMany",
+    "source": "convex-dev/agents.ts",
+    "line": 53,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); distinct(args.agentIds); const rows: Doc<\"agents\">[] = []; const patch = changes(args);\n  for (const id of args.agentIds) { const row = (await agentAt(access, id))!; await access.admit(resource(\"agents\", row), \"admin\"); rows.push(row); }\n  await access.fence();\n  for (const row of rows) { await effect(ctx, async () => await ctx.db.patch(\"agents\", row._id, patch)); access.expect(`agents:${row._id}`, { ...row, ...patch }); }\n  await access.fence(); return { updated: rows.length, agentIds: rows.map((row) => row.agentId) };\n})"
+  },
+  {
+    "path": "agents:unregister",
+    "source": "convex-dev/agents.ts",
+    "line": 60,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await agentAt(access, args.agentId))!;\n  await access.admit(resource(\"agents\", row), \"admin\"); await access.fence();\n  const now = Date.now(); const patch = { tombstonedAt: now, updatedAt: now };\n  await tombstone(ctx, resource(\"agents\", row), now); await effect(ctx, async () => await ctx.db.patch(\"agents\", row._id, patch));\n  access.expect(`agents:${row._id}`, { ...row, ...patch }); access.retire(resource(\"agents\", row), now);\n  await access.fence(); return { deleted: true, agentId: args.agentId };\n})"
+  },
+  {
+    "path": "agents:unregisterMany",
+    "source": "convex-dev/agents.ts",
+    "line": 68,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args);\n  if (args.agentIds) distinct(args.agentIds); if (!args.agentIds && !args.status) deny(\"INVALID_INPUT\");\n  const rows: Doc<\"agents\">[] = args.agentIds ? [] : (await all(access)).filter((row) => row.status === args.status);\n  if (args.agentIds) for (const id of args.agentIds) rows.push((await agentAt(access, id))!);\n  for (const row of rows) await access.admit(resource(\"agents\", row), \"admin\");\n  const readable = args.agentIds !== undefined || await access.readAll(rows.map((row) => resource(\"agents\", row))); await access.fence();\n  for (const row of rows) {\n    const now = Date.now(); const patch = { tombstonedAt: now, updatedAt: now };\n    await tombstone(ctx, resource(\"agents\", row), now); await effect(ctx, async () => await ctx.db.patch(\"agents\", row._id, patch));\n    access.expect(`agents:${row._id}`, { ...row, ...patch }); access.retire(resource(\"agents\", row), now);\n  }\n  await access.fence(); return { deleted: rows.length, ...(readable ? { agentIds: rows.map((row) => row.agentId) } : {}) };\n})"
+  },
+  {
+    "path": "agents:computeStats",
+    "source": "convex-dev/agents.ts",
+    "line": 93,
+    "start": "operation(ctx, \"query\", async () => {\n    const access = await RegistryAccess.open(ctx, \"read\", args);\n    const agent = (await agentAt(access, args.agentId))!;\n    await access.admit(resource(\"agents\", agent), \"admin\");\n    return await statisticsUnavailable(access);\n  })"
+  },
+  {
+    "path": "artifacts:create",
+    "source": "convex-dev/artifacts.ts",
+    "line": 84,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n    const now = Date.now();\n    const artifactId = args.artifactId ?? `art-${now}-${Math.random().toString(36).substring(2, 11)}`;\n    if (!artifactId) artifactDeny(\"INVALID_ARGUMENT\");\n    await operation.collision(artifactId);\n    const artifact = await operation.insert({\n      artifactId, tenantId: operation.authority.tenantId, memorySpaceId: operation.authority.memorySpaceId,\n      ownerPrincipalId: operation.authority.principalId, lastActorPrincipalId: operation.authority.principalId,\n      userId: operation.authority.userId, participantId: args.participantId,\n      kind: args.kind ?? \"text\", kindConfig: args.language || args.mimeType\n        ? { language: args.language, mimeType: args.mimeType } : undefined,\n      streamingState: args.streamingState ?? \"draft\", title: args.title ?? \"Untitled\",\n      description: args.description, content: args.content, conversationRef: args.conversationRef,\n      version: 1, versionPointer: 1, versionHistory: [{ version: 1, content: args.content,\n        title: args.title ?? \"Untitled\", timestamp: now, changedBy: operation.authority.principalId,\n        changeType: \"create\", changeSummary: \"Initial creation\" }],\n      metadata: args.metadata, tags: args.tags ?? [], createdAt: now, updatedAt: now,\n    });\n    return await operation.complete(artifact);\n  })"
+  },
+  {
+    "path": "artifacts:update",
+    "source": "convex-dev/artifacts.ts",
+    "line": 132,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Cannot update deleted artifacts\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    const now = Date.now();\n    const newContent = args.content ?? artifact.content;\n    const newTitle = args.title ?? artifact.title;\n\n    // Calculate new version number\n    const newVersion = nextArtifactVersion(artifact);\n\n    // If versionPointer is not at the end, we're branching from an undo state\n    // Discard all versions after versionPointer\n    let versionHistory = [...artifact.versionHistory];\n    if (artifact.versionPointer < artifact.version) {\n      // Truncate history to versionPointer position\n      versionHistory = versionHistory.filter(\n        (v) => v.version <= artifact.versionPointer,\n      );\n    }\n\n    // Add new version\n    const newVersionEntry = {\n      version: newVersion,\n      content: newContent,\n      title: newTitle,\n      timestamp: now,\n      changeType: \"update\" as const,\n      changedBy: operation.authority.principalId,\n      changeSummary: args.changeSummary,\n    };\n    versionHistory.push(newVersionEntry);\n\n    // Build kindConfig update if language or mimeType provided\n    const kindConfigUpdate =\n      args.language !== undefined || args.mimeType !== undefined\n        ? {\n            ...artifact.kindConfig,\n            language:\n              args.language !== undefined\n                ? args.language\n                : artifact.kindConfig?.language,\n            mimeType:\n              args.mimeType !== undefined\n                ? args.mimeType\n                : artifact.kindConfig?.mimeType,\n          }\n        : artifact.kindConfig;\n\n    // Update artifact\n    await operation.patch(artifact._id, {\n      content: newContent,\n      title: newTitle,\n      kindConfig: kindConfigUpdate,\n      version: newVersion,\n      versionPointer: newVersion, // Move pointer to new version\n      versionHistory,\n      metadata: args.metadata !== undefined ? args.metadata : artifact.metadata,\n      tags: args.tags !== undefined ? args.tags : artifact.tags,\n      updatedAt: now,\n    });\n\n    return await operation.complete(await ctx.db.get(artifact._id));\n  })"
+  },
+  {
+    "path": "artifacts:deleteArtifact",
+    "source": "convex-dev/artifacts.ts",
+    "line": 215,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n    await operation.tombstone(artifact);\n    return await operation.complete({ deleted: true, artifactId: artifact.artifactId,\n      deletedAt: Date.now(), permanent: true, restorable: false,\n      versionsPurged: 0, requestedHardDelete: args.hard === true });\n  })"
+  },
+  {
+    "path": "artifacts:undo",
+    "source": "convex-dev/artifacts.ts",
+    "line": 238,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Find the nearest previous version (handles gaps from purgeVersions)\n    // Sort versions below current pointer in descending order and take the first\n    const previousVersions = artifact.versionHistory\n      .filter((v) => v.version < artifact.versionPointer)\n      .sort((a, b) => b.version - a.version);\n\n    if (previousVersions.length === 0) {\n      throw new ConvexError(\"UNDO_NOT_AVAILABLE\");\n    }\n\n    const targetVersion = previousVersions[0];\n    const newPointer = targetVersion.version;\n\n    // Update artifact to reflect undone state\n    // Restore content, title, and fileRef from the target version\n    await operation.patch(artifact._id, {\n      content: targetVersion.content,\n      title: targetVersion.title,\n      fileRef: targetVersion.fileRef,\n      versionPointer: newPointer,\n      updatedAt: Date.now(),\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousVersion: artifact.versionPointer,\n      currentVersion: newPointer,\n      canUndo: canUndoTo(artifact.versionHistory, newPointer),\n      canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),\n    });\n  })"
+  },
+  {
+    "path": "artifacts:redo",
+    "source": "convex-dev/artifacts.ts",
+    "line": 288,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Find the nearest next version (handles gaps from purgeVersions)\n    // Sort versions above current pointer in ascending order and take the first\n    const nextVersions = artifact.versionHistory\n      .filter((v) => v.version > artifact.versionPointer)\n      .sort((a, b) => a.version - b.version);\n\n    if (nextVersions.length === 0) {\n      throw new ConvexError(\"REDO_NOT_AVAILABLE\");\n    }\n\n    const targetVersion = nextVersions[0];\n    const newPointer = targetVersion.version;\n\n    // Update artifact to reflect redone state\n    // Restore content, title, and fileRef from the target version\n    await operation.patch(artifact._id, {\n      content: targetVersion.content,\n      title: targetVersion.title,\n      fileRef: targetVersion.fileRef,\n      versionPointer: newPointer,\n      updatedAt: Date.now(),\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousVersion: artifact.versionPointer,\n      currentVersion: newPointer,\n      canUndo: canUndoTo(artifact.versionHistory, newPointer),\n      canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),\n    });\n  })"
+  },
+  {
+    "path": "artifacts:setStreamingState",
+    "source": "convex-dev/artifacts.ts",
+    "line": 341,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (!isValidTransition(artifact.streamingState, args.streamingState)) artifactDeny(\"INVALID_STATE_TRANSITION\");\n    const now = Date.now();\n    const previousState = artifact.streamingState;\n\n    await operation.patch(artifact._id, {\n      streamingState: args.streamingState,\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousState,\n      currentState: args.streamingState,\n      updatedAt: now,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:purgeVersions",
+    "source": "convex-dev/artifacts.ts",
+    "line": 437,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    if (safeInteger(args.keepLatest, 1) < 1) {\n      throw new ConvexError(\"KEEP_LATEST_MUST_BE_POSITIVE\");\n    }\n\n    const artifact = await operation.load(args.artifactId);\n\n    const totalVersions = artifact.versionHistory.length;\n\n    if (totalVersions <= args.keepLatest) {\n      return await operation.complete({\n        versionsPurged: 0,\n        versionsRemaining: totalVersions,\n      });\n    }\n\n    // Calculate how many to remove (from oldest, excluding v1)\n    const versionsToKeep = args.keepLatest;\n\n    // Keep latest N versions, but ALWAYS preserve version 1 (initial creation)\n    // and the version at versionPointer\n    const latestVersions = artifact.versionHistory.slice(-versionsToKeep);\n    const version1 = artifact.versionHistory.find((v) => v.version === 1);\n\n    // Start with latest versions\n    let prunedHistory = [...latestVersions];\n\n    // Always preserve version 1 if not already included\n    if (version1 && !prunedHistory.some((v) => v.version === 1)) {\n      prunedHistory = [version1, ...prunedHistory];\n    }\n\n    // Ensure version at versionPointer is preserved\n    const pointerVersionExists = prunedHistory.some(\n      (v) => v.version === artifact.versionPointer,\n    );\n    if (!pointerVersionExists) {\n      const pointerVersion = artifact.versionHistory.find(\n        (v) => v.version === artifact.versionPointer,\n      );\n      if (pointerVersion) {\n        // Insert pointer version in correct position (after v1 if present)\n        const insertIdx = prunedHistory.findIndex(\n          (v) => v.version > artifact.versionPointer,\n        );\n        if (insertIdx === -1) {\n          prunedHistory.push(pointerVersion);\n        } else {\n          prunedHistory.splice(insertIdx, 0, pointerVersion);\n        }\n      }\n    }\n\n    // Calculate actual versions purged\n    const versionsToRemove = totalVersions - prunedHistory.length;\n\n    await operation.patch(artifact._id, {\n      versionHistory: prunedHistory,\n    });\n\n    return await operation.complete({\n      versionsPurged: versionsToRemove,\n      versionsRemaining: prunedHistory.length,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:get",
+    "source": "convex-dev/artifacts.ts",
+    "line": 560,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Optionally exclude version history for smaller response\n    if (args.includeVersionHistory === false) {\n      return await operation.complete({\n        ...artifact,\n        versionHistory: [], // Omit for performance\n      });\n    }\n\n    return await operation.complete(artifact);\n  })"
+  },
+  {
+    "path": "artifacts:getByConversation",
+    "source": "convex-dev/artifacts.ts",
+    "line": 588,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    await operation.conversation({ conversationId: args.conversationId });\n    let artifacts = await operation.list();\n    artifacts = artifacts.filter((row) => row.conversationRef?.conversationId === args.conversationId);\n    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);\n    return await operation.complete(args.includeVersionHistory === false ? artifacts.map((row) => ({ ...row, versionHistory: [] })) : artifacts);\n  })"
+  },
+  {
+    "path": "artifacts:list",
+    "source": "convex-dev/artifacts.ts",
+    "line": 621,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    let artifacts = await operation.list();\n    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);\n    if (args.participantId !== undefined) artifacts = artifacts.filter((row) => row.participantId === args.participantId);\n    if (args.kind !== undefined) artifacts = artifacts.filter((row) => row.kind === args.kind);\n    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);\n    if (args.tags?.length) artifacts = artifacts.filter((row) => args.tags!.every((tag) => row.tags.includes(tag)));\n    if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }\n    if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }\n    if (args.updatedAfter !== undefined) { if (!Number.isFinite(args.updatedAfter)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.updatedAt > args.updatedAfter!); }\n    if (args.updatedBefore !== undefined) { if (!Number.isFinite(args.updatedBefore)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.updatedAt < args.updatedBefore!); }\n    const total = artifacts.length;\n    const limit = Math.min(safeInteger(args.limit ?? 50, 1), 100);\n    const offset = safeInteger(args.offset ?? 0);\n    const sortBy = args.sortBy ?? \"createdAt\";\n    artifacts.sort((left, right) => (left[sortBy] - right[sortBy]) * (args.sortOrder === \"asc\" ? 1 : -1));\n    const selected = artifacts.slice(offset, offset + limit);\n    return await operation.complete({ artifacts: args.includeVersionHistory === false\n      ? selected.map((row) => ({ ...row, versionHistory: [] })) : selected,\n      total, limit, offset, hasMore: offset + limit < total });\n  })"
+  },
+  {
+    "path": "artifacts:count",
+    "source": "convex-dev/artifacts.ts",
+    "line": 659,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    let artifacts = await operation.list();\n    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);\n    if (args.kind !== undefined) artifacts = artifacts.filter((row) => row.kind === args.kind);\n    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);\n    if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }\n    if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }\n    return await operation.complete(artifacts.length);\n  })"
+  },
+  {
+    "path": "artifacts:getVersion",
+    "source": "convex-dev/artifacts.ts",
+    "line": 681,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    safeInteger(args.version, 1);\n    const artifact = await operation.load(args.artifactId);\n\n    // Find version in history\n    const versionEntry = artifact.versionHistory.find(\n      (v) => v.version === args.version,\n    );\n\n    if (!versionEntry) {\n      return await operation.complete(null);\n    }\n\n    return await operation.complete({\n      artifactId: artifact.artifactId,\n      version: versionEntry.version,\n      content: versionEntry.content,\n      title: versionEntry.title,\n      timestamp: versionEntry.timestamp,\n      changeType: versionEntry.changeType,\n      changeSummary: versionEntry.changeSummary,\n      isCurrent: versionEntry.version === artifact.versionPointer,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:getHistory",
+    "source": "convex-dev/artifacts.ts",
+    "line": 721,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    const artifact = await operation.load(args.artifactId);\n\n    let history = [...artifact.versionHistory];\n\n    // Sort by version (asc = oldest first, desc = newest first)\n    const sortOrder = args.sortOrder || \"asc\";\n    if (sortOrder === \"desc\") {\n      history.reverse();\n    }\n\n    const total = history.length;\n    const offset = safeInteger(args.offset ?? 0);\n    const limit = Math.min(safeInteger(args.limit ?? 50, 1), 100); // Max 100\n\n    // Paginate\n    history = history.slice(offset, offset + limit);\n\n    // Add current version indicator\n    const enrichedHistory = history.map((v) => ({\n      ...v,\n      artifactId: artifact.artifactId,\n      isCurrent: v.version === artifact.versionPointer,\n    }));\n\n    return await operation.complete({\n      history: enrichedHistory,\n      total,\n      offset,\n      limit,\n      hasMore: offset + limit < total,\n      currentVersion: artifact.versionPointer,\n      latestVersion: artifact.version,\n      canUndo: canUndoTo(artifact.versionHistory, artifact.versionPointer),\n      canRedo: canRedoTo(artifact.versionHistory, artifact.versionPointer, artifact.version),\n    });\n  })"
+  },
+  {
+    "path": "artifacts:startStreaming",
+    "source": "convex-dev/artifacts.ts",
+    "line": 846,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state: only draft can start streaming\n    // Note: We explicitly check for draft rather than using isValidTransition because\n    // paused → streaming is valid for resumeStreaming, not startStreaming\n    if (artifact.streamingState !== \"draft\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    if (args.estimatedTotal !== undefined) safeInteger(args.estimatedTotal);\n    const now = Date.now();\n    const sessionId = generateSessionId();\n\n    // Update artifact to streaming state with metadata\n    // Note: streamingMetadata schema only supports: sessionId, startedAt, lastChunkAt,\n    // bytesReceived, estimatedTotal, errorMessage, errorCode\n    await operation.patch(artifact._id, {\n      streamingState: \"streaming\",\n      streamingMetadata: {\n        sessionId,\n        startedAt: now,\n        lastChunkAt: undefined,\n        bytesReceived: 0,\n        estimatedTotal: args.estimatedTotal,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      sessionId,\n      artifactId: args.artifactId,\n      startedAt: now,\n      previousState: artifact.streamingState,\n      currentState: \"streaming\",\n    });\n  })"
+  },
+  {
+    "path": "artifacts:appendContent",
+    "source": "convex-dev/artifacts.ts",
+    "line": 909,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Verify artifact is in streaming state\n    if (artifact.streamingState !== \"streaming\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches current streaming session\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    if (args.chunkIndex !== undefined) safeInteger(args.chunkIndex);\n    const now = Date.now();\n    const chunkBytes = new TextEncoder().encode(args.chunk).length;\n    const currentContent = artifact.content || \"\";\n    const newContent = currentContent + args.chunk;\n    const newBytesReceived = safeInteger((artifact.streamingMetadata?.bytesReceived || 0) + chunkBytes);\n\n    // Update artifact with appended content\n    await operation.patch(artifact._id, {\n      content: newContent,\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n        lastChunkAt: now,\n        bytesReceived: newBytesReceived,\n      },\n      updatedAt: now,\n    });\n\n    // Calculate progress percentage if estimatedTotal is available\n    const estimatedTotal = artifact.streamingMetadata?.estimatedTotal;\n    const progress =\n      estimatedTotal && estimatedTotal > 0\n        ? Math.min((newBytesReceived / estimatedTotal) * 100, 100)\n        : undefined;\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      chunkIndex: args.chunkIndex,\n      chunkBytes,\n      totalBytesReceived: newBytesReceived,\n      contentLength: newContent.length,\n      progress,\n      timestamp: now,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:pauseStreaming",
+    "source": "convex-dev/artifacts.ts",
+    "line": 982,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: streaming → paused\n    if (!isValidTransition(artifact.streamingState, \"paused\")) {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n\n    // Note: Schema streamingMetadata doesn't have pausedAt/pauseReason fields\n    // We transition to paused state but can't store pause metadata in schema\n    await operation.patch(artifact._id, {\n      streamingState: \"paused\",\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      pausedAt: now,\n      previousState: \"streaming\",\n      currentState: \"paused\",\n      bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,\n      contentPreserved: true,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:resumeStreaming",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1040,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state: only paused can be resumed\n    // Note: We explicitly check for paused rather than using isValidTransition because\n    // draft → streaming is valid for startStreaming, not resumeStreaming\n    if (artifact.streamingState !== \"paused\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n\n    // Note: Schema streamingMetadata doesn't have pausedAt/resumedAt/totalPauseDuration fields\n    await operation.patch(artifact._id, {\n      streamingState: \"streaming\",\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      resumedAt: now,\n      previousState: \"paused\",\n      currentState: \"streaming\",\n      bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:cancelStreaming",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1100,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state: only streaming or paused can be cancelled\n    // Note: We explicitly check states rather than using isValidTransition because\n    // final → draft is valid for update operations, but not for cancel operations\n    if (artifact.streamingState !== \"streaming\" && artifact.streamingState !== \"paused\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches - required for active streaming sessions\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (!currentSessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n    const preserveContent = args.preserveContent !== false; // Default true\n    const bytesReceived = artifact.streamingMetadata?.bytesReceived || 0;\n    const contentLength = artifact.content?.length || 0;\n\n    // Revert to draft, optionally preserving content\n    // Note: Schema streamingMetadata only supports limited fields\n    await operation.patch(artifact._id, {\n      streamingState: \"draft\",\n      content: preserveContent ? artifact.content : \"\",\n      streamingMetadata: {\n        // Clear active session data\n        sessionId: undefined,\n        startedAt: undefined,\n        lastChunkAt: undefined,\n        bytesReceived: undefined,\n        estimatedTotal: undefined,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      cancelledAt: now,\n      previousState: artifact.streamingState,\n      currentState: \"draft\",\n      contentPreserved: preserveContent,\n      bytesReceived,\n      contentLength: preserveContent ? contentLength : 0,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:finalizeStreaming",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1178,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: streaming → final\n    if (!isValidTransition(artifact.streamingState, \"final\")) {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n    const startedAt = artifact.streamingMetadata?.startedAt || now;\n    const totalDurationMs = now - startedAt;\n    const bytesReceived = artifact.streamingMetadata?.bytesReceived || 0;\n    const finalContent = artifact.content || \"\";\n    const createVersion = args.createVersion !== false; // Default true\n\n    // Prepare version history update if requested\n    let versionUpdate = {};\n    if (createVersion) {\n      const newVersion = nextArtifactVersion(artifact);\n\n      // Truncate history if user had undone (branching from undo state)\n      let versionHistory = [...artifact.versionHistory];\n      if (artifact.versionPointer < artifact.version) {\n        versionHistory = versionHistory.filter(\n          (v) => v.version <= artifact.versionPointer,\n        );\n      }\n\n      // Add new version entry for finalized streaming content\n      versionHistory.push({\n        version: newVersion,\n        content: finalContent,\n        title: artifact.title,\n        timestamp: now,\n        changeType: \"update\" as const,\n        changedBy: operation.authority.principalId,\n        changeSummary: args.changeSummary || \"Streaming content finalized\",\n      });\n\n      versionUpdate = {\n        version: newVersion,\n        versionPointer: newVersion,\n        versionHistory,\n      };\n    }\n\n    // Finalize: transition to final state, clear streaming metadata\n    // Note: Schema streamingMetadata only supports limited fields\n    await operation.patch(artifact._id, {\n      streamingState: \"final\",\n      streamingMetadata: {\n        // Clear all active streaming fields\n        sessionId: undefined,\n        startedAt: undefined,\n        lastChunkAt: undefined,\n        bytesReceived: undefined,\n        estimatedTotal: undefined,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      ...versionUpdate,\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      finalizedAt: now,\n      previousState: artifact.streamingState,\n      currentState: \"final\",\n      contentLength: finalContent.length,\n      bytesReceived,\n      totalDurationMs,\n      versionCreated: createVersion,\n      version: createVersion\n        ? nextArtifactVersion(artifact)\n        : artifact.versionPointer,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:setStreamingError",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1287,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: most states can go to error\n    if (!isValidTransition(artifact.streamingState, \"error\")) {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // If sessionId provided, verify it matches (optional for error state)\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (args.sessionId && currentSessionId && currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n\n    await operation.patch(artifact._id, {\n      streamingState: \"error\",\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n        errorCode: args.errorCode,\n        errorMessage: args.errorMessage,\n        errorAt: now,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousState: artifact.streamingState,\n      currentState: \"error\",\n      errorCode: args.errorCode,\n      errorMessage: args.errorMessage,\n      contentPreserved: true,\n      bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,\n    });\n  })"
+  },
+  {
+    "path": "artifacts:retryFromError",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1346,
+    "start": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: error → draft\n    if (artifact.streamingState !== \"error\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    const now = Date.now();\n    const clearContent = args.clearContent === true; // Default false\n\n    // Note: Schema streamingMetadata only supports limited fields\n    await operation.patch(artifact._id, {\n      streamingState: \"draft\",\n      content: clearContent ? \"\" : artifact.content,\n      streamingMetadata: {\n        // Clear all fields for retry\n        sessionId: undefined,\n        startedAt: undefined,\n        lastChunkAt: undefined,\n        bytesReceived: undefined,\n        estimatedTotal: undefined,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousState: \"error\",\n      currentState: \"draft\",\n      contentCleared: clearContent,\n      contentLength: clearContent ? 0 : (artifact.content?.length || 0),\n    });\n  })"
+  },
+  {
+    "path": "artifacts:completeArtifactUpload",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1496,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "let artifact;"
+    ]
+  },
+  {
+    "path": "artifacts:detachFile",
+    "source": "convex-dev/artifacts.ts",
+    "line": 1683,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "let artifact;"
+    ]
+  },
+  {
+    "path": "attachments:attach",
+    "source": "convex-dev/attachments.ts",
+    "line": 154,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "const now = Date.now();"
+    ]
+  },
+  {
+    "path": "attachments:remove",
+    "source": "convex-dev/attachments.ts",
+    "line": 206,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "const attachment = await lookupAttachment( ctx, args.attachmentId, args.tenantId, );"
+    ]
+  },
+  {
+    "path": "attachments:removeMany",
+    "source": "convex-dev/attachments.ts",
+    "line": 257,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "let deleted = 0;"
+    ]
+  },
+  {
+    "path": "attachments:get",
+    "source": "convex-dev/attachments.ts",
+    "line": 407,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "const attachment: Doc<\"attachments\"> | null = await lookupAttachment(ctx, args.attachmentId, args.tenantId);"
+    ]
+  },
+  {
+    "path": "attachments:list",
+    "source": "convex-dev/attachments.ts",
+    "line": 481,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "const limit = Math.min(args.limit || 50, 1000);"
+    ]
+  },
+  {
+    "path": "attachments:count",
+    "source": "convex-dev/attachments.ts",
+    "line": 602,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "let attachments;"
+    ]
+  },
+  {
+    "path": "attachments:getByIds",
+    "source": "convex-dev/attachments.ts",
+    "line": 657,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "const results: Array<any> = [];"
+    ]
+  },
+  {
+    "path": "attachments:getByConversation",
+    "source": "convex-dev/attachments.ts",
+    "line": 689,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "const limit = Math.min(args.limit || 50, 100);"
+    ]
+  },
+  {
+    "path": "attachments:getByMessage",
+    "source": "convex-dev/attachments.ts",
+    "line": 732,
+    "start": [
+      "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "let attachments = await ctx.db .query(\"attachments\") .withIndex(\"by_message\", (q) => q.eq(\"messageId\", args.messageId)) .collect();"
+    ]
+  },
+  {
+    "path": "contexts:create",
+    "source": "convex-dev/contexts.ts",
+    "line": 74,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const a = access.authority; await spaceAt(access, args.memorySpaceId, \"write\");\n  if (args.userId !== undefined && args.userId !== a.userId) deny();\n  const contextId = `ctx-${Date.now()}-${Math.random().toString(36).slice(2, 14)}`; const candidate = { contextId, tenantId: a.tenantId, memorySpaceId: args.memorySpaceId, ownerPrincipalId: a.principalId };\n  await access.admit(resource(\"contexts\", candidate)); await conflict(access, \"contexts\", contextId); const readable = await access.optionalRead(resource(\"contexts\", candidate));\n  if (await contextAt(access, contextId, false, false)) deny();\n  const parent = args.parentId ? (await contextAt(access, args.parentId, true))! : null;\n  if (parent && (await graph(access, parent)).size >= 100) deny(\"INVALID_INPUT\");\n  if (args.conversationRef) await conversationAt(access, args.conversationRef, args.memorySpaceId);\n  const now = Date.now(); const depth = parent ? integer(parent.depth + 1, 0, 100) : 0;\n  const value = { ...candidate, purpose: args.purpose, description: args.description, userId: a.userId,\n    parentId: parent?.contextId, rootId: parent?.rootId ?? contextId, depth, childIds: [], status: args.status ?? \"active\",\n    conversationRef: args.conversationRef, participants: [args.memorySpaceId], grantedAccess: [], data: args.data === undefined ? {} : args.data, metadata: {}, lastUpdatedBy: a.principalId, version: 1, previousVersions: [], createdAt: now, updatedAt: now };\n  const parentPatch = parent ? revision(parent, a.principalId, { childIds: [...parent.childIds, contextId] }) : null;\n  insertionShape(\"contexts\", value); await access.fence(); const id = await effect(ctx, async () => await ctx.db.insert(\"contexts\", value)); access.expect(`conflict:contexts:${contextId}`, true);\n  await inserted(access, \"contexts\", id, value);\n  if (parent && parentPatch) { await effect(ctx, async () => await ctx.db.patch(\"contexts\", parent._id, parentPatch)); access.expect(`contexts:${parent._id}`, { ...parent, ...parentPatch }); }\n  const created = readable ? await contextAt(access, contextId) : null; await access.fence(); return readable ? created : receipt(\"contexts\", contextId);\n})"
+  },
+  {
+    "path": "contexts:update",
+    "source": "convex-dev/contexts.ts",
+    "line": 93,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (args.completedAt !== undefined && (!Number.isFinite(args.completedAt) || args.completedAt < row.createdAt || args.completedAt > Date.now())) deny(\"INVALID_INPUT\");\n  return { ...(args.status === undefined ? {} : { status: args.status }), ...(args.description === undefined ? {} : { description: args.description }),\n    ...(args.data === undefined ? {} : { data: mergeValue(row.data, args.data) }), ...(args.completedAt === undefined && args.status !== \"completed\" ? {} : { completedAt: args.completedAt ?? Date.now() }) };\n})))"
+  },
+  {
+    "path": "contexts:addParticipant",
+    "source": "convex-dev/contexts.ts",
+    "line": 98,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (!args.participantId.trim()) deny(\"INVALID_INPUT\"); return { participants: row.participants.includes(args.participantId) ? row.participants : [...row.participants, args.participantId] };\n})))"
+  },
+  {
+    "path": "contexts:removeParticipant",
+    "source": "convex-dev/contexts.ts",
+    "line": 101,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => ({ participants: row.participants.filter((value) => value !== args.participantId) }))))"
+  },
+  {
+    "path": "contexts:grantAccess",
+    "source": "convex-dev/contexts.ts",
+    "line": 102,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (!args.scope.trim()) deny(\"INVALID_INPUT\"); return { grantedAccess: [...(row.grantedAccess ?? []).filter((grant) => grant.memorySpaceId !== args.targetMemorySpaceId), { memorySpaceId: args.targetMemorySpaceId, scope: args.scope, grantedAt: Date.now() }] };\n}, args.targetMemorySpaceId)))"
+  },
+  {
+    "path": "contexts:deleteContext",
+    "source": "convex-dev/contexts.ts",
+    "line": 143,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await contextAt(access, args.contextId))!;\n  const result = await deletion(ctx, access, [row], args.cascadeChildren ?? false, args.orphanChildren ?? false);\n  return { deleted: true, contextId: args.contextId, descendantsDeleted: result.deleting.size - 1, ...(result.readable && result.orphanedChildren.length ? { orphanedChildren: result.orphanedChildren } : {}) };\n})"
+  },
+  {
+    "path": "contexts:updateMany",
+    "source": "convex-dev/contexts.ts",
+    "line": 148,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const rows = await selected(access, args);\n  const data = args.updates.data; json(data);\n  const plans = rows.map((row) => ({ row, patch: revision(row, access.authority.principalId, {\n    ...(args.updates.status === undefined ? {} : { status: args.updates.status }), ...(data === undefined ? {} : { data: mergeValue(row.data, data) }),\n  }) }));\n  const readable = await access.readAll(rows.map((row) => resource(\"contexts\", row)));\n  await apply(ctx, access, plans); return { updated: rows.length, ...(readable ? { contextIds: rows.map((row) => row.contextId) } : {}) };\n})"
+  },
+  {
+    "path": "contexts:deleteMany",
+    "source": "convex-dev/contexts.ts",
+    "line": 157,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const rows = await selected(access, args);\n  const result = await deletion(ctx, access, rows, args.cascadeChildren ?? false, false, true); return { deleted: result.deleting.size, ...(result.readable ? { contextIds: [...result.deleting] } : {}) };\n})"
+  },
+  {
+    "path": "contexts:get",
+    "source": "convex-dev/contexts.ts",
+    "line": 161,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await contextAt(access, args.contextId, false, false);\n  if (!row) { await access.fence(); return null; } const nodes = await graph(access, row);\n  const conversation = args.includeConversation && row.conversationRef ? await conversationAt(access, row.conversationRef, row.memorySpaceId) : undefined;\n  await access.fence(); return args.includeChain ? { ...chain(nodes, row), ...(conversation ? { conversation, triggerMessages: conversation.messageAnchors } : {}) }\n    : { ...row, ...(conversation ? { conversation, triggerMessages: conversation.messageAnchors } : {}) };\n})"
+  },
+  {
+    "path": "contexts:list",
+    "source": "convex-dev/contexts.ts",
+    "line": 168,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);\n})"
+  },
+  {
+    "path": "contexts:search",
+    "source": "convex-dev/contexts.ts",
+    "line": 171,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);\n})"
+  },
+  {
+    "path": "contexts:count",
+    "source": "convex-dev/contexts.ts",
+    "line": 174,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = await selected(access, args); await access.fence(); return rows.length;\n})"
+  },
+  {
+    "path": "contexts:getChain",
+    "source": "convex-dev/contexts.ts",
+    "line": 177,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return chain(nodes, row);\n})"
+  },
+  {
+    "path": "contexts:getRoot",
+    "source": "convex-dev/contexts.ts",
+    "line": 180,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return nodes.get(row.rootId!)!;\n})"
+  },
+  {
+    "path": "contexts:getChildren",
+    "source": "convex-dev/contexts.ts",
+    "line": 183,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row);\n  const children = args.recursive ? descendants(nodes, row) : row.childIds.map((id) => nodes.get(id)!); await access.fence(); return children.filter((child) => args.status === undefined || child.status === args.status);\n})"
+  },
+  {
+    "path": "contexts:getByConversation",
+    "source": "convex-dev/contexts.ts",
+    "line": 187,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); if (!access.authority.memorySpaceId) deny();\n  await conversationAt(access, { conversationId: args.conversationId }, access.authority.memorySpaceId);\n  const rows = (await selected(access, args)).filter((row) => row.conversationRef?.conversationId === args.conversationId); await access.fence(); return rows;\n})"
+  },
+  {
+    "path": "contexts:findOrphaned",
+    "source": "convex-dev/contexts.ts",
+    "line": 192,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); await selected(access, args); await access.fence();\n  // Missing/malformed links deny rather than deliver a partially authorized orphan graph.\n  return [];\n})"
+  },
+  {
+    "path": "contexts:getVersion",
+    "source": "convex-dev/contexts.ts",
+    "line": 201,
+    "start": "operation(ctx, \"query\", async () => {\n  integer(args.version, 1, Number.MAX_SAFE_INTEGER); const versions = await historical(ctx, args); return versions.find((value) => value.version === args.version) ?? null;\n})"
+  },
+  {
+    "path": "contexts:getHistory",
+    "source": "convex-dev/contexts.ts",
+    "line": 204,
+    "start": "operation(ctx, \"query\", async () => (await historical(ctx, args)))"
+  },
+  {
+    "path": "contexts:getAtTimestamp",
+    "source": "convex-dev/contexts.ts",
+    "line": 205,
+    "start": "operation(ctx, \"query\", async () => {\n  if (!Number.isFinite(args.timestamp) || args.timestamp < 0) deny(\"INVALID_INPUT\");\n  const versions = await historical(ctx, args); return versions.reverse().find((value) => value.timestamp <= args.timestamp) ?? null;\n})"
+  },
+  {
+    "path": "contexts:exportContexts",
+    "source": "convex-dev/contexts.ts",
+    "line": 209,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = await selected(access, args); const exported: unknown[] = [];\n  for (const row of rows) exported.push({ contextId: row.contextId, memorySpaceId: row.memorySpaceId, purpose: row.purpose, status: row.status,\n    depth: row.depth, parentId: row.parentId, rootId: row.rootId, userId: row.userId, data: row.data, createdAt: row.createdAt, updatedAt: row.updatedAt,\n    ...(args.includeVersionHistory ? { version: row.version, previousVersions: row.previousVersions } : {}), ...(args.includeChain ? { chain: chain(await graph(access, row), row) } : {}) });\n  const csv = (value: string | number | undefined) => JSON.stringify(String(value ?? \"\"));\n  const data = args.format === \"json\" ? JSON.stringify(nativeJson(exported), null, 2) : [\"contextId,memorySpaceId,purpose,status,depth,parentId,userId,createdAt,updatedAt\",\n    ...rows.map((row) => [row.contextId, row.memorySpaceId, row.purpose, row.status, row.depth, row.parentId, row.userId, row.createdAt, row.updatedAt].map(csv).join(\",\"))].join(\"\\n\");\n  await access.fence(); return { format: args.format, data, count: rows.length, exportedAt: Date.now() };\n})"
+  },
+  {
+    "path": "conversationShares:create",
+    "source": "convex-dev/conversationShares.ts",
+    "line": 84,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversationShares:revoke",
+    "source": "convex-dev/conversationShares.ts",
+    "line": 148,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const share = await ctx.db .query(\"conversationShares\") .withIndex(\"by_shareId\", (q) => q.eq(\"shareId\", args.shareId)) .first();"
+    ]
+  },
+  {
+    "path": "conversationShares:get",
+    "source": "convex-dev/conversationShares.ts",
+    "line": 243,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const share = await ctx.db .query(\"conversationShares\") .withIndex(\"by_shareId\", (q) => q.eq(\"shareId\", args.shareId)) .first();"
+    ]
+  },
+  {
+    "path": "conversationShares:listByConversation",
+    "source": "convex-dev/conversationShares.ts",
+    "line": 279,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let shares = await ctx.db .query(\"conversationShares\") .withIndex(\"by_conversation\", (q) => q.eq(\"conversationId\", args.conversationId), ) .collect();"
+    ]
+  },
+  {
+    "path": "conversationShares:listByGranter",
+    "source": "convex-dev/conversationShares.ts",
+    "line": 318,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let shares = await ctx.db .query(\"conversationShares\") .withIndex(\"by_grantedBy\", (q) => q.eq(\"grantedBy\", args.grantedBy)) .collect();"
+    ]
+  },
+  {
+    "path": "conversationShares:checkAccess",
+    "source": "convex-dev/conversationShares.ts",
+    "line": 354,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const shares = await ctx.db .query(\"conversationShares\") .withIndex(\"by_conversation\", (q) => q.eq(\"conversationId\", args.conversationId), ) .collect();"
+    ]
+  },
+  {
+    "path": "conversationSnapshots:create",
+    "source": "convex-dev/conversationSnapshots.ts",
+    "line": 95,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId) ) .first();"
+    ]
+  },
+  {
+    "path": "conversationSnapshots:deleteSnapshot",
+    "source": "convex-dev/conversationSnapshots.ts",
+    "line": 183,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const snapshot = await ctx.db .query(\"conversationSnapshots\") .withIndex(\"by_snapshotId\", (q) => q.eq(\"snapshotId\", args.snapshotId)) .first();"
+    ]
+  },
+  {
+    "path": "conversationSnapshots:get",
+    "source": "convex-dev/conversationSnapshots.ts",
+    "line": 222,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const snapshot = await ctx.db .query(\"conversationSnapshots\") .withIndex(\"by_snapshotId\", (q) => q.eq(\"snapshotId\", args.snapshotId)) .first();"
+    ]
+  },
+  {
+    "path": "conversationSnapshots:listByConversation",
+    "source": "convex-dev/conversationSnapshots.ts",
+    "line": 249,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const snapshots = await ctx.db .query(\"conversationSnapshots\") .withIndex(\"by_conversation\", (q) => q.eq(\"conversationId\", args.conversationId) ) .collect();"
+    ]
+  },
+  {
+    "path": "conversationSnapshots:listByUser",
+    "source": "convex-dev/conversationSnapshots.ts",
+    "line": 278,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const snapshots = await ctx.db .query(\"conversationSnapshots\") .withIndex(\"by_createdBy\", (q) => q.eq(\"createdBy\", args.userId)) .collect();"
+    ]
+  },
+  {
+    "path": "conversations:create",
+    "source": "convex-dev/conversations.ts",
+    "line": 142,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "if (args.type === \"user-agent\") { // Check for collaborative (userIds) OR single user (userId) const hasUsers = args.participants.userIds && args.participants.userIds.length > 0; const hasSingleUser = !!args.participants.userId; if (!hasUsers && !hasSingleUser) { throw new ConvexError(\"user-agent conversations require userId or userIds\"); } // v0.17.0: User-agent conversations require agentId if (!args.participants.agentId) { throw new ConvexError( \"agentId is required. User-agent conversations require an agent participant.\", ); } } else if (args.type === \"agent-agent\") { if ( !args.participants.memorySpaceIds || args.participants.memorySpaceIds.length < 2 ) { throw new ConvexError( \"agent-agent conversations require at least 2 memorySpaceIds\", ); } }"
+    ]
+  },
+  {
+    "path": "conversations:setVisibility",
+    "source": "convex-dev/conversations.ts",
+    "line": 225,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:setMetadata",
+    "source": "convex-dev/conversations.ts",
+    "line": 268,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:checkAccess",
+    "source": "convex-dev/conversations.ts",
+    "line": 314,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:addMessage",
+    "source": "convex-dev/conversations.ts",
+    "line": 400,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:approveMessage",
+    "source": "convex-dev/conversations.ts",
+    "line": 465,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:rejectMessage",
+    "source": "convex-dev/conversations.ts",
+    "line": 530,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:deleteConversation",
+    "source": "convex-dev/conversations.ts",
+    "line": 593,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:deleteMany",
+    "source": "convex-dev/conversations.ts",
+    "line": 636,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "let conversations;"
+    ]
+  },
+  {
+    "path": "conversations:deleteByIds",
+    "source": "convex-dev/conversations.ts",
+    "line": 720,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "const deletedIds: string[] = [];"
+    ]
+  },
+  {
+    "path": "conversations:getMessage",
+    "source": "convex-dev/conversations.ts",
+    "line": 789,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:getMessagesByIds",
+    "source": "convex-dev/conversations.ts",
+    "line": 820,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:getOrCreate",
+    "source": "convex-dev/conversations.ts",
+    "line": 873,
+    "start": [
+      "await runtimeUnavailable(ctx, \"write\", args);",
+      "let existing = null;"
+    ]
+  },
+  {
+    "path": "conversations:findConversation",
+    "source": "convex-dev/conversations.ts",
+    "line": 984,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "if (args.type === \"user-agent\") { if (!args.userId) { return null; } // Find user-agent conversation in this memory space const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_memorySpace_user\", (q) => q .eq(\"memorySpaceId\", args.memorySpaceId!) .eq(\"participants.userId\", args.userId), ) .filter((q) => q.eq(q.field(\"type\"), \"user-agent\")) .first(); return conversation || null; }"
+    ]
+  },
+  {
+    "path": "conversations:get",
+    "source": "convex-dev/conversations.ts",
+    "line": 1050,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:list",
+    "source": "convex-dev/conversations.ts",
+    "line": 1126,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const limit = args.limit || 50;"
+    ]
+  },
+  {
+    "path": "conversations:count",
+    "source": "convex-dev/conversations.ts",
+    "line": 1324,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let conversations;"
+    ]
+  },
+  {
+    "path": "conversations:getHistory",
+    "source": "convex-dev/conversations.ts",
+    "line": 1375,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const conversation = await ctx.db .query(\"conversations\") .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", args.conversationId), ) .first();"
+    ]
+  },
+  {
+    "path": "conversations:search",
+    "source": "convex-dev/conversations.ts",
+    "line": 1452,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let allConversations;"
+    ]
+  },
+  {
+    "path": "conversations:exportConversations",
+    "source": "convex-dev/conversations.ts",
+    "line": 1591,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let conversations;"
+    ]
+  },
+  {
+    "path": "factHistory:getHistory",
+    "source": "convex-dev/factHistory.ts",
+    "line": 205,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const historyQuery = ctx.db .query(\"factHistory\") .withIndex(\"by_factId\", (q) => q.eq(\"factId\", args.factId)) .order(\"desc\");"
+    ]
+  },
+  {
+    "path": "factHistory:getEvent",
+    "source": "convex-dev/factHistory.ts",
+    "line": 231,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const event = await ctx.db .query(\"factHistory\") .withIndex(\"by_eventId\", (q) => q.eq(\"eventId\", args.eventId)) .first();"
+    ]
+  },
+  {
+    "path": "factHistory:getChangesByTimeRange",
+    "source": "convex-dev/factHistory.ts",
+    "line": 264,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let events = await ctx.db .query(\"factHistory\") .withIndex(\"by_memorySpace\", (q) => q.eq(\"memorySpaceId\", args.memorySpaceId), ) .order(\"desc\") .collect();"
+    ]
+  },
+  {
+    "path": "factHistory:countByAction",
+    "source": "convex-dev/factHistory.ts",
+    "line": 308,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "let events = await ctx.db .query(\"factHistory\") .withIndex(\"by_memorySpace\", (q) => q.eq(\"memorySpaceId\", args.memorySpaceId), ) .collect();"
+    ]
+  },
+  {
+    "path": "factHistory:getSupersessionChain",
+    "source": "convex-dev/factHistory.ts",
+    "line": 354,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const chain: any[] = [];"
+    ]
+  },
+  {
+    "path": "factHistory:getActivitySummary",
+    "source": "convex-dev/factHistory.ts",
+    "line": 403,
+    "start": [
+      "await runtimeUnavailable(ctx, \"read\", args);",
+      "const hours = args.hours ?? 24;"
+    ]
+  },
+  {
+    "path": "facts:store",
+    "source": "convex-dev/facts.ts",
+    "line": 90,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:update",
+    "source": "convex-dev/facts.ts",
+    "line": 181,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:deleteFact",
+    "source": "convex-dev/facts.ts",
+    "line": 268,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:supersede",
+    "source": "convex-dev/facts.ts",
+    "line": 299,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:updateInPlace",
+    "source": "convex-dev/facts.ts",
+    "line": 391,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:deleteMany",
+    "source": "convex-dev/facts.ts",
+    "line": 452,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:get",
+    "source": "convex-dev/facts.ts",
+    "line": 491,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:list",
+    "source": "convex-dev/facts.ts",
+    "line": 565,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:count",
+    "source": "convex-dev/facts.ts",
+    "line": 734,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:search",
+    "source": "convex-dev/facts.ts",
+    "line": 876,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:semanticSearch",
+    "source": "convex-dev/facts.ts",
+    "line": 1040,
+    "start": [
+      "const authority = await requireActionDataAuthority(ctx, args, \"read\");",
+      "await recheckActionDataAuthority(ctx, authority, \"read\");"
+    ]
+  },
+  {
+    "path": "facts:getHistory",
+    "source": "convex-dev/facts.ts",
+    "line": 1057,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:queryBySubject",
+    "source": "convex-dev/facts.ts",
+    "line": 1158,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:queryByRelationship",
+    "source": "convex-dev/facts.ts",
+    "line": 1322,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:exportFacts",
+    "source": "convex-dev/facts.ts",
+    "line": 1452,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:consolidate",
+    "source": "convex-dev/facts.ts",
+    "line": 1548,
+    "start": [
+      "const authority = await requireDataAuthority(ctx, args, \"write\");",
+      "const ids = [...new Set(args.factIds)];"
+    ]
+  },
+  {
+    "path": "facts:findByStructure",
+    "source": "convex-dev/facts.ts",
+    "line": 1597,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "facts:deleteByIds",
+    "source": "convex-dev/facts.ts",
+    "line": 1636,
+    "start": [
+      "const authority = await requireDataAuthority(ctx, {}, \"write\");",
+      "const rows: Doc<\"facts\">[] = [];"
+    ]
+  },
+  {
+    "path": "governance:setPolicy",
+    "source": "convex-dev/governance.ts",
+    "line": 317,
+    "start": [
+      "validatePolicy(args.policy);",
+      "const authority = await publicAdmin(ctx, { organizationId: args.policy.organizationId, memorySpaceId: args.policy.memorySpaceId }, args.tenantId);"
+    ]
+  },
+  {
+    "path": "governance:setAgentOverride",
+    "source": "convex-dev/governance.ts",
+    "line": 333,
+    "start": [
+      "validatePolicy(args.overrides, true);",
+      "if (args.overrides.memorySpaceId !== undefined && args.overrides.memorySpaceId !== args.memorySpaceId) workerDeny();"
+    ]
+  },
+  {
+    "path": "governance:getPolicy",
+    "source": "convex-dev/governance.ts",
+    "line": 353,
+    "start": [
+      "const authority = await publicAdmin(ctx, args.scope, args.tenantId);",
+      "const row = await activePolicy(ctx, authority);"
+    ]
+  },
+  {
+    "path": "governance:getTemplate",
+    "source": "convex-dev/governance.ts",
+    "line": 362,
+    "start": [
+      "const authority = await publicAdmin(ctx, args.scope, args.tenantId);",
+      "return scopedPolicy(COMPLIANCE_TEMPLATES[args.template] as Policy, authority);"
+    ]
+  },
+  {
+    "path": "governance:simulate",
+    "source": "convex-dev/governance.ts",
+    "line": 369,
+    "start": [
+      "validatePolicy(args.options, true);",
+      "const authority = await publicAdmin(ctx, { organizationId: args.options.organizationId, memorySpaceId: args.options.memorySpaceId }, args.tenantId);"
+    ]
+  },
+  {
+    "path": "governance:getComplianceReport",
+    "source": "convex-dev/governance.ts",
+    "line": 419,
+    "start": [
+      "const options = args.options ?? { period: { start: 0, end: Date.now() } };",
+      "const authority = await publicAdmin(ctx, { organizationId: options.organizationId, memorySpaceId: options.memorySpaceId }, args.tenantId);"
+    ]
+  },
+  {
+    "path": "governance:getEnforcementStats",
+    "source": "convex-dev/governance.ts",
+    "line": 430,
+    "start": [
+      "const options = args.options ?? { period: \"30d\" as const };",
+      "const authority = await publicAdmin(ctx, { organizationId: options.organizationId, memorySpaceId: options.memorySpaceId }, args.tenantId);"
+    ]
+  },
+  {
+    "path": "immutable:store",
+    "source": "convex-dev/immutable.ts",
+    "line": 23,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "actor(auth, args.userId);"
+    ]
+  },
+  {
+    "path": "immutable:get",
+    "source": "convex-dev/immutable.ts",
+    "line": 45,
+    "start": "await immutableRow(ctx, await authority(ctx, \"read\", args), args.type, args.id, \"read\")"
+  },
+  {
+    "path": "immutable:getVersion",
+    "source": "convex-dev/immutable.ts",
+    "line": 46,
+    "start": [
+      "const auth = await authority(ctx, \"read\", args);",
+      "const row = await immutableRow(ctx, auth, args.type, args.id, \"read\");"
+    ]
+  },
+  {
+    "path": "immutable:getHistory",
+    "source": "convex-dev/immutable.ts",
+    "line": 50,
+    "start": [
+      "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), args.type, args.id, \"read\");",
+      "return row ? versions(row) : [];"
+    ]
+  },
+  {
+    "path": "immutable:getAtTimestamp",
+    "source": "convex-dev/immutable.ts",
+    "line": 53,
+    "start": [
+      "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), args.type, args.id, \"read\");",
+      "const history = row ? versions(row).filter((version) => version.timestamp <= args.timestamp) : [];"
+    ]
+  },
+  {
+    "path": "immutable:list",
+    "source": "convex-dev/immutable.ts",
+    "line": 58,
+    "start": [
+      "const auth = await authority(ctx, \"read\", args);",
+      "let rows = filter(await candidates(ctx, \"immutable\", auth, \"read\"), args);"
+    ]
+  },
+  {
+    "path": "immutable:count",
+    "source": "convex-dev/immutable.ts",
+    "line": 64,
+    "start": "filter(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\"), args).length"
+  },
+  {
+    "path": "immutable:search",
+    "source": "convex-dev/immutable.ts",
+    "line": 65,
+    "start": [
+      "const rows = filter(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\"), args);",
+      "const needle = args.query.toLowerCase();"
+    ]
+  },
+  {
+    "path": "immutable:purge",
+    "source": "convex-dev/immutable.ts",
+    "line": 73,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const row = await immutableRow(ctx, auth, args.type, args.id, \"write\");"
+    ]
+  },
+  {
+    "path": "immutable:purgeMany",
+    "source": "convex-dev/immutable.ts",
+    "line": 80,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const rows = filter(await candidates(ctx, \"immutable\", auth, \"write\"), args);"
+    ]
+  },
+  {
+    "path": "immutable:purgeVersions",
+    "source": "convex-dev/immutable.ts",
+    "line": 89,
+    "start": [
+      "const keep = page(args.keepLatest, 1);",
+      "if (keep < 1) throw new ConvexError(\"INVALID_INPUT\");"
+    ]
+  },
+  {
+    "path": "memories:store",
+    "source": "convex-dev/memories.ts",
+    "line": 89,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:storePartialMemory",
+    "source": "convex-dev/memories.ts",
+    "line": 158,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:updatePartialMemory",
+    "source": "convex-dev/memories.ts",
+    "line": 215,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, {}, capability);"
+    ]
+  },
+  {
+    "path": "memories:finalizePartialMemory",
+    "source": "convex-dev/memories.ts",
+    "line": 250,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, {}, capability);"
+    ]
+  },
+  {
+    "path": "memories:deleteMemory",
+    "source": "convex-dev/memories.ts",
+    "line": 291,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:get",
+    "source": "convex-dev/memories.ts",
+    "line": 324,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:search",
+    "source": "convex-dev/memories.ts",
+    "line": 399,
+    "start": [
+      "const authority = await requireActionDataAuthority(ctx, args, \"read\");",
+      "rejectUnqualifiedEmbedding(args.embedding);"
+    ]
+  },
+  {
+    "path": "memories:list",
+    "source": "convex-dev/memories.ts",
+    "line": 437,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:count",
+    "source": "convex-dev/memories.ts",
+    "line": 472,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:update",
+    "source": "convex-dev/memories.ts",
+    "line": 506,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:getVersion",
+    "source": "convex-dev/memories.ts",
+    "line": 562,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:getHistory",
+    "source": "convex-dev/memories.ts",
+    "line": 605,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:deleteMany",
+    "source": "convex-dev/memories.ts",
+    "line": 651,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:deleteByIds",
+    "source": "convex-dev/memories.ts",
+    "line": 690,
+    "start": [
+      "const authority = await requireDataAuthority(ctx, {}, \"write\");",
+      "const rows: Doc<\"memories\">[] = [];"
+    ]
+  },
+  {
+    "path": "memories:exportMemories",
+    "source": "convex-dev/memories.ts",
+    "line": 761,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:updateMany",
+    "source": "convex-dev/memories.ts",
+    "line": 838,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:archive",
+    "source": "convex-dev/memories.ts",
+    "line": 888,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:restoreFromArchive",
+    "source": "convex-dev/memories.ts",
+    "line": 929,
+    "start": [
+      "const capability = \"write\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memories:getAtTimestamp",
+    "source": "convex-dev/memories.ts",
+    "line": 977,
+    "start": [
+      "const capability = \"read\" as const;",
+      "const authority = await requireDataAuthority(ctx, args, capability);"
+    ]
+  },
+  {
+    "path": "memorySpaces:register",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 20,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const a = access.authority;\n  const candidate = { memorySpaceId: args.memorySpaceId, tenantId: a.tenantId, ownerPrincipalId: a.principalId };\n  await access.admit(resource(\"memorySpaces\", candidate), \"admin\"); await conflict(access, \"memorySpaces\", args.memorySpaceId); const readable = await access.optionalRead(resource(\"memorySpaces\", candidate));\n  if (await spaceAt(access, args.memorySpaceId, \"write\", false)) throw new ConvexError(\"MEMORYSPACE_ALREADY_EXISTS\");\n  participants(args.participants ?? []); json(args.metadata); const now = Date.now();\n  const value = { ...candidate, name: args.name, type: args.type, participants: args.participants ?? [], metadata: args.metadata === undefined ? {} : args.metadata, status: \"active\" as const, createdAt: now, updatedAt: now };\n  insertionShape(\"memorySpaces\", value); await access.fence(); const id = await effect(ctx, async () => await ctx.db.insert(\"memorySpaces\", value));\n  access.expect(`conflict:memorySpaces:${args.memorySpaceId}`, true); await inserted(access, \"memorySpaces\", id, value); await access.fence();\n  const created = readable ? await spaceAt(access, args.memorySpaceId, \"read\") : null; await access.fence();\n  return readable ? created : receipt(\"memorySpaces\", args.memorySpaceId);\n})"
+  },
+  {
+    "path": "memorySpaces:update",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 32,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, () => ({\n  ...(args.name === undefined ? {} : { name: args.name }), ...(args.metadata === undefined ? {} : { metadata: args.metadata }), ...(args.status === undefined ? {} : { status: args.status }),\n}))))"
+  },
+  {
+    "path": "memorySpaces:addParticipant",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 35,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (row.participants.some((value) => value.id === args.participant.id)) deny(\"INVALID_INPUT\"); return { participants: [...row.participants, args.participant] };\n})))"
+  },
+  {
+    "path": "memorySpaces:removeParticipant",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 38,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => ({ participants: row.participants.filter((value) => value.id !== args.participantId) }))))"
+  },
+  {
+    "path": "memorySpaces:archive",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 39,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  const metadata = mergeValue(row.metadata, args.metadata);\n  return { status: \"archived\", metadata: record(metadata) ? { ...metadata, archivedAt: Date.now(), ...(args.reason === undefined ? {} : { archiveReason: args.reason }) } : metadata };\n})))"
+  },
+  {
+    "path": "memorySpaces:reactivate",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 43,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, () => ({ status: \"active\" }))))"
+  },
+  {
+    "path": "memorySpaces:updateParticipants",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 44,
+    "start": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  participants(args.add ?? []); distinct(args.remove ?? []);\n  if (args.add?.some((value) => args.remove?.includes(value.id))) deny(\"INVALID_INPUT\");\n  const retained = row.participants.filter((value) => !args.remove?.includes(value.id));\n  if (args.add?.some((value) => retained.some((previous) => previous.id === value.id))) deny(\"INVALID_INPUT\");\n  return { participants: [...retained, ...(args.add ?? [])] };\n})))"
+  },
+  {
+    "path": "memorySpaces:deleteSpace",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 51,
+    "start": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await spaceAt(access, args.memorySpaceId))!;\n  await access.admit(resource(\"memorySpaces\", row), \"admin\");\n  if (!args.reason.trim() || args.confirmId !== undefined && args.confirmId !== args.memorySpaceId || !args.cascade) deny(\"INVALID_INPUT\");\n  const scope = await ctx.db.query(\"runtimeAuthScopes\").withIndex(\"by_tenant_space\", (q) => q.eq(\"tenantId\", access.authority.tenantId).eq(\"memorySpaceId\", args.memorySpaceId)).unique();\n  if (!scope || scope.deletedAt !== undefined) deny(); const epoch = nextVersion(scope.epoch); const now = Date.now();\n  await access.fence();\n  // This mutation intentionally invalidates its own scope. All controls and canonical metadata are retained.\n  await tombstone(ctx, resource(\"memorySpaces\", row), now);\n  await effect(ctx, async () => await ctx.db.patch(\"runtimeAuthScopes\", scope._id, { epoch, deletedAt: now }));\n  await effect(ctx, async () => await ctx.db.patch(\"memorySpaces\", row._id, { tombstonedAt: now, status: \"archived\", updatedAt: now }));\n  access.expect(`memorySpaces:${row._id}`, { ...row, tombstonedAt: now, status: \"archived\", updatedAt: now });\n  access.retainTombstone(resource(\"memorySpaces\", row), now);\n  await access.fenceRetiredSpace({ memorySpaceId: args.memorySpaceId, epoch, deletedAt: now });\n  return { memorySpaceId: args.memorySpaceId, deleted: true as const, deletedAt: now, reason: args.reason,\n    cascade: { status: \"pending\" as const, conversationsDeleted: 0, memoriesDeleted: 0, factsDeleted: 0, totalBytes: 0 },\n    pendingTasks: [\"08\", \"12\", \"15\"] };\n})"
+  },
+  {
+    "path": "memorySpaces:get",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 69,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await spaceAt(access, args.memorySpaceId, \"read\", false); await access.fence(); return row;\n})"
+  },
+  {
+    "path": "memorySpaces:list",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 77,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);\n  const rows = filterRows(await spacesIn(access), args); const sort = args.sortBy ?? \"createdAt\";\n  rows.sort((a, b) => { const left = a[sort] ?? \"\"; const right = b[sort] ?? \"\"; return (left < right ? -1 : left > right ? 1 : 0) * (args.sortOrder === \"asc\" ? 1 : -1); });\n  await access.fence(); return { spaces: rows.slice(offset, offset + limit), total: rows.length, hasMore: offset + limit < rows.length, offset };\n})"
+  },
+  {
+    "path": "memorySpaces:count",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 83,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = filterRows(await spacesIn(access), args); await access.fence(); return rows.length;\n})"
+  },
+  {
+    "path": "memorySpaces:findByParticipant",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 86,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = filterRows(await spacesIn(access), { participant: args.participantId }); await access.fence(); return rows;\n})"
+  },
+  {
+    "path": "memorySpaces:search",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 89,
+    "start": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 50, 1); const search = args.query.toLowerCase();\n  const rows = filterRows(await spacesIn(access), args).filter((row) => [row.memorySpaceId, row.name ?? \"\", row.metadata === undefined ? \"\" : JSON.stringify(nativeJson(row.metadata))].some((value) => value.toLowerCase().includes(search)));\n  await access.fence(); return rows.slice(0, limit);\n})"
+  },
+  {
+    "path": "memorySpaces:getStats",
+    "source": "convex-dev/memorySpaces.ts",
+    "line": 113,
+    "start": "operation(ctx, \"query\", async () => {\n    const access = await RegistryAccess.open(ctx, \"read\", args);\n    await spaceAt(access, args.memorySpaceId, \"read\");\n    return await statisticsUnavailable(access);\n  })"
+  },
+  {
+    "path": "mutable:set",
+    "source": "convex-dev/mutable.ts",
+    "line": 23,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "actor(auth, args.userId);"
+    ]
+  },
+  {
+    "path": "mutable:update",
+    "source": "convex-dev/mutable.ts",
+    "line": 34,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const row = await mutableRow(ctx, auth, args.namespace, args.key, \"write\");"
+    ]
+  },
+  {
+    "path": "mutable:get",
+    "source": "convex-dev/mutable.ts",
+    "line": 41,
+    "start": "await mutableRow(ctx, await authority(ctx, \"read\", args), args.namespace, args.key, \"read\")"
+  },
+  {
+    "path": "mutable:exists",
+    "source": "convex-dev/mutable.ts",
+    "line": 42,
+    "start": "(await mutableRow(ctx, await authority(ctx, \"read\", args), args.namespace, args.key, \"read\")) !== null"
+  },
+  {
+    "path": "mutable:list",
+    "source": "convex-dev/mutable.ts",
+    "line": 43,
+    "start": [
+      "const rows = filter(await candidates(ctx, \"mutable\", await authority(ctx, \"read\", args), \"read\"), args);",
+      "rows.sort((a, b) => (args.sortBy === \"updatedAt\" ? a.updatedAt - b.updatedAt : a.key.localeCompare(b.key)) * (args.sortOrder === \"desc\" ? -1 : 1));"
+    ]
+  },
+  {
+    "path": "mutable:count",
+    "source": "convex-dev/mutable.ts",
+    "line": 48,
+    "start": "filter(await candidates(ctx, \"mutable\", await authority(ctx, \"read\", args), \"read\"), args).length"
+  },
+  {
+    "path": "mutable:deleteKey",
+    "source": "convex-dev/mutable.ts",
+    "line": 49,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const row = await mutableRow(ctx, auth, args.namespace, args.key, \"write\");"
+    ]
+  },
+  {
+    "path": "mutable:purgeMany",
+    "source": "convex-dev/mutable.ts",
+    "line": 54,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const rows = filter(await candidates(ctx, \"mutable\", auth, \"write\"), args);"
+    ]
+  },
+  {
+    "path": "mutable:purgeNamespace",
+    "source": "convex-dev/mutable.ts",
+    "line": 62,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const rows = filter(await candidates(ctx, \"mutable\", auth, \"write\"), args);"
+    ]
+  },
+  {
+    "path": "mutable:transaction",
+    "source": "convex-dev/mutable.ts",
+    "line": 72,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const state = new Map<string, { row: Doc<\"mutable\"> | null; value: unknown; deleted: boolean; read: Awaited<ReturnType<typeof readAuthority>> }>();"
+    ]
+  },
+  {
+    "path": "runtimeMemory:remember",
+    "source": "convex-dev/runtimeMemory.ts",
+    "line": 153,
+    "start": [
+      "const { authority, repository } = await memoryForegroundControl(ctx, { capability: \"write\", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });",
+      "return await rememberMemory({ repository, model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } }, { text: args.text, lineage: explicitSourceLineage(memoryScope(authority), args.requestId) });"
+    ]
+  },
+  {
+    "path": "runtimeMemory:recall",
+    "source": "convex-dev/runtimeMemory.ts",
+    "line": 158,
+    "start": [
+      "const { authority } = await memoryForegroundControl(ctx, { capability: \"read\", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });",
+      "return await recallMemory({ repository: createActionMemoryRepository(ctx, authority, \"read\"), model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } }, { text: args.text, requestId: args.requestId, limit: args.limit ?? 10 });"
+    ]
+  },
+  {
+    "path": "sessions:create",
+    "source": "convex-dev/sessions.ts",
+    "line": 21,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "actor(auth, args.userId);"
+    ]
+  },
+  {
+    "path": "sessions:get",
+    "source": "convex-dev/sessions.ts",
+    "line": 36,
+    "start": [
+      "const row = await sessionRow(ctx, await authority(ctx, \"read\", args), args.sessionId, \"read\");",
+      "if (!row) return null;"
+    ]
+  },
+  {
+    "path": "sessions:touch",
+    "source": "convex-dev/sessions.ts",
+    "line": 40,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const row = await sessionRow(ctx, auth, args.sessionId, \"write\");"
+    ]
+  },
+  {
+    "path": "sessions:end",
+    "source": "convex-dev/sessions.ts",
+    "line": 46,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const row = await sessionRow(ctx, auth, args.sessionId, \"write\");"
+    ]
+  },
+  {
+    "path": "sessions:endAll",
+    "source": "convex-dev/sessions.ts",
+    "line": 50,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const rows = filter(await candidates(ctx, \"sessions\", auth, \"write\"), args).filter((row) => row.status !== \"ended\");"
+    ]
+  },
+  {
+    "path": "sessions:list",
+    "source": "convex-dev/sessions.ts",
+    "line": 58,
+    "start": [
+      "const rows = filter(await candidates(ctx, \"sessions\", await authority(ctx, \"read\", args), \"read\"), args);",
+      "const offset = page(args.offset, 0);"
+    ]
+  },
+  {
+    "path": "sessions:count",
+    "source": "convex-dev/sessions.ts",
+    "line": 62,
+    "start": "filter(await candidates(ctx, \"sessions\", await authority(ctx, \"read\", args), \"read\"), args).length"
+  },
+  {
+    "path": "users:get",
+    "source": "convex-dev/users.ts",
+    "line": 7,
+    "start": [
+      "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "return row ? { id: row.id, data: row.data, version: row.version, createdAt: row.createdAt, updatedAt: row.updatedAt } : null;"
+    ]
+  },
+  {
+    "path": "users:list",
+    "source": "convex-dev/users.ts",
+    "line": 11,
+    "start": [
+      "const rows = (await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\")).filter((row) => row.type === \"user\");",
+      "return rows.slice(0, page(args.limit, rows.length)).map((row) => ({ id: row.id, data: row.data, version: row.version, createdAt: row.createdAt, updatedAt: row.updatedAt }));"
+    ]
+  },
+  {
+    "path": "users:count",
+    "source": "convex-dev/users.ts",
+    "line": 15,
+    "start": "(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\")).filter((row) => row.type === \"user\").length"
+  },
+  {
+    "path": "users:getVersion",
+    "source": "convex-dev/users.ts",
+    "line": 16,
+    "start": [
+      "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "page(args.version, 1);"
+    ]
+  },
+  {
+    "path": "users:getHistory",
+    "source": "convex-dev/users.ts",
+    "line": 21,
+    "start": [
+      "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "return row ? versions(row).reverse().map((version) => ({ version: version.version, data: version.data, timestamp: version.timestamp })) : [];"
+    ]
+  },
+  {
+    "path": "users:getAtTimestamp",
+    "source": "convex-dev/users.ts",
+    "line": 25,
+    "start": [
+      "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "const history = row ? versions(row).filter((value) => value.timestamp <= args.timestamp) : [];"
+    ]
+  },
+  {
+    "path": "users:exists",
+    "source": "convex-dev/users.ts",
+    "line": 31,
+    "start": "(await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\")) !== null"
+  },
+  {
+    "path": "users:deleteUserProfile",
+    "source": "convex-dev/users.ts",
+    "line": 32,
+    "start": [
+      "const auth = await authority(ctx, \"write\", args);",
+      "const row = await immutableRow(ctx, auth, \"user\", args.userId, \"write\");"
+    ]
+  }
+]

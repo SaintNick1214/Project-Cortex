@@ -1,0 +1,4 @@
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-product-review/setup-syntax-failure.py", line 13
+    paths.extend(str(p) for p in q.rglob('*') if p.is_file() and (p.suffix in ['.ts','.cjs','.mjs'] or p.name.startswith('jest.') or p.name=='freeze.json')))
+                                                                                                                                                            ^
+SyntaxError: unmatched ')'

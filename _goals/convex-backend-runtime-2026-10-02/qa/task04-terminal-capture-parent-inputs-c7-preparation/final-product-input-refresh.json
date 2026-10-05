@@ -1,0 +1,110 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-terminal-capture-parent-inputs-c7-preparation/final-refresh.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T07:37:22.519Z",
+  "status": "FINAL_STABLE_PRODUCT_INPUTS",
+  "profiles": [
+    {
+      "name": "extension",
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2",
+      "manifestSHA256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "manifestRows": 7696,
+      "runtimeFreezeSHA256": "f1e2d9017b26979081b61423bb81f9e9df40bfad5d3efaf8389c13b588e88d73",
+      "runtimeRows": 199,
+      "sourcePreflight": "PASS_PUBLIC_ONLY",
+      "completePreservation": "PASS_EXPLICIT_PUBLIC_DIGEST",
+      "wrongDigest": "EXPECTED_DENIAL",
+      "preserved": {
+        "files": 7696,
+        "historicalPackets": 4
+      },
+      "registrations": 287,
+      "public": 200,
+      "internal": 87,
+      "request": {
+        "version": 1,
+        "operation": "06900789-9427-4891-a0f9-91e062fa4b7b",
+        "purpose": "task04-terminal-capture-native-extension-c2",
+        "projectName": "cortex-task04-admission-disposable-a2321e5d95b8",
+        "projectSlug": "cortex-task04-admission-disposable-a2321e5d95b8",
+        "kind": "cloud",
+        "deploymentType": "dev",
+        "productionDeployment": false,
+        "sharedCiTarget": false,
+        "privateEnvironmentFile": "work/backend-runtime/task04-terminal-capture-native-extension-c2/deploy.env",
+        "provisionCalls": 5,
+        "provisionDeadlineMs": 150000,
+        "retirementCalls": 5,
+        "retirementDeadlineMs": 180000,
+        "runId": "admission-969cac44e6164e70a409e309ddd5fbce"
+      },
+      "externalSources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/parent-inputs-extension.mjs",
+          "bytes": 15496,
+          "sha256": "563632e9c91fbcd7f2613ed120172b93c5bdb4d2ce01c7e89629364bf638575f"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/current-inputs-extension.mjs",
+          "bytes": 5959,
+          "sha256": "541d9d4566d83169154f2c00be45ce9afb82a5d98895e1732c2dd9cfd7fd288e"
+        }
+      ]
+    },
+    {
+      "name": "regression",
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression",
+      "manifestSHA256": "5da01105a33b74144b4ffd3094f0d90845acf49df07faaa26b6581fbb0b2a248",
+      "manifestRows": 200,
+      "runtimeFreezeSHA256": "583efae3ba748abc787f919d0b5cd0dc1c9da027b21ec6f7958872b84a071dab",
+      "runtimeRows": 198,
+      "sourcePreflight": "PASS_PUBLIC_ONLY",
+      "completePreservation": "PASS_EXPLICIT_PUBLIC_DIGEST",
+      "wrongDigest": "EXPECTED_DENIAL",
+      "preserved": {
+        "files": 200,
+        "historicalPackets": 4
+      },
+      "registrations": 287,
+      "public": 200,
+      "internal": 87,
+      "request": {
+        "version": 1,
+        "operation": "08b467bf-d1dc-428a-ac17-b5850f6697ae",
+        "purpose": "task04-terminal-capture-native-regression-c2",
+        "projectName": "cortex-task04-admission-disposable-0aaa48ba1678",
+        "projectSlug": "cortex-task04-admission-disposable-0aaa48ba1678",
+        "kind": "cloud",
+        "deploymentType": "dev",
+        "productionDeployment": false,
+        "sharedCiTarget": false,
+        "privateEnvironmentFile": "work/backend-runtime/task04-terminal-capture-native-regression-c2/deploy.env",
+        "provisionCalls": 5,
+        "provisionDeadlineMs": 150000,
+        "retirementCalls": 5,
+        "retirementDeadlineMs": 180000,
+        "runId": "admission-0432bc95abb141d99972f0eb88cd9b4c"
+      },
+      "externalSources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/parent-inputs-regression.mjs",
+          "bytes": 15531,
+          "sha256": "3660b183ec83e189369f48d0e4234d5d44212ec1018def96af025ce3166c591e"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/current-inputs-regression.mjs",
+          "bytes": 5982,
+          "sha256": "7feea7cafd7b93a11e9dc5faa4a560dd914b96e0f14a2310eb2a2bc9761f2164"
+        }
+      ]
+    }
+  ],
+  "realPrivateReads": 0,
+  "realCredentials": 0,
+  "realNetwork": 0,
+  "realSigning": 0,
+  "native": "NOT_RUN"
+}

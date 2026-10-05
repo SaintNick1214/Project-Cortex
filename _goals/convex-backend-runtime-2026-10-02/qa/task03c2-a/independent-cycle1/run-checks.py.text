@@ -1,0 +1,17 @@
+from pathlib import Path
+import subprocess,json,time,datetime,concurrent.futures
+s=Path('/tmp/task03c2-a-review1-4cCdIR');c=s/'candidate';root=Path('/workspace/Project-Cortex')
+checks=[
+('scoped-types',['node','node_modules/typescript/bin/tsc','--project',str(s/'tsconfig.scoped.json'),'--noEmit','--pretty','false']),
+('owned-lint',['node','node_modules/eslint/bin/eslint.js','src/users/index.ts','src/sessions/index.ts','src/index.ts','tests/unit/runtimeWorkerClient/metadata-consumers.test.ts','tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts','--report-unused-disable-directives']),
+('root-types',['node','node_modules/typescript/bin/tsc','--noEmit','--pretty','false']),
+('backend-ES2021',['node','node_modules/typescript/bin/tsc','--project','convex-dev/tsconfig.json','--pretty','false']),
+('discovery',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(s/'jest.scoped.cjs'),'--listTests','--json','--runInBand']),
+('scoped-outcomes',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(s/'jest.scoped.cjs'),'--runInBand','--json','--outputFile='+str(s/'tests.json')]),
+]
+def run(item):
+    name,argv=item;start=time.time();p=subprocess.run(argv,cwd=c,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);(s/(name+'.log')).write_text(p.stdout)
+    return {'name':name,'argv':argv,'cwd':str(c),'exitCode':p.returncode,'seconds':round(time.time()-start,3),'log':str(s/(name+'.log'))}
+with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:results=list(executor.map(run,checks))
+(s/'commands.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps(results,indent=2))

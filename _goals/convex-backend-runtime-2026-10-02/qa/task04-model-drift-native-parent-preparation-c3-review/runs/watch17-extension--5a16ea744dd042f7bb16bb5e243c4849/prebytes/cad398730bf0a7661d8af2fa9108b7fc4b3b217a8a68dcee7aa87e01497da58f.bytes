@@ -1,0 +1,419 @@
+{
+  "version": 1,
+  "status": "SOURCE_BOUNDED_PREPARATION_PROPOSAL_PENDING_INDEPENDENT_REVIEW",
+  "scope": "SOURCE_SPECIFIC_NONPAID_ONLY_NATIVE_NOT_RUN",
+  "cases": [
+    {
+      "id": "known-drift-40",
+      "observedOfflineRpc": 36,
+      "observedOfflineCreated": 16,
+      "observedOfflinePeak": 16,
+      "proposedClientUpper": 36,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "known-drift-150",
+      "observedOfflineRpc": 36,
+      "observedOfflineCreated": 16,
+      "observedOfflinePeak": 16,
+      "proposedClientUpper": 36,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "unknown-drift-terminal",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "unknown-lifetime",
+      "observedOfflineRpc": 16,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "token-input-unknown",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "token-input-known40",
+      "observedOfflineRpc": 36,
+      "observedOfflineCreated": 16,
+      "observedOfflinePeak": 16,
+      "proposedClientUpper": 36,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "token-output-unknown",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "token-output-known40",
+      "observedOfflineRpc": 36,
+      "observedOfflineCreated": 16,
+      "observedOfflinePeak": 16,
+      "proposedClientUpper": 36,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "refinement-add-absent-model",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "refinement-add-absent-tokens",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "captured-parity-settle",
+      "observedOfflineRpc": 29,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "captured-parity-recover",
+      "observedOfflineRpc": 29,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "captured-parity-operator",
+      "observedOfflineRpc": 30,
+      "observedOfflineCreated": 16,
+      "observedOfflinePeak": 16,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 17,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "defensive-initial-model-pending",
+      "observedOfflineRpc": 32,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": [
+        "initial observation",
+        "final observation",
+        "attempt.actualModel only"
+      ]
+    },
+    {
+      "id": "defensive-initial-model-attached",
+      "observedOfflineRpc": 32,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": [
+        "initial observation",
+        "final observation",
+        "attempt.actualModel only"
+      ]
+    },
+    {
+      "id": "defensive-initial-token-pending",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "defensive-initial-token-attached",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "defensive-final-model-pending",
+      "observedOfflineRpc": 32,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": [
+        "initial observation",
+        "final observation",
+        "attempt.actualModel only"
+      ]
+    },
+    {
+      "id": "defensive-final-model-attached",
+      "observedOfflineRpc": 32,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": [
+        "initial observation",
+        "final observation",
+        "attempt.actualModel only"
+      ]
+    },
+    {
+      "id": "defensive-final-token-pending",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "defensive-final-token-attached",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "gateway-native-drift-40",
+      "observedOfflineRpc": 20,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "gateway-native-drift-150",
+      "observedOfflineRpc": 20,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "gateway-native-healthy-attachment",
+      "observedOfflineRpc": 21,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "late-drift-refinement-revoked-cancelled",
+      "observedOfflineRpc": 23,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    },
+    {
+      "id": "late-drift-refinement-original-window",
+      "observedOfflineRpc": 26,
+      "observedOfflineCreated": 15,
+      "observedOfflinePeak": 15,
+      "proposedClientUpper": 32,
+      "allocatedCreatedUpper": 16,
+      "staticSourceUpperStatus": "NEEDS_INDEPENDENT_ENUMERATION_REVIEW",
+      "unconditionalSubarms": []
+    }
+  ],
+  "capsUnchanged": {
+    "rpc": 3000,
+    "created": 465,
+    "live": 320,
+    "journalRows": 6000,
+    "journalBytes": 8388608,
+    "processes": 6,
+    "groups": 2,
+    "cliMs": 120000,
+    "rpcMs": 12000,
+    "qualificationMs": 1200000,
+    "driverMs": 1440000
+  },
+  "strongerProposedUpper": {
+    "cases": 848,
+    "securityIncluding5HTTPPeer": 2044,
+    "emptyIncludingFinally": 20,
+    "publication": 2,
+    "syntheticFinalRecovery": 10,
+    "nested": 37,
+    "total": 2961,
+    "created": 444,
+    "live": 32,
+    "cleanupCalls": 30,
+    "journalRows": 4800,
+    "serializedJournalLine": 1024,
+    "journalBytesWithReserves": 7143424,
+    "rpcResidual": 39,
+    "managementEvidenceFiles": 14,
+    "sourceJointJournalRows": 4776
+  },
+  "sourceDerivation": {
+    "security": "4 seed/positive-control + 200*(7 denials+2 snapshots) +87*2 internal +5*4*3 maintenance +1peerCounter=2039 native client; add5HTTP conservative=2044",
+    "empty": "seed+fabricate+preimage+bind-denial+postimage=5; 2install arms*(preimage+denial+postimage)=6; finally2*(snapshot+cleanup+snapshot)=6:17 <=20",
+    "finally": "synthetic at most2 triples=6 <=10; EMPTY finally already within20. Exception stops further cases; no catch retries operations",
+    "cleanup": "Hard shared cleanup ticket maximum tightened to40 (outer original profiles unchanged).26 postcase +2 synthetic finally +2 EMPTY finally=30. Cleanup errors propagate and stop next case; each native RPC reserves prior ticket; no reset.",
+    "rows": "26 allocated profiles total417 including operator17; security15; EMPTY12:444. Per-scenario allocation is one-shot; observed counts are independent evidence and do not prove these source maxima",
+    "nested": "Third profile calls4 public actions under7 denied identities. facts:semanticSearch and memories:search call runtimeDataAuth.requireActionDataAuthority\u2192ctx.runQuery(runtimeAuth:authorize) before work; runtimeMemory:remember/recall call memoryForegroundControl\u2192ctx.runQuery(runtimeAuth:authorize) before work. Each denied identity reaches at most1 such nested call; failed authority stops body:4*7=28. External attempts to internal handlers never invoke their bodies. Five peer denials reject before runMutation (four invalid secrets; genuine secret uses invalid foreign fixedRun). Gateway ROOT adapter calls are separate accounted client s.rpc ports,0nested. No newprofile rollback/fault calls. Conservative original37 remains28auth+1parent+8fault reservations;9unused do not create retry reserve.",
+    "journal": "Concrete source journal forms at most4762 including old fixed28 reserves; management adds14 finite1024 files, joint4776<=4800. Native journal allocation4786 plus14management slots retains4800*1024+2211840+16384=7143424. Hard6000/8MiB unchanged, no observed-slack-as-proof.",
+    "committedRows": "seed7 (principal1,membership1,scopes2,grants2,source1) + install4 (policies2,qualifications2) + original bind2 (tenant1,run1) + original admission2 (operation1,attempt1)=15. Remaining capture/settle/recover/checkpoint/attach/renew/revoke/control paths patch only. Preferred stronger NEW same-window bind adds1 run=16; denied successor/child/fallback cannot reach inserts under original overrun/capacity checks. Operator tenant-delete adds1 tombstone=16<=17. Gateway uses same one-admission creation path. Security2seed7+mutable1=15. EMPTYseed7+fabricated4=11<=12. No intermediate state exceeding created allocation; cleanup deletes all owned rows before next scenario.",
+    "gateway": "Exact Gateway source doGenerate enters ROOTledger.resolve/admit/checkpoint/capture; finite supported synthetic complete response enforces one native doGenerate/capture. Healthy path adds one real attach; no stream/markVisible work in this profile. Every port calls same s.rpc pre-dispatch source/case/shared native ticket guard; all duplicate/checkpoint/replay witnesses share it. Finally lifecycle.cancel/complete awaited; success asserts pendingWork all0 and nativeCalls=1. Source path grammar binds20/21 including post3. Exceptions abort remaining scenarios and shared finally accounts <=6cleanup RPC.",
+    "clientSequence": "evidence/static-path-plan.json is manually source-expanded finite branch/helper sequence, exact per-case20..36 including post3; independently corroborated by actual registered-handler offline traces. It does not replace ceilings by observed slack. Conditional model defensive subarm is selected by fixed case identity and unconditional within all four model variants; both pending/attached covered. Private replay tested before closure while flagsfalse/private bytes exist."
+  },
+  "unresolved": [
+    "Independent EXHAUSTIVE branch/assertion/create/error/finally/nested/graph/journal/source audit and fresh final parent review pending",
+    "Actual ROOT private binding/pin not supplied or certified",
+    "Warm expanded tier and848.5s schedule cannot guarantee20m; failure remains failclosed",
+    "Child collector overflow loses bytes and blocks acceptance"
+  ],
+  "evidence": {
+    "offlineCandidates": "evidence/final-source-outcomes.json",
+    "journalEncoding": "evidence/journal-budget-proof.json"
+  },
+  "native": "NOT_RUN",
+  "sourceEvidence": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/cases.mjs",
+      "sha256": "8145db2d46afc8956bfd7e23dac0e7804c04020eefa5dac97486e5b0cfe4d2ce"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/driver.mjs",
+      "sha256": "35c6d06e48e36f44d776ae0fb7f685d7ba8c14f17fcf498630b4a9dc6a46ce7c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/gateway-native-composition.mjs",
+      "sha256": "ac1d91e6058dc35e8c82d2bfba92569e366bcd9aa0d09bd9f2f7d7baf8075441"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/guard.mjs",
+      "sha256": "473e6ae7d6647277aac4369377c77f2d9108e9aaa1dfa207ed862ad47a964261"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710"
+    },
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/fixture/convex/qualificationPeer.ts",
+      "sha256": "b1b01c1bc9c241e8055438187f53fdd43fba3ec88938903b809411610c18ed99"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/peer.mjs",
+      "sha256": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/publication.mjs",
+      "sha256": "dd195975bce659e82ac54aa1fce71a9e75499bb1e97c397aebb4b6812fd5bb7a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/provision.mjs",
+      "sha256": "7c25d54f456bacbf9e6caad181a2ab79b4f0dbe8fab3908c5c3e53915e96f522"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/retire.mjs",
+      "sha256": "d9c3b24abc3afb715f842dd7122827f8f4c1d582662145b18ddddd890e36e304"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/management-transport.mjs",
+      "sha256": "aca98de01dedc1d6447d3aee5578a600caa62660d28dca47a0001c396ab74d04"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/bounded-response.mjs",
+      "sha256": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/publication-artifacts.mjs",
+      "sha256": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/task04-native-c8-parent-inputs.mjs",
+      "sha256": "423fdd99b4801c4740fa39d6acf3b14cdf93df8f129e6c2819fc1ef20914bbdd"
+    }
+  ],
+  "acceptedCorrection": {
+    "decision": "ACCEPT_DESIGN_CORRECTION_ONLY4.2",
+    "selected": "STRONGER",
+    "operative": "INSTALLED_PENDING_FRESH_SOURCE_PREPARATION_REVIEW",
+    "sourceAcceptance": "NOT_CLAIMED"
+  },
+  "runtimeValidation": {
+    "inventory": "dependency-tiers.json",
+    "sourceFull": "runner-dependency-inventory.json",
+    "fullDefault": true,
+    "rpcFreshConsumedGraph": true,
+    "firstBaseline": "FULL externally pinned independent review freeze+complete manifest; immutable reviewed binding",
+    "targetPrivateEnvPublication": "eachRPC strongcanonical hash compared initial, nonsecret diagnostics",
+    "calibration": "evidence/rpc-tier-calibration.json",
+    "strictPreimage": "evidence/source-calibration.json"
+  }
+}

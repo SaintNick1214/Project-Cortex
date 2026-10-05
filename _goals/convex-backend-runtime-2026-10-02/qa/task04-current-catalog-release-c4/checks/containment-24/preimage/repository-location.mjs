@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {inspectAncestors} from './containment.mjs';
+const base=path.dirname(fileURLToPath(import.meta.url));
+assert.equal(path.basename(base),'task04-current-catalog-release-c4','FIXED_PACKET_ANCESTRY');
+assert.equal(path.basename(path.dirname(base)),'qa','FIXED_QA_ANCESTRY');
+assert.equal(path.basename(path.resolve(base,'../..')),'convex-backend-runtime-2026-10-02','FIXED_GOAL_ANCESTRY');
+assert.equal(path.basename(path.resolve(base,'../../..')),'_goals','FIXED_GOALS_ANCESTRY');
+inspectAncestors(base);
+export const repositoryRoot=path.resolve(base,'../../../..');
+inspectAncestors(repositoryRoot);

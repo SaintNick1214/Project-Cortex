@@ -1,0 +1,117 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.7s | 111/111 passed | /tests/unit/runtimeEndpointAuth/facts.test.ts
+  ✅     2.9s | 143/143 passed | /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+  ✅     2.8s | 108/108 passed | /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+  ✅     2.2s | 366/366 passed | /tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+  ✅     2.1s | 117/117 passed | /tests/unit/runtimeEndpointAuth/memory.test.ts
+  ✅     1.7s | 99/99 passed | /tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+  ✅     1.5s | 7/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ✅     1.5s | 66/66 passed | /tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts
+  ✅     1.5s | 99/99 passed | /tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+  ✅     1.3s | 10/10 passed | /tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+  ✅     1.3s | 36/36 passed | /tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+  ✅     1.1s | 36/36 passed | /tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts
+  ✅     0.5s | 222/222 passed | /tests/unit/runtimeRegistryAuth/registered.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.38s ( 1.4%) - portable inventory, actual schema exports and preserved sources ordinary inventory reproduction writes only owned temporary outputs and always removes them
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 2. [32m✓[0m    0.20s ( 0.8%) - cycle2 F2 resulting graph bound before child insertion 99 nodes with READ=false validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 3. [32m✓[0m    0.19s ( 0.7%) - cycle2 F2 resulting graph bound before child insertion 99 nodes with READ=true validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 4. [32m✓[0m    0.06s ( 0.2%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.2%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.2%) - cycle2 F2 resulting graph bound before child insertion 100 nodes with READ=false validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.2%) - cycle2 F2 resulting graph bound before child insertion 100 nodes with READ=true validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.2%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.1%) - cycle3 original omitted-selector admission cannot prune a corrupt control lookup spaces agents:update native tenantTombstone ambiguity stops before selecting any peer or effect
+    /tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+
+10. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure editing an extracted fact (explicit sourceRef=true) creates a dedicated assertion without changing the originating memory or siblings
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses native (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } values survive create/edit/get and their scoped metadata paths
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+12. [32m✓[0m    0.02s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses native (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } values survive create/edit/get and their scoped metadata paths
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+13. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure current and audited historical reads reject canonical hash corruption and edits cannot repair it
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+14. [32m✓[0m    0.02s ( 0.1%) - mutation collision and serializable-data preflight native-invalid bulk config denies before all effects
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - cycle2 F1 independent READ before every stored identifier output agent status under none READ returns only eligible identifiers or a count receipt
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure store constrains actual canonical selection and mutation with a foreign same-ID row inserted first
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure actual mutation fixture rolls back all rows and tombstones on a later write failure
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - cycle3 strict admission cannot prune malformed controls into another scope tenants memorySpaces:get expired first grant leaves the sole eligible scope available
+    /tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+
+19. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure current and audited historical reads reject canonical normalization corruption and edits cannot repair it
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+20. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure editing an extracted fact (explicit sourceRef=false) creates a dedicated assertion without changing the originating memory or siblings
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.25s (4.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      26.55s
+  Test suites:        13
+  Individual tests:   1220
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 13
+════════════════════════════════════════════════════════════════════════════════
+

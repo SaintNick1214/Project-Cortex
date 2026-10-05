@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-04T13:19:42.404881+00:00",
+  "argv": [
+    "python",
+    "-c",
+    "import pathlib,json,hashlib; R=pathlib.Path.cwd(); pairs=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-supported-money-source-design-c1\",\"qa-seal.json\"),(\"work/resume/task04-supported-money-source-design-c1\",\"scratch-seal.json\")];\nfor root,seal in pairs:\n p=R/root; m=json.loads((p/seal).read_text()); actual={str(f.relative_to(p)) for f in p.rglob(\"*\") if f.is_file() and f!=p/seal}; entries={x[\"path\"] for x in m[\"files\"]}; bad=[x[\"path\"] for x in m[\"files\"] if hashlib.sha256((p/x[\"path\"]).read_bytes()).hexdigest()!=x[\"sha256\"] or (p/x[\"path\"]).stat().st_size!=x[\"bytes\"]]; print(root,\"seal\",hashlib.sha256((p/seal).read_bytes()).hexdigest(),\"files\",len(actual),\"missing\",sorted(entries-actual),\"extra\",sorted(actual-entries),\"bad\",bad); assert not bad and actual==entries"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "exit": 0,
+  "unchanged": true
+}

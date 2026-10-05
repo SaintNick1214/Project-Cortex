@@ -1,0 +1,62 @@
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs'
+    at Object.readFileSync (node:fs:484:20)
+    at read (file:///workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:35:27)
+    at file:///workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:66:21
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs'
+}
+
+Node.js v24.19.0
+(node:68510) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs /workspace/Project-Cortex/work/resume/c11-aggregate-review/cortex-asset-index-preservation-EVfpiE
+    node:fs:484
+        return binding.readFileUtf8(path, stringToFlags(options.flag));
+                       ^
+
+    Error: ENOENT: no such file or directory, open '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs'
+
+      33 | };
+      34 | const hash = (text) => crypto.createHash('sha256').update(text).digest('hex');
+    > 35 | const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
+         |                           ^
+      36 | const archived = (name) => read(`${qa}/archive/${name}`);
+      37 | const sources = Object.fromEntries(Object.keys(constants.postHashes).map((name) => [name, read(name)]));
+      38 | function verify(current) {
+
+      at read (file:/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:35:27)
+      at file:/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:66:21
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        errno: -2,
+        code: 'ENOENT',
+        syscall: 'open',
+        path: '/workspace/Project-Cortex/work/resume/c11-aggregate-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:211:36)
+
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       1 failed, 1637 passed, 1638 total
+Snapshots:   0 total
+Time:        7.252 s, estimated 15 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "tests/unit/runtimeAuth/inventory.test.ts", "tests/unit/runtimeMetadataAuth/registrations.test.ts".
+Test results written to: ../../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review/jest-rerun-result.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

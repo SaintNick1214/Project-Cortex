@@ -1,0 +1,19 @@
+import type {LanguageModelV4GenerateResult,LanguageModelV4StreamPart,EmbeddingModelV4Result} from '@ai-sdk/provider';
+import type {Receipt,Data,Reason} from './contracts.ts';
+import {canonical,parseCanonical,digest,record,count,id,one,vector,same,conservativeUsdDecimal,caseFor,fail} from './validate.ts';
+import {PROFILE} from './cases.ts';
+import {type Context,type Resolver,type Nomination,EMPTY_RESOLVER,unknownReceipt,qualify} from './proofs.ts';
+export interface Event {sequence:number;kind:'stream-start'|'raw'|'response-metadata'|'text-delta'|'text-start'|'text-end'|'finish'|'error'|'unsupported';digest:string;data:unknown}
+export interface Transcript {version:1;method:Receipt['method'];events:Event[];ended:'returned'|'reader-done'|'abort'|'deadline'|'error'}
+export interface Observed {readerOwnership?:{pending:number;failures:unknown[];join():Promise<void>};receipt:Receipt;transcriptCanonical:string;privateResultCanonical:string|null;eligible:{text:string;partSequence:number;rawPartDigest:string}[]}
+function own(x:unknown):Data {if(!x||typeof x!=='object'||Array.isArray(x)||![Object.prototype,null].includes(Object.getPrototypeOf(x)))fail('OWN_DATA');const d=Object.getOwnPropertyDescriptors(x);if(Reflect.ownKeys(d).some(k=>typeof k!=='string'))fail('SYMBOL');for(const [k,v] of Object.entries(d))if(!k.isWellFormed()||!('value'in v)||!v.enumerable)fail('OWN_DATA');return x as Data}
+function field(x:unknown,k:string){return own(x)[k]??null}
+function optionalCount(x:unknown):number|null {return x===null||x===undefined?null:count(x)}
+function optionalId(x:unknown):string|null{return x===null||x===undefined?null:id(x)}
+function selectedFinish(x:unknown){return x===null?null:{unified:field(x,'unified'),raw:field(x,'raw')}}
+function selectedUsage(x:unknown){if(x===null||x===undefined)return null;const i=field(x,'inputTokens'),o=field(x,'outputTokens');return {input:i===null?null:field(i,'total'),output:o===null?null:field(o,'total')}}
+function reason(r:Receipt,v:Reason){if(r.reason==='missing-evidence'||r.reason==='none')r.reason=v}
+export async function makeEvent(sequence:number,kind:Event['kind'],data:unknown):Promise<Event>{const encoded=canonical(data,180000);return {sequence,kind,digest:await digest(encoded),data:parseCanonical(encoded,180000)}}
+export function selectGenerate(r:LanguageModelV4GenerateResult){const response=field(r,'response'),metadata=response===null?null:{id:field(response,'id'),modelId:field(response,'modelId')};return {body:response===null?null:field(response,'body'),content:field(r,'content'),finish:selectedFinish(field(r,'finishReason')),usage:selectedUsage(field(r,'usage')),metadata}}
+export function selectEmbed(r:EmbeddingModelV4Result){const response=field(r,'response');return {body:response===null?null:parseCanonical(canonical(field(response,'body'),180000),180000),embeddings:parseCanonical(canonical(field(r,'embeddings'),180000),180000),usage:field(r,'usage')}}
+export async function nativeEvent(sequence:number,part:LanguageModelV4StreamPart):Promise<Event>{const p=own(part),type=String(p.type);const kind:Event['kind']=['stream-start','raw','response-metadata','text-delta','text-start','text-end','finish','error'].includes(type)?type as Event['kind']:'unsupported';let data:unknown;if(type==='stream-start'){const original=record(part,'type warnings');same(original.type,'stream-start');if(!Array.isArray(original.warnings)||original.warnings.length!==0)fail('STREAM_START');canonical(original,180000);data={type:'stream-start',warnings:[]}}else if(type==='raw')data=p.rawValue??null;else if(type==='finish')data={finish:selectedFinish(p.finishReason??null),usage:selectedUsage(p.usage)};else if(type==='response-metadata')data={id:p.id??null,modelId:p.modelId??null};else if(type==='text-delta')data={id:p.id??null,delta:p.delta??null};else if(type==='text-start'||type==='text-end')data={id:p.id??null};else data={type};return await makeEvent(sequence,kind,data)}

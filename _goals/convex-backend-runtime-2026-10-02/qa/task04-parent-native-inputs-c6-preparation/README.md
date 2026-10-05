@@ -1,0 +1,1 @@
+Use ONLY NEW work/resume/task04-native-c8-parent-inputs.mjs and task04-native-current-inputs-c6.mjs after fresh independent fixture and parent reviews. Exact source snapshots and final C8 manifest hashes are frozen here. Real credentials/signatures/peer configuration/target actions remain parent-only; offline results grant no live authority.

@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {ConvexHttpClient} from 'convex/browser';
+import {makeFunctionReference} from 'convex/server';
+import {livePreflight,verifyCodegen,preparation} from '../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c9/scripts/guard.mjs';
+const {values,target}=livePreflight();verifyCodegen(target);
+const client=new ConvexHttpClient(values.CONVEX_URL,{fetch:(url,options)=>{assert.equal(new URL(typeof url==='string'?url:url.url).origin,target.deploymentUrl);return fetch(url,{...options,signal:AbortSignal.timeout(12000),redirect:'error'});}});client.setAdminAuth(values.CONVEX_DEPLOY_KEY);
+const startedAtUtc=new Date().toISOString();
+const functions=await client.query(makeFunctionReference('_system/cli/modules:apiSpec'),{});
+assert(Array.isArray(functions));
+const tuples=functions.map(f=>({path:f.identifier.replace(/\.js:/,':'),kind:String(f.functionType).toLowerCase(),visibility:f.visibility?.kind??f.visibility})).sort((a,b)=>a.path.localeCompare(b.path));
+const kinds={seed:'mutation',snapshot:'query',cleanup:'mutation',ownedTombstones:'query',discoverOwnedEffects:'query',storageSnapshot:'query',storageCatalog:'query',registerStorage:'mutation',storeTiny:'action',cleanupStorage:'mutation'};
+const ledger=JSON.parse(readFileSync(resolve(preparation,'path-ledger.json')));
+const expected=[...ledger.cases.map(({path,kind,visibility})=>({path,kind,visibility})),...Object.entries(kinds).map(([name,kind])=>({path:'qualificationOwned:'+name,kind,visibility:'internal'}))].sort((a,b)=>a.path.localeCompare(b.path));
+assert.deepEqual(tuples,expected);
+const receipt={scope:'ACTUAL_NATIVE_PUBLICATION_READ_ONLY',startedAtUtc,observedAtUtc:new Date().toISOString(),operation:target.operation,projectId:target.projectId,deploymentName:target.deploymentName,status:'PASS',serviceCalls:1,productionRegistrations:259,fixtureOnlyInternal:10,public:200,internal:69,HTTP:0,aliasesOrDuplicates:0,tuples};
+writeFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c9-execution/published-native-functions.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({status:'PASS',published:tuples.length}));

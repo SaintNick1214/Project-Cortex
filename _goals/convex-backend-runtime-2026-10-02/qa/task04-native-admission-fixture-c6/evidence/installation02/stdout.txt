@@ -1,0 +1,25 @@
+{"case":"preserved-C5-install-red","handler":"ACTUAL_FROZEN_B16_OFFLINE_MOCK_CONTEXT","writes":0,"services":0,"native":"NOT_RUN"}
+✔ preserved C5 actual frozen B16 install handler rejects global Chat selector BEFORE writes, no services (136.567847ms)
+{"case":"actual-B16-offline-install","result":{"manifestId":"qa-task04-synthetic-v1","revision":1},"rows":4,"policyRows":2,"qualificationRows":2,"rowsDigest":"fa9b68bd67e679f148ec8b0b60cd4ed88d6e2ab0878590101f309432a93a0d3c","services":0,"native":"NOT_RUN"}
+{"case":"actual-B16-offline-install","result":{"manifestId":"qa-task04-synthetic-embedding-v1","revision":1},"rows":2,"policyRows":1,"qualificationRows":1,"rowsDigest":"07826de6a27da5d8a7fc0d9dd56c01949d9241cddb5bd11de104c751c398d056","services":0,"native":"NOT_RUN"}
+✔ actual frozen B16 installs both finite reviewed roots, idempotent FOUR Chat and TWO embedding rows (42.758209ms)
+✖ actual PURE defaults resolve DISTINCT agent.respond/embedding.query/embedding.memory snapshots preserving Chat fallback and exact profile/limits (22.768082ms)
+✔ preserved neutral-selector intermediate red rejects embedding with unchanged global Chat fallback (16.276273ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 298.741123
+
+✖ failing tests:
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-installation.mjs:9:1
+✖ actual PURE defaults resolve DISTINCT agent.respond/embedding.query/embedding.memory snapshots preserving Chat fallback and exact profile/limits (22.768082ms)
+  TypeError: Cannot read properties of undefined (reading 'length')
+      at TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-installation.mjs:9:1653)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

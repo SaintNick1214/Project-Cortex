@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/custody.py", line 15, in <module>
+    pre=json.loads((archive/'prebytes/index.json').read_bytes());assert pre==d['sourceBefore'];assert d['sourceBeforeScope'].startswith('FULL_');assert len(pre)==len({p['path'] for p in pre});assert d['sourceAfter'] and len(d['sourceAfter'])==len(pre)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/evidence/c3-command-runs/immutable-operation-runs/final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866/prebytes/index.json'

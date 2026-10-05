@@ -1,0 +1,17 @@
+# Task Completion Report
+
+Status: COMPLETE implementation; fresh independent review pending.
+
+This bounded C2 transport repair closes the confirmed input-ancestor symlink acceptance in the historical byte materializer. Only `read_regular` changed in the copied helper; all prior index/archive/TAR/object validation, size caps, extraction behavior and SHA objects remain unchanged. The original helper, README, pinned index, 13 backing parts and 301 original source labels were read without mutation.
+
+The helper uses descriptor-relative O_NOFOLLOW traversal for every input ancestor and final leaf, holds the entire directory chain, and revalidates path and FD identities before and after reading. It rejects ancestor/leaf symlinks, hardlinks, special files and deterministic leaf/ancestor replacement during index and part reads. It accepts public 0644 inputs. Lexical `..` paths are denied rather than collapsed across a potentially linked ancestor. Extraction remains into owned 0700 directories and SHA-named 0600 objects, after all input validation.
+
+Observed verification: 54 runs matched exact expected exits, including actual full materialization plus idempotence of 156 objects / 68,361,292 raw bytes / 301 references. Replayed all 43 prior non-full commands using copied prior fixture bytes and restored hardlink topology; both prior input-ancestor acceptance/failed-denial observations now deny with exit 1. Nine new controls prove index/part ancestry, leaf hardlink/FIFO denial and FD/path replacement during reads. Prior shape, TAR, trailing/concatenated gzip, overwrite and cap controls remain denied. SourcePRE and SourcePOST pins match for all preserved source inputs. All 13 actual copied parts form the exact 66,753,445-byte archive with SHA256 `54acd89e701d3e49d4a239e857dac7d10fd5980072965536c28c74c62da06e42`.
+
+One failed test-setup attempt is preserved: ordinary copytree discarded the prior hardlink relationship, so `prior-source-part-hardlink` unexpectedly succeeded. This was corrected by reconstructing copied hardlink topology; helper/assertions were unchanged. The failed receipts, source snapshots, fixture tree and run script remain under own `attempt01` paths. Prior judge report/manifests, including its confirmed expected-1/actual-0 ancestry failure, are copied unchanged in work.
+
+Final helper SHA256: `3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3`. Index SHA256: `cf6314cb96d9b8b74be64839ff971a0e85068dc6a67c5b8bf8433850263b6866`.
+
+Evidence: `/workspace/Project-Cortex/work/resume/task04-c2-component-byte-backing-c2` contains the runner, before-byte copies, sourcePRE/sourcePOST, raw argv/UTC/exit results and unchanged prior failure report. `/tmp/cortex-c2-component-byte-backing-c2` contains exact source-before gzip bytes, full actual inputs, full reconstructed objects, all stdout/stderr/receipts, copied controls and retained failed attempt. `seals.json` enumerates these three complete owned namespaces without following links; its only omission is its exact own file. Original paths in sourcePRE are external backing references, separately pinned rather than claimed as sealed owned closure. New QA sibling parts are virtual publication paths; ROOT must map the same preserved 13 external parts there.
+
+No Git, network, native capture, paid service, credential use, original-eight/source mutations or qualification release. Historical custody remains BROKEN. Component/transport only; all 122 commands remain HELD. No aggregate task or runtime acceptance is asserted.

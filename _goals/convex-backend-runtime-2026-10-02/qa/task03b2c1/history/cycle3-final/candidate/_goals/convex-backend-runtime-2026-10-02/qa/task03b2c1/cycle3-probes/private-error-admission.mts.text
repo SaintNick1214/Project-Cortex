@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { fixture } from '/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts';
+const output='/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes';
+const results:any[]=[];
+const sessionErrors=['appendContent','pauseStreaming','resumeStreaming','cancelStreaming','finalizeStreaming','setStreamingError'];
+const stateErrors=[['startStreaming','paused'],['appendContent','paused'],['pauseStreaming','paused'],['resumeStreaming','draft'],['cancelStreaming','error'],['finalizeStreaming','draft'],['setStreamingError','final'],['retryFromError','paused'],['setStreamingState','final']];
+const cases=[...sessionErrors.map(name=>({name,state:name==='resumeStreaming'?'paused':'streaming',branch:'session',code:'STREAMING_SESSION_INVALID'})),...stateErrors.map(([name,state])=>({name,state,branch:'state',code:'INVALID_STATE_TRANSITION'})),{name:'cancelStreaming',state:'streaming',branch:'missing-session',code:'STREAMING_SESSION_INVALID'}];
+for(const mode of ['no-read','owner-denied','admitted'])for(const c of cases){
+ const f=fixture(['write'],'space');
+ if(mode!=='no-read')f.db.add('runtimeAuthGrants',{principalId:f.principal._id,membershipId:f.membership._id,tenantId:'tenant-a',tenantEpoch:1,capabilities:['read'],resourceAccess:mode==='owner-denied'?'own':'tenant',version:1});
+ const row=f.row({ownerPrincipalId:'other-canonical-owner',streamingState:c.state,content:'unread fixture content',metadata:{config:'unread fixture configuration'},streamingMetadata:{...(c.branch==='missing-session'?{}:{sessionId:'unread fixture session'}),startedAt:1,bytesReceived:7,errorMessage:'unread fixture error'}});
+ let readDenied:any,readOutput:any;try{readOutput=await f.invoke('get',{artifactId:'artifact-a',memorySpaceId:'space-a'});}catch(e:any){readDenied=e.data;}
+ if(mode==='admitted')assert.equal(readOutput.content,row.content);else assert.equal(readDenied.code,'FORBIDDEN');
+ let thrown:any;try{await f.invoke(c.name,{artifactId:'artifact-a',memorySpaceId:'space-a',sessionId:'caller guess',chunk:'caller chunk',errorCode:'caller-error',errorMessage:'caller error',streamingState:'paused'});}catch(e:any){thrown=e;}
+ assert.deepEqual(thrown?.data,{code:c.code,message:'Artifact operation denied.'});
+ for(const secret of [row._id,row.content,'unread fixture session','unread fixture configuration','unread fixture error',c.state])assert.equal(JSON.stringify(thrown.data).includes(secret),false);
+ assert.equal(f.db.attempts.length,0);assert.equal(f.db.writes.length,0);
+ results.push({handler:c.name,branch:c.branch,readMode:mode,typedCode:thrown.data.code,exactSafeOutput:true,resourceReadControlVerified:true,attempts:0,committed:0,matched:true});
+}
+fs.writeFileSync(output+'/private-error-admission-results.json',JSON.stringify(results,null,2)+'\n');
+console.log(JSON.stringify({cases:results.length,matched:results.filter(r=>r.matched).length,privateOutputCases:0,mutationAttempts:0,committedEffects:0}));

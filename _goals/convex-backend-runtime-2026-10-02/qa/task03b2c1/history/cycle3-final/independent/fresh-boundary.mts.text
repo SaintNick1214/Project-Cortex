@@ -1,0 +1,34 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { fixture } from '/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts';
+import { ConvexError } from '/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/node_modules/convex/dist/esm/values/index.js';
+const results:any[]=[];
+const expected={version:1,code:'BACKEND_OPERATION_FAILED',message:'Artifact operation failed.',retryable:false,outcome:'not_committed'};
+async function probe(name:string,work:()=>Promise<any>){const evidence=await work();results.push({name,...evidence});}
+for(const op of ['create','update']) for(const kind of ['plain','code-private','auth-extra','getter','ordinary-denial','none']) await probe(`${op} independent initial READ identity ${kind}`,async()=>{
+ const f=fixture(); if(op==='update') f.row(); let identityCalls=0;let injections=0;const original=f.ctx.auth.getUserIdentity;
+ f.ctx.auth.getUserIdentity=async()=>{identityCalls++;if(identityCalls===2&&kind!=='none') {injections++;
+  if(kind==='ordinary-denial') throw new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});
+  if(kind==='plain') throw new Error('private native authentication diagnostic');
+  if(kind==='getter') {const e=new ConvexError({code:'FORBIDDEN'});Object.defineProperty(e,'data',{get(){throw new Error('private getter diagnostic');}});throw e;}
+  if(kind==='auth-extra') throw new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched',privateDocumentId:'private-doc'});
+  throw new ConvexError({code:'FORBIDDEN',message:'private native auth diagnostic',privateDocumentId:'private-doc'});
+ }return original();};let output:any;let error:any;try{output=await f.invoke(op,{artifactId:op==='create'?'fresh':'artifact-a',memorySpaceId:'space-a',content:'review update'});}catch(e:any){error=e.data??String(e);}
+ const shouldSucceed=['none','ordinary-denial'].includes(kind);const matched=shouldSucceed ? output!==undefined&&(kind!=='ordinary-denial'||JSON.stringify(output)===JSON.stringify({success:true,artifactId:op==='create'?'fresh':'artifact-a'})) : JSON.stringify(error)===JSON.stringify(expected)&&f.db.writes.length===0;
+ return {matched,identityCalls,injections,output,error,attempts:f.db.attempts.length,committed:f.db.writes.length,artifacts:f.db.rows('artifacts').map((x:any)=>({artifactId:x.artifactId,content:x.content}))};
+});
+for(const op of ['get','create','update']) for(const nth of [1,3]) for(const kind of ['plain','code-private','auth-extra']) await probe(`${op} initial authority scope reader ${nth} ${kind}`,async()=>{
+ const f=fixture();if(op!=='create')f.row();let calls=0;let injections=0;
+ f.db.hook=(e:any)=>{if(e.action==='query'&&e.table==='runtimeAuthScopes'&&++calls===nth){injections++;if(kind==='plain')throw new Error('private scope diagnostic');if(kind==='auth-extra')throw new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched',privateDocumentId:'private-doc'});throw new ConvexError({code:'FORBIDDEN',message:'private scope diagnostic',privateDocumentId:'private-doc'});}};
+ let output:any;let error:any;try{output=await f.invoke(op,{artifactId:op==='create'?'fresh':'artifact-a',memorySpaceId:'space-a',content:'review update'});}catch(e:any){error=e.data??String(e);}
+ const matched=injections===1&&JSON.stringify(error)===JSON.stringify(expected)&&f.db.writes.length===0;
+ return {matched,scopeCalls:calls,injections,output,error,attempts:f.db.attempts.length,committed:f.db.writes.length};
+});
+for(const op of ['get','create','update'])for(const phase of ['pre-effect','post-effect'])await probe(`${op} pinned control unexpected FORBIDDEN ${phase}`,async()=>{
+ const f=fixture();if(op!=='create')f.row();let after=false;let injections=0;let scopeQueries=0;
+ f.db.hook=(e:any)=>{if(['insert','patch'].includes(e.action)&&e.table==='artifacts')after=true;
+ if(e.action==='query'&&e.table==='runtimeAuthScopes'){scopeQueries++;const appropriate=phase==='post-effect'?after:scopeQueries===5;if(appropriate&&!injections){injections++;throw new ConvexError({code:'FORBIDDEN',message:'private pinned scope diagnostic',privateDocumentId:'private-doc'});}}};
+ let output:any;let error:any;try{output=await f.invoke(op,{artifactId:op==='create'?'fresh':'artifact-a',memorySpaceId:'space-a',content:'review update'});}catch(e:any){error=e.data??String(e);}
+ return {matched:injections===0?null:JSON.stringify(error)===JSON.stringify(expected)&&f.db.writes.length===0,scopeQueries,injections,output,error,attempts:f.db.attempts.length,committed:f.db.writes.length};
+});
+fs.writeFileSync('/tmp/task03b2c1-review3-eopdvclu'+'/fresh-boundary-results.json',JSON.stringify(results,null,2)+'\n');console.log(JSON.stringify({cases:results.length,matched:results.filter(x=>x.matched===true).length,unreached:results.filter(x=>x.matched===null).length,failed:results.filter(x=>x.matched===false).map(x=>({name:x.name,output:x.output,error:x.error,attempts:x.attempts,committed:x.committed,injections:x.injections}))},null,2));assert.equal(results.length,36);

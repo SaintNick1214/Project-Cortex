@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import json;r=Path('.');q=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2\");old=q.parent/'task04-metadata-retention-implementation-c1';v=json.loads((old/'verification.json').read_text());a=json.loads(Path(\"work/resume/task04-metadata-retention-implementation-c2/inputs.json\").read_text());a += [row['candidate'] for row in v['assertionPreservation']];a += [str(p) for p in (old/'fixture/convex').glob('*.ts')];a += [str(old/'verification.json'),str(old/'qa-seal.json'),str(old/'fixture/checks/metadata.mjs'),str(old/'fixture/checks/metadata-stage.mjs'),str(old/'fixture/checks/metadata-purge.mjs'),str(old/'fixture/checks/metadata-resource.mjs'),\"work/resume/task04-metadata-retention-implementation-c2/verify.py\",'work/resume/task04-metadata-retention-implementation-c1-fresh-review/construction.mjs',\"work/resume/task04-metadata-retention-implementation-c2/construction-historical.mjs\"];Path(\"work/resume/task04-metadata-retention-implementation-c2/verify-inputs.json\").write_text(json.dumps(sorted(set(a)),indent=2)+'\\n');p=Path(\"work/resume/task04-metadata-retention-implementation-c2/verify.py\");s=p.read_text().replace(\"for p in q.glob('*-pre.json'):\",\"for p in sorted(q.glob('*-pre.json'))+sorted(q.glob('*-post.json')):\");p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T15:09:49.702945+00:00",
+  "endUtc": "2026-10-04T15:09:49.752582+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901"
+}

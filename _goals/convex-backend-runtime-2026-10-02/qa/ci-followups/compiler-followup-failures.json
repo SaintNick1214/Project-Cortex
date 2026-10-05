@@ -1,0 +1,37 @@
+{
+  "observedAt": "2026-10-03T11:08:30.379534+00:00",
+  "head": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+  "workflow": 37117998717,
+  "overall": "FAILURE, still executing lastshard atfirststatuscapture",
+  "rawProvenance": "GitHub connector joblogs recovered despite shell logdownload403; unfiltered logs retained privately in work/backend-runtime/ci-current-<jobid>.log",
+  "observations": [
+    {
+      "jobs": [
+        111188647748,
+        111188438914,
+        111188647769,
+        111188647761,
+        111188647762
+      ],
+      "finding": "TS2339 src/governance/index.ts380 removedpublicenforce",
+      "classification": "Introduced SDK consumer mismatch from accepted internalization; current unpushed independently reviewed correction passes isolated build; aggregate CI rerun not yet observed"
+    },
+    {
+      "job": 111188647769,
+      "suites": "2skipped,26passed/28total",
+      "tests": "93skipped,989passed/1082total",
+      "finding": "Tests passed withskips before latertypecheckfails; not completecoverage"
+    },
+    {
+      "job": 111188647763,
+      "suites": "1failed,1skipped,26passed/28total",
+      "tests": "1failed,20skipped,875passed/896total",
+      "finding": "tests/e2e/sessions-workflow.test.ts:205 session.status expectedactive receivedended",
+      "classification": "Unresolved E2Efixture/sessionfailure; no proof ofpreexistingcause or newruntimecertification"
+    },
+    {
+      "finding": "ExistingCI uses serialized dedicatedSDK/CLI deployments; setup/purgejob reportsSUCCESS",
+      "classification": "No manuallyissued sharedtargetdeploy/purge; setupscript swallowsclearTableerrors, so actualpurgeproof mustbechecked andmodern ownedfixtures underTask16; not certifiedowned-disposable integration"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "scope": "INDEPENDENT_OFFLINE_CONTROLS_OWNED_REVIEW_ONLY",
+  "outcomes": [
+    {
+      "name": "independent exact-source denial old table",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial old index",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial policy validator",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial module injection",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial public visibility",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial handler source",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial source drift",
+      "status": "PASS"
+    },
+    {
+      "name": "independent exact-source denial extra table",
+      "status": "PASS"
+    },
+    {
+      "name": "independent native denial old validator",
+      "status": "PASS"
+    },
+    {
+      "name": "independent native denial old index",
+      "status": "PASS"
+    },
+    {
+      "name": "independent native denial extra policy",
+      "status": "PASS"
+    },
+    {
+      "name": "independent native denial return contract",
+      "status": "PASS"
+    },
+    {
+      "name": "independent native denial artifact visibility",
+      "status": "PASS"
+    },
+    {
+      "name": "independent native denial fake reviewed actual root",
+      "status": "PASS"
+    },
+    {
+      "name": "AST unresolved re-export denied",
+      "status": "PASS"
+    },
+    {
+      "name": "destination symlink ancestor escape",
+      "status": "DEFECT_REPRODUCED",
+      "compositionAccepted": 275,
+      "escapedDirectory": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/escaped-destination"
+    },
+    {
+      "name": "existing unpinned JS import sibling executed",
+      "status": "NOT_REPRODUCED",
+      "markerExists": false,
+      "compositionError": "Error: Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/polluted-destination/baseline-inventory\nfile:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/polluted-destination/replica/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220\nif (unresolved.length) throw new Error(JSON.stringify(unresolved, null, 2));\n                             ^\n\nError: [\n  \"convex-dev/runtimeModelPolicyBootstrap.js: external/re-export requires explicit traversal\"\n]\n    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/polluted-destination/replica/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220:30\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n",
+      "scratchRetained": true
+    },
+    {
+      "name": "mkdir effect precedes protected source fence",
+      "status": "DEFECT_REPRODUCED",
+      "directoryRetained": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/drift-fence-subject/created-before-source-fence"
+    },
+    {
+      "name": "Socket.prototype.connect bypasses preloaded guard (stubbed no network)",
+      "status": "DEFECT_REPRODUCED",
+      "underlyingConnectCalls": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+import pathlib,json,hashlib,datetime,subprocess,sys,uuid,os
+R=pathlib.Path('/workspace/Project-Cortex');W=R/'work/resume/task04-model-drift-native-source-preparation-c3-review';O=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review';label=sys.argv[1];argv=sys.argv[2:];run=O/'runs'/(label+'--'+str(uuid.uuid4()));run.mkdir(parents=True);store=O/'source-bytes';store.mkdir(exist_ok=True);sha=lambda b:hashlib.sha256(b).hexdigest();paths=set()
+for k in ['extension','regression','extra']:
+ p=R/('_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-'+k+'-preparation-c3');f=json.loads((p/'runtime-freeze.json').read_bytes());paths.update(str((p/x['path']).relative_to(R)) for x in f['files']);paths.update(str((p/x).relative_to(R)) for x in ['runtime-freeze.json','qa-manifest.json','report.md'])
+ for x in json.loads((p/'runner-dependency-inventory.json').read_bytes())['inputs']:paths.add(x['path'])
+ for x in json.loads((p/'toolchain-evidence.json').read_bytes())['files']:paths.add(x['path'])
+paths.update(str(x.relative_to(R)) for x in W.glob('*') if x.is_file());paths.add('node_modules/convex/dist/esm/browser/http_client.js')
+def snapshot(before):
+ rows=[]
+ for name in sorted(paths):
+  p=R/name;b=os.readlink(p).encode() if p.is_symlink() else p.read_bytes();h=sha(b);q=store/(h+'.bytes')
+  if before and not q.exists():q.write_bytes(b)
+  rows.append({'path':name,'bytes':len(b),'sha256':h,'preimage':str(q.relative_to(O)) if before else None})
+ return rows
+pre=snapshot(True);(run/'prebytes.json').write_text(json.dumps(pre,indent=2)+'\n');started=datetime.datetime.now(datetime.timezone.utc).isoformat()
+with (run/'stdout').open('wb') as out,(run/'stderr').open('wb') as err:
+ result=subprocess.run(argv,cwd=R,stdout=out,stderr=err,timeout=120)
+ended=datetime.datetime.now(datetime.timezone.utc).isoformat();post=snapshot(False);(run/'receipt.json').write_text(json.dumps({'argv':argv,'cwd':str(R),'startedAt':started,'observedAt':ended,'exitCode':result.returncode,'sourceBefore':pre,'sourceAfter':post,'changed':[x['path'] for x,y in zip(pre,post) if x['sha256']!=y['sha256']],'rawStdoutSHA256':sha((run/'stdout').read_bytes()),'rawStderrSHA256':sha((run/'stderr').read_bytes())},indent=2)+'\n');print(str(run));print((run/'stdout').read_text()[-6000:]);print((run/'stderr').read_text()[-3000:]);print('EXIT',result.returncode)

@@ -1,0 +1,37 @@
+{
+  "failures": [
+    {
+      "observedAtUTC": "2026-10-04T10:48:47.107666+00:00",
+      "startedAtUTC": "NOT_CAPTURED",
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "exit": 2,
+      "raw": "first-typecheck.stderr",
+      "preimage": "observer-before-first-typecheck-repair.ts"
+    },
+    {
+      "diagnostic": "Earlier mixed rg glob read emitted missing *.mjs diagnostic; exit0, exact startUTC not captured; no implementation failure or secret output"
+    },
+    {
+      "observedAtUTC": "2026-10-04T10:54:19.703755+00:00",
+      "startedAtUTC": "NOT_CAPTURED",
+      "exit": 2,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "preimage": "lifecycle-before-typecheck-repair.ts",
+      "diagnostic": "typedIntent inferred domain/version-only shape; unknown row epoch/revision values need validated numbers in patch"
+    }
+  ]
+}

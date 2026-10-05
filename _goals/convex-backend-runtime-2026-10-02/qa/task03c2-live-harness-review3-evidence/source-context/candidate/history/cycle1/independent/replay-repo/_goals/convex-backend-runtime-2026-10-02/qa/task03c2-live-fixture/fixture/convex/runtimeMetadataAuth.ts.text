@@ -1,0 +1,192 @@
+/** Verified generic metadata authority; deliberately independent of memory/fact adapters. */
+import { ConvexError, v } from "convex/values";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+import { createAuthorityReader, requireAuthority, recheckAuthority } from "./runtimeAuth";
+
+export const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
+export interface ScopeSelectors { tenantId?: string; memorySpaceId?: string }
+export type MetadataTable = "immutable" | "mutable" | "sessions";
+export type MetadataRow = Doc<"immutable"> | Doc<"mutable"> | Doc<"sessions">;
+type ReadCtx = Pick<QueryCtx, "db" | "auth">;
+export function denied(): never { throw new ConvexError({ code: "FORBIDDEN", message: "Access denied" }); }
+export function invalid(): never { throw new ConvexError({ code: "INVALID_INPUT", message: "Invalid metadata input" }); }
+export function nonempty(...values: string[]): void { if (values.some((value) => !value.trim())) invalid(); }
+export function page(value: number | undefined, fallback: number): number {
+  const result = value ?? fallback;
+  if (!Number.isSafeInteger(result) || result < 0) invalid();
+  return result;
+}
+/** Frozen v1 linked-source key: JSON array encoding is unambiguous for arbitrary strings. */
+export function sourceId(table: MetadataTable, first: string, second?: string): string {
+  return `${table === "sessions" ? "session" : table}:${JSON.stringify(second === undefined ? [first] : [first, second])}`;
+}
+export function resource(table: MetadataTable, row: MetadataRow): RuntimeResource {
+  if (!row.tenantId || !row.ownerPrincipalId) denied();
+  const id = "type" in row ? sourceId(table, row.type, row.id)
+    : "namespace" in row ? sourceId(table, row.namespace, row.key) : sourceId(table, row.sessionId);
+  return { resourceType: "source", resourceId: id, tenantId: row.tenantId,
+    memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId };
+}
+export async function authority(ctx: ReadCtx, capability: RuntimeCapability, selectors: ScopeSelectors): Promise<RuntimeAuthority> {
+  return await requireAuthority(ctx, { capability, tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId });
+}
+export function actor(authority: RuntimeAuthority, userId?: string): void {
+  if (userId !== undefined && userId !== authority.userId) denied();
+}
+function profileEligible(authority: Pick<RuntimeAuthority, "resourceAccess" | "userId">, type: string, id: string): boolean {
+  return type !== "user" || authority.resourceAccess !== "own" || id === authority.userId;
+}
+export function profile(authority: RuntimeAuthority, type: string, id: string): void {
+  if (!profileEligible(authority, type, id)) denied();
+}
+export async function check(ctx: Pick<QueryCtx, "db">, table: MetadataTable, row: MetadataRow,
+  auth: RuntimeAuthority, capability: RuntimeCapability): Promise<RuntimeAuthority> {
+  if (row.tombstonedAt !== undefined) denied();
+  if ("type" in row) profile(auth, row.type, row.id);
+  await finalChecks(ctx, [{ auth, capability, resource: resource(table, row) }]);
+  return auth;
+}
+function deadline(grant: { expiresAt?: number } | null): void {
+  if (!grant || (grant.expiresAt !== undefined && (!Number.isFinite(grant.expiresAt) || Date.now() >= grant.expiresAt))) denied();
+}
+/** Transaction snapshot control checks plus synchronous lifetime check after the final await. */
+export async function finalChecks(ctx: Pick<QueryCtx, "db">, checks: Array<{ auth: RuntimeAuthorityReference; capability: RuntimeCapability; resource?: RuntimeResource }>): Promise<void> {
+  const grants = await Promise.all(checks.map(({ auth }) => createAuthorityReader(ctx).getGrant(auth.grantId)));
+  for (const { auth, capability, resource: target } of checks) await recheckAuthority(ctx, auth,
+    target ? { capability, resource: target } : { capability, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId });
+  for (const grant of grants) deadline(grant);
+}
+export async function fresh(ctx: Pick<QueryCtx, "db">, auth: RuntimeAuthority, capability: RuntimeCapability): Promise<void> {
+  await finalChecks(ctx, [{ auth, capability }]);
+}
+export function canonicalFields(auth: RuntimeAuthority) {
+  return { tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId, userId: auth.userId };
+}
+export async function newResource(ctx: Pick<QueryCtx, "db">, auth: RuntimeAuthority, id: string): Promise<void> {
+  await recheckAuthority(ctx, auth, { capability: "write", resource: { resourceType: "source", resourceId: id,
+    tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId } });
+}
+/** Existence-only canonical-key preflight, including foreign/missing-owner duplicates. */
+async function uniqueKey(ctx: Pick<QueryCtx, "db">, table: MetadataTable, row: MetadataRow): Promise<void> {
+  let conflict: MetadataRow | null;
+  if (table === "immutable" && "type" in row) conflict = await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("type", row.type).eq("id", row.id))
+    .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  else if (table === "mutable" && "namespace" in row) conflict = await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("namespace", row.namespace).eq("key", row.key))
+    .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  else if (table === "sessions" && "sessionId" in row) conflict = await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("sessionId", row.sessionId))
+    .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  else denied();
+  if (conflict) denied();
+}
+/** Query candidates are narrowed by trusted scope and owner BEFORE collect/take/count. */
+export function candidates(ctx: Pick<QueryCtx, "db">, table: "immutable", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"immutable">[]>;
+export function candidates(ctx: Pick<QueryCtx, "db">, table: "mutable", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"mutable">[]>;
+export function candidates(ctx: Pick<QueryCtx, "db">, table: "sessions", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"sessions">[]>;
+export async function candidates(ctx: Pick<QueryCtx, "db">, table: MetadataTable,
+  auth: RuntimeAuthority, capability: RuntimeCapability): Promise<MetadataRow[]> {
+  const query = ctx.db.query(table).withIndex("by_runtime_scope", (q) => {
+    const scoped = q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId);
+    return auth.resourceAccess === "own" ? scoped.eq("ownerPrincipalId", auth.principalId) : scoped;
+  }).filter((q) => q.and(q.eq(q.field("tombstonedAt"), undefined), q.neq(q.field("ownerPrincipalId"), undefined),
+    auth.resourceAccess === "own" && table === "immutable"
+      ? q.or(q.neq(q.field("type"), "user"), q.eq(q.field("id"), auth.userId))
+      : q.neq(q.field("ownerPrincipalId"), undefined)));
+  const rows = await query.collect();
+  // Complete canonical uniqueness preflight before any caller can begin bulk effects.
+  for (const row of rows) await uniqueKey(ctx, table, row);
+  const result: MetadataRow[] = [];
+  for (const row of rows) {
+    const target = resource(table, row);
+    const reader = createAuthorityReader(ctx);
+    // Retained control fences exclude rows even when an older row has not been scrubbed yet.
+    if (await reader.hasTombstone({ ...target, tenantId: auth.tenantId })
+      || (row.memorySpaceId !== undefined && await reader.hasTombstone({ ...target, tenantId: auth.tenantId, memorySpaceId: undefined }))) continue;
+    if ("type" in row && row.type === "user" && auth.resourceAccess === "own" && row.id !== auth.userId) continue;
+    await check(ctx, table, row, auth, capability);
+    result.push(row);
+  }
+  await fresh(ctx, auth, capability);
+  return result;
+}
+/** Exact scoped lookup first obtains canonical identity, never a global first match. */
+export async function immutableRow(ctx: ReadCtx, auth: RuntimeAuthority, type: string, id: string, capability: RuntimeCapability) {
+  nonempty(type, id); profile(auth, type, id);
+  const selected = ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id));
+  const row = await selected.filter((q) => auth.resourceAccess === "own"
+    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
+  if (await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+  if (row) await check(ctx, "immutable", row, auth, capability); else await fresh(ctx, auth, capability);
+  return row;
+}
+export async function mutableRow(ctx: ReadCtx, auth: RuntimeAuthority, namespace: string, key: string, capability: RuntimeCapability) {
+  nonempty(namespace, key);
+  const selected = ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key));
+  const row = await selected.filter((q) => auth.resourceAccess === "own"
+    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
+  if (await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+  if (row) await check(ctx, "mutable", row, auth, capability); else await fresh(ctx, auth, capability);
+  return row;
+}
+export async function sessionRow(ctx: ReadCtx, auth: RuntimeAuthority, sessionId: string, capability: RuntimeCapability) {
+  nonempty(sessionId);
+  const selected = ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId));
+  const row = await selected.filter((q) => auth.resourceAccess === "own"
+    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
+  if (await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+  if (row) await check(ctx, "sessions", row, auth, capability); else await fresh(ctx, auth, capability);
+  return row;
+}
+export async function tombstone(ctx: MutationCtx, table: MetadataTable, row: MetadataRow): Promise<void> {
+  const target = resource(table, row);
+  const key = { resourceType: target.resourceType, resourceId: target.resourceId,
+    tenantId: row.tenantId!, memorySpaceId: row.memorySpaceId };
+  if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
+  if (row.tombstonedAt === undefined) {
+    if (table === "immutable" && "type" in row) await ctx.db.patch("immutable", row._id, { tombstonedAt: Date.now() });
+    else if (table === "mutable" && "namespace" in row) await ctx.db.patch("mutable", row._id, { tombstonedAt: Date.now() });
+    else if (table === "sessions" && "sessionId" in row) await ctx.db.patch("sessions", row._id, { tombstonedAt: Date.now() });
+  }
+}
+/** Admit eligible READ before mutation; an admitted READ failure never becomes a receipt. */
+export async function readResourceAuthority(ctx: ReadCtx, auth: RuntimeAuthority, target: RuntimeResource, profileKey?: { type: string; id: string }): Promise<RuntimeAuthority | undefined> {
+  const grants = await createAuthorityReader(ctx).listGrants(auth.membershipId);
+  const configured = grants.some((grant) => grant.principalId === auth.principalId && grant.tenantId === auth.tenantId
+    && grant.revokedAt === undefined && grant.deletedAt === undefined && Number.isSafeInteger(grant.version) && grant.version > 0
+    && (grant.expiresAt === undefined || (Number.isFinite(grant.expiresAt) && Date.now() < grant.expiresAt)) && grant.capabilities.includes("read")
+    && (grant.memorySpaceId === undefined || grant.memorySpaceId === target.memorySpaceId)
+    && grant.tenantEpoch === auth.tenantEpoch
+    && (grant.memorySpaceId === undefined || grant.memorySpaceEpoch === auth.memorySpaceEpoch)
+    && (grant.resourceAccess !== "own" || target.ownerPrincipalId === auth.principalId)
+    && (!profileKey || profileEligible({ resourceAccess: grant.resourceAccess, userId: auth.userId }, profileKey.type, profileKey.id))
+    && (grant.resourceAccess !== "space" || (grant.memorySpaceId !== undefined && grant.memorySpaceId === target.memorySpaceId))
+    && (grant.resourceAccess !== "tenant" || grant.memorySpaceId === undefined));
+  if (!configured) return undefined;
+  const read = await requireAuthority(ctx, { capability: "read", resource: target });
+  if (profileKey) profile(read, profileKey.type, profileKey.id);
+  return read;
+}
+export async function readAuthority(ctx: ReadCtx, auth: RuntimeAuthority, table: MetadataTable, row: MetadataRow) {
+  return await readResourceAuthority(ctx, auth, resource(table, row), "type" in row ? { type: row.type, id: row.id } : undefined);
+}
+export function newTarget(auth: RuntimeAuthority, id: string): RuntimeResource {
+  return { resourceType: "source", resourceId: id, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId };
+}
+export async function response<T, R>(ctx: ReadCtx, auth: RuntimeAuthority, table: MetadataTable, row: MetadataRow,
+  read: RuntimeAuthority | undefined, hydrated: () => T, receipt: () => R): Promise<T | R> {
+  const target = resource(table, row);
+  if (row.tombstonedAt !== undefined) denied();
+  await finalChecks(ctx, [{ auth, capability: "write", resource: target }, ...(read ? [{ auth: read, capability: "read" as const, resource: target }] : [])]);
+  if (read && "type" in row) profile(read, row.type, row.id);
+  return read ? hydrated() : receipt();
+}

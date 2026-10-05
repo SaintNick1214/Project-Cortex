@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-04T16:48:36.306406+00:00",
+  "verdict": "NEEDS_FIXES",
+  "average": 3.8,
+  "fullReportRead": true,
+  "reportSHA256": "a890d4e71c430cca89132f93d88b531a511cc0da720fe081b1ce8b575d0ef980",
+  "closures": [
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-byte-backing-transport-fresh-review/qa-manifest.json",
+      "sha256": "d5085bedf9d2a12a312e882687b79bd93aa3e49e978ef2e48febfbfa253c9831",
+      "rows": 1,
+      "literalLinks": 0,
+      "directoriesIncluded": false,
+      "verified": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-transport-fresh-review/work-manifest.json",
+      "sha256": "aa62ee52b3a93a18775f745f1d28e68df3579414d8ff57ece36d19fbe2685630",
+      "rows": 10,
+      "literalLinks": 0,
+      "directoriesIncluded": false,
+      "verified": true
+    },
+    {
+      "path": "/tmp/cortex-c2-backing-transport-fresh-review/tmp-manifest.json",
+      "sha256": "12b56d0cb6a66e9a13ba46b9a06c89feee31e6018c575f7f254159961c0397d3",
+      "rows": 664,
+      "literalLinks": 7,
+      "directoriesIncluded": true,
+      "verified": true
+    }
+  ],
+  "helperRuns": 45,
+  "outcomesMatched": 44,
+  "failure": "Source input ancestor symlink required denial expected1 actual0. New C2 ancestry repair delegated; old helper/archive/index/review unchanged.",
+  "all122": "HELD"
+}

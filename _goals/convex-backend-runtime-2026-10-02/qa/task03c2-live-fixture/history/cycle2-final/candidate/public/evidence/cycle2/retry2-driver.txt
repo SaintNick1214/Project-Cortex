@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:55:10
+    at check (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:12:31)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:54:1
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

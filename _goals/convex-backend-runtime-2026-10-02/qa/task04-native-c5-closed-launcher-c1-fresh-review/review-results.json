@@ -1,0 +1,163 @@
+{
+  "componentVerdict": "REJECT",
+  "bridgeDisposition": "NEEDS_FIX",
+  "original122": "HELD",
+  "originalControls": {
+    "count": 25,
+    "pass": 25,
+    "exitCode": 0,
+    "copiedControlSHA256": "296a53eb0160419a18e889ed351c071a002fb5a5486501a9f14fa8b0ae646855"
+  },
+  "extraControls": {
+    "results": [
+      {
+        "name": "fd-reuse-closeSync-must-not-close-unowned",
+        "status": "FAIL",
+        "error": "unowned reused descriptor was closed\n\nfalse !== true\n",
+        "stack": "AssertionError [ERR_ASSERTION]: unowned reused descriptor was closed\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:5:614\n    at test (file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:3:40)\n    at file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:5:54\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+      },
+      {
+        "name": "fd-reuse-closeOwned-must-not-close-unowned",
+        "status": "FAIL",
+        "error": "unowned reused descriptor was closed\n\nfalse !== true\n",
+        "stack": "AssertionError [ERR_ASSERTION]: unowned reused descriptor was closed\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:5:614\n    at test (file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:3:40)\n    at file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:5:54"
+      },
+      {
+        "name": "fd-write-reuse-denied",
+        "status": "PASS"
+      },
+      {
+        "name": "traversal-and-ancestor-denial-zero-effects",
+        "status": "PASS"
+      },
+      {
+        "name": "hardlink-write-denial",
+        "status": "PASS"
+      },
+      {
+        "name": "unsupported-fs-exports-denied",
+        "status": "PASS"
+      },
+      {
+        "name": "named-esm-fs-positive",
+        "status": "PASS"
+      },
+      {
+        "name": "cjs-import-default-denial",
+        "status": "PASS"
+      },
+      {
+        "name": "unsupported-fs-named-import-denial",
+        "status": "PASS"
+      },
+      {
+        "name": "import-entry-drift-denied",
+        "status": "PASS"
+      },
+      {
+        "name": "cwd-env-contract-denials",
+        "status": "PASS"
+      },
+      {
+        "name": "compiler-getter-outfile-must-deny-before-dispatch",
+        "status": "FAIL",
+        "error": "compiler dispatched after accessor output changed\n\n1 !== 0\n",
+        "stack": "AssertionError [ERR_ASSERTION]: compiler dispatched after accessor output changed\n\n1 !== 0\n\n    at file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:17:411\n    at async test (file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:3:34)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs:17:1"
+      }
+    ],
+    "pass": 9,
+    "fail": 3,
+    "limits": "trusted component DUMMY only; denied unsupported routes are not implementation coverage"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "utcStart": "2026-10-04T16:16:45.791268+00:00",
+      "utcEnd": "2026-10-04T16:16:45.899157+00:00",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c1-fresh-review/extra-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "utcStart": "2026-10-04T16:16:45.899398+00:00",
+      "utcEnd": "2026-10-04T16:16:45.979148+00:00",
+      "exitCode": 1
+    }
+  ],
+  "sourcePRErows": 154,
+  "nodeBeforeByteBacking": {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "bytes": 125989464,
+    "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+    "identity": {
+      "dev": 27,
+      "ino": 9223372036854818761,
+      "mode": 33261,
+      "uid": 0,
+      "nlink": 1,
+      "size": 125989464,
+      "mtime_ns": 1788486252000000000,
+      "ctime_ns": 1788486252000000000
+    },
+    "beforeByteBacking": "/tmp/cortex-native-c5-closed-launcher-c1-fresh-review/prebytes/bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12.gz",
+    "encodedBytes": 44017564,
+    "encodedSHA256": "6657afff2b3f5915296a1c7373fa359caa072cf2e5713673555732e1b288c06b",
+    "exactDecompressionVerified": true
+  },
+  "original8": {
+    "PRE": {
+      "path": "/tmp/cortex-native-c5-closed-launcher-c1-fresh-review/captures/review-before--965e8f026bd54618b2594d4c9141f81f.json.gz",
+      "bytes": 4942555,
+      "sha256": "7c93aa6602859dbd21724c5895b554b8de50a66970d4bbfc9598df7467a5f8e0",
+      "decodedSha256": "e51a9f73d7d5fda3e2c7f44c114083b1daba964254a4bd807e2465cd184d74ac",
+      "rows": 148325,
+      "utcPRE": "2026-10-04T16:16:09.833664+00:00",
+      "utcPOST": "2026-10-04T16:16:44.006001+00:00"
+    },
+    "POST": {
+      "path": "/tmp/cortex-native-c5-closed-launcher-c1-fresh-review/captures/review-after--95baab27c0284fda9ac939c7ea7ec18b.json.gz",
+      "bytes": 4942557,
+      "sha256": "4135cd33eee7353eb4e8cda826299c984d322b8d11e4e22ea2685debab567726",
+      "decodedSha256": "c4e7a817fb2734303f54f36221ed233a06500dc44b7eb6d22ae8e0d6531fbdb5",
+      "rows": 148325,
+      "utcPRE": "2026-10-04T16:16:45.979376+00:00",
+      "utcPOST": "2026-10-04T16:17:18.945120+00:00"
+    },
+    "rowsEach": 148325,
+    "regularBytesEach": 3110990905,
+    "literalLinks": 30,
+    "roots": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4",
+      "work/resume/task04-model-drift-native-preparation-c4",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review",
+      "work/resume/task04-native-c4-source-fresh-review",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review",
+      "work/resume/task04-native-c4-parent-fresh-review"
+    ],
+    "fullRowsAndIdentitiesEqual": true,
+    "transportParts": 32,
+    "historicalNegativeHardlinkRows": 32,
+    "custody": "BROKEN historic continuity; prospective recovered-state only"
+  },
+  "internalEsbuildServiceArgvAndRaw": "NOT_CAPTURED",
+  "nativePaidTimingTask04Acceptance": false,
+  "dimensionScores": {
+    "Requirement Fulfillment": 2,
+    "Code Quality": 2,
+    "Test Quality": 3,
+    "Pattern Adherence": 4,
+    "Completeness": 2
+  },
+  "average": 2.6
+}

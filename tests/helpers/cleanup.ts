@@ -12,6 +12,16 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type { TestRunContext } from "./isolation";
 
+/** Global purges require an operator executing inside the trusted backend. */
+export class TestCleanupCapabilityError extends Error {
+  readonly code = "TRUSTED_BACKEND_MAINTENANCE_REQUIRED";
+  readonly requiredCapability = "trusted-backend-maintenance";
+  constructor() {
+    super("Global purge requires trusted backend maintenance execution; a public client cannot invoke internal purge functions.");
+    this.name = "TestCleanupCapabilityError";
+  }
+}
+
 export class TestCleanup {
   constructor(protected client: ConvexClient) {}
 
@@ -52,76 +62,28 @@ export class TestCleanup {
    * Safe for test environments with no real data retention requirements
    */
   async purgeMemories(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging ALL memories from database...");
-
-    try {
-      const result = await this.client.mutation(api.memories.purgeAll, {});
-
-      console.log(`✅ Purged ${result.deleted} total memories`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge memories:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
    * Purge facts from the database
    */
   async purgeFacts(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging facts table...");
-
-    try {
-      const result = await this.client.mutation(api.facts.purgeAll, {});
-
-      console.log(`✅ Purged ${result.deleted} facts`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge facts:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
    * Purge contexts from the database
    */
   async purgeContexts(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging contexts table...");
-
-    try {
-      const result = await this.client.mutation(api.contexts.purgeAll, {});
-
-      console.log(`✅ Purged ${result.deleted} contexts`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge contexts:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
    * Purge memory spaces from the database
    */
   async purgeMemorySpaces(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging memorySpaces table...");
-
-    try {
-      const result = await this.client.mutation(api.memorySpaces.purgeAll, {});
-
-      console.log(`✅ Purged ${result.deleted} memory spaces`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge memory spaces:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
@@ -134,20 +96,7 @@ export class TestCleanup {
     contexts: number;
     memorySpaces: number;
   }> {
-    // Order matters: delete in reverse dependency order
-    const convResult = await this.purgeConversations();
-    const memResult = await this.purgeMemories();
-    const factsResult = await this.purgeFacts();
-    const contextsResult = await this.purgeContexts();
-    const spacesResult = await this.purgeMemorySpaces();
-
-    return {
-      conversations: convResult.deleted,
-      memories: memResult.deleted,
-      facts: factsResult.deleted,
-      contexts: contextsResult.deleted,
-      memorySpaces: spacesResult.deleted,
-    };
+    throw new TestCleanupCapabilityError();
   }
 
   /**

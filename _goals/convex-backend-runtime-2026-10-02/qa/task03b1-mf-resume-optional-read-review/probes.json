@@ -1,0 +1,1875 @@
+{
+  "summary": {
+    "total": 80,
+    "matched": 20,
+    "unexpectedSuccesses": 60,
+    "ordinaryPositive": 10,
+    "ordinaryErrorDenied": 10
+  },
+  "results": [
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027440-r25hbefbc"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027461-twtgdt53v"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027466-srelnffmw"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027473-eai5rhyxa"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027484-fxe6ijqaz"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027488-7op2ojryp"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027491-uqcgp82m1"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "sync",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027496-l0gkmeljs"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027499-8s91dstht"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027502-idlw4gl59"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027505-anw9y1g67"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027507-zsv7m7vi7"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027509-s42v9wnlr"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "memoryId": "mem-1791058027511-5fdymn03q"
+      }
+    },
+    {
+      "operation": "memories.store",
+      "timing": "rejected",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:138:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "sync",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "memoryId": "target"
+      }
+    },
+    {
+      "operation": "memories.update",
+      "timing": "rejected",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:640:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:549:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 8,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 2,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "sync",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 0,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 8,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 2,
+      "accessorReads": 2,
+      "identityCalls": 3,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)",
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:870:28)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "updated": 1,
+        "mutationReceipt": true
+      }
+    },
+    {
+      "operation": "memories.updateMany",
+      "timing": "rejected",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at canReadMutationRows (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:689:50)\n    at handler (/workspace/Project-Cortex/convex-dev/memories.ts:851:29)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027656-k6rqmn0do"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027657-9w5f7i33p"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027662-cpu55dd2x"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027669-ee9u2j3jm"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027674-6ldwt4plf"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027681-siz1uwhz8"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027683-nqyqsbqnt"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "sync",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027685-ildfmno51"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027687-v3hmw7lkk"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027690-nfflo4i3u"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027691-lncjz0zdq"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027693-2wk9odch7"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027694-kpgxaqoqh"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "store",
+        "factId": "fact-1791058027695-gzesbd85c"
+      }
+    },
+    {
+      "operation": "facts.store",
+      "timing": "rejected",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeMemorySources/6",
+        "insert:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:140:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027699-ji5dfy5co"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027705-wrin43el1"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027712-ku7jsmvan"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027716-w68x5ukwl"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027719-zj633v60y"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027722-o7dt9m76i"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027726-5lik95k44"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "sync",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "none",
+      "expected": "safe-receipt",
+      "matched": true,
+      "injected": 0,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027731-3wl4g9g3e"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "exact",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027735-wchnrrz36"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "code-only",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027742-xu9pl8kjq"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "extra-private",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027746-fc5o78j02"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "private-message",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027750-d132tr4hk"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "data-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 4,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027753-ka49czp1t"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "code-accessor",
+      "expected": "abort-and-rollback",
+      "matched": false,
+      "injected": 1,
+      "accessorReads": 1,
+      "identityCalls": 2,
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": true,
+      "result": {
+        "mutationReceipt": true,
+        "operation": "update",
+        "factId": "fact-1791058027756-9qjq42zsw"
+      }
+    },
+    {
+      "operation": "facts.update",
+      "timing": "rejected",
+      "mode": "ordinary-error",
+      "expected": "abort-and-rollback",
+      "matched": true,
+      "injected": 1,
+      "accessorReads": 0,
+      "identityCalls": 2,
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:runtimeMemorySources/6",
+        "insert:facts/8",
+        "patch:facts/7"
+      ],
+      "stacks": [
+        "Error\n    at Object.getUserIdentity (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:16:63)\n    at requireAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:250:76)\n    at optionalMutationRead (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:624:27)\n    at factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:659:24)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:256:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-optional-review/probes.mts:19:49)"
+      ],
+      "success": false,
+      "code": "NONSTATIC",
+      "sameOriginal": true
+    }
+  ]
+}

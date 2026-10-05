@@ -1,0 +1,87 @@
+{
+  "status": "PASS_EXACT_OWNED_TWO_TARGETS_REMOVED",
+  "utcPRE": "2026-10-04T16:22:05.742742+00:00",
+  "utcPOST": "2026-10-04T16:23:48.653710+00:00",
+  "removedTargets": [
+    "/tmp/cortex-evidence-transport-c4-c1-fresh-review/mirror",
+    "/tmp/cortex-evidence-transport-c4-c1-fresh-review/public-packet"
+  ],
+  "removedTerminalEntries": 148363,
+  "removedDirectoriesIncludingTwoTargetRootsAndContainers": 62214,
+  "logicalPayloadBytesRemovedIncludingLiteralTargets": 3272368135,
+  "terminalAllocatedBytesRemovedFromActualStBlocks": 3789434880,
+  "archiveOriginalObjectsRemain": 18995,
+  "archiveOriginalBytesRemain": 1215614313,
+  "allEightSourceRowsUnchanged": 148325,
+  "sourceBeforeMetadataSha256": "18ec9ae07272eb3db8de5b8ae7ba374b2eae996373d4e83cd8cfb1352a6d32a7",
+  "sourceAfterMetadataSha256": "18ec9ae07272eb3db8de5b8ae7ba374b2eae996373d4e83cd8cfb1352a6d32a7",
+  "negative32Paths16PairsPreserved": true,
+  "candidateAndReviewFourSealsUnchanged": [
+    {
+      "root": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1",
+      "rows": 237,
+      "manifest": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/qa-manifest.json",
+        "sha256": "c8612ba3a6e8507485c7d47f364059397be23e56456f8b8d8f8c804a6fadeb5c",
+        "bytes": 53107,
+        "mode": 384,
+        "dev": 27,
+        "ino": 915409,
+        "nlink": 1,
+        "mtimeNs": 1791129712803014212,
+        "ctimeNs": 1791129712803014212
+      },
+      "exactSelfOnly": true
+    },
+    {
+      "root": "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1",
+      "rows": 47,
+      "manifest": {
+        "path": "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1/work-manifest.json",
+        "sha256": "362a6aced0e6540f07c767aeccacc01f9a3803c930abccdecca4faee34417593",
+        "bytes": 10241,
+        "mode": 384,
+        "dev": 27,
+        "ino": 915411,
+        "nlink": 1,
+        "mtimeNs": 1791129712962257105,
+        "ctimeNs": 1791129712962257105
+      },
+      "exactSelfOnly": true
+    },
+    {
+      "root": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1-fresh-review",
+      "rows": 97,
+      "manifest": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1-fresh-review/qa-manifest.json",
+        "sha256": "0a15543bcf258ca4814ac433d3e97eb9311d8239a284bad22b66ce4b2f6e9280",
+        "bytes": 33231,
+        "mode": 384,
+        "dev": 27,
+        "ino": 1003389,
+        "nlink": 1,
+        "mtimeNs": 1791130488220969724,
+        "ctimeNs": 1791130488220969724
+      },
+      "exactSelfOnly": true
+    },
+    {
+      "root": "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1-fresh-review",
+      "rows": 20,
+      "manifest": {
+        "path": "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1-fresh-review/work-manifest.json",
+        "sha256": "3866141fbd003ebf63b84cbe6b56227de73c6f220ce51adacf6619fd24a6a282",
+        "bytes": 6982,
+        "mode": 384,
+        "dev": 27,
+        "ino": 1003393,
+        "nlink": 1,
+        "mtimeNs": 1791130488296971065,
+        "ctimeNs": 1791130488296971065
+      },
+      "exactSelfOnly": true
+    }
+  ],
+  "allOtherOwnedTmpHistoryPreserved": true,
+  "nativeSourceCustodyGitAcceptance": false
+}

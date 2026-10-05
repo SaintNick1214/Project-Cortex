@@ -1,0 +1,65 @@
+--- _goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-repair/rejected/tests/unit/runtimeUnavailableAuth/closure.test.ts
++++ tests/unit/runtimeUnavailableAuth/closure.test.ts
+@@ -105,7 +105,7 @@
+     const tenant = fixture(['read', 'write'], true); const g = trapped(); g.db.rows = tenant.db.rows;
+     await outcome(call, g, input, 'FORBIDDEN');
+   });
+-  it('checks applicable source deletion fences initially and after admission without source hydration', async () => {
++  it('unavailable outcome is invariant under caller-source tombstones initially or after authority admission', async () => {
+     const input = args(call);
+     const sources: { resourceType: string; resourceId: string }[] = [];
+     if (input.conversationId) sources.push({ resourceType: 'conversation', resourceId: String(input.conversationId) });
+@@ -114,21 +114,49 @@
+     if (input.snapshotId) sources.push({ resourceType: 'source', resourceId: JSON.stringify(['conversationSnapshots', input.snapshotId]) });
+     const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, unknown> }).value;
+     if (fields.conversationIds) { input.conversationIds = ['same-id']; sources.push({ resourceType: 'conversation', resourceId: 'same-id' }); }
++    const baseline = await outcome(call, trapped(), input, 'CAPABILITY_NOT_READY');
+     for (const source of sources) for (const late of [false, true]) for (const memorySpaceId of ['space-a', undefined]) {
+       const f = trapped(); let reads = 0;
+       const seed = () => f.db.seed('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId, ...source, deletedAt: 1 });
+       if (!late) seed();
+       else f.db.beforeRead = table => { if (table === 'runtimeAuthPrincipals' && ++reads === 2) seed(); };
+-      await outcome(call, f, input, 'FORBIDDEN');
+-    }
+-  });
+-  it('source control fault cannot masquerade as an exact policy FORBIDDEN', async () => {
++      const observed = await outcome(call, f, input, 'CAPABILITY_NOT_READY');
++      expect(observed).toEqual(baseline);
++      expect(f.db.traces.filter(trace => trace.table === 'runtimeAuthTombstones').every(trace => trace.keys.some(([key, value]) => key === 'resourceType' && ['tenant', 'memorySpace'].includes(String(value))))).toBe(true);
++    }
++  });
++  it('authority control fault cannot masquerade as an exact policy FORBIDDEN after source lookups are removed', async () => {
+     const input = args(call); const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, unknown> }).value;
+     if (fields.conversationIds) input.conversationIds = ['same-id'];
+     if (!['conversationId', 'conversationIds', 'factId', 'shareId', 'snapshotId'].some(key => input[key] !== undefined)) return;
+     const f = trapped(); let reads = 0;
+     f.db.beforeRead = table => { if (table === 'runtimeAuthTombstones' && ++reads === 3) throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); };
+     await outcome(call, f, input, 'REGISTRY_OPERATION_FAILED');
++  });
++  it.each(['issuer', 'subject'])('returned identity %s accessor is opaque without invoking it', async field => {
++    const f = trapped(); let invoked = 0;
++    const value = Object.defineProperty({ issuer: 'https://host.test', subject: 'user-a' }, field, { get() { invoked++; throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); } });
++    f.ctx.auth.getUserIdentity = async () => value as never;
++    await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED'); expect(invoked).toBe(0);
++  });
++  it.each(['principal', 'membership', 'grant'])('returned %s control accessors remain opaque before pure policy', async field => {
++    const f = trapped(); let invoked = 0; const get = f.db.get.bind(f.db);
++    const table = field === 'principal' ? 'runtimeAuthPrincipals' : field === 'membership' ? 'runtimeAuthMemberships' : 'runtimeAuthGrants';
++    f.db.get = async (name, id) => {
++      const row = await get(name, id); if (name !== table || !row) return row;
++      return Object.defineProperty({ ...row }, 'version', { enumerable: true, get() { invoked++; throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); } });
++    };
++    await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED'); expect(invoked).toBe(0);
++  });
++  it('inherited identity accessors are opaque without evaluating their getters', async () => {
++    const f = trapped(); let invoked = 0;
++    const prototype = Object.defineProperty({}, 'issuer', { get() { invoked++; throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); } });
++    f.ctx.auth.getUserIdentity = async () => Object.create(prototype) as never;
++    await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED'); expect(invoked).toBe(0);
++  });
++  it('returned identity proxy descriptor faults cannot become policy denial', async () => {
++    const f = trapped(); f.ctx.auth.getUserIdentity = async () => new Proxy({ issuer: 'https://host.test', subject: 'user-a' }, { getOwnPropertyDescriptor() { throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); } }) as never;
++    await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED');
+   });
+   it.each(['identity', 'control'])('keeps %s unknown faults opaque, never invokes error getters', async location => {
+     for (const thrown of [new Error('PRIVATE SECRET'), Object.defineProperty({}, 'data', { get() { throw new Error('GETTER'); } }), new Proxy({}, { getOwnPropertyDescriptor() { throw new Error('PROXY'); } }), new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' })]) {

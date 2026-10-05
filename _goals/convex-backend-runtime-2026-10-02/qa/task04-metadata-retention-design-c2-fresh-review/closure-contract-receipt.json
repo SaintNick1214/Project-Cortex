@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "import pathlib; fs=[\"validate.ts\",\"runner.ts\",\"proofs.ts\"];root=pathlib.Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex\");[(print(\"FILE\",f),[print(str(i)+\":\"+s) for i,s in enumerate((root/f).read_text().splitlines(),1) if f==\"validate.ts\" or f==\"proofs.ts\" or any(k in s for k in [\"1000\",\"phase\",\"firsteligible\",\"firstEligible\",\"StageCapability\",\"stageCapability\",\"await\",\"ACTUAL_PROOFS\"])]) for f in fs]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:12:52.433834+00:00",
+  "endUtc": "2026-10-04T14:12:52.457183+00:00",
+  "exit": 0
+}

@@ -1,0 +1,33 @@
+"""Rerun byte-exact independent cycle1 probes, preserving their original scripts/expectations."""
+import datetime
+import hashlib
+import json
+import pathlib
+import subprocess
+import time
+import sys
+ROOT = pathlib.Path(__file__).resolve().parents[5]
+QA = ROOT/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+OUT = QA/'cycle3'
+PREFIX = ['npx', '--offline', '--cache', '/workspace/Project-Cortex/work/backend-runtime/npm12-cache', '--yes', '--package=npm@12.2.0', '--', 'npm', 'exec', '--', 'tsx']
+source_files = ['convex-dev/agents.ts', 'convex-dev/memorySpaces.ts', 'convex-dev/contexts.ts', 'convex-dev/runtimeRegistryAuth.ts', 'convex-dev/schema.ts'] + sorted(str(file.relative_to(ROOT)) for file in (ROOT/'tests/unit/runtimeRegistryAuth').glob('*.ts'))
+records = json.loads((OUT/'probe-commands.json').read_text()) if len(sys.argv)>1 else []
+for name, script in [('original-native-probes', pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/probes.mts')),
+                     ('original-authority-probes', pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/authority-probes.mts')),
+                     ('original-graph-boundary', pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts')),
+                     ('repaired-graph-boundary', QA/'cycle2/graph-boundary.mts'),
+                     ('original-accessor-finding', pathlib.Path('/tmp/task03b2b1-review2-onz6ay2u/accessor-probes.mts')),
+                     ('original-stateful-finding', pathlib.Path('/tmp/task03b2b1-review2-onz6ay2u/stateful-envelope-probes.mts')),
+                     ('repaired-accessor-outcomes', OUT/'accessor-outcomes.mts'),
+                     ('repaired-stateful-outcomes', OUT/'stateful-outcomes.mts'),
+                     ('repaired-admission-outcomes', OUT/'admission-probes.mts')]:
+  if len(sys.argv)>1 and not name.startswith('repaired-') or len(sys.argv)>1 and name=='repaired-graph-boundary': continue
+  hashes = {file: hashlib.sha256((ROOT/file).read_bytes()).hexdigest() for file in source_files}
+  command = PREFIX + [str(script)]; started = datetime.datetime.now(datetime.timezone.utc).isoformat(); begin = time.monotonic()
+  result = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  (OUT/(name+'.stdout.json')).write_text(result.stdout); (OUT/(name+'.stderr.txt')).write_text(result.stderr)
+  records.append({'name':name, 'script':str(script), 'scriptSha256':hashlib.sha256(script.read_bytes()).hexdigest(), 'command':command,
+    'cwd':str(ROOT), 'utcStart':started, 'utcEnd':datetime.datetime.now(datetime.timezone.utc).isoformat(), 'seconds':round(time.monotonic()-begin,3),
+    'exitCode':result.returncode, 'sourceHashes':hashes, 'stdout':name+'.stdout.json', 'stderr':name+'.stderr.txt',
+    'classification':'Expected INVALID_INPUT exit1: original exploit script unconditionally assumes forbidden 101st creation succeeds; unchanged' if name=='original-graph-boundary' else 'Expected exit1: immutable second-review collector asserts its original leak/success; repaired handler violates that finding assertion, not relabeled PASS' if name in ['original-accessor-finding','original-stateful-finding'] else 'Actual native probe execution'})
+  (OUT/'probe-commands.json').write_text(json.dumps(records,indent=2)+'\n'); print(json.dumps({'name':name,'exitCode':result.returncode}),flush=True)

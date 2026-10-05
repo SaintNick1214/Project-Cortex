@@ -1,0 +1,77 @@
+{
+  "utc": "2026-10-05T02:19:26.086858+00:00",
+  "status": "ROOT_RETAINED_FAILED_EXTERNAL_BEFORE_NODE_CUSTODY_VERIFIED",
+  "root": "/tmp/cortex-native-c6-independent-review-87eb6f28-3812-499b-ab08-09282d98678d",
+  "receiptSHA256": "6a9c1026861ca43b10f6578f1b8fcbf9d5a3440334f5789a260a6d38d8203f34",
+  "receiptFreshIdentity": {
+    "st_dev": 34,
+    "st_ino": 805518,
+    "st_mode": 33152,
+    "st_uid": 1000,
+    "st_gid": 1000,
+    "st_nlink": 1,
+    "st_size": 1830621,
+    "st_mtime_ns": 1791166439781408601,
+    "st_ctime_ns": 1791166439781408601
+  },
+  "beforeNodeSHA256": "f373a2614c15b76b0d5b0893f6a7e9f1977553bdd97acc1e0372ba6908ce807f",
+  "beforeNodeFreshIdentity": {
+    "st_dev": 34,
+    "st_ino": 805502,
+    "st_mode": 33152,
+    "st_uid": 1000,
+    "st_gid": 1000,
+    "st_nlink": 1,
+    "st_size": 3526415,
+    "st_mtime_ns": 1791166424905166746,
+    "st_ctime_ns": 1791166424905166746
+  },
+  "beforeRowsVerified": 5342,
+  "uniqueBeforeByteBackingsDecoded": 3336,
+  "sourcePostRowsCompared": 5330,
+  "streams": [
+    {
+      "name": "stdout",
+      "path": "/tmp/cortex-native-c6-independent-review-87eb6f28-3812-499b-ab08-09282d98678d/stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "freshIdentity": {
+        "st_dev": 34,
+        "st_ino": 805503,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 0,
+        "st_mtime_ns": 1791166424905166746,
+        "st_ctime_ns": 1791166424905166746
+      }
+    },
+    {
+      "name": "stderr",
+      "path": "/tmp/cortex-native-c6-independent-review-87eb6f28-3812-499b-ab08-09282d98678d/stderr.raw",
+      "bytes": 2562,
+      "sha256": "5f8066d52bdf0f446af303ebd8c7e6c49ad716a3deb52aaaf67afcfcc8ad451e",
+      "freshIdentity": {
+        "st_dev": 34,
+        "st_ino": 805504,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 2562,
+        "st_mtime_ns": 1791166439009396109,
+        "st_ctime_ns": 1791166439009396109
+      }
+    }
+  ],
+  "recordedExitCode": 1,
+  "recordedRemaining": [],
+  "freshInitialProcessCensus": {
+    "absent": true
+  },
+  "recordedCleanupSuccesses": 17,
+  "evidenceComplete": false,
+  "qualification": "NONE_EXTERNAL_FAILURE_RETAINED_ORIGINAL122_HELD",
+  "limits": "Historical before-consumer records/backing and recorded sourcePOST checked; current originals/config not reread as retroactive custody. No service dispatch inferred and no VM or full gate success inferred from reaching output-family denial."
+}

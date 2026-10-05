@@ -1,0 +1,83 @@
+import { describe, expect, it } from "@jest/globals";
+import * as graph from "../../../convex-dev/graphSync";
+import * as governance from "../../../convex-dev/governance";
+import * as admin from "../../../convex-dev/admin";
+import { fixture, invoke, queueArgs, seedFact, policy } from "./fixture";
+async function prepared() { const f=fixture(); const s=await seedFact(f); const id=await invoke<string>(graph.queueForSync,f.anonymous,queueArgs(f)); return {...f,...s,id}; }
+describe("independent pessimistic requirement probes",()=>{
+  it.each([["validFrom", NaN],["validFrom",-1],["validFrom",-Infinity],["validUntil",NaN],["validUntil",Infinity]])("invalid persisted lifecycle %s=%s cannot admit canonical fact",async(field,value)=>{
+    const f=fixture(); await seedFact(f,{[field as string]:value});
+    await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(f.db.table("graphSyncQueue")).toHaveLength(0);
+  });
+  it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+    const f=await prepared(); f.fact[field as string]=value;
+    await expect(invoke(graph.getUnsyncedItems,f.anonymous,{authority:f.reference,limit:1})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    await expect(invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:f.id})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(f.db.table("graphSyncQueue")[0]?.synced).toBe(false);
+  });
+  it("own owner restriction applies in queue DB selection before top K",async()=>{
+    const f=await prepared(); const own=f.db.table("graphSyncQueue")[0]!;
+    const foreign=f.db.seed("graphSyncQueue",{...own,_id:"graphSyncQueue:foreign-own-selector",ownerPrincipalId:"foreign-owner"});
+    await expect(invoke(graph.getHighPriorityItems,f.anonymous,{authority:f.reference,limit:1})).resolves.toEqual([own]);
+    expect(f.db.traces.filter(t=>t.table==="graphSyncQueue").every(t=>!t.returned.includes(foreign._id))).toBe(true);
+  });
+  it("own owner restriction applies before single queue ID hydration",async()=>{
+    const f=await prepared(); const own=f.db.table("graphSyncQueue")[0]!;
+    const foreign=f.db.seed("graphSyncQueue",{...own,_id:"graphSyncQueue:foreign-id-selector",ownerPrincipalId:"foreign-owner"});
+    await expect(invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:foreign._id})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(f.db.traces.filter(t=>t.table==="graphSyncQueue").every(t=>!t.returned.includes(foreign._id))).toBe(true);
+  });
+  it("late source tombstone before final checkpoint cannot deliver canonical payload",async()=>{
+    const f=await prepared(); let sourceRead=false, afterSource=0;
+    f.db.beforeRead=(table)=>{if(table==="runtimeMemorySources") sourceRead=true;
+      if(sourceRead && table==="runtimeAuthGrants" && ++afterSource===2) f.db.seed("runtimeAuthTombstones",{tenantId:"tenant-a",memorySpaceId:"space-a",resourceType:"source",resourceId:"source-a",deletedAt:Date.now()});};
+    await expect(invoke(graph.getUnsyncedItems,f.anonymous,{authority:f.reference,limit:1})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(f.db.table("graphSyncQueue")[0]?.synced).toBe(false);
+  });
+  it("late canonical source deletion before final checkpoint cannot mark job synced",async()=>{
+    const f=await prepared(); let sources=0, afterSource=0;
+    f.db.beforeRead=(table)=>{if(table==="runtimeMemorySources"){sources++;afterSource=0;}
+      if(sources===2 && table==="runtimeAuthGrants" && ++afterSource===2) f.source.tombstonedAt=Date.now();};
+    await expect(f.db.transaction(()=>invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:f.id}))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(f.db.table("graphSyncQueue")[0]?.synced).toBe(false);
+  });
+  it.each(["issuer","subject"])("only exact verified %s maps to authority",async(field)=>{
+    const f=fixture(); const ctx={...f.ctx,auth:{getUserIdentity:async()=>({issuer:"https://host.test",subject:"user-a",[field]:field==="issuer"?"https://host.test/":"User-a",roles:["admin"],tenantId:"tenant-a"})}};
+    await expect(invoke(governance.getPolicy,ctx,{})).rejects.toMatchObject({data:{code:"FORBIDDEN"}}); expect(f.db.writes).toBe(0);
+  });
+  it("admin only can inspect policy without reading private facts",async()=>{
+    const f=fixture(["admin"]); await seedFact(f);
+    expect(await invoke(governance.getPolicy,f.ctx,{})).toMatchObject({organizationId:"tenant-a",memorySpaceId:"space-a"});
+    await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(f.db.traces.some(t=>t.table==="facts")).toBe(false);
+  });
+  it("current admin can inspect a policy after actual creator grant revocation",async()=>{
+    const f=fixture(); const created=await invoke<{policyId:string}>(governance.setPolicy,f.ctx,{policy}); f.grant.revokedAt=1001;
+    const replacement=f.db.seed("runtimeAuthGrants",{...f.grant,_id:"runtimeAuthGrants:new-generation",version:2,revokedAt:undefined});
+    expect(await invoke(governance.getPolicy,f.ctx,{})).toEqual(policy);
+    await expect(invoke(governance.enforce,f.anonymous,{policyId:created.policyId})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    expect(replacement.version).toBe(2); expect(f.db.table("governanceEnforcement")).toHaveLength(0);
+  });
+  it("wrong stored grant ID cannot renew/re-authorize old job",async()=>{
+    const f=await prepared(); f.db.table("graphSyncQueue")[0]!.authority={...f.reference,grantId:"runtimeAuthGrants:nonexistent"}; const before=f.db.writes;
+    await expect(invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:f.id})).rejects.toMatchObject({data:{code:"FORBIDDEN"}}); expect(f.db.writes).toBe(before);
+  });
+  it("foreign source owner and same ID is excluded before private hydration",async()=>{
+    const f=fixture(); const {source}=await seedFact(f);
+    const foreign=f.db.seed("runtimeMemorySources",{...source,_id:"runtimeMemorySources:foreign",ownerPrincipalId:"foreign-owner",content:"private",contentHash:"private"});
+    expect(await invoke(graph.queueForSync,f.anonymous,queueArgs(f))).toEqual(expect.any(String));
+    expect(f.db.traces.filter(t=>t.table==="runtimeMemorySources").every(t=>!t.returned.includes(foreign._id))).toBe(true);
+  });
+  it("actual semantic source hash mismatch prevents job creation",async()=>{const f=fixture();const {source}=await seedFact(f);source.content="User prefers coffee"; await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});expect(f.db.table("graphSyncQueue")).toHaveLength(0);});
+  it("expired grant cannot mark/re-authorize a job",async()=>{const f=await prepared();f.grant.expiresAt=Date.now()-1;await expect(invoke(graph.markFailed,f.anonymous,{authority:f.reference,id:f.id,error:"attempt"})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});expect(f.db.table("graphSyncQueue")[0]?.failedAttempts).toBe(0);});
+  it("foreign scope top K rows cannot starve actual authorized queue selection",async()=>{const f=await prepared();const own=f.db.table("graphSyncQueue")[0]!;for(let i=0;i<20;i++)f.db.seed("graphSyncQueue",{...own,_id:`graphSyncQueue:foreign${i}`,tenantId:"tenant-b"});expect(await invoke(graph.getHighPriorityItems,f.anonymous,{authority:f.reference,limit:1})).toEqual([own]);});
+  it("internal inspection remains usable with revoked target and does not expose protected tables",async()=>{const f=fixture();f.grant.revokedAt=1000;const fact=f.db.seed("facts",{fact:"operator inspect"});expect(await invoke(admin.listTable,f.anonymous,{table:"facts",limit:1})).toEqual([fact]);await expect(invoke(admin.listTable,f.anonymous,{table:"runtimeAuthTombstones"})).rejects.toMatchObject({data:{code:"INVALID_INPUT"}});});
+  it("operator count reports truncation instead of fabricating exact count",async()=>{const f=fixture();for(let i=0;i<10002;i++)f.db.seed("graphSyncQueue",{entityId:String(i)});expect(await invoke(admin.countTable,f.anonymous,{table:"graphSyncQueue"})).toEqual({count:10000,truncated:true});expect(f.db.writes).toBe(0);});
+  it("metadata table with wrong-table ID is denied before deleting anything",async()=>{const f=fixture();const fact=f.db.seed("facts",{fact:"retained"});await expect(invoke(admin.deleteRecord,f.anonymous,{table:"graphSyncQueue",id:fact._id})).rejects.toMatchObject({data:{code:"INVALID_INPUT"}});expect(f.db.writes).toBe(0);expect(f.db.table("facts")).toEqual([fact]);});
+  it("native nested privilege forgery does not modify policies or auth",async()=>{const f=fixture();const forged={...policy,conversations:{...policy.conversations,retention:{...policy.conversations.retention,admin:true}}};await expect(invoke(governance.setPolicy,f.ctx,{policy:forged})).rejects.toMatchObject({data:{code:"INVALID_INPUT"}});expect(f.db.table("governancePolicies")).toHaveLength(0);expect(f.db.table("runtimeAuthGrants")).toEqual([f.grant]);});
+  it("overlapping importance ranges fail canonical policy semantics",async()=>{const f=fixture();const invalid={...policy,vector:{...policy.vector,retention:{defaultVersions:1,byImportance:[{range:[0,50],versions:1},{range:[50,100],versions:1}]}}};await expect(invoke(governance.setPolicy,f.ctx,{policy:invalid})).rejects.toMatchObject({data:{code:"INVALID_INPUT"}});expect(f.db.writes).toBe(0);});
+  it("enforcement reports simulation with zero actual deletion and preserves facts",async()=>{const f=fixture(["admin"]);const {fact}=await seedFact(f);const c=await invoke<{policyId:string}>(governance.setPolicy,f.ctx,{policy});expect(await invoke(governance.enforce,f.anonymous,{policyId:c.policyId})).toMatchObject({simulation:true,status:"RETENTION_EXECUTION_NOT_IMPLEMENTED",versionsDeleted:0,recordsPurged:0,storageFreed:0});expect(f.db.table("facts")).toEqual([fact]);});
+  it("exhaustion cannot assert projection success and secrets are sanitized",async()=>{const f=await prepared();for(let i=0;i<8;i++)await invoke(graph.markFailed,f.anonymous,{authority:f.reference,id:f.id,error:"PRIVATE_CONTENT key=do-not-return"});expect(f.db.table("graphSyncQueue")[0]).toMatchObject({failedAttempts:8,synced:false,lastError:"GRAPH_SYNC_FAILED"});});
+  it("unsupported graph source deletion and resource destruction preserve controls",async()=>{const f=await prepared();const before=f.db.writes;await expect(invoke(graph.queueForSync,f.anonymous,{...queueArgs(f),operation:"delete"})).rejects.toMatchObject({data:{code:"UNSUPPORTED_OPERATION"}});await expect(invoke(admin.deleteRecord,f.anonymous,{table:"facts",id:f.fact._id})).rejects.toMatchObject({data:{code:"UNSUPPORTED_OPERATION"}});expect(f.db.writes).toBe(before);expect(f.db.table("facts")).toEqual([f.fact]);expect(f.db.table("runtimeMemorySources")).toEqual([f.source]);});
+});

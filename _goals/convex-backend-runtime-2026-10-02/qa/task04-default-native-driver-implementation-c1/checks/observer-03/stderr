@@ -1,0 +1,16 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:11
+    if (typeof item !== "object" || seen.has(item)) throw new Error("DATA_GRAPH");
+                                                          ^
+
+Error: DATA_GRAPH
+    at inspect (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:11:59)
+    at inspect (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:24:56)
+    at inspect (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:23:98)
+    at inspect (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:24:56)
+    at canonical (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/canonical.ts:26:3)
+    at observeStream (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/convex/observer.ts:31:144)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/observer.mjs:17:388
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/observer.mjs:7:52)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/observer.mjs:17:1
+
+Node.js v24.19.0

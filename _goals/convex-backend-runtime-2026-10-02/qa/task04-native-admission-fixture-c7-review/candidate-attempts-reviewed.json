@@ -1,0 +1,128 @@
+[
+  {
+    "attempt": "offline01",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "--test",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-regressions.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-public-semantic.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-cli-prerequisites.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-publication-artifacts.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-installation.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-diagnostics.mjs"
+    ],
+    "preSHA256": "caa846b8ed16a41304b96dc75cac57e803d9f109ba4005332d555444e3c40b86",
+    "postSHA256": "6668f5f099b57d2bb1d0a034b8ad29e4ea410b605ff9ce4fd85361f265036173",
+    "sourceSnapshots": 223,
+    "result": {
+      "exitCode": 0,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  },
+  {
+    "attempt": "inventory01",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/inventory.mjs",
+      "--verify"
+    ],
+    "preSHA256": "f28cff8d5d57bc448752a1411d3e8a4deb359d50b0305fcfb98a07ab166129e8",
+    "postSHA256": "83484181c03a2991c9533cfee303dee00f691a21e769104b42bf51baf891eaba",
+    "sourceSnapshots": 223,
+    "result": {
+      "exitCode": 0,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  },
+  {
+    "attempt": "codec01",
+    "argv": [
+      "node",
+      "--test",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/offline-error-boundary.mjs"
+    ],
+    "preSHA256": "a4b2342f336a7b98f00ac67b351dc90f5eba2bcbfae569aa9b0c432c15e9d5b5",
+    "postSHA256": "a9a580535e9244972a1047ac4184ea9766c8405c9a244e87ac6cb9529a9b8027",
+    "sourceSnapshots": 224,
+    "result": {
+      "exitCode": 0,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  },
+  {
+    "attempt": "types01",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/fixture/convex/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "preSHA256": "152cee79f96de70549f5b5ae21ee105a956c6dcd4eacb9278c08430b8b860c6a",
+    "postSHA256": "76b839c0d343f3406459fe46d5281057a0a5ca44b771a53c2101aa45d416af92",
+    "sourceSnapshots": 224,
+    "result": {
+      "exitCode": 0,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  },
+  {
+    "attempt": "preflight01",
+    "argv": [
+      "node",
+      "work/resume/task04-native-admission-fixture-c7/preflight.mjs"
+    ],
+    "preSHA256": "1493b89cf4b7a5e1cfc5be93c8d181f15894b85f28095296ebf7c3e6eefd144d",
+    "postSHA256": "33066418f43421ec3881bf87d715138d1979306e31dc71a5974d062405ab9d3c",
+    "sourceSnapshots": 231,
+    "result": {
+      "exitCode": 1,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  },
+  {
+    "attempt": "syntax01",
+    "argv": [
+      "python",
+      "work/resume/task04-native-admission-fixture-c7/syntax.py"
+    ],
+    "preSHA256": "dc211f16b60599904d6f97ce8eadac9e5b85739fea8157bc7b48b214843db230",
+    "postSHA256": "9976f5390490edf9d24c0aceb377106994398004628239b277a74001192cce96",
+    "sourceSnapshots": 224,
+    "result": {
+      "exitCode": 0,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  },
+  {
+    "attempt": "preflight02",
+    "argv": [
+      "node",
+      "work/resume/task04-native-admission-fixture-c7/preflight.mjs"
+    ],
+    "preSHA256": "f97455b236f26ec0835754ce47bd32908af057dff3c1ca04d0bfc48f0a8a2302",
+    "postSHA256": "c64fcd43a309849ed76a79b0bfa4bcdb8b498a6380124d5fc4108903486a81f4",
+    "sourceSnapshots": 231,
+    "result": {
+      "exitCode": 0,
+      "sourceChangedDuringExecution": [],
+      "protectedStable": true,
+      "native": "NOT_RUN"
+    }
+  }
+]

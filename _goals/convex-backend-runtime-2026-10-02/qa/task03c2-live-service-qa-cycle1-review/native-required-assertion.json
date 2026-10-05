@@ -1,0 +1,75 @@
+{
+  "mode": "required-assertion",
+  "phase": "actual-helper-installed-native-current-source-OFFLINE",
+  "original41Replays": 0,
+  "discovered": 4,
+  "executed": 4,
+  "passed": 3,
+  "failed": 1,
+  "skipped": 0,
+  "todo": 0,
+  "fullNames": [
+    "initial host failures contained and exact sanitized keys",
+    "native QueryFailed is received by actual listener",
+    "session notification has void return",
+    "original immediate recovery value43 assertion"
+  ],
+  "reproduced": true,
+  "errorCode": "UNAUTHENTICATED",
+  "networkAttempts": 0,
+  "closed": true,
+  "credentialFilesRead": 0,
+  "privateJwtRead": 0,
+  "signedTokens": 0,
+  "sdkSourceEdits": 0,
+  "fixtureHelperExtracted": true,
+  "diagnostics": [
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 1
+    },
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 2
+    }
+  ],
+  "wireTypes": [
+    {
+      "type": "Connect"
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 0,
+      "newVersion": 1,
+      "modifications": []
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "None",
+      "baseVersion": 0
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 0
+        }
+      ]
+    }
+  ],
+  "unhandled": []
+}

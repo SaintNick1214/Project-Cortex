@@ -1,0 +1,32 @@
+{
+  "explorationOnly": true,
+  "utcNotCapturedForEarlierReads": true,
+  "failures": [
+    {
+      "operation": "first rg included nonexistent root qa directory",
+      "result": "rg diagnostic qa No such file or directory; no mutation; correct goal qa subsequently discovered"
+    },
+    {
+      "operation": "rg guessed node_modules/@convex-dev/ai-sdk-provider/dist/index.js",
+      "result": "No such file; official source src/index.ts subsequently read"
+    },
+    {
+      "operation": "initial packet builder guessed cases/scenarios rather than expectedCalls",
+      "result": "exit1 RuntimeError; corrected key only, retained full builder preimage and stderr",
+      "utc": "not recorded for original failing command; corrected successful builder UTC 2026-10-04T09:54:12.092486+00:00"
+    },
+    {
+      "operation": "guessed compatible adapter path omitted chat subdirectory",
+      "result": "read diagnostic only; rg --files discovered official src/chat path; exact UTC not captured"
+    },
+    {
+      "operation": "documentation finalizer order assertion used immutable permit identity ordinal as execution order",
+      "result": "exit1; accepted executionOrder/compiled ORDER govern; corrected documentation check, source identities unchanged; preimage/stderr preserved; original UTC unavailable"
+    },
+    {
+      "operation": "guessed compatible adapter path omitted chat subdirectory",
+      "result": "read diagnostic only; rg --files discovered official src/chat path; exact UTC not captured"
+    }
+  ],
+  "preimages": "No edited implementation or failed checker preimages exist; only exploratory read path failures. Tool transcripts retain available raw diagnostics. No inferred timestamps."
+}

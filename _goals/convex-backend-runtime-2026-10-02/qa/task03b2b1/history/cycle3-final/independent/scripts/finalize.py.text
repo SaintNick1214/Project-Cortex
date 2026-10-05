@@ -1,0 +1,48 @@
+from judge import *
+# Verify terminal immutable state and required result classification before sealing own evidence.
+for stage in ['before','after','terminal']:
+ for part,count in [('freeze',50),('qa',322)]:
+  d=json.loads((OUT/'raw'/f'{stage}-{part}.json').read_text());assert d['records']==count and d['mismatchCount']==0
+before=json.loads((OUT/'raw/before-all-qa.json').read_text())
+terminal=json.loads((OUT/'raw/terminal-all-qa.json').read_text())
+assert before==terminal and len(before)==2160
+assert (OUT/'raw/before-candidate-head.stdout').read_bytes()==(OUT/'raw/terminal-candidate-head.stdout').read_bytes()
+assert (OUT/'raw/before-candidate-status.stdout').read_bytes()==(OUT/'raw/terminal-candidate-status.stdout').read_bytes()
+expected={'node-version':0,'npm-version':0,'typescript-version':0,'backend-types':0,'scoped-types':0,'core-types':0,'scoped-lint':0,'core-lint':0,'discovery':0,'registry-tests':0,'core-tests':0,'root-types':2,'root-lint-types':2,'diff-check':0,'original-authority':0,'original-native':0,'original-graph':1,'original-accessor':1,'original-stateful':1,'required-graph':0,'required-accessor':0,'required-stateful':0,'required-admission':0,'catalog':0,'independent-read-matrix':0,'identity-read-probe':0,'identity-required-outcomes':1,'preservation-initial-failure':1,'preservation-corrected':1,'preservation-final':0,'additional-verification':0,'final-state':0,'terminal-state':0}
+commands={}
+for n,want in expected.items():
+ d=json.loads((OUT/'raw'/f'{n}.command.json').read_text());assert d['exit']==want,(n,d['exit'],want);commands[n]=d
+for p in (OUT/'raw').glob('*.command.json'):
+ commands.setdefault(p.name.removesuffix('.command.json'),json.loads(p.read_text()))
+tests=json.loads((OUT/'registry-tests.json').read_text());core=json.loads((OUT/'core-tests.json').read_text())
+assert tests['numTotalTests']==1146 and tests['numPassedTests']==1146
+assert core['numTotalTests']==133 and core['numPassedTests']==133
+for d in [tests,core]:assert d['numPendingTests']==0 and d['numTodoTests']==0
+identity=json.loads((OUT/'raw/identity-required-outcomes.stdout').read_text())
+assert identity['count']==36 and identity['reached']==36 and identity['mismatches']==36 and identity['committedReceipts']==3
+report=(OUT/'report.md').read_text()
+cat=json.loads((OUT/'catalog/selected-path-inventory.json').read_text())
+assert len(cat['endpoints'])==46
+assert all(report.count('| '+r['path']+' |')==1 for r in cat['endpoints'])
+for r in cat['endpoints']:assert r['path'] in report
+files={}
+for p in sorted(OUT.rglob('*')):
+ if p.is_file() and p.name!='manifest.json':files[str(p.relative_to(OUT))]=record(p)
+manifest={'status':'NATIVE FINAL; REJECT3.2/5; all commands complete; reviewer writes stopped after manifest',
+'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'candidate':str(C),'candidateHead':'a2c9827783e9dd49b9811a2899ba4acbeadc21cd',
+'cycle':'THIRD and last same original46; no fourth authorization or reset',
+'verdict':'REJECT','scores':{'RequirementFulfillment':2,'CodeQuality':3,'TestQuality':4,'PatternAdherence':4,'Completeness':3},'average':3.2,
+'scope':{'selected':46,'public':43,'internal':3,'agents':10,'memorySpaces':14,'contexts':22,'excludedStats':2,'excludedA2A':4},
+'candidateReportSha256':record(Q/'cycle3/report.md')['sha256'],'candidateFreezeSha256':record(Q/'cycle3/source-freeze.json')['sha256'],'candidateQaManifestSha256':record(Q/'cycle3/qa-manifest.json')['sha256'],
+'sourceRecordsVerifiedBeforeAfterTerminal':50,'thirdQaRecordsVerifiedBeforeAfterTerminal':322,'allCandidateQaRecordsUnchanged':2160,
+'archivesVerified':[450,970],'originalRawRecordsVerified':[2286,67],'READY1110SourceRawRecordsVerified':[42,48],'originalIdenticalSourceEntries':35,
+'registryOutcomes':1146,'coreOutcomes':133,'skipped':0,'todo':0,'freshDbMatrix':{'count':138,'faults':132,'positive':6,'allPassed':True},
+'freshIdentityRequired':{'count':36,'reached':36,'mismatchCount':36,'committedReceipts':3,'exit':1,'syntheticOfflineOnly':True},
+'rootTypesDiagnostics':29,'rootLintTypesDiagnostics':27,'rootIntegration':'PENDING',
+'mainObservedBefore':(OUT/'raw/before-main-head.stdout').read_text().strip(),'mainObservedTerminal':(OUT/'raw/terminal-main-head.stdout').read_text().strip(),'mainGlobalEqualityOrLaterQualityNotClaimed':True,
+'reportSha256':record(OUT/'report.md')['sha256'],'commands':commands,'fileCount':len(files),'files':files,
+'excludedRegularFiles':[{'path':'manifest.json','reason':'Self-reference excluded; exact manifest SHA provided in native FINAL'}],
+'reproducibleCachePolicy':'All reviewer-owned compiled caches are included with hash/bytes; original2286/67 external raw records are separately verified, not falsely copied',
+'pending':['stats2','A2A4','MF/source bridge','canonical conversation/anchors03T/05','durable memory/derived cascade08/12/15','SDK/internal-cleanup03C2/09','clients/runtime09/14/15','live all03','wholeTask03','full17','wholeGoal']}
+(OUT/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+print(json.dumps({'report':str(OUT/'report.md'),'reportSha256':record(OUT/'report.md')['sha256'],'manifest':str(OUT/'manifest.json'),'manifestSha256':record(OUT/'manifest.json')['sha256'],'fileCount':len(files),'excludedRegularFiles':1,'verdict':'REJECT','average':3.2},indent=2))

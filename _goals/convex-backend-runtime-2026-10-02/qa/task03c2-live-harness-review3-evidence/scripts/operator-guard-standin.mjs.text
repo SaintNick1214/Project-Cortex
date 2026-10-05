@@ -1,0 +1,3 @@
+export const repo="/offline/synthetic";export const fixture="/offline/synthetic-fixture";export let preflights=0;
+export function livePreflight(){preflights++;return {env:{PATH:process.env.PATH},envFile:"OFFLINE_ENV_SELECTOR_NO_FILE"};}
+

@@ -1,0 +1,88 @@
+jest-haste-map: Haste module naming collision: @cortexmemory/sdk
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/package.json
+    * <rootDir>/work/resume/artifact/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/quickstart/package.json
+    * <rootDir>/packages/cortex-cli/templates/vercel-ai-quickstart/package.json
+
+jest-haste-map: Haste module naming collision: cortex-current-foundation-live-fixture
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/work/resume/current-guard-prep-judge/offline-fixture/package.json
+    * <rootDir>/work/resume/current-guard-preparation-c2-review/offline-fixture/package.json
+
+jest-haste-map: Haste module naming collision: cortex-task03c2-identity-qualification
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/package.json
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/cli
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-provider
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/package.json
+    * <rootDir>/work/resume/artifact/packages/vercel-ai-provider/package.json
+
+jest-haste-map: Haste module naming collision: {{PROJECT_NAME}}
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/templates/basic/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/templates/basic/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/chat-sdk-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/templates/chat-sdk-quickstart/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/templates/chat-sdk-quickstart/package.json
+
+jest-haste-map: Haste module naming collision: cortex-backend-runtime-task01-qualification
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
+    * <rootDir>/work/resume/registry/candidate/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
+
+(node:59528) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/partial-memory-denial-repair-review/probes.test.ts (20.681 s)
+  independent actual partial-memory probes
+    ✓ updatePartialMemory rejects foreign-space with no writes or source hydration (12 ms)
+    ✓ updatePartialMemory rejects ownerless with no writes or source hydration (3 ms)
+    ✓ updatePartialMemory rejects deleted-absent with no writes or source hydration (1 ms)
+    ✓ updatePartialMemory rejects resource-tombstone with no writes or source hydration (2 ms)
+    ✓ finalizePartialMemory rejects foreign-space with no writes or source hydration (2 ms)
+    ✓ finalizePartialMemory rejects ownerless with no writes or source hydration (2 ms)
+    ✓ finalizePartialMemory rejects deleted-absent with no writes or source hydration (1 ms)
+    ✓ finalizePartialMemory rejects resource-tombstone with no writes or source hydration (2 ms)
+    ✕ owner updates twice then finalizes without losing source, tags, revision or metadata (4 ms)
+    ✓ actual progressive helper handles both error forms identically and does not retry (3 ms)
+    ✓ unchanged generic resilience and exact classifier preserve the documented terminal semantic (5 ms)
+
+  ● independent actual partial-memory probes › owner updates twice then finalizes without losing source, tags, revision or metadata
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Manual source text must be nonempty after normalization","retryable":false,"outcome":"not_dispatched"}
+
+      18 | type Capability = "read" | "write";
+      19 | export function dataDenied(code = "FORBIDDEN", message = "Access denied"): never {
+    > 20 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      21 | }
+      22 | function concrete(authority: RuntimeAuthority): ScopedDataAuthority {
+      23 |   if (!authority.memorySpaceId || authority.memorySpaceEpoch === undefined) dataDenied();
+
+      at dataDenied (convex-dev/runtimeDataAuth.ts:20:9)
+      at manualSourceText (convex-dev/runtimeDataAuth.ts:222:53)
+      at reviseDataSource (convex-dev/runtimeDataAuth.ts:467:19)
+      at handler (convex-dev/memories.ts:224:46)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)
+      at Object.<anonymous> (work/resume/partial-memory-denial-repair-review/probes.test.ts:36:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 10 passed, 11 total
+Snapshots:   0 total
+Time:        21.136 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-partial-memory-denial-repair-review/probes.json

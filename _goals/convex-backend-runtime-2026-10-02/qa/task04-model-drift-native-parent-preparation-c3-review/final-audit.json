@@ -1,0 +1,395 @@
+{
+  "status": "PASS_PREPARATION_CUSTODY",
+  "utc": "2026-10-04T12:22:30.700096+00:00",
+  "subjectPins": [
+    {
+      "kind": "extension",
+      "runtimeFreezeSHA256": "c0660c7be5fb4a23dc73b7e9ef2efcb0a157e27fba485808c8deda3f124e9d04",
+      "operationalRows": 210,
+      "qaManifestSHA256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+      "qaRows": 2000,
+      "reportSHA256": "18cde990789c11155fe50147ffe6b2890087b1609e0dc6e2bdf1f482e5afd89b"
+    },
+    {
+      "kind": "regression",
+      "runtimeFreezeSHA256": "da380a33195c872e470493f10f759f4dba7c897cec4399d53c1063892250636a",
+      "operationalRows": 207,
+      "qaManifestSHA256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+      "qaRows": 1991,
+      "reportSHA256": "0903d22776c860e4a6f0200f07567962514e52e385095aadaa10de32fcefc07c"
+    },
+    {
+      "kind": "extra",
+      "runtimeFreezeSHA256": "71439945280c6fb17c95042f82633996234188b730d285b499beb0e3f9fc16d6",
+      "operationalRows": 318,
+      "qaManifestSHA256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+      "qaRows": 2206,
+      "reportSHA256": "5ca820c12179d6697eb74d41ab410e91bebd2b76c0729e393364218dfcd5b884"
+    }
+  ],
+  "finalRuns": [
+    {
+      "path": "runs/final-added16-extension--a841a38fcb194af2a502b89aa6236eb0/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extension/added16.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/extension/added16-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-added16-extra--34706477f8324edfa99e0e069038c950/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extra/added16.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/extra/added16-results.json"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-added16-regression--8740c5a0c1914b9ab1703b2b39058e42/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/regression/added16.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/regression/added16-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-body18-extension--603a542dbb534b8fb268243f9a21010f/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/body18.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/scripts/parent-inputs.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/extension/body18-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-body18-extra--e0bb15b8380849f9923eadbd88309832/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/body18.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/scripts/parent-inputs.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/extra/body18-results.json"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-body18-regression--c78d58d56ac34de0b8c3728e204c97bc/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/body18.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/scripts/parent-inputs.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/regression/body18-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-final-inherited106-extension--a8b787fdb2384d1f9cbc5e4f1e218433/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extension/final-inherited106.mjs"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-final-inherited106-extra--1f4b9837d612497caaf4631014eb6a67/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extra/final-inherited106.mjs"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-final-inherited106-regression--56c520eb15544397b674215e814843ee/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/regression/final-inherited106.mjs"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-final-watch-extension--8d50c89887a74706ab32fa9ea86e4cbb/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extension/final-watch.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/extension/watch17-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-final-watch-extra--a5dbf1f6622f4a5e88c2d4fc7a4fd16b/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extra/final-watch.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/extra/watch17-results.json"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-final-watch-regression--ed102fd0dbe145928ab2c8d650017e9b/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/regression/final-watch.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/regression/watch17-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-legacy--f3de49e44738467cba9f000eded22efa/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-parent-preparation-c3-review/legacy.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/legacy-results.json"
+      ],
+      "sourceRows": 954,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-controls-extension--8712ed1b67064257b9951058d0fb1f52/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-controls.mjs",
+        "extension"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-controls-extra--953b26943ecf4223ba4489334c8fb867/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-controls.mjs",
+        "extra"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-controls-regression--e3feebbe419240b0808a43e4ccfc1627/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-controls.mjs",
+        "regression"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-entry-controls-extension--1d9943d23d164868a929ca7810251171/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-entry-controls.mjs",
+        "extension"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-entry-controls-extra--b8b448c34a194d95865f6678f9702d54/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-entry-controls.mjs",
+        "extra"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-entry-controls-regression--1097301997c54ca9bafcc148cd63f40a/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-entry-controls.mjs",
+        "regression"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-reserve-controls-extension--0a91cb7422dc4a4fa1a8bde724080fb5/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-reserve-controls.mjs",
+        "extension"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-reserve-controls-extra--3fd7b4d5474c4e889a749cac465d00d1/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-reserve-controls.mjs",
+        "extra"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-management-reserve-controls-regression--2e4b1002d90149e590a18726bcea3168/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/management-reserve-controls.mjs",
+        "regression"
+      ],
+      "sourceRows": 953,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-process-pin--95f8891865614ad193addaccdae8e662/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/process-pin.mjs",
+        "/workspace/Project-Cortex",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/process-pin-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-shared-body--4bd9a5a69feb417c938803c63aa21de0/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/shared-body.mjs",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/shared-body-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    },
+    {
+      "path": "runs/final-trust--45ce058f8f8743029ec46546a65b3c9e/run.receipt.json",
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/trust.mjs",
+        "/workspace/Project-Cortex",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/trust-results.json"
+      ],
+      "sourceRows": 952,
+      "prePostExact": true
+    }
+  ],
+  "contextCompleteReadHashes": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 4486,
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e"
+    },
+    {
+      "path": ".agents/CODEX-RUNTIME.md",
+      "bytes": 5824,
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895"
+    },
+    {
+      "path": ".agents/PROJECT-PROFILE.md",
+      "bytes": 14706,
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12"
+    },
+    {
+      "path": ".agents/roles/pessimistic-judge.md",
+      "bytes": 6919,
+      "sha256": "71e0e99d0709275056fbd15125eeffa71f6ed87d9a9114ea325e3c6efcf29f9a"
+    },
+    {
+      "path": ".agents/skills/judge-task/SKILL.md",
+      "bytes": 7742,
+      "sha256": "2522d7f180dec8492a698007a14b8e1259b4b237cbedba71144a8ad86469497d"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "bytes": 11937,
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "bytes": 30372,
+      "sha256": "d53e18355904cfd7d9db43951468bc4b0aca0de568008ac4c27d7fa783390c8e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "bytes": 3682,
+      "sha256": "4667290be427310c4d6988c666925344b8f86b043c09db392542991de0ce0104"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/goal.md",
+      "bytes": 16007,
+      "sha256": "e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "bytes": 2759,
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review/report.md",
+      "bytes": 15982,
+      "sha256": "77990c0c34015f021e390f16e364e3a4cd3adb6bf2bcf97f620b3ebc36cd35eb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-design-correction-c2-review/report.md",
+      "bytes": 10564,
+      "sha256": "f824e1d906193d2ef3934e8407a69e9e4c14653de49809f5bbfcd419cedeb95a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/report.md",
+      "bytes": 10929,
+      "sha256": "ea2e49d8a395f9c01d9fec869a9aa5dc27708eb93cd6d9c48937139faa116ea0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/report.md",
+      "bytes": 12833,
+      "sha256": "d9cc73e670665ab66b29c6d89d1b94ea6e94cca8c2d1d79f68c4a1ba38f8acd2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review/report.md",
+      "bytes": 8738,
+      "sha256": "730eabb7ae9c877793aca9621620092a210772cfbc4ef0cdb00382f7d46c9b76"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review/report.md",
+      "bytes": 16511,
+      "sha256": "8acfaac5ad0f6ff78f99bf6365ec6c21d21b864024083058e38aa55ea651e7d1"
+    }
+  ],
+  "actualPrivate": "NEVER_READ",
+  "sourceIndependentReview": "PENDING_OR_SEPARATE_ROOT_GATE",
+  "native": "NOT_RUN"
+}

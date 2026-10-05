@@ -1,0 +1,100 @@
+(node:65622) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.5s | 97/97 passed | /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.5%) - installed native unique diagnostic and bounded metadata ambiguity immutable write/tenant duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.4%) - installed native unique diagnostic and bounded metadata ambiguity immutable write/own duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity real QueryImpl.unique exposes both stored IDs for immutable; protocol control
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity immutable write/space duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity sessions write/own duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - accepted shared authority reader native ambiguity and infrastructure distinction principal write/own duplicate control lookup denies with zero effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity immutable read/own duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity immutable read/space duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity immutable read/tenant duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity mutable write/own duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity mutable write/space duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity mutable read/own duplicate canonical rows produce opaque denial before effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity mutable read detects missing-owner exact-key collision after owner-filtered selection
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity immutable same external ID in another exact space/tenant does not shadow normal write/read
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity mutable same external ID in another exact space/tenant does not shadow normal write/read
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - installed native unique diagnostic and bounded metadata ambiguity sessions same external ID in another exact space/tenant does not shadow normal write/read
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - accepted shared authority reader native ambiguity and infrastructure distinction principal write/space duplicate control lookup denies with zero effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - accepted shared authority reader native ambiguity and infrastructure distinction tenant-tombstone read/space duplicate control lookup denies with zero effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - accepted shared authority reader native ambiguity and infrastructure distinction space-tombstone write/space duplicate control lookup denies with zero effects
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - installed native unique diagnostic and bounded metadata ambiguity real QueryImpl.unique exposes both stored IDs for mutable; protocol control
+    /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.07s (2.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.75s
+  Test suites:        1
+  Individual tests:   88
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 passed, 1 total
+Tests:       97 passed, 97 total
+Snapshots:   0 total
+Time:        3.752 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/native-errors-second.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

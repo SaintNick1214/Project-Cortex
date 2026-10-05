@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'REGISTRY_OPERATION_FAILED'
+- 'private-driver-payload-in-public-code'
+
+    at <anonymous> (/tmp/task03b2b1-review2-onz6ay2u/stateful-envelope-probes.mts:17:102) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'REGISTRY_OPERATION_FAILED',
+  expected: 'private-driver-payload-in-public-code',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,273 @@
+{
+  "method": "Independent actual registered metadata handlers and byte-preserved accepted baseline authority share identical fixtures; installed QueryImpl.unique drives baseline diagnostics. No selectors are supplied; two independent concrete grants exist. Current candidate requires whole-operation denial; preserved case fixtures and accepted baseline actual native protocol comparisons retained.",
+  "results": [
+    {
+      "capability": "read",
+      "defect": "none",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 0,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "scope",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "AUTHORITY_LOOKUP_AMBIGUOUS",
+        "message": "Authority lookup is ambiguous",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"AUTHORITY_LOOKUP_AMBIGUOUS\",\"message\":\"Authority lookup is ambiguous\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "space-tombstone",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "AUTHORITY_LOOKUP_AMBIGUOUS",
+        "message": "Authority lookup is ambiguous",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"AUTHORITY_LOOKUP_AMBIGUOUS\",\"message\":\"Authority lookup is ambiguous\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "none",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 0,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "scope",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "AUTHORITY_LOOKUP_AMBIGUOUS",
+        "message": "Authority lookup is ambiguous",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"AUTHORITY_LOOKUP_AMBIGUOUS\",\"message\":\"Authority lookup is ambiguous\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "space-tombstone",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "AUTHORITY_LOOKUP_AMBIGUOUS",
+        "message": "Authority lookup is ambiguous",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"AUTHORITY_LOOKUP_AMBIGUOUS\",\"message\":\"Authority lookup is ambiguous\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "none",
+      "kind": "byte-preserved accepted baseline authority with native unique protocol",
+      "duplicateLookupReached": 0,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "scope",
+      "kind": "byte-preserved accepted baseline authority with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthScopes:\n [runtimeAuthScopes:4, runtimeAuthScopes:duplicate-a, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "space-tombstone",
+      "kind": "byte-preserved accepted baseline authority with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthTombstones:\n [runtimeAuthTombstones:private-one, runtimeAuthTombstones:private-two, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "none",
+      "kind": "byte-preserved accepted baseline authority with native unique protocol",
+      "duplicateLookupReached": 0,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "scope",
+      "kind": "byte-preserved accepted baseline authority with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthScopes:\n [runtimeAuthScopes:4, runtimeAuthScopes:duplicate-a, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "space-tombstone",
+      "kind": "byte-preserved accepted baseline authority with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthTombstones:\n [runtimeAuthTombstones:private-one, runtimeAuthTombstones:private-two, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "none",
+      "kind": "accepted baseline actual registered handler with native unique protocol",
+      "duplicateLookupReached": 0,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "scope",
+      "kind": "accepted baseline actual registered handler with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthScopes:\n [runtimeAuthScopes:4, runtimeAuthScopes:duplicate-a, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "read",
+      "defect": "space-tombstone",
+      "kind": "accepted baseline actual registered handler with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthTombstones:\n [runtimeAuthTombstones:private-one, runtimeAuthTombstones:private-two, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "none",
+      "kind": "accepted baseline actual registered handler with native unique protocol",
+      "duplicateLookupReached": 0,
+      "accepted": false,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "scope",
+      "kind": "accepted baseline actual registered handler with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthScopes:\n [runtimeAuthScopes:4, runtimeAuthScopes:duplicate-a, ...]",
+      "attempts": 0,
+      "writes": 0
+    },
+    {
+      "capability": "write",
+      "defect": "space-tombstone",
+      "kind": "accepted baseline actual registered handler with native unique protocol",
+      "duplicateLookupReached": 1,
+      "accepted": false,
+      "errorType": "Error",
+      "errorMessage": "unique() query returned more than one result from table runtimeAuthTombstones:\n [runtimeAuthTombstones:private-one, runtimeAuthTombstones:private-two, ...]",
+      "attempts": 0,
+      "writes": 0
+    }
+  ]
+}

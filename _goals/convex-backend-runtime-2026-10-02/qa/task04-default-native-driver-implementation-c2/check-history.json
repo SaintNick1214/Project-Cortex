@@ -1,0 +1,1691 @@
+{
+  "utc": "2026-10-04T12:58:06.572798+00:00",
+  "runs": [
+    {
+      "receipt": "checks/account-load-02/run.json",
+      "argv": [
+        "node",
+        "checks/independent-account-load.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:47.983248+00:00",
+      "endUTC": "2026-10-04T11:59:48.540168+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 193,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/account-load-final/run.json",
+      "argv": [
+        "node",
+        "checks/independent-account-load.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:41.029249+00:00",
+      "endUTC": "2026-10-04T12:02:41.641361+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 193,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/admission-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-admission.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:40:16.918899+00:00",
+      "endUTC": "2026-10-04T12:40:23.196031+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 462,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 130
+    },
+    {
+      "receipt": "checks/admission-final-02/run.json",
+      "argv": [
+        "node",
+        "checks/c2-admission.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:28.796001+00:00",
+      "endUTC": "2026-10-04T12:46:36.035244+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 716,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/admission-final-03/run.json",
+      "argv": [
+        "node",
+        "checks/c2-admission.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:52:26.947101+00:00",
+      "endUTC": "2026-10-04T12:52:34.767572+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 887,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 152
+    },
+    {
+      "receipt": "checks/async-final/run.json",
+      "argv": [
+        "node",
+        "checks/independent-async.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.900768+00:00",
+      "endUTC": "2026-10-04T12:02:41.935071+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 240,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/baseline23-02/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:48.056529+00:00",
+      "endUTC": "2026-10-04T11:59:49.601832+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3195,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/baseline23-complete-preimages-04/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:51:03.144022+00:00",
+      "endUTC": "2026-10-04T12:51:04.597235+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3195,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/c2-owned-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-owned.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:23.250175+00:00",
+      "endUTC": "2026-10-04T11:59:25.136480+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2094,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/c2-owned-final/run.json",
+      "argv": [
+        "node",
+        "checks/c2-owned.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.848040+00:00",
+      "endUTC": "2026-10-04T12:02:43.729173+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2186,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/c2-stage-phase-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-stage-phase.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:00:35.684900+00:00",
+      "endUTC": "2026-10-04T12:00:41.778079+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 1832,
+      "rawStderrBytes": 469,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 46
+    },
+    {
+      "receipt": "checks/c2-stage-phase-02/run.json",
+      "argv": [
+        "node",
+        "checks/c2-stage-phase.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:00:56.136733+00:00",
+      "endUTC": "2026-10-04T12:01:03.834395+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2322,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 46
+    },
+    {
+      "receipt": "checks/c2-stream-final/run.json",
+      "argv": [
+        "node",
+        "checks/c2-stream.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.851738+00:00",
+      "endUTC": "2026-10-04T12:02:41.161227+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 473,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/capability-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:38:52.535573+00:00",
+      "endUTC": "2026-10-04T12:38:53.721424+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 1780,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 105
+    },
+    {
+      "receipt": "checks/capability-02/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:39:17.535380+00:00",
+      "endUTC": "2026-10-04T12:39:21.463931+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2530,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 105
+    },
+    {
+      "receipt": "checks/capability-03/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:41:47.435260+00:00",
+      "endUTC": "2026-10-04T12:41:51.979753+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3459,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 130
+    },
+    {
+      "receipt": "checks/capability-04/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:43:57.973027+00:00",
+      "endUTC": "2026-10-04T12:44:02.926456+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3720,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/capability-c10-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability-c10.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:42:55.965233+00:00",
+      "endUTC": "2026-10-04T12:43:01.551608+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2068,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/capability-final-05/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:25.183742+00:00",
+      "endUTC": "2026-10-04T12:47:30.170027+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3806,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/capability-final-06/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:50:50.308037+00:00",
+      "endUTC": "2026-10-04T12:50:55.997045+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 4095,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/capability-final-07/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:56:45.259392+00:00",
+      "endUTC": "2026-10-04T12:56:50.951681+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 4095,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/codec-final/run.json",
+      "argv": [
+        "node",
+        "checks/independent-codec.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.866924+00:00",
+      "endUTC": "2026-10-04T12:02:41.256952+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 192,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/final-adapter-01/run.json",
+      "argv": [
+        "node",
+        "checks/adapter.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.073898+00:00",
+      "endUTC": "2026-10-04T12:46:47.280898+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3732,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-all-01/run.json",
+      "argv": [
+        "node",
+        "checks/all.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.343915+00:00",
+      "endUTC": "2026-10-04T12:46:50.158796+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 1562,
+      "rawStderrBytes": 841,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-audit-03/run.json",
+      "argv": [
+        "python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/scripts/audit-final.py"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:57:35.619913+00:00",
+      "endUTC": "2026-10-04T12:57:36.245575+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 6579,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/final-baseline23-03/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.460566+00:00",
+      "endUTC": "2026-10-04T12:47:36.072256+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 3195,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-c10-02/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability-c10.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.500770+00:00",
+      "endUTC": "2026-10-04T12:47:40.535201+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2068,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-c10-source-complete-03/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability-c10.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:52:25.631492+00:00",
+      "endUTC": "2026-10-04T12:52:27.916925+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1498,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 152
+    },
+    {
+      "receipt": "checks/final-c10-source-complete-04/run.json",
+      "argv": [
+        "node",
+        "checks/c2-capability-c10.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:56:46.576174+00:00",
+      "endUTC": "2026-10-04T12:56:49.001597+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1498,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/final-c2-owned-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-owned.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.595750+00:00",
+      "endUTC": "2026-10-04T12:46:49.713494+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2186,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-c2-stage-phase-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-stage-phase.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.203224+00:00",
+      "endUTC": "2026-10-04T12:46:50.109418+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 1562,
+      "rawStderrBytes": 841,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-c2-stream-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-stream.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.575786+00:00",
+      "endUTC": "2026-10-04T12:46:45.435881+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 473,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-controls-01/run.json",
+      "argv": [
+        "node",
+        "checks/controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.543819+00:00",
+      "endUTC": "2026-10-04T12:46:49.444126+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1262,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-fresh5-03/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.422182+00:00",
+      "endUTC": "2026-10-04T12:47:34.776626+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 681,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-history-03/run.json",
+      "argv": [
+        "python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/scripts/audit-history.py"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.546827+00:00",
+      "endUTC": "2026-10-04T12:47:35.942902+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1622,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-hostile6-03/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/hostile.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.502577+00:00",
+      "endUTC": "2026-10-04T12:47:34.975372+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 874,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.443262+00:00",
+      "endUTC": "2026-10-04T12:46:46.584311+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 914,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-account-load-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-account-load.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.499186+00:00",
+      "endUTC": "2026-10-04T12:46:46.301475+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 193,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-async-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-async.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.466203+00:00",
+      "endUTC": "2026-10-04T12:46:46.829596+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 240,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-codec-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-codec.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.956571+00:00",
+      "endUTC": "2026-10-04T12:46:45.741560+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 192,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-late-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-late.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.095983+00:00",
+      "endUTC": "2026-10-04T12:46:49.195759+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 499,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-money-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-money.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.300924+00:00",
+      "endUTC": "2026-10-04T12:46:45.870117+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 414,
+      "rawStderrBytes": 633,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-reader-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-reader.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.187690+00:00",
+      "endUTC": "2026-10-04T12:46:46.904880+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 3892,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-stage-wait-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-stage-wait.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.264586+00:00",
+      "endUTC": "2026-10-04T12:46:49.811549+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 296,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-stage-window-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-stage-window.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.426215+00:00",
+      "endUTC": "2026-10-04T12:46:48.695658+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 271,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-staging-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-staging.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.586980+00:00",
+      "endUTC": "2026-10-04T12:46:49.591131+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 231,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-independent-stream-01/run.json",
+      "argv": [
+        "node",
+        "checks/independent-stream.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.627687+00:00",
+      "endUTC": "2026-10-04T12:46:45.631066+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 544,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-lint-03/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/c2-capability.mjs",
+        "checks/c2-capability-c10.mjs",
+        "checks/c2-admission.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.525218+00:00",
+      "endUTC": "2026-10-04T12:47:38.549052+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-lint-06/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/c2-capability.mjs",
+        "checks/c2-capability-c10.mjs",
+        "checks/c2-admission.mjs",
+        "checks/c2-collect-original-groups.mjs",
+        "checks/c2-reader-dependencies.mjs",
+        "checks/c2-prefix-helpers.mjs",
+        "checks/c2-retained-refinements.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:56:47.892633+00:00",
+      "endUTC": "2026-10-04T12:56:51.519505+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/final-observer-01/run.json",
+      "argv": [
+        "node",
+        "checks/observer.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:45.374644+00:00",
+      "endUTC": "2026-10-04T12:46:49.742644+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2459,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-proofs-01/run.json",
+      "argv": [
+        "node",
+        "checks/proofs.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.826967+00:00",
+      "endUTC": "2026-10-04T12:46:45.829976+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 478,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-refinement4-03/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/refinement-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.399376+00:00",
+      "endUTC": "2026-10-04T12:47:34.767100+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 614,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-schema-adverse-01/run.json",
+      "argv": [
+        "node",
+        "checks/schema-adverse.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:46:44.725699+00:00",
+      "endUTC": "2026-10-04T12:46:49.350837+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1474,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/final-source-audit-01/run.json",
+      "argv": [
+        "python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/scripts/audit-final.py"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:50:17.589740+00:00",
+      "endUTC": "2026-10-04T12:50:18.336365+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 6579,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/final-source-audit-02/run.json",
+      "argv": [
+        "python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/scripts/audit-final.py"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:54:35.058835+00:00",
+      "endUTC": "2026-10-04T12:54:35.668939+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 6579,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/final-typed-lint-04/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/c2-capability.mjs",
+        "checks/c2-capability-c10.mjs",
+        "checks/c2-admission.mjs",
+        "checks/c2-collect-original-groups.mjs",
+        "checks/c2-reader-dependencies.mjs",
+        "checks/c2-prefix-helpers.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:52:50.529553+00:00",
+      "endUTC": "2026-10-04T12:52:53.721862+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 521,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 152
+    },
+    {
+      "receipt": "checks/final-typed-lint-05/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/c2-capability.mjs",
+        "checks/c2-capability-c10.mjs",
+        "checks/c2-admission.mjs",
+        "checks/c2-collect-original-groups.mjs",
+        "checks/c2-reader-dependencies.mjs",
+        "checks/c2-prefix-helpers.mjs",
+        "checks/c2-retained-refinements.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:54:05.450127+00:00",
+      "endUTC": "2026-10-04T12:54:08.572709+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/final-types-03/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:47:34.461743+00:00",
+      "endUTC": "2026-10-04T12:47:37.105191+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/fresh5-02/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:48.044305+00:00",
+      "endUTC": "2026-10-04T11:59:48.580097+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 681,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/fresh5-complete-preimages-04/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:51:03.130147+00:00",
+      "endUTC": "2026-10-04T12:51:03.428260+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 681,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/history-audit/run.json",
+      "argv": [
+        "python3",
+        "../scripts/audit-history.py"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:03:06.618487+00:00",
+      "endUTC": "2026-10-04T12:03:07.251974+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 499,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/history-audit-02/run.json",
+      "argv": [
+        "python3",
+        "../scripts/audit-history.py"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:03:20.429941+00:00",
+      "endUTC": "2026-10-04T12:03:21.285135+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1622,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/hostile6-02/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/hostile.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:48.055108+00:00",
+      "endUTC": "2026-10-04T11:59:48.556398+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 874,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/hostile6-complete-preimages-04/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/hostile.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:51:03.243601+00:00",
+      "endUTC": "2026-10-04T12:51:03.539290+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 874,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/independent-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.748527+00:00",
+      "endUTC": "2026-10-04T11:56:39.192014+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 892,
+      "rawStderrBytes": 468,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/independent-02/run.json",
+      "argv": [
+        "node",
+        "checks/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:47.995848+00:00",
+      "endUTC": "2026-10-04T11:59:48.393776+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 914,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/independent-account-load-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/independent-account-load.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.723053+00:00",
+      "endUTC": "2026-10-04T11:56:39.191136+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 1388,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/independent-async-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/independent-async.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.738957+00:00",
+      "endUTC": "2026-10-04T11:56:39.344231+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 240,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/independent-codec-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/independent-codec.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.791860+00:00",
+      "endUTC": "2026-10-04T11:56:39.147106+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 192,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/independent-late-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/independent-late.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.755770+00:00",
+      "endUTC": "2026-10-04T11:56:40.299257+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 168,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/independent-stream-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/independent-stream.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.687839+00:00",
+      "endUTC": "2026-10-04T11:56:38.962436+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 544,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/late-final/run.json",
+      "argv": [
+        "node",
+        "checks/independent-late.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.930136+00:00",
+      "endUTC": "2026-10-04T12:02:43.697096+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 168,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/linkage-final/run.json",
+      "argv": [
+        "node",
+        "checks/independent.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.879849+00:00",
+      "endUTC": "2026-10-04T12:02:41.593955+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 914,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/lint-final/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/all.mjs",
+        "checks/adapter.mjs",
+        "checks/controls.mjs",
+        "checks/harness.mjs",
+        "checks/late-accounting.mjs",
+        "checks/lifecycle.mjs",
+        "checks/managed.mjs",
+        "checks/observer.mjs",
+        "checks/proofs.mjs",
+        "checks/runner.mjs",
+        "checks/schema-adverse.mjs",
+        "checks/c2-owned.mjs",
+        "checks/reader-wrapper.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:00:05.410664+00:00",
+      "endUTC": "2026-10-04T12:00:09.072528+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/lint-final-02/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/all.mjs",
+        "checks/adapter.mjs",
+        "checks/controls.mjs",
+        "checks/harness.mjs",
+        "checks/late-accounting.mjs",
+        "checks/lifecycle.mjs",
+        "checks/managed.mjs",
+        "checks/observer.mjs",
+        "checks/proofs.mjs",
+        "checks/runner.mjs",
+        "checks/schema-adverse.mjs",
+        "checks/c2-owned.mjs",
+        "checks/c2-stage-phase.mjs",
+        "checks/c2-stream.mjs",
+        "checks/reader-wrapper.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.760019+00:00",
+      "endUTC": "2026-10-04T12:02:45.417299+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/money-unresolved/run.json",
+      "argv": [
+        "node",
+        "checks/independent-money.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:00:05.450743+00:00",
+      "endUTC": "2026-10-04T12:00:05.648264+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 414,
+      "rawStderrBytes": 633,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/original40-discovery-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-collect-original-groups.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:49:33.808492+00:00",
+      "endUTC": "2026-10-04T12:49:52.640530+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 20215,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 149
+    },
+    {
+      "receipt": "checks/original40-discovery-02/run.json",
+      "argv": [
+        "node",
+        "checks/c2-collect-original-groups.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:50:49.002579+00:00",
+      "endUTC": "2026-10-04T12:51:08.431379+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 20184,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/original40-discovery-final-03/run.json",
+      "argv": [
+        "node",
+        "checks/c2-collect-original-groups.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:54:06.792531+00:00",
+      "endUTC": "2026-10-04T12:54:24.736708+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 20184,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/reader-dependency-complete-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-reader-dependencies.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:49:38.086840+00:00",
+      "endUTC": "2026-10-04T12:49:38.389484+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 271,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 149
+    },
+    {
+      "receipt": "checks/reader-final/run.json",
+      "argv": [
+        "node",
+        "checks/reader-wrapper.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:03:55.420455+00:00",
+      "endUTC": "2026-10-04T12:03:55.735084+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 271,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/reader-wrapper-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/reader-wrapper.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.847697+00:00",
+      "endUTC": "2026-10-04T11:56:39.450542+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 271,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/refinement4-02/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/refinement-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:48.069173+00:00",
+      "endUTC": "2026-10-04T11:59:48.439386+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 614,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/refinement4-complete-preimages-04/run.json",
+      "argv": [
+        "node",
+        "../regression/v1-c2/scripts/refinement-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:51:03.251845+00:00",
+      "endUTC": "2026-10-04T12:51:03.470289+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 614,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 151
+    },
+    {
+      "receipt": "checks/retained-refinements-01/run.json",
+      "argv": [
+        "node",
+        "checks/c2-retained-refinements.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:53:44.334783+00:00",
+      "endUTC": "2026-10-04T12:53:45.577128+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 1538,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 153
+    },
+    {
+      "receipt": "checks/stage-phase-final/run.json",
+      "argv": [
+        "node",
+        "checks/c2-stage-phase.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:03:55.426500+00:00",
+      "endUTC": "2026-10-04T12:04:02.717125+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 2322,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/stage-wait-02/run.json",
+      "argv": [
+        "node",
+        "checks/independent-stage-wait.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:48.027400+00:00",
+      "endUTC": "2026-10-04T11:59:49.798009+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 309,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/staging-lint-01/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/eslint",
+        "--config",
+        "../eslint.config.mjs",
+        "convex",
+        "checks/c2-capability.mjs",
+        "checks/c2-capability-c10.mjs",
+        "checks/c2-admission.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:43:17.086892+00:00",
+      "endUTC": "2026-10-04T12:43:20.641050+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 131
+    },
+    {
+      "receipt": "checks/staging-types-01/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:37:03.229855+00:00",
+      "endUTC": "2026-10-04T12:37:04.935767+00:00",
+      "exit": 2,
+      "rawStdoutBytes": 306,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 104
+    },
+    {
+      "receipt": "checks/staging-types-02/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:37:17.597955+00:00",
+      "endUTC": "2026-10-04T12:37:19.249975+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 104
+    },
+    {
+      "receipt": "checks/staging-types-final/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:40:56.209123+00:00",
+      "endUTC": "2026-10-04T12:40:57.946753+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 130
+    },
+    {
+      "receipt": "checks/staging-unresolved/run.json",
+      "argv": [
+        "node",
+        "checks/independent-staging.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:00:05.404958+00:00",
+      "endUTC": "2026-10-04T12:00:07.204042+00:00",
+      "exit": 1,
+      "rawStdoutBytes": 586,
+      "rawStderrBytes": 547,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/stream-final/run.json",
+      "argv": [
+        "node",
+        "checks/independent-stream.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:03:55.403713+00:00",
+      "endUTC": "2026-10-04T12:03:55.542679+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 544,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/suite-01/run.json",
+      "argv": [
+        "node",
+        "--experimental-strip-types",
+        "checks/all.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:38.701359+00:00",
+      "endUTC": "2026-10-04T11:56:59.715404+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 9457,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/suite-02/run.json",
+      "argv": [
+        "node",
+        "checks/all.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:59:48.011886+00:00",
+      "endUTC": "2026-10-04T12:00:09.300135+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 9457,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/suite-final/run.json",
+      "argv": [
+        "node",
+        "checks/all.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.746144+00:00",
+      "endUTC": "2026-10-04T12:03:03.084851+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 9457,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    },
+    {
+      "receipt": "checks/typecheck-01/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:56:32.577657+00:00",
+      "endUTC": "2026-10-04T11:56:34.174303+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 43
+    },
+    {
+      "receipt": "checks/typecheck-02/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T11:57:18.317337+00:00",
+      "endUTC": "2026-10-04T11:57:20.042605+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 44
+    },
+    {
+      "receipt": "checks/typecheck-final/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:00:05.439435+00:00",
+      "endUTC": "2026-10-04T12:00:07.573103+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 45
+    },
+    {
+      "receipt": "checks/typecheck-final-02/run.json",
+      "argv": [
+        "/workspace/Project-Cortex/node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+      "startUTC": "2026-10-04T12:02:40.751827+00:00",
+      "endUTC": "2026-10-04T12:02:43.862194+00:00",
+      "exit": 0,
+      "rawStdoutBytes": 0,
+      "rawStderrBytes": 0,
+      "sourcePreBefore": true,
+      "sourcePostAfter": true,
+      "bytePreimageFiles": 103
+    }
+  ],
+  "initialFailuresPreserved": true,
+  "noNativeCertification": true
+}

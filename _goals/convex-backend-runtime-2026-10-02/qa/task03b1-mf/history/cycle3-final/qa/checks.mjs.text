@@ -1,0 +1,51 @@
+/** Exact command receipts. No deployment, client construction, network calls, or paid inference. */
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import { spawnSync } from "node:child_process";
+const cwd = process.cwd();
+const destination = path.join(cwd, "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks");
+fs.mkdirSync(destination, { recursive: true });
+const testsEnv = { CONVEX_URL: "http://127.0.0.1:1", CONVEX_TEST_MODE: "local" };
+const commands = [
+  ["backend-types", "node", ["node_modules/typescript/bin/tsc", "-p", "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/tsconfig.backend.json", "--pretty", "false"]],
+  ["root-scoped-types", "node", ["node_modules/typescript/bin/tsc", "-p", "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/tsconfig.root.json", "--pretty", "false"]],
+  ["affected-eslint", "node", ["node_modules/eslint/bin/eslint.js", "convex-dev/runtimeDataAuth.ts", "convex-dev/memories.ts", "convex-dev/facts.ts", "convex-dev/schema.ts", "tests/unit/runtimeEndpointAuth", "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/closure.mjs", "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks.mjs", "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/archive-integrity.mjs", "--report-unused-disable-directives"]],
+  ["archive-integrity", "node", ["_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/archive-integrity.mjs"]],
+  ["closure", "node", ["_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/closure.mjs"]],
+  ["endpoint-and-authority-unit", "node", ["--experimental-vm-modules", "node_modules/jest/bin/jest.js", "--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)", "--runInBand", "--forceExit"], testsEnv],
+  ["probe-source-fences", "node_modules/.bin/tsx", ["_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/source-fence-probes.mts"]],
+  ["probe-historical-source-fences", "node_modules/.bin/tsx", ["_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/historical-source-probes.mts"]],
+  ["probe-independent-read-delivery", "node_modules/.bin/tsx", ["_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/final-read-probes.mts"]],
+  ["full-root-types-expected-consumer-errors", "node", ["node_modules/typescript/bin/tsc", "--noEmit", "--pretty", "false"]],
+  ["whitespace", "git", ["diff", "--check", "--", "convex-dev/runtimeDataAuth.ts", "convex-dev/memories.ts", "convex-dev/facts.ts", "convex-dev/schema.ts", "tests/unit/runtimeEndpointAuth"]],
+];
+const receipts = [];
+for (const [name, command, args, environment = {}] of commands) {
+  const started = new Date().toISOString();
+  const result = spawnSync(command, args, { cwd, env: { ...process.env, ...environment }, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+  fs.writeFileSync(path.join(destination, `${name}.stdout.log`), result.stdout ?? "");
+  fs.writeFileSync(path.join(destination, `${name}.stderr.log`), result.stderr ?? "");
+  const receipt = { name, command, args, cwd, environment, node: process.version, started, ended: new Date().toISOString(), exitCode: result.status,
+    signal: result.signal, error: result.error?.message, stdout: `${name}.stdout.log`, stderr: `${name}.stderr.log` };
+  if (name.startsWith("probe-")) {
+    receipt.probeSha256 = crypto.createHash("sha256").update(fs.readFileSync(path.join(cwd, args[0]))).digest("hex");
+    receipt.provenance = "Executor replay of byte-identical preserved independent judge probe, not a fresh independent judgment";
+  }
+  if (name === "full-root-types-expected-consumer-errors") {
+    const diagnostics = (result.stdout ?? "").split("\n").filter(line => line.includes("error TS"));
+    const expected = [
+      { position: "src/governance/index.ts(380,28)", property: "enforce", provenance: "Parent-integrated independently FINAL PASS Task03B2-D internalized worker; Task03C consumer update pending" },
+      { position: "tests/helpers/cleanup.ts(58,62)", property: "purgeAll", provenance: "MF approved operator-internal memory purge; Task03C consumer update pending" },
+      { position: "tests/helpers/cleanup.ts(77,59)", property: "purgeAll", provenance: "MF approved operator-internal fact purge; Task03C consumer update pending" },
+      { position: "tests/interactive-runner.ts(380,55)", property: "purgeAll", provenance: "MF approved operator-internal memory purge; Task03C consumer update pending" },
+    ];
+    receipt.expectedIntegrationDiagnostics = expected;
+    receipt.fullRootStatus = "FAIL; four expected integration diagnostics are not a full-root PASS";
+    receipt.expectedConsumerDiagnosticsOnly = diagnostics.length === expected.length && diagnostics.every((line, index) =>
+      line.startsWith(expected[index].position) && line.includes("error TS2339") && line.includes(`Property '${expected[index].property}'`));
+  }
+  receipts.push(receipt); console.log(`${name}: exit ${result.status}`);
+}
+fs.writeFileSync(path.join(destination, "commands.json"), `${JSON.stringify(receipts, null, 2)}\n`);
+if (receipts.some(receipt => receipt.exitCode !== 0 && !(receipt.name === "full-root-types-expected-consumer-errors" && receipt.expectedConsumerDiagnosticsOnly))) process.exitCode = 1;

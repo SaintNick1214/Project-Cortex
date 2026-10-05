@@ -1,0 +1,18 @@
+{
+  "scope": "review tooling only",
+  "firstFinalize": {
+    "argv": [
+      "python",
+      "work/resume/task04-default-model-qualification-proposal-review/finalize.py"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exitCode": 1,
+    "failure": "SyntaxError: closing brace did not match list-comprehension opening bracket on skips.json construction; script did not execute"
+  },
+  "repair": "Added missing list-comprehension closing bracket only",
+  "rerun": {
+    "exitCode": 0,
+    "preservedSources": 206,
+    "rawReceipts": 5
+  }
+}

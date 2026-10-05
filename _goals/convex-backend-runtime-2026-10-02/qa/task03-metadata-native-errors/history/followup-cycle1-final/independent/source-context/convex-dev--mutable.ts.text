@@ -1,0 +1,113 @@
+   1: /** Verified mutable metadata. Operations preflight every target and never revive retained keys. */
+   2: import { ConvexError, v } from "convex/values";
+   3: import { mutation, query, internalMutation } from "./_generated/server";
+   4: import type { Doc } from "./_generated/dataModel";
+   5: import { scopeArgs, authority, actor, mutableRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
+   6:   tombstone, readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid } from "./runtimeMetadataAuth";
+   7: const keyArgs = { namespace: v.string(), key: v.string(), ...scopeArgs };
+   8: const filterArgs = { namespace: v.string(), ...scopeArgs, keyPrefix: v.optional(v.string()), userId: v.optional(v.string()), updatedBefore: v.optional(v.number()), updatedAfter: v.optional(v.number()) };
+   9: interface Filters { namespace: string; keyPrefix?: string; userId?: string; updatedBefore?: number; updatedAfter?: number }
+  10: function filter(rows: Doc<"mutable">[], args: Filters) { return rows.filter((row) => row.namespace === args.namespace
+  11:   && (args.keyPrefix === undefined || row.key.startsWith(args.keyPrefix)) && (args.userId === undefined || row.userId === args.userId)
+  12:   && (args.updatedBefore === undefined || row.updatedAt < args.updatedBefore) && (args.updatedAfter === undefined || row.updatedAt > args.updatedAfter)); }
+  13: function numeric(value: unknown, amount: unknown, decrement = false): number {
+  14:   const delta = amount === undefined ? 1 : amount;
+  15:   if (typeof value !== "number" || !Number.isFinite(value) || typeof delta !== "number" || !Number.isFinite(delta)) invalid();
+  16:   const result = value + (decrement ? -delta : delta); if (!Number.isFinite(result)) invalid(); return result;
+  17: }
+  18: function updateValue(value: unknown, operation: string, operand: unknown): unknown {
+  19:   if (operation === "increment" || operation === "decrement") return numeric(value, operand, operation === "decrement");
+  20:   if (operation === "append") { if (operand === undefined) invalid(); if (!Array.isArray(value)) throw new ConvexError("MUTABLE_VALUE_NOT_ARRAY"); return [...value, operand]; }
+  21:   if (operand === undefined) invalid(); return operand;
+  22: }
+  23: export const set = mutation({ args: { ...keyArgs, value: v.any(), userId: v.optional(v.string()), metadata: v.optional(v.any()) }, handler: async (ctx, args) => {
+  24:   const auth = await authority(ctx, "write", args); actor(auth, args.userId);
+  25:   const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); const key = sourceId("mutable", args.namespace, args.key);
+  26:   await newResource(ctx, auth, key); const read = row ? await readAuthority(ctx, auth, "mutable", row) : await readResourceAuthority(ctx, auth, newTarget(auth, key));
+  27:   const now = Date.now();
+  28:   if (row) { await check(ctx, "mutable", row, auth, "write"); await ctx.db.patch("mutable", row._id, { value: args.value, metadata: args.metadata === undefined ? row.metadata : args.metadata, updatedAt: now }); }
+  29:   else await newResource(ctx, auth, key);
+  30:   const id = row?._id ?? await ctx.db.insert("mutable", { namespace: args.namespace, key: args.key, value: args.value, ...canonicalFields(auth), metadata: args.metadata, createdAt: now, updatedAt: now });
+  31:   const updated = await ctx.db.get("mutable", id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  32:   return await response(ctx, auth, "mutable", updated, read, () => updated, () => ({ updated: true as const, namespace: args.namespace, key: args.key, ...(row ? {} : { createdId: id }) }));
+  33: } });
+  34: export const update = mutation({ args: { ...keyArgs, operation: v.union(v.literal("increment"), v.literal("decrement"), v.literal("append"), v.literal("custom")), operand: v.optional(v.any()) }, handler: async (ctx, args) => {
+  35:   const auth = await authority(ctx, "write", args); const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  36:   const read = await readAuthority(ctx, auth, "mutable", row); const value = updateValue(row.value, args.operation, args.operand);
+  37:   await check(ctx, "mutable", row, auth, "write"); await ctx.db.patch("mutable", row._id, { value, updatedAt: Date.now() });
+  38:   const updated = await ctx.db.get("mutable", row._id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  39:   return await response(ctx, auth, "mutable", updated, read, () => updated, () => ({ updated: true, namespace: args.namespace, key: args.key }));
+  40: } });
+  41: export const get = query({ args: keyArgs, handler: async (ctx, args) => await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read") });
+  42: export const exists = query({ args: keyArgs, handler: async (ctx, args) => (await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read")) !== null });
+  43: export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
+  44:   const rows = filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args);
+  45:   rows.sort((a, b) => (args.sortBy === "updatedAt" ? a.updatedAt - b.updatedAt : a.key.localeCompare(b.key)) * (args.sortOrder === "desc" ? -1 : 1));
+  46:   const offset = page(args.offset, 0); return rows.slice(offset, offset + page(args.limit, 100));
+  47: } });
+  48: export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args).length });
+  49: export const deleteKey = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  50:   const auth = await authority(ctx, "write", args); const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  51:   await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); await fresh(ctx, auth, "write");
+  52:   return { deleted: true, namespace: args.namespace, key: args.key };
+  53: } });
+  54: export const purgeMany = mutation({ args: filterArgs, handler: async (ctx, args) => {
+  55:   const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "mutable", auth, "write"), args);
+  56:   const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "mutable", row)));
+  57:   for (const row of rows) await check(ctx, "mutable", row, auth, "write");
+  58:   for (const row of rows) { await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); }
+  59:   await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read) => read ? [{ auth: read, capability: "read" as const }] : [])]);
+  60:   return { deleted: rows.length, namespace: args.namespace, ...(reads.every(Boolean) ? { keys: rows.map((row) => row.key) } : {}) };
+  61: } });
+  62: export const purgeNamespace = mutation({ args: { namespace: v.string(), ...scopeArgs, dryRun: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+  63:   const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "mutable", auth, "write"), args);
+  64:   const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "mutable", row)));
+  65:   for (const row of rows) await check(ctx, "mutable", row, auth, "write");
+  66:   if (!args.dryRun) for (const row of rows) { await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); }
+  67:   await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read, index) => read ? [{ auth: read, capability: "read" as const,
+  68:     ...(args.dryRun ? { resource: resource("mutable", rows[index]!) } : {}) }] : [])]);
+  69:   return { deleted: rows.length, namespace: args.namespace, dryRun: args.dryRun ?? false,
+  70:     ...(args.dryRun && reads.every(Boolean) ? { keys: rows.map((row) => row.key) } : {}) };
+  71: } });
+  72: export const transaction = mutation({ args: { ...scopeArgs, operations: v.array(v.object({ op: v.union(v.literal("set"), v.literal("update"), v.literal("delete"), v.literal("increment"), v.literal("decrement")), namespace: v.string(), key: v.string(), value: v.optional(v.any()), amount: v.optional(v.number()) })) }, handler: async (ctx, args) => {
+  73:   const auth = await authority(ctx, "write", args);
+  74:   const state = new Map<string, { row: Doc<"mutable"> | null; value: unknown; deleted: boolean; read: Awaited<ReturnType<typeof readAuthority>> }>();
+  75:   const plans: Array<{ operation: typeof args.operations[number]; value: unknown }> = [];
+  76:   // Validate authorization and functional operations for the ENTIRE batch before the first write.
+  77:   for (const operation of args.operations) {
+  78:     const key = sourceId("mutable", operation.namespace, operation.key);
+  79:     let current = state.get(key);
+  80:     if (!current) {
+  81:       const row = await mutableRow(ctx, auth, operation.namespace, operation.key, "write"); await newResource(ctx, auth, key);
+  82:       const read = row ? await readAuthority(ctx, auth, "mutable", row) : await readResourceAuthority(ctx, auth, newTarget(auth, key));
+  83:       current = { row, value: row?.value, deleted: false, read }; state.set(key, current);
+  84:     }
+  85:     if (current.deleted) invalid();
+  86:     if (operation.op !== "set" && current.value === undefined) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  87:     if (operation.op === "delete") current.deleted = true;
+  88:     else if (operation.op === "increment" || operation.op === "decrement") current.value = numeric(current.value, operation.amount, operation.op === "decrement");
+  89:     else { if (operation.value === undefined) invalid(); current.value = operation.value; }
+  90:     plans.push({ operation, value: current.value });
+  91:   }
+  92:   const results: Array<Doc<"mutable"> | { deleted: boolean; namespace: string; key: string } | { updated: boolean; namespace: string; key: string }> = [];
+  93:   for (const { operation, value } of plans) {
+  94:     const key = sourceId("mutable", operation.namespace, operation.key); const current = state.get(key)!;
+  95:     const row = await mutableRow(ctx, auth, operation.namespace, operation.key, "write");
+  96:     if (operation.op === "delete") { if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND"); await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); results.push({ deleted: true, namespace: operation.namespace, key: operation.key }); }
+  97:     else {
+  98:       const now = Date.now(); if (row) { await check(ctx, "mutable", row, auth, "write"); await ctx.db.patch("mutable", row._id, { value, updatedAt: now }); } else await newResource(ctx, auth, key);
+  99:       const id = row?._id ?? await ctx.db.insert("mutable", { namespace: operation.namespace, key: operation.key, value, ...canonicalFields(auth), createdAt: now, updatedAt: now });
+ 100:       const updated = await ctx.db.get("mutable", id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+ 101:       await check(ctx, "mutable", updated, auth, "write"); results.push(current.read ? updated : { updated: true, namespace: operation.namespace, key: operation.key }); current.row = updated;
+ 102:     }
+ 103:   }
+ 104:   await finalChecks(ctx, [{ auth, capability: "write" }, ...[...state.values()].flatMap((current) => current.read ? [{ auth: current.read, capability: "read" as const,
+ 105:     ...(!current.deleted && current.row ? { resource: resource("mutable", current.row) } : {}) }] : [])]);
+ 106:   return { success: true, operationsExecuted: plans.length, results };
+ 107: } });
+ 108: export const purgeAll = internalMutation({ args: { tenantId: v.optional(v.string()) }, handler: async (ctx, args) => {
+ 109:   const rows = args.tenantId === undefined ? await ctx.db.query("mutable").collect()
+ 110:     : await ctx.db.query("mutable").withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId)).collect();
+ 111:   for (const row of rows) { if (row.tenantId && row.ownerPrincipalId) await tombstone(ctx, "mutable", row); else await ctx.db.patch("mutable", row._id, { tombstonedAt: Date.now() }); }
+ 112:   return { deleted: rows.filter((row) => row.tombstonedAt === undefined).length };
+ 113: } });

@@ -1,0 +1,290 @@
+[
+  {
+    "name": "registry-tests",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/registry-review/jest.registry.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4-review/registry-tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:36.669808+00:00",
+    "end": "2026-10-03T19:54:02.130425+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "core-tests",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/registry-review/jest.core.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4-review/core-tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:36.670271+00:00",
+    "end": "2026-10-03T19:53:46.553209+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "backend-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:36.671008+00:00",
+    "end": "2026-10-03T19:53:46.470446+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/tsconfig.registry.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:46.470639+00:00",
+    "end": "2026-10-03T19:53:50.924038+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "core-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/tsconfig.core.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:46.553427+00:00",
+    "end": "2026-10-03T19:53:49.581068+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "root-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:49.581234+00:00",
+    "end": "2026-10-03T19:54:05.329800+00:00",
+    "exitCode": 2
+  },
+  {
+    "name": "root-lint-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:53:50.924213+00:00",
+    "end": "2026-10-03T19:54:01.743747+00:00",
+    "exitCode": 2
+  },
+  {
+    "name": "scoped-lint",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeRegistryAuth.ts",
+      "convex-dev/agents.ts",
+      "convex-dev/memorySpaces.ts",
+      "convex-dev/contexts.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeRegistryAuth",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:01.743894+00:00",
+    "end": "2026-10-03T19:54:10.096096+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/inventory.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4-review/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:02.130606+00:00",
+    "end": "2026-10-03T19:54:02.663434+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "original-authority",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-authority.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:02.663594+00:00",
+    "end": "2026-10-03T19:54:03.153440+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "original-native",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-native.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:03.153598+00:00",
+    "end": "2026-10-03T19:54:03.532666+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-graph",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-graph.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:03.532820+00:00",
+    "end": "2026-10-03T19:54:04.557403+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-accessor",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-accessor.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:04.557561+00:00",
+    "end": "2026-10-03T19:54:05.070995+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-stateful",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-stateful.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:05.071209+00:00",
+    "end": "2026-10-03T19:54:05.487044+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-admission",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-admission.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:05.329972+00:00",
+    "end": "2026-10-03T19:54:05.702366+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "db-read-matrix",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/db-read-matrix.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:05.487200+00:00",
+    "end": "2026-10-03T19:54:06.111581+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-required",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/identity-required.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:54:05.702556+00:00",
+    "end": "2026-10-03T19:54:06.084155+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-adversarial",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/work/resume/registry-review/identity-adversarial.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:55:44.091454+00:00",
+    "end": "2026-10-03T19:55:44.569944+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "discovery",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/registry-review/jest.registry.json",
+      "--listTests",
+      "--json",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:55:44.570107+00:00",
+    "end": "2026-10-03T19:55:44.758272+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "core-lint",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeAuth.ts",
+      "tests/unit/runtimeAuth",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:55:44.758454+00:00",
+    "end": "2026-10-03T19:55:51.563130+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "integrity-terminal",
+    "command": [
+      "python",
+      "/workspace/Project-Cortex/work/resume/registry-review/integrity.py"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "start": "2026-10-03T19:55:51.563302+00:00",
+    "end": "2026-10-03T19:55:51.705470+00:00",
+    "exitCode": 0
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "recordedAt": {
+    "current_time": "2026-10-04 11:38:25 UTC"
+  },
+  "status": "PUSHED_QA_CHECKPOINT_ONLY",
+  "parent": "a4c90b5ab60c56ffb805f446d47fd53792ccb83c",
+  "commit": "797d2474423cc1db29389a138d3d66548a199494",
+  "tree": "24693c1c3abae952b3db4dc77f6d6d23ac4a1b62",
+  "paths": 1886,
+  "successfulTreeCalls": 20,
+  "failedTreeCalls": [
+    {
+      "batch": 2,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "GitHub API error 422: {\"message\":\"tree.sha 3f1b67ddbd2e8cc9e13125eb21ede56919e35754 is not a valid blob\",\"documentation_url\":\"https://docs.github.com/rest/git/trees#create-a-tree\",\"status\":\"422\"}"
+          }
+        ],
+        "structuredContent": {
+          "error": "GitHub API error 422: {\"message\":\"tree.sha 3f1b67ddbd2e8cc9e13125eb21ede56919e35754 is not a valid blob\",\"documentation_url\":\"https://docs.github.com/rest/git/trees#create-a-tree\",\"status\":\"422\"}",
+          "error_code": "INVALID_ARGUMENT",
+          "error_data": {
+            "message": "tree.sha 3f1b67ddbd2e8cc9e13125eb21ede56919e35754 is not a valid blob",
+            "documentation_url": "https://docs.github.com/rest/git/trees#create-a-tree",
+            "status": "422"
+          }
+        },
+        "isError": true
+      },
+      "repair": "v2 embeds same-request new duplicate blob content; preserves original rejected request"
+    }
+  ],
+  "plan": "work/resume/connector-transfer-plan-26.json",
+  "treeProof": "work/resume/task04-transfer-26-tree-verification.json",
+  "allBytesReverified": true,
+  "tempIndexExactTree": true,
+  "liveHeadIndexRefsUnchanged": true,
+  "force": false,
+  "pr": {
+    "number": 134,
+    "draft": true,
+    "base": "dev",
+    "head": "797d2474423cc1db29389a138d3d66548a199494"
+  },
+  "exclusions": [
+    "mutable C3 preparation",
+    "default implementation and its fresh review",
+    "actual native/default paid/full goal acceptance"
+  ],
+  "localPreparationFailure": "work/resume/task04-transfer-26-materialize-initial-failure.json",
+  "scope": "all three C2 native preparations; SOURCE REJECT2.2, PARENT4.2 preparation-only combinedHOLD, stream-start design acceptance, recorder incident, checkpoint25 receipts/progress"
+}

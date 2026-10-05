@@ -1,0 +1,94 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 111/111 passed | /tests/unit/runtimeEndpointAuth/facts.test.ts
+  ✅     1.4s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ✅     0.5s | 117/117 passed | /tests/unit/runtimeEndpointAuth/memory.test.ts
+  ✅     0.2s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+  ✅     0.2s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.31s ( 4.5%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.29s ( 4.2%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.6%) - actual facts endpoint closure current and audited historical reads reject canonical hash corruption and edits cannot repair it
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.5%) - actual facts endpoint closure store constrains actual canonical selection and mutation with a foreign same-ID row inserted first
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - actual facts endpoint closure actual mutation fixture rolls back all rows and tombstones on a later write failure
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - actual facts endpoint closure search denies missing identity before data hydration and writes
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - actual facts endpoint closure editing an extracted fact (explicit sourceRef=false) creates a dedicated assertion without changing the originating memory or siblings
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - actual facts endpoint closure current and audited historical reads reject canonical normalization corruption and edits cannot repair it
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - actual facts endpoint closure editing an extracted fact (explicit sourceRef=true) creates a dedicated assertion without changing the originating memory or siblings
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - actual memories endpoint closure deleteMany handles distinct grant delivery and late invalidation without exposing unsupplied IDs
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - actual memories endpoint closure space write-only mutations succeed with safe receipts and never expose private rows or filter-selected IDs
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - actual facts endpoint closure space write-only edits return safe receipts while read+write preserves hydrated responses
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - actual memories endpoint closure own write-only mutations succeed with safe receipts and never expose private rows or filter-selected IDs
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - actual facts endpoint closure update constrains actual canonical selection and mutation with a foreign same-ID row inserted first
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - actual facts endpoint closure own write-only edits return safe receipts while read+write preserves hydrated responses
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - actual memories endpoint closure denies hash corruption on current/history reads and all source revisions without repairing or writing
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - actual memories endpoint closure store reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - actual memories endpoint closure excludes same-tenant foreign owners and old missing-owner/provenance rows before hydration
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - actual facts endpoint closure fact delivery checks the write lifetime after final grants have been fetched and the canonical source reload has awaited
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - actual memories endpoint closure denies normalization corruption on current/history reads and all source revisions without repairing or writing
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.88s (12.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.86s
+  Test suites:        5
+  Individual tests:   253
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+

@@ -1,0 +1,180 @@
+{
+  "cycle": 3,
+  "frozenAt": "2026-10-03T10:59:44.498391+00:00",
+  "reviewedHead": "2edd9435a545ecf0f1e3315fe7ae37c22c7b0623",
+  "worktree": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+  "noFurtherWrites": true,
+  "implementation": "bounded ES2021 final-index and disposable inventory repair complete",
+  "independentReview": "fresh cycle3 review pending; cycle1 REJECT and cycle2 NEEDS FIXES preserved",
+  "changedSourcesFromCycle2": [
+    "convex-dev/immutable.ts",
+    "convex-dev/users.ts",
+    "tests/unit/runtimeMetadataAuth/registrations.test.ts"
+  ],
+  "tests": {
+    "total": 189,
+    "passed": 189,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 2,
+    "namesUnchangedFromCycle2": true
+  },
+  "registered": {
+    "total": 41,
+    "public": 36,
+    "internal": 5,
+    "unresolved": 0,
+    "dispositionsUnchanged": true,
+    "nativeValidatorsUnchanged": true
+  },
+  "timestampOutcomeProbe": {
+    "classification": "executor outcome evidence, not independent judgment",
+    "passed": 14,
+    "total": 14
+  },
+  "actualBackendCompiler": {
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "exitCode": 0,
+    "lib": [
+      "ES2021",
+      "dom"
+    ],
+    "compilerConfigurationUnchanged": true
+  },
+  "scopedBackendAndTestLibraries": "ES2021",
+  "scopeChecks": "PASS: scoped executor gates only",
+  "ordinaryTestCatalogBytesUnchanged": true,
+  "ordinaryTestTemporaryCleanup": true,
+  "fullRoot": "FAIL: identical five introduced downstream SDK consumer diagnostics",
+  "baselineDiagnostics": 0,
+  "archives": [
+    {
+      "cycle": "cycle1-final",
+      "records": 69,
+      "manifestSha256": "6b712643a61ac00d6ac0da6bbe4a88a0772331b88f45ee2f299e668070ee5064",
+      "unchanged": true
+    },
+    {
+      "cycle": "cycle2-final",
+      "records": 101,
+      "manifestSha256": "fe8f897750bace73234bebbedae73d00c973e73852c1e70bd4ffddf704364f40",
+      "unchanged": true
+    }
+  ],
+  "archiveRecordsVerifiedUnchanged": 170,
+  "sourceHashes": [
+    {
+      "file": "convex-dev/immutable.ts",
+      "sha256": "1bbeca8ed71dd089a8804d34b016900a261a22a65ac70e08330b3a56a4fd0804"
+    },
+    {
+      "file": "convex-dev/mutable.ts",
+      "sha256": "14feb91094f31b9f72cdab9ecb6faa5025a27972f234b1129d4c77ee4ee037e5"
+    },
+    {
+      "file": "convex-dev/runtimeMetadataAuth.ts",
+      "sha256": "fa4e2885fcbecb24522894acccb5d894ecb42433074480d78e84a382167cf128"
+    },
+    {
+      "file": "convex-dev/schema.ts",
+      "sha256": "7cfed2ba26a0885ff8746d0ef8e1b25990c1a7771e9737917b3e726a749e1ae3"
+    },
+    {
+      "file": "convex-dev/sessions.ts",
+      "sha256": "3f5b9649255899c04afd25bcb2ee4dbb126a047a513d4781f359ab4afd0f66c8"
+    },
+    {
+      "file": "convex-dev/users.ts",
+      "sha256": "733c926437533d4113feea633e6a1ff365a45803c1db0e63b42a8d2a25550f0f"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/fixture.ts",
+      "sha256": "4fa0ff3d2575fb9ab6ab64c6ed69f5039b7a79769a6c0570b84f710a2fd3f584"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+      "sha256": "e80833776309a2f63a8083eaf9a882c78b233dcf902a68d6802a817197068af0"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/registrations.test.ts",
+      "sha256": "d4f59ade4aa9486c6289a8baafec157574d3ee8c45211c286857369b349a491c"
+    }
+  ],
+  "checkHashes": [
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/actual-backend-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/ast-inventory.log",
+      "sha256": "a50e8af8412366fcfa207cae515b767d89fd4e48d849062ef6a1697a92d37233"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/backend-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/baseline-root-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/compiler-config-unchanged.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/framework-registration.log",
+      "sha256": "210a6c01dddf19e9a78b692e00b28aa758daddfe394618f0827cb093ae21369f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/full-root-types.log",
+      "sha256": "8842748ea20a0858e9b2f05cd0f238e6d96f828d09e6c4e67f5abbf4ca031d77"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/scoped-jest.log",
+      "sha256": "b63736ea389a3bf73a8caa3996bea9527f71c344d3a95aae873f0dfb6294414e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/scoped-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/test-discovery.log",
+      "sha256": "824f4ea020a16b39b5a853272daeb3785e6e6a12484adfbf9d39c45158363247"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/test-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/timestamp-outcomes.log",
+      "sha256": "e78bc67756b4baebe5411f6f66cd1fee993919a1d66875065db44160be95821a"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/verification.initial.log",
+      "sha256": "52fe0142f3c55a9f98c822c00a030c56dea7a0ce9b8ee1d22ff3e19eed2d9545"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/checks/verification.log",
+      "sha256": "a967bc9f48bdc01948197545aa99b926d3261c00ac019254b4de1ebfe42d405c"
+    }
+  ],
+  "artifactRecords": 262,
+  "artifactHashesSha256": "93ceecd116941c8a98a739805b905b5a9b6afa0b309f8884a6e2f28e882ffbf4",
+  "receiptsSha256": "fd7391c166e4e2b6b350f34179e85812dec13c90c30501cd68624b34af752bc3",
+  "contractsSha256": "e9afcc2d017ced583c1a269d11510a5aa1eb5215f395150be53cf89ba08f5013",
+  "reportSha256": "0ea2bb592e06756e43bc7b2421674f3ad105ad7c1c471d7d8638ccfec4ac81b7",
+  "verificationSha256": "cd924ffff0caca1a6e9758cbe1cb73a798a9ede0babad2328009a472e75a523a",
+  "ordinaryTestPreservationSha256": "650189d40b93b0fbaacba0be05e2819c02c48712f51ef7a9b67d303d1f7c6645",
+  "unsupportedBoundaries": "parent integration/fresh judgment; separately reviewed MF composite source-key bridge; SDK03C2/09; managed JWT/subscription/private-byte/deployment03C2; all17 tasks ongoing"
+}

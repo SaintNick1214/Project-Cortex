@@ -1,0 +1,3223 @@
+{
+  "conversations:addMessage": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "message": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "id": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "role": {
+                "fieldType": {
+                  "type": "union",
+                  "value": [
+                    {
+                      "type": "literal",
+                      "value": "user"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "agent"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "system"
+                    }
+                  ]
+                },
+                "optional": false
+              },
+              "content": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "participantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "metadata": {
+                "fieldType": {
+                  "type": "any"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:approveMessage": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "messageId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "approverId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:checkAccess": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:count": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:create": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "participantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "participants": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "userId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "agentId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "userIds": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              },
+              "participantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceIds": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        },
+        "visibility": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "private"
+              },
+              {
+                "type": "literal",
+                "value": "space"
+              },
+              {
+                "type": "literal",
+                "value": "public"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "collaborativeSettings": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "requireApproval": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "ownerUserId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "approvedParticipants": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:deleteByIds": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationIds": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "string"
+            }
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:deleteConversation": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:deleteMany": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "dryRun": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "confirmationThreshold": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:exportConversations": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationIds": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "dateStart": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "dateEnd": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "format": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "json"
+              },
+              {
+                "type": "literal",
+                "value": "csv"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "includeMetadata": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:findConversation": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceIds": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:get": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "includeMessages": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "messageLimit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:getHistory": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "sortOrder": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "asc"
+              },
+              {
+                "type": "literal",
+                "value": "desc"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "since": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "until": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "roles": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "user"
+                },
+                {
+                  "type": "literal",
+                  "value": "agent"
+                },
+                {
+                  "type": "literal",
+                  "value": "system"
+                }
+              ]
+            }
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:getMessage": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "messageId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:getMessagesByIds": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "messageIds": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "string"
+            }
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:getOrCreate": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "participantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "participants": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "userId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "agentId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "userIds": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              },
+              "participantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceIds": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        },
+        "visibility": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "private"
+              },
+              {
+                "type": "literal",
+                "value": "space"
+              },
+              {
+                "type": "literal",
+                "value": "public"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "collaborativeSettings": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "requireApproval": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "ownerUserId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "approvedParticipants": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:list": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "participantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "createdBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "createdAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "lastMessageBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "lastMessageAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "messageCountMin": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "messageCountMax": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "sortBy": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "createdAt"
+              },
+              {
+                "type": "literal",
+                "value": "updatedAt"
+              },
+              {
+                "type": "literal",
+                "value": "lastMessageAt"
+              },
+              {
+                "type": "literal",
+                "value": "messageCount"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "sortOrder": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "asc"
+              },
+              {
+                "type": "literal",
+                "value": "desc"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "includeMessages": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:purgeAll": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {}
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "conversations:rejectMessage": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "messageId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "rejecterId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:search": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "query": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "type": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user-agent"
+              },
+              {
+                "type": "literal",
+                "value": "agent-agent"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "dateStart": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "dateEnd": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "searchIn": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "content"
+              },
+              {
+                "type": "literal",
+                "value": "metadata"
+              },
+              {
+                "type": "literal",
+                "value": "both"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "matchMode": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "contains"
+              },
+              {
+                "type": "literal",
+                "value": "exact"
+              },
+              {
+                "type": "literal",
+                "value": "fuzzy"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:setMetadata": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversations:setVisibility": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "visibility": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "private"
+              },
+              {
+                "type": "literal",
+                "value": "space"
+              },
+              {
+                "type": "literal",
+                "value": "public"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationShares:checkAccess": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "emailDomain": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationShares:create": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "grantedBy": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "sourceMemorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "grantType": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "user"
+              },
+              {
+                "type": "literal",
+                "value": "space"
+              },
+              {
+                "type": "literal",
+                "value": "link"
+              },
+              {
+                "type": "literal",
+                "value": "domain"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "grantedTo": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "permissions": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "canView": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "canViewFacts": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "canViewMemories": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "canContinue": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "canFork": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              },
+              "canExport": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": false
+              }
+            }
+          },
+          "optional": false
+        },
+        "expiresAt": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "maxViews": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "redactBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "redactSensitive": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationShares:get": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "shareId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationShares:incrementViewCount": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "shareId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "conversationShares:listByConversation": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "status": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "active"
+              },
+              {
+                "type": "literal",
+                "value": "revoked"
+              },
+              {
+                "type": "literal",
+                "value": "expired"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationShares:listByGranter": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "grantedBy": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "status": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "active"
+              },
+              {
+                "type": "literal",
+                "value": "revoked"
+              },
+              {
+                "type": "literal",
+                "value": "expired"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationShares:revoke": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "shareId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationSnapshots:create": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "createdBy": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "redactPII": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "redactBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "customRedactions": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "object",
+              "value": {
+                "pattern": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "replacement": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                }
+              }
+            }
+          },
+          "optional": true
+        },
+        "includeFacts": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "includeMemories": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationSnapshots:deleteSnapshot": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "snapshotId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationSnapshots:get": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "snapshotId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationSnapshots:listByConversation": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "includeArchived": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "conversationSnapshots:listByUser": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "includeArchived": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:countByAction": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "after": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "before": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:deleteByFactId": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "factId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "factHistory:deleteByMemorySpace": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "factHistory:deleteByUserId": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "factHistory:getActivitySummary": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "hours": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:getChangesByTimeRange": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "after": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "before": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "action": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "CREATE"
+              },
+              {
+                "type": "literal",
+                "value": "UPDATE"
+              },
+              {
+                "type": "literal",
+                "value": "SUPERSEDE"
+              },
+              {
+                "type": "literal",
+                "value": "DELETE"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:getEvent": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "eventId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:getHistory": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "factId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:getSupersessionChain": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "factId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "factHistory:logEvent": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "factId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "action": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "CREATE"
+              },
+              {
+                "type": "literal",
+                "value": "UPDATE"
+              },
+              {
+                "type": "literal",
+                "value": "SUPERSEDE"
+              },
+              {
+                "type": "literal",
+                "value": "DELETE"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "oldValue": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "newValue": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "supersededBy": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "supersedes": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "reason": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "confidence": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "pipeline": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "slotMatching": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": true
+              },
+              "semanticMatching": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": true
+              },
+              "llmResolution": {
+                "fieldType": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "participantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "conversationId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "factHistory:purgeOldEvents": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "olderThan": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": []
+  },
+  "a2a:broadcast": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "from": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "to": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "string"
+            }
+          },
+          "optional": false
+        },
+        "message": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "contextId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "importance": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "trackConversation": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "a2a:getConversation": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "agent1": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "agent2": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "since": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "until": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "minImportance": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "tags": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "a2a:request": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "from": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "to": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "message": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "timeout": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "retries": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "contextId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "importance": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  },
+  "a2a:send": {
+    "observed": {
+      "version": 1,
+      "code": "CAPABILITY_NOT_READY",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "nativeValidators": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "from": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "to": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "message": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "contextId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "importance": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "trackConversation": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "autoEmbed": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        }
+      }
+    },
+    "privateDataOrEffectAttempts": [],
+    "writes": 0,
+    "controlTables": [
+      "runtimeAuthPrincipals",
+      "runtimeAuthMemberships",
+      "runtimeAuthGrants",
+      "runtimeAuthScopes",
+      "runtimeAuthTombstones"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "total": 9,
+  "controls": [
+    {
+      "control": "all-eight-new-roots-created-private700-first",
+      "pass": true
+    },
+    {
+      "control": "root-private-idempotence",
+      "pass": true
+    },
+    {
+      "control": "Git755-root-to-original700-with-identity-evidence",
+      "pass": true
+    },
+    {
+      "control": "all-directory-preflight-before-any-chmod",
+      "reject": true,
+      "reason": "directory owner/type/current-mode mismatch"
+    },
+    {
+      "control": "directory-owner-deny-before-mutation",
+      "reject": true,
+      "reason": "directory owner/type/current-mode mismatch"
+    },
+    {
+      "control": "unknown-directory-deny-before-mutation",
+      "reject": true,
+      "reason": "unknown directory before mutation"
+    },
+    {
+      "control": "symlink-root-and-foreign-target-never-followed",
+      "reject": true,
+      "reason": "[Errno 20] Not a directory: 'task04-model-drift-native-extension-preparation-c4'"
+    },
+    {
+      "control": "directory-regular-type-collision",
+      "reject": true,
+      "reason": "[Errno 20] Not a directory: 'task04-model-drift-native-extension-preparation-c4'"
+    },
+    {
+      "control": "literal-terminal-link-never-directory-followed",
+      "pass": true
+    }
+  ],
+  "scope": "current recovered source directory metadata, ordinary nofollow descriptors only"
+}

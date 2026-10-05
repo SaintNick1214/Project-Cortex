@@ -1,0 +1,11 @@
+node:fs:2480
+      path = getValidatedPath(path);
+             ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string or an instance of Buffer or URL. Received undefined
+    at Object.writeFileSync (node:fs:2480:14)
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c3-review/extension/added16.mjs:46:4 {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v24.19.0

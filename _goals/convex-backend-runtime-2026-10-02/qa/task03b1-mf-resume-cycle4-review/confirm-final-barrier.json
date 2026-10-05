@@ -1,0 +1,1041 @@
+{
+  "summary": {
+    "total": 16,
+    "matched": 8,
+    "failed": [
+      "memories-list-final-source-replacement",
+      "memories-list-final-source-tombstone",
+      "memories-internal-final-source-replacement",
+      "memories-internal-final-source-tombstone",
+      "facts-list-final-source-replacement",
+      "facts-list-final-source-tombstone",
+      "facts-internal-final-source-replacement",
+      "facts-internal-final-source-tombstone"
+    ]
+  },
+  "results": [
+    {
+      "kind": "memories",
+      "path": "list",
+      "mode": "none",
+      "injected": false,
+      "sourceReloads": 2,
+      "hashes": 4,
+      "hashesAtInjection": -1,
+      "noFurtherDigest": false,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561799
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561799,
+          "updatedAt": 1791057561799,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561799,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/10",
+          "_creationTime": 11
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561796
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561796,
+          "updatedAt": 1791057561796,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561796,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "path": "list",
+      "mode": "early-source-replacement",
+      "injected": true,
+      "sourceReloads": 0,
+      "hashes": 2,
+      "hashesAtInjection": 2,
+      "noFurtherDigest": true,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async assertDataLinks (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:268:18)\n    at async assertDataRow (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:337:5)\n    at async currentRows (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:373:5)\n    at async listScopedMemories (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:383:10)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts:440:21)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "path": "list",
+      "mode": "final-source-replacement",
+      "injected": true,
+      "sourceReloads": 2,
+      "hashes": 4,
+      "hashesAtInjection": 4,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async currentRows (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:375:30)\n    at async listScopedMemories (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:383:10)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts:440:21)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561831
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561831,
+          "updatedAt": 1791057561831,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561831,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/10",
+          "_creationTime": 11
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561831
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561831,
+          "updatedAt": 1791057561831,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561831,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "path": "list",
+      "mode": "final-source-tombstone",
+      "injected": true,
+      "sourceReloads": 2,
+      "hashes": 4,
+      "hashesAtInjection": 4,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async currentRows (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:375:30)\n    at async listScopedMemories (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:383:10)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts:440:21)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561840
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561840,
+          "updatedAt": 1791057561840,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561840,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/10",
+          "_creationTime": 11
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561840
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561840,
+          "updatedAt": 1791057561840,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561840,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "path": "internal",
+      "mode": "none",
+      "injected": false,
+      "sourceReloads": 1,
+      "hashes": 1,
+      "hashesAtInjection": -1,
+      "noFurtherDigest": false,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561853
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561853,
+          "updatedAt": 1791057561853,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561853,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "path": "internal",
+      "mode": "early-source-replacement",
+      "injected": true,
+      "sourceReloads": 0,
+      "hashes": 1,
+      "hashesAtInjection": 1,
+      "noFurtherDigest": true,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async assertDataLinks (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:268:18)\n    at async assertDataRow (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:337:5)\n    at async getScopedMemoryDocument (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:502:12)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts:351:19)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "path": "internal",
+      "mode": "final-source-replacement",
+      "injected": true,
+      "sourceReloads": 1,
+      "hashes": 1,
+      "hashesAtInjection": 1,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts:355:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561863
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561863,
+          "updatedAt": 1791057561863,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561863,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "path": "internal",
+      "mode": "final-source-tombstone",
+      "injected": true,
+      "sourceReloads": 1,
+      "hashes": 1,
+      "hashesAtInjection": 1,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts:355:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561867
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561867,
+          "updatedAt": 1791057561867,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057561867,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "path": "list",
+      "mode": "none",
+      "injected": false,
+      "sourceReloads": 2,
+      "hashes": 4,
+      "hashesAtInjection": -1,
+      "noFurtherDigest": false,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561871
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561871,
+          "updatedAt": 1791057561871,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561871
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561871,
+          "updatedAt": 1791057561871,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "path": "list",
+      "mode": "early-source-replacement",
+      "injected": true,
+      "sourceReloads": 0,
+      "hashes": 2,
+      "hashesAtInjection": 2,
+      "noFurtherDigest": true,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async assertDataLinks (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:268:18)\n    at async assertDataRow (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:337:5)\n    at async currentRows (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:373:5)\n    at async listScopedFacts (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:389:10)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts:568:17)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "path": "list",
+      "mode": "final-source-replacement",
+      "injected": true,
+      "sourceReloads": 2,
+      "hashes": 4,
+      "hashesAtInjection": 4,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async currentRows (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:375:30)\n    at async listScopedFacts (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:389:10)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts:568:17)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561889
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561889,
+          "updatedAt": 1791057561889,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561893
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561893,
+          "updatedAt": 1791057561893,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "path": "list",
+      "mode": "final-source-tombstone",
+      "injected": true,
+      "sourceReloads": 2,
+      "hashes": 4,
+      "hashesAtInjection": 4,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async currentRows (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:375:30)\n    at async listScopedFacts (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:389:10)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts:568:17)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561907
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561907,
+          "updatedAt": 1791057561907,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561907
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561907,
+          "updatedAt": 1791057561907,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "path": "internal",
+      "mode": "none",
+      "injected": false,
+      "sourceReloads": 1,
+      "hashes": 1,
+      "hashesAtInjection": -1,
+      "noFurtherDigest": false,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561917
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561917,
+          "updatedAt": 1791057561917,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "path": "internal",
+      "mode": "early-source-replacement",
+      "injected": true,
+      "sourceReloads": 0,
+      "hashes": 1,
+      "hashesAtInjection": 1,
+      "noFurtherDigest": true,
+      "rolledBack": true,
+      "matched": true,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async assertDataLinks (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:268:18)\n    at async assertDataRow (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:337:5)\n    at async getScopedFactDocument (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:509:12)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts:1008:19)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "path": "internal",
+      "mode": "final-source-replacement",
+      "injected": true,
+      "sourceReloads": 1,
+      "hashes": 1,
+      "hashesAtInjection": 1,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts:1012:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561924
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561924,
+          "updatedAt": 1791057561924,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "path": "internal",
+      "mode": "final-source-tombstone",
+      "injected": true,
+      "sourceReloads": 1,
+      "hashes": 1,
+      "hashesAtInjection": 1,
+      "noFurtherDigest": true,
+      "rolledBack": false,
+      "matched": false,
+      "injectionStack": "Error\n    at Object.q.collect (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:20:61)\n    at async reloadLinkedWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:119:20)\n    at async recheckSourceWitnesses (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:201:3)\n    at async finalizeDataRead (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/runtimeDataAuth.ts:218:3)\n    at async handler (/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts:1012:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)\n    at async FixtureDb.transaction (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)\n    at async Object.invoke (/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)\n    at async <anonymous> (/workspace/Project-Cortex/work/resume/mf-review/confirm-final-barrier.mts:26:49)",
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057561928
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057561928,
+          "updatedAt": 1791057561928,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        }
+      ]
+    }
+  ]
+}

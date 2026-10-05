@@ -1,0 +1,31 @@
+{
+  "records": 496,
+  "actual47": 47,
+  "frozen58": 58,
+  "sdkRows": 199,
+  "checks": 364,
+  "mismatches": [],
+  "omissions": [
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/initial-direct-provisioning-observation.json"
+    },
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/report.md"
+    },
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/source-bindings.json"
+    }
+  ],
+  "changed": [],
+  "git": {
+    "head": "df49be9f2294e7c0538ea47d59e1546bff377612\n",
+    "status": " M convex-dev/facts.ts\n M convex-dev/memories.ts\n M convex-dev/schema.ts\n?? convex-dev/runtimeDataAuth.ts\n?? tests/unit/runtimeEndpointAuth/\n",
+    "headSignature": "df49be9f2294e7c0538ea47d59e1546bff377612 E docs(qa): reconcile all task gates, live counts and CI skips\n"
+  }
+}

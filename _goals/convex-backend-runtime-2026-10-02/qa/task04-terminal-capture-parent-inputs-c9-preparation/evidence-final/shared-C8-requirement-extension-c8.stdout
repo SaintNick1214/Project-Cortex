@@ -1,0 +1,58 @@
+{
+  "subject": "c8",
+  "profile": "extension",
+  "results": [],
+  "errors": [
+    {
+      "type": "expireCanonical",
+      "n": 1,
+      "diagnostic": "expireCanonical-1 actual-created\n+ actual - expected\n\n+ [\n+   'initial-physical-id-provenance.json'\n+ ]\n- []\n"
+    },
+    {
+      "type": "failFsync",
+      "n": 1,
+      "diagnostic": "failFsync-1 truthful creation names\n+ actual - expected\n\n+ []\n- [\n-   'initial-physical-id-provenance.json'\n- ]\n"
+    },
+    {
+      "type": "expireCanonical",
+      "n": 2,
+      "diagnostic": "expireCanonical-2 actual-created\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n+   'historical-native-locators.json'\n  ]\n"
+    },
+    {
+      "type": "failFsync",
+      "n": 2,
+      "diagnostic": "failFsync-2 truthful creation names\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n-   'historical-native-locators.json'\n  ]\n"
+    },
+    {
+      "type": "expireCanonical",
+      "n": 3,
+      "diagnostic": "expireCanonical-3 actual-created\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n    'historical-native-locators.json',\n+   'identities.json'\n  ]\n"
+    },
+    {
+      "type": "failFsync",
+      "n": 3,
+      "diagnostic": "failFsync-3 truthful creation names\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n    'historical-native-locators.json',\n-   'identities.json'\n  ]\n"
+    },
+    {
+      "type": "expireCanonical",
+      "n": 4,
+      "diagnostic": "expireCanonical-4 actual-created\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n    'historical-native-locators.json',\n    'identities.json',\n+   'peer-config.json'\n  ]\n"
+    },
+    {
+      "type": "failFsync",
+      "n": 4,
+      "diagnostic": "failFsync-4 truthful creation names\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n    'historical-native-locators.json',\n    'identities.json',\n-   'peer-config.json'\n  ]\n"
+    },
+    {
+      "type": "expireCanonical",
+      "n": 5,
+      "diagnostic": "expireCanonical-5 actual-created\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n    'historical-native-locators.json',\n    'identities.json',\n    'peer-config.json',\n+   'parent-inputs-receipt.json'\n  ]\n"
+    },
+    {
+      "type": "failFsync",
+      "n": 5,
+      "diagnostic": "failFsync-5 truthful creation names\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n    'historical-native-locators.json',\n    'identities.json',\n    'peer-config.json',\n-   'parent-inputs-receipt.json'\n  ]\n"
+    }
+  ],
+  "expectedIdenticalRequirements": 10
+}

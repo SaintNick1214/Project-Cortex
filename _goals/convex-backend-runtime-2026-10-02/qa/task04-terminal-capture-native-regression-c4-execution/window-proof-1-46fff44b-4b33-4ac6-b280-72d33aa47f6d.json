@@ -1,0 +1,58 @@
+{
+  "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+  "runId": "admission-46832d1ebf244c8dbd8419041b423559",
+  "phase": "synthetic",
+  "status": "PASS",
+  "version": 1,
+  "caseId": "held-current-operation",
+  "uncertaintyMs": 1000,
+  "clockAssumption": "local UTC uncertainty; no server synchrony proof",
+  "bracket": {
+    "startMs": 1791103406540,
+    "endMs": 1791103407297
+  },
+  "before": [
+    {
+      "kind": "run",
+      "windowStart": 1791103380000,
+      "windowEnd": 1791103440000,
+      "current": true,
+      "reservedUnits": 200,
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "activeConcurrency": 2
+    },
+    {
+      "kind": "tenant",
+      "windowStart": 1791103380000,
+      "windowEnd": 1791103440000,
+      "current": true,
+      "reservedUnits": 200,
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "activeConcurrency": 2
+    }
+  ],
+  "after": [
+    {
+      "kind": "run",
+      "windowStart": 1791103380000,
+      "windowEnd": 1791103440000,
+      "current": true,
+      "reservedUnits": 200,
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "activeConcurrency": 2
+    },
+    {
+      "kind": "tenant",
+      "windowStart": 1791103380000,
+      "windowEnd": 1791103440000,
+      "current": true,
+      "reservedUnits": 200,
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "activeConcurrency": 2
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/quickstart/package.json
+    * <rootDir>/packages/cortex-cli/templates/vercel-ai-quickstart/package.json
+
+(node:22498) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● actual registered visibility and canonical schema/AST catalog › AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 22
+
+      Object {
+    -   "status": 0,
+    -   "stderr": "",
+    +   "status": 1,
+    +   "stderr": "file:///workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs:211
+    + if (unresolved.length) throw new Error(JSON.stringify(unresolved, null, 2));
+    +                              ^
+    +
+    + Error: [
+    +   \"runtimeMemory:checkAuthority: missing explicit module resource policy\",
+    +   \"runtimeMemory:readSource: missing explicit module resource policy\",
+    +   \"runtimeMemory:writeSource: missing explicit module resource policy\",
+    +   \"runtimeMemory:writeDerived: missing explicit module resource policy\",
+    +   \"runtimeMemory:readFacts: missing explicit module resource policy\",
+    +   \"runtimeMemory:readVectorMatches: missing explicit module resource policy\",
+    +   \"runtimeMemory:remember: missing explicit module resource policy\",
+    +   \"runtimeMemory:recall: missing explicit module resource policy\"
+    + ]
+    +     at file:///workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs:211:30
+    +     at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    +     at async node:internal/modules/esm/loader:643:26
+    +     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      102 |     const target = "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/catalog";
+      103 |     const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+    > 104 |     expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
+          |                                                        ^
+      105 |     const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
+      106 |       completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
+      107 |     };
+
+      at Object.<anonymous> (tests/unit/runtimeWorkerAuth/admin-catalog.test.ts:104:56)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 145 passed, 146 total
+Snapshots:   0 total
+Time:        6.792 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/tests-initial.json

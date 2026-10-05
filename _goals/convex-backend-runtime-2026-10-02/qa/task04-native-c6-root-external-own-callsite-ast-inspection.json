@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-05T02:24:28.175Z",
+  "status": "ROOT_EXACT_OLD_AND_NEW_OWN_CALLSITE_AST_BINDINGS_VERIFIED",
+  "results": [
+    {
+      "version": "old",
+      "sourceSHA256": "69dc6dd4aa277e4dc344f0378c77f1000fe0aeef397eb635a2e1327dddeff58a",
+      "nodes": [
+        {
+          "kind": "SourceTextModule",
+          "line": 3,
+          "columnStart": 1532,
+          "columnEnd": 1573,
+          "argumentExpression": "source",
+          "sourceFragment": "new vm.SourceTextModule(source,{context})"
+        },
+        {
+          "kind": "runInContext",
+          "line": 3,
+          "columnStart": 1598,
+          "columnEnd": 1629,
+          "argumentExpression": "'JSON'",
+          "sourceFragment": "vm.runInContext('JSON',context)"
+        }
+      ]
+    },
+    {
+      "version": "new",
+      "sourceSHA256": "0e2d8202d7f4b1f3e8eb77a8317be12e5d46ec44294249051b610fbf06279fbc",
+      "nodes": [
+        {
+          "kind": "SourceTextModule",
+          "line": 3,
+          "columnStart": 1546,
+          "columnEnd": 1587,
+          "argumentExpression": "source",
+          "sourceFragment": "new vm.SourceTextModule(source,{context})"
+        },
+        {
+          "kind": "runInContext",
+          "line": 3,
+          "columnStart": 1612,
+          "columnEnd": 1643,
+          "argumentExpression": "'JSON'",
+          "sourceFragment": "vm.runInContext('JSON',context)"
+        }
+      ]
+    }
+  ],
+  "scope": "Static parsing only; candidate source not executed, no runtime qualification."
+}

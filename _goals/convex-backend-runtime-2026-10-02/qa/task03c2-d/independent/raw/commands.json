@@ -1,0 +1,192 @@
+[
+  {
+    "name": "build",
+    "argv": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:05:14.615628+00:00",
+    "durationSeconds": 10.323,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/build.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/jest.scoped.cjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:04:26.860335+00:00",
+    "durationSeconds": 0.448,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/discovery.log"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/governance/index.ts",
+      "src/index.ts",
+      "tests/unit/runtimeWorkerClient/governance.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:04:26.788472+00:00",
+    "durationSeconds": 19.833,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/lint.log"
+  },
+  {
+    "name": "node-version",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--version"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:04:23.158797+00:00",
+    "durationSeconds": 0.012,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/node-version.log"
+  },
+  {
+    "name": "npm-version",
+    "argv": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "--version"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:04:26.821551+00:00",
+    "durationSeconds": 3.156,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/npm-version.log"
+  },
+  {
+    "name": "outcomes",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/jest.scoped.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile=/tmp/task03c2-d-review1-o0v1eus6/raw/outcomes.json"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:04:26.814195+00:00",
+    "durationSeconds": 23.663,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/outcomes.log"
+  },
+  {
+    "name": "packed-contract",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/packed-browser-contract.mjs"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:05:31.038438+00:00",
+    "durationSeconds": 2.69,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/packed-contract.log"
+  },
+  {
+    "argv": [
+      "node",
+      "/tmp/task03c2-d-review1-o0v1eus6/source-boundary.cjs"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6",
+    "exitCode": 0
+  },
+  {
+    "argv": [
+      "node",
+      "/tmp/task03c2-d-review1-o0v1eus6/source-boundary.cjs"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6",
+    "exitCode": 1,
+    "reason": "Judge probe expected uppercase SIMULATION backend source literal; actual reviewed backend uses simulation: true and RETENTION_EXECUTION_NOT_IMPLEMENTED. Not an implementation defect."
+  },
+  {
+    "name": "types",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/tsconfig.scoped.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+    "startedAt": "2026-10-03T11:04:26.718787+00:00",
+    "durationSeconds": 23.411,
+    "exitCode": 0,
+    "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+    },
+    "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/types.log"
+  }
+]

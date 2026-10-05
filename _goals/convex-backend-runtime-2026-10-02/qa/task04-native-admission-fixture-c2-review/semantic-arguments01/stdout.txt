@@ -1,0 +1,36 @@
+node:fs:1771
+  const stats = binding.lstat(
+                        ^
+
+Error: ENOENT: no such file or directory, lstat '/workspace/Project-Cortex/work/backend-runtime/task04-native-admission-c1'
+    at lstatSync (node:fs:1771:25)
+    at canonical (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/scripts/guard.mjs:11:95)
+    at json (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/scripts/guard.mjs:13:87)
+    at reviewed (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/scripts/guard.mjs:19:66)
+    at livePreflight (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/scripts/guard.mjs:23:38)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/scripts/arguments.mjs:4:63
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'lstat',
+  path: '/workspace/Project-Cortex/work/backend-runtime/task04-native-admission-c1'
+}
+
+Node.js v24.19.0
+✖ /workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c2-review/semantic-arguments.mjs (210.149067ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 219.741316
+
+✖ failing tests:
+
+test at work/resume/task04-native-admission-fixture-c2-review/semantic-arguments.mjs:1:1
+✖ /workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c2-review/semantic-arguments.mjs (210.149067ms)
+  'test failed'

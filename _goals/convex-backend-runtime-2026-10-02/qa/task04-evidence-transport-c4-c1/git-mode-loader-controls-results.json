@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "total": 5,
+  "controls": [
+    {
+      "control": "helper-source-all-ancestry-nofollow",
+      "rejected": true,
+      "reason": "[Errno 20] Not a directory: 'packet-alias'"
+    },
+    {
+      "control": "approved-py-source-hash-before-execution",
+      "rejected": true,
+      "reason": "materializer .py source hash mismatch"
+    },
+    {
+      "control": "approved-py-source-exact-size-before-buffer",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "control": "approved-py-source-short-size",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "control": "approved-py-source-nlink1",
+      "rejected": true,
+      "reason": ""
+    }
+  ],
+  "normalizerSourceSha256": "187c3950f02caa16f0671a615faa93d0657377e8b84da95b7ea28e7069da48cf",
+  "ownCachedBytecodeRead": false
+}

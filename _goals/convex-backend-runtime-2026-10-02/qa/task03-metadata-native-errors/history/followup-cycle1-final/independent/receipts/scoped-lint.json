@@ -1,0 +1,29 @@
+{
+  "name": "scoped-lint",
+  "argv": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "convex-dev/runtimeAuth.ts",
+    "convex-dev/runtimeMetadataAuth.ts",
+    "tests/unit/runtimeMetadataAuth",
+    "tests/unit/runtimeAuth/provisioning.test.ts",
+    "--report-unused-disable-directives"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+  "startedAt": "2026-10-03T13:03:56.566158+00:00",
+  "finishedAt": "2026-10-03T13:04:15.981850+00:00",
+  "seconds": 19.415696871001273,
+  "exitCode": 0,
+  "environment": {
+    "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+    "CONVEX_URL": "http://127.0.0.1:1",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "CONVEX_TEST_MODE": "local",
+    "CI": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+    "npm_config_offline": "true",
+    "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+    "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+  }
+}

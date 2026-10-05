@@ -1,0 +1,26 @@
+{
+  "kind": "extension",
+  "status": "PASS",
+  "files": 14,
+  "usage": {
+    "bytes": 2470,
+    "rows": 16
+  },
+  "constructorReserve": {
+    "rows": 38,
+    "bytes": 2226176
+  },
+  "jointAllocatedRows": 4800,
+  "jointAllocatedBytes": 7143424,
+  "sourcePins": [
+    {
+      "path": "scripts/guard.mjs",
+      "sha256": "d9ff341926d38afdbc476ddbbc8a83c1aabebc72069772833e7a4ff9b41c16ab"
+    },
+    {
+      "path": "scripts/publication-artifacts.mjs",
+      "sha256": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334"
+    }
+  ],
+  "scope": "EXACT_GUARD_JOURNAL_AND_ARTIFACT_USAGE_DUMMY_FILES_NO_NATIVE"
+}

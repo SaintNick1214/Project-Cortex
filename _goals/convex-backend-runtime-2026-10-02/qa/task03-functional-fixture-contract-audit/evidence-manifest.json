@@ -1,0 +1,9 @@
+{
+  "scope": "supplemental offline native functional contract audit; not service or C11 judgment",
+  "files": {
+    "probe.mjs.text": "87480da7fb219a49521cda8f85ca745631c898baf246e4a305f85a991c72ff58",
+    "report.md": "84acb8847b441797e993ce184fbd30c5fd2bef553965a00511665f281ca9e7cc",
+    "results.json": "8e1af04b35b993bc27f72f124dbf41bbbdccbfe6be46f5753d383325fa5f2f00"
+  },
+  "reproduction": "Restore probe.mjs.text byte-for-byte to work/resume/functional-fixture-contract-audit/probe.mjs; mkdir scratch first; run node from repository root. Compiled native handlers stay scratch; results target declared QA output must be redirected to new scratch for immutable evidence."
+}

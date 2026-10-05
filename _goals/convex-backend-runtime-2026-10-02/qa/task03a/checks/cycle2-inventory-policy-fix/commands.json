@@ -1,0 +1,112 @@
+[
+  {
+    "name": "inventory-work",
+    "command": "node",
+    "args": [
+      "work/backend-runtime/task03a/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:35:20.082Z",
+    "finishedAt": "2026-10-03T08:35:20.490Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-work.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-work.stderr.log"
+  },
+  {
+    "name": "inventory-reproduction",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:35:20.491Z",
+    "finishedAt": "2026-10-03T08:35:20.928Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-reproduction.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-reproduction.stderr.log"
+  },
+  {
+    "name": "root-strict-inventory-tests",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "tsc",
+      "--project",
+      "work/backend-runtime/task03a/tsconfig.root.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:35:20.928Z",
+    "finishedAt": "2026-10-03T08:35:23.779Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/root-strict-inventory-tests.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/root-strict-inventory-tests.stderr.log"
+  },
+  {
+    "name": "inventory-scoped-eslint",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "eslint",
+      "tests/unit/runtimeAuth/inventory.test.ts",
+      "work/backend-runtime/task03a/inventory.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:35:23.779Z",
+    "finishedAt": "2026-10-03T08:35:27.644Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-scoped-eslint.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-scoped-eslint.stderr.log"
+  },
+  {
+    "name": "inventory-policy-unit",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeAuth/inventory.test.ts",
+      "--runInBand",
+      "--forceExit"
+    ],
+    "environment": {
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local"
+    },
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:35:27.644Z",
+    "finishedAt": "2026-10-03T08:35:31.653Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-policy-unit.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle2-inventory-policy-fix/inventory-policy-unit.stderr.log"
+  }
+]

@@ -1,0 +1,5 @@
+from pathlib import Path
+import subprocess,json,datetime,os
+out=Path('/tmp/task03b2b1-review2-onz6ay2u'); env={**os.environ,'npm_config_offline':'true'};records=[]
+for c in json.loads((out/'planned-checks.json').read_text()):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(c['command'],cwd=c['cwd'],env=env,capture_output=True,text=True);end=datetime.datetime.now(datetime.timezone.utc).isoformat();name=c['name'];(out/(name+'.stdout.txt')).write_text(p.stdout);(out/(name+'.stderr.txt')).write_text(p.stderr);records.append({'name':name,'argv':c['command'],'cwd':c['cwd'],'utcStart':start,'utcEnd':end,'exitCode':p.returncode,'stdout':name+'.stdout.txt','stderr':name+'.stderr.txt'});(out/'commands.json').write_text(json.dumps(records,indent=2));print(name,p.returncode,flush=True)

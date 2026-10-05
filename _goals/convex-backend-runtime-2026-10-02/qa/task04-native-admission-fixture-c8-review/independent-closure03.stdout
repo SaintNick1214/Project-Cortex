@@ -1,0 +1,33 @@
+✔ actual inventory reinspection matches all registrations and composed schema (436.893485ms)
+✖ independent AST closure reachable relative runtime imports resolve inside 194 frozen files or hash-bound installed sources (193.574896ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 636.228183
+
+✖ failing tests:
+
+test at work/resume/task04-native-admission-fixture-c8-review/closure.mjs:5:1
+✖ independent AST closure reachable relative runtime imports resolve inside 194 frozen files or hash-bound installed sources (193.574896ms)
+  AssertionError [ERR_ASSERTION]: scripts/offline-publication-artifacts.mjs -> ../../task04-native-admission-fixture-c4/scripts/guard.mjs
+      at walk (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c8-review/closure.mjs:5:1014)
+      at visitNodes (/workspace/Project-Cortex/node_modules/typescript/lib/typescript.js:32559:22)
+      at forEachChildInSourceFile (/workspace/Project-Cortex/node_modules/typescript/lib/typescript.js:32772:12)
+      at Object.forEachChild (/workspace/Project-Cortex/node_modules/typescript/lib/typescript.js:33072:35)
+      at walk (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c8-review/closure.mjs:5:1282)
+      at TestContext.<anonymous> (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c8-review/closure.mjs:5:1305)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,0 +1,18 @@
+from pathlib import Path
+import subprocess,datetime,json,os,concurrent.futures
+r=Path('/workspace/Project-Cortex');d=Path('/tmp/task03c2-live-harness-review2-oj6uebre');p=d/'replay-repo';scope='_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture'
+commands=[(x,['node',scope+'/scripts/'+x+'.mjs'],p) for x in ('guard-check','entrypoint-check','classifier-check','driver-check','bounds-check','packed-prep')]
+commands.append(('client-prep',['node','--import','./node_modules/tsx/dist/loader.mjs',scope+'/scripts/client-prep.ts'],p))
+commands += [('backend-types',['node','node_modules/typescript/bin/tsc','--noEmit','--project',scope+'/fixture/convex/tsconfig.json'],r),('client-types',['node','node_modules/typescript/bin/tsc','--noEmit','--project',scope+'/client-tsconfig.json'],r)]
+files=sorted(str(f.relative_to(r)) for base in ('scripts','fixture') for f in (r/scope/base).rglob('*') if f.suffix in ('.ts','.mjs') and '/_generated/' not in str(f) and not f.name.endswith('.d.mts'))
+commands += [('house-lint',['node','node_modules/eslint/bin/eslint.js','--no-ignore','--format','json',*files],r),('backend-policy-lint',['node','node_modules/eslint/bin/eslint.js','--config','work/backend-runtime/task03c2-live-fixture/eslint.config.mjs','--no-ignore','--format','json',*files],r)]
+commands += [('node',['node','--version'],r),('npm12',['node','work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js','--version'],r)]
+rows=[]
+for name,argv,cwd in commands:
+ started=datetime.datetime.now(datetime.timezone.utc).isoformat();env={k:v for k,v in os.environ.items() if not k.startswith(('CONVEX_','CORTEX_QUALIFICATION_','OPENAI_','ANTHROPIC_'))};env['npm_config_cache']=str(r/'work/backend-runtime/npm12-cache')
+ proc=subprocess.run(argv,cwd=cwd,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=90)
+ (d/(name+'.log')).write_text(proc.stdout);os.chmod(d/(name+'.log'),0o600)
+ row={'name':name,'argv':argv,'cwd':str(cwd),'startedAt':started,'completedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':proc.returncode,'raw':name+'.log'}
+ if name.endswith('lint') and proc.returncode==0:
+  data=json.loads(proc.stdout);row.update(files=len(data),errors=sum(x['errorCount'] for x in data),warnings=sum(x['warningCount'] for x in data),fatal=sum(x['fatalErrorCount'] for x in data))
+ rows.append(row);(d/'commands.json').write_text(json.dumps(rows,indent=2));print(json.dumps(row),flush=True)

@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\nPath('work/resume/task04-metadata-retention-implementation-c1/capture-store.py').write_text(\"from pathlib import Path\\nimport hashlib,json,datetime,subprocess,sys,gzip,os\\nr=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1'\\ntag=sys.argv[1];files=json.loads(sys.argv[2]);argv=sys.argv[3:]\\nnow=lambda:datetime.datetime.now(datetime.timezone.utc).isoformat()\\npool=q/'source-byte-store';pool.mkdir(exist_ok=True)\\ndef captured(phase):\\n rows={}\\n for name in files:\\n  p=r/name;b=p.read_bytes();h=hashlib.sha256(b).hexdigest()\\n  objectPath=pool/(h+'.gz')\\n  if objectPath.is_symlink():raise RuntimeError('OBJECT_LINK')\\n  if objectPath.exists():\\n   if objectPath.stat().st_nlink!=1:raise RuntimeError('OBJECT_NLINK')\\n   if gzip.decompress(objectPath.read_bytes())!=b:raise RuntimeError('OBJECT_BYTES')\\n  else:\\n   encoded=gzip.compress(b,mtime=0)\\n   with objectPath.open('xb') as f:f.write(encoded)\\n   if objectPath.stat().st_nlink!=1 or gzip.decompress(objectPath.read_bytes())!=b:raise RuntimeError('OBJECT_VERIFY')\\n  rows[name]={'sha256':h,'bytes':len(b),'beforeByteObject':str(objectPath.relative_to(q)),'encoding':'gzip, original bytes independently decompressed/equal before command','objectSha256':hashlib.sha256(objectPath.read_bytes()).hexdigest()}\\n (q/(tag+'-'+phase+'.json')).write_text(json.dumps({'utc':now(),'files':rows,'layout':'normal nlink1 lossless exact-hash byte store; no hardlinks or caller assertions'},indent=2)+'\\\\n')\\ncaptured('pre');start=now();x=subprocess.run(argv,cwd=r,capture_output=True)\\n(q/(tag+'.stdout')).write_bytes(x.stdout);(q/(tag+'.stderr')).write_bytes(x.stderr)\\n(q/(tag+'-receipt.json')).write_text(json.dumps({'argv':argv,'cwd':str(r),'startUtc':start,'endUtc':now(),'exit':x.returncode,'recorderSourceSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()},indent=2)+'\\\\n')\\ncaptured('post')\\nprint(x.stdout.decode());print(x.stderr.decode(),file=sys.stderr);sys.exit(x.returncode)\\n\")"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:34:55.843517+00:00",
+  "endUtc": "2026-10-04T14:34:55.868148+00:00",
+  "exit": 0
+}

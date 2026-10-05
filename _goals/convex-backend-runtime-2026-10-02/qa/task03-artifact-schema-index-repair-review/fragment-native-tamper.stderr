@@ -1,0 +1,2083 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: All native validators and indexes exact except authorized removal
++ actual - expected
+... Skipped lines
+
+  [
+    {
+      exported: {
+        documentType: {
+          type: 'object',
+...
+              },
++             optional: true
+-             optional: false
+            },
+            metadataUserId: {
+              fieldType: {
+                type: 'string'
+              },
+
+    at file:///workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/clean-replica/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:88:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    {
+      table: 'runtimeAuthPrincipals',
+      indexes: [
+        {
+          indexDescriptor: 'by_issuer_subject',
+          fields: [ 'issuer', 'subject' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_issuer_subject', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            issuer: [Object],
+            subject: [Object],
+            actorKind: [Object],
+            metadataUserId: [Object],
+            version: [Object],
+            createdAt: [Object],
+            revokedAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthMemberships',
+      indexes: [
+        {
+          indexDescriptor: 'by_principal_tenant',
+          fields: [ 'principalId', 'tenantId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_principal_tenant', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            principalId: [Object],
+            tenantId: [Object],
+            version: [Object],
+            createdAt: [Object],
+            revokedAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthScopes',
+      indexes: [
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_tenant_space', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            epoch: [Object],
+            createdAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthGrants',
+      indexes: [
+        {
+          indexDescriptor: 'by_membership',
+          fields: [ 'membershipId' ]
+        },
+        {
+          indexDescriptor: 'by_membership_scope_version',
+          fields: [ 'membershipId', 'memorySpaceId', 'version' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_membership', fields: [Array] },
+          {
+            indexDescriptor: 'by_membership_scope_version',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            principalId: [Object],
+            membershipId: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            tenantEpoch: [Object],
+            memorySpaceEpoch: [Object],
+            capabilities: [Object],
+            resourceAccess: [Object],
+            version: [Object],
+            createdAt: [Object],
+            expiresAt: [Object],
+            revokedAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthTombstones',
+      indexes: [
+        {
+          indexDescriptor: 'by_resource',
+          fields: [ 'tenantId', 'memorySpaceId', 'resourceType', 'resourceId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_resource', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            resourceType: [Object],
+            resourceId: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemorySources',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_source',
+          fields: [ 'tenantId', 'memorySpaceId', 'lineage.sourceId' ]
+        },
+        {
+          indexDescriptor: 'by_scope_event',
+          fields: [ 'tenantId', 'memorySpaceId', 'lineage.sourceEventId' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_scope_source', fields: [Array] },
+          { indexDescriptor: 'by_scope_event', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            ownerPrincipalId: [Object],
+            lineage: [Object],
+            content: [Object],
+            contentHash: [Object],
+            createdAt: [Object],
+            tombstonedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemoryChunks',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_chunk',
+          fields: [ 'tenantId', 'memorySpaceId', 'chunkId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_scope_chunk', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            sourceId: [Object],
+            sourceEventId: [Object],
+            sourceRevision: [Object],
+            chunkId: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            profileId: [Object],
+            ordinal: [Object],
+            start: [Object],
+            end: [Object],
+            text: [Object],
+            textHash: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemoryVectors',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_vector',
+          fields: [ 'tenantId', 'memorySpaceId', 'vectorId' ]
+        },
+        {
+          indexDescriptor: 'by_scope_source_revision',
+          fields: [ 'tenantId', 'memorySpaceId', 'sourceId', 'sourceRevision' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_scope_vector', fields: [Array] },
+          {
+            indexDescriptor: 'by_scope_source_revision',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [
+          {
+            indexDescriptor: 'by_default_embedding_v1',
+            vectorField: 'embedding',
+            dimensions: 1536,
+            filterFields: [Array]
+          }
+        ],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            sourceId: [Object],
+            sourceEventId: [Object],
+            sourceRevision: [Object],
+            vectorId: [Object],
+            chunkId: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            profile: [Object],
+            embedding: [Object],
+            processingReceiptId: [Object],
+            profileId: [Object],
+            scopeProfileKey: [Object],
+            ownerPrincipalId: [Object],
+            scopeProfileOwnerKey: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemoryReceipts',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_receipt',
+          fields: [ 'tenantId', 'memorySpaceId', 'receiptId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_scope_receipt', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            receiptId: [Object],
+            identity: [Object],
+            canonicalIdentity: [Object],
+            canonicalPayload: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'conversations',
+      indexes: [
+        {
+          indexDescriptor: 'by_conversationId',
+          fields: [ 'conversationId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_type', fields: [ 'type' ] },
+        {
+          indexDescriptor: 'by_user',
+          fields: [ 'participants.userId' ]
+        },
+        {
+          indexDescriptor: 'by_agent',
+          fields: [ 'participants.agentId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_user',
+          fields: [ 'memorySpaceId', 'participants.userId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_agent',
+          fields: [ 'memorySpaceId', 'participants.agentId' ]
+        },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] },
+        { indexDescriptor: 'by_visibility', fields: [ 'visibility' ] },
+        {
+          indexDescriptor: 'by_memorySpace_visibility',
+          fields: [ 'memorySpaceId', 'visibility' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_conversationId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          { indexDescriptor: 'by_type', fields: [Array] },
+          { indexDescriptor: 'by_user', fields: [Array] },
+          { indexDescriptor: 'by_agent', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_user', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_agent', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] },
+          { indexDescriptor: 'by_visibility', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_visibility',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            conversationId: [Object],
+            memorySpaceId: [Object],
+            participantId: [Object],
+            tenantId: [Object],
+            type: [Object],
+            participants: [Object],
+            collaborativeSettings: [Object],
+            messages: [Object],
+            messageCount: [Object],
+            metadata: [Object],
+            createdAt: [Object],
+            updatedAt: [Object],
+            visibility: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'conversationShares',
+      indexes: [
+        { indexDescriptor: 'by_shareId', fields: [ 'shareId' ] },
+        {
+          indexDescriptor: 'by_conversation',
+          fields: [ 'conversationId' ]
+        },
+        { indexDescriptor: 'by_grantedTo', fields: [ 'grantedTo' ] },
+        { indexDescriptor: 'by_grantedBy', fields: [ 'grantedBy' ] },
+        { indexDescriptor: 'by_status', fields: [ 'status' ] },
+        {
+          indexDescriptor: 'by_tenant_shareId',
+          fields: [ 'tenantId', 'shareId' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_conversation',
+          fields: [ 'tenantId', 'conversationId' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_shareId', fields: [Array] },
+          { indexDescriptor: 'by_conversation', fields: [Array] },
+          { indexDescriptor: 'by_grantedTo', fields: [Array] },
+          { indexDescriptor: 'by_grantedBy', fields: [Array] },
+          { indexDescriptor: 'by_status', fields: [Array] },
+          { indexDescriptor: 'by_tenant_shareId', fields: [Array] },
+          {
+            indexDescriptor: 'by_tenant_conversation',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            shareId: [Object],
+            conversationId: [Object],
+            grantedBy: [Object],
+            sourceMemorySpaceId: [Object],
+            grantType: [Object],
+            grantedTo: [Object],
+            permissions: [Object],
+            expiresAt: [Object],
+            maxViews: [Object],
+            viewCount: [Object],
+            redactBefore: [Object],
+            redactSensitive: [Object],
+            status: [Object],
+            tenantId: [Object],
+            createdAt: [Object],
+            revokedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'conversationSnapshots',
+      indexes: [
+        { indexDescriptor: 'by_snapshotId', fields: [ 'snapshotId' ] },
+        {
+          indexDescriptor: 'by_conversation',
+          fields: [ 'conversationId' ]
+        },
+        { indexDescriptor: 'by_createdBy', fields: [ 'createdBy' ] },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_status', fields: [ 'status' ] },
+        {
+          indexDescriptor: 'by_tenant_snapshotId',
+          fields: [ 'tenantId', 'snapshotId' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_snapshotId', fields: [Array] },
+          { indexDescriptor: 'by_conversation', fields: [Array] },
+          { indexDescriptor: 'by_createdBy', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_status', fields: [Array] },
+          { indexDescriptor: 'by_tenant_snapshotId', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            snapshotId: [Object],
+            conversationId: [Object],
+            messages: [Object],
+            conversationType: [Object],
+            participants: [Object],
+            messageCount: [Object],
+            includedContent: [Object],
+            redaction: [Object],
+            facts: [Object],
+            createdBy: [Object],
+            memorySpaceId: [Object],
+            tenantId: [Object],
+            status: [Object],
+            createdAt: [Object],
+            snapshotOf: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'immutable',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_scope',
+          fields: [ 'tenantId', 'memorySpaceId', 'ownerPrincipalId' ]
+        },
+        {
+          indexDescriptor: 'by_runtime_key',
+          fields: [ 'tenantId', 'memorySpaceId', 'type', 'id' ]
+        },
+        { indexDescriptor: 'by_type_id', fields: [ 'type', 'id' ] },
+        { indexDescriptor: 'by_type', fields: [ 'type' ] },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_type_id',
+          fields: [ 'tenantId', 'type', 'id' ]
+        },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_runtime_scope', fields: [Array] },
+          { indexDescriptor: 'by_runtime_key', fields: [Array] },
+          { indexDescriptor: 'by_type_id', fields: [Array] },
+          { indexDescriptor: 'by_type', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_type_id', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            type: [Object],
+            id: [Object],
+            data: [Object],
+            userId: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            tombstonedAt: [Object],
+            memorySpaceId: [Object],
+            version: [Object],
+            previousVersions: [Object],
+            metadata: [Object],
+            createdAt: [Object],
+            updatedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'mutable',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_scope',
+          fields: [ 'tenantId', 'memorySpaceId', 'ownerPrincipalId' ]
+        },
+        {
+          indexDescriptor: 'by_runtime_key',
+          fields: [ 'tenantId', 'memorySpaceId', 'namespace', 'key' ]
+        },
+        {
+          indexDescriptor: 'by_namespace_key',
+          fields: [ 'namespace', 'key' ]
+        },
+        { indexDescriptor: 'by_namespace', fields: [ 'namespace' ] },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_namespace',
+          fields: [ 'tenantId', 'namespace' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_namespace_key',
+          fields: [ 'tenantId', 'namespace', 'key' ]
+        },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_updated', fields: [ 'updatedAt' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_runtime_scope', fields: [Array] },
+          { indexDescriptor: 'by_runtime_key', fields: [Array] },
+          { indexDescriptor: 'by_namespace_key', fields: [Array] },
+          { indexDescriptor: 'by_namespace', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_namespace', fields: [Array] },
+          {
+            indexDescriptor: 'by_tenant_namespace_key',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_updated', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            namespace: [Object],
+            key: [Object],
+            value: [Object],
+            userId: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            tombstonedAt: [Object],
+            memorySpaceId: [Object],
+            metadata: [Object],
+            createdAt: [Object],
+            updatedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'memories',
+      indexes: [
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_memoryId', fields: [ 'memoryId' ] },
+        {
+          indexDescriptor: 'by_runtime_scope_memoryId',
+          fields: [ 'tenantId', 'memorySpaceId', 'memoryId' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_agentId', fields: [ 'agentId' ] },
+        {
+          indexDescriptor: 'by_memorySpace_created',
+          fields: [ 'memorySpaceId', 'createdAt' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_userId',
+          fields: [ 'memorySpaceId', 'userId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_agentId',
+          fields: [ 'memorySpaceId', 'agentId' ]
+        },
+        {
+          indexDescriptor: 'by_participantId',
+          fields: [ 'participantId' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_memoryId', fields: [Array] },
+          {
+            indexDescriptor: 'by_runtime_scope_memoryId',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_agentId', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_created',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_memorySpace_userId', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_agentId',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_participantId', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [
+          {
+            indexDescriptor: 'by_content',
+            searchField: 'content',
+            filterFields: [Array]
+          }
+        ],
+        stagedSearchIndexes: [],
+        vectorIndexes: [
+          {
+            indexDescriptor: 'by_embedding',
+            vectorField: 'embedding',
+            dimensions: 1536,
+            filterFields: [Array]
+          }
+        ],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            ownerPrincipalId: [Object],
+            runtimeEditor: [Object],
+            manualSourceBinding: [Object],
+            lineage: [Object],
+            tombstonedAt: [Object],
+            memoryId: [Object],
+            memorySpaceId: [Object],
+            participantId: [Object],
+            tenantId: [Object],
+            content: [Object],
+            contentType: [Object],
+            embedding: [Object],
+            sourceType: [Object],
+            sourceUserId: [Object],
+            sourceUserName: [Object],
+            sourceTimestamp: [Object],
+            messageRole: [Object],
+            userId: [Object],
+            agentId: [Object],
+            conversationRef: [Object],
+            immutableRef: [Object],
+            mutableRef: [Object],
+            factsRef: [Object],
+            importance: [Object],
+            tags: [Object],
+            enrichedContent: [Object],
+            factCategory: [Object],
+            metadata: [Object],
+            version: [Object],
+            previousVersions: [Object],
+            createdAt: [Object],
+            updatedAt: [Object],
+            lastAccessed: [Object],
+            accessCount: [Object],
+            isPartial: [Object],
+            partialMetadata: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'facts',
+      indexes: [
+        { indexDescriptor: 'by_factId', fields: [ 'factId' ] },
+        {
+          indexDescriptor: 'by_runtime_scope_factId',
+          fields: [ 'tenantId', 'memorySpaceId', 'factId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_subject',
+          fields: [ 'memorySpaceId', 'subject' ]
+        },
+        {
+          indexDescriptor: 'by_participantId',
+          fields: [ 'participantId' ]
+        },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_factId', fields: [Array] },
+          {
+            indexDescriptor: 'by_runtime_scope_factId',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_subject',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_participantId', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [
+          {
+            indexDescriptor: 'by_content',
+            searchField: 'fact',
+            filterFields: [Array]
+          }
+        ],
+        stagedSearchIndexes: [],
+        vectorIndexes: [
+          {
+            indexDescriptor: 'by_embedding',
+            vectorField: 'embedding',
+            dimensions: 1536,
+            filterFields: [Array]
+          }
+        ],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            ownerPrincipalId: [Object],
+            runtimeEditor: [Object],
+            manualSourceBinding: [Object],
+            lineage: [Object],
+            extractionPolicyVersion: [Object],
+            processingReceiptId: [Object],
+            tombstonedAt: [Object],
+            factId: [Object],
+            memorySpaceId: [Object],
+            participantId: [Object],
+            userId: [Object],
+            tenantId: [Object],
+            fact: [Object],
+            factType: [Object],
+            subject: [Object],
+            predicate: [Object],
+            object: [Object],
+            confidence: [Object],
+            sourceType: [Object],
+            sourceRef: [Object],
+            metadata: [Object],
+            tags: [Object],
+            category: [Object],
+            searchAliases: [Object],
+            semanticContext: [Object],
+            entities: [Object],
+            relations: [Object],
+            validFrom: [Object],
+            validUntil: [Object],
+            version: [Object],
+            supersededBy: [Object],
+            supersedes: [Object],
+            createdAt: [Object],
+            updatedAt: [Object],
+            embedding: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'factHistory',
+      indexes: [
+        { indexDescriptor: 'by_eventId', fields: [ 'eventId' ] },
+        { indexDescriptor: 'by_factId', fields: [ 'factId' ] },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_timestamp',
+          fields: [ 'memorySpaceId', 'timestamp' ]
+        },
+        { indexDescriptor: 'by_action', fields: [ 'action' ] },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_timestamp', fields: [ 'timestamp' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_eventId', fields: [Array] },
+          { indexDescriptor: 'by_factId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_timestamp',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_action', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_timestamp', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            eventId: [Object],
+            factId: [Object],
+            memorySpaceId: [Object],
+            action: [Object],
+            oldValue: [Object],
+            newValue: [Object],
+            supersededBy: [Object],
+            supersedes: [Object],
+            reason: [Object],
+            confidence: [Object],
+            pipeline: [Object],
+            userId: [Object],
+            participantId: [Object],
+            conversationId: [Object],
+            timestamp: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'memorySpaces',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_scope_owner',
+          fields: [ 'tenantId', 'memorySpaceId', 'ownerPrincipalId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpaceId',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_memorySpaceId',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_status',
+          fields: [ 'tenantId', 'status' ]
+        },
+        { indexDescriptor: 'by_status', fields: [ 'status' ] },
+        { indexDescriptor: 'by_type', fields: [ 'type' ] },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] }
+      ],
+      exported: {
+        indexes: [
+          {
+            indexDescriptor: 'by_runtime_scope_owner',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_memorySpaceId', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          {
+            indexDescriptor: 'by_tenant_memorySpaceId',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_tenant_status', fields: [Array] },
+          { indexDescriptor: 'by_status', fields: [Array] },
+          { indexDescriptor: 'by_type', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            memorySpaceId: [Object],
+            name: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            tombstonedAt: [Object],
+            type: [Object],
+            participants: [Object],
+            metadata: [Object],
+            status: [Object],
+            createdAt: [Object],
+            updatedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'contexts',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_scope_context',
+          fields: [ 'tenantId', 'memorySpaceId', 'contextId' ]
+        },
+        {
+          indexDescriptor: 'by_runtime_scope_owner',
+          fields: [ 'tenantId', 'memorySpaceId', 'ownerPrincipalId' ]
+        },
+        { indexDescriptor: 'by_contextId', fields: [ 'contextId' ] },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_contextId',
+          fields: [ 'tenantId', 'contextId' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_parentId', fields: [ 'parentId' ] },
+        { indexDescriptor: 'by_rootId', fields: [ 'rootId' ] },
+        { indexDescriptor: 'by_status', fields: [ 'status' ] },
+        {
+          indexDescriptor: 'by_memorySpace_status',
+          fields: [ 'memorySpaceId', 'status' ]
+        },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] }
+      ],
+      exported: {
+        indexes: [
+          {
+            indexDescriptor: 'by_runtime_scope_context',
+            fields: [Array]
+          },
+          {
+            indexDescriptor: 'by_runtime_scope_owner',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_contextId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_contextId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          { indexDescriptor: 'by_parentId', fields: [Array] },
+          { indexDescriptor: 'by_rootId', fields: [Array] },
+          { indexDescriptor: 'by_status', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_status', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            contextId: [Object],
+            memorySpaceId: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            tombstonedAt: [Object],
+            purpose: [Object],
+            description: [Object],
+            parentId: [Object],
+            rootId: [Object],
+            depth: [Object],
+            childIds: [Object],
+            status: [Object],
+            conversationRef: [Object],
+            userId: [Object],
+            participants: [Object],
+            grantedAccess: [Object],
+            data: [Object],
+            metadata: [Object],
+            lastUpdatedBy: [Object],
+            version: [Object],
+            previousVersions: [Object],
+            createdAt: [Object],
+            updatedAt: [Object],
+            completedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'agents',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_scope_agent',
+          fields: [ 'tenantId', 'memorySpaceId', 'agentId' ]
+        },
+        {
+          indexDescriptor: 'by_runtime_scope_owner',
+          fields: [ 'tenantId', 'memorySpaceId', 'ownerPrincipalId' ]
+        },
+        { indexDescriptor: 'by_agentId', fields: [ 'agentId' ] },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_status',
+          fields: [ 'tenantId', 'status' ]
+        },
+        { indexDescriptor: 'by_status', fields: [ 'status' ] },
+        {
+          indexDescriptor: 'by_registered',
+          fields: [ 'registeredAt' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          {
+            indexDescriptor: 'by_runtime_scope_agent',
+            fields: [Array]
+          },
+          {
+            indexDescriptor: 'by_runtime_scope_owner',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_agentId', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_status', fields: [Array] },
+          { indexDescriptor: 'by_status', fields: [Array] },
+          { indexDescriptor: 'by_registered', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            agentId: [Object],
+            memorySpaceId: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            tombstonedAt: [Object],
+            name: [Object],
+            description: [Object],
+            metadata: [Object],
+            config: [Object],
+            status: [Object],
+            registeredAt: [Object],
+            updatedAt: [Object],
+            lastActive: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'sessions',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_scope',
+          fields: [ 'tenantId', 'memorySpaceId', 'ownerPrincipalId' ]
+        },
+        {
+          indexDescriptor: 'by_runtime_key',
+          fields: [ 'tenantId', 'memorySpaceId', 'sessionId' ]
+        },
+        { indexDescriptor: 'by_sessionId', fields: [ 'sessionId' ] },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_user',
+          fields: [ 'tenantId', 'userId' ]
+        },
+        { indexDescriptor: 'by_status', fields: [ 'status' ] },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_lastActive',
+          fields: [ 'lastActiveAt' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_status',
+          fields: [ 'tenantId', 'status' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_runtime_scope', fields: [Array] },
+          { indexDescriptor: 'by_runtime_key', fields: [Array] },
+          { indexDescriptor: 'by_sessionId', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_user', fields: [Array] },
+          { indexDescriptor: 'by_status', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_lastActive', fields: [Array] },
+          { indexDescriptor: 'by_tenant_status', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            sessionId: [Object],
+            userId: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            tombstonedAt: [Object],
+            authorityReference: [Object],
+            memorySpaceId: [Object],
+            status: [Object],
+            startedAt: [Object],
+            lastActiveAt: [Object],
+            endedAt: [Object],
+            expiresAt: [Object],
+            metadata: [Object],
+            messageCount: [Object],
+            memoryCount: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'governancePolicies',
+      indexes: [
+        {
+          indexDescriptor: 'by_organization',
+          fields: [ 'organizationId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_active',
+          fields: [ 'isActive', 'organizationId' ]
+        },
+        { indexDescriptor: 'by_updated', fields: [ 'updatedAt' ] },
+        {
+          indexDescriptor: 'by_runtime_scope_active',
+          fields: [ 'tenantId', 'memorySpaceId', 'isActive' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_organization', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_active', fields: [Array] },
+          { indexDescriptor: 'by_updated', fields: [Array] },
+          {
+            indexDescriptor: 'by_runtime_scope_active',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            authority: [Object],
+            organizationId: [Object],
+            memorySpaceId: [Object],
+            policy: [Object],
+            isActive: [Object],
+            appliedBy: [Object],
+            createdAt: [Object],
+            updatedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'governanceEnforcement',
+      indexes: [
+        {
+          indexDescriptor: 'by_organization',
+          fields: [ 'organizationId', 'executedAt' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId', 'executedAt' ]
+        },
+        { indexDescriptor: 'by_executed', fields: [ 'executedAt' ] },
+        {
+          indexDescriptor: 'by_runtime_scope_executed',
+          fields: [ 'tenantId', 'memorySpaceId', 'executedAt' ]
+        },
+        {
+          indexDescriptor: 'by_runtime_policy',
+          fields: [ 'policyId' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_organization', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_executed', fields: [Array] },
+          {
+            indexDescriptor: 'by_runtime_scope_executed',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_runtime_policy', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            policyId: [Object],
+            simulation: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            authority: [Object],
+            organizationId: [Object],
+            memorySpaceId: [Object],
+            enforcementType: [Object],
+            layers: [Object],
+            rules: [Object],
+            versionsDeleted: [Object],
+            recordsPurged: [Object],
+            storageFreed: [Object],
+            triggeredBy: [Object],
+            executedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'graphSyncQueue',
+      indexes: [
+        { indexDescriptor: 'by_synced', fields: [ 'synced' ] },
+        { indexDescriptor: 'by_table', fields: [ 'table' ] },
+        {
+          indexDescriptor: 'by_table_entity',
+          fields: [ 'table', 'entityId' ]
+        },
+        {
+          indexDescriptor: 'by_priority',
+          fields: [ 'priority', 'synced' ]
+        },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] },
+        {
+          indexDescriptor: 'by_runtime_worker_entity',
+          fields: [
+            'tenantId',
+            'memorySpaceId',
+            'authority.grantId',
+            'table',
+            'entityId'
+          ]
+        },
+        {
+          indexDescriptor: 'by_runtime_worker_state',
+          fields: [
+            'tenantId',
+            'memorySpaceId',
+            'authority.grantId',
+            'synced',
+            'priority'
+          ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_synced', fields: [Array] },
+          { indexDescriptor: 'by_table', fields: [Array] },
+          { indexDescriptor: 'by_table_entity', fields: [Array] },
+          { indexDescriptor: 'by_priority', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] },
+          {
+            indexDescriptor: 'by_runtime_worker_entity',
+            fields: [Array]
+          },
+          {
+            indexDescriptor: 'by_runtime_worker_state',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            memorySpaceId: [Object],
+            entityDocumentId: [Object],
+            entityVersion: [Object],
+            sourceId: [Object],
+            sourceEventId: [Object],
+            sourceRevision: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            authority: [Object],
+            table: [Object],
+            entityId: [Object],
+            operation: [Object],
+            entity: [Object],
+            synced: [Object],
+            syncedAt: [Object],
+            failedAttempts: [Object],
+            lastError: [Object],
+            priority: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'artifacts',
+      indexes: [
+        {
+          indexDescriptor: 'by_runtime_key',
+          fields: [ 'tenantId', 'memorySpaceId', 'artifactId' ]
+        },
+        { indexDescriptor: 'by_artifactId', fields: [ 'artifactId' ] },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_created',
+          fields: [ 'memorySpaceId', 'createdAt' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_updated',
+          fields: [ 'memorySpaceId', 'updatedAt' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_kind',
+          fields: [ 'memorySpaceId', 'kind' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_state',
+          fields: [ 'memorySpaceId', 'streamingState' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_artifactId',
+          fields: [ 'tenantId', 'artifactId' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_space_kind',
+          fields: [ 'tenantId', 'memorySpaceId', 'kind' ]
+        },
+        {
+          indexDescriptor: 'by_conversation',
+          fields: [ 'conversationRef.conversationId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_conversation',
+          fields: [ 'memorySpaceId', 'conversationRef.conversationId' ]
+        },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        { indexDescriptor: 'by_agentId', fields: [ 'agentId' ] },
+        {
+          indexDescriptor: 'by_memorySpace_user',
+          fields: [ 'memorySpaceId', 'userId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_agent',
+          fields: [ 'memorySpaceId', 'agentId' ]
+        },
+        {
+          indexDescriptor: 'by_participantId',
+          fields: [ 'participantId' ]
+        },
+        {
+          indexDescriptor: 'by_streamingState',
+          fields: [ 'streamingState' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_streaming',
+          fields: [ 'memorySpaceId', 'streamingState', 'updatedAt' ]
+        },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] },
+        { indexDescriptor: 'by_updated', fields: [ 'updatedAt' ] },
+        {
+          indexDescriptor: 'by_lastAccessed',
+          fields: [ 'lastAccessedAt' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_runtime_key', fields: [Array] },
+          { indexDescriptor: 'by_artifactId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_created',
+            fields: [Array]
+          },
+          {
+            indexDescriptor: 'by_memorySpace_updated',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_memorySpace_kind', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_state', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          { indexDescriptor: 'by_tenant_artifactId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space_kind', fields: [Array] },
+          { indexDescriptor: 'by_conversation', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_conversation',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_agentId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_user', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_agent', fields: [Array] },
+          { indexDescriptor: 'by_participantId', fields: [Array] },
+          { indexDescriptor: 'by_streamingState', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_streaming',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_created', fields: [Array] },
+          { indexDescriptor: 'by_updated', fields: [Array] },
+          { indexDescriptor: 'by_lastAccessed', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [
+          {
+            indexDescriptor: 'by_content',
+            searchField: 'content',
+            filterFields: [Array]
+          },
+          {
+            indexDescriptor: 'by_title',
+            searchField: 'title',
+            filterFields: [Array]
+          }
+        ],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            artifactId: [Object],
+            memorySpaceId: [Object],
+            participantId: [Object],
+            tenantId: [Object],
+            ownerPrincipalId: [Object],
+            lastActorPrincipalId: [Object],
+            tombstonedAt: [Object],
+            userId: [Object],
+            agentId: [Object],
+            kind: [Object],
+            kindConfig: [Object],
+            content: [Object],
+            fileRef: [Object],
+            streamingState: [Object],
+            streamingMetadata: [Object],
+            title: [Object],
+            description: [Object],
+            tags: [Object],
+            conversationRef: [Object],
+            memoryRefs: [Object],
+            version: [Object],
+            versionPointer: [Object],
+            versionHistory: [Object],
+            collaborators: [Object],
+            stats: [Object],
+            metadata: [Object],
+            createdAt: [Object],
+            updatedAt: [Object],
+            lastAccessedAt: [Object],
+            accessCount: [Object],
+            isDeleted: [Object],
+            deletedAt: [Object],
+            deletedBy: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'attachments',
+      indexes: [
+        {
+          indexDescriptor: 'by_attachmentId',
+          fields: [ 'attachmentId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_type',
+          fields: [ 'memorySpaceId', 'type' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_created',
+          fields: [ 'memorySpaceId', 'createdAt' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        {
+          indexDescriptor: 'by_tenant_attachmentId',
+          fields: [ 'tenantId', 'attachmentId' ]
+        },
+        {
+          indexDescriptor: 'by_conversation',
+          fields: [ 'conversationId' ]
+        },
+        { indexDescriptor: 'by_message', fields: [ 'messageId' ] },
+        { indexDescriptor: 'by_memory', fields: [ 'memoryId' ] },
+        { indexDescriptor: 'by_artifact', fields: [ 'artifactId' ] },
+        { indexDescriptor: 'by_userId', fields: [ 'userId' ] },
+        {
+          indexDescriptor: 'by_memorySpace_user',
+          fields: [ 'memorySpaceId', 'userId' ]
+        },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] },
+        { indexDescriptor: 'by_updated', fields: [ 'updatedAt' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_attachmentId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_type', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_created',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          {
+            indexDescriptor: 'by_tenant_attachmentId',
+            fields: [Array]
+          },
+          { indexDescriptor: 'by_conversation', fields: [Array] },
+          { indexDescriptor: 'by_message', fields: [Array] },
+          { indexDescriptor: 'by_memory', fields: [Array] },
+          { indexDescriptor: 'by_artifact', fields: [Array] },
+          { indexDescriptor: 'by_userId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_user', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] },
+          { indexDescriptor: 'by_updated', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [
+          {
+            indexDescriptor: 'by_embedding',
+            vectorField: 'embedding',
+            dimensions: 1536,
+            filterFields: [Array]
+          }
+        ],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            attachmentId: [Object],
+            memorySpaceId: [Object],
+            tenantId: [Object],
+            userId: [Object],
+            conversationId: [Object],
+            messageId: [Object],
+            memoryId: [Object],
+            artifactId: [Object],
+            storageId: [Object],
+            type: [Object],
+            mimeType: [Object],
+            filename: [Object],
+            size: [Object],
+            extractedText: [Object],
+            transcript: [Object],
+            embedding: [Object],
+            dimensions: [Object],
+            duration: [Object],
+            metadata: [Object],
+            createdAt: [Object],
+            updatedAt: [Object]
+          }
+        }
+      }
+    }
+  ],
+  expected: [
+    {
+      table: 'runtimeAuthPrincipals',
+      indexes: [
+        {
+          indexDescriptor: 'by_issuer_subject',
+          fields: [ 'issuer', 'subject' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_issuer_subject', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            issuer: [Object],
+            subject: [Object],
+            actorKind: [Object],
+            metadataUserId: [Object],
+            version: [Object],
+            createdAt: [Object],
+            revokedAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthMemberships',
+      indexes: [
+        {
+          indexDescriptor: 'by_principal_tenant',
+          fields: [ 'principalId', 'tenantId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_principal_tenant', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            principalId: [Object],
+            tenantId: [Object],
+            version: [Object],
+            createdAt: [Object],
+            revokedAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthScopes',
+      indexes: [
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_tenant_space', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            epoch: [Object],
+            createdAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthGrants',
+      indexes: [
+        {
+          indexDescriptor: 'by_membership',
+          fields: [ 'membershipId' ]
+        },
+        {
+          indexDescriptor: 'by_membership_scope_version',
+          fields: [ 'membershipId', 'memorySpaceId', 'version' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_membership', fields: [Array] },
+          {
+            indexDescriptor: 'by_membership_scope_version',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            principalId: [Object],
+            membershipId: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            tenantEpoch: [Object],
+            memorySpaceEpoch: [Object],
+            capabilities: [Object],
+            resourceAccess: [Object],
+            version: [Object],
+            createdAt: [Object],
+            expiresAt: [Object],
+            revokedAt: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeAuthTombstones',
+      indexes: [
+        {
+          indexDescriptor: 'by_resource',
+          fields: [ 'tenantId', 'memorySpaceId', 'resourceType', 'resourceId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_resource', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            resourceType: [Object],
+            resourceId: [Object],
+            deletedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemorySources',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_source',
+          fields: [ 'tenantId', 'memorySpaceId', 'lineage.sourceId' ]
+        },
+        {
+          indexDescriptor: 'by_scope_event',
+          fields: [ 'tenantId', 'memorySpaceId', 'lineage.sourceEventId' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_scope_source', fields: [Array] },
+          { indexDescriptor: 'by_scope_event', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            ownerPrincipalId: [Object],
+            lineage: [Object],
+            content: [Object],
+            contentHash: [Object],
+            createdAt: [Object],
+            tombstonedAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemoryChunks',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_chunk',
+          fields: [ 'tenantId', 'memorySpaceId', 'chunkId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_scope_chunk', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            sourceId: [Object],
+            sourceEventId: [Object],
+            sourceRevision: [Object],
+            chunkId: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            profileId: [Object],
+            ordinal: [Object],
+            start: [Object],
+            end: [Object],
+            text: [Object],
+            textHash: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemoryVectors',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_vector',
+          fields: [ 'tenantId', 'memorySpaceId', 'vectorId' ]
+        },
+        {
+          indexDescriptor: 'by_scope_source_revision',
+          fields: [ 'tenantId', 'memorySpaceId', 'sourceId', 'sourceRevision' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_scope_vector', fields: [Array] },
+          {
+            indexDescriptor: 'by_scope_source_revision',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [
+          {
+            indexDescriptor: 'by_default_embedding_v1',
+            vectorField: 'embedding',
+            dimensions: 1536,
+            filterFields: [Array]
+          }
+        ],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            sourceId: [Object],
+            sourceEventId: [Object],
+            sourceRevision: [Object],
+            vectorId: [Object],
+            chunkId: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            profile: [Object],
+            embedding: [Object],
+            processingReceiptId: [Object],
+            profileId: [Object],
+            scopeProfileKey: [Object],
+            ownerPrincipalId: [Object],
+            scopeProfileOwnerKey: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeMemoryReceipts',
+      indexes: [
+        {
+          indexDescriptor: 'by_scope_receipt',
+          fields: [ 'tenantId', 'memorySpaceId', 'receiptId' ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_scope_receipt', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            receiptId: [Object],
+            identity: [Object],
+            canonicalIdentity: [Object],
+            canonicalPayload: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'conversations',
+      indexes: [
+        {
+          indexDescriptor: 'by_conversationId',
+          fields: [ 'conversationId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace',
+          fields: [ 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_tenantId', fields: [ 'tenantId' ] },
+        {
+          indexDescriptor: 'by_tenant_space',
+          fields: [ 'tenantId', 'memorySpaceId' ]
+        },
+        { indexDescriptor: 'by_type', fields: [ 'type' ] },
+        {
+          indexDescriptor: 'by_user',
+          fields: [ 'participants.userId' ]
+        },
+        {
+          indexDescriptor: 'by_agent',
+          fields: [ 'participants.agentId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_user',
+          fields: [ 'memorySpaceId', 'participants.userId' ]
+        },
+        {
+          indexDescriptor: 'by_memorySpace_agent',
+          fields: [ 'memorySpaceId', 'participants.agentId' ]
+        },
+        { indexDescriptor: 'by_created', fields: [ 'createdAt' ] },
+        { indexDescriptor: 'by_visibility', fields: [ 'visibility' ] },
+        {
+          indexDescriptor: 'by_memorySpace_visibility',
+          fields: [ 'memorySpaceId', 'visibility' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_conversationId', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace', fields: [Array] },
+          { indexDescriptor: 'by_tenantId', fields: [Array] },
+          { indexDescriptor: 'by_tenant_space', fields: [Array] },
+          { indexDescriptor: 'by_type', fields: [Array] },
+          { indexDescriptor: 'by_user', fields: [Array] },
+          { indexDescriptor: 'by_agent', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_user', fields: [Array] },
+          { indexDescriptor: 'by_memorySpace_agent', fields: [Array] },
+          { indexDescriptor: 'by_created', fields: [Array] },
+          { indexDescriptor: 'by_visibility', fields: [Array] },
+          {
+            indexDescriptor: 'by_memorySpace_visibility',
+            fields: [Array]
+          }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+    

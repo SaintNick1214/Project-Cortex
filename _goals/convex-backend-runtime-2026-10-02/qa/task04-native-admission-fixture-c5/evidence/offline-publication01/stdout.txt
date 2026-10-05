@@ -1,0 +1,190 @@
+{"case":"preserved-C4-writer-red","basis":"SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":281,"rawBaselineBytes":198852,"rawWorstBytes":256000,"functionsCompactBytes":191397,"equalityCompactBytes":56265,"C4FormattedReceiptBytes":564697,"perArtifactCeiling":256000}
+(node:94786) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ C4 actual formatted exclusive writer reproduces QA_BYTES with FULL281 validator/equality records before any file write (4.932516ms)
+✖ actual C5 writer/reader retains FULL281 tuple+args/equalities/opaque HTTP and exact256000 raw in BOTH phases without cap growth (254.008177ms)
+✔ actual bounded raw capture precedes comparison failure, preserves every byte and fails closed on overwrite or257000-byte response (99.979479ms)
+✔ actual strict reader rejects truncation/altered chunk/order/hash/phase/source/operation/opaque metadata/args after adversarial rehash (1338.200121ms)
+✔ source-bound publication/driver preserve exactly1 query; aggregate journal reserves bounded publication bytes/rows under unchanged8MiB/6000 (0.471336ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1853.062992
+
+✖ failing tests:
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c5/scripts/offline-publication-artifacts.mjs:8:1
+✖ actual C5 writer/reader retains FULL281 tuple+args/equalities/opaque HTTP and exact256000 raw in BOTH phases without cap growth (254.008177ms)
+  AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  ... Skipped lines
+  [
+    {
+      args: {
+        type: 'object',
+        value: {
+          autoEmbed: {
+            fieldType: {
+              type: 'boolean'
+            },
+            optional: true
+          },
+          contextId: {
+            fieldType: {
+              type: 'string'
+            },
+            optional: true
+          },
+          from: {
+            fieldType: {
+              type: 'string'
+            },
+            optional: false
+          },
+          importance: {
+            fieldType: {
+              type: 'number'
+            },
+            optional: true
+          },
+          memorySpaceId: {
+            fieldType: {
+              type: 'string'
+            },
+            optional: true
+          },
+          message: {
+            fieldType: {
+              type: 'string'
+            },
+            optional: false
+          },
+          metadata: {
+            fieldType: {
+              type: 'any'
+            },
+            optional: true
+          },
+          tenantId: {
+            fieldType: {
+              type: 'string'
+  ...}
+  
+      at TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c5/scripts/offline-publication-artifacts.mjs:8:578)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      { path: 'a2a:send', type: 'mutation', visibility: 'public', args: [Object] },                         { path: 'a2a:request', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'a2a:broadcast', type: 'mutation', visibility: 'public', args: [Object] },                    { path: 'a2a:getConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'admin:listTable', type: 'query', visibility: 'internal', args: [Object] },                   { path: 'admin:deleteRecord', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'admin:clearTable', type: 'mutation', visibility: 'internal', args: [Object] },               { path: 'admin:countTable', type: 'query', visibility: 'internal', args: [Object] },
+      { path: 'admin:getAllCounts', type: 'query', visibility: 'internal', args: [Object] },                { path: 'agents:get', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'agents:exists', type: 'query', visibility: 'public', args: [Object] },                       { path: 'agents:list', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'agents:count', type: 'query', visibility: 'public', args: [Object] },                        { path: 'agents:register', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'agents:update', type: 'mutation', visibility: 'public', args: [Object] },                    { path: 'agents:updateMany', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'agents:unregister', type: 'mutation', visibility: 'public', args: [Object] },                { path: 'agents:unregisterMany', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'agents:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },                { path: 'agents:computeStats', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:create', type: 'mutation', visibility: 'public', args: [Object] },                 { path: 'artifacts:update', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:deleteArtifact', type: 'mutation', visibility: 'public', args: [Object] },         { path: 'artifacts:undo', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:redo', type: 'mutation', visibility: 'public', args: [Object] },                   { path: 'artifacts:setStreamingState', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:setFileRef', type: 'mutation', visibility: 'internal', args: [Object] },           { path: 'artifacts:purgeVersions', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },             { path: 'artifacts:get', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:getByConversation', type: 'query', visibility: 'public', args: [Object] },         { path: 'artifacts:list', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:count', type: 'query', visibility: 'public', args: [Object] },                     { path: 'artifacts:getVersion', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:getHistory', type: 'query', visibility: 'public', args: [Object] },                { path: 'artifacts:startStreaming', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:appendContent', type: 'mutation', visibility: 'public', args: [Object] },          { path: 'artifacts:pauseStreaming', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:resumeStreaming', type: 'mutation', visibility: 'public', args: [Object] },        { path: 'artifacts:cancelStreaming', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:finalizeStreaming', type: 'mutation', visibility: 'public', args: [Object] },      { path: 'artifacts:setStreamingError', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:retryFromError', type: 'mutation', visibility: 'public', args: [Object] },         { path: 'artifacts:generateArtifactUploadUrl', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'artifacts:completeArtifactUpload', type: 'mutation', visibility: 'public', args: [Object] }, { path: 'artifacts:getArtifactFileUrl', type: 'query', visibility: 'internal', args: [Object] },
+      { path: 'artifacts:detachFile', type: 'mutation', visibility: 'public', args: [Object] },             { path: 'attachments:generateUploadUrl', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'attachments:attach', type: 'mutation', visibility: 'public', args: [Object] },               { path: 'attachments:remove', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'attachments:removeMany', type: 'mutation', visibility: 'public', args: [Object] },           { path: 'attachments:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'attachments:get', type: 'query', visibility: 'public', args: [Object] },                     { path: 'attachments:getUrl', type: 'query', visibility: 'internal', args: [Object] },
+      { path: 'attachments:list', type: 'query', visibility: 'public', args: [Object] },                    { path: 'attachments:count', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'attachments:getByIds', type: 'query', visibility: 'public', args: [Object] },                { path: 'attachments:getByConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'attachments:getByMessage', type: 'query', visibility: 'public', args: [Object] },            { path: 'contexts:create', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:update', type: 'mutation', visibility: 'public', args: [Object] },                  { path: 'contexts:addParticipant', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:removeParticipant', type: 'mutation', visibility: 'public', args: [Object] },       { path: 'contexts:grantAccess', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:deleteContext', type: 'mutation', visibility: 'public', args: [Object] },           { path: 'contexts:updateMany', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:deleteMany', type: 'mutation', visibility: 'public', args: [Object] },              { path: 'contexts:get', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:list', type: 'query', visibility: 'public', args: [Object] },                       { path: 'contexts:search', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:count', type: 'query', visibility: 'public', args: [Object] },                      { path: 'contexts:getChain', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getRoot', type: 'query', visibility: 'public', args: [Object] },                    { path: 'contexts:getChildren', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getByConversation', type: 'query', visibility: 'public', args: [Object] },          { path: 'contexts:findOrphaned', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getVersion', type: 'query', visibility: 'public', args: [Object] },                 { path: 'contexts:getHistory', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getAtTimestamp', type: 'query', visibility: 'public', args: [Object] },             { path: 'contexts:exportContexts', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },              { path: 'conversationShares:create', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversationShares:revoke', type: 'mutation', visibility: 'public', args: [Object] },        { path: 'conversationShares:incrementViewCount', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'conversationShares:get', type: 'query', visibility: 'public', args: [Object] },              { path: 'conversationShares:listByConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'conversationShares:listByGranter', type: 'query', visibility: 'public', args: [Object] },    { path: 'conversationShares:checkAccess', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'conversationSnapshots:create', type: 'mutation', visibility: 'public', args: [Object] },     { path: 'conversationSnapshots:deleteSnapshot', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversationSnapshots:get', type: 'query', visibility: 'public', args: [Object] },           { path: 'conversationSnapshots:listByConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'conversationSnapshots:listByUser', type: 'query', visibility: 'public', args: [Object] },    { path: 'conversations:create', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversations:setVisibility', type: 'mutation', visibility: 'public', args: [Object] },      { path: 'conversations:setMetadata', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversations:checkAccess', type: 'query', visibility: 'public', args: [Object] },           { path: 'conversations:addMessage', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversations:approveMessage', type: 'mutation', visibility: 'public', args: [Object] },     { path: 'conversations:rejectMessage', type: 'mutation', visibility: 'public', args: [Object] },
+      ... 181 more items
+    ],
+    expected: [
+      { path: 'a2a:send', type: 'mutation', visibility: 'public', args: [Object] },                         { path: 'a2a:request', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'a2a:broadcast', type: 'mutation', visibility: 'public', args: [Object] },                    { path: 'a2a:getConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'admin:listTable', type: 'query', visibility: 'internal', args: [Object] },                   { path: 'admin:deleteRecord', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'admin:clearTable', type: 'mutation', visibility: 'internal', args: [Object] },               { path: 'admin:countTable', type: 'query', visibility: 'internal', args: [Object] },
+      { path: 'admin:getAllCounts', type: 'query', visibility: 'internal', args: [Object] },                { path: 'agents:get', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'agents:exists', type: 'query', visibility: 'public', args: [Object] },                       { path: 'agents:list', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'agents:count', type: 'query', visibility: 'public', args: [Object] },                        { path: 'agents:register', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'agents:update', type: 'mutation', visibility: 'public', args: [Object] },                    { path: 'agents:updateMany', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'agents:unregister', type: 'mutation', visibility: 'public', args: [Object] },                { path: 'agents:unregisterMany', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'agents:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },                { path: 'agents:computeStats', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:create', type: 'mutation', visibility: 'public', args: [Object] },                 { path: 'artifacts:update', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:deleteArtifact', type: 'mutation', visibility: 'public', args: [Object] },         { path: 'artifacts:undo', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:redo', type: 'mutation', visibility: 'public', args: [Object] },                   { path: 'artifacts:setStreamingState', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:setFileRef', type: 'mutation', visibility: 'internal', args: [Object] },           { path: 'artifacts:purgeVersions', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },             { path: 'artifacts:get', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:getByConversation', type: 'query', visibility: 'public', args: [Object] },         { path: 'artifacts:list', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:count', type: 'query', visibility: 'public', args: [Object] },                     { path: 'artifacts:getVersion', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'artifacts:getHistory', type: 'query', visibility: 'public', args: [Object] },                { path: 'artifacts:startStreaming', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:appendContent', type: 'mutation', visibility: 'public', args: [Object] },          { path: 'artifacts:pauseStreaming', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:resumeStreaming', type: 'mutation', visibility: 'public', args: [Object] },        { path: 'artifacts:cancelStreaming', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:finalizeStreaming', type: 'mutation', visibility: 'public', args: [Object] },      { path: 'artifacts:setStreamingError', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'artifacts:retryFromError', type: 'mutation', visibility: 'public', args: [Object] },         { path: 'artifacts:generateArtifactUploadUrl', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'artifacts:completeArtifactUpload', type: 'mutation', visibility: 'public', args: [Object] }, { path: 'artifacts:getArtifactFileUrl', type: 'query', visibility: 'internal', args: [Object] },
+      { path: 'artifacts:detachFile', type: 'mutation', visibility: 'public', args: [Object] },             { path: 'attachments:generateUploadUrl', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'attachments:attach', type: 'mutation', visibility: 'public', args: [Object] },               { path: 'attachments:remove', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'attachments:removeMany', type: 'mutation', visibility: 'public', args: [Object] },           { path: 'attachments:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'attachments:get', type: 'query', visibility: 'public', args: [Object] },                     { path: 'attachments:getUrl', type: 'query', visibility: 'internal', args: [Object] },
+      { path: 'attachments:list', type: 'query', visibility: 'public', args: [Object] },                    { path: 'attachments:count', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'attachments:getByIds', type: 'query', visibility: 'public', args: [Object] },                { path: 'attachments:getByConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'attachments:getByMessage', type: 'query', visibility: 'public', args: [Object] },            { path: 'contexts:create', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:update', type: 'mutation', visibility: 'public', args: [Object] },                  { path: 'contexts:addParticipant', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:removeParticipant', type: 'mutation', visibility: 'public', args: [Object] },       { path: 'contexts:grantAccess', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:deleteContext', type: 'mutation', visibility: 'public', args: [Object] },           { path: 'contexts:updateMany', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'contexts:deleteMany', type: 'mutation', visibility: 'public', args: [Object] },              { path: 'contexts:get', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:list', type: 'query', visibility: 'public', args: [Object] },                       { path: 'contexts:search', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:count', type: 'query', visibility: 'public', args: [Object] },                      { path: 'contexts:getChain', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getRoot', type: 'query', visibility: 'public', args: [Object] },                    { path: 'contexts:getChildren', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getByConversation', type: 'query', visibility: 'public', args: [Object] },          { path: 'contexts:findOrphaned', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getVersion', type: 'query', visibility: 'public', args: [Object] },                 { path: 'contexts:getHistory', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:getAtTimestamp', type: 'query', visibility: 'public', args: [Object] },             { path: 'contexts:exportContexts', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'contexts:purgeAll', type: 'mutation', visibility: 'internal', args: [Object] },              { path: 'conversationShares:create', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversationShares:revoke', type: 'mutation', visibility: 'public', args: [Object] },        { path: 'conversationShares:incrementViewCount', type: 'mutation', visibility: 'internal', args: [Object] },
+      { path: 'conversationShares:get', type: 'query', visibility: 'public', args: [Object] },              { path: 'conversationShares:listByConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'conversationShares:listByGranter', type: 'query', visibility: 'public', args: [Object] },    { path: 'conversationShares:checkAccess', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'conversationSnapshots:create', type: 'mutation', visibility: 'public', args: [Object] },     { path: 'conversationSnapshots:deleteSnapshot', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversationSnapshots:get', type: 'query', visibility: 'public', args: [Object] },           { path: 'conversationSnapshots:listByConversation', type: 'query', visibility: 'public', args: [Object] },
+      { path: 'conversationSnapshots:listByUser', type: 'query', visibility: 'public', args: [Object] },    { path: 'conversations:create', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversations:setVisibility', type: 'mutation', visibility: 'public', args: [Object] },      { path: 'conversations:setMetadata', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversations:checkAccess', type: 'query', visibility: 'public', args: [Object] },           { path: 'conversations:addMessage', type: 'mutation', visibility: 'public', args: [Object] },
+      { path: 'conversations:approveMessage', type: 'mutation', visibility: 'public', args: [Object] },     { path: 'conversations:rejectMessage', type: 'mutation', visibility: 'public', args: [Object] },
+      ... 181 more items
+    ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

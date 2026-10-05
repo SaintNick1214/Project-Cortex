@@ -1,0 +1,90 @@
+"""Fresh offline continuation receipts; no writes to previous scripts or receipts."""
+import datetime
+import hashlib
+import json
+import os
+import pathlib
+import subprocess
+import time
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+QA = ROOT / '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+OUT = QA / 'cycle3/continuation/current-base-rerun'
+CHECKS = OUT / 'checks'
+CHECKS.mkdir(parents=True, exist_ok=True)
+REL = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+PREFIX = ['npx', '--offline', '--cache', '/workspace/Project-Cortex/work/backend-runtime/npm12-cache', '--yes', '--package=npm@12.2.0', '--', 'npm']
+TEST = ['exec', '--', 'node', '--experimental-vm-modules', 'node_modules/jest/bin/jest.js', '--config', REL + '/jest.scoped.cjs', '--runInBand']
+ENV = {**os.environ, 'npm_config_offline': 'true', 'npm_config_cache': '/workspace/Project-Cortex/work/backend-runtime/npm12-cache'}
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def record(path):
+    return {'sha256': digest(path), 'bytes': path.stat().st_size}
+
+prior_qa = {str(path.relative_to(ROOT)): record(path) for path in QA.rglob('*') if path.is_file() and OUT not in path.parents}
+frozen = json.loads((QA / 'source-freeze.json').read_text())['sourceHashes']
+immutable = {path: expected for path, expected in frozen.items() if path != 'convex-dev/runtimeRegistryAuth.ts'}
+assert all(digest(ROOT / path) == expected for path, expected in immutable.items())
+(OUT / 'before-preservation.json').write_text(json.dumps({'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'priorQa': prior_qa, 'immutableSourceHashes': immutable}, indent=2) + '\n')
+sources = sorted(set(frozen) | {str(path.relative_to(ROOT)) for path in (ROOT/'tests/unit/runtimeRegistryAuth').glob('*.ts')})
+commands = [
+    ('node-version', ['node', '--version']),
+    ('npm-version', PREFIX + ['--version']),
+    ('backend-types', PREFIX + ['exec', '--', 'tsc', '--project', 'convex-dev/tsconfig.json', '--noEmit']),
+    ('scoped-types', PREFIX + ['exec', '--', 'tsc', '--project', REL + '/tsconfig.scoped.json', '--noEmit']),
+    ('scoped-lint', PREFIX + ['exec', '--', 'eslint', 'convex-dev/agents.ts', 'convex-dev/memorySpaces.ts', 'convex-dev/contexts.ts', 'convex-dev/runtimeRegistryAuth.ts', 'convex-dev/schema.ts', 'tests/unit/runtimeRegistryAuth', REL + '/inventory.mjs', REL + '/jest.scoped.cjs', '--max-warnings=0']),
+    ('discovery', PREFIX + TEST + ['--listTests']),
+    ('tests', PREFIX + TEST + ['--json', '--outputFile=' + str(CHECKS / 'tests.json')]),
+    ('catalog', PREFIX + ['exec', '--', 'node', REL + '/inventory.mjs', str(OUT / 'catalog')]),
+    ('root-types-diagnostic', PREFIX + ['exec', '--', 'tsc', '--noEmit']),
+    ('root-lint-types-diagnostic', PREFIX + ['exec', '--', 'tsc', '--project', 'tsconfig.lint.json', '--noEmit']),
+    ('diff-check', ['git', 'diff', '--check']),
+]
+receipts = []
+for name, command in commands:
+    hashes = {file: digest(ROOT / file) for file in sources}
+    start = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    begin = time.monotonic()
+    result = subprocess.run(command, cwd=ROOT, env=ENV, text=True, capture_output=True)
+    (CHECKS / (name + '.stdout.txt')).write_text(result.stdout)
+    (CHECKS / (name + '.stderr.txt')).write_text(result.stderr)
+    receipts.append({'name': name, 'command': command, 'cwd': str(ROOT), 'utcStart': start,
+                     'utcEnd': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                     'seconds': round(time.monotonic()-begin, 3), 'sourceHashes': hashes,
+                     'exitCode': result.returncode, 'stdout': name + '.stdout.txt', 'stderr': name + '.stderr.txt'})
+    (CHECKS / 'commands.json').write_text(json.dumps(receipts, indent=2) + '\n')
+    print(json.dumps({'name': name, 'exitCode': result.returncode}), flush=True)
+
+archives = []
+for name in ['history/cycle1/preservation-manifest.json', 'history/cycle2-final/preservation-manifest.json']:
+    manifest = json.loads((QA / name).read_text())
+    assert all(record(ROOT / item['file']) == {'sha256': item['sha256'], 'bytes': item['bytes']} for item in manifest['records'])
+    archives.append({'manifest': name, 'sha256': digest(QA / name), 'verifiedRecords': len(manifest['records'])})
+assert all(record(ROOT / path) == expected for path, expected in prior_qa.items())
+assert all(digest(ROOT / path) == expected for path, expected in immutable.items())
+catalog = json.loads((OUT/'catalog/selected-path-inventory.json').read_text())
+original_catalog = json.loads((QA/'catalog/selected-path-inventory.json').read_text())
+assert all(catalog[key] == value for key, value in original_catalog.items() if key != 'hashes')
+assert all(digest(ROOT/item['file']) == item['sha256'] for item in catalog['hashes'])
+schema = subprocess.run(['git', 'diff', '--', 'convex-dev/schema.ts'], cwd=ROOT, capture_output=True, check=True).stdout
+assert schema == (QA/'schema-additive.patch').read_bytes()
+tests = json.loads((CHECKS / 'tests.json').read_text())
+original = json.loads((QA/'checks/tests-final.json').read_text())
+final_suites = {pathlib.Path(suite['name']).name: suite['assertionResults'] for suite in tests['testResults']}
+for suite in original['testResults']:
+    actual = final_suites[pathlib.Path(suite['name']).name]
+    assert [item['fullName'] for item in actual] == [item['fullName'] for item in suite['assertionResults']]
+    assert all(item['status'] == 'passed' for item in actual)
+assert tests['numTotalTests'] == 1110 and tests['numPassedTests'] == 1110
+assert tests['numPendingTests'] == tests['numTodoTests'] == 0
+assert tests['numTotalTestSuites'] == tests['numPassedTestSuites'] == 8
+summary = {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'Current-base independent checks completed; READY checkpoint only, no FINAL freeze',
+           'priorQaVerified': len(prior_qa), 'immutableSourceHashesVerified': len(immutable), 'archives': archives,
+           'original480OrderedOutcomesPreserved': True, 'schemaPatchByteExact': True, 'catalogEndpointsAndCountsUnchanged': True,
+           'tests': {'suites': 8, 'passed': 1110, 'skipped': 0, 'todo': 0, 'original': 480, 'failureBoundary': 366,
+                     'priorAdmissionFailure': 99, 'admissionBoundary': 99, 'controlAmbiguityCompatibility': 66},
+           'sourceHashes': {file: digest(ROOT/file) for file in sources}, 'checks': [{'name': row['name'], 'exitCode': row['exitCode']} for row in receipts]}
+(OUT/'current-base-verification.json').write_text(json.dumps(summary, indent=2)+'\n')
+print(json.dumps({'verification': 'complete', 'tests': summary['tests'], 'priorQaVerified': len(prior_qa)}), flush=True)

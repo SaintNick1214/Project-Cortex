@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {ConvexError} from '/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/convex/dist/esm/values/index.js';
+import {fixture,invoke,seedAgent,seedSpace,seedContext} from '/workspace/Project-Cortex/work/resume/registry/candidate/tests/unit/runtimeRegistryAuth/fixture.ts';
+import * as agents from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/agents.ts';
+import * as spaces from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/memorySpaces.ts';
+import * as contexts from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/contexts.ts';
+const rows=[];
+for(const entry of [{table:'agents',reg:agents.update,seed:seedAgent,args:{agentId:'agent-a',name:'Changed'},nth:4},{table:'memorySpaces',reg:spaces.update,seed:seedSpace,args:{name:'Changed'},nth:5},{table:'contexts',reg:contexts.update,seed:seedContext,args:{contextId:'context-a',description:'Changed'},nth:4}]){
+ const f=fixture();entry.seed(f);let count=0,reached=false,attempts=0;
+ f.db.beforeWrite=()=>attempts++;
+ f.ctx.auth.getUserIdentity=async()=>{if(++count===entry.nth){reached=true;throw new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});}return {issuer:'https://host.test',subject:'user-a'};};
+ let result,error;try{result=await f.db.transaction(()=>invoke(entry.reg,f.ctx,{tenantId:'tenant-a',memorySpaceId:'space-a',...entry.args}));}catch(e){error=e;}
+ assert(reached);
+ rows.push({table:entry.table,reached,identityCalls:count,attempts,commits:f.db.writes,result:result??null,errorData:error?.data??null});
+}
+console.log(JSON.stringify({count:rows.length,observations:rows},null,2));

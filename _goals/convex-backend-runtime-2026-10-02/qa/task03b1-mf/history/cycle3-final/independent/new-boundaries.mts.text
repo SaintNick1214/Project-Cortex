@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {harness, identity, memoryStoreArgs, factStoreArgs} from '/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/convex-dev/facts.ts';
+import {semanticHash} from '/workspace/Project-Cortex/src/domain/profile.ts';
+const outcomes:any[]=[];
+async function run(name:string, body:()=>Promise<any>){try{outcomes.push({name,status:'PASS',...await body()});}catch(e:any){outcomes.push({name,status:'FAIL',error:e.message,stack:e.stack});}}
+function errorCode(e:any){return e?.data?.code??e?.message;}
+async function expectDeny(h:any, op:()=>Promise<any>, injected:()=>boolean, before:Map<any,any>){let rejected:any;let result:any;try{result=await op();}catch(e){rejected=e;}assert(injected(),'Injection must be reached');assert(rejected,'Operation delivered success despite late invalidation: '+JSON.stringify(result));assert(['FORBIDDEN','STALE_SOURCE'].includes(errorCode(rejected)),JSON.stringify(rejected));assert.deepEqual(h.db.rows,before,'Failure must restore all transaction rows');return {injected:true,code:errorCode(rejected),rolledBack:true};}
+for(const kind of ['memory','fact'] as const)for(const operation of ['list','internal'] as const){
+ await run(`${kind}-${operation}-linked-conversation-tombstone-during-later-candidate-hash`,async()=>{
+ const h=harness();const owner=await h.provisionScope();
+ await h.db.insert('conversations',{conversationId:'canon',tenantId:'tenant-a',memorySpaceId:'space-a',ownerPrincipalId:owner.principalId,participants:{memorySpaceIds:['space-a']},messages:[{id:'anchor'}]});
+ const first=await h.seedData(kind==='memory'?'memories':'facts',owner,'first',kind==='memory'?{conversationRef:{conversationId:'canon',messageIds:['anchor']}}:{sourceRef:{conversationId:'canon',messageIds:['anchor']}});
+ const second=await h.seedData(kind==='memory'?'memories':'facts',owner,'second');
+ const before=structuredClone(h.db.rows);let injected=false;const digest=crypto.subtle.digest;
+ crypto.subtle.digest=async(a:any,b:any)=>{if(!injected && new TextDecoder().decode(b).includes('private second')){injected=true;await h.db.insert('runtimeAuthTombstones',{tenantId:'tenant-a',memorySpaceId:'space-a',resourceType:'conversation',resourceId:'canon',deletedAt:Date.now()});}return await digest.call(crypto.subtle,a,b);};
+ try{return await expectDeny(h,()=>h.invoke(operation==='list'?(kind==='memory'?memories.list:facts.list):(kind==='memory'?memories.fetchMemoriesByIds:facts.fetchFactsByIds),{memorySpaceId:'space-a',reference:owner,ids:[first,second]}),()=>injected,before);}finally{crypto.subtle.digest=digest;}
+ });
+}
+for(const readable of [false,true])await run(`updateMany-full-source-witness-replacement-after-first-patch-readable-${readable}`,async()=>{
+ const h=harness();const owner=await h.provisionScope({capabilities:readable?['write','read']:['write']});await h.seedData('memories',owner,'first');await h.seedData('memories',owner,'second');
+ const source=h.db.rows.get('runtimeMemorySources')![0];const altered='independently replaced valid canonical content';const hash=await semanticHash(altered);const before=structuredClone(h.db.rows);const patch=h.db.patch.bind(h.db);let injected=false;
+ h.db.patch=async(...args:any[])=>{await (patch as any)(...args);const id=typeof args[1]==='string'?args[1]:args[0];if(!injected && String(id).startsWith('memories/')){injected=true;await patch(source._id,{content:altered,contentHash:hash});}};
+ return await expectDeny(h,()=>h.invoke(memories.updateMany,{memorySpaceId:'space-a',importance:77}),()=>injected,before);
+});
+console.log(JSON.stringify({observedAt:new Date().toISOString(),node:process.version,outcomes},null,2));process.exitCode=outcomes.some(v=>v.status==='FAIL')?1:0;

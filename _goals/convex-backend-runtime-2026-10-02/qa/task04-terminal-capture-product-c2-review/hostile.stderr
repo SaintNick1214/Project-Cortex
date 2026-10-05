@@ -1,0 +1,92 @@
+(node:139988) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/task04-terminal-capture-product-c2-review/hostile.test.ts (9.418 s)
+  fresh C2 error boundary and exact recovery
+    ✓ unexpected database fault at attach preserves full state then same args recover once (74 ms)
+    ✓ unexpected database fault at capture preserves full state then same args recover once (28 ms)
+    ✓ native envelope unknownCode must propagate and retain pending attachment (27 ms)
+    ✓ native envelope retryable must propagate and retain pending attachment (26 ms)
+    ✓ native envelope missingRetryable must propagate and retain pending attachment (27 ms)
+    ✓ native envelope stringVersion must propagate and retain pending attachment (29 ms)
+    ✓ native envelope wrongVersion must propagate and retain pending attachment (26 ms)
+    ✓ native envelope missingVersion must propagate and retain pending attachment (28 ms)
+    ✓ native envelope confirmedOutcome must propagate and retain pending attachment (26 ms)
+    ✓ native envelope missingOutcome must propagate and retain pending attachment (25 ms)
+    ✓ native envelope stringRetryable must propagate and retain pending attachment (31 ms)
+    ✓ native envelope codeArray must propagate and retain pending attachment (25 ms)
+    ✓ native envelope unknownNotDispatched must propagate and retain pending attachment (30 ms)
+    ✓ native envelope nullCode must propagate and retain pending attachment (25 ms)
+    ✓ hostile plainError preserves original thrown value and calls no getters (28 ms)
+    ✓ hostile lookalike preserves original thrown value and calls no getters (26 ms)
+    ✓ hostile primitive preserves original thrown value and calls no getters (24 ms)
+    ✓ hostile null preserves original thrown value and calls no getters (26 ms)
+    ✓ hostile subclass preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile nullDataPrototype preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile inheritedEnvelope preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile missingData preserves original thrown value and calls no getters (29 ms)
+    ✓ hostile dataGetter preserves original thrown value and calls no getters (28 ms)
+    ✓ hostile versionGetter preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile retryableGetter preserves original thrown value and calls no getters (26 ms)
+    ✓ hostile outcomeGetter preserves original thrown value and calls no getters (27 ms)
+    ✓ hostile codeGetter preserves original thrown value and calls no getters (24 ms)
+    ✓ hostile descriptorTrap preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile dataPrototypeTrap preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile errorPrototypeTrap preserves original thrown value and calls no getters (25 ms)
+    ✓ hostile revokedProxy preserves original thrown value and calls no getters (26 ms)
+    ✓ recognized FORBIDDEN/not_dispatched closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized FORBIDDEN/uncertain closes exactly once without getters or monetary change (24 ms)
+    ✓ recognized UNAUTHENTICATED/not_dispatched closes exactly once without getters or monetary change (22 ms)
+    ✓ recognized UNAUTHENTICATED/uncertain closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized AUTHORITY_LOOKUP_AMBIGUOUS/not_dispatched closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized AUTHORITY_LOOKUP_AMBIGUOUS/uncertain closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized RUN_CANCELLED/not_dispatched closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized RUN_CANCELLED/uncertain closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized INVALID_INPUT/not_dispatched closes exactly once without getters or monetary change (45 ms)
+    ✓ recognized INVALID_INPUT/uncertain closes exactly once without getters or monetary change (44 ms)
+    ✓ recognized POLICY_DENIED/not_dispatched closes exactly once without getters or monetary change (32 ms)
+    ✓ recognized POLICY_DENIED/uncertain closes exactly once without getters or monetary change (22 ms)
+    ✓ recognized CAPABILITY_UNAVAILABLE/not_dispatched closes exactly once without getters or monetary change (21 ms)
+    ✓ recognized CAPABILITY_UNAVAILABLE/uncertain closes exactly once without getters or monetary change (21 ms)
+    ✓ recognized CAPABILITY_UNSUPPORTED/not_dispatched closes exactly once without getters or monetary change (22 ms)
+    ✓ recognized CAPABILITY_UNSUPPORTED/uncertain closes exactly once without getters or monetary change (21 ms)
+    ✓ recognized PROFILE_NOT_READY/not_dispatched closes exactly once without getters or monetary change (21 ms)
+    ✓ recognized PROFILE_NOT_READY/uncertain closes exactly once without getters or monetary change (23 ms)
+    ✓ recognized IDEMPOTENCY_CONFLICT/not_dispatched closes exactly once without getters or monetary change (22 ms)
+    ✓ recognized IDEMPOTENCY_CONFLICT/uncertain closes exactly once without getters or monetary change (20 ms)
+    ✓ genuine revoked eligibility loss closes permanently with unchanged charge (23 ms)
+    ✓ genuine cancelled eligibility loss closes permanently with unchanged charge (20 ms)
+    ✕ genuine retired eligibility loss closes permanently with unchanged charge (17 ms)
+    ✓ genuine expiredRoot eligibility loss closes permanently with unchanged charge (21 ms)
+    ✓ genuine narrowed eligibility loss closes permanently with unchanged charge (22 ms)
+  fresh C2 remaining design outcomes
+    ✓ revoked LIVE scope unknown100 refines full150 on expired historical root; old and final retries preserve immutable identity (34 ms)
+    ✓ refinement cannot remove stored inputTokens (17 ms)
+    ✓ refinement cannot remove stored outputTokens (17 ms)
+    ✓ refinement cannot remove stored totalTokens (16 ms)
+    ✓ refinement cannot remove stored cachedInputTokens (17 ms)
+    ✓ refinement cannot remove stored reasoningTokens (17 ms)
+    ✓ cancelled parent closes pending child without another money write (32 ms)
+    ✓ partial marker cannot bypass current replay and writes nothing (22 ms)
+    ✓ unsupported absent proof never becomes stored terminal and cannot prevent later genuine capture (22 ms)
+
+  ● fresh C2 error boundary and exact recovery › genuine retired eligibility loss closes permanently with unchanged charge
+
+    TypeError: Cannot set properties of undefined (setting 'state')
+
+      169 |   const op=f.db.table('runtimeModelOperations').find(x=>x._id===a.operationId)!;
+      170 |   if(kind==='revoked')f.grant.revokedAt=clock;if(kind==='cancelled')op.cancelled=true;
+    > 171 |   if(kind==='retired')f.db.table('runtimeTenants')[0]!.state='deleting';
+          |                                                             ^
+      172 |   if(kind==='expiredRoot')jest.spyOn(Date,'now').mockReturnValue(root.dispatchEvidence[0]!.expiresAt+1);
+      173 |   if(kind==='narrowed') {const p=f.db.table('runtimeModelPolicies').find(x=>x.scope==='deployment')!; const record=JSON.parse(p.canonical as string);record.rules.limits.outputTokens=1;p.canonical=canonicalModelJson(record);}
+      174 |   expect(await f.invoke('attachTerminalResult',attach)).toEqual({attached:false,resultWithheld:true});expect(f.attempt(a.attemptId).resultAttachmentState).toBe('closed');
+
+      at work/resume/task04-terminal-capture-product-c2-review/hostile.test.ts:171:61
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 64 passed, 65 total
+Snapshots:   0 total
+Time:        9.659 s
+Ran all test suites within paths "/workspace/Project-Cortex/work/resume/task04-terminal-capture-product-c2-review/hostile.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-product-c2-review/hostile.results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

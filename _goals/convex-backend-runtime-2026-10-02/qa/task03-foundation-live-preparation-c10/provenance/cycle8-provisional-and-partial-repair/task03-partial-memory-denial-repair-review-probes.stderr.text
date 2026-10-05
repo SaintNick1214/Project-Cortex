@@ -1,0 +1,24 @@
+(node:59628) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS work/resume/partial-memory-denial-repair-review/probes.test.ts (13.041 s)
+  independent actual partial-memory probes
+    ✓ updatePartialMemory rejects foreign-space with no writes or source hydration (11 ms)
+    ✓ updatePartialMemory rejects ownerless with no writes or source hydration (2 ms)
+    ✓ updatePartialMemory rejects deleted-absent with no writes or source hydration (1 ms)
+    ✓ updatePartialMemory rejects resource-tombstone with no writes or source hydration (3 ms)
+    ✓ finalizePartialMemory rejects foreign-space with no writes or source hydration (2 ms)
+    ✓ finalizePartialMemory rejects ownerless with no writes or source hydration (1 ms)
+    ✓ finalizePartialMemory rejects deleted-absent with no writes or source hydration (1 ms)
+    ✓ finalizePartialMemory rejects resource-tombstone with no writes or source hydration (1 ms)
+    ✓ owner updates twice then finalizes without losing source, tags, revision or metadata (12 ms)
+    ✓ updatePartialMemory retains empty-source validation with no attempted writes (3 ms)
+    ✓ finalizePartialMemory retains empty-source validation with no attempted writes (2 ms)
+    ✓ actual progressive helper handles both error forms identically and does not retry (9 ms)
+    ✓ unchanged generic resilience and exact classifier preserve the documented terminal semantic (5 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        13.274 s, estimated 21 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-partial-memory-denial-repair-review/probes.json

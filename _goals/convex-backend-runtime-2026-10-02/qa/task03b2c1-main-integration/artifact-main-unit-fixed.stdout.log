@@ -1,0 +1,92 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.0s | 217/217 passed | /tests/unit/runtimeArtifactAuth/handlers.test.ts
+  ✅     1.2s | 138/138 passed | /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+  ✅     0.6s | 1/1 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.38s ( 6.1%) - native AST resolves exact selected22, preserves five file registrations and owns temporary output
+    /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.1%) - native artifacts:getByConversation requires verified identity before artifact hydration or effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.1%) - retained admission and transactional source witnesses file-bearing current row is rejected by all applicable selected public APIs before effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - independent03A resource and lifecycle boundary full canonical snapshot detects stale version, owner and linked anchor after awaits
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.1%) - native artifacts:create requires verified identity before artifact hydration or effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.1%) - native artifacts:create preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - native artifacts:update requires verified identity before artifact hydration or effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - official Convex native payload witnesses native int64, bytes and special floats round trip through registered create/get/update with preserved history
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - get initial-identity plain is an opaque failure before effects
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - native artifacts:update preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - native artifacts:deleteArtifact preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - native artifacts:getByConversation preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - independent03A resource and lifecycle boundary undo/redo preserve gaps; branching discards only future text versions
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - retained admission and transactional source witnesses completed streaming keeps version history; cancellation and retry preserve selected content behavior
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - cycle3 private error output admission resource-admitted appendContent session error contains only a safe typed code and no stored details
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - create exact ordinary initial READ denial retains safe receipt
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - native artifacts:undo preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - native artifacts:redo preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - independent03A resource and lifecycle boundary expiry after the last control await blocks delivery
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - independent03A resource and lifecycle boundary fractional pagination, negative counts and illegal stream state deny
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.46s (7.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.13s
+  Test suites:        3
+  Individual tests:   290
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+

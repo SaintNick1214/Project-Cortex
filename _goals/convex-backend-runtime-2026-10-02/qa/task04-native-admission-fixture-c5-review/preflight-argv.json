@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "import {sourcePreflight} from './_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c5/scripts/guard.mjs'; const f=sourcePreflight(); console.log(JSON.stringify({status:'PASS',operationalPaths:f.operationalPaths.length,freezeFiles:f.files.length,native:'NOT_RUN'}));"
+  ],
+  "UTC": "2026-10-04T04:29:16.158062+00:00",
+  "cwd": "/workspace/Project-Cortex"
+}

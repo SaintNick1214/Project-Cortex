@@ -1,0 +1,824 @@
+{
+  "regression-sdk-supported-results.json": {
+    "scope": "EXACT_DRIVER_ACTUAL_INSTALLED_SDK_OFFLINE_DUMMY_NETWORK_PORT",
+    "results": [
+      {
+        "kind": "regression",
+        "type": "query",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "query",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "query",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "query",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "mutation",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "mutation",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "mutation",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "mutation",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "action",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "action",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "action",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "regression",
+        "type": "action",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      }
+    ]
+  },
+  "regression-sdk-queue-results.json": {
+    "scope": "OFFLINE_EXACT_DRIVER_GUARD_ARTIFACT_VALIDATORS_AND_INSTALLED_SDK_DUMMY_NETWORK_PORT_NO_ACTUAL_PRIVATE",
+    "results": [
+      {
+        "kind": "regression",
+        "mode": "healthy",
+        "dispatches": 2,
+        "secondDispatches": 1,
+        "expectedSecondDispatches": 1,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "fulfilled",
+            "error": null
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/192e0548-9df4-4d78-8f8f-6386c4f1fc4a/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "regression",
+        "mode": "source",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": "QA_SOURCE_DRIFT",
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_SOURCE_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/48e3d923-2caf-41b9-8b2d-2f482fa18b0c/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "regression",
+        "mode": "target",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_TARGET_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/22c19a43-3173-486f-ade9-fd3f1d479a3c/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "regression",
+        "mode": "env",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_PRIVATE_SELECTOR_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/16f841e6-c86d-452b-a8b1-4ef7d81acc1b/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "regression",
+        "mode": "publication",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_PUBLICATION_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/9a9f69c6-1a5e-483c-955b-6b2be8a4b3ca/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "regression",
+        "mode": "pin",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+        "outcomes": [
+          {
+            "status": "rejected",
+            "error": "QA_REVIEW_EXPECTED_PIN_DRIFT"
+          },
+          {
+            "status": "rejected",
+            "error": "QA_REVIEW_EXPECTED_PIN_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/34c46c4a-2f67-45d1-b888-9cbeb178b0e2/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "regression",
+        "mode": "window",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_WINDOW_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-79299439-b5fa-49bb-845a-291d9d7637e0/2ac1c7c6-3b50-4e15-93f8-19e60b7d46bb/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      }
+    ]
+  },
+  "extra-sdk-queue-results.json": {
+    "scope": "OFFLINE_EXACT_DRIVER_GUARD_ARTIFACT_VALIDATORS_AND_INSTALLED_SDK_DUMMY_NETWORK_PORT_NO_ACTUAL_PRIVATE",
+    "results": [
+      {
+        "kind": "extra",
+        "mode": "healthy",
+        "dispatches": 2,
+        "secondDispatches": 1,
+        "expectedSecondDispatches": 1,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "fulfilled",
+            "error": null
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/219b0343-66da-441c-a7d3-d63f5ad118bf/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extra",
+        "mode": "source",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": "QA_SOURCE_DRIFT",
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_SOURCE_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/67d328bb-6f62-4d68-9dc2-52c8fcc27c43/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extra",
+        "mode": "target",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_TARGET_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/39e24b92-6f2b-4793-a99d-05c296fcb73a/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extra",
+        "mode": "env",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_PRIVATE_SELECTOR_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/239a5156-413d-49f4-aa68-731141f69494/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extra",
+        "mode": "publication",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_PUBLICATION_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/05b25a20-8452-467f-9f7d-05d24de62bae/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extra",
+        "mode": "pin",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+        "outcomes": [
+          {
+            "status": "rejected",
+            "error": "QA_REVIEW_EXPECTED_PIN_DRIFT"
+          },
+          {
+            "status": "rejected",
+            "error": "QA_REVIEW_EXPECTED_PIN_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/a625e8b0-871e-47f1-b2a1-c5a27380ad98/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extra",
+        "mode": "window",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_WINDOW_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-9cffe351-f73d-49b5-88ee-17fa10da3fc1/df6a355d-e333-45ba-bc30-77087801dab7/a/b/c/d",
+        "exactDriverSHA256": "63fe3578ec6377f9bc076ef4205c9ab4c4533d3b5a6cce0b8388b8b5f05b3b9c",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      }
+    ]
+  },
+  "extension-sdk-supported-results.json": {
+    "scope": "EXACT_DRIVER_ACTUAL_INSTALLED_SDK_OFFLINE_DUMMY_NETWORK_PORT",
+    "results": [
+      {
+        "kind": "extension",
+        "type": "query",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "query",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "query",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "query",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "mutation",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "mutation",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "mutation",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "mutation",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "action",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "action",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "action",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extension",
+        "type": "action",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      }
+    ]
+  },
+  "extra-sdk-supported-results.json": {
+    "scope": "EXACT_DRIVER_ACTUAL_INSTALLED_SDK_OFFLINE_DUMMY_NETWORK_PORT",
+    "results": [
+      {
+        "kind": "extra",
+        "type": "query",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "query",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "query",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "query",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "mutation",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "mutation",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "mutation",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "mutation",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "action",
+        "outcome": "healthy",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "action",
+        "outcome": "http",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "action",
+        "outcome": "udf",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      },
+      {
+        "kind": "extra",
+        "type": "action",
+        "outcome": "transport",
+        "callbacks": 1,
+        "tickets": 1,
+        "status": "PASS"
+      }
+    ]
+  },
+  "extension-sdk-queue-results.json": {
+    "scope": "OFFLINE_EXACT_DRIVER_GUARD_ARTIFACT_VALIDATORS_AND_INSTALLED_SDK_DUMMY_NETWORK_PORT_NO_ACTUAL_PRIVATE",
+    "results": [
+      {
+        "kind": "extension",
+        "mode": "healthy",
+        "dispatches": 2,
+        "secondDispatches": 1,
+        "expectedSecondDispatches": 1,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "fulfilled",
+            "error": null
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/84550440-e1d6-4b36-afb1-3c8b11b8a242/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extension",
+        "mode": "source",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": "QA_SOURCE_DRIFT",
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_SOURCE_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/a035f719-ee7e-4b31-844c-2d9d4995e887/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extension",
+        "mode": "target",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_TARGET_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/e6c36a1d-c5d2-4638-b43c-47d10bd735cd/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extension",
+        "mode": "env",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_PRIVATE_SELECTOR_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/f65f1508-03ab-4cc3-93a6-ec8e78f9fb95/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extension",
+        "mode": "publication",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_PUBLICATION_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/8af23682-04bb-412d-aeb0-535dc84323c8/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extension",
+        "mode": "pin",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+        "outcomes": [
+          {
+            "status": "rejected",
+            "error": "QA_REVIEW_EXPECTED_PIN_DRIFT"
+          },
+          {
+            "status": "rejected",
+            "error": "QA_REVIEW_EXPECTED_PIN_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/24430701-503a-4f76-95fc-178ef5447ab4/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      },
+      {
+        "kind": "extension",
+        "mode": "window",
+        "dispatches": 1,
+        "secondDispatches": 0,
+        "expectedSecondDispatches": 0,
+        "ticketCount": 2,
+        "independentDenial": null,
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "error": null
+          },
+          {
+            "status": "rejected",
+            "error": "QA_WINDOW_DRIFT"
+          }
+        ],
+        "failure": null,
+        "status": "PASS",
+        "dummyPacket": "/workspace/Project-Cortex/work/resume/task04-native-c4-source-fresh-review/dispatch-proof/runtime-proof-bd2604fe-9c99-461a-8377-b87a89f29a8f/fbcf5cad-b859-4316-a7d0-0a815249f015/a/b/c/d",
+        "exactDriverSHA256": "080adff3d2c7911dfb2ba6c474079f33a02bf2d9eb184ccdb28443d883905e99",
+        "sdkSHA256": "bea8351feae61c318b4f1d813841c08021fbe0fd9fba387ad23a86ad478c6c8a"
+      }
+    ]
+  }
+}

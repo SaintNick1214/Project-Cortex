@@ -1,0 +1,11 @@
+--- immutable-c2/qualificationOwned.ts
++++ new-c3/qualificationOwned.ts
+@@ -70,7 +70,7 @@
+   {const rows=await ctx.db.query("governancePolicies").withIndex("by_runtime_scope_active",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"governancePolicies",id:row._id});}
+   {const rows=await ctx.db.query("governanceEnforcement").withIndex("by_runtime_scope_executed",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"governanceEnforcement",id:row._id});}
+   {const rows=await ctx.db.query("graphSyncQueue").withIndex("by_runtime_worker_entity",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"graphSyncQueue",id:row._id});}
+-  {const rows=await ctx.db.query("artifacts").withIndex("by_runtime_scope",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"artifacts",id:row._id});}
++  {const rows=await ctx.db.query("artifacts").withIndex("by_tenant_space",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"artifacts",id:row._id});}
+   {const rows=await ctx.db.query("attachments").withIndex("by_tenantId",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"attachments",id:row._id});}
+   {const rows=await ctx.db.query("runtimeAuthScopes").withIndex("by_tenant_space",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"runtimeAuthScopes",id:row._id});}
+   {const rows=await ctx.db.query("runtimeAuthTombstones").withIndex("by_resource",q=>q.eq("tenantId",tenantId)).take(321);if(rows.length>320)throw new Error("Owned table ceiling");for(const row of rows)refs.push({table:"runtimeAuthTombstones",id:row._id});}

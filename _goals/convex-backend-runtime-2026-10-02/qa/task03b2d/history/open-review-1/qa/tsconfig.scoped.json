@@ -1,0 +1,6 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": { "allowJs": true, "noEmit": true, "rootDir": "../../../..", "lib": ["ES2022", "DOM"] },
+  "include": ["../../../../convex-dev/governance.ts", "../../../../convex-dev/graphSync.ts", "../../../../convex-dev/admin.ts", "../../../../convex-dev/runtimeWorkerAuth.ts", "../../../../tests/unit/runtimeWorkerAuth/**/*.ts"],
+  "exclude": []
+}

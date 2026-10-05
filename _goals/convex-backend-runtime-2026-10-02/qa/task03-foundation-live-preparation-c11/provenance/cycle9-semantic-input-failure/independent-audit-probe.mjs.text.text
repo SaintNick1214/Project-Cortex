@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {build} from 'esbuild';
+import {getFunctionName} from 'convex/server';
+import {candidate} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c9/scripts/argument-candidates.mjs';
+const repo=process.cwd(), ledger=JSON.parse(readFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c9/path-ledger.json'));
+const rows=ledger.cases.filter(r=>r.visibility==='public'), sources=[...new Set([...rows.map(r=>r.source),'convex-dev/runtimeAuth.ts'])];
+const entry=sources.map((s,i)=>`import * as m${i} from ${JSON.stringify(resolve(repo,s))};`).join('\n')+'\nexport default {'+sources.map((s,i)=>JSON.stringify(s)+`:m${i}`).join(',')+'};';
+await build({stdin:{contents:entry,resolveDir:repo},bundle:true,platform:'node',format:'esm',packages:'external',outfile:'work/resume/semantic-fixture-audit/handlers.mjs',logLevel:'silent'});
+const modules=(await import('./handlers.mjs')).default;
+const run='foundation-'+'a'.repeat(32),fake=t=>'OFFLINE_SHAPE_ONLY_'+t;
+const c={run,issuer:'https://cortex-qualification.invalid',scopes:{tenantId:run+':tenantA',memorySpaceId:run+':spaceA'},users:{reader:run+':reader'},principals:{reader:fake('runtimeAuthPrincipals')},identities:{reader:run+':subject'},references:{reader:{membershipId:fake('runtimeAuthMemberships')}},grants:{reader:fake('runtimeAuthGrants')},refs:['runtimeAuthPrincipals','governancePolicies','graphSyncQueue','runtimeAuthGrants','runtimeAuthMemberships','runtimeMemoryVectors','memories','facts'].map(table=>({table,id:fake(table)})),files:[{id:fake('_storage')}]};
+const sourceHashes=Object.fromEntries(sources.map(s=>[s,createHash('sha256').update(readFileSync(s)).digest('hex')]));
+const results=[];
+for(const repaired of [false,true]) for(const row of rows){
+ let auth=0,traps=0;const trap=()=>{traps++;throw new Error('AUDIT_TRAP');};
+ const context={auth:{getUserIdentity:async()=>{auth++;return null;}},db:new Proxy({}, {get:()=>trap}),scheduler:new Proxy({}, {get:()=>trap}),storage:new Proxy({}, {get:()=>trap}),runQuery:async(ref,args)=>{if(getFunctionName(ref)!=='runtimeAuth:authorize')return trap();return await modules['convex-dev/runtimeAuth.ts'].authorize._handler(context,args);},runMutation:trap,runAction:trap,vectorSearch:trap};
+ const args=candidate(row.validatorSchema,c);
+ if(row.path==='facts:deleteByIds')args.factIds=[run+':facts-owned'];if(row.path==='memories:deleteByIds')args.memoryIds=[run+':memories-owned'];if(['memories:updatePartialMemory','memories:finalizePartialMemory'].includes(row.path))args.memoryId=run+':memories-owned';
+ if(repaired&&row.path==='governance:setPolicy')args.policy.conversations.retention.deleteAfter='30d';
+ let code='RETURNED';try{await modules[row.source][row.path.split(':')[1]]._handler(context,args);}catch(e){code=typeof e.data==='object'?e.data?.code:typeof e.data==='string'?e.data:'UNCLASSIFIED';}
+ results.push({path:row.path,repaired,auth,traps,code});
+}
+writeFileSync('work/resume/semantic-fixture-audit/nojwt-results.json',JSON.stringify({scope:'LOCAL_ACTUAL_PUBLIC_HANDLERS_NOJWT_SEMANTIC_AUDIT',idEncoding:'OFFLINE_ONLY_NOT_NATIVE_WIRE_VALIDATED',registered:rows.length,sourceHashes,results},null,2));
+for(const repaired of [false,true]){const r=results.filter(x=>x.repaired===repaired);console.log(JSON.stringify({repaired,total:r.length,authReached:r.filter(x=>x.auth>0).length,trapped:r.filter(x=>x.traps>0),nonAuth:r.filter(x=>!['UNAUTHENTICATED','FORBIDDEN'].includes(x.code))}));}
+
+assert.equal(rows.length,200);
+assert.deepEqual(results.filter(r=>!r.repaired && r.auth===0).map(r=>({path:r.path,code:r.code})),[{path:'governance:setPolicy',code:'INVALID_INPUT'}]);
+assert.ok(results.every(r=>r.traps===0));
+assert.ok(results.filter(r=>r.repaired).every(r=>r.auth===1&&['UNAUTHENTICATED','FORBIDDEN'].includes(r.code)));
+console.log('LOCAL SEMANTIC AUDIT ASSERTIONS PASSED');

@@ -1,0 +1,21 @@
+from pathlib import Path
+import subprocess,datetime,time,hashlib,json,sys,shutil
+repo=Path('/workspace/Project-Cortex');w=repo/'work/resume/task04-model-drift-native-preparation-c3';q=repo/'_goals/convex-backend-runtime-2026-10-02/qa';name=sys.argv[1];argv=sys.argv[2:];source=next((repo/a for a in argv[1:] if (repo/a).is_file()),None);kinds=[argv[-1]] if argv[-1] in ['extension','regression','extra'] else ['extension','regression','extra'];area=w/'operation-source-preimages'/name
+if area.exists():
+ n=1
+ while (w/'prior-runs'/f'{name}-{n}').exists():n+=1
+ dest=w/'prior-runs'/f'{name}-{n}';dest.mkdir(parents=True);shutil.move(str(area),str(dest/'preimages'))
+ for ext in ['stdout','stderr','receipt.json']:
+  f=w/f'{name}.{ext}'
+  if f.exists():shutil.move(str(f),str(dest/f.name))
+area.mkdir(parents=True);files={source} if source else set()
+for k in kinds:
+ root=q/f'task04-model-drift-native-{k}-preparation-c3'
+ files.update(p for p in (root/'scripts').rglob('*') if p.is_file())
+ files.update(p for p in root.glob('*.json'))
+files.update(repo/p for p in ['convex-dev/runtimeModelPolicy.ts','src/runtime/ExecutionGateway.ts'] if (repo/p).is_file())
+def record():return [{'path':str(p.relative_to(repo)),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(files)]
+pre=record()
+for row in pre:
+ dest=area/row['path'];dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes((repo/row['path']).read_bytes())
+start=datetime.datetime.now(datetime.timezone.utc).isoformat();t=time.monotonic();r=subprocess.run(argv,cwd=repo,capture_output=True,text=True,timeout=120);(w/f'{name}.stdout').write_text(r.stdout);(w/f'{name}.stderr').write_text(r.stderr);(w/f'{name}.receipt.json').write_text(json.dumps({'argv':argv,'cwd':str(repo),'startedAt':start,'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'elapsedMs':round((time.monotonic()-t)*1000),'sourcePath':str(source) if source else None,'sourcePreimages':str(area.relative_to(repo)),'sourceBefore':pre,'sourceAfter':record(),'exitCode':r.returncode,'native':'NOT_RUN'},indent=2)+'\n');print(name,r.returncode,r.stdout[-1000:],r.stderr[-2000:]);sys.exit(r.returncode)

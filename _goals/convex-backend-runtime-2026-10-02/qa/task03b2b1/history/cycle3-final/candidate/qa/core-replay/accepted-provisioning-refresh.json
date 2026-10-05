@@ -1,0 +1,19 @@
+{
+  "observedAt": "2026-10-03T13:46:34.655207+00:00",
+  "parentQualifiedDependencyRefresh": true,
+  "sourceCommit": "022e2e3d61161766e90e91dd572bb9b7063d5957",
+  "source": "tests/unit/runtimeAuth/provisioning.test.ts",
+  "beforeSha256": "695b0dc0d138a5c62fc334ec1b4e0ee88ffd5a0363a7907a7b224a554b99b576",
+  "afterSha256": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580",
+  "independentReportSha256": "b608adce3d20d8fdac98f8c2541c243dfa72616b6204e21ca1e7cf0dc6d8a94d",
+  "literalBeforeOutcomes": {
+    "total": 133,
+    "passed": 120,
+    "failed": 13,
+    "skipped": 0
+  },
+  "failureCause": "Old local MemoryDb missing take(2); all13 failures in provisioning fixture. No registry test change. Accepted test adds native API take and exact static ambiguity envelope/no-effect expectation; independently qualified earlier925 and original133 outcomes. Full local replay required; receipt not PASS.",
+  "preservedOldSource": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/core-replay/legacy-fixture/provisioning.test.ts.text",
+  "originalTestNamesRetained": true,
+  "registryOriginal480AndNewAssertionsUnchanged": true
+}

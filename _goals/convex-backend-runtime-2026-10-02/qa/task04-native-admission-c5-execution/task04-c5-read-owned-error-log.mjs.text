@@ -1,0 +1,9 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {livePreflight,scratch} from '../../_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c5/scripts/guard.mjs';
+const {target,values}=livePreflight();
+const startedAt=new Date().toISOString();
+const r=await fetch(target.deploymentUrl+'/api/stream_function_logs?cursor=0',{method:'GET',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY},signal:AbortSignal.timeout(30000)});
+const reader=r.body.getReader(),parts=[];let bytes=0;while(true){const v=await reader.read();if(v.done)break;bytes+=v.value.byteLength;if(bytes>256000){await reader.cancel();throw Error('DIAGNOSTIC_LOG_BOUND');}parts.push(Buffer.from(v.value));}
+const body=Buffer.concat(parts);writeFileSync(resolve(scratch,'private-owned-native-error-log.json'),body,{flag:'wx',mode:0o600});writeFileSync(resolve(scratch,'owned-native-error-log-receipt.json'),JSON.stringify({operation:target.operation,status:r.status,startedAt,observedAt:new Date().toISOString(),managementReadOnlyGET:1,nativeRPC:0,bytes,reason:'Failed driver discarded child stderr; preserve original server diagnostic before retirement'},null,2)+'\n',{flag:'wx',mode:0o600});
+process.stdout.write(JSON.stringify({status:r.status,bytes,diagnosticReadOnlyGET:1,nativeRPC:0})+'\n');

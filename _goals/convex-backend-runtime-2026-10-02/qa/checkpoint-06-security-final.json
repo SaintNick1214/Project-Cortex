@@ -1,0 +1,83 @@
+{
+  "observedAt": "2026-10-04T06:14:27Z",
+  "commit": "dee3308d351fb609b8a969fcd7f040fb0556e183",
+  "runId": 37181430443,
+  "coverage": "first returned jobs page only; individual skipped steps retained in prior checkpoint-06-ci-jobs.json",
+  "jobs": [
+    {
+      "id": 111374638345,
+      "name": "Dependency Review",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": []
+    },
+    {
+      "id": 111374638447,
+      "name": "License Compliance",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": []
+    },
+    {
+      "id": 111374638459,
+      "name": "Secret Scanning",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": []
+    },
+    {
+      "id": 111374638462,
+      "name": "CodeQL Analysis (javascript-typescript)",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": []
+    },
+    {
+      "id": 111374638481,
+      "name": "Dependency Vulnerability Scan",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": []
+    },
+    {
+      "id": 111374638490,
+      "name": "OpenAPI Security Audit",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": [
+        "Run 42Crunch API Security Audit"
+      ]
+    },
+    {
+      "id": 111374638504,
+      "name": "API Security Scan (Semgrep)",
+      "status": "completed",
+      "conclusion": "success",
+      "skippedSteps": [
+        "Upload SARIF file"
+      ]
+    },
+    {
+      "id": 111374638529,
+      "name": "Commit Signature Verification",
+      "status": "completed",
+      "conclusion": "failure",
+      "skippedSteps": []
+    },
+    {
+      "id": 111374639024,
+      "name": "Supply Chain Security (Scorecard)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "skippedSteps": []
+    },
+    {
+      "id": 111375950438,
+      "name": "Security Checks Summary",
+      "status": "completed",
+      "conclusion": "failure",
+      "skippedSteps": []
+    }
+  ],
+  "aggregate": "FAIL_COMMIT_SIGNATURE; no full quality or signature-compliance claim"
+}

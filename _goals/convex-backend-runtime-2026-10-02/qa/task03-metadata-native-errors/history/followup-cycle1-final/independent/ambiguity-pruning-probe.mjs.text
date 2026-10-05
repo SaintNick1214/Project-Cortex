@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {fixture} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/tests/unit/runtimeMetadataAuth/fixture.ts';
+import * as mutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/mutable.ts';
+import {requireAuthority} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/runtimeAuth.ts';
+import {QueryImpl} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/convex/dist/esm/server/impl/query_impl.js';
+const OUT='/tmp/task03-metadata-native-errors-review1-7MWpo4Y1';
+const results=[];
+function setup(capability,defect){
+  const f=fixture({space:'space-a',capabilities:[capability],access:'space'});
+  f.db.seed('runtimeAuthScopes',{tenantId:'tenant-a',memorySpaceId:'space-b',epoch:1,createdAt:1000});
+  f.db.seed('runtimeAuthGrants',{...f.grant,_id:'runtimeAuthGrants:space-b',memorySpaceId:'space-b'});
+  f.seedMutable({memorySpaceId:'space-b',_id:'mutable:private-b',value:'private-b-value'});
+  if(defect==='scope')f.db.seed('runtimeAuthScopes',{...f.db.table('runtimeAuthScopes').find(r=>r.memorySpaceId==='space-a'),_id:'runtimeAuthScopes:duplicate-a'});
+  if(defect==='space-tombstone')for(const suffix of ['one','two'])f.db.seed('runtimeAuthTombstones',{_id:'runtimeAuthTombstones:private-'+suffix,tenantId:'tenant-a',memorySpaceId:'space-a',resourceType:'memorySpace',resourceId:'space-a',deletedAt:1000});
+  let reached=0;const old=f.db.query.bind(f.db);
+  f.db.query=(table)=>{const q=old(table),take=q.take.bind(q);q.take=async(limit)=>{const rows=await take(limit);if(rows.length>1)reached++;return rows;};q.unique=()=>QueryImpl.prototype.unique.call({take:q.take,tableNameForErrorMessages:table});return q;};
+  return {f,reached:()=>reached};
+}
+async function run(f,operation){try{return {accepted:true,value:await operation(),attempts:f.db.attemptedWrites,writes:f.db.writes}}catch(e){return {accepted:false,errorType:e.constructor.name,errorData:e.data,errorMessage:e.message,attempts:f.db.attemptedWrites,writes:f.db.writes}}}
+for(const capability of ['read','write'])for(const defect of ['none','scope','space-tombstone']){
+  const {f,reached}=setup(capability,defect);
+  const result=await run(f,()=>f.run(capability==='read'?mutable.get:mutable.set,{namespace:'counter',key:'one',...(capability==='write'?{value:'replacement'}:{})}));
+  results.push({capability,defect,kind:'actual registered handler omitted selectors',duplicateLookupReached:reached(),...result});
+  assert.equal(result.accepted,defect!=='none');
+  assert.equal(reached(),defect==='none'?0:1);
+  if(result.accepted)assert.equal(result.writes,capability==='write'?1:0);
+}
+const {requireAuthority:original}=await import('./baseline-runtimeAuth.ts');
+for(const capability of ['read','write'])for(const defect of ['none','scope','space-tombstone']){
+  const {f,reached}=setup(capability,defect);
+  const result=await run(f,()=>original(f.ctx,{capability}));
+  results.push({capability,defect,kind:'byte-preserved accepted baseline authority with native unique protocol',duplicateLookupReached:reached(),...result});
+  assert.equal(result.accepted,false);assert.equal(reached(),defect==='none'?0:1);
+}
+const baselineMutable=await import('./baseline-mutable.ts');
+for(const capability of ['read','write'])for(const defect of ['none','scope','space-tombstone']){
+  const {f,reached}=setup(capability,defect);
+  const result=await run(f,()=>f.run(capability==='read'?baselineMutable.get:baselineMutable.set,{namespace:'counter',key:'one',...(capability==='write'?{value:'replacement'}:{})}));
+  results.push({capability,defect,kind:'accepted baseline actual registered handler with native unique protocol',duplicateLookupReached:reached(),...result});
+  assert.equal(result.accepted,false);assert.equal(reached(),defect==='none'?0:1);assert.equal(result.attempts,0);assert.equal(result.writes,0);
+}
+fs.writeFileSync(OUT+'/ambiguity-pruning-outcomes.json',JSON.stringify({method:'Independent actual registered metadata handlers and byte-preserved accepted baseline authority share identical fixtures; installed QueryImpl.unique drives baseline diagnostics. No selectors are supplied; two independent concrete grants exist. Observation assertions characterize the behavior and retain actual results.',results},null,2)+'\n');
+console.log(JSON.stringify(results,null,2));

@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: same creation/deadline/retained-output requirements
+
+10 !== 0
+
+    at file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-parent-inputs-c9-review/real-chain-regression.mjs:39:124 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 10,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

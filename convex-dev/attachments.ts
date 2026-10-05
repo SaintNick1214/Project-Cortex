@@ -14,7 +14,10 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
+
+import { internalAssetUnavailable, runtimeAssetUnavailable } from "./runtimeAssetUnavailableAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Shared Validators
@@ -91,12 +94,15 @@ async function lookupAttachment(
  * await cortex.attachments.attach({ storageId, ... });
  * ```
  */
-export const generateUploadUrl = mutation({
+export const generateUploadUrl = internalMutation({
   args: {
     // Multi-tenancy (optional - passed by SDKs for consistency/auditing)
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await internalAssetUnavailable();
+
     // Generate upload URL (expires in 1 hour per Convex docs)
     // Note: tenantId is accepted for SDK consistency but not used here
     // since Convex storage is global; tenant isolation happens at attach()
@@ -146,6 +152,9 @@ export const attach = mutation({
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:write", args);
+
     const now = Date.now();
     const attachmentId = generateAttachmentId();
 
@@ -190,10 +199,14 @@ export const attach = mutation({
  */
 export const remove = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:write", args);
+
     const attachment = await lookupAttachment(
       ctx,
       args.attachmentId,
@@ -237,10 +250,14 @@ export const remove = mutation({
  */
 export const removeMany = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentIds: v.array(v.string()),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:write", args);
+
     let deleted = 0;
     const errors: Array<{ attachmentId: string; error: string }> = [];
 
@@ -294,12 +311,15 @@ export const removeMany = mutation({
  *
  * WARNING: Permanently deletes all attachments and their files!
  */
-export const purgeAll = mutation({
+export const purgeAll = internalMutation({
   args: {
     memorySpaceId: v.optional(v.string()), // Limit to memory space if provided
     tenantId: v.optional(v.string()), // Limit to tenant if provided
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await internalAssetUnavailable();
+
     // Safety check: Only allow in test/dev environments
     const siteUrl = process.env.CONVEX_SITE_URL || "";
     const isLocal =
@@ -380,23 +400,33 @@ export const purgeAll = mutation({
  */
 export const get = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await lookupAttachment(ctx, args.attachmentId, args.tenantId);
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
+    // Retain the concrete native result type for existing SDK consumers. This
+    // entire legacy lookup remains unreachable behind the non-resolving guard.
+    const attachment: Doc<"attachments"> | null = await lookupAttachment(ctx, args.attachmentId, args.tenantId);
+    return attachment;
   },
 });
 
 /**
  * Get signed download URL for an attachment.
  */
-export const getUrl = query({
+export const getUrl = internalQuery({
   args: {
     attachmentId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await internalAssetUnavailable();
+
     const attachment = await lookupAttachment(
       ctx,
       args.attachmentId,
@@ -449,6 +479,9 @@ export const list = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     const limit = Math.min(args.limit || 50, 1000); // Max 1000 (matches SDK validators)
 
     // Select optimal index based on provided filters
@@ -567,6 +600,9 @@ export const count = query({
     type: v.optional(attachmentTypeValidator),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     let attachments;
 
     if (args.tenantId) {
@@ -614,10 +650,14 @@ export const count = query({
  */
 export const getByIds = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentIds: v.array(v.string()),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     const results: Array<any> = [];
 
     for (const attachmentId of args.attachmentIds) {
@@ -640,12 +680,16 @@ export const getByIds = query({
  */
 export const getByConversation = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     tenantId: v.optional(v.string()),
     type: v.optional(attachmentTypeValidator),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     const limit = Math.min(args.limit || 50, 100);
 
     let attachments = await ctx.db
@@ -681,10 +725,14 @@ export const getByConversation = query({
  */
 export const getByMessage = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     messageId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     let attachments = await ctx.db
       .query("attachments")
       .withIndex("by_message", (q) => q.eq("messageId", args.messageId))

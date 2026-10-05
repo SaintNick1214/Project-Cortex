@@ -1,0 +1,85 @@
+{
+  "scope": "STATIC_SOURCE_ENGINEERING_BOUNDS_EXECUTOR_PROPOSAL_REVIEW_PENDING",
+  "native": "NOT_RUN",
+  "process": {
+    "perOwnerSpawnUpper": 6,
+    "perOwnerSimultaneousGroupUpper": 2,
+    "sharedTicketUpper": 6,
+    "originalRegressionFaults": "exact unchanged original3; no intermediate cleanup; executed only original regression target",
+    "extraFaults": 0,
+    "extraKnownRequiredChildProcesses": 3,
+    "sourceKnownChildPaths": [
+      "synthetic publication CLI",
+      "EMPTY publication CLI",
+      "synthetic qualifier driver"
+    ],
+    "reaping": "SIGTERM thenSIGKILL with leader wait and bounded group terminal verification; no unknown verification PASS; records retained on failure",
+    "CLI120000ms": "apiSpec ProcessOwner timeout source uses limits.cliMs; qualifier outer driverMs1440000, source qualification shared1200000"
+  },
+  "window": {
+    "sharedQualificationUpperMs": 1200000,
+    "driverUpperMs": 1440000,
+    "rpcUpperMs": 12000,
+    "schedulingPerCaseUpperMs": 30250,
+    "cases": 26,
+    "latePollUpperMs": 62000,
+    "conservativeSchedulePlusLateUpperMs": 848500,
+    "remainingForCallsAndFilesystemMsAtConservativeSchedulingUpper": 351500,
+    "requiredNativeThroughput": "Worst authored scheduling848500ms leaves351500ms for2961 allocated RPC tickets and filesystem: average<=118.71ms. Warm tier filesystem max95.49ms is local only, leaving~68.7s aggregate other overhead under additive model. No native success/timing guarantee; unchanged qualification deadline fails closed. No reset/retry from residual.",
+    "calibration": {
+      "strict": "evidence/source-calibration.json",
+      "rpcTier": "evidence/rpc-tier-calibration.json",
+      "warmTierMaxMs": 90.69246099999998,
+      "projection2961Ms": 268540.37702099996,
+      "omissions": "measurement is local operational/product/graph hash reads only, omits actual private trusted-receipt/canonical bindings and native latency; no native practical guarantee",
+      "native": "NOT_RUN"
+    }
+  },
+  "raw": {
+    "combinedChildRetainedUpperBytes": 256000,
+    "discardedOnOverflow": true,
+    "overflowDisposition": "complete:false, overflow:true, FAIL; unavailable discarded bytes cannot be recovered by outerROOT recorder; no fullraw acceptance on overflow",
+    "publicationAndQualifierReservedBytes": 2211840,
+    "publicationReservedBytes": 1634304,
+    "qualifierDiagnosticsReservedBytes": 577536,
+    "windowReservedBytes": 16384,
+    "sourceJournalUpperBytes": 4915200,
+    "totalBytesUpper": 7143424,
+    "maximumEvidenceBytesUnchanged": 8388608
+  },
+  "originalLimitsUnchanged": true,
+  "sources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/window-evidence.mjs",
+      "sha256": "3f2bfc652523383f45c734170d0ab307104317978d62bec3b4fb4ee1288b7255"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/process-owner.mjs",
+      "sha256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/process-terminal.mjs",
+      "sha256": "2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/qualify-owned.mjs",
+      "sha256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/driver.mjs",
+      "sha256": "cb110d3739d92e11a7a70de4afe26d6329430116fbfbe4b63401e25bcd8d436a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/guard.mjs",
+      "sha256": "79e9f3f1113a44c961f2dd28fad422618fba867f1e8880ae7efe51363dd13d64"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/qualifier-diagnostics.mjs",
+      "sha256": "3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/scripts/publication-artifacts.mjs",
+      "sha256": "f612ef99701485b18c909e234f74227599c93a76ce16081afede48023d8ac413"
+    }
+  ]
+}

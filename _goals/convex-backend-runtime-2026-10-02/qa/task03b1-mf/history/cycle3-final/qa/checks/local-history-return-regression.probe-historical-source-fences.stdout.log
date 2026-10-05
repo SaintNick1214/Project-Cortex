@@ -1,0 +1,36 @@
+{
+  "node": "v24.19.0",
+  "observedAt": "2026-10-03T10:45:41.686Z",
+  "results": [
+    {
+      "name": "history-none",
+      "status": "FAIL",
+      "injected": false,
+      "error": "TypeError: Cannot read properties of undefined (reading 'length')\n    at <anonymous> (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/historical-source-probes.mts:7:137)"
+    },
+    {
+      "name": "history-tombstone",
+      "status": "PASS",
+      "injected": true,
+      "error": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "name": "history-event",
+      "status": "PASS",
+      "injected": true,
+      "error": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    }
+  ]
+}

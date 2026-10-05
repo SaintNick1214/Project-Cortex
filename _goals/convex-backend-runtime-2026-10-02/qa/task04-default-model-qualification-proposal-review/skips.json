@@ -1,0 +1,28 @@
+{
+  "notRun": [
+    {
+      "gate": "product lint/build/unit",
+      "reason": "No product behavior changed; preparation-only assessment. Scoped offline official transform checks are appropriate."
+    },
+    {
+      "gate": "actual native experiment guard/accounting/quota/privacy",
+      "reason": "Guard and durable capture implementation are prerequisites, not this packet; no implementation acceptance claimed."
+    },
+    {
+      "gate": "paid Gateway/model/currency/all-charge/max-token/serving-decoder",
+      "reason": "Read-only delegated scope prohibits network/model/service/target/credential actions; readiness is intentionally NOT_RUN."
+    },
+    {
+      "gate": "managed source/vector/index/search/currentness",
+      "reason": "Real managed service evidence remains required before Task09; offline forwarding cannot establish retrieval."
+    },
+    {
+      "gate": "production trusted-root installation/dispatch",
+      "reason": "Production root stays EMPTY; experiment hypothesis cannot create production truth."
+    },
+    {
+      "gate": "Git/credentials/env/private keys/target services",
+      "reason": "Outside delegated scope; no such actions performed."
+    }
+  ]
+}

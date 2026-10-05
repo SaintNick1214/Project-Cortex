@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-04T06:54:30.861651+00:00",
+  "sources": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "7a21d64328b7b0f08f91199cf6a714c78432e0db68eb340713d208763871f64b",
+      "bytes": 85121,
+      "originalBytes": 73531,
+      "exactOriginalPrefix": null
+    },
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "4467a4d4e424fa57cd07de95bce702108765747cfb6afa8a0756fea253926534",
+      "bytes": 5313,
+      "originalBytes": 5153,
+      "exactOriginalPrefix": null
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "be5b87c1c1bb744222c4ca9f4a274279890dcca9443fcfd93bbd6b1177134489",
+      "bytes": 83111,
+      "originalBytes": 50546,
+      "exactOriginalPrefix": true
+    }
+  ],
+  "tests": {
+    "numTotalTestSuites": 1,
+    "numPassedTestSuites": 1,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 122,
+    "numPassedTests": 122,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "success": true
+  },
+  "sourceConfigFreezeStable": {
+    "tests-candidate": true,
+    "typecheck-candidate": true,
+    "lint-candidate": true
+  },
+  "skipped": [],
+  "limitations": [
+    "Offline fake database is not native OCC, isolation, native IDs/publication or rollback qualification.",
+    "Gateway composition remains separately held.",
+    "Production immutable root remains empty; synthetic fixtures do not prove real provider token/price/interface truth.",
+    "No native/codegen/service/network/credential/Git actions performed."
+  ]
+}

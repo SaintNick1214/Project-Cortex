@@ -1,0 +1,90 @@
+[
+  {
+    "name": "remember",
+    "serializedReferenceKeys": [
+      "actorKind",
+      "capabilities",
+      "grantId",
+      "grantVersion",
+      "membershipId",
+      "membershipVersion",
+      "memorySpaceEpoch",
+      "memorySpaceId",
+      "principalId",
+      "principalVersion",
+      "resourceAccess",
+      "tenantEpoch",
+      "tenantId",
+      "userId"
+    ],
+    "nativeAcceptedReferenceKeys": [
+      "principalId",
+      "principalVersion",
+      "membershipId",
+      "membershipVersion",
+      "grantId",
+      "grantVersion",
+      "tenantId",
+      "tenantEpoch",
+      "memorySpaceId",
+      "memorySpaceEpoch"
+    ],
+    "extraFields": [
+      "actorKind",
+      "capabilities",
+      "resourceAccess",
+      "userId"
+    ],
+    "fixtureReturnedError": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    }
+  },
+  {
+    "name": "recall",
+    "serializedReferenceKeys": [
+      "actorKind",
+      "capabilities",
+      "grantId",
+      "grantVersion",
+      "membershipId",
+      "membershipVersion",
+      "memorySpaceEpoch",
+      "memorySpaceId",
+      "principalId",
+      "principalVersion",
+      "resourceAccess",
+      "tenantEpoch",
+      "tenantId",
+      "userId"
+    ],
+    "nativeAcceptedReferenceKeys": [
+      "principalId",
+      "principalVersion",
+      "membershipId",
+      "membershipVersion",
+      "grantId",
+      "grantVersion",
+      "tenantId",
+      "tenantEpoch",
+      "memorySpaceId",
+      "memorySpaceEpoch"
+    ],
+    "extraFields": [
+      "actorKind",
+      "capabilities",
+      "resourceAccess",
+      "userId"
+    ],
+    "fixtureReturnedError": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    }
+  }
+]

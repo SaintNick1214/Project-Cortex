@@ -1,0 +1,76 @@
+{
+  "utc": "2026-10-03T13:55:16.149140+00:00",
+  "registry": {
+    "total": 1146,
+    "suites": 9,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "preservedSets": [
+    {
+      "file": "checks/tests-final.json",
+      "sha256": "198b0eb0b77a248e189e3a01f914cb39e579d728872cccf230090b29bdae9ec3",
+      "total": 480,
+      "orderedNamesMultiplicityPreserved": true
+    },
+    {
+      "file": "cycle3/continuation/current-base-rerun/checks/tests.json",
+      "sha256": "39e3d5f6cf96c52eea19417d4e94845a2eb565533b0b441b6004bc97a79e6a8f",
+      "total": 1110,
+      "orderedNamesMultiplicityPreserved": true
+    },
+    {
+      "file": "cycle3/continuation/call-context-rerun/checks/tests.json",
+      "sha256": "336c16fe73b4a8aca1f3376b3886c51b0726059daab059ba65accb884175910b",
+      "total": 1146,
+      "orderedNamesMultiplicityPreserved": true
+    }
+  ],
+  "core": {
+    "total": 133,
+    "suites": 3,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "ordered133NamesPreserved": true
+  },
+  "legacyCoreLiteral": {
+    "total": 133,
+    "passed": 120,
+    "failed": 13,
+    "skipped": 0,
+    "rawFailurePreserved": true
+  },
+  "preAdmissionLiteral": {
+    "count": 44,
+    "wrongSelections": 34,
+    "fixtureCommits": 16,
+    "preserved": true
+  },
+  "freshAdmission": {
+    "count": 44,
+    "reached": 44,
+    "denied": 44,
+    "domainHydration": 0,
+    "attempts": 0,
+    "commits": 0
+  },
+  "historicalFindingCollectors": [
+    {
+      "name": "original-graph-boundary",
+      "exitCode": 1,
+      "classification": "Immutable historical finding assertion exits1 on repaired outcomes; retained as expected non-PASS, no relabeling"
+    },
+    {
+      "name": "original-accessor-finding",
+      "exitCode": 1,
+      "classification": "Immutable historical finding assertion exits1 on repaired outcomes; retained as expected non-PASS, no relabeling"
+    },
+    {
+      "name": "original-stateful-finding",
+      "exitCode": 1,
+      "classification": "Immutable historical finding assertion exits1 on repaired outcomes; retained as expected non-PASS, no relabeling"
+    }
+  ]
+}

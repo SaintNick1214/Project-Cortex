@@ -1,0 +1,39 @@
+--- convex-dev/runtimeModelPolicy.ts (C1)
++++ convex-dev/runtimeModelPolicy.ts (C2)
+@@ -754,6 +754,24 @@
+   const privateResult = !captured && canDeliver && receipt.outcome === "confirmed" ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
+   return await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost, privateResult);
+ }
++/** Classify only native structured control denials; never infer eligibility loss from runtime messages/getters. */
++function attachmentDenied(error: unknown): boolean {
++  try {
++    if (!(error instanceof ConvexError) || Object.getPrototypeOf(error) !== ConvexError.prototype) return false;
++    const data = Object.getOwnPropertyDescriptor(error, "data");
++    if (!data || !("value" in data) || typeof data.value !== "object" || data.value === null
++      || Object.getPrototypeOf(data.value) !== Object.prototype) return false;
++    const fields = Object.getOwnPropertyDescriptors(data.value);
++    const ownValue = (key: string): unknown => {
++      const field = fields[key]; return field && "value" in field ? field.value : undefined;
++    };
++    if (ownValue("version") !== 1 || ownValue("retryable") !== false
++      || (ownValue("outcome") !== "not_dispatched" && ownValue("outcome") !== "uncertain")) return false;
++    const code = ownValue("code");
++    return typeof code === "string" && ["FORBIDDEN", "UNAUTHENTICATED", "AUTHORITY_LOOKUP_AMBIGUOUS", "RUN_CANCELLED",
++      "INVALID_INPUT", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE", "CAPABILITY_UNSUPPORTED", "PROFILE_NOT_READY", "IDEMPOTENCY_CONFLICT"].includes(code);
++  } catch { return false; }
++}
+ async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
+   try {
+     const checked = await currentOperation(ctx, reference, state.operation);
+@@ -767,7 +785,10 @@
+     validateModelRequest({ ...state.snapshot, limits: current.limits, allowedOptions: current.allowedOptions, allowedTools: current.allowedTools }, original.request);
+     await finalActor(ctx, reference, state.operation.operationKey);
+     return true;
+-  } catch { return false; }
++  } catch (error: unknown) {
++    if (attachmentDenied(error)) return false;
++    throw error;
++  }
+ }
+ /** Trusted compiled terminal producers only. This authority accounts liability, never grants data access. */
+ export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.id("runtimeModelAttempts"), dispatchIdentity: v.string(), receiptCanonical: v.string() }, handler: async (ctx, args) => {

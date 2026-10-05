@@ -1,0 +1,441 @@
+{
+  "originalControls": [
+    {
+      "ordinal": 1,
+      "name": "legitimate-two-current-receipts",
+      "originalOutcome": "PASS",
+      "extensionOutcome": "PASS",
+      "regressionOutcome": "PASS"
+    },
+    {
+      "ordinal": 2,
+      "name": "foreign-history-operation",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 3,
+      "name": "foreign-history-run",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 4,
+      "name": "foreign-current-operation",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 5,
+      "name": "missing-current-receipts",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 6,
+      "name": "partial-current-receipts",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 7,
+      "name": "misnamed-current-receipt",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 8,
+      "name": "insecure-current-receipt-permissions",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 9,
+      "name": "symlink-history",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 10,
+      "name": "preexisting-proof-exclusive",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 11,
+      "name": "stale-core-IDs-in-history-bypass-receipts",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 12,
+      "name": "foreign-provenance-proof-not-validated",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 13,
+      "name": "changed-run-from-repeat-preflight-ignored",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 14,
+      "name": "nonstring-current-ID-rejected",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 15,
+      "name": "actual-guard-foreign-run-accepted",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 16,
+      "name": "actual-parent-private-key-mode-check-accepts-symlink",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 17,
+      "name": "canonical-key-healthy-eight-mock-signatures-one-mock-request",
+      "originalOutcome": "PASS",
+      "extensionOutcome": "PASS",
+      "regressionOutcome": "PASS"
+    },
+    {
+      "ordinal": 18,
+      "name": "key-mode644",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 19,
+      "name": "key-hardlink",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 20,
+      "name": "key-foreign-owner",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 21,
+      "name": "key-parent-mode755",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 22,
+      "name": "key-parent-foreign-owner",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 23,
+      "name": "public-key-mismatch",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 24,
+      "name": "history-extra-top-level-field",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 25,
+      "name": "history-missing-one-allowed-table",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 26,
+      "name": "history-substituted-locator",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 27,
+      "name": "proof-foreign-run",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 28,
+      "name": "proof-wrong-compact-digest",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 29,
+      "name": "proof-wrong-historical-source-hash",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 30,
+      "name": "proof-wrong-locator-hash",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 31,
+      "name": "proof-missing-journal-witness",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 32,
+      "name": "proof-insecure-mode644",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 33,
+      "name": "proof-symlink",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 34,
+      "name": "current-receipt-extra-run-field",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 35,
+      "name": "current-receipt-empty-id",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 36,
+      "name": "current-receipt-overlength-id",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 37,
+      "name": "current-receipt-wrong-kind",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 38,
+      "name": "current-receipt-symlink",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 39,
+      "name": "current-receipt-hardlink",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 40,
+      "name": "changed-project-at-final-preflight",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 41,
+      "name": "changed-deployment-at-final-preflight",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 42,
+      "name": "changed-proof-before-outputs",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 43,
+      "name": "changed-receipt-before-outputs",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 44,
+      "name": "historical-source-drift-owned-foundation-29178d862bcf4a31926b4530c322efd4.json",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 45,
+      "name": "historical-source-drift-owned-journal-foundation-29178d862bcf4a31926b4530c322efd4.jsonl",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 46,
+      "name": "historical-source-drift-qualify-325ff9b9-223e-47c5-b245-f50e5162b0cc.json",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 47,
+      "name": "historical-source-drift-target-retirement.json",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 48,
+      "name": "current-receipt-foreign-owner",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 49,
+      "name": "total-budget-expired-before-output",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 50,
+      "name": "old-C4-candidate-argument-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 51,
+      "name": "retired-C4-operation-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 52,
+      "name": "retired-C4-run-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 53,
+      "name": "both-parent-sources-exact-identity-only-adaptations",
+      "originalOutcome": "PASS",
+      "extensionOutcome": "PASS",
+      "regressionOutcome": "PASS"
+    },
+    {
+      "ordinal": 54,
+      "name": "old-C5-candidate-argument-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 55,
+      "name": "retired-C5-operation-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 56,
+      "name": "retired-C5-run-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 57,
+      "name": "old-C6-candidate-argument-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 58,
+      "name": "retired-C6-operation-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 59,
+      "name": "retired-C6-run-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 60,
+      "name": "old-C7-candidate-argument-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 61,
+      "name": "retired-C7-operation-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    },
+    {
+      "ordinal": 62,
+      "name": "retired-C7-run-denied",
+      "originalOutcome": "EXPECTED_DENIAL",
+      "extensionOutcome": "EXPECTED_DENIAL",
+      "regressionOutcome": "EXPECTED_DENIAL"
+    }
+  ],
+  "originalAssertionSource": "accepted-c6-offline.mjs.text",
+  "sourceMapping": "Only bounded candidate/source/dummy paths and VM-only historical expected constants parameterized. All62 original outcome assertions remain unchanged; exact C6 identity-only adaptation assertion compares accepted original source preimages. New candidate body executed independently for each profile.",
+  "historicalRuntimeAuthority": "Accepted exact4 source hash/byte constants +9 locator digest constants and journal witness bodies unchanged from qualified C6. Real private C11 payloads never read by preparation."
+}

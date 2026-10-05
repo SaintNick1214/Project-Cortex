@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {Harness} from './harness.mjs';
+import * as guard from '../convex/guard.ts';
+import * as life from '../convex/lifecycle.ts';
+import {BINDING,ACCOUNT_HASH} from '../convex/installed.ts';
+import {CASES} from '../convex/cases.ts';
+import {canonical,account,factsFold} from '../convex/validate.ts';
+import {observeGenerate} from '../convex/observer.ts';
+const h=await new Harness().setup();await h.reserve();await h.enter();const a=h.state().attempts[0];const now=Date.now();const ctx={binding:BINDING,scenarioId:'C01',dispatchIdentity:a.dispatchIdentity,enteredAt:now,now,originalDeadline:now+15000,sourceClosureHash:BINDING.installedClosureHash};
+const native={content:[{type:'text',text:'DUMMY'}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:1},outputTokens:{total:1}},response:{id:'DUMMY-response',modelId:'openai/gpt-4o-mini',body:{id:'DUMMY-response',model:'openai/gpt-4o-mini',choices:[{index:0,message:{content:'DUMMY'},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,total_tokens:2,cost:'0'}}}};
+const obs=await observeGenerate(ctx,native);await h.mutation(guard.capture,{scenarioId:'C01',dispatchIdentity:a.dispatchIdentity,observationCanonical:canonical(obs.receipt,8192),contextCanonical:canonical(ctx),transcriptCanonical:obs.transcriptCanonical});
+assert.equal((await account(canonical(h.state(),524288),BINDING,ACCOUNT_HASH)).active,'C01');
+const s=h.state(),c=CASES.find(x=>x.scenarioId==='C02'),r={...JSON.parse(s.attempts[0].firstCapture),scenarioId:'C02',dispatchIdentity:'b'.repeat(64),nativeHash:c.normalizedNativeRequestHash,expectedWireHash:c.expectedWireBodyHash,method:c.method,interface:c.nativeInterface,requestedModel:c.modelId};s.attempts[0].firstCapture=canonical(r,8192);s.attempts[0].facts=factsFold([r]);h.setState(s);const install=h.rows.find(r=>r._table==='fixtureInstallation'),owned={accountHash:ACCOUNT_HASH,targetHash:BINDING.targetHash,manifestHash:BINDING.manifestHash,operatorHash:BINDING.operatorHash,scope:{tenantHash:install.tenantHash,spaceHash:install.spaceHash,ownerHash:install.ownerHash},sourceId:install.sourceId,chunkId:install.chunkId,grantId:install.grantId};const writes=h.writes,recovery=await h.query(life.recoverOwnedEvidence,{ownedCanonical:canonical(owned)}),inspect=await h.query(guard.inspect);console.log(JSON.stringify({scope:'DUMMY_CROSS_ATTEMPT_REGISTERED_LOAD',recovery,inspect,writes:h.writes-writes,expected:'corrupt denial no summary'}));assert.equal(recovery.kind,'denied');

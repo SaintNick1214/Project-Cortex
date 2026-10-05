@@ -6,8 +6,14 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { action, internalQuery, mutation, query } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import type { CanonicalSourceWitness, HistoricalFactView } from "./runtimeDataAuth";
+import { prepareMutationRowsWrite, finalizeMutationRowsRead, recheckSourceWitnesses, finalizeDataRead, factMutationResult, getHistoricalScopedFact, dataEditor, assertDataLinks, assertDataRow, bindDataActor, dataDenied, getScopedFact,
+  listScopedFacts, manualDataSource, recheckDataAuthority,
+  requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority,
+  getScopedFactDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedFacts, tombstoneDataRow,
+} from "./runtimeDataAuth";
 import { Doc } from "./_generated/dataModel";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -82,22 +88,35 @@ export const store = mutation({
     embedding: v.optional(v.array(v.float64())),
   },
   handler: async (ctx, args) => {
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
     const now = Date.now();
     const factId = `fact-${now}-${Math.random().toString(36).substring(2, 11)}`;
+    rejectUnqualifiedEmbedding(args.embedding);
+    bindDataActor(authority, args.userId);
+    bindDataActor(authority, args.participantId);
+    await assertDataLinks(ctx, authority, capability, args);
+    const manualSourceBinding = { resourceType: "fact" as const, resourceId: factId };
+    const lineage = await manualDataSource(ctx, authority, manualSourceBinding, args.fact);
 
-    const _id = await ctx.db.insert("facts", {
+    await ctx.db.insert("facts", {
       factId,
+      ownerPrincipalId: authority.principalId,
+      runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
+      extractionPolicyVersion: "manual-assertion-v1",
       memorySpaceId: args.memorySpaceId,
-      participantId: args.participantId,
-      userId: args.userId,
-      tenantId: args.tenantId, // Store tenantId
+      participantId: authority.userId,
+      userId: authority.userId,
+      tenantId: authority.tenantId, // Store tenantId
       fact: args.fact,
       factType: args.factType,
       subject: args.subject,
       predicate: args.predicate,
       object: args.object,
       confidence: args.confidence,
-      sourceType: args.sourceType,
+      sourceType: "manual",
       sourceRef: args.sourceRef,
       metadata: args.metadata,
       tags: args.tags,
@@ -118,7 +137,7 @@ export const store = mutation({
       updatedAt: now,
     });
 
-    return await ctx.db.get(_id);
+    return await factMutationResult(ctx, authority, factId, authority.principalId, "store");
   },
 });
 
@@ -160,10 +179,10 @@ export const update = mutation({
     embedding: v.optional(v.array(v.float64())),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    rejectUnqualifiedEmbedding(args.embedding);
+    const existing = await getScopedFact(ctx, authority, args.factId, capability);
 
     if (!existing) {
       throw new ConvexError("FACT_NOT_FOUND");
@@ -174,12 +193,19 @@ export const update = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
+    if (existing.supersededBy || (existing.validUntil !== undefined && existing.validUntil <= Date.now())) dataDenied();
     const now = Date.now();
     const newFactId = `fact-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
     // Create new version (manually copy fields to avoid _id/_creationTime)
-    const _id = await ctx.db.insert("facts", {
+    const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, existing, args.fact ?? existing.fact, newFactId);
+    await ctx.db.insert("facts", {
       factId: newFactId,
+      ownerPrincipalId: existing.ownerPrincipalId,
+      runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
+      extractionPolicyVersion: "manual-assertion-v1",
       memorySpaceId: existing.memorySpaceId,
       participantId: existing.participantId,
       userId: existing.userId, // GDPR compliance - preserve user link across versions
@@ -191,9 +217,9 @@ export const update = mutation({
       object: existing.object,
       confidence:
         args.confidence !== undefined ? args.confidence : existing.confidence,
-      sourceType: existing.sourceType,
+      sourceType: "manual",
       sourceRef: existing.sourceRef,
-      metadata: args.metadata || existing.metadata,
+      metadata: args.metadata !== undefined ? args.metadata : existing.metadata,
       tags: args.tags || existing.tags,
       validFrom: existing.validFrom,
       validUntil:
@@ -227,7 +253,7 @@ export const update = mutation({
       validUntil: now,
     });
 
-    return await ctx.db.get(_id);
+    return await factMutationResult(ctx, authority, newFactId, existing.ownerPrincipalId!, "update");
   },
 });
 
@@ -240,10 +266,9 @@ export const deleteFact = mutation({
     factId: v.string(),
   },
   handler: async (ctx, args) => {
-    const fact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const fact = await getScopedFact(ctx, authority, args.factId, capability);
 
     if (!fact) {
       throw new ConvexError("FACT_NOT_FOUND");
@@ -254,10 +279,7 @@ export const deleteFact = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
-    await ctx.db.patch(fact._id, {
-      validUntil: Date.now(),
-      updatedAt: Date.now(),
-    });
+    await tombstoneDataRow(ctx, authority, "facts", fact);
 
     return { deleted: true, factId: args.factId };
   },
@@ -275,10 +297,10 @@ export const supersede = mutation({
     reason: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const oldFact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.oldFactId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const admittedSources: CanonicalSourceWitness[] = [];
+    const oldFact = await getScopedFact(ctx, authority, args.oldFactId, capability, new Set<string>(), undefined, admittedSources);
 
     if (!oldFact) {
       throw new ConvexError("OLD_FACT_NOT_FOUND");
@@ -289,10 +311,7 @@ export const supersede = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
-    const newFact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.newFactId))
-      .first();
+    const newFact = await getScopedFact(ctx, authority, args.newFactId, capability, new Set<string>(), undefined, admittedSources);
 
     if (!newFact) {
       throw new ConvexError("NEW_FACT_NOT_FOUND");
@@ -303,21 +322,27 @@ export const supersede = mutation({
       throw new ConvexError("FACTS_MUST_BE_IN_SAME_SPACE");
     }
 
+    if (oldFact.factId === newFact.factId || oldFact.supersededBy || newFact.supersededBy
+      || (oldFact.validUntil !== undefined && oldFact.validUntil <= Date.now())
+      || (newFact.validUntil !== undefined && newFact.validUntil <= Date.now())) dataDenied();
     const now = Date.now();
 
+    await recheckSourceWitnesses(ctx, authority, capability, admittedSources);
     // Mark old fact as superseded
-    await ctx.db.patch(oldFact._id, {
+    await ctx.db.patch(oldFact._id, { runtimeEditor: dataEditor(authority),
       supersededBy: args.newFactId,
       validUntil: now,
       updatedAt: now,
     });
 
     // Update new fact to reference old
-    await ctx.db.patch(newFact._id, {
+    await ctx.db.patch(newFact._id, { runtimeEditor: dataEditor(authority),
       supersedes: args.oldFactId,
       updatedAt: now,
     });
 
+    const witnesses = [...admittedSources, ...await assertDataRow(ctx, authority, capability, oldFact), ...await assertDataRow(ctx, authority, capability, newFact)];
+    await recheckSourceWitnesses(ctx, authority, capability, witnesses);
     return {
       superseded: true,
       oldFactId: args.oldFactId,
@@ -364,10 +389,9 @@ export const updateInPlace = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const existing = await getScopedFact(ctx, authority, args.factId, capability);
 
     if (!existing) {
       throw new ConvexError("FACT_NOT_FOUND");
@@ -378,10 +402,11 @@ export const updateInPlace = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
+    if (existing.supersededBy || (existing.validUntil !== undefined && existing.validUntil <= Date.now())) dataDenied();
     const now = Date.now();
 
     // Build update object with only provided fields
-    const updates: Record<string, any> = {
+    const updates: Partial<Omit<Doc<"facts">, "_id" | "_creationTime">> = {
       updatedAt: now,
     };
 
@@ -398,9 +423,10 @@ export const updateInPlace = mutation({
     if (args.entities !== undefined) updates.entities = args.entities;
     if (args.relations !== undefined) updates.relations = args.relations;
 
-    await ctx.db.patch(existing._id, updates);
+    const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, existing, args.fact ?? existing.fact);
+    await ctx.db.patch(existing._id, { ...updates, runtimeEditor: dataEditor(authority), lineage, manualSourceBinding, sourceType: "manual", extractionPolicyVersion: "manual-assertion-v1", version: existing.version + 1 });
 
-    return await ctx.db.get(existing._id);
+    return await factMutationResult(ctx, authority, existing.factId, existing.ownerPrincipalId!, "updateInPlace");
   },
 });
 
@@ -424,12 +450,9 @@ export const deleteMany = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let facts = await listScopedFacts(ctx, authority, capability);
 
     // Apply optional filters
     if (args.userId) {
@@ -439,12 +462,15 @@ export const deleteMany = mutation({
       facts = facts.filter((f) => f.factType === args.factType);
     }
 
+    const admission = await prepareMutationRowsWrite(ctx, authority, facts);
+    const deletions = [];
     let deleted = 0;
     for (const fact of facts) {
-      await ctx.db.delete(fact._id);
+      deletions.push(await tombstoneDataRow(ctx, authority, "facts", fact));
       deleted++;
     }
 
+    await finalizeMutationRowsRead(ctx, authority, admission, deletions);
     return { deleted, memorySpaceId: args.memorySpaceId };
   },
 });
@@ -463,10 +489,9 @@ export const get = query({
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    const fact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const fact = await getScopedFact(ctx, authority, args.factId, capability);
 
     if (!fact) {
       return null;
@@ -538,12 +563,9 @@ export const list = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let facts = await listScopedFacts(ctx, authority, capability);
 
     // Filter out superseded by default
     if (!args.includeSuperseded) {
@@ -710,12 +732,9 @@ export const count = query({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let facts = await listScopedFacts(ctx, authority, capability);
 
     // Filter out superseded by default
     if (!args.includeSuperseded) {
@@ -855,13 +874,10 @@ export const search = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
     // Keyword search on fact content
-    const results = await ctx.db
-      .query("facts")
-      .withSearchIndex("by_content", (q) =>
-        q.search("fact", args.query).eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const results = await searchScopedFacts(ctx, authority, args.query);
 
     // Filter superseded unless explicitly requested
     let filtered = args.includeSuperseded
@@ -984,15 +1000,16 @@ export const search = query({
  * Internal query to fetch facts by their IDs (used by semanticSearch action)
  */
 export const fetchFactsByIds = internalQuery({
-  args: { ids: v.array(v.id("facts")) },
-  handler: async (ctx, { ids }): Promise<Doc<"facts">[]> => {
-    const results: Doc<"facts">[] = [];
-    for (const id of ids) {
-      const doc = await ctx.db.get(id);
-      if (doc !== null) {
-        results.push(doc);
-      }
+  args: { ids: v.array(v.id("facts")), reference: runtimeAuthorityReference },
+  handler: async (ctx, args): Promise<Doc<"facts">[]> => {
+    const authority = await recheckDataAuthority(ctx, args.reference, "read");
+    const results: Doc<"facts">[] = []; const witnesses: CanonicalSourceWitness[] = [];
+    for (const id of args.ids) {
+      const row = await getScopedFactDocument(ctx, authority, id, witnesses);
+      if (!row) dataDenied();
+      results.push(row);
     }
+    await finalizeDataRead(ctx, authority, witnesses, results);
     return results;
   },
 });
@@ -1020,77 +1037,12 @@ export const semanticSearch = action({
     createdAfter: v.optional(v.number()),
     createdBefore: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
-    const limit = args.limit || 20;
-    let results: any[] = [];
-
-    if (args.embedding && args.embedding.length > 0) {
-      // Semantic search with vector similarity using ctx.vectorSearch()
-      // This is the correct Convex API for vector search (only available in actions)
-      const vectorResults = await ctx.vectorSearch("facts", "by_embedding", {
-        vector: args.embedding,
-        limit: Math.min(limit * 2, 256), // Fetch more for post-filtering, max 256
-        filter: (q) => q.eq("memorySpaceId", args.memorySpaceId),
-      });
-
-      // Fetch full documents using internal query
-      const ids = vectorResults.map((r) => r._id);
-      const docs = await ctx.runQuery(internal.facts.fetchFactsByIds, { ids });
-
-      // Merge scores with documents (preserve order from vector search)
-      const scoreMap = new Map(
-        vectorResults.map((r) => [r._id.toString(), r._score]),
-      );
-      results = docs.map((doc) => ({
-        ...doc,
-        _score: scoreMap.get(doc._id.toString()) ?? 0,
-      }));
-
-      // Sort by score (should already be sorted, but ensure consistency)
-      results.sort((a, b) => (b._score ?? 0) - (a._score ?? 0));
-    }
-
-    // Filter superseded unless explicitly requested
-    let filtered = args.includeSuperseded
-      ? results
-      : results.filter((f) => f.supersededBy === undefined);
-
-    // Tenant isolation filter
-    if (args.tenantId) {
-      filtered = filtered.filter((f) => f.tenantId === args.tenantId);
-    }
-
-    // Apply additional filters
-    if (args.userId !== undefined) {
-      filtered = filtered.filter((f) => f.userId === args.userId);
-    }
-    if (args.minConfidence !== undefined) {
-      filtered = filtered.filter((f) => f.confidence >= args.minConfidence!);
-    }
-    if (args.tags && args.tags.length > 0) {
-      filtered = filtered.filter((f) =>
-        args.tags!.some((tag) => f.tags.includes(tag)),
-      );
-    }
-    if (args.createdAfter !== undefined) {
-      filtered = filtered.filter((f) => f.createdAt >= args.createdAfter!);
-    }
-    if (args.createdBefore !== undefined) {
-      filtered = filtered.filter((f) => f.createdAt <= args.createdBefore!);
-    }
-
-    // Filter by minimum score
-    if (args.minScore !== undefined) {
-      filtered = filtered.filter((f: any) => {
-        if (f._score !== undefined) {
-          return f._score >= args.minScore!;
-        }
-        return true;
-      });
-    }
-
-    // Apply final limit
-    return filtered.slice(0, limit);
+  handler: async (ctx, args): Promise<Doc<"facts">[]> => {
+    const authority = await requireActionDataAuthority(ctx, args, "read");
+    await recheckActionDataAuthority(ctx, authority, "read");
+    // Old fact vectors lack qualified profiles and cannot be treated as modern current vectors.
+    rejectUnqualifiedEmbedding(args.embedding);
+    return [];
   },
 });
 
@@ -1103,51 +1055,52 @@ export const getHistory = query({
     factId: v.string(),
   },
   handler: async (ctx, args) => {
-    const fact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const witnesses: CanonicalSourceWitness[] = [];
+    const fact = await getHistoricalScopedFact(ctx, authority, args.factId, witnesses);
 
     if (!fact || fact.memorySpaceId !== args.memorySpaceId) {
       return [];
     }
 
     // Build version chain - start from given fact and go both directions
-    const history: any[] = [];
+    const history: HistoricalFactView[] = [];
 
     // First, go backward to find oldest version
+    const backward = new Set<string>([fact.factId]);
     let oldest = fact;
     while (oldest.supersedes) {
-      const previous = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", oldest.supersedes!))
-        .first();
+      const previous = await getHistoricalScopedFact(ctx, authority, oldest.supersedes!, witnesses);
 
       if (previous) {
+        if (backward.has(previous.factId)) dataDenied("INVALID_INPUT", "Fact version cycle");
+        backward.add(previous.factId);
         oldest = previous;
       } else {
-        break;
+        dataDenied();
       }
     }
 
     // Now go forward from oldest to build complete chain
     history.push(oldest);
+    const forward = new Set<string>([oldest.factId]);
     let current = oldest;
 
     while (current.supersededBy) {
-      const next = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", current.supersededBy!))
-        .first();
+      const next = await getHistoricalScopedFact(ctx, authority, current.supersededBy!, witnesses);
 
       if (next) {
+        if (forward.has(next.factId)) dataDenied("INVALID_INPUT", "Fact version cycle");
+        forward.add(next.factId);
         history.push(next);
         current = next;
       } else {
-        break;
+        dataDenied();
       }
     }
 
+    await finalizeDataRead(ctx, authority, witnesses, history);
     return history; // Already in chronological order
   },
 });
@@ -1203,12 +1156,9 @@ export const queryBySubject = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace_subject", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject),
-      )
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let facts = (await listScopedFacts(ctx, authority, capability)).filter(row => row.subject === args.subject);
 
     // Filter superseded (unless explicitly requested)
     if (!args.includeSuperseded) {
@@ -1370,12 +1320,9 @@ export const queryByRelationship = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace_subject", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject),
-      )
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let facts = (await listScopedFacts(ctx, authority, capability)).filter(row => row.subject === args.subject);
 
     // Filter by predicate and superseded
     facts = facts.filter((f) => f.predicate === args.predicate);
@@ -1503,12 +1450,9 @@ export const exportFacts = query({
     ),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let facts = await listScopedFacts(ctx, authority, capability);
 
     // Filter superseded
     facts = facts.filter((f) => f.supersededBy === undefined);
@@ -1600,67 +1544,29 @@ export const exportFacts = query({
  * Consolidate duplicate facts
  */
 export const consolidate = mutation({
-  args: {
-    memorySpaceId: v.string(),
-    factIds: v.array(v.string()), // Facts to merge
-    keepFactId: v.string(), // Fact to keep
-  },
+  args: { memorySpaceId: v.string(), factIds: v.array(v.string()), keepFactId: v.string() },
   handler: async (ctx, args) => {
-    if (!args.factIds.includes(args.keepFactId)) {
-      throw new Error("KEEP_FACT_NOT_IN_LIST");
+    const authority = await requireDataAuthority(ctx, args, "write");
+    const ids = [...new Set(args.factIds)];
+    if (!ids.includes(args.keepFactId)) dataDenied("INVALID_INPUT", "Keep fact must be included");
+    const facts: Doc<"facts">[] = []; const admittedSources: CanonicalSourceWitness[] = [];
+    for (const id of ids) {
+      const fact = await getScopedFact(ctx, authority, id, "write", new Set<string>(), undefined, admittedSources);
+      if (!fact || fact.supersededBy || (fact.validUntil !== undefined && fact.validUntil <= Date.now())) dataDenied();
+      facts.push(fact);
     }
-
+    await recheckSourceWitnesses(ctx, authority, "write", admittedSources);
+    const kept = facts.find(f => f.factId === args.keepFactId)!;
     const now = Date.now();
-
-    // Mark all others as superseded by the kept fact
-    for (const factId of args.factIds) {
-      if (factId === args.keepFactId) continue;
-
-      const fact = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", factId))
-        .first();
-
-      if (fact && fact.memorySpaceId === args.memorySpaceId) {
-        await ctx.db.patch(fact._id, {
-          supersededBy: args.keepFactId,
-          validUntil: now,
-        });
-      }
+    for (const fact of facts) {
+      await assertDataRow(ctx, authority, "write", fact);
+      if (fact.factId !== kept.factId) await ctx.db.patch(fact._id, { runtimeEditor: dataEditor(authority), supersededBy: kept.factId, validUntil: now, updatedAt: now });
     }
-
-    // Update confidence of kept fact (average of all)
-    const kept = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.keepFactId))
-      .first();
-
-    if (kept && kept.memorySpaceId === args.memorySpaceId) {
-      const allFacts = await Promise.all(
-        args.factIds.map((id) =>
-          ctx.db
-            .query("facts")
-            .withIndex("by_factId", (q) => q.eq("factId", id))
-            .first(),
-        ),
-      );
-
-      const validFacts = allFacts.filter((f) => f !== null) as any[];
-      const avgConfidence =
-        validFacts.reduce((sum, f) => sum + f.confidence, 0) /
-        validFacts.length;
-
-      await ctx.db.patch(kept._id, {
-        confidence: Math.round(avgConfidence),
-        updatedAt: now,
-      });
-    }
-
-    return {
-      consolidated: true,
-      keptFactId: args.keepFactId,
-      mergedCount: args.factIds.length - 1,
-    };
+    await ctx.db.patch(kept._id, { runtimeEditor: dataEditor(authority), confidence: Math.round(facts.reduce((total, fact) => total + fact.confidence, 0) / facts.length), updatedAt: now });
+    const witnesses: CanonicalSourceWitness[] = [...admittedSources];
+    for (const fact of facts) witnesses.push(...await assertDataRow(ctx, authority, "write", fact));
+    await recheckSourceWitnesses(ctx, authority, "write", witnesses);
+    return { consolidated: true, keptFactId: kept.factId, mergedCount: facts.length - 1 };
   },
 });
 
@@ -1689,13 +1595,10 @@ export const findByStructure = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
     // Start with memorySpace filter
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    let facts = await listScopedFacts(ctx, authority, capability);
 
     // Filter out superseded facts
     facts = facts.filter((f) => f.supersededBy === undefined);
@@ -1729,42 +1632,27 @@ export const findByStructure = query({
  * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
 export const deleteByIds = mutation({
-  args: {
-    factIds: v.array(v.string()),
-  },
+  args: { factIds: v.array(v.string()) },
   handler: async (ctx, args) => {
-    const deletedIds: string[] = [];
-    const now = Date.now();
-
-    // Look up each fact by index to avoid full table scan
-    // This is O(n) index lookups vs O(entire table) memory usage
-    for (const factId of args.factIds) {
-      const fact = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", factId))
-        .first();
-
-      if (fact) {
-        // Soft delete by marking as invalidated
-        await ctx.db.patch(fact._id, {
-          validUntil: now,
-          updatedAt: now,
-        });
-        deletedIds.push(factId);
-      }
+    const authority = await requireDataAuthority(ctx, {}, "write");
+    const rows: Doc<"facts">[] = [];
+    for (const id of [...new Set(args.factIds)]) {
+      const row = await getScopedFact(ctx, authority, id, "write");
+      if (!row) dataDenied();
+      rows.push(row);
     }
-
-    return {
-      deleted: deletedIds.length,
-      factIds: deletedIds,
-    };
+    const admission = await prepareMutationRowsWrite(ctx, authority, rows);
+    const deletions = [];
+    for (const row of rows) deletions.push(await tombstoneDataRow(ctx, authority, "facts", row));
+    await finalizeMutationRowsRead(ctx, authority, admission, deletions);
+    return { deleted: rows.length, factIds: rows.map(row => row.factId) };
   },
 });
 
 /**
  * Purge all facts (TEST/DEV ONLY)
  */
-export const purgeAll = mutation({
+export const purgeAll = internalMutation({
   args: {},
   handler: async (ctx) => {
     // Safety check: Only allow in test/dev environments

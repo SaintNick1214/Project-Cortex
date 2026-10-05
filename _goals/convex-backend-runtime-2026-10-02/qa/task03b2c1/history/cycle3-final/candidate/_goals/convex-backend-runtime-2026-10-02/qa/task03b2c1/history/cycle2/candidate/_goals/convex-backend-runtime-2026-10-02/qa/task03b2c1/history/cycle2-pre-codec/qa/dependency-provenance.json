@@ -1,0 +1,36 @@
+{
+  "imports": [
+    "accepted03A runtimeAuth.ts",
+    "accepted03A runtimeAuthSchema.ts via runtimeAuth",
+    "accepted03A src/auth/verified.ts",
+    "existing generated server/data model; no handwritten bindings"
+  ],
+  "excludedTrust": [
+    "memory/fact rejected helpers and fixtures",
+    "unreviewed metadata/registry helpers and fixtures",
+    "storage/Agent/media readiness"
+  ],
+  "dependencies": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "baselineSha256": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f",
+      "actualSha256": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f",
+      "unchanged": true,
+      "accepted03ASourceHash": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f"
+    },
+    {
+      "file": "convex-dev/runtimeAuthSchema.ts",
+      "baselineSha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "actualSha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "unchanged": true,
+      "accepted03ASourceHash": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    {
+      "file": "src/auth/verified.ts",
+      "baselineSha256": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "actualSha256": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "unchanged": true,
+      "accepted03ASourceHash": null
+    }
+  ]
+}

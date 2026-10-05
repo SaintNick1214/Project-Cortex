@@ -1,0 +1,880 @@
+{
+  "status": "MEASURED_TIMEOUT_AND_REMAINING_SOURCE_WORK_NO_INFEASIBILITY_THEOREM",
+  "recordedBatch": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/88ec05db86d44a03ae43dff90d923248/receipt.json",
+  "phaseRows": [
+    {
+      "ordinal": 1,
+      "stage": "PREPARATION_START",
+      "utc": "2026-10-05T02:26:53.865Z",
+      "previousSHA256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "ordinal": 2,
+      "stage": "PREPARATION_COMPLETE",
+      "utc": "2026-10-05T02:26:54.827Z",
+      "previousSHA256": "81421ffa8e989e46beceecc8dd0939fd26f6437b67d0b7a28ddd46a5f38e63a0"
+    },
+    {
+      "ordinal": 3,
+      "stage": "DISPATCH_INPUTS_START",
+      "utc": "2026-10-05T02:26:54.827Z",
+      "previousSHA256": "c29e30113948907dc7af7df6b953092dd9c8b8964f15d0e691512f54e3fe485f"
+    },
+    {
+      "ordinal": 4,
+      "stage": "DISPATCH_INPUTS_COMPLETE",
+      "utc": "2026-10-05T02:27:38.741Z",
+      "rows": 75364,
+      "previousSHA256": "6f25bd65d1d8b1f4a31c05bdf8cec386401349b848e1ac391b4e2eed71849fe0"
+    },
+    {
+      "ordinal": 5,
+      "stage": "CHILD_ARCHIVE_COMPLETE",
+      "utc": "2026-10-05T02:27:43.236Z",
+      "previousSHA256": "94deb9c13f35beea9a73c94b09b1161c74f4e5273f147a31c25bf0de5d9617ea"
+    },
+    {
+      "ordinal": 6,
+      "stage": "INSTALL_COMPLETE",
+      "utc": "2026-10-05T02:27:44.593Z",
+      "previousSHA256": "429ace2c970666bfc67818a7d68c81a0ff74bae9fc44d95eef4f13a4973eef7c"
+    }
+  ],
+  "parentAbsoluteDeadline": 1791167285218,
+  "deadlineUTC": "2026-10-05T02:28:05.218000+00:00",
+  "bodyConsumption": {
+    "events": 2601,
+    "bytes": 57696224,
+    "historicalEvents": 2583,
+    "historicalUniquePaths": 2582,
+    "historicalBytes": 54007675,
+    "firstHistoricalUTC": "2026-10-05T02:28:00.645Z",
+    "lastHistoricalUTC": "2026-10-05T02:28:04.039Z",
+    "allCapturedHistoricalVersionsMatchAudited": true,
+    "allEventsBacking": {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/all-body-consumption-events.jsonl.gz",
+      "decodedBytes": 2819520,
+      "decodedSHA256": "f9cce9c8d31d0b8e494bcbaa63023f0f7c36d8c7f9e59c370b199ff1a0ea2d24",
+      "encodedBytes": 248331,
+      "encodedSHA256": "57512dff05d9ed080f20185cfcef8ab64064f097593d2c7b086c5f2b1ab69327"
+    },
+    "metadataEvents": [
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/dependency-tiers.json",
+        "bytes": 217471,
+        "sha256": "a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703",
+        "identity": {
+          "dev": 26,
+          "ino": 2618,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 217471,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703.gz",
+          "bytes": 15429,
+          "sha256": "4c2adfa53fd3e4e75edf44eed95d3ad9ba96dcf195c4265966eec8971b2e570d",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70032,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:27:58.908Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runner-dependency-inventory.json",
+        "bytes": 348254,
+        "sha256": "b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a",
+        "identity": {
+          "dev": 26,
+          "ino": 2807,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 348254,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a.gz",
+          "bytes": 19131,
+          "sha256": "0441db6f342771857955eec6186e4b5f63d73e792f072bd2adb531b2c6eaaf74",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70033,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:27:58.940Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/c4-journal-semantic-domain-proof.json",
+        "bytes": 307327,
+        "sha256": "05a8d5a6609dfc8dfc503c5d871916b3f9345a2d34faa1712718d11ea60787c2",
+        "identity": {
+          "dev": 26,
+          "ino": 2612,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 307327,
+          "mtimeMs": 1791156733207.9014,
+          "ctimeMs": 1791156733207.9014,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/05a8d5a6609dfc8dfc503c5d871916b3f9345a2d34faa1712718d11ea60787c2.gz",
+          "bytes": 13057,
+          "sha256": "5619d33e24dee5f58ed6b364c99391ced155bdd54295d0dc20f55ca607aec9d2",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70034,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:27:59.730Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/dependency-tiers.json",
+        "bytes": 217471,
+        "sha256": "a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703",
+        "identity": {
+          "dev": 26,
+          "ino": 2618,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 217471,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703.gz",
+          "bytes": 15429,
+          "sha256": "4c2adfa53fd3e4e75edf44eed95d3ad9ba96dcf195c4265966eec8971b2e570d",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70035,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:27:59.732Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runner-dependency-inventory.json",
+        "bytes": 348254,
+        "sha256": "b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a",
+        "identity": {
+          "dev": 26,
+          "ino": 2807,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 348254,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a.gz",
+          "bytes": 19131,
+          "sha256": "0441db6f342771857955eec6186e4b5f63d73e792f072bd2adb531b2c6eaaf74",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70036,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:27:59.763Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runtime-freeze.json",
+        "bytes": 43141,
+        "sha256": "ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583",
+        "identity": {
+          "dev": 26,
+          "ino": 17842,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 43141,
+          "mtimeMs": 1791167279723.153,
+          "ctimeMs": 1791167279723.153,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583.gz",
+          "bytes": 12094,
+          "sha256": "ca75c9d9a364d1e2f4adaad0af8167284b4f633976231b175afbcc6744eb17da",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70037,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:27:59.764Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runtime-freeze.json",
+        "bytes": 43141,
+        "sha256": "ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583",
+        "identity": {
+          "dev": 26,
+          "ino": 17842,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 43141,
+          "mtimeMs": 1791167279723.153,
+          "ctimeMs": 1791167279723.153,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583.gz",
+          "bytes": 12094,
+          "sha256": "ca75c9d9a364d1e2f4adaad0af8167284b4f633976231b175afbcc6744eb17da",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70038,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.559Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/dependency-tiers.json",
+        "bytes": 217471,
+        "sha256": "a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703",
+        "identity": {
+          "dev": 26,
+          "ino": 2618,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 217471,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703.gz",
+          "bytes": 15429,
+          "sha256": "4c2adfa53fd3e4e75edf44eed95d3ad9ba96dcf195c4265966eec8971b2e570d",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70039,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.564Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runner-dependency-inventory.json",
+        "bytes": 348254,
+        "sha256": "b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a",
+        "identity": {
+          "dev": 26,
+          "ino": 2807,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 348254,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a.gz",
+          "bytes": 19131,
+          "sha256": "0441db6f342771857955eec6186e4b5f63d73e792f072bd2adb531b2c6eaaf74",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70040,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.627Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runtime-freeze.json",
+        "bytes": 43141,
+        "sha256": "ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583",
+        "identity": {
+          "dev": 26,
+          "ino": 17842,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 43141,
+          "mtimeMs": 1791167279723.153,
+          "ctimeMs": 1791167279723.153,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583.gz",
+          "bytes": 12094,
+          "sha256": "ca75c9d9a364d1e2f4adaad0af8167284b4f633976231b175afbcc6744eb17da",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70042,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.709Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/dependency-tiers.json",
+        "bytes": 217471,
+        "sha256": "a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703",
+        "identity": {
+          "dev": 26,
+          "ino": 2618,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 217471,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703.gz",
+          "bytes": 15429,
+          "sha256": "4c2adfa53fd3e4e75edf44eed95d3ad9ba96dcf195c4265966eec8971b2e570d",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70043,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.713Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runner-dependency-inventory.json",
+        "bytes": 348254,
+        "sha256": "b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a",
+        "identity": {
+          "dev": 26,
+          "ino": 2807,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 348254,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a.gz",
+          "bytes": 19131,
+          "sha256": "0441db6f342771857955eec6186e4b5f63d73e792f072bd2adb531b2c6eaaf74",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70044,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.774Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/qa-manifest.json",
+        "bytes": 36353,
+        "sha256": "cea50cf1a1c7256e3347a9d0c937d38095063144418a64298992d0d577a2ff86",
+        "identity": {
+          "dev": 26,
+          "ino": 17844,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 36353,
+          "mtimeMs": 1791167280555.1667,
+          "ctimeMs": 1791167280555.1667,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/cea50cf1a1c7256e3347a9d0c937d38095063144418a64298992d0d577a2ff86.gz",
+          "bytes": 11416,
+          "sha256": "3605e8f22f5d0d19e063ae1a6b2608bbda072a1300dbb6c7da6ad2214513d433",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70046,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.854Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/qa-manifest.json",
+        "bytes": 36353,
+        "sha256": "cea50cf1a1c7256e3347a9d0c937d38095063144418a64298992d0d577a2ff86",
+        "identity": {
+          "dev": 26,
+          "ino": 17844,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 36353,
+          "mtimeMs": 1791167280555.1667,
+          "ctimeMs": 1791167280555.1667,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/cea50cf1a1c7256e3347a9d0c937d38095063144418a64298992d0d577a2ff86.gz",
+          "bytes": 11416,
+          "sha256": "3605e8f22f5d0d19e063ae1a6b2608bbda072a1300dbb6c7da6ad2214513d433",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70047,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.855Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/c4-journal-semantic-domain-proof.json",
+        "bytes": 307327,
+        "sha256": "05a8d5a6609dfc8dfc503c5d871916b3f9345a2d34faa1712718d11ea60787c2",
+        "identity": {
+          "dev": 26,
+          "ino": 2612,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 307327,
+          "mtimeMs": 1791156733207.9014,
+          "ctimeMs": 1791156733207.9014,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/05a8d5a6609dfc8dfc503c5d871916b3f9345a2d34faa1712718d11ea60787c2.gz",
+          "bytes": 13057,
+          "sha256": "5619d33e24dee5f58ed6b364c99391ced155bdd54295d0dc20f55ca607aec9d2",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70048,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.860Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/dependency-tiers.json",
+        "bytes": 217471,
+        "sha256": "a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703",
+        "identity": {
+          "dev": 26,
+          "ino": 2618,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 217471,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/a9bdbbfca67486ab4318ac5f3a06fccc0ea9d1d82f91133de5e784a604530703.gz",
+          "bytes": 15429,
+          "sha256": "4c2adfa53fd3e4e75edf44eed95d3ad9ba96dcf195c4265966eec8971b2e570d",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70049,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.863Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runner-dependency-inventory.json",
+        "bytes": 348254,
+        "sha256": "b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a",
+        "identity": {
+          "dev": 26,
+          "ino": 2807,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 348254,
+          "mtimeMs": 1791161895979.2954,
+          "ctimeMs": 1791161895979.2954,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/b065ca72bef4d95486059960db4f5c319a6fb9acdf52cbca538cdc36f89e5e5a.gz",
+          "bytes": 19131,
+          "sha256": "0441db6f342771857955eec6186e4b5f63d73e792f072bd2adb531b2c6eaaf74",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70050,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.960Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      },
+      {
+        "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/runtime-freeze.json",
+        "bytes": 43141,
+        "sha256": "ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583",
+        "identity": {
+          "dev": 26,
+          "ino": 17842,
+          "mode": 33152,
+          "uid": 1000,
+          "size": 43141,
+          "mtimeMs": 1791167279723.153,
+          "ctimeMs": 1791167279723.153,
+          "nlink": 1
+        },
+        "beforeByteBacking": {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/consumed-prebytes/ef5b0f5cc090b6007c94cccfffcf83dc3303ef4bd65450b5629344b9df14f583.gz",
+          "bytes": 12094,
+          "sha256": "ca75c9d9a364d1e2f4adaad0af8167284b4f633976231b175afbcc6744eb17da",
+          "encoding": "GZIP_EXACT_PREIMAGE"
+        },
+        "ordinal": 70051,
+        "reason": "READ_FILE_BEFORE_RETURN",
+        "utcBeforeConsumption": "2026-10-05T02:28:00.961Z",
+        "classification": "DECLARED_METADATA_VERSION"
+      }
+    ]
+  },
+  "allPostInstallSourceFences": [
+    {
+      "fence": 2,
+      "startUTC": "2026-10-05T02:27:44.594Z",
+      "endUTC": "2026-10-05T02:27:45.374Z",
+      "milliseconds": 780.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 3,
+      "startUTC": "2026-10-05T02:27:45.376Z",
+      "endUTC": "2026-10-05T02:27:46.173Z",
+      "milliseconds": 797.0,
+      "caller": "    at load (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:821)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at loadWithHooks (node:internal/modules/customization_hooks:374:18)\n    at #loadSync (node:internal/modules/esm/loader:825:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 4,
+      "startUTC": "2026-10-05T02:27:46.175Z",
+      "endUTC": "2026-10-05T02:27:46.979Z",
+      "milliseconds": 804.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1165:25)",
+      "rows": 5332
+    },
+    {
+      "fence": 5,
+      "startUTC": "2026-10-05T02:27:46.979Z",
+      "endUTC": "2026-10-05T02:27:47.787Z",
+      "milliseconds": 808.0,
+      "caller": "    at load (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:821)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at loadWithHooks (node:internal/modules/customization_hooks:374:18)\n    at loadBuiltinWithHooks (node:internal/modules/cjs/loader:1239:22)",
+      "rows": 5332
+    },
+    {
+      "fence": 6,
+      "startUTC": "2026-10-05T02:27:47.788Z",
+      "endUTC": "2026-10-05T02:27:48.625Z",
+      "milliseconds": 837.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 7,
+      "startUTC": "2026-10-05T02:27:48.625Z",
+      "endUTC": "2026-10-05T02:27:49.413Z",
+      "milliseconds": 788.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 8,
+      "startUTC": "2026-10-05T02:27:49.413Z",
+      "endUTC": "2026-10-05T02:27:50.206Z",
+      "milliseconds": 793.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 9,
+      "startUTC": "2026-10-05T02:27:50.206Z",
+      "endUTC": "2026-10-05T02:27:51.014Z",
+      "milliseconds": 808.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 10,
+      "startUTC": "2026-10-05T02:27:51.015Z",
+      "endUTC": "2026-10-05T02:27:51.822Z",
+      "milliseconds": 807.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 11,
+      "startUTC": "2026-10-05T02:27:51.824Z",
+      "endUTC": "2026-10-05T02:27:52.619Z",
+      "milliseconds": 795.0,
+      "caller": "    at load (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:821)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at loadWithHooks (node:internal/modules/customization_hooks:374:18)\n    at #loadSync (node:internal/modules/esm/loader:825:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 12,
+      "startUTC": "2026-10-05T02:27:52.620Z",
+      "endUTC": "2026-10-05T02:27:53.407Z",
+      "milliseconds": 787.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1165:25)",
+      "rows": 5332
+    },
+    {
+      "fence": 13,
+      "startUTC": "2026-10-05T02:27:53.407Z",
+      "endUTC": "2026-10-05T02:27:54.193Z",
+      "milliseconds": 786.0,
+      "caller": "    at load (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:821)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at loadWithHooks (node:internal/modules/customization_hooks:374:18)\n    at loadBuiltinWithHooks (node:internal/modules/cjs/loader:1239:22)",
+      "rows": 5332
+    },
+    {
+      "fence": 14,
+      "startUTC": "2026-10-05T02:27:54.195Z",
+      "endUTC": "2026-10-05T02:27:54.977Z",
+      "milliseconds": 782.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 15,
+      "startUTC": "2026-10-05T02:27:54.977Z",
+      "endUTC": "2026-10-05T02:27:55.755Z",
+      "milliseconds": 778.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 16,
+      "startUTC": "2026-10-05T02:27:55.755Z",
+      "endUTC": "2026-10-05T02:27:56.537Z",
+      "milliseconds": 782.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 17,
+      "startUTC": "2026-10-05T02:27:56.537Z",
+      "endUTC": "2026-10-05T02:27:57.319Z",
+      "milliseconds": 782.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 18,
+      "startUTC": "2026-10-05T02:27:57.319Z",
+      "endUTC": "2026-10-05T02:27:58.128Z",
+      "milliseconds": 809.0,
+      "caller": "    at resolve (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:61)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at resolveWithHooks (node:internal/modules/customization_hooks:417:10)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:747:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 19,
+      "startUTC": "2026-10-05T02:27:58.129Z",
+      "endUTC": "2026-10-05T02:27:58.901Z",
+      "milliseconds": 772.0,
+      "caller": "    at load (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/module-boundary.cjs:8:821)\n    at nextStep (node:internal/modules/customization_hooks:189:26)\n    at loadWithHooks (node:internal/modules/customization_hooks:374:18)\n    at #loadSync (node:internal/modules/esm/loader:825:16)",
+      "rows": 5332
+    },
+    {
+      "fence": 20,
+      "startUTC": "2026-10-05T02:27:58.948Z",
+      "endUTC": "2026-10-05T02:27:59.725Z",
+      "milliseconds": 777.0,
+      "caller": "    at route (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/bridge-preload.cjs:9:232)\n    at sync.<computed> (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/bridge-preload.cjs:15:115)\n    at file:///dev/shm/cortex-native-c6-closed-launcher-c6/whole-freeze-fixture-metadata-version-07/entry.mjs:4:1",
+      "rows": 5332
+    },
+    {
+      "fence": 21,
+      "startUTC": "2026-10-05T02:27:59.772Z",
+      "endUTC": "2026-10-05T02:28:00.558Z",
+      "milliseconds": 786.0,
+      "caller": "    at route (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/bridge-preload.cjs:9:232)\n    at sync.<computed> (/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/bridge-preload.cjs:15:115)\n    at full (file:///dev/shm/cortex-native-c6-closed-launcher-c6/whole-freeze-fixture-metadata-version-07/entry.mjs:5:16)\n    at file:///dev/shm/cortex-native-c6-closed-launcher-c6/whole-freeze-fixture-metadata-version-07/entry.mjs:5:150",
+      "rows": 5332
+    }
+  ],
+  "profilesRemainingSourceContract": [
+    {
+      "kind": "extension",
+      "packets": 35,
+      "declaredManifestRowsPerPreservationCall": 65585,
+      "originalBodyPreservationCalls": 2,
+      "specialFullClosureAdditionalRows": 3
+    },
+    {
+      "kind": "regression",
+      "packets": 37,
+      "declaredManifestRowsPerPreservationCall": 59460,
+      "originalBodyPreservationCalls": 2,
+      "specialFullClosureAdditionalRows": 3
+    },
+    {
+      "kind": "extra",
+      "packets": 35,
+      "declaredManifestRowsPerPreservationCall": 64054,
+      "originalBodyPreservationCalls": 2,
+      "specialFullClosureAdditionalRows": 3
+    }
+  ],
+  "sourceSequence": "Exact six-line body: first profile runtime-freeze write; qa-manifest write; full sourcePreflight; rpc sourcePreflight; preservationPreflight complete historical packets; final-freeze-verification write; qa-manifest rewrite; second preservationPreflight; output. Then repeat regression and extra. Actual historical body events establish reaching extension preservation after sequential full/rpc calls; no explicit sourcePreflight phase/PASS emitted. First preservation incomplete; final write/second preservation/remaining profiles/final delivery not observed.",
+  "safeOptimizationRationale": "Zero-reentry diagnostic repair measured at its port, retained. Same-boundary transfer already shares exact fresh capture with archive role; parent->child/body reuse, skipped archives/fences/assertions, larger bounds prohibited. Source-only performance aid offers local unmeasured allocation changes, no demonstrated sufficient whole-route saving. No unchanged whole retry proposed.",
+  "limits": {
+    "whole": 120000,
+    "compiler": 20000,
+    "diagnostic": 256000
+  },
+  "original122": "HELD",
+  "pins": [
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole-freeze-fixture-metadata-version-07/child-VZdMrn/tmp/child-phases.jsonl",
+      "bytes": 985,
+      "sha256": "74765c3e365e810caa0daf2855d18f2723c1d91df722d5efe86941175060759e",
+      "identity": {
+        "dev": 26,
+        "ino": 18625,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 985,
+        "mtime_ns": 1791167264590904534,
+        "ctime_ns": 1791167264590904534
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/74765c3e365e810caa0daf2855d18f2723c1d91df722d5efe86941175060759e.gz",
+      "encodedSHA256": "2ebdc5381947265f8eea525632b43729348d61665b6857d6f60adaf47c256e7e",
+      "encodedBytes": 439
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/prepared-freeze-after-scratch-208380b7-23ab-4610-a296-83bf82f77ee5/source-fence-phases.jsonl",
+      "bytes": 22541,
+      "sha256": "6858fb37f48622c83f1fce6d9c2a945ed278f3e44cc79a21d20e5cb45b3f8e17",
+      "identity": {
+        "dev": 26,
+        "ino": 18629,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 22541,
+        "mtime_ns": 1791167280555166652,
+        "ctime_ns": 1791167280555166652
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/6858fb37f48622c83f1fce6d9c2a945ed278f3e44cc79a21d20e5cb45b3f8e17.gz",
+      "encodedSHA256": "df6af1e4fd8c9661f5514c475dfc36bc06e9d783aa90f8536ffa91de6b0e75f0",
+      "encodedBytes": 4994
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/prepared-freeze-after-scratch-208380b7-23ab-4610-a296-83bf82f77ee5/consumed-version-ledger.jsonl",
+      "bytes": 80721231,
+      "sha256": "94fd02a4277d6103aa1fe2a6027f57a75858e61df6d15984a3290515990f5bac",
+      "identity": {
+        "dev": 26,
+        "ino": 18628,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 80721231,
+        "mtime_ns": 1791167284039272433,
+        "ctime_ns": 1791167284039272433
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/94fd02a4277d6103aa1fe2a6027f57a75858e61df6d15984a3290515990f5bac.gz",
+      "encodedSHA256": "758be7459c88cb94a552e57c921885fd1e36efec38d71faf7c52dad355f27214",
+      "encodedBytes": 6663449
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole-freeze-fixture-metadata-version-07/child-VZdMrn/bootstrap.json",
+      "bytes": 2685,
+      "sha256": "eab519378db3410538ec17edf7907190ae06caab1104b1143f3549b3ccd6e338",
+      "identity": {
+        "dev": 26,
+        "ino": 18606,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 2685,
+        "mtime_ns": 1791167165213278387,
+        "ctime_ns": 1791167165213278387
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/eab519378db3410538ec17edf7907190ae06caab1104b1143f3549b3ccd6e338.gz",
+      "encodedSHA256": "7370c97a255b9c045a41f1376626135495ef020813ab0b83aa72644153c16b07",
+      "encodedBytes": 884
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/own-whole-freeze-entry.mjs",
+      "bytes": 2595,
+      "sha256": "d1179804a6832367d651c92dcf951224b4180e227ba10a11e966e2db575e7cd7",
+      "identity": {
+        "dev": 27,
+        "ino": 866389,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 2595,
+        "mtime_ns": 1791158368536144026,
+        "ctime_ns": 1791158368536144026
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/d1179804a6832367d651c92dcf951224b4180e227ba10a11e966e2db575e7cd7.gz",
+      "encodedSHA256": "db423f7b2fe85c993ce6bba5dcb59585107727ff64c4b84c5fb1a427b107dfda",
+      "encodedBytes": 1194
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/guard.mjs",
+      "bytes": 30650,
+      "sha256": "9ab172ec166e0fe99e0e9107f6efae2d5999d0d8e38f744a33a929b55071ff58",
+      "identity": {
+        "dev": 26,
+        "ino": 2824,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 30650,
+        "mtime_ns": 1791156733234339114,
+        "ctime_ns": 1791156733234339114
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/9ab172ec166e0fe99e0e9107f6efae2d5999d0d8e38f744a33a929b55071ff58.gz",
+      "encodedSHA256": "4e4ccb43af857efbda2d24771c06a064e003ce85c936b14afc11e4102ff34eb7",
+      "encodedBytes": 8787
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/historical-preservation.json",
+      "bytes": 10258,
+      "sha256": "fad338f4e141cc74eb4776cc64e7e323d9922406dceaac35c2f9045f6426ca6d",
+      "identity": {
+        "dev": 26,
+        "ino": 2800,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 10258,
+        "mtime_ns": 1791156733228036019,
+        "ctime_ns": 1791156733228036019
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/fad338f4e141cc74eb4776cc64e7e323d9922406dceaac35c2f9045f6426ca6d.gz",
+      "encodedSHA256": "faf6a870cbbb797fabfe6315cbbdcd5e5af4d1e3bba7a9657014d81344ed8393",
+      "encodedBytes": 2403
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/historical-preservation.json",
+      "bytes": 10847,
+      "sha256": "f2cb05fe95068d6e62a78bb95aad6554ef58d6bb1fa3e26027d38d177620b761",
+      "identity": {
+        "dev": 26,
+        "ino": 3448,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 10847,
+        "mtime_ns": 1791156733309247732,
+        "ctime_ns": 1791156733309247732
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/f2cb05fe95068d6e62a78bb95aad6554ef58d6bb1fa3e26027d38d177620b761.gz",
+      "encodedSHA256": "142e92b3af72761e707582176500fdbbbbe1bc04ac8e73eb3b767b9641be4994",
+      "encodedBytes": 2500
+    },
+    {
+      "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/historical-preservation.json",
+      "bytes": 10254,
+      "sha256": "b41ab1125e1becfcbbd6c9acce69b5b8e2498914c1e644615bd3a90487132f9b",
+      "identity": {
+        "dev": 26,
+        "ino": 3055,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 10254,
+        "mtime_ns": 1791156733259299740,
+        "ctime_ns": 1791156733259299740
+      },
+      "backing": "/dev/shm/cortex-native-c6-closed-launcher-c6/whole07-timing-analysis/b41ab1125e1becfcbbd6c9acce69b5b8e2498914c1e644615bd3a90487132f9b.gz",
+      "encodedSHA256": "9ee7ce314cad676bc467675d60f1bdbe2bfe44d01a0ff3f791adf919618b193f",
+      "encodedBytes": 2403
+    }
+  ]
+}

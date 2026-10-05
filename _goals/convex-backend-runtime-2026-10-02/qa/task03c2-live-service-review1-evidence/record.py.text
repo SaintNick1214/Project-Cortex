@@ -1,0 +1,9 @@
+import sys,subprocess,json,datetime,hashlib,os
+from pathlib import Path
+r=Path(__file__).parent; label=sys.argv[1]; argv=sys.argv[2:]
+start=datetime.datetime.now(datetime.timezone.utc).isoformat(); p=subprocess.run(argv,cwd='/workspace/Project-Cortex',capture_output=True)
+end=datetime.datetime.now(datetime.timezone.utc).isoformat()
+base=r/'commands'/label
+base.with_suffix('.stdout').write_bytes(p.stdout); base.with_suffix('.stderr').write_bytes(p.stderr)
+base.with_suffix('.json').write_text(json.dumps({'argv':argv,'cwd':'/workspace/Project-Cortex','startUtc':start,'endUtc':end,'exit':p.returncode,'environment':'inherited for read-only context command; no env dump'},indent=2)+'\n')
+sys.stdout.buffer.write(p.stdout); sys.stderr.buffer.write(p.stderr); print('\nRECORDED '+label+' exit='+str(p.returncode)); sys.exit(p.returncode)

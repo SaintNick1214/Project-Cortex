@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
+import { dirname, resolve } from 'node:path';
+const original = fs.writeFileSync;
+const root = resolve('_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture');
+let count = 0;
+fs.writeFileSync = function (path, data, options) {
+  if (typeof path !== 'string' || dirname(path) !== resolve(root,'evidence')
+      || !/^key-match-[0-9a-f-]{36}\.json$/.test(path.split('/').at(-1))
+      || options?.flag !== 'wx' || options?.mode !== 0o600) throw new Error('UNEXPECTED_KEY_CHECK_OUTPUT');
+  if (++count !== 1) throw new Error('REPEATED_KEY_CHECK_OUTPUT');
+  return original(resolve(root,'evidence/cycle3',path.split('/').at(-1)),data,options);
+};
+syncBuiltinESMExports();
+process.on('exit',()=>{ if(count!==1) process.exitCode=1; });

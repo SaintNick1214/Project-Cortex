@@ -1,715 +1,113 @@
-/**
- * Cortex SDK - Mutable Store API (Layer 1c)
- *
- * ACID-compliant mutable storage for live, frequently-changing data
- * Namespaces: inventory, config, counters, sessions, state, etc.
- */
-
+/** Verified mutable metadata. Operations preflight every target and never revive retained keys. */
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Mutations (Write Operations)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Set a key to a value (creates or overwrites)
- */
-export const set = mutation({
-  args: {
-    namespace: v.string(),
-    key: v.string(),
-    value: v.any(),
-    userId: v.optional(v.string()),
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-    metadata: v.optional(v.any()),
-  },
-  handler: async (ctx, args) => {
-    const now = Date.now();
-
-    // Check if entry exists - must match both namespace/key AND tenantId for proper isolation
-    let existing;
-    if (args.tenantId) {
-      // With tenant isolation: look for tenant-specific entry
-      existing = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace_key", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("namespace", args.namespace)
-            .eq("key", args.key),
-        )
-        .first();
-    } else {
-      // Without tenant: fallback to global namespace/key lookup
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant access
-      const candidate = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace_key", (q) =>
-          q.eq("namespace", args.namespace).eq("key", args.key),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      existing = candidate && !candidate.tenantId ? candidate : null;
+import { mutation, query, internalMutation } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import { scopeArgs, authority, actor, mutableRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
+  tombstone, readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid } from "./runtimeMetadataAuth";
+const keyArgs = { namespace: v.string(), key: v.string(), ...scopeArgs };
+const filterArgs = { namespace: v.string(), ...scopeArgs, keyPrefix: v.optional(v.string()), userId: v.optional(v.string()), updatedBefore: v.optional(v.number()), updatedAfter: v.optional(v.number()) };
+interface Filters { namespace: string; keyPrefix?: string; userId?: string; updatedBefore?: number; updatedAfter?: number }
+function filter(rows: Doc<"mutable">[], args: Filters) { return rows.filter((row) => row.namespace === args.namespace
+  && (args.keyPrefix === undefined || row.key.startsWith(args.keyPrefix)) && (args.userId === undefined || row.userId === args.userId)
+  && (args.updatedBefore === undefined || row.updatedAt < args.updatedBefore) && (args.updatedAfter === undefined || row.updatedAt > args.updatedAfter)); }
+function numeric(value: unknown, amount: unknown, decrement = false): number {
+  const delta = amount === undefined ? 1 : amount;
+  if (typeof value !== "number" || !Number.isFinite(value) || typeof delta !== "number" || !Number.isFinite(delta)) invalid();
+  const result = value + (decrement ? -delta : delta); if (!Number.isFinite(result)) invalid(); return result;
+}
+function updateValue(value: unknown, operation: string, operand: unknown): unknown {
+  if (operation === "increment" || operation === "decrement") return numeric(value, operand, operation === "decrement");
+  if (operation === "append") { if (operand === undefined) invalid(); if (!Array.isArray(value)) throw new ConvexError("MUTABLE_VALUE_NOT_ARRAY"); return [...value, operand]; }
+  if (operand === undefined) invalid(); return operand;
+}
+export const set = mutation({ args: { ...keyArgs, value: v.any(), userId: v.optional(v.string()), metadata: v.optional(v.any()) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); actor(auth, args.userId);
+  const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); const key = sourceId("mutable", args.namespace, args.key);
+  await newResource(ctx, auth, key); const read = row ? await readAuthority(ctx, auth, "mutable", row) : await readResourceAuthority(ctx, auth, newTarget(auth, key));
+  const now = Date.now();
+  if (row) { await check(ctx, "mutable", row, auth, "write"); await ctx.db.patch("mutable", row._id, { value: args.value, metadata: args.metadata === undefined ? row.metadata : args.metadata, updatedAt: now }); }
+  else await newResource(ctx, auth, key);
+  const id = row?._id ?? await ctx.db.insert("mutable", { namespace: args.namespace, key: args.key, value: args.value, ...canonicalFields(auth), metadata: args.metadata, createdAt: now, updatedAt: now });
+  const updated = await ctx.db.get("mutable", id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  return await response(ctx, auth, "mutable", updated, read, () => updated, () => ({ updated: true as const, namespace: args.namespace, key: args.key, ...(row ? {} : { createdId: id }) }));
+} });
+export const update = mutation({ args: { ...keyArgs, operation: v.union(v.literal("increment"), v.literal("decrement"), v.literal("append"), v.literal("custom")), operand: v.optional(v.any()) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  const read = await readAuthority(ctx, auth, "mutable", row); const value = updateValue(row.value, args.operation, args.operand);
+  await check(ctx, "mutable", row, auth, "write"); await ctx.db.patch("mutable", row._id, { value, updatedAt: Date.now() });
+  const updated = await ctx.db.get("mutable", row._id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  return await response(ctx, auth, "mutable", updated, read, () => updated, () => ({ updated: true, namespace: args.namespace, key: args.key }));
+} });
+export const get = query({ args: keyArgs, handler: async (ctx, args) => await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read") });
+export const exists = query({ args: keyArgs, handler: async (ctx, args) => (await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read")) !== null });
+export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
+  const rows = filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args);
+  rows.sort((a, b) => (args.sortBy === "updatedAt" ? a.updatedAt - b.updatedAt : a.key.localeCompare(b.key)) * (args.sortOrder === "desc" ? -1 : 1));
+  const offset = page(args.offset, 0); return rows.slice(offset, offset + page(args.limit, 100));
+} });
+export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args).length });
+export const deleteKey = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+  await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); await fresh(ctx, auth, "write");
+  return { deleted: true, namespace: args.namespace, key: args.key };
+} });
+export const purgeMany = mutation({ args: filterArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "mutable", auth, "write"), args);
+  const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "mutable", row)));
+  for (const row of rows) await check(ctx, "mutable", row, auth, "write");
+  for (const row of rows) { await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); }
+  await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read) => read ? [{ auth: read, capability: "read" as const }] : [])]);
+  return { deleted: rows.length, namespace: args.namespace, ...(reads.every(Boolean) ? { keys: rows.map((row) => row.key) } : {}) };
+} });
+export const purgeNamespace = mutation({ args: { namespace: v.string(), ...scopeArgs, dryRun: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "mutable", auth, "write"), args);
+  const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "mutable", row)));
+  for (const row of rows) await check(ctx, "mutable", row, auth, "write");
+  if (!args.dryRun) for (const row of rows) { await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); }
+  await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read, index) => read ? [{ auth: read, capability: "read" as const,
+    ...(args.dryRun ? { resource: resource("mutable", rows[index]!) } : {}) }] : [])]);
+  return { deleted: rows.length, namespace: args.namespace, dryRun: args.dryRun ?? false,
+    ...(args.dryRun && reads.every(Boolean) ? { keys: rows.map((row) => row.key) } : {}) };
+} });
+export const transaction = mutation({ args: { ...scopeArgs, operations: v.array(v.object({ op: v.union(v.literal("set"), v.literal("update"), v.literal("delete"), v.literal("increment"), v.literal("decrement")), namespace: v.string(), key: v.string(), value: v.optional(v.any()), amount: v.optional(v.number()) })) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args);
+  const state = new Map<string, { row: Doc<"mutable"> | null; value: unknown; deleted: boolean; read: Awaited<ReturnType<typeof readAuthority>> }>();
+  const plans: Array<{ operation: typeof args.operations[number]; value: unknown }> = [];
+  // Validate authorization and functional operations for the ENTIRE batch before the first write.
+  for (const operation of args.operations) {
+    const key = sourceId("mutable", operation.namespace, operation.key);
+    let current = state.get(key);
+    if (!current) {
+      const row = await mutableRow(ctx, auth, operation.namespace, operation.key, "write"); await newResource(ctx, auth, key);
+      const read = row ? await readAuthority(ctx, auth, "mutable", row) : await readResourceAuthority(ctx, auth, newTarget(auth, key));
+      current = { row, value: row?.value, deleted: false, read }; state.set(key, current);
     }
-
-    if (existing) {
-      // Update existing
-      await ctx.db.patch(existing._id, {
-        value: args.value,
-        userId: args.userId !== undefined ? args.userId : existing.userId,
-        metadata:
-          args.metadata !== undefined ? args.metadata : existing.metadata,
-        updatedAt: now,
-      });
-
-      return await ctx.db.get(existing._id);
+    if (current.deleted) invalid();
+    if (operation.op !== "set" && current.value === undefined) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+    if (operation.op === "delete") current.deleted = true;
+    else if (operation.op === "increment" || operation.op === "decrement") current.value = numeric(current.value, operation.amount, operation.op === "decrement");
+    else { if (operation.value === undefined) invalid(); current.value = operation.value; }
+    plans.push({ operation, value: current.value });
+  }
+  const results: Array<Doc<"mutable"> | { deleted: boolean; namespace: string; key: string } | { updated: boolean; namespace: string; key: string }> = [];
+  for (const { operation, value } of plans) {
+    const key = sourceId("mutable", operation.namespace, operation.key); const current = state.get(key)!;
+    const row = await mutableRow(ctx, auth, operation.namespace, operation.key, "write");
+    if (operation.op === "delete") { if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND"); await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); results.push({ deleted: true, namespace: operation.namespace, key: operation.key }); }
+    else {
+      const now = Date.now(); if (row) { await check(ctx, "mutable", row, auth, "write"); await ctx.db.patch("mutable", row._id, { value, updatedAt: now }); } else await newResource(ctx, auth, key);
+      const id = row?._id ?? await ctx.db.insert("mutable", { namespace: operation.namespace, key: operation.key, value, ...canonicalFields(auth), createdAt: now, updatedAt: now });
+      const updated = await ctx.db.get("mutable", id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
+      await check(ctx, "mutable", updated, auth, "write"); results.push(current.read ? updated : { updated: true, namespace: operation.namespace, key: operation.key }); current.row = updated;
     }
-    // Create new
-    const _id = await ctx.db.insert("mutable", {
-      namespace: args.namespace,
-      key: args.key,
-      value: args.value,
-      userId: args.userId,
-      tenantId: args.tenantId, // Store tenantId
-      metadata: args.metadata,
-      createdAt: now,
-      updatedAt: now,
-    });
-
-    return await ctx.db.get(_id);
-  },
-});
-
-/**
- * Atomic update using updater function
- */
-export const update = mutation({
-  args: {
-    namespace: v.string(),
-    key: v.string(),
-    // Note: updater function is passed as serialized code in the actual implementation
-    // For now, we'll handle simple operations
-    operation: v.union(
-      v.literal("increment"),
-      v.literal("decrement"),
-      v.literal("append"),
-      v.literal("custom"),
-    ),
-    operand: v.optional(v.any()),
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-  },
-  handler: async (ctx, args) => {
-    let existing;
-    if (args.tenantId) {
-      // Tenant-isolated lookup
-      existing = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace_key", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("namespace", args.namespace)
-            .eq("key", args.key),
-        )
-        .first();
-    } else {
-      // Global namespace/key lookup for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant updates
-      const candidate = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace_key", (q) =>
-          q.eq("namespace", args.namespace).eq("key", args.key),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      existing = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    if (!existing) {
-      throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
-    }
-
-    let newValue = existing.value;
-
-    // Apply operation
-    switch (args.operation) {
-      case "increment":
-        newValue = (existing.value || 0) + (args.operand || 1);
-        break;
-      case "decrement":
-        newValue = (existing.value || 0) - (args.operand || 1);
-        break;
-      case "append":
-        if (Array.isArray(existing.value)) {
-          newValue = [...existing.value, args.operand];
-        } else {
-          throw new Error("MUTABLE_VALUE_NOT_ARRAY");
-        }
-        break;
-      case "custom":
-        newValue = args.operand; // For custom updates via SDK
-        break;
-    }
-
-    await ctx.db.patch(existing._id, {
-      value: newValue,
-      updatedAt: Date.now(),
-    });
-
-    return await ctx.db.get(existing._id);
-  },
-});
-
-/**
- * Delete a key
- */
-export const deleteKey = mutation({
-  args: {
-    namespace: v.string(),
-    key: v.string(),
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-  },
-  handler: async (ctx, args) => {
-    let entry;
-    if (args.tenantId) {
-      // Tenant-isolated delete
-      entry = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace_key", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("namespace", args.namespace)
-            .eq("key", args.key),
-        )
-        .first();
-    } else {
-      // Global namespace/key delete for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant deletion
-      const candidate = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace_key", (q) =>
-          q.eq("namespace", args.namespace).eq("key", args.key),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      entry = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    if (!entry) {
-      throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
-    }
-
-    await ctx.db.delete(entry._id);
-
-    return {
-      deleted: true,
-      namespace: args.namespace,
-      key: args.key,
-    };
-  },
-});
-
-/**
- * Purge all keys in a namespace
- *
- * SECURITY: When tenantId is provided, only entries belonging to that tenant
- * within the namespace are purged. This prevents cross-tenant data deletion.
- */
-export const purgeNamespace = mutation({
-  args: {
-    namespace: v.string(),
-    dryRun: v.optional(v.boolean()),
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-  },
-  handler: async (ctx, args) => {
-    let entries;
-    if (args.tenantId) {
-      // Tenant-isolated purge: only delete entries for this tenant
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
-        )
-        .collect();
-    } else {
-      // Global namespace purge (use with caution)
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-        .collect();
-    }
-
-    // If dryRun, return what would be deleted without actually deleting
-    if (args.dryRun) {
-      return {
-        deleted: entries.length,
-        namespace: args.namespace,
-        keys: entries.map((e) => e.key),
-        dryRun: true,
-      };
-    }
-
-    let deleted = 0;
-
-    for (const entry of entries) {
-      await ctx.db.delete(entry._id);
-      deleted++;
-    }
-
-    return {
-      deleted,
-      namespace: args.namespace,
-      dryRun: false,
-    };
-  },
-});
-
-/**
- * Execute multiple operations atomically
- *
- * SECURITY: When tenantId is provided, all operations are scoped to that tenant.
- * This prevents cross-tenant data modification in atomic transactions.
- */
-export const transaction = mutation({
-  args: {
-    operations: v.array(
-      v.object({
-        op: v.union(
-          v.literal("set"),
-          v.literal("update"),
-          v.literal("delete"),
-          v.literal("increment"),
-          v.literal("decrement"),
-        ),
-        namespace: v.string(),
-        key: v.string(),
-        value: v.optional(v.any()),
-        amount: v.optional(v.number()),
-      }),
-    ),
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-  },
-  handler: async (ctx, args) => {
-    const results = [];
-
-    for (const operation of args.operations) {
-      let existing;
-      if (args.tenantId) {
-        // Tenant-isolated lookup
-        existing = await ctx.db
-          .query("mutable")
-          .withIndex("by_tenant_namespace_key", (q) =>
-            q
-              .eq("tenantId", args.tenantId!)
-              .eq("namespace", operation.namespace)
-              .eq("key", operation.key),
-          )
-          .first();
-      } else {
-        // Global namespace/key lookup for non-tenant records only
-        // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant access
-        const candidate = await ctx.db
-          .query("mutable")
-          .withIndex("by_namespace_key", (q) =>
-            q.eq("namespace", operation.namespace).eq("key", operation.key),
-          )
-          .first();
-        // Only match if the record is truly global (no tenantId)
-        existing = candidate && !candidate.tenantId ? candidate : null;
-      }
-
-      if (operation.op === "set") {
-        if (existing) {
-          await ctx.db.patch(existing._id, {
-            value: operation.value,
-            updatedAt: Date.now(),
-          });
-          results.push(await ctx.db.get(existing._id));
-        } else {
-          const now = Date.now();
-          const _id = await ctx.db.insert("mutable", {
-            namespace: operation.namespace,
-            key: operation.key,
-            value: operation.value,
-            tenantId: args.tenantId, // Store tenantId for new entries
-            createdAt: now,
-            updatedAt: now,
-          });
-
-          results.push(await ctx.db.get(_id));
-        }
-      } else if (
-        operation.op === "update" ||
-        operation.op === "increment" ||
-        operation.op === "decrement"
-      ) {
-        if (!existing) {
-          throw new ConvexError(
-            `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
-          );
-        }
-
-        let newValue = existing.value;
-
-        if (operation.op === "increment") {
-          newValue = (existing.value || 0) + (operation.amount || 1);
-        } else if (operation.op === "decrement") {
-          newValue = (existing.value || 0) - (operation.amount || 1);
-        } else {
-          // update with provided value
-          newValue = operation.value;
-        }
-
-        await ctx.db.patch(existing._id, {
-          value: newValue,
-          updatedAt: Date.now(),
-        });
-        results.push(await ctx.db.get(existing._id));
-      } else if (operation.op === "delete") {
-        if (!existing) {
-          throw new ConvexError(
-            `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
-          );
-        }
-        await ctx.db.delete(existing._id);
-        results.push({
-          deleted: true,
-          namespace: operation.namespace,
-          key: operation.key,
-        });
-      }
-    }
-
-    return {
-      success: true,
-      operationsExecuted: args.operations.length,
-      results,
-    };
-  },
-});
-
-/**
- * Bulk delete keys matching filters
- *
- * SECURITY: When tenantId is provided, only entries belonging to that tenant
- * are deleted. This prevents cross-tenant data deletion.
- */
-export const purgeMany = mutation({
-  args: {
-    namespace: v.string(),
-    keyPrefix: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    updatedBefore: v.optional(v.number()),
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-  },
-  handler: async (ctx, args) => {
-    let entries;
-    if (args.tenantId) {
-      // Tenant-isolated purge
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
-        )
-        .collect();
-    } else {
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-        .collect();
-    }
-
-    // Apply filters
-    if (args.keyPrefix) {
-      entries = entries.filter((e) => e.key.startsWith(args.keyPrefix!));
-    }
-
-    if (args.userId) {
-      entries = entries.filter((e) => e.userId === args.userId);
-    }
-
-    // Filter by updatedBefore if provided
-    if (args.updatedBefore !== undefined) {
-      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
-    }
-
-    let deleted = 0;
-
-    for (const entry of entries) {
-      await ctx.db.delete(entry._id);
-      deleted++;
-    }
-
-    return {
-      deleted,
-      namespace: args.namespace,
-      keys: entries.map((e) => e.key),
-    };
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Queries (Read Operations)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get value for a key
- */
-export const get = query({
-  args: {
-    namespace: v.string(),
-    key: v.string(),
-    tenantId: v.optional(v.string()), // Multi-tenancy filter
-  },
-  handler: async (ctx, args) => {
-    let entry;
-    if (args.tenantId) {
-      // Tenant-isolated lookup
-      entry = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace_key", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("namespace", args.namespace)
-            .eq("key", args.key),
-        )
-        .first();
-    } else {
-      // Global namespace/key lookup for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant reads
-      const candidate = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace_key", (q) =>
-          q.eq("namespace", args.namespace).eq("key", args.key),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      entry = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    return entry || null;
-  },
-});
-
-/**
- * Check if key exists
- */
-export const exists = query({
-  args: {
-    namespace: v.string(),
-    key: v.string(),
-    tenantId: v.optional(v.string()), // Multi-tenancy filter
-  },
-  handler: async (ctx, args) => {
-    let entry;
-    if (args.tenantId) {
-      entry = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace_key", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("namespace", args.namespace)
-            .eq("key", args.key),
-        )
-        .first();
-    } else {
-      // Global namespace/key lookup for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant checks
-      const candidate = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace_key", (q) =>
-          q.eq("namespace", args.namespace).eq("key", args.key),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      entry = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    return entry !== null;
-  },
-});
-
-/**
- * List keys in namespace
- */
-export const list = query({
-  args: {
-    namespace: v.string(),
-    keyPrefix: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    tenantId: v.optional(v.string()), // Multi-tenancy filter
-    limit: v.optional(v.number()),
-    offset: v.optional(v.number()),
-    updatedAfter: v.optional(v.number()),
-    updatedBefore: v.optional(v.number()),
-    sortBy: v.optional(v.string()),
-    sortOrder: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // Collect all matching entries first for filtering and sorting
-    let entries;
-    if (args.tenantId) {
-      // Tenant-isolated query
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
-        )
-        .collect();
-    } else {
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-        .collect();
-    }
-
-    // Filter by key prefix if provided
-    if (args.keyPrefix) {
-      entries = entries.filter((e) => e.key.startsWith(args.keyPrefix!));
-    }
-
-    // Filter by userId if provided
-    if (args.userId) {
-      entries = entries.filter((e) => e.userId === args.userId);
-    }
-
-    // Filter by updatedAfter if provided
-    if (args.updatedAfter !== undefined) {
-      entries = entries.filter((e) => e.updatedAt > args.updatedAfter!);
-    }
-
-    // Filter by updatedBefore if provided
-    if (args.updatedBefore !== undefined) {
-      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
-    }
-
-    // Sort entries
-    const sortBy = args.sortBy || "key";
-    const sortOrder = args.sortOrder || "asc";
-    const sortMultiplier = sortOrder === "desc" ? -1 : 1;
-
-    entries.sort((a, b) => {
-      let comparison = 0;
-      if (sortBy === "key") {
-        comparison = a.key.localeCompare(b.key);
-      } else if (sortBy === "updatedAt") {
-        comparison = a.updatedAt - b.updatedAt;
-      }
-      return comparison * sortMultiplier;
-    });
-
-    // Apply offset
-    const offset = args.offset || 0;
-    entries = entries.slice(offset);
-
-    // Apply limit
-    const limit = args.limit || 100;
-    entries = entries.slice(0, limit);
-
-    return entries;
-  },
-});
-
-/**
- * Count keys in namespace
- */
-export const count = query({
-  args: {
-    namespace: v.string(),
-    userId: v.optional(v.string()),
-    tenantId: v.optional(v.string()), // Multi-tenancy filter
-    keyPrefix: v.optional(v.string()),
-    updatedAfter: v.optional(v.number()),
-    updatedBefore: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    let entries;
-    if (args.tenantId) {
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenant_namespace", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
-        )
-        .collect();
-    } else {
-      entries = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-        .collect();
-    }
-
-    // Filter by userId if provided
-    if (args.userId) {
-      entries = entries.filter((e) => e.userId === args.userId);
-    }
-
-    // Filter by key prefix if provided
-    if (args.keyPrefix) {
-      entries = entries.filter((e) => e.key.startsWith(args.keyPrefix!));
-    }
-
-    // Filter by updatedAfter if provided
-    if (args.updatedAfter !== undefined) {
-      entries = entries.filter((e) => e.updatedAt > args.updatedAfter!);
-    }
-
-    // Filter by updatedBefore if provided
-    if (args.updatedBefore !== undefined) {
-      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
-    }
-
-    return entries.length;
-  },
-});
-
-/**
- * Purge all mutable entries (TEST/DEV ONLY)
- *
- * WARNING: This permanently deletes mutable entries!
- * Only available in test/dev environments.
- *
- * SECURITY: When tenantId is provided, only entries belonging to that tenant
- * are deleted. Without tenantId, ALL entries are deleted (dangerous!).
- */
-export const purgeAll = mutation({
-  args: {
-    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
-  },
-  handler: async (ctx, args) => {
-    // Safety check: Only allow in test/dev environments
-    const siteUrl = process.env.CONVEX_SITE_URL || "";
-    const isLocal =
-      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    const isDevDeployment =
-      siteUrl.includes(".convex.site") ||
-      siteUrl.includes("dev-") ||
-      siteUrl.includes("convex.cloud");
-    const isTestEnv =
-      process.env.NODE_ENV === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "test";
-
-    if (!isLocal && !isDevDeployment && !isTestEnv) {
-      throw new Error(
-        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
-      );
-    }
-
-    let allEntries;
-    if (args.tenantId) {
-      // Tenant-isolated purge: only delete entries for this tenant
-      allEntries = await ctx.db
-        .query("mutable")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else {
-      // Global purge (use with extreme caution)
-      allEntries = await ctx.db.query("mutable").collect();
-    }
-
-    for (const entry of allEntries) {
-      await ctx.db.delete(entry._id);
-    }
-
-    return { deleted: allEntries.length };
-  },
-});
+  }
+  await finalChecks(ctx, [{ auth, capability: "write" }, ...[...state.values()].flatMap((current) => current.read ? [{ auth: current.read, capability: "read" as const,
+    ...(!current.deleted && current.row ? { resource: resource("mutable", current.row) } : {}) }] : [])]);
+  return { success: true, operationsExecuted: plans.length, results };
+} });
+export const purgeAll = internalMutation({ args: { tenantId: v.optional(v.string()) }, handler: async (ctx, args) => {
+  const rows = args.tenantId === undefined ? await ctx.db.query("mutable").collect()
+    : await ctx.db.query("mutable").withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId)).collect();
+  for (const row of rows) { if (row.tenantId && row.ownerPrincipalId) await tombstone(ctx, "mutable", row); else await ctx.db.patch("mutable", row._id, { tombstonedAt: Date.now() }); }
+  return { deleted: rows.filter((row) => row.tombstonedAt === undefined).length };
+} });

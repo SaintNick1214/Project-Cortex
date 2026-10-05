@@ -1,0 +1,1148 @@
+{
+  "subject": "c9",
+  "profile": "extension",
+  "results": [
+    {
+      "mode": "setup",
+      "name": "expireCanonical-1",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [],
+        "privateOutputStates": []
+      },
+      "physical": [],
+      "events": [],
+      "originalIdentity": null,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "failFsync-1",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": false,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "de37cef0e85ff4feb921cf7c2fcc4d4bec7084d8da5c935e84c9954484b727fb"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        }
+      ],
+      "originalIdentity": true,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "expireCanonical-2",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "a691ad4fcda89137387a350327141136274ee2b9fa989e46e912fedfccc59dd8"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        }
+      ],
+      "originalIdentity": null,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "failFsync-2",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": false,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "3e33156c24ab4a1afd3a41c16997437748cf45a79eff0ce7b0517793eb19d503"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "1dade0f179f432ddb2a98f65bf6ef668ecc0c314bcd6d32672b6139910aaab79"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        }
+      ],
+      "originalIdentity": true,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "expireCanonical-3",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "84971e6e4607339144143a337827e68c006142367241dfc89b3baef38a732135"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "4e1b96c155ebc7c0feafa0e08494e70e6fd87d4f0247bde9f26b7f40cd097765"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-durable",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        }
+      ],
+      "originalIdentity": null,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "failFsync-3",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "identities.json",
+            "created": true,
+            "written": true,
+            "durable": false,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "e19b277ff5fa9f36e6f80e87da7aae84f182222ba095c5cf8cec620c6e622381"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "32813cfb26a8858fb6bfe910775b266cda1fd37d28cbca93115337428abb8070"
+        },
+        {
+          "name": "identities.json",
+          "bytes": 3222,
+          "sha256": "1cd6d5a5cdd2e561c5df86922715d2cd72a8a8f35ceb09c9d10782ed3b87babf"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-durable",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "identities.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "identities.json",
+          "bytes": 3222
+        },
+        {
+          "phase": "actual-closed",
+          "name": "identities.json"
+        }
+      ],
+      "originalIdentity": true,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "expireCanonical-4",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "identities.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "6f15587d298f1b3f547be92f50248ddb030db2b0a4f1e88cac7582cc9ab868aa"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "120923e32200fa9a81209e11df3c01511ce2c0b979fcaf34e6096f556067b1d3"
+        },
+        {
+          "name": "identities.json",
+          "bytes": 3222,
+          "sha256": "1cd6d5a5cdd2e561c5df86922715d2cd72a8a8f35ceb09c9d10782ed3b87babf"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-durable",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "identities.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "identities.json",
+          "bytes": 3222
+        },
+        {
+          "phase": "actual-durable",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "identities.json"
+        }
+      ],
+      "originalIdentity": null,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "failFsync-4",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "identities.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "peer-config.json",
+            "created": true,
+            "written": true,
+            "durable": false,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "8224c4641bbbb19e34ba592e0bbd07ed77c2734480c829af8ff3c307fdacb3ab"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "4a0ced689d8aa21dc80bbcd9410972cc7a2d3a2d55a0cecb7cd614ba1c5523df"
+        },
+        {
+          "name": "identities.json",
+          "bytes": 3222,
+          "sha256": "1cd6d5a5cdd2e561c5df86922715d2cd72a8a8f35ceb09c9d10782ed3b87babf"
+        },
+        {
+          "name": "peer-config.json",
+          "bytes": 142,
+          "sha256": "738ffe2ad3fe60c1479c27d19a4e3a7d3236a50a0eac9d6d1b2a2dc2ec500207"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-durable",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "identities.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "identities.json",
+          "bytes": 3222
+        },
+        {
+          "phase": "actual-durable",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "peer-config.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "peer-config.json",
+          "bytes": 142
+        },
+        {
+          "phase": "actual-closed",
+          "name": "peer-config.json"
+        }
+      ],
+      "originalIdentity": true,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "expireCanonical-5",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "identities.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "peer-config.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "4f68965324cbe0b3e722a83450eecc1ffb5703e4c80ff329a95f5ca1ab0110da"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "3b0683283b9502d3ef0ef70c84b1c0ad2869f9acd1e5073f4dd94b2e3287cc99"
+        },
+        {
+          "name": "identities.json",
+          "bytes": 3222,
+          "sha256": "1cd6d5a5cdd2e561c5df86922715d2cd72a8a8f35ceb09c9d10782ed3b87babf"
+        },
+        {
+          "name": "peer-config.json",
+          "bytes": 142,
+          "sha256": "738ffe2ad3fe60c1479c27d19a4e3a7d3236a50a0eac9d6d1b2a2dc2ec500207"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-durable",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "identities.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "identities.json",
+          "bytes": 3222
+        },
+        {
+          "phase": "actual-durable",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "peer-config.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "peer-config.json",
+          "bytes": 142
+        },
+        {
+          "phase": "actual-durable",
+          "name": "peer-config.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "peer-config.json"
+        }
+      ],
+      "originalIdentity": null,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    },
+    {
+      "mode": "setup",
+      "name": "failFsync-5",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json",
+          "parent-inputs-receipt.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "partial": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json",
+          "parent-inputs-receipt.json"
+        ],
+        "privateOutputStates": [
+          {
+            "name": "initial-physical-id-provenance.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "historical-native-locators.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "identities.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "peer-config.json",
+            "created": true,
+            "written": true,
+            "durable": true,
+            "closed": true
+          },
+          {
+            "name": "parent-inputs-receipt.json",
+            "created": true,
+            "written": true,
+            "durable": false,
+            "closed": true
+          }
+        ]
+      },
+      "physical": [
+        {
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129,
+          "sha256": "e4ded5b26369a7e16547e7dda9494d362dc7c4afbf24116ba543e6a398c39f32"
+        },
+        {
+          "name": "historical-native-locators.json",
+          "bytes": 648,
+          "sha256": "5bcdf31698c47f8484ddf6af97368a640ab3fc64913a0ba5a6b25f8ea63dc46d"
+        },
+        {
+          "name": "identities.json",
+          "bytes": 3222,
+          "sha256": "1cd6d5a5cdd2e561c5df86922715d2cd72a8a8f35ceb09c9d10782ed3b87babf"
+        },
+        {
+          "name": "peer-config.json",
+          "bytes": 142,
+          "sha256": "738ffe2ad3fe60c1479c27d19a4e3a7d3236a50a0eac9d6d1b2a2dc2ec500207"
+        },
+        {
+          "name": "parent-inputs-receipt.json",
+          "bytes": 701,
+          "sha256": "7ce7e74606bad5cc1b306a00df62fddc453dfa2df0c89a818f561160e98ccca7"
+        }
+      ],
+      "events": [
+        {
+          "phase": "actual-created",
+          "name": "initial-physical-id-provenance.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "initial-physical-id-provenance.json",
+          "bytes": 5129
+        },
+        {
+          "phase": "actual-durable",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "initial-physical-id-provenance.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "historical-native-locators.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "historical-native-locators.json",
+          "bytes": 648
+        },
+        {
+          "phase": "actual-durable",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "historical-native-locators.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "identities.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "identities.json",
+          "bytes": 3222
+        },
+        {
+          "phase": "actual-durable",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "identities.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "peer-config.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "peer-config.json",
+          "bytes": 142
+        },
+        {
+          "phase": "actual-durable",
+          "name": "peer-config.json"
+        },
+        {
+          "phase": "actual-closed",
+          "name": "peer-config.json"
+        },
+        {
+          "phase": "actual-created",
+          "name": "parent-inputs-receipt.json",
+          "clock": 0,
+          "mode": 384
+        },
+        {
+          "phase": "actual-write",
+          "name": "parent-inputs-receipt.json",
+          "bytes": 701
+        },
+        {
+          "phase": "actual-closed",
+          "name": "parent-inputs-receipt.json"
+        }
+      ],
+      "originalIdentity": true,
+      "actualPrivateReads": 0,
+      "actualSigning": 0,
+      "actualNetwork": 0
+    }
+  ],
+  "errors": [],
+  "expectedIdenticalRequirements": 10
+}

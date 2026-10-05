@@ -1,0 +1,41 @@
+{
+  "subject": "c7",
+  "results": [
+    {
+      "name": "expiry-after-key-before-first-sign",
+      "requirement": "FAIL",
+      "assertion": "expired derivation must prevent first signing effect\n\n8 !== 0\n",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "writes": [],
+        "stdout": ""
+      }
+    },
+    {
+      "name": "expiry-after-first-proof-before-other-outputs",
+      "requirement": "FAIL",
+      "assertion": "expired first proof must prevent every later output\n+ actual - expected\n\n  [\n    'initial-physical-id-provenance.json',\n+   'historical-native-locators.json',\n+   'identities.json',\n+   'peer-config.json'\n  ]\n",
+      "stats": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      }
+    }
+  ],
+  "tests": 2,
+  "skipped": 0,
+  "realSigning": 0,
+  "realNetwork": 0,
+  "realPrivateReads": 0
+}

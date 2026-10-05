@@ -1,0 +1,29 @@
+[
+  {
+    "name": "provenance",
+    "argv": [
+      "python",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/verify-provenance.py",
+      "mechanics3"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:21:12.623015+00:00",
+    "completedAt": "2026-10-03T13:21:13.148882+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics3-provenance.txt"
+  },
+  {
+    "name": "existing-key-match",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/key-output-register.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/key-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:21:13.149074+00:00",
+    "completedAt": "2026-10-03T13:21:13.290079+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics3-existing-key-match.txt"
+  }
+]

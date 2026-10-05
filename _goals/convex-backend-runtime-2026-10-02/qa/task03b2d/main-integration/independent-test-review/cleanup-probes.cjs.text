@@ -1,0 +1,18 @@
+const fs=require('node:fs');const os=require('node:os');const path=require('node:path');const vm=require('node:vm');const assert=require('node:assert/strict');const crypto=require('node:crypto');const ts=require('/workspace/Project-Cortex/node_modules/typescript');
+const root='/workspace/Project-Cortex';const source=fs.readFileSync(path.join(root,'tests/unit/runtimeWorkerAuth/admin-catalog.test.ts'),'utf8');
+const ast=ts.createSourceFile('admin-catalog.test.ts',source,ts.ScriptTarget.Latest,true);let callback;
+function visit(n){if(ts.isCallExpression(n)&&n.arguments[0]&&ts.isStringLiteral(n.arguments[0])&&n.arguments[0].text==='AST inventory resolves exact 25 frozen paths with seven public and eighteen internal')callback=n.arguments[1];ts.forEachChild(n,visit);}visit(ast);assert.ok(callback);
+const exact=callback.getText(ast);const compiled=ts.transpileModule('const targetCallback = '+exact+';',{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+const results=[];
+for(const kind of ['child-process-status','inventory-read','outcome-assertion']){
+ let created,removed,observed;
+ const fixtureFs={...fs,mkdtempSync(p){created=fs.mkdtempSync(p);return created;},rmSync(p,opts){removed=p;return fs.rmSync(p,opts);}};
+ const expect=(actual)=>({toEqual(expected){assert.equal(JSON.stringify(actual),JSON.stringify(expected));},toHaveLength(n){assert.equal(actual.length,n);},toBe(expected){assert.equal(actual,expected);},toMatchObject(expected){for(const k of Object.keys(expected))assert.equal(actual[k],expected[k]);}});
+ const spawnSync=(_exec,argv)=>{if(kind==='child-process-status')return {status:1,stderr:'injected child process failure'};if(kind==='outcome-assertion')fs.writeFileSync(path.join(argv[1],'public-path-inventory.json'),JSON.stringify({completeness:{unresolved:[]},endpoints:[]}));return {status:0,stderr:''};};
+ const context={fs:fixtureFs,path,os,spawnSync,process,expect,internal:[]};
+ try{vm.runInNewContext(compiled+'\ntargetCallback();',context,{filename:'exact-extracted-AST-callback.cjs'});}catch(e){observed={name:e.name,message:e.message};}
+ assert.ok(observed,kind+' must fail');assert.ok(created);assert.equal(removed,created);assert.equal(fs.existsSync(created),false);
+ results.push({probe:kind,expectedFailureObserved:observed,created,finallyRemoved:removed,absentAfterFailure:!fs.existsSync(created)});
+}
+const receipt={sourceSha256:crypto.createHash('sha256').update(source).digest('hex'),exactCallbackSha256:crypto.createHash('sha256').update(exact).digest('hex'),scope:'Three controlled failure probes of exact transpiled source callback, no repository mutation',results};
+fs.writeFileSync(path.join(__dirname,'cleanup-probes.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));

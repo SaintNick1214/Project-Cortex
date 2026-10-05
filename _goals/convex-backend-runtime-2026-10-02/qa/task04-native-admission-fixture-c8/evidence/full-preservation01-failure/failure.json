@@ -1,0 +1,15 @@
+{
+  "status": "FAIL_OFFLINE_FULL_PRESERVATION",
+  "argv": [
+    "node",
+    "work/resume/task04-native-admission-fixture-c8/full-preservation.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "observedAt": "2026-10-04T06:03:31.564015+00:00",
+  "error": "QA_PRESERVATION_INVENTORY",
+  "sourceKnownBeforeAttempt": "exact C8 frozenruntime and completeQAmanifest retained; command source created before attempt, exact bytes retained; no retrospective command-start UTC/prehash claimed",
+  "cause": "historical C7 review manifest exact1607complete rows unsorted; only historical expected-path ordering comparison needs normalization",
+  "historicalManifestSameSet": true,
+  "noSourceOldQAProductChanges": true,
+  "native": "NOT_RUN"
+}

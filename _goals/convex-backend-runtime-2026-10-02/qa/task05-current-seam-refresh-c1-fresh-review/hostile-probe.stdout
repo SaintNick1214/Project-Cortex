@@ -1,0 +1,14 @@
+PASS 1: actual transpiled ledger replay returns separate derived budget/account IDs with zero writes
+PASS 2: actual ledger changed payload under same key conflicts before writes
+PASS 3: actual ledger changed agent version conflicts
+PASS 4: actual ledger changed authority cannot replay
+PASS 5: actual resource scope admits exact owned executable source resource
+PASS 6: actual admin scope denies ownerPrincipalId drift
+PASS 7: actual admin scope denies tenantId drift
+PASS 8: actual admin scope denies memorySpaceId drift
+PASS 9: actual imported installed save helper forwards next order/no embeddings and returns all IDs
+PASS 10: actual installed body includes same-order later step without exact adapter filtering
+PASS 11: actual installed body missing anchor broadens history
+PASS 12: actual installed body deleted anchor broadens history
+PASS 13: actual installed body foreign anchor denies
+{"assertedOutcomeGroups":13,"classification":"offline actual source/body and imported installed helper; explicit fake DB/streams; no native transactions, OCC, current grants, policy root, UI or public DTO implementation qualified","testsSkipped":[],"native":"NOT_RUN"}

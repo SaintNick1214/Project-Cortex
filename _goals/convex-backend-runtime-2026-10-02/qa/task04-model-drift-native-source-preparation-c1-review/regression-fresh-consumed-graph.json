@@ -1,0 +1,3687 @@
+{
+  "inputs": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+      "bytes": 2869,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/base64.js": {
+      "bytes": 3251,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/common/index.js": {
+      "bytes": 1936,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/value.js": {
+      "bytes": 10045,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/base64.js",
+          "kind": "import-statement",
+          "original": "./base64.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/validators.js": {
+      "bytes": 13168,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/validator.js": {
+      "bytes": 8089,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/validators.js",
+          "kind": "import-statement",
+          "original": "./validators.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/errors.js": {
+      "bytes": 796,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/compare_utf8.js": {
+      "bytes": 2034,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/compare.js": {
+      "bytes": 3289,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/compare_utf8.js",
+          "kind": "import-statement",
+          "original": "./compare_utf8.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/size.js": {
+      "bytes": 2300,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/index.js": {
+      "bytes": 374,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "./validator.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/base64.js",
+          "kind": "import-statement",
+          "original": "./base64.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/compare.js",
+          "kind": "import-statement",
+          "original": "./compare.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/size.js",
+          "kind": "import-statement",
+          "original": "./size.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+      "bytes": 20417,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+      "bytes": 2555,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+      "bytes": 11256,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "convex/values"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs",
+          "kind": "import-statement",
+          "original": "./publication-contract.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/index.js": {
+      "bytes": 81,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/logging.js": {
+      "bytes": 3563,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js": {
+      "bytes": 1159,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/local_state.js": {
+      "bytes": 8668,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+          "kind": "import-statement",
+          "original": "./udf_path_utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/request_manager.js": {
+      "bytes": 7146,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/logging.js",
+          "kind": "import-statement",
+          "original": "../logging.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/functionName.js": {
+      "bytes": 111,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/components/paths.js": {
+      "bytes": 1106,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/functionName.js",
+          "kind": "import-statement",
+          "original": "../functionName.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/api.js": {
+      "bytes": 2584,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/functionName.js",
+          "kind": "import-statement",
+          "original": "./functionName.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./components/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js": {
+      "bytes": 5135,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "../../server/api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/logging.js",
+          "kind": "import-statement",
+          "original": "../logging.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+          "kind": "import-statement",
+          "original": "./udf_path_utils.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/errors.js",
+          "kind": "import-statement",
+          "original": "../../values/errors.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/vendor/long.js": {
+      "bytes": 2503,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/remote_query_set.js": {
+      "bytes": 3036,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/vendor/long.js",
+          "kind": "import-statement",
+          "original": "../../vendor/long.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/logging.js",
+          "kind": "import-statement",
+          "original": "../logging.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/protocol.js": {
+      "bytes": 1759,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/vendor/long.js",
+          "kind": "import-statement",
+          "original": "../../vendor/long.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js": {
+      "bytes": 22509,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/protocol.js",
+          "kind": "import-statement",
+          "original": "./protocol.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/session.js": {
+      "bytes": 302,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+      "bytes": 1634,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+      "bytes": 13198,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/vendor/jwt-decode/index.js",
+          "kind": "import-statement",
+          "original": "../../vendor/jwt-decode/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/metrics.js": {
+      "bytes": 977,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/client.js": {
+      "bytes": 26101,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/logging.js",
+          "kind": "import-statement",
+          "original": "../logging.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/local_state.js",
+          "kind": "import-statement",
+          "original": "./local_state.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/request_manager.js",
+          "kind": "import-statement",
+          "original": "./request_manager.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js",
+          "kind": "import-statement",
+          "original": "./optimistic_updates_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/remote_query_set.js",
+          "kind": "import-statement",
+          "original": "./remote_query_set.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+          "kind": "import-statement",
+          "original": "./udf_path_utils.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js",
+          "kind": "import-statement",
+          "original": "./web_socket_manager.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/session.js",
+          "kind": "import-statement",
+          "original": "./session.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/authentication_manager.js",
+          "kind": "import-statement",
+          "original": "./authentication_manager.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/metrics.js",
+          "kind": "import-statement",
+          "original": "./metrics.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/errors.js",
+          "kind": "import-statement",
+          "original": "../../values/errors.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/vendor/jwt-decode/index.js",
+          "kind": "import-statement",
+          "original": "../../vendor/jwt-decode/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/pagination.js": {
+      "bytes": 568,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js": {
+      "bytes": 12074,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+          "kind": "import-statement",
+          "original": "./udf_path_utils.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/pagination.js",
+          "kind": "import-statement",
+          "original": "./pagination.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/vendor/long.js",
+          "kind": "import-statement",
+          "original": "../../vendor/long.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/simple_client.js": {
+      "bytes": 13515,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "../server/api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/client.js",
+          "kind": "import-statement",
+          "original": "./sync/client.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js",
+          "kind": "import-statement",
+          "original": "./sync/paginated_query_client.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+          "kind": "import-statement",
+          "original": "./sync/udf_path_utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+      "bytes": 137940,
+      "imports": [
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/simple_client.js",
+          "kind": "import-statement",
+          "original": "./simple_client.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/http_client.js": {
+      "bytes": 15649,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "../server/api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/logging.js",
+          "kind": "import-statement",
+          "original": "./logging.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/query_options.js": {
+      "bytes": 122,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/browser/index-node.js": {
+      "bytes": 267,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/browser/sync/client.js",
+          "kind": "import-statement",
+          "original": "./sync/client.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/simple_client-node.js",
+          "kind": "import-statement",
+          "original": "./simple_client-node.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/http_client.js",
+          "kind": "import-statement",
+          "original": "./http_client.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/query_options.js",
+          "kind": "import-statement",
+          "original": "./query_options.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/database.js": {
+      "bytes": 51,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/syscall.js": {
+      "bytes": 1560,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/errors.js",
+          "kind": "import-statement",
+          "original": "../../values/errors.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/validate.js": {
+      "bytes": 680,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/actions_impl.js": {
+      "bytes": 1609,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "../components/paths.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/vector_search.js": {
+      "bytes": 642,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/vector_search_impl.js": {
+      "bytes": 3056,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/vector_search.js",
+          "kind": "import-statement",
+          "original": "../vector_search.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/authentication_impl.js": {
+      "bytes": 304,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/filter_builder.js": {
+      "bytes": 637,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js": {
+      "bytes": 2977,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/filter_builder.js",
+          "kind": "import-statement",
+          "original": "../filter_builder.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/index_range_builder.js": {
+      "bytes": 535,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js": {
+      "bytes": 2347,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/index_range_builder.js",
+          "kind": "import-statement",
+          "original": "../index_range_builder.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/search_filter_builder.js": {
+      "bytes": 541,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js": {
+      "bytes": 1818,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/search_filter_builder.js",
+          "kind": "import-statement",
+          "original": "../search_filter_builder.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/query_impl.js": {
+      "bytes": 8019,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js",
+          "kind": "import-statement",
+          "original": "./filter_builder_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js",
+          "kind": "import-statement",
+          "original": "./index_range_builder_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js",
+          "kind": "import-statement",
+          "original": "./search_filter_builder_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/database_impl.js": {
+      "bytes": 4967,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/query_impl.js",
+          "kind": "import-statement",
+          "original": "./query_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/scheduler_impl.js": {
+      "bytes": 3065,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "../components/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/storage_impl.js": {
+      "bytes": 1653,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/meta_impl.js": {
+      "bytes": 2252,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/registration_impl.js": {
+      "bytes": 10102,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+          "kind": "import-statement",
+          "original": "./actions_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/vector_search_impl.js",
+          "kind": "import-statement",
+          "original": "./vector_search_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/authentication_impl.js",
+          "kind": "import-statement",
+          "original": "./authentication_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/database_impl.js",
+          "kind": "import-statement",
+          "original": "./database_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/query_impl.js",
+          "kind": "import-statement",
+          "original": "./query_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/scheduler_impl.js",
+          "kind": "import-statement",
+          "original": "./scheduler_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/storage_impl.js",
+          "kind": "import-statement",
+          "original": "./storage_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../../values/validator.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "../components/paths.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/meta_impl.js",
+          "kind": "import-statement",
+          "original": "./meta_impl.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/pagination.js": {
+      "bytes": 775,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../values/validator.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/storage.js": {
+      "bytes": 50,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/cron.js": {
+      "bytes": 8904,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "../server/api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./components/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/router.js": {
+      "bytes": 7101,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./impl/syscall.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/components/index.js": {
+      "bytes": 9424,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "../impl/syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./paths.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../../values/validator.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/logVars.js": {
+      "bytes": 976,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/audit_logging.js": {
+      "bytes": 1201,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./impl/syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/logVars.js",
+          "kind": "import-statement",
+          "original": "./logVars.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/log.js": {
+      "bytes": 167,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/audit_logging.js",
+          "kind": "import-statement",
+          "original": "./audit_logging.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/logVars.js",
+          "kind": "import-statement",
+          "original": "./logVars.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/schema.js": {
+      "bytes": 9649,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../values/validator.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/index.js": {
+      "bytes": 997,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/database.js",
+          "kind": "import-statement",
+          "original": "./database.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/registration_impl.js",
+          "kind": "import-statement",
+          "original": "./impl/registration_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+          "kind": "import-statement",
+          "original": "./impl/actions_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/pagination.js",
+          "kind": "import-statement",
+          "original": "./pagination.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/search_filter_builder.js",
+          "kind": "import-statement",
+          "original": "./search_filter_builder.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/storage.js",
+          "kind": "import-statement",
+          "original": "./storage.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/cron.js",
+          "kind": "import-statement",
+          "original": "./cron.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/router.js",
+          "kind": "import-statement",
+          "original": "./router.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "./api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/index.js",
+          "kind": "import-statement",
+          "original": "./components/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/index.js",
+          "kind": "import-statement",
+          "original": "./components/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/index.js",
+          "kind": "import-statement",
+          "original": "./components/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/log.js",
+          "kind": "import-statement",
+          "original": "./log.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/schema.js",
+          "kind": "import-statement",
+          "original": "./schema.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+      "bytes": 1707,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+      "bytes": 3215,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+      "bytes": 16886,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs",
+          "kind": "import-statement",
+          "original": "./window-evidence.mjs"
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+      "bytes": 16243,
+      "imports": [
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs",
+          "kind": "import-statement",
+          "original": "./window-evidence.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs",
+          "kind": "import-statement",
+          "original": "./publication-artifacts.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs",
+          "kind": "import-statement",
+          "original": "./publication-artifacts.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs",
+          "kind": "import-statement",
+          "original": "./publication-contract.mjs"
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node_modules/convex/dist/esm/browser/index-node.js",
+          "kind": "import-statement",
+          "original": "convex/browser"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/index.js",
+          "kind": "import-statement",
+          "original": "convex/server"
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs",
+          "kind": "import-statement",
+          "original": "./peer.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs",
+          "kind": "import-statement",
+          "original": "./ownership.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs",
+          "kind": "import-statement",
+          "original": "./cases.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-terminal.mjs": {
+      "bytes": 1316,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-owner.mjs": {
+      "bytes": 4146,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        },
+        {
+          "path": "node:child_process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-terminal.mjs",
+          "kind": "import-statement",
+          "original": "./process-terminal.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/qualifier-diagnostics.mjs": {
+      "bytes": 3812,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs",
+          "kind": "import-statement",
+          "original": "./publication-artifacts.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/qualify-owned.mjs": {
+      "bytes": 2404,
+      "imports": [
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-owner.mjs",
+          "kind": "import-statement",
+          "original": "./process-owner.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/qualifier-diagnostics.mjs",
+          "kind": "import-statement",
+          "original": "./qualifier-diagnostics.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+          "kind": "dynamic-import",
+          "original": "./driver.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-child.mjs": {
+      "bytes": 2836,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+          "kind": "import-statement",
+          "original": "./driver.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs",
+          "kind": "import-statement",
+          "original": "./cases.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs",
+          "kind": "import-statement",
+          "original": "./peer.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-driver.mjs": {
+      "bytes": 2059,
+      "imports": [
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-owner.mjs",
+          "kind": "import-statement",
+          "original": "./process-owner.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-ledger.mjs": {
+      "bytes": 1902,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-setup.mjs": {
+      "bytes": 1980,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs",
+          "kind": "import-statement",
+          "original": "./window-evidence.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs",
+          "kind": "import-statement",
+          "original": "./ownership.mjs"
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+          "kind": "import-statement",
+          "original": "./driver.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs",
+          "kind": "import-statement",
+          "original": "./cases.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-recovery.mjs": {
+      "bytes": 3787,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-ledger.mjs",
+          "kind": "import-statement",
+          "original": "./fault-ledger.mjs"
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+          "kind": "import-statement",
+          "original": "./driver.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cleanup.mjs": {
+      "bytes": 1168,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+          "kind": "import-statement",
+          "original": "./driver.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/reconcile.mjs": {
+      "bytes": 1317,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/arguments.mjs": {
+      "bytes": 2993,
+      "imports": [
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs": {
+      "bytes": 19209,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/current-inputs.mjs": {
+      "bytes": 8462,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+          "kind": "import-statement",
+          "original": "./guard.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/arguments.mjs",
+          "kind": "import-statement",
+          "original": "./arguments.mjs"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs",
+          "kind": "import-statement",
+          "original": "./parent-inputs.mjs"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/driver.js": {
+      "imports": [
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "qualify",
+        "security",
+        "session",
+        "shape"
+      ],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+          "bytesInOutput": 17949
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+          "bytesInOutput": 3075
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+          "bytesInOutput": 7380
+        },
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 2875
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 1867
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9558
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 11540
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 7715
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 704
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 92
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+          "bytesInOutput": 2564
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 22919
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 24
+        },
+        "node_modules/convex/dist/esm/browser/logging.js": {
+          "bytesInOutput": 3026
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 47
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 896
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 1984
+        },
+        "node_modules/convex/dist/esm/vendor/long.js": {
+          "bytesInOutput": 2468
+        },
+        "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+          "bytesInOutput": 105
+        },
+        "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+          "bytesInOutput": 53
+        },
+        "node_modules/convex/dist/esm/browser/index-node.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+          "bytesInOutput": 136310
+        },
+        "node_modules/convex/dist/esm/browser/simple_client.js": {
+          "bytesInOutput": 117
+        },
+        "node_modules/convex/dist/esm/browser/http_client.js": {
+          "bytesInOutput": 15140
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 282
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 326
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 9332
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+          "bytesInOutput": 1889
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+          "bytesInOutput": 3648
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+          "bytesInOutput": 19387
+        }
+      },
+      "bytes": 286131
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/qualify-owned.js": {
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:child_process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/qualify-owned.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 23427
+        },
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 3031
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 1972
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9972
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 13654
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 8933
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 934
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 235
+        },
+        "node_modules/convex/dist/esm/values/compare.js": {
+          "bytesInOutput": 151
+        },
+        "node_modules/convex/dist/esm/values/size.js": {
+          "bytesInOutput": 139
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 220
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+          "bytesInOutput": 2781
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+          "bytesInOutput": 7707
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+          "bytesInOutput": 3299
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 132
+        },
+        "node_modules/convex/dist/esm/browser/logging.js": {
+          "bytesInOutput": 3380
+        },
+        "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js": {
+          "bytesInOutput": 147
+        },
+        "node_modules/convex/dist/esm/browser/sync/local_state.js": {
+          "bytesInOutput": 168
+        },
+        "node_modules/convex/dist/esm/browser/sync/request_manager.js": {
+          "bytesInOutput": 169
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 183
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 1057
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 2139
+        },
+        "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js": {
+          "bytesInOutput": 247
+        },
+        "node_modules/convex/dist/esm/vendor/long.js": {
+          "bytesInOutput": 2965
+        },
+        "node_modules/convex/dist/esm/browser/sync/remote_query_set.js": {
+          "bytesInOutput": 188
+        },
+        "node_modules/convex/dist/esm/browser/sync/protocol.js": {
+          "bytesInOutput": 152
+        },
+        "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js": {
+          "bytesInOutput": 157
+        },
+        "node_modules/convex/dist/esm/browser/sync/session.js": {
+          "bytesInOutput": 114
+        },
+        "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+          "bytesInOutput": 256
+        },
+        "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+          "bytesInOutput": 247
+        },
+        "node_modules/convex/dist/esm/browser/sync/metrics.js": {
+          "bytesInOutput": 114
+        },
+        "node_modules/convex/dist/esm/browser/sync/client.js": {
+          "bytesInOutput": 478
+        },
+        "node_modules/convex/dist/esm/browser/sync/pagination.js": {
+          "bytesInOutput": 120
+        },
+        "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js": {
+          "bytesInOutput": 211
+        },
+        "node_modules/convex/dist/esm/browser/simple_client.js": {
+          "bytesInOutput": 354
+        },
+        "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+          "bytesInOutput": 152620
+        },
+        "node_modules/convex/dist/esm/browser/http_client.js": {
+          "bytesInOutput": 17181
+        },
+        "node_modules/convex/dist/esm/browser/query_options.js": {
+          "bytesInOutput": 121
+        },
+        "node_modules/convex/dist/esm/browser/index-node.js": {
+          "bytesInOutput": 215
+        },
+        "node_modules/convex/dist/esm/server/database.js": {
+          "bytesInOutput": 110
+        },
+        "node_modules/convex/dist/esm/server/impl/syscall.js": {
+          "bytesInOutput": 150
+        },
+        "node_modules/convex/dist/esm/server/impl/validate.js": {
+          "bytesInOutput": 115
+        },
+        "node_modules/convex/dist/esm/server/impl/actions_impl.js": {
+          "bytesInOutput": 236
+        },
+        "node_modules/convex/dist/esm/server/vector_search.js": {
+          "bytesInOutput": 120
+        },
+        "node_modules/convex/dist/esm/server/impl/vector_search_impl.js": {
+          "bytesInOutput": 236
+        },
+        "node_modules/convex/dist/esm/server/impl/authentication_impl.js": {
+          "bytesInOutput": 157
+        },
+        "node_modules/convex/dist/esm/server/filter_builder.js": {
+          "bytesInOutput": 122
+        },
+        "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js": {
+          "bytesInOutput": 182
+        },
+        "node_modules/convex/dist/esm/server/index_range_builder.js": {
+          "bytesInOutput": 132
+        },
+        "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js": {
+          "bytesInOutput": 197
+        },
+        "node_modules/convex/dist/esm/server/search_filter_builder.js": {
+          "bytesInOutput": 136
+        },
+        "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js": {
+          "bytesInOutput": 224
+        },
+        "node_modules/convex/dist/esm/server/impl/query_impl.js": {
+          "bytesInOutput": 303
+        },
+        "node_modules/convex/dist/esm/server/impl/database_impl.js": {
+          "bytesInOutput": 242
+        },
+        "node_modules/convex/dist/esm/server/impl/scheduler_impl.js": {
+          "bytesInOutput": 240
+        },
+        "node_modules/convex/dist/esm/server/impl/storage_impl.js": {
+          "bytesInOutput": 180
+        },
+        "node_modules/convex/dist/esm/server/impl/meta_impl.js": {
+          "bytesInOutput": 156
+        },
+        "node_modules/convex/dist/esm/server/impl/registration_impl.js": {
+          "bytesInOutput": 442
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 476
+        },
+        "node_modules/convex/dist/esm/server/storage.js": {
+          "bytesInOutput": 108
+        },
+        "node_modules/convex/dist/esm/server/cron.js": {
+          "bytesInOutput": 174
+        },
+        "node_modules/convex/dist/esm/server/router.js": {
+          "bytesInOutput": 126
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 214
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 519
+        },
+        "node_modules/convex/dist/esm/server/audit_logging.js": {
+          "bytesInOutput": 176
+        },
+        "node_modules/convex/dist/esm/server/log.js": {
+          "bytesInOutput": 146
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 10564
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 415
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+          "bytesInOutput": 2081
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+          "bytesInOutput": 3847
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+          "bytesInOutput": 19753
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+          "bytesInOutput": 18687
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/qualify-owned.mjs": {
+          "bytesInOutput": 2527
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-owner.mjs": {
+          "bytesInOutput": 4164
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-terminal.mjs": {
+          "bytesInOutput": 1190
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/qualifier-diagnostics.mjs": {
+          "bytesInOutput": 4354
+        }
+      },
+      "bytes": 338566
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/fault-child.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-child.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-child.mjs": {
+          "bytesInOutput": 2759
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+          "bytesInOutput": 18055
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+          "bytesInOutput": 3088
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+          "bytesInOutput": 7380
+        },
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 2875
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 1867
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9558
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 11540
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 7715
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 704
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 92
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+          "bytesInOutput": 2564
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 22930
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 24
+        },
+        "node_modules/convex/dist/esm/browser/logging.js": {
+          "bytesInOutput": 3026
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 47
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 898
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 1984
+        },
+        "node_modules/convex/dist/esm/vendor/long.js": {
+          "bytesInOutput": 2468
+        },
+        "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+          "bytesInOutput": 105
+        },
+        "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+          "bytesInOutput": 53
+        },
+        "node_modules/convex/dist/esm/browser/index-node.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+          "bytesInOutput": 136310
+        },
+        "node_modules/convex/dist/esm/browser/simple_client.js": {
+          "bytesInOutput": 117
+        },
+        "node_modules/convex/dist/esm/browser/http_client.js": {
+          "bytesInOutput": 15140
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 282
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 326
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 9332
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+          "bytesInOutput": 1889
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+          "bytesInOutput": 3650
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+          "bytesInOutput": 19411
+        }
+      },
+      "bytes": 289242
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/fault-driver.js": {
+      "imports": [
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:child_process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-driver.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-driver.mjs": {
+          "bytesInOutput": 2078
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 14416
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-owner.mjs": {
+          "bytesInOutput": 4174
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/process-terminal.mjs": {
+          "bytesInOutput": 1192
+        }
+      },
+      "bytes": 22608
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/fault-ledger.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "assertFaultLedger"
+      ],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-ledger.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-ledger.mjs": {
+          "bytesInOutput": 2044
+        }
+      },
+      "bytes": 2200
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/fault-setup.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-setup.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+          "bytesInOutput": 3079
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+          "bytesInOutput": 3648
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 22952
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-setup.mjs": {
+          "bytesInOutput": 1785
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+          "bytesInOutput": 18055
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+          "bytesInOutput": 7380
+        },
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 2875
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 1867
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9558
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 11540
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 7715
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 704
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 92
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+          "bytesInOutput": 2564
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 24
+        },
+        "node_modules/convex/dist/esm/browser/logging.js": {
+          "bytesInOutput": 3026
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 47
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 898
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 1984
+        },
+        "node_modules/convex/dist/esm/vendor/long.js": {
+          "bytesInOutput": 2468
+        },
+        "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+          "bytesInOutput": 105
+        },
+        "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+          "bytesInOutput": 53
+        },
+        "node_modules/convex/dist/esm/browser/index-node.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+          "bytesInOutput": 136330
+        },
+        "node_modules/convex/dist/esm/browser/simple_client.js": {
+          "bytesInOutput": 117
+        },
+        "node_modules/convex/dist/esm/browser/http_client.js": {
+          "bytesInOutput": 15140
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 282
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 326
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 9332
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+          "bytesInOutput": 1889
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+          "bytesInOutput": 19467
+        }
+      },
+      "bytes": 288344
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/fault-recovery.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-recovery.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-ledger.mjs": {
+          "bytesInOutput": 2053
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/fault-recovery.mjs": {
+          "bytesInOutput": 3889
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+          "bytesInOutput": 18062
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+          "bytesInOutput": 3089
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+          "bytesInOutput": 7380
+        },
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 2875
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 1872
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9558
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 11540
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 7715
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 704
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 92
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+          "bytesInOutput": 2564
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 22928
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 24
+        },
+        "node_modules/convex/dist/esm/browser/logging.js": {
+          "bytesInOutput": 3042
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 47
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 898
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 1984
+        },
+        "node_modules/convex/dist/esm/vendor/long.js": {
+          "bytesInOutput": 2468
+        },
+        "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+          "bytesInOutput": 105
+        },
+        "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+          "bytesInOutput": 53
+        },
+        "node_modules/convex/dist/esm/browser/index-node.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+          "bytesInOutput": 136310
+        },
+        "node_modules/convex/dist/esm/browser/simple_client.js": {
+          "bytesInOutput": 117
+        },
+        "node_modules/convex/dist/esm/browser/http_client.js": {
+          "bytesInOutput": 15174
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 282
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 326
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 9332
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+          "bytesInOutput": 1889
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+          "bytesInOutput": 3648
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+          "bytesInOutput": 19447
+        }
+      },
+      "bytes": 292651
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/cleanup.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "dynamic-import",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "module",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cleanup.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cleanup.mjs": {
+          "bytesInOutput": 1175
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs": {
+          "bytesInOutput": 18061
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/window-evidence.mjs": {
+          "bytesInOutput": 3075
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-artifacts.mjs": {
+          "bytesInOutput": 7380
+        },
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 2875
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 1867
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9558
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 11540
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 7715
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 704
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 92
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/publication-contract.mjs": {
+          "bytesInOutput": 2564
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 22939
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 24
+        },
+        "node_modules/convex/dist/esm/browser/logging.js": {
+          "bytesInOutput": 3026
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 47
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 898
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 1984
+        },
+        "node_modules/convex/dist/esm/vendor/long.js": {
+          "bytesInOutput": 2468
+        },
+        "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": {
+          "bytesInOutput": 105
+        },
+        "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": {
+          "bytesInOutput": 53
+        },
+        "node_modules/convex/dist/esm/browser/index-node.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/browser/simple_client-node.js": {
+          "bytesInOutput": 136310
+        },
+        "node_modules/convex/dist/esm/browser/simple_client.js": {
+          "bytesInOutput": 117
+        },
+        "node_modules/convex/dist/esm/browser/http_client.js": {
+          "bytesInOutput": 15140
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 282
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 326
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 9332
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/peer.mjs": {
+          "bytesInOutput": 1889
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/ownership.mjs": {
+          "bytesInOutput": 3648
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/cases.mjs": {
+          "bytesInOutput": 19401
+        }
+      },
+      "bytes": 287640
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/reconcile.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "reconcile"
+      ],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/reconcile.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/reconcile.mjs": {
+          "bytesInOutput": 1384
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 2995
+        }
+      },
+      "bytes": 4764
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/current-inputs.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/current-inputs.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/current-inputs.mjs": {
+          "bytesInOutput": 9317
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 17750
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/arguments.mjs": {
+          "bytesInOutput": 3167
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs": {
+          "bytesInOutput": 20846
+        }
+      },
+      "bytes": 51727
+    },
+    "work/resume/task04-model-drift-native-source-preparation-c1-review/graph-regression/parent-inputs.js": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:util",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "acceptedSourceBindings",
+        "boundedId",
+        "boundedParentBody",
+        "candidateArgument",
+        "currentTarget",
+        "exactKeys",
+        "historicalEvidence",
+        "historicalLocatorHashes",
+        "historicalSources",
+        "initialProof",
+        "main",
+        "parentDeadline",
+        "privateParentFile",
+        "profileContract",
+        "readPrivate",
+        "strictProfile",
+        "validateHistoricalInputs"
+      ],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs": {
+          "bytesInOutput": 20846
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs": {
+          "bytesInOutput": 17750
+        }
+      },
+      "bytes": 39299
+    }
+  }
+}

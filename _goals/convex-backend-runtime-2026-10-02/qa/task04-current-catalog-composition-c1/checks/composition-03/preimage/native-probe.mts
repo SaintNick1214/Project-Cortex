@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+const root=process.argv[2];
+const schema=(await import(pathToFileURL(path.join(root,'convex-dev/schema.ts')).href)).default;
+const fragment=await import(pathToFileURL(path.join(root,'convex-dev/runtimePolicySchema.ts')).href);
+const artifacts=await import(pathToFileURL(path.join(root,'convex-dev/artifacts.ts')).href);
+const policies=await import(pathToFileURL(path.join(root,'convex-dev/runtimeModelPolicy.ts')).href);
+const bootstrap=await import(pathToFileURL(path.join(root,'convex-dev/runtimeModelPolicyBootstrap.ts')).href);
+const definitions=Object.entries(schema.tables).map(([table,definition]:[string,any])=>({table,indexes:definition[' indexes'](),exported:definition.export()}));
+const additions=Object.entries(fragment.runtimePolicyTables).map(([table,definition]:[string,any])=>({table,indexes:definition[' indexes'](),exported:definition.export()}));
+const registrations=(module:Record<string,any>)=>Object.fromEntries(Object.entries(module).filter(([,v])=>v&&typeof v.exportArgs==='function').map(([name,v])=>[name,{isPublic:v.isPublic,isInternal:v.isInternal,args:v.exportArgs(),returns:v.exportReturns()}]));
+const result={definitions,additions,artifactRegistrations:registrations(artifacts),policyRegistrations:registrations(policies),rootLookup:bootstrap.lookupDeploymentManifest('fixture-forged',1)??null,forgedRootTrusted:bootstrap.isTrustedDeploymentManifest({classification:'reviewed-actual'})};
+fs.writeFileSync(process.argv[3],JSON.stringify(result,null,2)+'\n');

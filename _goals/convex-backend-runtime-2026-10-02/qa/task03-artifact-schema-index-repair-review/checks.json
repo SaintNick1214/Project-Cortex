@@ -1,0 +1,123 @@
+[
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/jest.config.mjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065473.1512628,
+    "duration": 0.2734043598175049,
+    "exitCode": 0
+  },
+  {
+    "name": "native",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/jest.config.mjs",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair-review/native.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065473.4248846,
+    "duration": 10.686127185821533,
+    "exitCode": 0
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065484.1112142,
+    "duration": 7.802417755126953,
+    "exitCode": 0
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065491.913847,
+    "duration": 14.763079643249512,
+    "exitCode": 0
+  },
+  {
+    "name": "lint-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065506.677428,
+    "duration": 9.719907283782959,
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/schema.ts",
+      "convex-dev/runtimeArtifactAuth.ts",
+      "convex-dev/artifacts.ts",
+      "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+      "--max-warnings",
+      "0",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065516.3975725,
+    "duration": 7.496911287307739,
+    "exitCode": 0
+  },
+  {
+    "name": "composer-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/composer-eslint.config.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065523.8947198,
+    "duration": 0.26416826248168945,
+    "exitCode": 0
+  },
+  {
+    "name": "compose",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/compose"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065524.159297,
+    "duration": 1.0197906494140625,
+    "exitCode": 0
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "name": "outcomes",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/jest.scoped.cjs",
+    "--runInBand",
+    "--json",
+    "--outputFile=/tmp/task03c2-d-review1-o0v1eus6/raw/outcomes.json"
+  ],
+  "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+  "startedAt": "2026-10-03T11:04:26.814195+00:00",
+  "durationSeconds": 23.663,
+  "exitCode": 0,
+  "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "nodeVersion": "v24.19.0",
+  "environmentOverrides": {
+    "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+    "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+  },
+  "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/outcomes.log"
+}

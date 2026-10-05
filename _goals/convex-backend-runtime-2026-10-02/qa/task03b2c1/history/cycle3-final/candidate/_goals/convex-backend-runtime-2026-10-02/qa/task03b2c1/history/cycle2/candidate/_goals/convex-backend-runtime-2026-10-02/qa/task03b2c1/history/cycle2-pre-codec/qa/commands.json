@@ -1,0 +1,223 @@
+[
+  {
+    "name": "tools",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "-e",
+      "console.log(JSON.stringify({node:process.version,npmExecutable:process.env.npm_execpath,npm:require(require(\"node:path\").resolve(require(\"node:path\").dirname(process.env.npm_execpath),\"../package.json\")).version,outerLauncherUserAgent:process.env.npm_config_user_agent,typescript:require(\"typescript/package.json\").version,convex:require(\"convex/package.json\").version,jest:require(\"jest/package.json\").version}))"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:15.651967+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:17.226896+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/tools.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/tools.stderr"
+  },
+  {
+    "name": "backend-types",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "convex-dev/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:17.227296+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:26.211947+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/backend-types.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/backend-types.stderr"
+  },
+  {
+    "name": "scoped-types",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/tsconfig.scoped.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:26.212271+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:30.902597+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/scoped-types.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/scoped-types.stderr"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "eslint",
+      "convex-dev/artifacts.ts",
+      "convex-dev/runtimeArtifactAuth.ts",
+      "tests/unit/runtimeArtifactAuth",
+      "--max-warnings=0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:30.903300+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:39.089981+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/lint.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/lint.stderr"
+  },
+  {
+    "name": "discovery",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/jest.scoped.cjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:39.090717+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:40.925659+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/discovery.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/discovery.stderr"
+  },
+  {
+    "name": "unit",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/jest.scoped.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/tests-final.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:40.926008+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:45.600168+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/unit.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/unit.stderr"
+  },
+  {
+    "name": "inventory",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/inventory.mjs",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:45.600953+00:00",
+    "finishedAtUtc": "2026-10-03T11:45:47.541378+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/inventory.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/inventory.stderr"
+  },
+  {
+    "name": "root-types",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:45:47.541791+00:00",
+    "finishedAtUtc": "2026-10-03T11:46:00.222736+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/root-types.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/root-types.stderr"
+  },
+  {
+    "name": "baseline-root-types",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/baseline-types.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:46:00.223130+00:00",
+    "finishedAtUtc": "2026-10-03T11:46:13.784477+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/baseline-root-types.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/baseline-root-types.stderr"
+  },
+  {
+    "name": "whitespace",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:46:13.784836+00:00",
+    "finishedAtUtc": "2026-10-03T11:46:13.792074+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/whitespace.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/checks/whitespace.stderr"
+  }
+]

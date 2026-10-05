@@ -1,0 +1,10 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/inventory.mjs:21
+ if(process.argv.includes('--verify')){if(JSON.stringify(JSON.parse(readFileSync(resolve(root,'registration-inventory.json'),'utf8')))!==JSON.stringify(result)||JSON.stringify(JSON.parse(readFileSync(resolve(root,'schema-evidence.json'),'utf8')))!==JSON.stringify({product,composed,productCounts}))throw Error('QA_INVENTORY_DRIFT');}else{exclusive(resolve(root,'registration-inventory.json'),result,false,8388608);exclusive(resolve(root,'schema-evidence.json'),{product,composed,productCounts},false,8388608);}return result;
+                                                                                                                                                                                                                                                                                                                ^
+
+Error: QA_INVENTORY_DRIFT
+    at inventory (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/inventory.mjs:21:305)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/scripts/inventory.mjs:23:47
+
+Node.js v24.19.0

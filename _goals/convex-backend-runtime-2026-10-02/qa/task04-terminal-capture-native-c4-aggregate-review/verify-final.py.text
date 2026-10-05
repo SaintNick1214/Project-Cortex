@@ -1,0 +1,64 @@
+from pathlib import Path
+import json,hashlib,datetime,collections
+R=Path('/workspace/Project-Cortex');Q=R/'_goals/convex-backend-runtime-2026-10-02/qa';O=Q/'task04-terminal-capture-native-c4-aggregate-review'; P=Q/'task04-terminal-capture-native-extension-preparation-c4'
+def sha(b):return hashlib.sha256(b).hexdigest()
+def read(p):return json.loads(p.read_text())
+def utc(s):return datetime.datetime.fromisoformat(s.replace('Z','+00:00'))
+results=[]
+for profile,core,creates,tickets,rows,maxcreates in [('extension',22,411,2581,4380,465),('regression',43,736,2699,4540,783)]:
+ e=Q/f'task04-terminal-capture-native-{profile}-c4-execution'; prep=P if profile=='extension' else P/'regression'; supp=Q/f'task04-terminal-capture-native-{profile}-c4-private-supplement'; result=read(e/'result.json'); op=result['operation']; target=read(e/'target.json'); retirement=result['targetRetirement']; assert target['operation']==op==retirement['operation'] and target['projectId']==retirement['projectId'];assert retirement['deletionHttpStatus']==200 and retirement['absentProjectHttpStatus']==404 and retirement['managementCalls']==5
+ assert creates==result['createdRowWitnesses']==result['deletedRowWitnesses'] and creates<=maxcreates;assert len(list(e.glob('ticket-native-*.json')))==tickets and tickets+37<=3000;assert len(list(e.glob('ticket-process-*.json')))<=6; assert len(list(e.glob('ticket-nested-auth-*.json')))==28 and len(list(e.glob('ticket-nested-parent-*.json')))==1
+ journals=[r for f in e.glob('journal-*.jsonl') for r in [json.loads(x) for x in f.read_text().splitlines()]]; assert len(journals)==rows<=6000
+ categories=collections.Counter(r.get('observedCategory') for r in journals);assert categories['authorization-denied']==1400 and categories['whole-state-equal']==200 and categories['published-internal-inaccessible']==174 and categories['outcome-asserted']==core
+ for cat,n in [('authorization-denied',7),('whole-state-equal',1),('published-internal-inaccessible',2)]:
+  c=collections.Counter(r['caseId'] for r in journals if r.get('observedCategory')==cat);assert all(v==n for v in c.values()) and len(c)==(87 if n==2 else 200)
+ assert sum(r['status']=='FAIL' and r['caseId'] in ['admin-listTable','admin-deleteRecord','admin-clearTable','admin-countTable'] for r in journals)==28
+ commands=[]
+ for f in sorted(e.glob('*.receipt.json')):
+  x=read(f); assert x['exitCode']==0 and x['sourceUnchanged'] and x['sourcePre']==x['sourcePost'];assert x['cwd']==str(R);assert utc(x['endedAt'])>=utc(x['startedAt']);
+  for r in x['sourcePre']:
+   p=Path(r['path']);p=p if p.is_absolute() else R/p; assert '/work/backend-runtime/' not in str(p);assert sha(p.read_bytes())==r['sha256'],str(p)
+  commands.append({'path':f.name,'startedAt':x['startedAt'],'endedAt':x['endedAt'],'sourcePre':x['sourcePre']})
+ processes=[]
+ for pattern in ['process-deploy-*.json','qualifier-process-*.json','fault-process-*.json']:
+  for f in e.glob(pattern):
+   x=read(f);assert x.get('operation',op)==op
+   if 'counts' in x:assert x['counts']['remaining']==0
+   if 'remaining' in x:assert x['remaining']==0
+   if f.name.startswith('fault-process-'):assert x['directChildWaited'] and x['parentForcedKill']
+   if 'status' in x:assert x['status']=='PASS'
+   processes.append({'path':f.name,'record':x})
+ window=read(e/'qualifier-window.json');assert window['deadlineMs']==1200000
+ for c in commands:
+  if any(t in c['path'] for t in ['qualify','fault-','cleanup-faults']):assert utc(c['endedAt'])-utc(window['startedAt'])<datetime.timedelta(minutes=20)
+ key=next(e.glob('key-match-*.json')); keyrecord=read(key)
+ witness=read(e/'current-physical-id-input-receipt.json');assert witness['operation']==op and set(witness['currentCoreOwnership'])=={'runtimeModelAttempts','runtimeModelOperations'}; owned=read(e/'owned-physical-row-hash-witnesses.json')
+ for table,w in witness['currentCoreOwnership'].items():assert w['operation']==op and any(r['table']==table and r['idSHA256']==w['locatorSHA256'] and r['sourceSHA256']==w['sha256'] and r['event']=='created' for r in owned)
+ historical=read(e/'initial-physical-id-provenance.json');assert len(historical['sources'])==4 and len(historical['journalWitnesses'])==9 and witness['historicalProvenanceSHA256']==sha((e/'initial-physical-id-provenance.json').read_bytes())
+ storage=read(Q/f'task04-terminal-capture-native-{profile}-c4-storage-witnesses.json');assert len(storage['witnesses'])==2 and storage['extraRPC']==0 and storage['storageCreated']==0
+ for w in storage['witnesses']:
+  jr=[json.loads(x) for x in (e/w['journal']).read_text().splitlines()][w['sequence']-1];assert jr['receiptDigest']==w['rowReceiptDigest'] and jr['failureClass']=='unauthenticated' and jr['caseId']==w['caller'].replace(':','-')
+ retained=read(e/'private-artifact-retention.json');bindings=read(supp/'source-bindings.json');assert bindings['originalExecutionManifestSHA256']==sha((e/'qa-manifest.json').read_bytes());assert not bindings['originalsModified'] and bindings['retired'];assert len(bindings['records'])==len(retained['blockedPublicCopies'])
+ for r in bindings['records']:
+  b=next(x for x in retained['blockedPublicCopies'] if x['source']==r['source']);assert r['originalSHA256']==b['sha256'] and r['originalBytes']==b['bytes'];assert sha((supp/r['redactedArtifact']).read_bytes())==r['redactedSHA256']
+ currentfreeze=read(prep/'runtime-freeze.json')
+ for r in currentfreeze['files']:
+  p=prep/r['path'];assert sha(p.read_bytes())==r['sha256']
+ evidenceBytes=sum(f.stat().st_size for f in e.glob('journal-*.jsonl'));assert evidenceBytes<8388608
+ results.append({'profile':profile,'operation':op,'projectId':target['projectId'],'completeMatrices':dict(categories),'nativeClient':tickets,'nestedUpper':37,'createdDeleted':creates,'processTickets':len(list(e.glob('ticket-process-*.json'))),'processRecords':processes,'commands':commands,'keyMatch':keyrecord,'journalBytes':evidenceBytes,'retirement':retirement,'currentProvenance':'BOTH operation/attempt hashes agree with owned created witnesses','sourceFreezeFiles':len(currentfreeze['files'])})
+reg=Q/'task04-terminal-capture-native-regression-c4-execution';supp=Q/'task04-terminal-capture-native-regression-c4-private-supplement';faults=[]
+for mode in ['before-peer','lost-receipt','before-settle']:
+ f=read(reg/f'fault-result-{mode}.json');assert f['status']=='PASS' and f['actualInference']=='NOT_RUN' and f['chargeEvidence']=='SYNTHETIC_ONLY';assert f['counts']=={'effectCount':0 if mode=='before-peer' else 1,'requestCount':0 if mode=='before-peer' else 1};assert f['unknown']['uncertainUnits']==100 and f['unknown']['activeConcurrency']==1
+ cp=read(supp/f'fault-checkpoint-{mode}.json.redacted.json');proc=read(reg/f'fault-process-{mode}.json');assert cp['operation']==proc['operation'] and utc(cp['observedAt'])<utc(proc['observedAt'])
+ setup=read(reg/f'task04-capture-c4-regression-fault-{mode}-setup.receipt.json');driver=read(reg/f'task04-capture-c4-regression-fault-{mode}-driver.receipt.json');recov=read(reg/f'task04-capture-c4-regression-fault-{mode}-recovery.receipt.json');assert utc(setup['endedAt'])<=utc(driver['startedAt'])<=utc(proc['observedAt'])<=utc(driver['endedAt'])<=utc(recov['startedAt'])
+ faults.append({'mode':mode,'result':f,'checkpoint':cp,'process':proc,'start':setup['startedAt'],'end':recov['endedAt']})
+assert all(utc(faults[i]['end'])<=utc(faults[i+1]['start']) for i in [0,1]);cleanup=read(reg/'task04-capture-c4-regression-cleanup-faults.receipt.json');assert utc(cleanup['startedAt'])>utc(faults[-1]['end'])
+js=[json.loads(x) for f in reg.glob('journal-*.jsonl') for x in f.read_text().splitlines()];known=[r for r in js if r['caseId']=='before-settle-known-settled'];assert len(known)==1 and known[0]['counts']=={'reservedUnits':0,'uncertainUnits':0,'settledUnits':40,'activeConcurrency':0}
+assert read(next(reg.glob('cleanup-*.json')))['cleanupComplete']
+windows=[]
+for f in reg.glob('window-proof-*.json'):
+ w=read(f);assert w['status']=='PASS' and w['uncertaintyMs']==1000
+ for a in w['before']+w['after']:assert a['current'] and a['windowStart']<=w['bracket']['startMs']-1000 and a['windowEnd']>w['bracket']['endMs']+1000
+ windows.append(w['caseId'])
+assert len(windows)==4 and results[0]['projectId']!=results[1]['projectId'] and results[0]['operation']!=results[1]['operation']
+(O/'final-deep-verification.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'profiles':results,'faults':faults,'knownSettled':known,'windows':windows,'skips':[],'paidInference':0,'privateReads':0},indent=2)+'\n');print(json.dumps({'profiles':[(r['profile'],r['createdDeleted'],r['nativeClient'],len(r['commands']),len(r['processRecords'])) for r in results],'faults':len(faults),'windows':windows,'sourceFreezeChecks':'PASS','chronology':'PASS','privateReads':0}))

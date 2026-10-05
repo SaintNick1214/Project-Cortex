@@ -1,0 +1,53 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {memoryFixture, registeredHandler} from '../../../tests/unit/runtimeMemory/fixture.ts';
+import * as memory from '../../../convex-dev/runtimeMemory.ts';
+import * as auth from '../../../convex-dev/runtimeAuth.ts';
+import {getFunctionName} from 'convex/server';
+import {ConvexError,convexToJson} from 'convex/values';
+const qa='_goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-c2-review';
+const unavailable={version:1,code:'CAPABILITY_UNAVAILABLE',message:'Memory capability unavailable.',retryable:false,outcome:'not_dispatched'};
+const opaque={...unavailable,code:'INTERNAL_FAILURE',message:'Memory control failed.'};
+const denied={...unavailable,code:'FORBIDDEN',message:'Access denied'};
+function validate(schema:any,value:any){if(schema.type==='object'){assert(value&&typeof value==='object'&&!Array.isArray(value));for(const key of Object.keys(value))assert(Object.hasOwn(schema.value,key));for(const [key,field] of Object.entries<any>(schema.value)){if(!Object.hasOwn(value,key))assert(field.optional);else validate(field.fieldType,value[key]);}}else if(schema.type==='union'){assert(schema.value.some((x:any)=>x.type==='literal'&&x.value===value));}else if(schema.type==='literal')assert.equal(value,schema.value);else assert.equal(typeof value,schema.type);}
+const cases=['healthy','late-principal-delete','late-membership-delete','late-grant-delete','late-tenant-epoch','late-space-epoch','late-grant-expired','late-capability-remove','mutate-original-authority','recheck-reference-mismatch','null-prototype-authority','only-space-id','only-space-epoch','nonfinite-version','known-diagnostic-getters','unknown-serialized-authorize','unknown-serialized-recheck','safe-plus-private-field','nonenumerable-result','revoked-proxy-result'];
+const rows:any[]=[];
+for(const operation of ['remember','recall'] as const)for(const scenario of cases){
+ const f=memoryFixture();const trace:any[]=[];const business:string[]=[];let diagnostics=0;let full:any;
+ const query=f.db.query.bind(f.db);f.db.query=(table)=>{if(!table.startsWith('runtimeAuth'))business.push(table);return query(table);};
+ const get=f.db.get.bind(f.db);f.db.get=async(table,id)=>{if(!table.startsWith('runtimeAuth'))business.push(table);return get(table,id);};
+ const run=f.actionCtx.runQuery.bind(f.actionCtx);f.actionCtx.runMutation=async()=>{throw new Error('Unexpected mutation');};f.actionCtx.vectorSearch=async()=>{throw new Error('Unexpected vector');};
+ f.actionCtx.runQuery=async(ref,input)=>{
+  const name=getFunctionName(ref);const [module,key]=name.split(':');const registration=(module==='runtimeAuth'?auth:memory) as any;const json=convexToJson(input as any);validate(JSON.parse(registration[key].exportArgs()),json);trace.push({name,json,frozen: name==='runtimeMemory:checkAuthority'?Object.isFrozen((input as any).reference):null});
+  if(scenario==='unknown-serialized-authorize'&&name==='runtimeAuth:authorize'||scenario==='unknown-serialized-recheck'&&name==='runtimeMemory:checkAuthority')throw new ConvexError(JSON.parse(JSON.stringify({code:'UNKNOWN',message:'PRIVATE',private:'PRIVATE'})));
+  if(scenario==='safe-plus-private-field')throw new ConvexError({...unavailable,private:'PRIVATE'});
+  if(scenario==='known-diagnostic-getters'){const e=new ConvexError(denied);for(const key of ['message','stack'])Object.defineProperty(e,key,{get(){diagnostics++;throw new Error('PRIVATE');}});throw e;}
+  if(name==='runtimeMemory:checkAuthority'){
+   const deletion={'late-principal-delete':['runtimeAuthPrincipals',f.principal],'late-membership-delete':['runtimeAuthMemberships',f.membership],'late-grant-delete':['runtimeAuthGrants',f.grant]}[scenario] as any;
+   if(deletion)f.db.rows.set(deletion[0],f.db.table(deletion[0]).filter(row=>row._id!==deletion[1]._id));
+   if(scenario==='late-tenant-epoch')f.db.table('runtimeAuthScopes').find(row=>row.memorySpaceId===undefined)!.epoch=2;
+   if(scenario==='late-space-epoch')f.db.table('runtimeAuthScopes').find(row=>row.memorySpaceId==='space-a')!.epoch=2;
+   if(scenario==='late-grant-expired')f.grant.expiresAt=0;
+   if(scenario==='late-capability-remove')f.grant.capabilities=[];
+   if(scenario==='mutate-original-authority'){full.tenantId='changed';full.capabilities=[];}
+  }
+  let result:any=await run(ref,input);
+  if(name==='runtimeAuth:authorize'){
+   full=result;
+   if(scenario==='null-prototype-authority')result=Object.assign(Object.create(null),result);
+   if(scenario==='only-space-id')delete result.memorySpaceEpoch;
+   if(scenario==='only-space-epoch')delete result.memorySpaceId;
+   if(scenario==='nonfinite-version')result.principalVersion=Infinity;
+   if(scenario==='nonenumerable-result')Object.defineProperty(result,'userId',{value:result.userId,enumerable:false});
+   if(scenario==='revoked-proxy-result'){const pair=Proxy.revocable(result,{});pair.revoke();result=pair.proxy;}
+  }
+  if(name==='runtimeMemory:checkAuthority'&&scenario==='recheck-reference-mismatch')result={...result,grantVersion:2};
+  return result;
+ };
+ let data:any;try{await registeredHandler(memory[operation])(f.actionCtx as never,{tenantId:'tenant-a',memorySpaceId:'space-a',text:'owned text',requestId:'independent'});}catch(e){data=(e as any).data;}
+ let expected=scenario==='healthy'||scenario==='mutate-original-authority'||scenario==='null-prototype-authority'?unavailable:scenario.startsWith('late-')||scenario==='known-diagnostic-getters'?denied:scenario.startsWith('only-space-')?{...denied,message:'A concrete authorized memory space is required'}:opaque;
+ assert.deepEqual(data,expected);assert.equal(f.db.writes,0);assert.deepEqual(business,[]);assert.equal(diagnostics,0);assert(trace.every(x=>['runtimeAuth:authorize','runtimeMemory:checkAuthority'].includes(x.name)));
+ if(trace[1]){assert.equal(trace[1].frozen,true);assert.equal(Object.keys(trace[1].json.reference).length,10);assert.equal(trace[1].json.capability,operation==='remember'?'write':'read');}
+ rows.push({operation,scenario,data,trace,businessReads:business,writes:f.db.writes,diagnosticReads:diagnostics});
+}
+fs.writeFileSync(qa+'/independent-probe.json',JSON.stringify(rows,null,2));console.log(JSON.stringify({cases:rows.length,passed:rows.length,zeroBusinessEffects:true}));

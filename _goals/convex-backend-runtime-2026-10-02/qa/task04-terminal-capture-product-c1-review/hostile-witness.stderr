@@ -1,0 +1,43 @@
+(node:131777) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/task04-terminal-capture-product-c1-review/hostile.test.ts
+  ✓ independent raw witness: transient read error changes pending to closed and healthy exact retry remains withheld (27 ms)
+  independent hostile outcomes
+    ✓ late expired-root revoked live refinement preserves exact original windows and initial identity (78 ms)
+    ✓ known inputTokens cannot disappear during refinement (69 ms)
+    ✓ known outputTokens cannot disappear during refinement (51 ms)
+    ✓ known totalTokens cannot disappear during refinement (45 ms)
+    ✓ known cachedInputTokens cannot disappear during refinement (22 ms)
+    ✓ known reasoningTokens cannot disappear during refinement (20 ms)
+    ✓ nonterminal legacy recovery keeps active slot then first genuine capture may settle (25 ms)
+    ✓ caller cannot assert qualification by receipt extra trust flags (18 ms)
+    ✓ partial capture marker denies ordinary replay with zero effects (28 ms)
+    ✓ parent cancellation closes pending child and renewal cannot reopen (39 ms)
+    ✕ unexpected eligibility read failure must propagate without permanently closing pending attachment (28 ms)
+
+  ● independent hostile outcomes › unexpected eligibility read failure must propagate without permanently closing pending attachment
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attached": false, "resultWithheld": true}
+
+      93 | async function deniedZero(f:ReturnType<typeof fixture>, action:()=>Promise<unknown>) {
+      94 |  const before=JSON.stringify([...f.db.rows]), writes=f.db.writes;
+    > 95 |  await expect(action()).rejects.toThrow(); expect(JSON.stringify([...f.db.rows])).toBe(before); expect(f.db.writes).toBe(writes);
+         |        ^
+      96 | }
+      97 | describe("independent hostile outcomes",()=>{
+      98 |  it("late expired-root revoked live refinement preserves exact original windows and initial identity",async()=>{
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedZero (work/resume/task04-terminal-capture-product-c1-review/hostile.test.ts:95:8)
+      at Object.<anonymous> (work/resume/task04-terminal-capture-product-c1-review/hostile.test.ts:144:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 11 passed, 12 total
+Snapshots:   0 total
+Time:        5.221 s, estimated 9 s
+Ran all test suites within paths "/workspace/Project-Cortex/work/resume/task04-terminal-capture-product-c1-review/hostile.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-product-c1-review/hostile-witness.results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,60 @@
+{
+  "profile": {
+    "profileId": "cortex-text-small-1536-v1",
+    "modelId": "openai/text-embedding-3-small",
+    "dimensions": 1536,
+    "normalization": "text-nfc-lf-v1",
+    "chunking": "codepoint-1600-overlap-200-v1",
+    "indexName": "by_default_embedding_v1"
+  },
+  "profileSourceSHA256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+  "profileCanonical": "{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"}",
+  "profileCanonicalBytes": 215,
+  "numberProof": {
+    "binary64SignificandBits": 53,
+    "roundtripDecimalDigitsUpperBound": 17,
+    "roundingInequality": {
+      "left": "90071992547409920",
+      "right": "100000000000000000",
+      "meaning": "5e-17 < 2^-54, strict candidate decimal rounding error less than minimum relative binary64 midpoint distance"
+    },
+    "nRange": [
+      -323,
+      309
+    ],
+    "finiteJSONStringMaximumBytes": 25,
+    "allNotationShapesExhausted": 21522,
+    "maximumShapes": [
+      {
+        "n": -5,
+        "k": 17,
+        "negative": true,
+        "length": 25
+      }
+    ],
+    "attainingRealNumber": "-0.0000012345678901234567",
+    "attainingRealNumberBytes": 25,
+    "proofIsFiniteNumberSamplesOnly": false
+  },
+  "textEnvelope": {
+    "canonicalEmpty": "{\"text\":\"\"}",
+    "fixedBytes": 11,
+    "conditionalMaximum": "128*M+11",
+    "M64": 8203,
+    "M256": 32779
+  },
+  "defaultEmbeddingEnvelope": {
+    "grammar": "canonical {profile:exactDefault,vectors:[oneArrayOf1536FiniteCanonicalNumbers]}",
+    "emptyEnvelopeCanonical": "{\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"vectors\":[[]]}",
+    "fixedBytesIncludingEmptyArrayBrackets": 242,
+    "numberCount": 1536,
+    "numberMaxBytes": 25,
+    "commaCount": 1535,
+    "maximumPrivateBytes": 40177,
+    "witnessSHA256": "fe046e580d6b2873d3a5982ad51fc21d633471310afbcd89e2a35eb18beb1d5c",
+    "fits60000": true,
+    "secondVectorNotAllowedByAcceptedB": true,
+    "negativeZero": "domain canonical rejects -0; no normalization introduced"
+  },
+  "actualModelReadiness": "NOT_RUN"
+}

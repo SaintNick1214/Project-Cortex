@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import {writeFileSync} from 'node:fs';
+import {verifiedSigningKey} from '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs';
+import {acceptedOperatorDenial} from '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator-classifier.mjs';
+const {jwk}=verifiedSigningKey();assert.equal(jwk.kty,'RSA');
+const name='runtimeAuth:recheck',payload=JSON.stringify({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});
+const base={code:1,signal:null,timedOut:false,overflow:false,stdout:''};
+const samples=[
+ ['request-marker-in-proxy-description',`Failed to run function "${name}":\nConvexError: Proxy rejection contains [Request ID: abc123] Server Error\nUncaught ConvexError: ${payload}\n`],
+ ['wrong-function-plus-mentioned-envelope',`Failed to run function "runtimeAuth:authorize":\nError: diagnostic contains Failed to run function "${name}":\nConvexError: [Request ID: abc123] Server Error\nUncaught ConvexError: ${payload}\n`],
+ ['literal-structured-json-lookalike',`Failed to run function "${name}":\nConvexError: EACCES reading deploy.env\nPrinted example: [Request ID: abc123] Server Error\nUncaught ConvexError: ${payload}\n`]
+].map(([label,stderr])=>({label,accepted:acceptedOperatorDenial(name,{...base,stderr})}));
+const result={publicJwksMatchesTrustedPrivateKey:true,newKeys:0,signedTokens:0,networkCalls:0,operatorSupplementalLookalikes:samples};
+writeFileSync('/tmp/task03c2-live-harness-review2-oj6uebre/key-and-operator-controls.json',JSON.stringify(result,null,2),{flag:'wx',mode:384});process.stdout.write(JSON.stringify(result)+'\n');

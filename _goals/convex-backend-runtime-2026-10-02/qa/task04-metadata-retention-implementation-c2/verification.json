@@ -1,0 +1,637 @@
+{
+  "scope": "OFFLINE C2; no actual qualification",
+  "preservedOriginalAssertions": [
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/adapter.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/adapter.mjs",
+      "sha256": "b9b9ec095819e35107c9a52f8f62c6fa3f66df8e182251f038d64c860dcfb2b4"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/all.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/all.mjs",
+      "sha256": "01fabe953bc8cd609708aa7ee2142d49ff5e3f53256d11338846bec01b0e350e"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-admission.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-admission.mjs",
+      "sha256": "b4611f3300c30ea85bf12680b06d2fe7077c2562575ac790855fd888ae8a8a41"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability-c10.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-capability-c10.mjs",
+      "sha256": "3254cffee9093b902b5b66cd5e5afa93d2471aad557f1ba6ad90ab7662bb95b5"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-capability.mjs",
+      "sha256": "0a51d46d2e0347d48e36d803e573df73eb66a579c8c0075f4c57ba63a79401bd"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-collect-original-groups.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-collect-original-groups.mjs",
+      "sha256": "a377f2a7e559daaaae1b38751c2d11f2e3705f102bd9d9da31e5be2496750afd"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-owned.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-owned.mjs",
+      "sha256": "be679cb8312f01c66e624595ae1182db9aac87e4942ca2a366d1eb2f94f99f8c"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-prefix-helpers.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-prefix-helpers.mjs",
+      "sha256": "b78e8bafbcdbf16047cd0bced78fcbda9c78c52ef0c56c23eaf8e730b2f60e0a"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-reader-dependencies.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-reader-dependencies.mjs",
+      "sha256": "9c8686338f9e5821ffe168be5d4577852a66fa4e9700dc1d354d0f714243e56b"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-retained-refinements.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-retained-refinements.mjs",
+      "sha256": "6fe7f5ec05d5abc54a342281cb812825f164695f0bcfb596c8bb353a1388de99"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-stage-phase.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-stage-phase.mjs",
+      "sha256": "fcc3b56e6697b4cb6e08e7e1d7876eb75cd7f5e5b33c5ab22b542bd81bbcc66a"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-stream.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/c2-stream.mjs",
+      "sha256": "0184ae4717c0b5aa9523c51ba169c841e6456a200b9c6c125c0a9a8cb84cee24"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/controls.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/controls.mjs",
+      "sha256": "f56e5030a6231bfaa3c561059e13a6506a6e74a7712a5de62be597c7102b0552"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/harness.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/harness.mjs",
+      "sha256": "c9a9441d7976c7fa5f9cdc432e9b2898008d3673bafe0b3828ba2039f88de1cc"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-account-load.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-account-load.mjs",
+      "sha256": "cef2db9eb213601980017cb5530003acd3760340759d056d4ad0f3795c657188"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-async.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-async.mjs",
+      "sha256": "0ee326a2a03069ae72a88646f72d39a09edc457a3a4e0b5211c016688079b870"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-codec.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-codec.mjs",
+      "sha256": "78e95553d5e41a755f54850b56400f0b2a95e6f7c5056e4075f85a9fa9663106"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-late.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-late.mjs",
+      "sha256": "84942735f8a0e9f5b4bbe1c2b007ecb5e50790777f2a813afd0443dfa4544536"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-money.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-money.mjs",
+      "sha256": "6921ac95e275024ce5cacbb3e8d46d94079545e5bebca4e4e1d5ac64fa7937c6"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-prefix.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-prefix.mjs",
+      "sha256": "42d6959ff24717a11924cd5ebef30e8ad882bf0714fc9e60364933b7133668c1"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-reader.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-reader.mjs",
+      "sha256": "e7b815b963c43e965d9ebbd886c2ab9d4716e13828ec7b7ce4719e49b43b9a33"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-stage-wait.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-stage-wait.mjs",
+      "sha256": "8809505382d99e38ca0550715d52f3ddf7d6295f3f4b9a9ad602dd85ab11306b"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-stage-window.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-stage-window.mjs",
+      "sha256": "0be6ff3834ca6d18aabc06a5821fa522e8a1f366c8d2a683359dec68a343791e"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-staging.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-staging.mjs",
+      "sha256": "a20dd71d7fa7904bf06945fd26d6635a1a15969f1d43b7802d8e5a0c50665e32"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-stream.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent-stream.mjs",
+      "sha256": "ae4a97826e23b10c9fc09fed7384c3adb7328e3f72f53b632cd2f8ff6b773ac9"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/independent.mjs",
+      "sha256": "c21e1bede9bb877f336ab8df8d864a1f931dd047b47ba638fb4bcf708a886696"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/late-accounting.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/late-accounting.mjs",
+      "sha256": "5d3b4fa479b2d037c9a67759680dc7c7227d83d6f942282d2a9bf25bf134d42f"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/lifecycle.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/lifecycle.mjs",
+      "sha256": "69dcf8fa9af0b56a71d5a2aebf33bd75ab9b511549bab3d796db7f326f5d3f58"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/managed.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/managed.mjs",
+      "sha256": "9f773be684c650fc6f475702d0d302b088d738aef07a36917f963045e18144a6"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/observer.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/observer.mjs",
+      "sha256": "7b3168395516b0a0470336306679f7a8c9f90a6bcb5b6c1929a8def2f3e8cd06"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/proofs.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/proofs.mjs",
+      "sha256": "5312eb0705a2e33656697cb2e00e2c87751b815917376aac4c9f62d4601441a1"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/reader-wrapper.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/reader-wrapper.mjs",
+      "sha256": "881a011133e7e2f74bb6e5deea41928e18540df21fcd570e13f583f164df4cff"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/runner.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/runner.mjs",
+      "sha256": "08e53192902c0f971456e5583d6184439762d21c72c0831d5d4aef221c654787"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/schema-adverse.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/schema-adverse.mjs",
+      "sha256": "be90d3f7b4ede588de4ac7ca9e4aa7bf856b454b89daf8530d197e9ac4ac1690"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/eslint.config.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/eslint.config.mjs",
+      "sha256": "ff4e17e06639d00231a544f48b9431e41895e6f589ab5aa07883a915f158ddd8"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/canonical.ts",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/convex/canonical.ts",
+      "sha256": "ac599b8b2bd1a917f1e9b5b8c6e90565fe4ddbc9d660d99c4b9faffa450fb8b6"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/compiled.ts",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/convex/compiled.ts",
+      "sha256": "316e64e513049dd401758f2d74b61f7c7a09c5f50e24344438627178c5ccf354"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/guard.ts",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/convex/guard.ts",
+      "sha256": "5bcb1c1de8c449673cf5756bd6c8fb0acbae46fb187cb900b83779369059b979"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/runner.ts",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/convex/runner.ts",
+      "sha256": "b7dcf40969231afe4b813b93c3a8d35a0f5bbf15fd270bf27cc12c73ad30181b"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/convex/schema.ts",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/convex/schema.ts",
+      "sha256": "9708cf57a155968f185f044d13e0e822cb0a4fcbc4a52c20130eacbb5442d3ae"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/package.json",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/package.json",
+      "sha256": "58f0c93393f5f1dcbd72fd813353fe96109b95754d9ffaefb3608713e19a6583"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/fixture/tsconfig.json",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/fixture/tsconfig.json",
+      "sha256": "2faa9c9c3403560bb9cf3b546c55e514272ede6dd0005dfa723ef7c938ae5ee6"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/initial14-manifest.json",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/initial14-manifest.json",
+      "sha256": "6588994a04a5d7a2ead13bf80c82b1e5b0a11c4bf44a5cc1f40d0b85cc16d1ae"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/hostile.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/scripts/hostile.mjs",
+      "sha256": "fbf1bbfa41bb378a385321cdb49030a808b0988ec4e78ed523d5d3454eba1d8e"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/independent.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/scripts/independent.mjs",
+      "sha256": "a059cdbc8a750cfa48cdc2e05df11cbcd9e84be23ad98102e11cac8161291ecb"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/offline-check.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/scripts/offline-check.mjs",
+      "sha256": "e04d5f128fa16da8ec96dfb8862d405a9c170a15130b9b1076df0fdbff1fb2ce"
+    },
+    {
+      "candidate": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/refinement-check.mjs",
+      "historical": "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/regression/v1-c2/scripts/refinement-check.mjs",
+      "sha256": "63031b77418daf4bc0265e33a5a2af0a611dd0cf6e3e44ba25e4799db964a7c6"
+    }
+  ],
+  "unchangedModules": [
+    {
+      "name": "canonical.ts",
+      "sha256": "7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860"
+    },
+    {
+      "name": "cases.ts",
+      "sha256": "be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248"
+    },
+    {
+      "name": "contracts.ts",
+      "sha256": "f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031"
+    },
+    {
+      "name": "convex.config.ts",
+      "sha256": "83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b"
+    },
+    {
+      "name": "guard.ts",
+      "sha256": "7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3"
+    },
+    {
+      "name": "lifecycle.ts",
+      "sha256": "fcd9e057a86a894156f291aa83e67ca71b5184908a70f11c92ef8f74f0b2e36a"
+    },
+    {
+      "name": "managed.ts",
+      "sha256": "95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106"
+    },
+    {
+      "name": "proofs.ts",
+      "sha256": "a91d4b78e505f3b204f41f38e21096922f10444ca37c40ab4b9cc2c5dd7a41c1"
+    },
+    {
+      "name": "repository-codec.ts",
+      "sha256": "1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930"
+    },
+    {
+      "name": "requests.ts",
+      "sha256": "24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f"
+    },
+    {
+      "name": "schema.ts",
+      "sha256": "114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7"
+    },
+    {
+      "name": "store.ts",
+      "sha256": "af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8"
+    },
+    {
+      "name": "validate.ts",
+      "sha256": "b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab"
+    }
+  ],
+  "changes": [
+    {
+      "name": "installed.ts",
+      "sha256": "5d839c6728fdd1a0ccbfb2eb54075377ecf24ddfdafdd6730a449d465dbe3227",
+      "historicalSha256": "0cb8f53d1ac725d7d99c9b5a86185974998659d54b410878f166bbd8f9d86ffc"
+    },
+    {
+      "name": "observation-builder.ts",
+      "sha256": "9177ca05b01de96d176a42377e7f730c458738d9bf3676475ed42ac1efaee635",
+      "historicalSha256": null
+    },
+    {
+      "name": "observer.ts",
+      "sha256": "ba4dc648f4747b14aec7f90a7e76a2776ac99c71d74bff48847f7712af3b5346",
+      "historicalSha256": "177e863bd1cf111eef1834c8437badd73956b765d1e0a15fccb33f6a08c81cb9"
+    },
+    {
+      "name": "provider-cost.ts",
+      "sha256": "6eca67ac8d6a6193b295cc09a66085d25cca66403b2c23d65d9958b6b7d49bcb",
+      "historicalSha256": "aa0b9989087d8894121ccf9dcf1cb86fcd0545b82804cd5fd0f382e06a20a9c4"
+    },
+    {
+      "name": "runner.ts",
+      "sha256": "52913cbb9aba896756268a579d6e9a51b5ae28b53b18c5e4a826bd20ce55a224",
+      "historicalSha256": "de45d1e1fa051e72ad159081703b9f57cc056bc17211496311ed87ed98f71566"
+    },
+    {
+      "name": "stage-pins.ts",
+      "sha256": "b39fd9b30560ddcce78a11032ceb4a9d076d0e08976aa884545d93e738025154",
+      "historicalSha256": "022970a79d6ecac77c2114862b25a6cba1413542bc80d7f1fb3d293c8f605eb1"
+    }
+  ],
+  "captureReferences": 11353,
+  "sourceObjects": 121,
+  "metadata16AssertionBodyEqual": true,
+  "otherNewC1ControlsFullBytesEqual": true,
+  "historicalConstructionOnlyImportPathChanged": true,
+  "capsule": {
+    "status": "UNINSTALLED_SYNTHETIC_OFFLINE_CAPSULE",
+    "nativeEnabled": false,
+    "privateKey": null,
+    "actualProofs": [],
+    "designSha256": "155af8a352dc1d19da2910200cba97496ce1115b53c4f3af2b2dc981c32e7f09",
+    "manifestHash": "a26944db6ca8a81b80084bb9ed1984671b2e9c065502cede10ab04935ae8ba75",
+    "installedClosureHash": "1af8d7dc5d08f8e11681c1edf3a85cdcdc029735ce165d64015939e9db220b67",
+    "sourceHash": "daa5a12545a7ca28b49280a24abae24029ee01862c4561d0800a156b072feba7",
+    "distinctKeyId": "16b41562d1da20971283827341fb52f8000148eee886e0d1bc702dfcaf867a00",
+    "issuerVerifierHash": "52913cbb9aba896756268a579d6e9a51b5ae28b53b18c5e4a826bd20ce55a224",
+    "exactSourceModules": {
+      "canonical.ts": "7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860",
+      "cases.ts": "be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248",
+      "contracts.ts": "f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031",
+      "convex.config.ts": "83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b",
+      "guard.ts": "7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3",
+      "lifecycle.ts": "fcd9e057a86a894156f291aa83e67ca71b5184908a70f11c92ef8f74f0b2e36a",
+      "managed.ts": "95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106",
+      "observation-builder.ts": "9177ca05b01de96d176a42377e7f730c458738d9bf3676475ed42ac1efaee635",
+      "observer.ts": "ba4dc648f4747b14aec7f90a7e76a2776ac99c71d74bff48847f7712af3b5346",
+      "proofs.ts": "a91d4b78e505f3b204f41f38e21096922f10444ca37c40ab4b9cc2c5dd7a41c1",
+      "provider-cost.ts": "6eca67ac8d6a6193b295cc09a66085d25cca66403b2c23d65d9958b6b7d49bcb",
+      "repository-codec.ts": "1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930",
+      "requests.ts": "24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f",
+      "runner.ts": "52913cbb9aba896756268a579d6e9a51b5ae28b53b18c5e4a826bd20ce55a224",
+      "schema.ts": "114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7",
+      "store.ts": "af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8",
+      "validate.ts": "b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab"
+    },
+    "selfReferences": "installed.ts and stage-pins.ts are external capsule leaves; exact leaf pins recorded in final source manifest, excluded from generating their own hash"
+  },
+  "leafPins": {
+    "installed.ts": "5d839c6728fdd1a0ccbfb2eb54075377ecf24ddfdafdd6730a449d465dbe3227",
+    "stage-pins.ts": "b39fd9b30560ddcce78a11032ceb4a9d076d0e08976aa884545d93e738025154"
+  },
+  "encodedSourceBytes": 371896,
+  "historicalC1FullSealUnchanged": {
+    "rows": 2497,
+    "sha256": "77587788d0d398da6d349399a872f5e91b566b91df79607994117a51c36852a2"
+  },
+  "allOwnRegularFilesNlink1": true,
+  "finalControls": {
+    "final-construction": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-construction.mjs"
+      ],
+      "stdoutSha256": "2b69ea6307c78f81905f84289ddf090000e3d6f881ce4ef04dc07623a88f4e42",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-metadata-collected": {
+      "exit": 1,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-collection.mjs"
+      ],
+      "stdoutSha256": "b293a092d40b97de4326d45fae9ca484fe52d3090cc0c00bd6750e7449ee885d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-metadata-resource-01": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-resource.mjs"
+      ],
+      "stdoutSha256": "ce791605b0244ce5181066163659acd32bf104e2e08b6eacf1da8660633cbaff",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-official-denials": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-official-denials.mjs"
+      ],
+      "stdoutSha256": "21f39cada5a476002da7113ac4c03c74d191831247578d26a788fb00ccc92110",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-c2-admission": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-admission.mjs"
+      ],
+      "stdoutSha256": "7c5de5daa0e0d9dc41b36d31c745199f67ecfb179a3841995cb9f93d33e6d5dd",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-c2-collect-original-groups": {
+      "exit": 1,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-collect-original-groups.mjs"
+      ],
+      "stdoutSha256": "db23c0e6f706b890cad0b6f7d5c4c82c4829bbb8cf1f7a82944bd3a38327a283",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-c2-owned": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-owned.mjs"
+      ],
+      "stdoutSha256": "091304fba76938cedeac44b6b6ec90013285b9e13f3994ae155433b5d0bdf8e2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-c2-retained-refinements": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-retained-refinements.mjs"
+      ],
+      "stdoutSha256": "df6c71dd287aac59f31ee3fad207080b9f5a178d38eb184d9a727b00c15c609f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-c2-stream": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-stream.mjs"
+      ],
+      "stdoutSha256": "5f2318bc56e9b57b46b1c6a028dcedfb399d3870da627008b6668115e707a515",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-independent-account-load": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-account-load.mjs"
+      ],
+      "stdoutSha256": "147c9e490f18a6300d0285ca03b24987371e30cdbe160bb76a869225678f0475",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-independent-async": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-async.mjs"
+      ],
+      "stdoutSha256": "bfaa034203a897839b3a286c6d9b812a38abc069dce5fff4da4f7c8f7726c841",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-independent-codec": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-codec.mjs"
+      ],
+      "stdoutSha256": "b737466cdff8f0cee848cbacc0b27a24e4e8bd5aa8324935c793abd80dd103bf",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-independent-money": {
+      "exit": 1,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-money.mjs"
+      ],
+      "stdoutSha256": "2f4d9a5c7153d6c422ffda379e7629502b520c6e617099be7d043fc9a8b86b9a",
+      "stderrSha256": "209464f3c46d3bf0f7687c2e59da4f50775eb84a752e5b131c72b59f98e52387"
+    },
+    "final-store-final-independent": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent.mjs"
+      ],
+      "stdoutSha256": "8d58b0ecbf7acda56443b1b1ea7376be85400d3e663ef0b45048ce209313f184",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-metadata-purge": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-purge.mjs"
+      ],
+      "stdoutSha256": "a43a273ffdd9abe082b0b5adbebb6646ede7ab416576b21fd9f2eea166439d71",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-metadata-stage": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-stage.mjs"
+      ],
+      "stdoutSha256": "be4707f3db6edceeb058eaa2838fcc53774bcdd854dd3aeaa05194f294952bb8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-regression-hostile": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/hostile.mjs"
+      ],
+      "stdoutSha256": "6a779add53bf9401c54908d85fa26c72878aa36746cc07dfa5575edcf6fc5893",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-regression-independent": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/independent.mjs"
+      ],
+      "stdoutSha256": "fc1d558dcd5e8de7f3508b0e02ee030d732501b2be6ecc210cce1b946d04e389",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-regression-offline-check": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/offline-check.mjs"
+      ],
+      "stdoutSha256": "265b3bf3f6517d99e424d8bcfe7a468114139849c73b2106a61a889fc7ab0dfd",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-final-regression-refinement-check": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/refinement-check.mjs"
+      ],
+      "stdoutSha256": "5c700af963794686bc74fbb07523c1b0376e814ceb175841f0863c616f240a6c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-retry-adapter": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/adapter.mjs"
+      ],
+      "stdoutSha256": "44fd2d055c74d2c526b5b8be4eba1acb78bbbf1e3a664524da78e018073f9e72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-retry-c2-capability-c10": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability-c10.mjs"
+      ],
+      "stdoutSha256": "70b4859de9b81e3f580e71dc96752ff1e7f3aefa2619d599161ed7e69c766b15",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-store-retry-c2-capability": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability.mjs"
+      ],
+      "stdoutSha256": "295819b244ed38af29d0cb0e254315e3a50792c49a62a28a95f9abb4d25dad22",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-strict-types": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/tsconfig.json"
+      ],
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-strict-types-vm": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/tsconfig.json"
+      ],
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-suite": {
+      "exit": 0,
+      "argv": [
+        "python3",
+        "work/resume/task04-metadata-retention-implementation-c2/rerun-final.py"
+      ],
+      "stdoutSha256": "d72d1cb5dee40dd67ecb1eb416b17502f694989ac33c6afb19781a8493c5964a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-typed-lint-complete": {
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "-c",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex"
+      ],
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-verification": {
+      "exit": 1,
+      "argv": [
+        "python3",
+        "work/resume/task04-metadata-retention-implementation-c2/verify.py"
+      ],
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "db4067c14826767f9ac2e7ca4391f34d7531b3d99fb4b60b0c572e012b6e50e5"
+    }
+  }
+}

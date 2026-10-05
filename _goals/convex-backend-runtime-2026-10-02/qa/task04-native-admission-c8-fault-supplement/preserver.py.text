@@ -1,0 +1,25 @@
+import datetime,hashlib,json,pathlib
+s=pathlib.Path('work/backend-runtime/task04-native-admission-c8');q=pathlib.Path('_goals/convex-backend-runtime-2026-10-02/qa');p=q/'task04-native-admission-c8-fault-supplement';p.mkdir()
+sha=lambda b:hashlib.sha256(b).hexdigest()
+retention=json.loads((q/'task04-native-admission-c8-execution/private-artifact-retention.json').read_text());physical=set()
+for f in s.glob('owned-*.json'):
+ j=json.loads(f.read_text())
+ if 'table' in j and 'id' in j:physical.add(j['id'])
+for n in ['historical-native-locators.json','argument-scope.json']:physical.update(json.loads((s/n).read_text())['ids'].values())
+secrets={json.loads(f.read_text())['peerSecret'] for f in s.glob('fault-input-*.json')}
+replace={v:'<physical-id-sha256:'+sha(v.encode())+'>' for v in physical};replace.update({v:'<retired-peer-secret-sha256:'+sha(v.encode())+'>' for v in secrets})
+def redact(v):
+ if isinstance(v,dict):return {k:redact(x) for k,x in v.items()}
+ if isinstance(v,list):return [redact(x) for x in v]
+ if isinstance(v,str):
+  for a,b in replace.items():v=v.replace(a,b)
+ return v
+records=[]
+for row in retention['blockedPublicCopies']:
+ f=pathlib.Path(row['source']);raw=f.read_bytes();assert sha(raw)==row['sha256'] and len(raw)==row['bytes'];j=redact(json.loads(raw));body=(json.dumps(j,indent=2)+'\n').encode();assert not any(v.encode() in body for v in replace);n=f.name+'.redacted.json';(p/n).open('xb').write(body);records.append({'source':str(f),'originalBytes':len(raw),'originalSHA256':sha(raw),'redactedArtifact':n,'redactedSHA256':sha(body),'claim':'Original raw remains private and unchanged; only native physical IDs and retired peer-secret substrings replaced'})
+(p/'source-bindings.json').open('x').write(json.dumps({'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'records':records,'originalExecutionManifestSHA256':sha((q/'task04-native-admission-c8-execution/qa-manifest.json').read_bytes()),'originalsModified':False,'retired':True},indent=2)+'\n')
+(p/'preserver.py.text').open('xb').write(pathlib.Path(__file__).read_bytes())
+(p/'report.md').open('x').write('# C8 native fault supplement\n\nNine original fault witnesses/inputs were excluded from public execution copies because of physical IDs or the retired peer secret. This supplement retains exact original byte/hash bindings and consistently redacted JSON; source originals remain private and unchanged. Numeric/outcome/timing/accounting/process evidence is retained; placeholders are not original bytes or platform locator proof. No network, services, signing, model calls, rows, storage or original packet edits. Native aggregate judgment remains pending.\n')
+files=[{'path':str(f.relative_to(p)),'bytes':f.stat().st_size,'sha256':sha(f.read_bytes())} for f in sorted(p.rglob('*')) if f.is_file()]
+(p/'qa-manifest.json').open('x').write(json.dumps({'selfExcluded':'qa-manifest.json','files':files},indent=2)+'\n')
+print(json.dumps({'sourceFaultWitnesses':len(records),'manifestRows':len(files),'manifestSHA256':sha((p/'qa-manifest.json').read_bytes()),'originalsUnchanged':True}))

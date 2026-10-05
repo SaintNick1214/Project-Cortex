@@ -1,0 +1,85 @@
+   1: import type { MutationCtx } from "../../../convex-dev/_generated/server";
+   2: 
+   3: type Row = Record<string, unknown> & { _id: string; _creationTime: number };
+   4: export function registeredHandler<Args, Result>(registration: unknown): (ctx: MutationCtx, args: Args) => Promise<Result> {
+   5:   return (registration as { _handler: (ctx: MutationCtx, args: Args) => Promise<Result> })._handler;
+   6: }
+   7: function field(row: Row, path: string): unknown {
+   8:   return path.split(".").reduce<unknown>((value, key) => value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined, row);
+   9: }
+  10: export class MetadataTestDb {
+  11:   rows = new Map<string, Row[]>();
+  12:   writes = 0;
+  13:   attemptedWrites = 0;
+  14:   sequence = 0;
+  15:   table(name: string): Row[] { if (!this.rows.has(name)) this.rows.set(name, []); return this.rows.get(name)!; }
+  16:   seed(table: string, value: Record<string, unknown>): Row {
+  17:     const row = { ...value, _id: typeof value._id === "string" ? value._id : `${table}:${++this.sequence}`, _creationTime: 1000 };
+  18:     this.table(table).push(row); return row;
+  19:   }
+  20:   query(table: string) {
+  21:     const filters: [string, unknown][] = [];
+  22:     let predicate: (row: Row) => boolean = () => true;
+  23:     const selected = () => this.table(table).filter((row) => filters.every(([key, value]) => field(row, key) === value) && predicate(row)).map((row) => structuredClone(row));
+  24:     const builder = {
+  25:       withIndex: (_name: string, callback: (q: { eq(key: string, value: unknown): unknown }) => unknown) => {
+  26:         const q: { eq(key: string, value: unknown): typeof q } = { eq: (key, value) => { filters.push([key, value]); return q; } };
+  27:         callback(q); return builder;
+  28:       },
+  29:       filter: (callback: (q: {
+  30:         field(name: string): string; eq(name: string, value: unknown): (row: Row) => boolean;
+  31:         and(...predicates: ((row: Row) => boolean)[]): (row: Row) => boolean;
+  32:         or(...predicates: ((row: Row) => boolean)[]): (row: Row) => boolean;
+  33:         neq(name: string, value: unknown): (row: Row) => boolean;
+  34:       }) => (row: Row) => boolean) => {
+  35:         predicate = callback({ field: (name) => name, eq: (name, value) => (row) => field(row, name) === value,
+  36:           neq: (name, value) => (row) => field(row, name) !== value,
+  37:           or: (...predicates) => (row) => predicates.some((test) => test(row)),
+  38:           and: (...predicates) => (row) => predicates.every((test) => test(row)) }); return builder;
+  39:       },
+  40:       first: async () => selected()[0] ?? null,
+  41:       unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Nonunique canonical index"); return rows[0] ?? null; },
+  42:       collect: async () => [...selected()], take: async (limit: number) => selected().slice(0, limit),
+  43:     };
+  44:     return builder;
+  45:   }
+  46:   normalizeId(table: string, id: string): string | null { return id.startsWith(`${table}:`) ? id : null; }
+  47:   async get(table: string, id: string): Promise<Row | null> { return structuredClone(this.table(table).find((row) => row._id === id) ?? null); }
+  48:   async insert(table: string, value: Record<string, unknown>): Promise<string> { this.attemptedWrites++; this.writes++; const id = this.seed(table, structuredClone(value))._id; this.afterWrite?.(); return id; }
+  49:   afterWrite?: () => void;
+  50:   async patch(table: string, id: string, value: Record<string, unknown>): Promise<void> {
+  51:     const row = this.table(table).find((candidate) => candidate._id === id);
+  52:     if (!row) throw new Error("Missing row"); Object.assign(row, structuredClone(value)); this.attemptedWrites++; this.writes++; this.afterWrite?.();
+  53:   }
+  54:   async replace(table: string, id: string, value: Record<string, unknown>): Promise<void> {
+  55:     const rows = this.table(table); const index = rows.findIndex((row) => row._id === id);
+  56:     if (index < 0) throw new Error("Missing row"); this.attemptedWrites++; this.writes++;
+  57:     rows[index] = { ...structuredClone(value), _id: id, _creationTime: rows[index]!._creationTime };
+  58:   }
+  59:   async transaction<T>(run: () => Promise<T>): Promise<T> {
+  60:     const before = structuredClone(this.rows); const writes = this.writes; const sequence = this.sequence;
+  61:     try { return await run(); } catch (error) { this.rows = before; this.writes = writes; this.sequence = sequence; throw error; }
+  62:   }
+  63: }
+  64: 
+  65: export function fixture(options: { capabilities?: string[]; access?: string; space?: string } = {}) {
+  66:   const db = new MetadataTestDb();
+  67:   const principal = db.seed("runtimeAuthPrincipals", { issuer: "https://host.test", subject: "user-a", actorKind: "user", metadataUserId: "alice", version: 1, createdAt: 1000 });
+  68:   const membership = db.seed("runtimeAuthMemberships", { principalId: principal._id, tenantId: "tenant-a", version: 1, createdAt: 1000 });
+  69:   db.seed("runtimeAuthScopes", { tenantId: "tenant-a", epoch: 1, createdAt: 1000 });
+  70:   if (options.space) db.seed("runtimeAuthScopes", { tenantId: "tenant-a", memorySpaceId: options.space, epoch: 1, createdAt: 1000 });
+  71:   const grant = db.seed("runtimeAuthGrants", { principalId: principal._id, membershipId: membership._id,
+  72:     tenantId: "tenant-a", ...(options.space ? { memorySpaceId: options.space, memorySpaceEpoch: 1 } : {}), tenantEpoch: 1,
+  73:     capabilities: options.capabilities ?? ["read", "write"], resourceAccess: options.access ?? "own", version: 1, createdAt: 1000 });
+  74:   const reference = { principalId: principal._id, principalVersion: 1, membershipId: membership._id, membershipVersion: 1,
+  75:     grantId: grant._id, grantVersion: 1, tenantId: "tenant-a", tenantEpoch: 1, ...(options.space ? { memorySpaceId: options.space, memorySpaceEpoch: 1 } : {}) };
+  76:   const ctx = { db, auth: { getUserIdentity: async () => ({ issuer: "https://host.test", subject: "user-a" }) } } as unknown as MutationCtx;
+  77:   const seedImmutable = (value: Record<string, unknown> = {}) => db.seed("immutable", { tenantId: "tenant-a", memorySpaceId: options.space, ownerPrincipalId: principal._id,
+  78:     type: "note", id: "one", userId: "alice", data: { secret: "old" }, version: 1, previousVersions: [], createdAt: 1000, updatedAt: 1000, ...value });
+  79:   const seedMutable = (value: Record<string, unknown> = {}) => db.seed("mutable", { tenantId: "tenant-a", memorySpaceId: options.space, ownerPrincipalId: principal._id,
+  80:     namespace: "counter", key: "one", userId: "alice", value: 5, createdAt: 1000, updatedAt: 1000, ...value });
+  81:   const seedSession = (value: Record<string, unknown> = {}) => db.seed("sessions", { tenantId: "tenant-a", memorySpaceId: options.space, ownerPrincipalId: principal._id,
+  82:     sessionId: "one", userId: "alice", authorityReference: reference, status: "active", startedAt: 1000, lastActiveAt: 1000, messageCount: 0, memoryCount: 0, ...value });
+  83:   const run = async (registration: unknown, args: unknown = {}) => await db.transaction(async () => await registeredHandler<unknown, unknown>(registration)(ctx, args));
+  84:   return { db, ctx, principal, membership, grant, reference, seedImmutable, seedMutable, seedSession, run };
+  85: }

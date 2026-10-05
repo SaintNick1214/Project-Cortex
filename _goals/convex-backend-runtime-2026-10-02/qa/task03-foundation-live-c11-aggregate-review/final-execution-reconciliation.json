@@ -1,0 +1,87 @@
+{
+  "utc": "2026-10-04T01:04:56.925472+00:00",
+  "scope": "FINAL_C11_INDEPENDENT_PACKET_RECONCILIATION",
+  "executionPacketFiles": 29,
+  "executionManifestMatched": 28,
+  "executionManifestSha256": "a83cb26c81eb31cae674d0b5915d2cc3a78b02a23203a3d309202c7b29931873",
+  "manifestSha256": "e2b015f14d57692544cf73242e1a5bd784b342b43a0d3c1e6d0ecdb5b0c2fbc6",
+  "frozenRowsMatched": 622,
+  "journalRows": 4228,
+  "journalEqualsOutcomes": true,
+  "phases": {
+    "rpc-observation": 2099,
+    "healthy-batch-fixture": 2,
+    "healthy-policy-fixture": 1,
+    "authorization": 1400,
+    "authorization-effect-snapshot": 200,
+    "uniform-unavailability": 262,
+    "internal-visibility": 118,
+    "functional-family": 130,
+    "authority-boundaries": 8,
+    "lifecycle": 6,
+    "diagnostics": 1,
+    "terminal": 1
+  },
+  "publicCartesianCases": 1400,
+  "publicCompleteNoEffects": 200,
+  "closures": 262,
+  "closurePaths": 67,
+  "internalVisibilityCases": 118,
+  "functionalMRA": 122,
+  "functionalMWD": 8,
+  "authorityCases": 8,
+  "SDKCases": 6,
+  "officialCodegenEnabledTypecheck": true,
+  "generatedBindingHashMatches": [
+    {
+      "path": "fixture/convex/_generated/api.d.ts",
+      "sha256": "c4ac2a8cbc611ff6bff886239ac57929e7b0fd53962d9b1c08ce855340f27edd",
+      "matches": true
+    },
+    {
+      "path": "fixture/convex/_generated/api.js",
+      "sha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
+      "matches": true
+    },
+    {
+      "path": "fixture/convex/_generated/dataModel.d.ts",
+      "sha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
+      "matches": true
+    },
+    {
+      "path": "fixture/convex/_generated/server.d.ts",
+      "sha256": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b",
+      "matches": true
+    },
+    {
+      "path": "fixture/convex/_generated/server.js",
+      "sha256": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2",
+      "matches": true
+    }
+  ],
+  "nativePublicationTuples": 269,
+  "allParentProcessesExit0": true,
+  "cleanupComplete": true,
+  "deployTerminalGroups": 1,
+  "driverTerminalGroups": 1,
+  "remainingGroups": 0,
+  "recoveryNeeded": false,
+  "retirementReviewed": {
+    "version": 1,
+    "operation": "5987fed9-776f-4aae-942b-b081e7457740",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T01:01:28.727Z",
+    "observedAt": "2026-10-04T01:01:29.075Z",
+    "projectId": 3138249,
+    "deploymentName": "admired-walrus-730",
+    "deploymentUrl": "https://admired-walrus-730.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "independentNetworkRequest": "NOT_RUN_OPTIONAL_NOT_NEEDED",
+  "noPrivateKeyCredentialAccess": true
+}

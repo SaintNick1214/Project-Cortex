@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-04T13:19:55.385250+00:00",
+  "argv": [
+    "bash",
+    "-c",
+    "nl -ba node_modules/@convex-dev/ai-sdk-provider/src/index.ts; nl -ba node_modules/@ai-sdk/gateway/src/gateway-generation-info.ts; nl -ba node_modules/@ai-sdk/gateway/src/gateway-provider.ts | sed -n \"1,180p\"; nl -ba _goals/convex-backend-runtime-2026-10-02/qa/task04-money-source-candidate-c1/official-doc-response | sed -n \"590,715p;1650,1680p\""
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "exit": 0,
+  "unchanged": true
+}

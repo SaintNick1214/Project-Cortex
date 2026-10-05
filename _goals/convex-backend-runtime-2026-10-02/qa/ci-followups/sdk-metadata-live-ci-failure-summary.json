@@ -1,0 +1,161 @@
+{
+  "observedAt": "2026-10-03T12:38:20.499849+00:00",
+  "head": "4fb3482c5e06fcab12ab8513b242a066ef761f2f",
+  "classification": "Observed failing CI jobs, not aggregate or service PASS. Many unchanged live fixtures invoke newly guarded metadata/worker paths without verified JWT/provisioned grants. Other failures and cleanup remain unresolved; fixture modernization is Task16, never removal of authority checks.",
+  "jobLogsFetchedThrough": "GitHub connector workflow job logs; private raw logs unchanged; public summary excludes credentials and raw request URLs",
+  "jobs": [
+    {
+      "job": 111198987589,
+      "privateRawLog": "work/backend-runtime/ci-current-111198987589.log",
+      "sha256": "30f3de37fc99b1418ca46e911057b52ccfb47f5100df49c1a41f59737e37aec7",
+      "bytes": 739733,
+      "failingSuites": [
+        "FAIL tests/parameter-combinations.test.ts (154.696 s)",
+        "FAIL tests/agents.test.ts (216.713 s)",
+        "FAIL tests/integration.test.ts (22.302 s)",
+        "FAIL tests/gdprCascade.test.ts (87.159 s)",
+        "FAIL tests/memory-streaming-belief-revision.test.ts (64.093 s)",
+        "FAIL tests/hiveMode.test.ts (15.2 s)",
+        "FAIL tests/memory-orchestration.test.ts (94.787 s)",
+        "FAIL tests/recall-integration.test.ts (30.997 s)",
+        "FAIL tests/memory-lifecycle.test.ts (18.774 s)",
+        "FAIL tests/integration/phase-orchestration.test.ts (15.954 s)",
+        "FAIL tests/memory-facts-integration.test.ts (32.055 s)",
+        "FAIL tests/operation-sequences.test.ts (596.485 s)",
+        "FAIL tests/governance.test.ts (1200.763 s)",
+        "FAIL tests/parameter-combinations.test.ts (154.696 s)",
+        "FAIL tests/agents.test.ts (216.713 s)",
+        "FAIL tests/integration.test.ts (22.302 s)",
+        "FAIL tests/gdprCascade.test.ts (87.159 s)",
+        "FAIL tests/memory-streaming-belief-revision.test.ts (64.093 s)",
+        "FAIL tests/hiveMode.test.ts (15.2 s)",
+        "FAIL tests/memory-orchestration.test.ts (94.787 s)",
+        "FAIL tests/recall-integration.test.ts (30.997 s)",
+        "FAIL tests/memory-lifecycle.test.ts (18.774 s)",
+        "FAIL tests/integration/phase-orchestration.test.ts (15.954 s)",
+        "FAIL tests/memory-facts-integration.test.ts (32.055 s)",
+        "FAIL tests/operation-sequences.test.ts (596.485 s)",
+        "FAIL tests/governance.test.ts (1200.763 s)"
+      ],
+      "observedTestSummary": [
+        "Test Suites: 13 failed, 16 passed, 29 total",
+        "Tests:       135 failed, 15 skipped, 940 passed, 1090 total",
+        "Snapshots:   0 total",
+        "Time:        1202.297 s"
+      ],
+      "unauthenticatedDiagnosticLines": 166,
+      "forbiddenDiagnosticLines": 0
+    },
+    {
+      "job": 111198987568,
+      "privateRawLog": "work/backend-runtime/ci-current-111198987568.log",
+      "sha256": "4f9c7f761bb16decd8812ee344437cbbfb1d30689b95f74355c211795953ecee",
+      "bytes": 866500,
+      "failingSuites": [
+        "FAIL tests/resilience.test.ts (40.698 s)",
+        "FAIL tests/crossLayerIntegrity.test.ts (117.521 s)",
+        "FAIL tests/e2e/multi-tenancy.test.ts (68.545 s)",
+        "FAIL tests/e2e/cross-api-tenantid.test.ts (146.361 s)",
+        "FAIL tests/memory-belief-revision-e2e.test.ts (22.491 s)",
+        "FAIL tests/memory-belief-revision.test.ts (19.799 s)",
+        "FAIL tests/mutable-e2e-scenarios.test.ts (695.948 s)",
+        "FAIL tests/immutable.test.ts (1620.183 s)",
+        "FAIL tests/resilience.test.ts (40.698 s)",
+        "FAIL tests/crossLayerIntegrity.test.ts (117.521 s)",
+        "FAIL tests/e2e/multi-tenancy.test.ts (68.545 s)",
+        "FAIL tests/e2e/cross-api-tenantid.test.ts (146.361 s)",
+        "FAIL tests/memory-belief-revision-e2e.test.ts (22.491 s)",
+        "FAIL tests/memory-belief-revision.test.ts (19.799 s)",
+        "FAIL tests/mutable-e2e-scenarios.test.ts (695.948 s)",
+        "FAIL tests/immutable.test.ts (1620.183 s)"
+      ],
+      "observedTestSummary": [
+        "Test Suites: 8 failed, 2 skipped, 19 passed, 27 of 29 total",
+        "Tests:       151 failed, 93 skipped, 855 passed, 1099 total",
+        "Snapshots:   0 total",
+        "Time:        1621.387 s"
+      ],
+      "unauthenticatedDiagnosticLines": 80,
+      "forbiddenDiagnosticLines": 0
+    },
+    {
+      "job": 111198987534,
+      "privateRawLog": "work/backend-runtime/ci-current-111198987534.log",
+      "sha256": "bfdac34ab769857a9292ec559c745c5ced17efcefb232dada0f92c72f968bdc8",
+      "bytes": 342608,
+      "failingSuites": [
+        "FAIL tests/e2e/auth-integration.test.ts (10.201 s)",
+        "FAIL tests/statistics-consistency.test.ts (62.193 s)",
+        "FAIL tests/unit/memory-observer.test.ts (25.975 s)",
+        "FAIL tests/edge-runtime.test.ts (30.888 s)",
+        "FAIL tests/streaming/factDeduplication.test.ts (5.88 s)",
+        "FAIL tests/memory-openai.test.ts (59.754 s)",
+        "FAIL tests/memory-core.test.ts (46.694 s)",
+        "FAIL tests/e2e/auth-integration.test.ts (10.201 s)",
+        "FAIL tests/statistics-consistency.test.ts (62.193 s)",
+        "FAIL tests/unit/memory-observer.test.ts (25.975 s)",
+        "FAIL tests/edge-runtime.test.ts (30.888 s)",
+        "FAIL tests/streaming/factDeduplication.test.ts (5.88 s)",
+        "FAIL tests/memory-openai.test.ts (59.754 s)",
+        "FAIL tests/memory-core.test.ts (46.694 s)"
+      ],
+      "observedTestSummary": [
+        "Test Suites: 7 failed, 22 passed, 29 total",
+        "Tests:       34 failed, 46 skipped, 647 passed, 727 total",
+        "Snapshots:   0 total",
+        "Time:        158.006 s"
+      ],
+      "unauthenticatedDiagnosticLines": 61,
+      "forbiddenDiagnosticLines": 0
+    },
+    {
+      "job": 111198987492,
+      "privateRawLog": "work/backend-runtime/ci-current-111198987492.log",
+      "sha256": "4057b070d1a38e1dbd0bc7488f3a3d5761b18e76cee1852bf1d05134c433ac1f",
+      "bytes": 171934,
+      "failingSuites": [
+        "FAIL e2e tests/e2e/memory-workflow.test.ts (19.314 s)",
+        "FAIL e2e tests/e2e/conversations-workflow.test.ts (12.95 s)",
+        "FAIL e2e tests/e2e/facts-workflow.test.ts (10.95 s)",
+        "FAIL e2e tests/e2e/user-workflow.test.ts (317.081 s)"
+      ],
+      "observedTestSummary": [
+        "Test Suites: 8 passed, 8 total",
+        "Tests:       168 passed, 168 total",
+        "Snapshots:   0 total",
+        "Time:        1.646 s",
+        "Test Suites: 4 failed, 1 passed, 5 total",
+        "Tests:       17 failed, 4 skipped, 50 passed, 71 total",
+        "Snapshots:   0 total",
+        "Time:        317.595 s"
+      ],
+      "unauthenticatedDiagnosticLines": 15,
+      "forbiddenDiagnosticLines": 0
+    },
+    {
+      "job": 111198987472,
+      "privateRawLog": "work/backend-runtime/ci-current-111198987472.log",
+      "sha256": "1da22c7e533774db236ec1290e33190878ae7f0205c226a0c41888f37b864758",
+      "bytes": 245775,
+      "failingSuites": [
+        "FAIL e2e tests/e2e/conversation-memory.test.ts (34.125 s)"
+      ],
+      "observedTestSummary": [
+        "Test Suites: 6 passed, 6 total",
+        "Tests:       202 passed, 202 total",
+        "Snapshots:   0 total",
+        "Time:        9.855 s",
+        "Test Suites: 4 passed, 4 total",
+        "Tests:       71 passed, 71 total",
+        "Snapshots:   0 total",
+        "Time:        7.69 s",
+        "Test Suites: 1 failed, 4 passed, 5 total",
+        "Tests:       3 failed, 32 passed, 35 total",
+        "Snapshots:   0 total",
+        "Time:        92.45 s"
+      ],
+      "unauthenticatedDiagnosticLines": 39,
+      "forbiddenDiagnosticLines": 0
+    }
+  ]
+}

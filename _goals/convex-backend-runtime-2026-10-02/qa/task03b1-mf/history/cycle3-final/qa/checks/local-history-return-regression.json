@@ -1,0 +1,7 @@
+{
+  "status": "Intermediate executor regression caught by retained positive controls; non-final evidence",
+  "cause": "History resource-fence edit accidentally removed return history",
+  "sourceHashBeforeFix": "739384ce526261bb98d777d52ce493e1502248c36c3da884a534b952bc52035c",
+  "outcomes": "4 existing positive handler controls and unchanged historical probe positive failed; negative controls passed",
+  "fix": "Restore existing return history, preserve all assertions, rerun full retained runner"
+}

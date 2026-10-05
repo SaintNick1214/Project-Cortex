@@ -1,0 +1,15 @@
+# R1 finite repair map
+
+| Reviewed requirement | C3 finite design and meaningful prospective/evidence control |
+|---|---|
+| All async work/sealing/encoding/validation/argument preparation finishes before admission | proposal Closed issuer: explicitly awaited WebCrypto digest/importKey/sign/verify Promise APIs; canonical/envelopes/combined views/frozenArgs complete first. DUMMY actual Node WebCrypto Promise sequencing plus symbolic compute-time crossing. No Convex crypto certification. |
+| Final fresh clock and invocation-local authority/cancel checks | explicit finalAdmissionAt block checks original phase/native/account interval, no submitted flag/authorityclosed/deliveryclosed/signalaborted; no new timestamps/renewal. Sync preparation2ms at999→1001 denial; awaited completion1001 denial; closure during prep; equality/native/account expiry. |
+| Direct mark/first supported RPC no gap | submitted=true then DIRECT actual fixed ctx.runMutation(FIXED_STAGE_REFERENCE,frozenArgs); no await/callback/interceptor/delayed adapter/caller exposure/preparation between final checks+mark+invoke. Source/load review requires actual framework context, no test driver mint. |
+| Prepared S timestamp is insufficient | submittedAt≤finalAdmissionAt and original interval; only actual finalblock+firstinvoke counts admittedpending. HMAC authenticates bytes, source ordering governs admission, no physical socket-time attestation. |
+| Late truly admitted work retained | in-window first admission followed by late success/failure pending1→0 controls; immutable effects/current atomic mutation fences/fullK/active/unknownclose retained. No zeroeffects assumption. |
+| Phase does not renew | fixed P/S/expiry once; no resign/new phase, lost response inspect/exact persistence retry only same original phase with equivalent final fence. Preparation overexpiry discarded unsubmitted0RPC. |
+| Full encoded and combined decoded bounds | capability193000/P190000/child180000/conditionalstage caps, repeated escaping included; combined expanded graph count4096/depth16 includes outer metadata+decodedP/S/transcript/stage; no hidden cap increase, child-only checks insufficient. DUMMY escapedchild/combinedmetadata examples. |
+| All original stage/proof/model/authority obligations | exact firsteligible official source-prefix rerun; HMACprivate/futureROOTkeyinstall; oldsevenargs/StageIdentity/T unchanged; replay/collision before live fences; newclosed denial/nativeOCC gates. NO dependent implementation change. |
+| Narrow current money semantics | money-domain.md byte-identical to frozen C2: presentdomainEMPTY→UNKNOWN/fullK/STOP, actualpositive extraction/task04 scope stillBLOCKED before separate source/design gates. |
+
+History contains exact frozen v2 entire4-file closure including its3 manifested rows, fresh42-file review entire manifest+42 rows and its original2-file scratch closure/failuremodel. No earlier subject/review/failure model changed. This C3 is design-only; numeric cycles only waived. Other C2 repairs remain explicitly PARTIAL/unfrozen and byte-pinned unchanged.

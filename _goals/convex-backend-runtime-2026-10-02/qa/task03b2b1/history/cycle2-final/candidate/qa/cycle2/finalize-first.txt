@@ -1,0 +1,12 @@
+Preliminary tool-only finalizer invocation; no raw timestamp was recorded.
+Command: python3 _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/finalize.py
+Exit:1
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/finalize.py", line 78, in <module>
+    if len(old_names)!=337 or len(old_names)!=len(set(old_names)) or any(current_names.count(name)!=1 for name in old_names):raise RuntimeError('Original337 outcomes missing/duplicated')
+RuntimeError: Original337 outcomes missing/duplicated
+
+Actual archived corpus:337 cases with302 unique rendered names. Current per-suite case
+ordering/multiplicity is byte-identical for all original names; none missing. The finalizer
+now checks that exact ordered list instead of imposing a uniqueness requirement that the
+frozen corpus never had. Source tests/names/assertions/cases were not edited to satisfy it.

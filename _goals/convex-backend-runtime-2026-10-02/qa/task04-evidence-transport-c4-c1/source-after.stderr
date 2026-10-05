@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 191, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 182, in main
+    existing={r['path'] for r in rows if present(a.target,r)};created=0
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 64, in present
+    exactread(base,p,row['bytes'],row['sha256'],row['mode'],unique);return True
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 43, in exactread
+    if nlink:require(before.st_nlink==1,'restored file must have unique inode')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 14, in require
+    if not ok:raise ValueError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^
+ValueError: restored file must have unique inode

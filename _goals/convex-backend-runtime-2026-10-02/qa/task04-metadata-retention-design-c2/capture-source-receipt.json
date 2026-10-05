@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/lifecycle.ts\");print(\"\\n\".join(s for s in p.read_text().splitlines() if \"capture\" in s or \"observeTranscript\" in s))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:05:53.936053+00:00",
+  "endUtc": "2026-10-04T14:05:53.969093+00:00",
+  "exit": 0
+}

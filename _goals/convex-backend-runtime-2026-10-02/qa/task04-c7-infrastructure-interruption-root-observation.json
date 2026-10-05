@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-05T05:35:21Z",
+  "status": "INFRASTRUCTURE_RECONNECTED_EXECUTION_OUTCOME_UNQUALIFIED",
+  "observations": [
+    {
+      "at": "2026-10-05T05:32:31Z",
+      "connectivity": "offline",
+      "observedPhase": "running",
+      "failure": null
+    },
+    {
+      "at": "2026-10-05T05:35Z",
+      "connectivity": "connected",
+      "observedPhase": "running",
+      "failure": null
+    }
+  ],
+  "refresh3": {
+    "receiptObserved": false,
+    "stdoutBytes": 657,
+    "stderrBytes": 0,
+    "stdoutClaimedElapsedSeconds": 3.116444985003909,
+    "stdoutIsNotTerminalReceipt": true
+  },
+  "resources": {
+    "memoryCurrentBytes": "17169813504",
+    "memoryMaxBytes": "17179869184",
+    "shmemBytes": "16037462016",
+    "oom": "1",
+    "oomKill": "3",
+    "priorOomKill": "2",
+    "causality": "No attribution of OOM kill to refresh3 child or recorder established"
+  },
+  "limits": "No retry or successful execution inferred. Pending original outcome, group/lifecycle/source evidence; original122/whole/native/private/paid/ROOT approval held."
+}

@@ -1,0 +1,134 @@
+ledger schema/counts only {'runId': 'str', 'deploymentName': 'str', 'owned': 17, 'attemptedScopes': 8, 'operations': 32}
+
+task03c2-live-fixture/history/cycle1/preservation-manifest.json
+{
+  "preservedAt": "2026-10-03T12:12:39.062194+00:00",
+  "verdict": "FINAL REJECT2.6 harnesscycle1",
+  "candidateFreezeSha256": "8a2b01205fda1fd3edbf371983090062729e9e7002ff3a22a7ee0122edbfc75b",
+  "judgeManifestSha256": "d340e8847255483ff40bb8d66f0652ee21c43bb121bcce30b28d8ab756fd374c",
+  "records": [
+    {
+      "original": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/README.md",
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/history/cycle1/candidate/README.md",
+      "sha256": "11ae84ca561ceeeda2c818c1e2687150d56db4ea2fecd82067343ca5dbf937e3",
+      "bytes": 7511
+    }
+  ],
+  "omittedPrivateReproducibleSdk": [
+    {
+      "path": "replay-repo/work/backend-runtime/task03c2-live-fixture/packed-sdk/package/convex-dev/README.md",
+      "sha256": "9dd90e16e8e4a3ae0d1e9270a7090309d02481e2993996ceb216d6cff820e559",
+      "bytes": 2536,
+      "reason": "Reproducible exact accepted SDK archive/build/pack copied for replay stays private; original manifest and accepted Git source hashes retained."
+    }
+  ],
+  "ancillaryLint": "Narrow eslint project override and historical helper style correction independently PASS; harness REJECT unchanged."
+}
+
+task03c2-live-fixture/history/cycle2-final/preservation-manifest.json
+{
+  "preservedAt": "2026-10-03T13:02:36.368232+00:00",
+  "verdict": "FINAL SECOND REJECT2.6",
+  "candidateFreezeSha256": "c36c94ff03fd68f74da4d44feb068c155d0c50e80c0199e6e384b07de86f2cf4",
+  "judgeManifestSha256": "c72b52af1b80d6d8745f03149853317510f07361406dca2d75bdd4d1953498a4",
+  "verifiedPublicRecords": 511,
+  "verifiedPrivateRecords": 214,
+  "verifiedIndependentRecords": 976,
+  "records": [
+    {
+      "original": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/README.md",
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/history/cycle2-final/candidate/public/README.md",
+      "sha256": "9c62d272348c97ff7de575d58ac9bbfbf10f02f768955714648f1dafe1cd1c5f",
+      "bytes": 10938
+    }
+  ],
+  "privateReproducibleOmissions": [
+    {
+      "original": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/cortexmemory-sdk-0.37.0.tgz",
+      "path": "work/backend-runtime/task03c2-live-fixture/cortexmemory-sdk-0.37.0.tgz",
+      "sha256": "cd97dabc1428e2dc7f217bf316aff0d7bf4ebf0d843a214a5777a2228275193d",
+      "reason": "Immutable private accepted SDK source/build/packed dependency, fully hash-verified; not duplicated as public compiled/package evidence"
+    }
+  ],
+  "limitations": "All41 real service cases UNEXECUTED. Later passing process runs do not erase the retained failing run. No accepted native-helper fixture refresh yet."
+}
+
+task03c2-live-service/execution/auth-provision-reconciliation.json
+{
+  "operation": "read-only-disposable-create-reconciliation",
+  "startedAt": "2026-10-03T14:13:09.691Z",
+  "observedAt": "2026-10-03T14:13:10.075Z",
+  "httpStatus": 200,
+  "requestedName": "Cortex runtime disposable qualification auth 399781dd7c",
+  "requestedSlug": "cortex-runtime-disposable-qualification-auth-399781dd7c",
+  "matchingProjectCount": 0,
+  "matching": [],
+  "proxyEnabledCommandLocally": true,
+  "status": "ABSENT_CREATE_MAY_RETRY"
+}
+
+task03c2-live-service/execution/provision-proxy-retry.json
+{
+  "argv": [
+    "node"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1"
+  },
+  "startedAt": "2026-10-03T14:17:42.853682+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:17:46.303655+00:00",
+  "exitCode": 0
+}
+
+task03c2-live-service/initial-direct-provisioning-observation.json
+{
+  "operation": "initial-direct-provisioning-attempt",
+  "status": "FAILED_BEFORE_OWNERSHIP_RECEIPT",
+  "startedAt": null,
+  "completedAt": null,
+  "actualExitCodeRecordedInFilesystem": false,
+  "transportErrorsObservedInSession": [
+    "ECONNREFUSED IPv4 HTTPS"
+  ],
+  "rawOriginalToolStreamArchived": false,
+  "reconciliation": "Actual subsequent proxied HTTP200 team lookup found zero projects matching exact requested name/slug. No timestamp or raw stream is fabricated for the initial failed attempt."
+}
+
+task03c2-live-service/service/codegen-aca83d11-336f-491a-8566-6420547666c9.json
+{
+  "mode": "codegen",
+  "startedAt": "2026-10-03T14:18:08.516Z",
+  "completedAt": "2026-10-03T14:18:10.730Z",
+  "deploymentName": "helpful-iguana-708",
+  "exitCode": 1,
+  "timedOut": false,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 1,
+  "processCleanup": "REAPED",
+  "rawDiagnostics": "discarded for privacy"
+}
+
+task03c2-live-service/service/codegen-3a856ab1-77ba-43e3-bf97-6f2d3c14594d.json
+{
+  "mode": "codegen",
+  "startedAt": "2026-10-03T14:20:35.924Z",
+  "completedAt": "2026-10-03T14:20:40.209Z",
+  "deploymentName": "helpful-iguana-708",
+  "exitCode": 0,
+  "timedOut": false,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 1,
+  "processCleanup": "REAPED",
+  "rawDiagnostics": "discarded for privacy"
+}
+
+VERSIONS
+convex 1.46.0
+typescript 6.0.3
+tsx 4.23.15
+ws 8.21.0
+
+PRIVATE SDK FILE GROUPS
+sdk source/config 164

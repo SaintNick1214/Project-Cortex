@@ -1,0 +1,67 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
+const ts = require('typescript');
+const root = '/workspace/Project-Cortex';
+const base = 'c92d548368791386c62f39895e381ef6bde2dc86';
+const relative = '_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a';
+const qa = path.join(root, relative);
+const provenance = JSON.parse(fs.readFileSync(path.join(qa, 'snapshot-provenance.json'), 'utf8'));
+const digest = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+const baseline = (file) => execFileSync('git', ['show', `${base}:${file}`], { cwd: root });
+function methods(bytes) {
+  const file = ts.createSourceFile('module.ts', bytes.toString(), ts.ScriptTarget.Latest, true);
+  const result = new Map();
+  for (const declaration of file.statements) {
+    if (!ts.isClassDeclaration(declaration)) continue;
+    for (const member of declaration.members) {
+      if (ts.isMethodDeclaration(member)) result.set(member.name.getText(file), member.getText(file));
+    }
+  }
+  return result;
+}
+const methodChecks = [];
+for (const [file, changed] of [['src/users/index.ts', ['update', 'updateMany']], ['src/sessions/index.ts', ['expireIdle']]]) {
+  const before = methods(baseline(file));
+  const after = methods(fs.readFileSync(path.join(root, file)));
+  assert.deepEqual([...before.keys()], [...after.keys()]);
+  for (const [name, text] of before) {
+    if (changed.includes(name)) continue;
+    assert.equal(after.get(name), text, `${file}:${name} source changed`);
+    methodChecks.push({ file, method: name, byteUnchanged: true, sha256: digest(text) });
+  }
+}
+const originalRoot = baseline('src/index.ts').toString();
+const currentRoot = fs.readFileSync(path.join(root, 'src/index.ts'), 'utf8');
+assert.equal(currentRoot, originalRoot.replace('export { UserValidationError } from "./users";', 'export { UserValidationError, UserProfileWriteReceiptError } from "./users";').replace('export { SessionValidationError } from "./sessions";', 'export { SessionValidationError, SessionCapabilityError } from "./sessions";'));
+const catalog = execFileSync('git', ['ls-tree', '-r', '--name-only', base], { cwd: root, encoding: 'utf8' }).trim().split('\n');
+const protectedFiles = catalog.filter((file) => file.startsWith('_goals/convex-backend-runtime-2026-10-02/qa/task03a/') || file.startsWith('_goals/convex-backend-runtime-2026-10-02/qa/task03c1/') || file.startsWith('tests/unit/runtimeAuth/') || ['convex-dev/runtimeAuth.ts', 'convex-dev/runtimeAuthSchema.ts', 'convex-dev/runtimeWorkerAuth.ts'].includes(file) || file.startsWith('_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/') || file.startsWith('_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/') || file.startsWith('tests/unit/runtimeMetadataAuth/') || file.startsWith('tests/unit/runtimeWorkerAuth/') || ['src/governance/index.ts', 'tests/unit/runtimeWorkerClient/governance.test.ts', 'convex-dev/immutable.ts', 'convex-dev/mutable.ts', 'convex-dev/runtimeMetadataAuth.ts', 'convex-dev/sessions.ts', 'convex-dev/users.ts'].includes(file));
+const protection = protectedFiles.map((file) => {
+  const expected = baseline(file);
+  const actual = fs.readFileSync(path.join(root, file));
+  assert.deepEqual(actual, expected, `Protected file changed: ${file}`);
+  return { file, sha256: digest(actual), unchangedFromAcceptedBase: true };
+});
+for (const item of provenance.overlays) {
+  const actual = fs.readFileSync(path.join(root, item.file));
+  const archived = fs.readFileSync(path.join(provenance.snapshot, item.file));
+  assert.equal(digest(actual), item.sha256, `Overlay hash changed: ${item.file}`);
+  assert.deepEqual(actual, archived, `Archive overlay differs: ${item.file}`);
+}
+for (const item of provenance.otherTracked) {
+  assert.equal(digest(fs.readFileSync(path.join(provenance.snapshot, item.file))), item.sha256, `Archive tracked file changed: ${item.file}`);
+}
+const testSummary = JSON.parse(fs.readFileSync(path.join(qa, 'tests.json'), 'utf8'));
+assert.equal(testSummary.numTotalTestSuites, 2);
+assert.equal(testSummary.numPassedTests, 106);
+assert.equal(testSummary.numFailedTests, 0);
+assert.equal(testSummary.numPendingTests, 0);
+assert.equal(testSummary.numTodoTests, 0);
+const diagnostics = fs.readFileSync(path.join(qa, 'main-root-types.log'), 'utf8').trim().split('\n');
+assert.equal(diagnostics.length, 3);
+for (const diagnostic of diagnostics) assert.match(diagnostic, /^(tests\/helpers\/cleanup\.ts\((58|77),|tests\/interactive-runner\.ts\(380,).*error TS2339: Property 'purgeAll'/);
+const result = { observedAt: new Date().toISOString(), base, unchangedMethodCount: methodChecks.length, methods: methodChecks, protectedFileCount: protection.length, protectedFiles: protection, archiveOtherTrackedFileCount: provenance.otherTracked.length, archiveOtherTrackedFilesUnchanged: true, mainRemainingDiagnostics: diagnostics, testCounts: { suites: 2, passed: 106, failed: 0, pending: 0, todo: 0 }, rootOnlyNecessaryErrorExports: true };
+fs.writeFileSync(path.join(qa, 'source-boundary.json'), JSON.stringify(result, null, 2) + '\n');
+console.log(JSON.stringify({ unchangedMethodCount: methodChecks.length, protectedFileCount: protection.length, archiveOtherTrackedFileCount: provenance.otherTracked.length, testCounts: result.testCounts, mainRemainingDiagnostics: diagnostics.length }));

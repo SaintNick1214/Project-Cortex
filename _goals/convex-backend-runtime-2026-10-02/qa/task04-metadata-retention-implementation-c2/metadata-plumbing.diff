@@ -1,0 +1,19 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/metadata.mjs
++++ /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs
+@@ -1,5 +1,5 @@
+ import assert from 'node:assert/strict';
+-import {selectProviderSnapshot,validateProviderSnapshot} from '../convex/provider-cost.ts';
++import {selectProviderSnapshot as selectedProviderSnapshot,validateProviderSnapshot} from '../convex/provider-cost.ts';
+ import {observeGenerate,observeEmbed,observeStream,observeTranscript,nativeEvent,makeEvent} from '../convex/observer.ts';
+ import {canonical,parseCanonical,digest,conservativeUsdDecimal,micro} from '../convex/validate.ts';
+ import {BINDING,NATIVE_INSTALLATION_ENABLED} from '../convex/installed.ts';
+@@ -19,7 +19,8 @@
+  {type:'text-end',id:'DUMMY'},
+  {type:'finish',finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:1},outputTokens:{total:1}},providerMetadata:metadata(n)}
+  ]}
+-const events=async p=>Promise.all(p.map((x,i)=>nativeEvent(i,x)));
++const events=async p=>{const events=[];for(const x of p)events.push(await nativeEvent(events.length,x,events));return events;};
++const selectProviderSnapshot=root=>selectedProviderSnapshot(root,snapshot=>({version:2,method:'generate',events:[{sequence:0,kind:'raw',digest:'0'.repeat(64),data:snapshot}],ended:'returned'}));
+ const stream=async p=>observeStream(context('C09'),await events(p),'reader-done',undefined,2);
+ function validate(s){return validateProviderSnapshot(s.providerCost,s.providerShape)}
+ await test('actual selector number frozen witness state and outward microceil',async()=>{const x=generate(),s=selectProviderSnapshot(x);assert(Object.is(s.providerCost.cost,number));assert.equal(micro(conservativeUsdDecimal(s.providerCost.cost)),2);assert(Object.isFrozen(s.providerShape[0].keys));assert.deepEqual(validate(s),s);x.providerMetadata.convexGateway.cost=100;x.unused=1;assert(Object.is(s.providerCost.cost,number));assert(!s.providerShape[0].keys.includes('unused'))});

@@ -1,0 +1,372 @@
+{
+  "observedAt": "2026-10-05T00:31:32.212780+00:00",
+  "status": "ROOT_READ_ONLY_RETAINED_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "0a8434f3fa5f43db853a5b05b3bc3963",
+      "receiptSHA256": "edd28fa6f8e021af8025bd23ce7e0b1629d10c93a582303e31449951c534fd03",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 17697,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 25134483,
+        "st_mtime_ns": 1791159554168825899,
+        "st_ctime_ns": 1791159554168825899
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/capture-boundary-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:15:50.050719+00:00",
+          "utcEnd": "2026-10-05T00:15:50.096829+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/vm-install-rollback-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:15:52.997521+00:00",
+          "utcEnd": "2026-10-05T00:15:53.041951+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/whole-freeze-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:15:55.952627+00:00",
+          "utcTimeoutObserved": "2026-10-05T00:17:56.767594+00:00",
+          "exitCode": null,
+          "status": "TIMEOUT_EXIT_NOT_CAPTURED",
+          "rawPartialOnly": true,
+          "recordedCleanupComplete": true,
+          "recordedRemainingLive": []
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/0a8434f3fa5f43db853a5b05b3bc3963/capture-boundary-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17663,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791159350747079236,
+            "st_ctime_ns": 1791159350747079236
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/0a8434f3fa5f43db853a5b05b3bc3963/capture-boundary-controls.mjs.stdout",
+          "bytes": 127,
+          "sha256": "e28d13b015d38bac2936f3aaefda3cc74ad714bd9eaa2d018aa00426dcc02192",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17662,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 127,
+            "st_mtime_ns": 1791159350747079236,
+            "st_ctime_ns": 1791159350747079236
+          },
+          "text": "{\"PASS\":\"ONE_FRESH_HELD_READ_SUPPLIES_LEDGER_AND_ARCHIVE_SINGLE_USE\",\"newBoundaryFresh\":true,\"unknownSnapshotPathDenied\":true}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/0a8434f3fa5f43db853a5b05b3bc3963/vm-install-rollback-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17665,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791159353694555380,
+            "st_ctime_ns": 1791159353694555380
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/0a8434f3fa5f43db853a5b05b3bc3963/vm-install-rollback-controls.mjs.stdout",
+          "bytes": 144,
+          "sha256": "1ec942a31637d97115a579e4dc785f754bde9727d0877713d63b3b860f4fc13d",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17664,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 144,
+            "st_mtime_ns": 1791159353694555380,
+            "st_ctime_ns": 1791159353694555380
+          },
+          "text": "{\"PASS\":\"ACTUAL_PARTIAL_INSTALL_FROZEN_PRIMARY_ALL_THREE_SECONDARIES\",\"attempts\":[\"SourceTextModule\",\"SourceTextModule\",\"runInContext\",\"sync\"]}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/0a8434f3fa5f43db853a5b05b3bc3963/whole-freeze-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17695,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791159476767559553,
+            "st_ctime_ns": 1791159476767559553
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/0a8434f3fa5f43db853a5b05b3bc3963/whole-freeze-controls.mjs.stdout",
+          "bytes": 169,
+          "sha256": "d51bddf9f51bf8ccf639e8dd230f197d3df5ff0357fa8aab075a506bb604944a",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17694,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 169,
+            "st_mtime_ns": 1791159476767559553,
+            "st_ctime_ns": 1791159476767559553
+          },
+          "text": "{\"stage\":\"OWN_WHOLE_FREEZE_START\",\"utc\":\"2026-10-05T00:15:56.790Z\",\"original122\":\"HELD\",\"body\":\"EXACT_FORKED_SIX_LINE_BODY_NO_ADDITIONAL_TRANSFORM\",\"deadlineMs\":120000}\n"
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5365,
+      "uniqueBeforeByteBackingsDecoded": 3358,
+      "beforeByteBackingRawBytes": 298673141,
+      "assessment": "Focused command exits observed. Whole route TIMEOUT, exit unknown; no body or terminal completion inferred. Recorded cleanup is historical, not a fresh process census."
+    },
+    {
+      "batch": "3c36485c37424c64a7b1790e7c2ed0fc",
+      "receiptSHA256": "ad6750319e2d811449e5e99b984386336c893e3a449812407c6a656f5f7c195f",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 17756,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 32658088,
+        "st_mtime_ns": 1791160091093724671,
+        "st_ctime_ns": 1791160091093724671
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/capture-boundary-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:24:47.258913+00:00",
+          "utcEnd": "2026-10-05T00:24:47.335801+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/vm-consumer-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:24:50.243343+00:00",
+          "utcEnd": "2026-10-05T00:24:50.342991+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/vm-install-rollback-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:24:53.280204+00:00",
+          "utcEnd": "2026-10-05T00:24:53.327867+00:00",
+          "exitCode": 0
+        },
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/whole-freeze-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T00:24:56.276219+00:00",
+          "utcTimeoutObserved": "2026-10-05T00:26:57.099195+00:00",
+          "exitCode": null,
+          "status": "TIMEOUT_EXIT_NOT_CAPTURED",
+          "rawPartialOnly": true,
+          "recordedCleanupComplete": true,
+          "recordedRemainingLive": []
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/capture-boundary-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17716,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791159887988426593,
+            "st_ctime_ns": 1791159887988426593
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/capture-boundary-controls.mjs.stdout",
+          "bytes": 127,
+          "sha256": "e28d13b015d38bac2936f3aaefda3cc74ad714bd9eaa2d018aa00426dcc02192",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17715,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 127,
+            "st_mtime_ns": 1791159887988426593,
+            "st_ctime_ns": 1791159887988426593
+          },
+          "text": "{\"PASS\":\"ONE_FRESH_HELD_READ_SUPPLIES_LEDGER_AND_ARCHIVE_SINGLE_USE\",\"newBoundaryFresh\":true,\"unknownSnapshotPathDenied\":true}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/vm-consumer-controls.mjs.stderr",
+          "bytes": 174,
+          "sha256": "2005dc96d870ceeb33703f6b5d79f4dc9399dcca50111de33c9bc1805ef170c0",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17721,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 174,
+            "st_mtime_ns": 1791159890999737257,
+            "st_ctime_ns": 1791159890999737257
+          },
+          "text": "(node:385212) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/vm-consumer-controls.mjs.stdout",
+          "bytes": 128,
+          "sha256": "2afee1da9aa72963ae992cf4d2590396a8c739538f341bf8425ede6eb82677d9",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17720,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 128,
+            "st_mtime_ns": 1791159890999704095,
+            "st_ctime_ns": 1791159890999704095
+          },
+          "text": "{\"status\":\"OWN_VM_CONSUMER_PASS\",\"count\":10,\"events\":11,\"original122\":\"HELD\",\"evaluateEffects\":\"BOUNDED_RESPONSE_EXPORTS_ONLY\"}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/vm-install-rollback-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17723,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791159893996538641,
+            "st_ctime_ns": 1791159893996538641
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/vm-install-rollback-controls.mjs.stdout",
+          "bytes": 144,
+          "sha256": "1ec942a31637d97115a579e4dc785f754bde9727d0877713d63b3b860f4fc13d",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17722,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 144,
+            "st_mtime_ns": 1791159893996538641,
+            "st_ctime_ns": 1791159893996538641
+          },
+          "text": "{\"PASS\":\"ACTUAL_PARTIAL_INSTALL_FROZEN_PRIMARY_ALL_THREE_SECONDARIES\",\"attempts\":[\"SourceTextModule\",\"SourceTextModule\",\"runInContext\",\"sync\"]}\n"
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/whole-freeze-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17754,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791160017099154667,
+            "st_ctime_ns": 1791160017099154667
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/3c36485c37424c64a7b1790e7c2ed0fc/whole-freeze-controls.mjs.stdout",
+          "bytes": 169,
+          "sha256": "2925cf85ddf297872587b8a4c05ee8b580060784c0c82d7c69e0c0e0dd874893",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 17753,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 169,
+            "st_mtime_ns": 1791160017099154667,
+            "st_ctime_ns": 1791160017099154667
+          },
+          "text": "{\"stage\":\"OWN_WHOLE_FREEZE_START\",\"utc\":\"2026-10-05T00:24:57.095Z\",\"original122\":\"HELD\",\"body\":\"EXACT_FORKED_SIX_LINE_BODY_NO_ADDITIONAL_TRANSFORM\",\"deadlineMs\":120000}\n"
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5365,
+      "uniqueBeforeByteBackingsDecoded": 3358,
+      "beforeByteBackingRawBytes": 298679195,
+      "assessment": "Focused command exits observed. Whole route TIMEOUT, exit unknown; no body or terminal completion inferred. Recorded cleanup is historical, not a fresh process census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

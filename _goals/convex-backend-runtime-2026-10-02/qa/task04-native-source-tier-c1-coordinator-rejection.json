@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-04 14:20:45 UTC",
+  "verdict": "NEEDS FIXES DESIGN ONLY",
+  "average": 3.8,
+  "reportSHA256": "41b8739c2a9df2841736be4cab61a7c72bca016d4d79080a90eb1b0e0941986e",
+  "qaSealSHA256": "9a5143e287e70a5db693d896a2bcc487dee2a3d931563c6e4ffea247e32ba71f",
+  "qaRowsVerified": 93,
+  "scratchSealSHA256": "03fa4dd6b1d46a44e5874b6af84191413b4024565987cdd5358b864289aab2c0",
+  "scratchRowsVerified": 11,
+  "fullReportRead": true,
+  "blocker": "Exact regression runner partition must be 96 + 17 = 113 after compiler move, not 96 + 19. Original 97 + 16; tool 4 + 14 independent.",
+  "action": "New C2 exact partition repair and fresh DESIGN judgment; existing report/failures unchanged. No classification/native/source acceptance."
+}

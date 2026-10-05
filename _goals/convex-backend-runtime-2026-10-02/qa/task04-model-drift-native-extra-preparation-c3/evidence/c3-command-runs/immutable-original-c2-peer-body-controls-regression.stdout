@@ -1,0 +1,40 @@
+{
+  "kind": "regression",
+  "sourcePath": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/scripts/peer.mjs",
+  "sourceSHA256": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+  "results": [
+    {
+      "mode": "success",
+      "read": 2,
+      "cancel": 0,
+      "release": 1,
+      "result": "ok",
+      "failures": []
+    },
+    {
+      "mode": "read-error",
+      "read": 0,
+      "cancel": 1,
+      "release": 1,
+      "error": "DUMMY_READ_ERROR",
+      "failures": []
+    },
+    {
+      "mode": "overflow",
+      "read": 1,
+      "cancel": 1,
+      "release": 1,
+      "error": "QA_RESPONSE_CEILING",
+      "failures": []
+    },
+    {
+      "mode": "overflow-cancel-error",
+      "read": 1,
+      "cancel": 1,
+      "release": 1,
+      "error": "QA_RESPONSE_CEILING",
+      "failures": []
+    }
+  ],
+  "network": "NOT_RUN"
+}

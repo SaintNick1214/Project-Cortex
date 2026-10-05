@@ -1,0 +1,22 @@
+from pathlib import Path
+import json,hashlib,datetime
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c3-review';p=q.parent/'task04-pure-policy-contracts-c3';s=r/'work/resume/task04-pure-policy-c3-review/run01'
+def fp(path):return {'path':str(path.relative_to(r)),'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+manifest=json.loads((p/'evidence-manifest.json').read_text());verified=[]
+for row in manifest['files']:
+ actual=fp(r/row['path']);assert actual['bytes']==row['bytes'] and actual['sha256']==row['sha256'];verified.append(actual)
+old=(p/'pre-edit/model-policy.test.ts.text').read_bytes();now=(r/'tests/unit/domain/model-policy.test.ts').read_bytes();assert len(old)==28011 and now.startswith(old)
+red=json.loads((p/'run01-c2-plus-regressions/unit.result.json').read_text());green=json.loads((p/'run02-c3-candidate/unit.result.json').read_text());ind=json.loads((q/'unit.result.json').read_text())
+def names(x):return [(a['fullName'],a['status']) for suite in x['testResults'] for a in suite['assertionResults']]
+orig=json.loads((q.parent/'task04-pure-policy-contracts-c2-review/unit.result.json').read_text());oldnames=[x[0] for x in names(orig)];assert len(oldnames)==30
+assert all(n in dict(names(ind)) and dict(names(ind))[n]=='passed' for n in oldnames)
+assert ind['numTotalTests']==35 and ind['numPassedTests']==35 and ind['numPendingTests']==0 and ind['numTodoTests']==0
+assert red['numPassedTests']==30 and red['numFailedTests']==5 and green['numPassedTests']==35
+for file,sha in [('src/domain/model-policy.ts','f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da'),('src/domain/index.ts','b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648'),('tests/unit/domain/model-policy.test.ts','d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc')]:assert fp(r/file)['sha256']==sha and (r/file).read_bytes()==(s/file).read_bytes()
+assert (q/'source-before.json').read_bytes()==(q/'source-after.json').read_bytes()
+assert (q/'original-c1-probes.mjs.text').read_bytes()==(q.parent/'task04-pure-policy-contracts-c2-review/original-c1-probes.mjs.text').read_bytes()
+assert (q/'original-c2-probes.mjs.text').read_bytes()==(q.parent/'task04-pure-policy-contracts-c2-review/run05-fresh-probes.mjs.text').read_bytes()
+docs=[r/'AGENTS.md',r/'.agents/CODEX-RUNTIME.md',r/'.agents/PROJECT-PROFILE.md',r/'.agents/roles/pessimistic-judge.md',r/'.agents/skills/judge-task/SKILL.md',r/'.agents/skills/feature-orchestrator/SKILL.md',r/'_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md',r/'_goals/convex-backend-runtime-2026-10-02/goal.md',r/'_research/convex-ai-gateway-2026-10-02/decision-gates.md',r/'_research/convex-ai-gateway-2026-10-02/architecture.md',q.parent/'task04-contract-preparation/implementation-packets.md',q.parent/'task01/contracts.md',q.parent/'task03-foundation-live-c11-aggregate-review/report.md']+sorted((r/'_goals/convex-backend-runtime-2026-10-02/tasks').glob('*.md'))
+res={'observedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'producerManifestVerifiedRows':len(verified),'producerFiles':verified,'C2TestBytes':len(old),'C2PrefixSHA256':hashlib.sha256(old).hexdigest(),'exactPrefix':True,'original30OutcomeNames':oldnames,'red':{'passed':red['numPassedTests'],'failed':red['numFailedTests']},'green':{'passed':green['numPassedTests'],'failed':green['numFailedTests']},'independent':{'passed':ind['numPassedTests'],'failed':ind['numFailedTests'],'pending':ind['numPendingTests'],'todo':ind['numTodoTests'],'suites':ind['numTotalTestSuites']},'sourceStable':True,'sourceMirrorExact':True,'oldProbeSourcesExact':True,'requiredSourceDocuments':[fp(x) for x in docs],'historyLimitation':'Initial C1 missing/truncated producer raw streams and source preimages remain missing; new red/green and this review cannot retroactively supply them.'}
+with (q/'independent-reconciliation.json').open('x') as f:json.dump(res,f,indent=2)
+print(json.dumps({k:v for k,v in res.items() if k not in ['producerFiles','original30OutcomeNames','requiredSourceDocuments']},indent=2))

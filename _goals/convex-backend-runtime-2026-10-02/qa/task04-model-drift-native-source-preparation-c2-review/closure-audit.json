@@ -1,0 +1,433 @@
+{
+  "observedAt": "2026-10-04T11:22:12.698255+00:00",
+  "subjects": [
+    {
+      "kind": "extension",
+      "qaSHA256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+      "qaRows": 471,
+      "qaHashFailures": [],
+      "qaInventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      },
+      "freezeSHA256": "1d6e26709cd7f0cbda78b3c6828373bb890f4f69b6f74afffdcee878e47618a2",
+      "freezeRows": 208,
+      "freezeHashFailures": [],
+      "freezePathsEqual": true,
+      "dependencies": {
+        "runner": {
+          "rpc": 87,
+          "boundary": 27,
+          "full": 114,
+          "exactUnion": true,
+          "disjoint": true,
+          "hashFailures": []
+        },
+        "tools": {
+          "rpc": 4,
+          "boundary": 14,
+          "full": 18,
+          "exactUnion": true,
+          "disjoint": true,
+          "hashFailures": []
+        }
+      }
+    },
+    {
+      "kind": "regression",
+      "qaSHA256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+      "qaRows": 463,
+      "qaHashFailures": [],
+      "qaInventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      },
+      "freezeSHA256": "45398e83f731763dac2a89aa2bc9d2bba15378cc19490795c201311cc9c5ef1b",
+      "freezeRows": 205,
+      "freezeHashFailures": [],
+      "freezePathsEqual": true,
+      "dependencies": {
+        "runner": {
+          "rpc": 86,
+          "boundary": 25,
+          "full": 111,
+          "exactUnion": true,
+          "disjoint": true,
+          "hashFailures": []
+        },
+        "tools": {
+          "rpc": 4,
+          "boundary": 14,
+          "full": 18,
+          "exactUnion": true,
+          "disjoint": true,
+          "hashFailures": []
+        }
+      }
+    },
+    {
+      "kind": "extra",
+      "qaSHA256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+      "qaRows": 670,
+      "qaHashFailures": [],
+      "qaInventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      },
+      "freezeSHA256": "a028ee0445c55c3f4ef8b1b632f9e42b587396dc5cd828591b45857aa9f5d684",
+      "freezeRows": 316,
+      "freezeHashFailures": [],
+      "freezePathsEqual": true,
+      "dependencies": {
+        "runner": {
+          "rpc": 89,
+          "boundary": 27,
+          "full": 116,
+          "exactUnion": true,
+          "disjoint": true,
+          "hashFailures": []
+        },
+        "tools": {
+          "rpc": 4,
+          "boundary": 14,
+          "full": 18,
+          "exactUnion": true,
+          "disjoint": true,
+          "hashFailures": []
+        }
+      }
+    }
+  ],
+  "uniqueHistoricalPackets": 25,
+  "history": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7": {
+      "manifestSHA256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+      "expectedManifestSHA256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+      "rows": 1579,
+      "expectedRows": 1579,
+      "completeRows": 1579,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review": {
+      "manifestSHA256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+      "expectedManifestSHA256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+      "rows": 1607,
+      "expectedRows": 1607,
+      "completeRows": 1607,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8": {
+      "manifestSHA256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+      "expectedManifestSHA256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+      "rows": 3288,
+      "expectedRows": 3288,
+      "completeRows": 3288,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation": {
+      "manifestSHA256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+      "expectedManifestSHA256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+      "rows": 55,
+      "expectedRows": 55,
+      "completeRows": 55,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2": {
+      "manifestSHA256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "expectedManifestSHA256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "rows": 7696,
+      "expectedRows": 7696,
+      "completeRows": 7696,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3": {
+      "manifestSHA256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "expectedManifestSHA256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "rows": 5576,
+      "expectedRows": 5576,
+      "completeRows": 5576,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review": {
+      "manifestSHA256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+      "expectedManifestSHA256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+      "rows": 4529,
+      "expectedRows": 4529,
+      "completeRows": 4529,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review": {
+      "manifestSHA256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+      "expectedManifestSHA256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+      "rows": 576,
+      "expectedRows": 576,
+      "completeRows": 576,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation": {
+      "manifestSHA256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+      "expectedManifestSHA256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+      "rows": 179,
+      "expectedRows": 179,
+      "completeRows": 179,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review": {
+      "manifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+      "expectedManifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+      "rows": 80,
+      "expectedRows": 80,
+      "completeRows": 83,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation": {
+      "manifestSHA256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+      "expectedManifestSHA256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+      "rows": 168,
+      "expectedRows": 168,
+      "completeRows": 168,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review": {
+      "manifestSHA256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+      "expectedManifestSHA256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+      "rows": 44,
+      "expectedRows": 44,
+      "completeRows": 44,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4": {
+      "manifestSHA256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+      "expectedManifestSHA256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+      "rows": 5039,
+      "expectedRows": 5039,
+      "completeRows": 5039,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation": {
+      "manifestSHA256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+      "expectedManifestSHA256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+      "rows": 207,
+      "expectedRows": 207,
+      "completeRows": 207,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review": {
+      "manifestSHA256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+      "expectedManifestSHA256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+      "rows": 22,
+      "expectedRows": 22,
+      "completeRows": 22,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1": {
+      "manifestSHA256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+      "expectedManifestSHA256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+      "rows": 15,
+      "expectedRows": 15,
+      "completeRows": 15,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review": {
+      "manifestSHA256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+      "expectedManifestSHA256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+      "rows": 12,
+      "expectedRows": 12,
+      "completeRows": 12,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1": {
+      "manifestSHA256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "expectedManifestSHA256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "rows": 294,
+      "expectedRows": 294,
+      "completeRows": 294,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1": {
+      "manifestSHA256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "expectedManifestSHA256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "rows": 287,
+      "expectedRows": 287,
+      "completeRows": 287,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1": {
+      "manifestSHA256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "expectedManifestSHA256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "rows": 466,
+      "expectedRows": 466,
+      "completeRows": 466,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review": {
+      "manifestSHA256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+      "expectedManifestSHA256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+      "rows": 43,
+      "expectedRows": 43,
+      "completeRows": 43,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review": {
+      "manifestSHA256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+      "expectedManifestSHA256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+      "rows": 348,
+      "expectedRows": 348,
+      "completeRows": 348,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression": {
+      "manifestSHA256": "5da01105a33b74144b4ffd3094f0d90845acf49df07faaa26b6581fbb0b2a248",
+      "expectedManifestSHA256": "5da01105a33b74144b4ffd3094f0d90845acf49df07faaa26b6581fbb0b2a248",
+      "rows": 200,
+      "expectedRows": 200,
+      "completeRows": 200,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression": {
+      "manifestSHA256": "7b0cc8215d66304d5db6997d4a4a20fc0abd07cc063e02e97eaba6e52f4393ad",
+      "expectedManifestSHA256": "7b0cc8215d66304d5db6997d4a4a20fc0abd07cc063e02e97eaba6e52f4393ad",
+      "rows": 247,
+      "expectedRows": 247,
+      "completeRows": 247,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression": {
+      "manifestSHA256": "9476a0dc442a86d850e07cc90ba626d658fd9448f1185b0e14934120efeef679",
+      "expectedManifestSHA256": "9476a0dc442a86d850e07cc90ba626d658fd9448f1185b0e14934120efeef679",
+      "rows": 247,
+      "expectedRows": 247,
+      "completeRows": 247,
+      "hashFailures": [],
+      "inventory": {
+        "missing": [],
+        "extraneous": [],
+        "duplicates": 0
+      }
+    }
+  },
+  "scope": "READ_ONLY_BYTES_AND_RECURSIVE_INVENTORY_ONLY_NO_NATIVE_ACCEPTANCE"
+}

@@ -1,0 +1,35 @@
+{
+  "utc": {
+    "current_time": "2026-10-04 12:32:46 UTC"
+  },
+  "status": "COMBINED_NATIVE_PREPARATION_C3_REJECTED",
+  "source": {
+    "verdict": "REJECT_SOURCE_PREPARATION_ONLY",
+    "score": 2.4,
+    "reportSha256": "91e093a2aebfb1a4c479e13c3d3b575ad27d10beef78a677e945251f6938a91f",
+    "qaManifestSha256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+    "rows": 644,
+    "observedFailures": [
+      "15 queued stale SDK callbacks despite enqueue checks",
+      "3 incomplete journal writes claimed complete"
+    ],
+    "remainingProof": "exhaustive semantic aggregate resource and serialization upper proof incomplete"
+  },
+  "parent": {
+    "verdict": "PASS_PREPARATION_ONLY",
+    "score": 4.2,
+    "reportSha256": "1018e0f707650dbe0a3b8d8bbacc46cf1cd0d3968dbd9ed16f639cd3aa4a1065",
+    "qaManifestSha256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+    "rows": 18896,
+    "scope": "bounded parent and preservation only"
+  },
+  "root": {
+    "fullReportsRead": true,
+    "qaAndScratchCompleteClosuresVerified": true,
+    "verification": "work/resume/task04-c3-reviews-root-closure-verification.json",
+    "actualApprovalPinIssued": false,
+    "actualNativeOrPaidCalls": 0,
+    "next": "NEW C4 repair delegated; fresh SOURCE/PARENT and ROOT acceptance mandatory"
+  },
+  "numericCycles": "user waived limits; original caps, assertions and scope preserved"
+}

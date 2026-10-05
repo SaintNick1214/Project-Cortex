@@ -1,0 +1,51 @@
+from pathlib import Path
+import os,stat,json,hashlib,gzip,datetime,shutil
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa';p=q/'task04-native-admission-c8-preparation-scratch-preservation';p.mkdir();(p/'chunks').mkdir();w=r/'work/resume/task04-native-admission-c8-preparation-scratch-preservation';rt=w/'roundtrip';rt.mkdir();src=r/'work/resume/task04-native-admission-fixture-c8'
+def sha(b):return hashlib.sha256(b).hexdigest()
+def inventory(base):
+ rows=[]
+ def walk(d):
+  for e in sorted(os.scandir(d),key=lambda e:e.name):
+   f=Path(e.path);s=e.stat(follow_symlinks=False);row={'path':str(f.relative_to(r)),'mode':stat.S_IMODE(s.st_mode),'bytes':s.st_size,'nlink':s.st_nlink}
+   if e.is_symlink():row.update(kind='symlink',target=os.readlink(f),followed=False)
+   elif e.is_dir(follow_symlinks=False):row['kind']='directory';walk(f)
+   elif e.is_file(follow_symlinks=False):row.update(kind='file',sha256=sha(f.read_bytes()))
+   else:row['kind']='special'
+   rows.append(row)
+ walk(base);return sorted(rows,key=lambda x:x['path'])
+review=json.loads((q/'task04-parent-native-inputs-review/results.json').read_text());owned=json.loads((r/'work/backend-runtime/task03-foundation-live-c11'/review['sourceVerification'][0]['name']).read_text());locators=[v['id'].encode()for v in owned['refs']+owned['files']if isinstance(v.get('id'),str)];assert locators
+pre=inventory(src);extra=[r/'work/resume/task04-native-c8-parent-inputs.mjs',r/'work/resume/task04-native-current-inputs-c6.mjs']
+extra += [f for f in (q/'task04-native-admission-fixture-c8/evidence/full-preservation01-failure').iterdir() if f.is_file()]
+extra += [f for f in (q/'task04-native-admission-fixture-c8/evidence/initialization-path-discovery').rglob('*') if f.is_file()]
+extra += [f for f in (q/'task04-parent-native-inputs-c6-preparation/evidence/finalization01-failure').iterdir() if f.is_file()]
+for f in extra:
+ s=f.lstat();assert stat.S_ISREG(s.st_mode);pre.append({'path':str(f.relative_to(r)),'mode':stat.S_IMODE(s.st_mode),'bytes':s.st_size,'nlink':s.st_nlink,'kind':'file','sha256':sha(f.read_bytes())})
+pre=sorted(pre,key=lambda x:x['path']);(p/'pre-inventory.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'cwd':str(r),'argv':['python',str(Path(__file__).relative_to(r))],'entries':pre,'symlinksNeverFollowed':True,'credentialReads':0,'physicalLocatorPayloadPublication':False},indent=2)+'\n')
+records=[];excluded=[];count=0
+for row in pre:
+ if row['kind']!='file':continue
+ f=r/row['path'];b=f.read_bytes();assert sha(b)==row['sha256'];category=None
+ if '/parent-c6/case-'in row['path']:category='isolated_VM_case_payload_may_contain_dummy_key_or_historical_native_locator'
+ elif any(token in b for token in locators):category='contains_historical_native_locator_payload'
+ elif f.name.startswith('jwt-private'):category='dummy_key_payload'
+ if category:excluded.append({**row,'category':category});continue
+ chunks=[];restore=rt/row['path'];restore.parent.mkdir(parents=True,exist_ok=True)
+ with restore.open('xb')as out:
+  for ordinal,start in enumerate(range(0,max(len(b),1),700000)):
+   piece=b[start:start+700000];compressed=gzip.compress(piece,compresslevel=9,mtime=0);assert len(piece)<=700000 and len(compressed)<=750000;assert gzip.compress(piece,compresslevel=9,mtime=0)==compressed
+   name=f'chunks/{count:05d}-{ordinal:03d}.gz';count+=1
+   with(p/name).open('xb')as archive:archive.write(compressed)
+   decoded=gzip.decompress((p/name).read_bytes());assert decoded==piece;out.write(decoded);chunks.append({'path':name,'ordinal':ordinal,'rawBytes':len(piece),'rawSHA256':sha(piece),'gzipBytes':len(compressed),'gzipSHA256':sha(compressed)})
+ os.chmod(restore,row['mode']);assert restore.read_bytes()==b and stat.S_IMODE(restore.stat().st_mode)==row['mode'];records.append({**row,'chunks':chunks,'roundtripBytesExact':True,'roundtripModeExact':True})
+assert inventory(src)==[x for x in pre if x['path'].startswith(str(src.relative_to(r))+'/')]
+for f in extra:assert sha(f.read_bytes())==next(x['sha256']for x in pre if x['path']==str(f.relative_to(r)))
+protected=[]
+for name in ['task04-native-admission-fixture-c8','task04-parent-native-inputs-c6-preparation']:
+ packet=q/name;m=json.loads((packet/'qa-manifest.json').read_text())
+ for row in m['files']:assert sha((packet/row['path']).read_bytes())==row['sha256']
+ protected.append({'packet':name,'manifestSHA256':sha((packet/'qa-manifest.json').read_bytes()),'verifiedFiles':len(m['files'])})
+(p/'archive-index.json').write_text(json.dumps({'scope':'INERT_SCRATCH_PRESERVATION_ONLY','rawChunkMaximum':700000,'gzipArtifactMaximum':750000,'deterministic':'gzip compresslevel9 mtime0, no filename','files':records,'excludedPayloads':excluded,'symlinks':[x for x in pre if x['kind']=='symlink'],'protectedPackets':protected,'roundtrip':'EXACT_BYTES_AND_MODE','native':'NOT_RUN','gateClaim':False},indent=2)+'\n')
+(p/'result.json').write_text(json.dumps({'status':'PASS_ARCHIVE_ROUNDTRIP_ONLY','inventoryEntries':len(pre),'archivedFiles':len(records),'excludedFiles':len(excluded),'gzipChunks':count,'symlinksNotFollowed':sum(x['kind']=='symlink'for x in pre),'sourceStable':True,'protectedPacketsStable':True,'network':0,'signing':0,'credentialReads':0,'RPC':0,'storage':0,'native':'NOT_RUN','preparationGateClaim':False},indent=2)+'\n')
+(p/'preserve.py.text').write_bytes(Path(__file__).read_bytes())
+(p/'report.md').write_text(f'''# C8 inert scratch preservation\n\nArchive roundtrip PASS only. Inventoried {len(pre)} entries; preserved {len(records)} regular files in {count} deterministic gzip pieces, each raw<=700000 bytes and gzip<=750000 bytes. Reconstructed every included file with exact bytes and mode. {sum(x['kind']=='symlink'for x in pre)} symlinks were inventoried without following.\n\nExcluded {len(excluded)} payload files that contain or may contain historical physical locators or isolated dummy key data; exact relative path/category/bytes/hash remain inventoried. No locator or credential content is published. Source helpers, generated nonsecret source bundles, external new parent/watcher scripts and available failed helper preimages are preserved. Existing frozen3288+69 QA hashes remain unchanged.\n\nNo service/network/signing/actual credential/RPC/storage activity. This archive makes no native or preparation-gate claim.\n''')
+files=sorted((f for f in p.rglob('*')if f.is_file()),key=lambda f:str(f.relative_to(p)));manifest={'scope':'INERT_SCRATCH_PRESERVATION_ONLY','selfExcluded':'qa-manifest.json','files':[{'path':str(f.relative_to(p)),'bytes':f.stat().st_size,'sha256':sha(f.read_bytes())}for f in files]};(p/'qa-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(json.dumps({'archivedFiles':len(records),'excludedFiles':len(excluded),'chunks':count,'manifestFiles':len(files),'manifestSHA256':sha((p/'qa-manifest.json').read_bytes()),'reportSHA256':sha((p/'report.md').read_bytes()),'scope':'ARCHIVE_ONLY'}))

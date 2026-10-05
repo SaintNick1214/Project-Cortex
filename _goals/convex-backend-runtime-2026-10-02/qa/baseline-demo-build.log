@@ -1,0 +1,37 @@
+npm notice run @cortexmemory/vercel-ai-quickstart@1.0.0 build
+npm notice run next build --webpack
+▲ Next.js 16.3.8 (webpack)
+✓ Running next.config.js took 17ms
+- Experiments (use with caution):
+  ✓ externalDir
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 20.0s
+  Running TypeScript ...
+  Finished TypeScript in 3.0s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/11) ...
+  Generating static pages using 4 workers (2/11)
+  Generating static pages using 4 workers (5/11)
+  Generating static pages using 4 workers (8/11)
+✓ Generating static pages using 4 workers (11/11) in 2.0s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/check
+├ ƒ /api/auth/login
+├ ƒ /api/auth/register
+├ ƒ /api/auth/setup
+├ ƒ /api/chat
+├ ƒ /api/chat-v6
+├ ƒ /api/conversations
+├ ƒ /api/facts
+├ ƒ /api/health
+└ ƒ /api/memories
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

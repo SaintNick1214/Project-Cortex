@@ -1,0 +1,43 @@
+{
+  "argv": [
+    "work/resume/task04-transport30-fresh-review/resume-audit.py"
+  ],
+  "utcPre": "2026-10-04T13:33:10.000689+00:00",
+  "checks": [
+    {
+      "name": "corrected-independent-negative-controls",
+      "utcPre": "2026-10-04T13:33:10.082885+00:00",
+      "result": {
+        "expectedRejections": 21,
+        "validationGaps": 0,
+        "sealedMapAffected": false,
+        "foreignPreserved": true,
+        "partialOwnedFileRetained": true
+      },
+      "exitCode": 0,
+      "utcPost": "2026-10-04T13:33:10.087637+00:00"
+    },
+    {
+      "name": "frozen-source-closure-after",
+      "utcPre": "2026-10-04T13:33:10.087804+00:00",
+      "result": 63543,
+      "exitCode": 0,
+      "utcPost": "2026-10-04T13:33:18.954235+00:00"
+    },
+    {
+      "name": "packet-closure-after",
+      "utcPre": "2026-10-04T13:33:18.954490+00:00",
+      "result": {
+        "rows": 52,
+        "manifestSha256": "8e0571129a46c31c031a751a6f97d532d54a16e4c9c0de86b72e9a169094f4d8"
+      },
+      "exitCode": 0,
+      "utcPost": "2026-10-04T13:33:18.966577+00:00"
+    }
+  ],
+  "failures": [],
+  "qualificationAcceptance": false,
+  "priorSuccessfulEvidence": "reviewer-failed-audit-receipt.json; failure there is reviewer expectation defect, not subject helper failure",
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:33:18.966755+00:00"
+}

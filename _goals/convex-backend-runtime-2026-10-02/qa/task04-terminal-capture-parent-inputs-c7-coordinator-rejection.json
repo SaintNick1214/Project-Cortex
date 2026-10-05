@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-04 07:43:30 UTC",
+  "gate": "REJECT_PREPARATION",
+  "subject": "task04-terminal-capture-parent-inputs-c7-preparation",
+  "review": {
+    "path": "task04-terminal-capture-parent-inputs-c7-review",
+    "verdict": "REJECT",
+    "score": 2.8,
+    "reportSHA256": "bc0345aed4fc2bfcbb00b0d52c8d8e370630d7c9ab77e4963d7aac32db0ba1a2",
+    "manifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+    "coordinatorRowsVerified": 80,
+    "mismatches": 0
+  },
+  "blockers": [
+    "All eight signatures can begin after120s deadline crossed during key derivation.",
+    "Later exclusive proof/history/identity/peer outputs can occur after deadline crossed during prior output."
+  ],
+  "repair": "NEW parent-inputs-c8-preparation and consumed native-profiles-c3; per-effect deadline checks and fresh reviews; all original assertions and caps retained; C7/C2 histories immutable.",
+  "effects": {
+    "targetsProvisioned": 0,
+    "realPrivateReads": 0,
+    "signatures": 0,
+    "paidInference": 0,
+    "native": "NOT_RUN"
+  },
+  "coordinator": "Read complete final review and independently rehashed all80rows before bounded repair delegation."
+}

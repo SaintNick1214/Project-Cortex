@@ -1,0 +1,756 @@
+--- cycle2/convex-dev/artifacts.ts
++++ cycle3/convex-dev/artifacts.ts
+@@ -15,7 +15,7 @@
+ 
+ import { ConvexError, v } from "convex/values";
+ import { internalMutation, mutation, query } from "./_generated/server";
+-import { ArtifactOperation, artifactDeny, nextArtifactVersion, safeInteger, validateArtifact } from "./runtimeArtifactAuth";
++import { ArtifactOperation, artifactDeny, artifactHandler, nextArtifactVersion, safeInteger, validateArtifact } from "./runtimeArtifactAuth";
+ 
+ // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ // Shared Validators
+@@ -79,7 +79,7 @@
+     metadata: v.optional(v.any()),
+     tags: v.optional(v.array(v.string())),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+     const now = Date.now();
+     const artifactId = args.artifactId ?? `art-${now}-${Math.random().toString(36).substring(2, 11)}`;
+@@ -99,7 +99,7 @@
+       metadata: args.metadata, tags: args.tags ?? [], createdAt: now, updatedAt: now,
+     });
+     return await operation.complete(artifact);
+-  },
++  }),
+ });
+ 
+ /**
+@@ -127,7 +127,7 @@
+     // Change description
+     changeSummary: v.optional(v.string()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -196,7 +196,7 @@
+     });
+ 
+     return await operation.complete(await ctx.db.get(artifact._id));
+-  },
++  }),
+ });
+ 
+ /**
+@@ -210,7 +210,7 @@
+     hard: v.optional(v.boolean()), // Default: false (soft delete)
+     deletedBy: v.optional(v.string()), // Optional: track who deleted
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -218,7 +218,7 @@
+     return await operation.complete({ deleted: true, artifactId: artifact.artifactId,
+       deletedAt: Date.now(), permanent: true, restorable: false,
+       versionsPurged: 0, requestedHardDelete: args.hard === true });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -233,7 +233,7 @@
+     artifactId: v.string(),
+     tenantId: v.optional(v.string()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -269,7 +269,7 @@
+       canUndo: canUndoTo(artifact.versionHistory, newPointer),
+       canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -283,7 +283,7 @@
+     artifactId: v.string(),
+     tenantId: v.optional(v.string()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -319,7 +319,7 @@
+       canUndo: canUndoTo(artifact.versionHistory, newPointer),
+       canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -336,7 +336,7 @@
+     tenantId: v.optional(v.string()),
+     streamingState: streamingStateValidator,
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -357,7 +357,7 @@
+       currentState: args.streamingState,
+       updatedAt: now,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -429,7 +429,7 @@
+     tenantId: v.optional(v.string()),
+     keepLatest: v.number(), // Number of versions to keep
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     if (safeInteger(args.keepLatest, 1) < 1) {
+@@ -495,7 +495,7 @@
+       versionsPurged: versionsToRemove,
+       versionsRemaining: prunedHistory.length,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -507,7 +507,7 @@
+     memorySpaceId: v.optional(v.string()),
+     tenantId: v.optional(v.string()), // Limit to tenant if provided
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     // Only authenticated Convex deployment-operator internal tooling may invoke
+     // this registration. URL/environment names and public JWT admin labels are
+     // never operator credentials. This does not remove other control tables.
+@@ -535,7 +535,7 @@
+       deleted += 1;
+     }
+     return { deleted };
+-  },
++  }),
+ });
+ 
+ // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@@ -552,7 +552,7 @@
+     tenantId: v.optional(v.string()),
+     includeVersionHistory: v.optional(v.boolean()), // Default: true
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, false);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -566,7 +566,7 @@
+     }
+ 
+     return await operation.complete(artifact);
+-  },
++  }),
+ });
+ 
+ /**
+@@ -580,14 +580,14 @@
+     streamingState: v.optional(streamingStateValidator),
+     includeVersionHistory: v.optional(v.boolean()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, false);
+     await operation.conversation({ conversationId: args.conversationId });
+     let artifacts = await operation.list();
+     artifacts = artifacts.filter((row) => row.conversationRef?.conversationId === args.conversationId);
+     if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);
+     return await operation.complete(args.includeVersionHistory === false ? artifacts.map((row) => ({ ...row, versionHistory: [] })) : artifacts);
+-  },
++  }),
+ });
+ 
+ /**
+@@ -613,7 +613,7 @@
+     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+     includeVersionHistory: v.optional(v.boolean()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, false);
+     let artifacts = await operation.list();
+     if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);
+@@ -634,7 +634,7 @@
+     return await operation.complete({ artifacts: args.includeVersionHistory === false
+       ? selected.map((row) => ({ ...row, versionHistory: [] })) : selected,
+       total, limit, offset, hasMore: offset + limit < total });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -651,7 +651,7 @@
+     createdAfter: v.optional(v.number()),
+     createdBefore: v.optional(v.number()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, false);
+     let artifacts = await operation.list();
+     if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);
+@@ -660,7 +660,7 @@
+     if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }
+     if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }
+     return await operation.complete(artifacts.length);
+-  },
++  }),
+ });
+ 
+ /**
+@@ -673,7 +673,7 @@
+     version: v.number(),
+     tenantId: v.optional(v.string()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, false);
+ 
+     safeInteger(args.version, 1);
+@@ -698,7 +698,7 @@
+       changeSummary: versionEntry.changeSummary,
+       isCurrent: versionEntry.version === artifact.versionPointer,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -713,7 +713,7 @@
+     offset: v.optional(v.number()),
+     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, false);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -751,7 +751,7 @@
+       canUndo: canUndoTo(artifact.versionHistory, artifact.versionPointer),
+       canRedo: canRedoTo(artifact.versionHistory, artifact.versionPointer, artifact.version),
+     });
+-  },
++  }),
+ });
+ 
+ // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@@ -838,7 +838,7 @@
+     estimatedTotal: v.optional(v.number()), // Estimated total bytes
+     metadata: v.optional(v.any()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -851,12 +851,7 @@
+     // Note: We explicitly check for draft rather than using isValidTransition because
+     // paused → streaming is valid for resumeStreaming, not startStreaming
+     if (artifact.streamingState !== "draft") {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot start streaming: artifact is in '${artifact.streamingState}' state. Expected 'draft'.`,
+-        currentState: artifact.streamingState,
+-        targetState: "streaming",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     if (args.estimatedTotal !== undefined) safeInteger(args.estimatedTotal);
+@@ -888,7 +883,7 @@
+       previousState: artifact.streamingState,
+       currentState: "streaming",
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -906,7 +901,7 @@
+     chunk: v.string(),
+     chunkIndex: v.optional(v.number()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -917,22 +912,13 @@
+ 
+     // Verify artifact is in streaming state
+     if (artifact.streamingState !== "streaming") {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot append content: artifact is in '${artifact.streamingState}' state. Expected 'streaming'.`,
+-        currentState: artifact.streamingState,
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     // Verify sessionId matches current streaming session
+     const currentSessionId = artifact.streamingMetadata?.sessionId;
+     if (currentSessionId !== args.sessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
+-        expectedSessionId: currentSessionId,
+-        providedSessionId: args.sessionId,
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+ 
+     if (args.chunkIndex !== undefined) safeInteger(args.chunkIndex);
+@@ -971,7 +957,7 @@
+       progress,
+       timestamp: now,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -988,7 +974,7 @@
+     sessionId: v.string(),
+     reason: v.optional(v.string()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -999,21 +985,13 @@
+ 
+     // Validate state transition: streaming → paused
+     if (!isValidTransition(artifact.streamingState, "paused")) {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot pause: artifact is in '${artifact.streamingState}' state. Expected 'streaming'.`,
+-        currentState: artifact.streamingState,
+-        targetState: "paused",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     // Verify sessionId matches
+     const currentSessionId = artifact.streamingMetadata?.sessionId;
+     if (currentSessionId !== args.sessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+ 
+     const now = Date.now();
+@@ -1038,7 +1016,7 @@
+       bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,
+       contentPreserved: true,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -1054,7 +1032,7 @@
+     tenantId: v.optional(v.string()),
+     sessionId: v.string(),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -1067,21 +1045,13 @@
+     // Note: We explicitly check for paused rather than using isValidTransition because
+     // draft → streaming is valid for startStreaming, not resumeStreaming
+     if (artifact.streamingState !== "paused") {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot resume: artifact is in '${artifact.streamingState}' state. Expected 'paused'.`,
+-        currentState: artifact.streamingState,
+-        targetState: "streaming",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     // Verify sessionId matches
+     const currentSessionId = artifact.streamingMetadata?.sessionId;
+     if (currentSessionId !== args.sessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+ 
+     const now = Date.now();
+@@ -1104,7 +1074,7 @@
+       currentState: "streaming",
+       bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -1122,7 +1092,7 @@
+     reason: v.optional(v.string()),
+     preserveContent: v.optional(v.boolean()), // Default: true
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -1135,27 +1105,16 @@
+     // Note: We explicitly check states rather than using isValidTransition because
+     // final → draft is valid for update operations, but not for cancel operations
+     if (artifact.streamingState !== "streaming" && artifact.streamingState !== "paused") {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot cancel: artifact is in '${artifact.streamingState}' state. Expected 'streaming' or 'paused'.`,
+-        currentState: artifact.streamingState,
+-        targetState: "draft",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     // Verify sessionId matches - required for active streaming sessions
+     const currentSessionId = artifact.streamingMetadata?.sessionId;
+     if (!currentSessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: "No active streaming session to cancel.",
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+     if (currentSessionId !== args.sessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+ 
+     const now = Date.now();
+@@ -1192,7 +1151,7 @@
+       bytesReceived,
+       contentLength: preserveContent ? contentLength : 0,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -1211,7 +1170,7 @@
+     createVersion: v.optional(v.boolean()), // Default: true - create version history entry
+     changeSummary: v.optional(v.string()),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -1222,21 +1181,13 @@
+ 
+     // Validate state transition: streaming → final
+     if (!isValidTransition(artifact.streamingState, "final")) {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot finalize: artifact is in '${artifact.streamingState}' state. Expected 'streaming'.`,
+-        currentState: artifact.streamingState,
+-        targetState: "final",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     // Verify sessionId matches
+     const currentSessionId = artifact.streamingMetadata?.sessionId;
+     if (currentSessionId !== args.sessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+ 
+     const now = Date.now();
+@@ -1310,7 +1261,7 @@
+         ? nextArtifactVersion(artifact)
+         : artifact.versionPointer,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -1328,7 +1279,7 @@
+     errorCode: v.string(),
+     errorMessage: v.string(),
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -1339,21 +1290,13 @@
+ 
+     // Validate state transition: most states can go to error
+     if (!isValidTransition(artifact.streamingState, "error")) {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot set error state: artifact is in '${artifact.streamingState}' state.`,
+-        currentState: artifact.streamingState,
+-        targetState: "error",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     // If sessionId provided, verify it matches (optional for error state)
+     const currentSessionId = artifact.streamingMetadata?.sessionId;
+     if (args.sessionId && currentSessionId && currentSessionId !== args.sessionId) {
+-      throw new ConvexError({
+-        code: "STREAMING_SESSION_INVALID",
+-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
+-      });
++      artifactDeny("STREAMING_SESSION_INVALID");
+     }
+ 
+     const now = Date.now();
+@@ -1379,7 +1322,7 @@
+       contentPreserved: true,
+       bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,
+     });
+-  },
++  }),
+ });
+ 
+ /**
+@@ -1395,7 +1338,7 @@
+     tenantId: v.optional(v.string()),
+     clearContent: v.optional(v.boolean()), // Default: false - preserve content
+   },
+-  handler: async (ctx, args) => {
++  handler: async (ctx, args) => artifactHandler(async () => {
+     const operation = await ArtifactOperation.begin(ctx, args, true);
+ 
+     const artifact = await operation.load(args.artifactId);
+@@ -1406,12 +1349,7 @@
+ 
+     // Validate state transition: error → draft
+     if (artifact.streamingState !== "error") {
+-      throw new ConvexError({
+-        code: "INVALID_STATE_TRANSITION",
+-        message: `Cannot retry: artifact is in '${artifact.streamingState}' state. Expected 'error'.`,
+-        currentState: artifact.streamingState,
+-        targetState: "draft",
+-      });
++      artifactDeny("INVALID_STATE_TRANSITION");
+     }
+ 
+     const now = Date.now();
+@@ -1442,7 +1380,7 @@
+       contentCleared: clearContent,
+       contentLength: clearContent ? 0 : (artifact.content?.length || 0),
+     });
+-  },
++  }),
+ });
+ 
+ // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+--- cycle2/convex-dev/runtimeArtifactAuth.ts
++++ cycle3/convex-dev/runtimeArtifactAuth.ts
+@@ -38,6 +38,57 @@
+ export function artifactDeny(code = "FORBIDDEN"): never {
+   throw new ConvexError({ code, message: code === "CAPABILITY_NOT_READY"
+     ? "Owned file and canonical source admission is pending." : "Artifact operation denied." });
++}
++const SAFE_ARTIFACT_ERROR_CODES = new Set([
++  "UNAUTHENTICATED", "FORBIDDEN", "INVALID_INPUT", "INVALID_ARGUMENT", "INVALID_VERSION_STATE",
++  "INVALID_STATE_TRANSITION", "STREAMING_SESSION_INVALID", "CAPABILITY_NOT_READY",
++]);
++const SAFE_ARTIFACT_STRING_ERRORS = new Set([
++  "ARTIFACT_IS_DELETED", "UNDO_NOT_AVAILABLE", "REDO_NOT_AVAILABLE", "KEEP_LATEST_MUST_BE_POSITIVE",
++]);
++const AUTHORITY_ERROR_MESSAGES = new Map([
++  ["UNAUTHENTICATED", "Verified identity required"], ["FORBIDDEN", "Access denied"],
++  ["INVALID_INPUT", "Invalid authority configuration"],
++]);
++function safeArtifactErrorData(error: unknown): Value | undefined {
++  if (!(error instanceof ConvexError)) return undefined;
++  const data: unknown = error.data;
++  if (typeof data === "string" && SAFE_ARTIFACT_STRING_ERRORS.has(data)) return data;
++  if (data === null || typeof data !== "object") return undefined;
++  const fields = data as Record<string, unknown>;
++  const code = fields.code;
++  if (typeof code !== "string") return undefined;
++  const keys = Object.keys(fields).sort().join(",");
++  if (keys === "code,message" && SAFE_ARTIFACT_ERROR_CODES.has(code)
++    && fields.message === (code === "CAPABILITY_NOT_READY"
++      ? "Owned file and canonical source admission is pending." : "Artifact operation denied.")) {
++    return { code, message: code === "CAPABILITY_NOT_READY"
++      ? "Owned file and canonical source admission is pending." : "Artifact operation denied." };
++  }
++  const message = AUTHORITY_ERROR_MESSAGES.get(code);
++  if (keys === "code,message,outcome,retryable,version" && message !== undefined && fields.message === message
++    && fields.version === 1 && fields.retryable === false && fields.outcome === "not_dispatched") {
++    return { version: 1, code, message, retryable: false, outcome: "not_dispatched" };
++  }
++  return undefined;
++}
++/** Error delivery is also an output boundary. Retain only exact static typed
++ * authority/input/capability errors. Unexpected backend diagnostics are distinct
++ * from FORBIDDEN and success, with no raw message/cause/row values. This boundary
++ * never acquires READ, removes admitted witnesses, or converts failures to receipts.
++ */
++export async function artifactHandler<R>(handler: () => Promise<R>): Promise<R> {
++  try { return await handler(); }
++  catch (error) {
++    let safeData: Value | undefined;
++    try { safeData = safeArtifactErrorData(error); }
++    catch { /* Even malformed exception getters cannot expose backend diagnostics. */ }
++    if (safeData !== undefined) throw new ConvexError(safeData);
++    // Every selected mutation propagates failure so Convex aborts the transaction;
++    // queries have no committed effects. No original diagnostic is retained.
++    throw new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.",
++      retryable: false, outcome: "not_committed" });
++  }
+ }
+ export function safeInteger(value: number, minimum = 0): number {
+   if (!Number.isSafeInteger(value) || value < minimum) artifactDeny("INVALID_ARGUMENT");
+--- cycle2/tests/unit/runtimeArtifactAuth/handlers.test.ts
++++ cycle3/tests/unit/runtimeArtifactAuth/handlers.test.ts
+@@ -481,3 +481,107 @@
+     expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
+   });
+ });
++
++describe("cycle3 private error output admission", () => {
++  const errors = [
++    { name: "startStreaming", branch: "state", state: "paused", code: "INVALID_STATE_TRANSITION" },
++    { name: "appendContent", branch: "state", state: "paused", code: "INVALID_STATE_TRANSITION" },
++    { name: "pauseStreaming", branch: "state", state: "paused", code: "INVALID_STATE_TRANSITION" },
++    { name: "resumeStreaming", branch: "state", state: "draft", code: "INVALID_STATE_TRANSITION" },
++    { name: "cancelStreaming", branch: "state", state: "error", code: "INVALID_STATE_TRANSITION" },
++    { name: "finalizeStreaming", branch: "state", state: "draft", code: "INVALID_STATE_TRANSITION" },
++    { name: "setStreamingError", branch: "state", state: "final", code: "INVALID_STATE_TRANSITION" },
++    { name: "retryFromError", branch: "state", state: "paused", code: "INVALID_STATE_TRANSITION" },
++    { name: "setStreamingState", branch: "state", state: "final", code: "INVALID_STATE_TRANSITION" },
++    ...["appendContent", "pauseStreaming", "resumeStreaming", "cancelStreaming", "finalizeStreaming", "setStreamingError"]
++      .map((name) => ({ name, branch: "session", state: name === "resumeStreaming" ? "paused" : "streaming", code: "STREAMING_SESSION_INVALID" })),
++    { name: "cancelStreaming", branch: "missing-session", state: "streaming", code: "STREAMING_SESSION_INVALID" },
++  ];
++  for (const read of ["absent", "scope-owner-denied", "resource-admitted"] as const) {
++    test.each(errors)(`${read} $name $branch error contains only a safe typed code and no stored details`, async ({ name, branch, state, code }) => {
++      const f = fixture(["write"], "space");
++      if (read !== "absent") f.db.add("runtimeAuthGrants", { principalId: f.principal._id, membershipId: f.membership._id,
++        tenantId: "tenant-a", tenantEpoch: 1, capabilities: ["read"], resourceAccess: read === "scope-owner-denied" ? "own" : "tenant", version: 1 });
++      const row = f.row({ ownerPrincipalId: "other-canonical-owner", content: "unread canonical content", streamingState: state,
++        streamingMetadata: { ...(branch === "missing-session" ? {} : { sessionId: "unread canonical session" }),
++          startedAt: 1, bytesReceived: 7, errorMessage: "unread canonical error" },
++        metadata: { storedConfig: "unread canonical configuration" } });
++      if (read === "resource-admitted") {
++        expect((await f.invoke("get", { artifactId: "artifact-a", memorySpaceId: "space-a" })).content).toBe(row.content);
++      } else {
++        await expect(f.invoke("get", { artifactId: "artifact-a", memorySpaceId: "space-a" }))
++          .rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
++      }
++      const identity = jest.spyOn(f.ctx.auth, "getUserIdentity");
++      let caught: { data?: unknown } | undefined;
++      try {
++        await f.invoke(name, { artifactId: "artifact-a", memorySpaceId: "space-a", sessionId: "caller guess", chunk: "caller chunk",
++          errorCode: "caller-error", errorMessage: "caller error", streamingState: "paused" }).catch((error) => { caught = error; });
++        expect(caught?.data).toEqual({ code, message: "Artifact operation denied." });
++        const output = JSON.stringify(caught?.data);
++        for (const privateValue of [row._id, row.content, "unread canonical session", "unread canonical error", "unread canonical configuration", state]) {
++          expect(output).not.toContain(privateValue);
++        }
++        // WRITE and initially independent READ are the only identity admissions.
++        // The error boundary does not acquire READ or retry a denied READ.
++        expect(identity).toHaveBeenCalledTimes(2);
++        expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
++      } finally { identity.mockRestore(); }
++    });
++    test.each(["undo", "redo", "purgeVersions"] as const)(`${read} %s static availability error preserves its existing code and zero effects`, async (name) => {
++      const f = fixture(["write"], "space");
++      if (read !== "absent") f.db.add("runtimeAuthGrants", { principalId: f.principal._id, membershipId: f.membership._id,
++        tenantId: "tenant-a", tenantEpoch: 1, capabilities: ["read"], resourceAccess: read === "scope-owner-denied" ? "own" : "tenant", version: 1 });
++      f.row({ ownerPrincipalId: "other-canonical-owner", versionPointer: name === "undo" ? 1 : 2 });
++      const code = name === "undo" ? "UNDO_NOT_AVAILABLE" : name === "redo" ? "REDO_NOT_AVAILABLE" : "INVALID_ARGUMENT";
++      await expect(f.invoke(name, { artifactId: "artifact-a", keepLatest: 0 })).rejects.toMatchObject({ data: name === "purgeVersions"
++        ? { code, message: "Artifact operation denied." } : code });
++      expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
++    });
++  }
++  test.each([...selected, "purgeAll"])("native %s unexpected database error hides row/config/document details", async (name) => {
++    const f = happyCase(name === "purgeAll" ? "get" : name as typeof selected[number]);
++    let injections = 0;
++    f.db.hook = (event) => { if (event.action === "query" && event.table === "artifacts") {
++      injections += 1;
++      throw new Error(`Database diagnostic: ${f.db.rows("artifacts")[0]?._id ?? "internal-document"}; unread stored content/configuration`);
++    } };
++    await expect(f.invoke(name, name === "purgeAll" ? { tenantId: "tenant-a", memorySpaceId: "space-a" } : f.args))
++      .rejects.toHaveProperty("data", { version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.", retryable: false, outcome: "not_committed" });
++    expect(injections).toBe(1); expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
++  });
++  test.each(["recognized-code", "authority-code-with-diagnostics", "unknown-code", "string-payload"] as const)("unexpected native ConvexError %s cannot return stored private payload", async (kind) => {
++    const { ConvexError } = await import("convex/values");
++    const f = fixture(["write"], "space"); const row = f.row({ ownerPrincipalId: "other-canonical-owner" });
++    let injections = 0;
++    f.db.hook = (event) => { if (event.action === "query" && event.table === "artifacts") {
++      injections += 1;
++      throw new ConvexError(kind === "string-payload" ? "unread native backend payload" : {
++        code: kind === "recognized-code" ? "STREAMING_SESSION_INVALID" : kind === "authority-code-with-diagnostics" ? "FORBIDDEN" : "unread native backend code",
++        message: "unread native backend payload", expectedSessionId: "unread native session", currentState: "paused", documentId: row._id,
++      });
++    } };
++    await expect(f.invoke("appendContent", { artifactId: "artifact-a", sessionId: "guess", chunk: "caller chunk" }))
++      .rejects.toHaveProperty("data", { version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.", retryable: false, outcome: "not_committed" });
++    expect(injections).toBe(1); expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
++  });
++  test("unexpected database error after a text effect remains a failure and rolls back", async () => {
++    const f = fixture(["write"], "space"); f.row({ ownerPrincipalId: "other-canonical-owner" }); let injections = 0;
++    f.db.hook = (event) => { if (event.action === "patch") { injections += 1; throw new Error("unread backend row/session/configuration"); } };
++    await expect(f.invoke("update", { artifactId: "artifact-a", content: "rollback" }))
++      .rejects.toHaveProperty("data", { version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.", retryable: false, outcome: "not_committed" });
++    expect(injections).toBe(1); expect(f.db.attempts).toHaveLength(1);
++    expect(f.db.rows("artifacts")[0].content).toBe("first"); expect(f.db.writes).toEqual([]);
++  });
++});
++
++test("malformed native exception getter remains an opaque backend failure with zero effects", async () => {
++  const { ConvexError } = await import("convex/values"); const f = fixture(["write"], "space"); f.row({ ownerPrincipalId: "other-canonical-owner" });
++  const error = new ConvexError({ code: "FORBIDDEN", message: "unexpected backend" }); let injections = 0; let getterCalls = 0;
++  Object.defineProperty(error, "data", { get: () => { getterCalls += 1; throw new Error("unread native diagnostic"); } });
++  f.db.hook = (event) => { if (event.action === "query" && event.table === "artifacts") { injections += 1; throw error; } };
++  await expect(f.invoke("update", { artifactId: "artifact-a", content: "caller content" })).rejects.toHaveProperty("data", {
++    version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.", retryable: false, outcome: "not_committed",
++  });
++  expect(injections).toBe(1); expect(getterCalls).toBe(1); expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
++});

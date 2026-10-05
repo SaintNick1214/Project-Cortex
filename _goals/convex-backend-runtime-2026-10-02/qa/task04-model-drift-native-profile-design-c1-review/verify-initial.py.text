@@ -1,0 +1,88 @@
+from pathlib import Path
+import json,hashlib,datetime,copy
+R=Path('/workspace/Project-Cortex'); Q=R/'_goals/convex-backend-runtime-2026-10-02/qa'
+S=Q/'task04-model-drift-native-profile-design-c1'; O=Q/'task04-model-drift-native-profile-design-c1-review'
+def digest(b):return hashlib.sha256(b).hexdigest()
+def read(p):return json.loads(p.read_bytes())
+def packet(p,m):
+ rows=read(p/m)['files']; names=[r['path'] for r in rows]
+ assert len(names)==len(set(names))
+ actual=sorted(x.relative_to(p).as_posix() for x in p.rglob('*') if x.is_file() and x!=p/m)
+ assert sorted(names)==actual,(p,'closure')
+ for row in rows:
+  f=p/row['path'];assert not f.is_symlink() and f.stat().st_nlink==1
+  b=f.read_bytes();assert len(b)==row['bytes'] and digest(b)==row['sha256'],str(f)
+ return {'root':str(p.relative_to(R)),'files':len(rows),'manifestSHA256':digest((p/m).read_bytes())}
+results=[]
+def check(name,fn):
+ fn();results.append({'name':name,'status':'PASS_STATIC_DESIGN_ONLY'})
+check('exact_subject_digest',lambda: (_ for _ in ()).throw(AssertionError()) if digest((S/'manifest.json').read_bytes())!='2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16' else None)
+packets=[packet(S,'manifest.json')]
+check('complete_subject_15',lambda:exec('assert packets[0]["files"]==15'))
+for name,m in [('task04-model-drift-charge-only-c2-design-review','manifest.json'),('task04-terminal-capture-native-c4-aggregate-review','qa-manifest.json'),('task04-terminal-capture-parent-inputs-c9-restoration-review','qa-manifest.json')]:
+ p=Q/name
+ if not (p/m).exists():m='qa-manifest.json' if m=='manifest.json' else 'manifest.json'
+ packets.append(packet(p,m))
+evidence=[]
+for row in read(S/'source-evidence.json')['files']:
+ b=(R/row['path']).read_bytes();assert len(b)==row['bytes'] and digest(b)==row['sha256']
+ evidence.append(row)
+check('all_36_source_evidence_rows',lambda:exec('assert len(evidence)==36'))
+C=read(S/'cases.json')['cases']; B=read(S/'budget.json')['driftProfile']; P=(S/'proposal.md').read_text()
+def arithmetic(c=C,b=B):
+ assert len(c)==26 and len({x['id'] for x in c})==26
+ assert sum(x['createdRowsUpper'] for x in c)==b['createdCoreUpper']==417
+ assert sum(x['clientRpcUpperIncludingThreeCleanupCalls'] for x in c)==b['caseClientRpcUpper']==832
+ assert sum(b[k] for k in ['caseClientRpcUpper','securityClientRpcUpper','emptyClientRpcUpper','publicationClientRpcUpper','finalRecoveryClientRpcUpper'])==b['clientRpcUpper']==2908
+ assert b['clientRpcUpper']+b['nestedUpper']==b['totalRpcUpper']==2945<3000
+ assert b['createdCoreUpper']+b['createdSecurityUpper']+b['createdEmptyUpper']==b['createdUpper']==b['deletedUpper']==444<465
+ assert b['journalRowsUpper']*b['journalSerializedLineUpper']+2211840+16384==b['journalBytesUpperIncludingOriginal2211840And16384Reserve']==7143424<8388608
+ assert sum(b['nestedBreakdown'].values())==37
+check('independent_case_and_budget_arithmetic',arithmetic)
+def adverse():
+ for alteration in ['rpc','row','case','nested','bytes']:
+  c=copy.deepcopy(C);b=copy.deepcopy(B)
+  if alteration=='rpc':c[0]['clientRpcUpperIncludingThreeCleanupCalls']+=1
+  if alteration=='row':c[0]['createdRowsUpper']+=1
+  if alteration=='case':c.pop()
+  if alteration=='nested':b['nestedUpper']+=1
+  if alteration=='bytes':b['journalSerializedLineUpper']+=1
+  try:arithmetic(c,b)
+  except AssertionError:continue
+  raise AssertionError('mutation accepted '+alteration)
+check('five_adverse_arithmetic_controls',adverse)
+def names():
+ ids={x['id'] for x in C}
+ assert len([x for x in ids if x.startswith('defensive-')])==8
+ assert {'token-input-unknown','token-input-known40','token-output-unknown','token-output-known40'}<=ids
+ assert {'captured-parity-settle','captured-parity-recover','captured-parity-operator'}<=ids
+ assert {'gateway-native-drift-40','gateway-native-drift-150','gateway-native-healthy-attachment'}<=ids
+check('all_required_variant_families',names)
+def caps():
+ assert [B[x] for x in ['rpcMs','cliMs','qualifierMs','driverMs','processesCap','groupsCap']]==[12000,120000,1200000,1440000,6,2]
+ assert B['maximumLiveUpper']==32<=320 and B['journalRowsUpper']==4800<=6000
+ assert all(x['clientRpcUpperIncludingThreeCleanupCalls']==32 for x in C)
+ assert sorted(x['createdRowsUpper'] for x in C)==[16]*25+[17]
+ assert 2892+832>3000 and 2875+832>3000
+check('unchanged_caps_and_allocation_conflict',caps)
+def gate():
+ for phrase in ['fail preparation','independent source count','enumerate all reachable nested calls','max-encode every PASS/FAIL event form','healthy source-preflight calibration','Both','Source-specific']:
+  assert phrase.lower() in P.lower(),phrase
+ assert '2945*12s' in read(S/'budget.json')['schedulingCaveat']
+check('source_proofs_are_explicit_preparation_gates',gate)
+def control():
+ for phrase in ['finite validator union','both original hashOnly/stateOnly','No arbitrary table name','attempt→operation→tenant','original account bindings','metadata change','actual registered handlers','healthy arm actually calls registered attach']:
+  assert phrase in P,phrase
+check('finite_controls_and_actual_handler_ports_specified',control)
+def preserve():
+ for phrase in ['200public×7 identities=1400','87internal×2=174','20maintenance','5peer','3real forced kills','no intervening cleanup','DELETE200/GET404','4historical C11 hashes/9 locator','noJWT storage-handler']:
+  assert phrase in P,phrase
+check('original_security_fault_provenance_retirement_obligations',preserve)
+def failures():
+ assert (S/'failures/initial-manifest.json').exists()
+ f=read(S/'failures/arithmetic-verification-failure.json');assert f['correctValue']==2945 and f['observedExitCode']==1
+ assert len(read(S/'discovery-failures.json')['failures'])==4
+check('subject_failures_preserved',failures)
+body={'recordedUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'results':results,'packets':packets,'sourceEvidence':evidence,'scope':'Local standalone integrity/arithmetic/design controls only; NOT application/native/source-bound runner tests','caseIDs':[x['id'] for x in C],'limitations':['No final implementation to count or calibrate','No current mutable policy/Gateway freeze or acceptance','Historical C4/C9 closure verified only for public listed packets; raw private originals not read']}
+(O/'verification.json').write_text(json.dumps(body,indent=2)+'\n')
+print(json.dumps({'controls':len(results),'packets':[(x['files'],x['manifestSHA256']) for x in packets],'sourceEvidenceRows':len(evidence),'native':'NOT_RUN'}))

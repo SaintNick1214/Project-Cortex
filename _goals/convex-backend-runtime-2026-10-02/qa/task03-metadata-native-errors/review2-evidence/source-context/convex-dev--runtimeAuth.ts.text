@@ -1,0 +1,396 @@
+   1: /** Trusted authorization boundary. Registered functions in this module are internal only. */
+   2: import { ConvexError, v } from "convex/values";
+   3: import type { UserIdentity } from "convex/server";
+   4: import { internalMutation, internalQuery } from "./_generated/server";
+   5: import type { MutationCtx, QueryCtx } from "./_generated/server";
+   6: import type {
+   7:   RuntimeActorKind, RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement,
+   8:   RuntimeCapability, RuntimeResource, RuntimeResourceAccess, RuntimeResourceType,
+   9: } from "../src/auth/verified";
+  10: import {
+  11:   runtimeActorKind, runtimeAuthorityReference, runtimeAuthorityRequirement,
+  12:   runtimeCapability, runtimeResourceAccess, runtimeResourceType,
+  13: } from "./runtimeAuthSchema";
+  14: 
+  15: type Lifecycle = { version: number; revokedAt?: number; deletedAt?: number };
+  16: export interface PrincipalRecord extends Lifecycle {
+  17:   _id: string; issuer: string; subject: string; actorKind: RuntimeActorKind; metadataUserId?: string;
+  18: }
+  19: export interface MembershipRecord extends Lifecycle {
+  20:   _id: string; principalId: string; tenantId: string;
+  21: }
+  22: export interface GrantRecord extends Lifecycle {
+  23:   _id: string; principalId: string; membershipId: string; tenantId: string;
+  24:   memorySpaceId?: string; tenantEpoch: number; memorySpaceEpoch?: number;
+  25:   capabilities: RuntimeCapability[]; resourceAccess: RuntimeResourceAccess; expiresAt?: number;
+  26: }
+  27: export interface ScopeRecord {
+  28:   tenantId: string; memorySpaceId?: string; epoch: number; deletedAt?: number;
+  29: }
+  30: export interface TombstoneKey {
+  31:   tenantId: string; memorySpaceId?: string; resourceType: RuntimeResourceType; resourceId: string;
+  32: }
+  33: /** Adapter reads only trusted control tables; no user metadata or semantic memory. */
+  34: export interface AuthorityReader {
+  35:   findPrincipal(issuer: string, subject: string): Promise<PrincipalRecord | null>;
+  36:   getPrincipal(id: string): Promise<PrincipalRecord | null>;
+  37:   listMemberships(principalId: string): Promise<MembershipRecord[]>;
+  38:   getMembership(id: string): Promise<MembershipRecord | null>;
+  39:   listGrants(membershipId: string): Promise<GrantRecord[]>;
+  40:   getGrant(id: string): Promise<GrantRecord | null>;
+  41:   getScope(tenantId: string, memorySpaceId?: string): Promise<ScopeRecord | null>;
+  42:   hasTombstone(key: TombstoneKey): Promise<boolean>;
+  43: }
+  44: 
+  45: function deny(code: "UNAUTHENTICATED" | "FORBIDDEN" | "INVALID_INPUT" = "FORBIDDEN"): never {
+  46:   throw new ConvexError({ version: 1, code, message: code === "UNAUTHENTICATED"
+  47:     ? "Verified identity required" : code === "INVALID_INPUT" ? "Invalid authority configuration" : "Access denied",
+  48:   retryable: false, outcome: "not_dispatched" });
+  49: }
+  50: 
+  51: function active(record: Lifecycle | null): record is Lifecycle {
+  52:   return record !== null && Number.isSafeInteger(record.version) && record.version > 0
+  53:     && record.revokedAt === undefined && record.deletedAt === undefined;
+  54: }
+  55: 
+  56: /** Inspect the trusted raw grant scope before capability/ownership/currentness pruning. */
+  57: function boundGrants(
+  58:   grants: GrantRecord[], principalId: string, membership: MembershipRecord,
+  59:   memorySpaceId?: string, exactScope = false,
+  60: ): GrantRecord[] {
+  61:   return grants.filter((grant) => grant.principalId === principalId && grant.membershipId === membership._id
+  62:     && grant.tenantId === membership.tenantId && (exactScope ? grant.memorySpaceId === memorySpaceId
+  63:       : memorySpaceId === undefined || grant.memorySpaceId === undefined || grant.memorySpaceId === memorySpaceId));
+  64: }
+  65: 
+  66: function assertSingleActiveGeneration(grants: GrantRecord[]): void {
+  67:   const groups = new Set<string>();
+  68:   for (const grant of grants) {
+  69:     // Expiry or a malformed version does not repair duplicate unrevoked generations.
+  70:     // Provisioning revokes the old generation before replacement, including expired grants.
+  71:     if (grant.revokedAt !== undefined || grant.deletedAt !== undefined) continue;
+  72:     const key = JSON.stringify([grant.principalId, grant.membershipId, grant.tenantId, grant.memorySpaceId]);
+  73:     if (groups.has(key)) deny();
+  74:     groups.add(key);
+  75:   }
+  76: }
+  77: 
+  78: function validateRequirement(requirement: RuntimeAuthorityRequirement): void {
+  79:   const resource = requirement.resource;
+  80:   if (resource && (!resource.tenantId || !resource.resourceId
+  81:     || (requirement.tenantId !== undefined && requirement.tenantId !== resource.tenantId)
+  82:     || (requirement.memorySpaceId !== undefined && requirement.memorySpaceId !== resource.memorySpaceId))) deny();
+  83:   if (requirement.tenantId === "" || requirement.memorySpaceId === "") deny();
+  84: }
+  85: 
+  86: /** Scope/ownership check for canonical rows. A missing row tenant is never global permission. */
+  87: export function assertResourceScope(authority: RuntimeAuthority, resource: RuntimeResource): void {
+  88:   if (!resource.tenantId || resource.tenantId !== authority.tenantId
+  89:     || (authority.memorySpaceId !== undefined && resource.memorySpaceId !== authority.memorySpaceId)) deny();
+  90:   if (authority.resourceAccess === "own" && resource.ownerPrincipalId !== authority.principalId) deny();
+  91:   if (authority.resourceAccess === "space"
+  92:     && (authority.memorySpaceId === undefined || resource.memorySpaceId !== authority.memorySpaceId)) deny();
+  93: }
+  94: 
+  95: async function assertCurrentScope(
+  96:   reader: AuthorityReader, tenantId: string, memorySpaceId?: string,
+  97: ): Promise<{ tenantEpoch: number; memorySpaceEpoch?: number }> {
+  98:   const tenant = await reader.getScope(tenantId);
+  99:   if (!tenant || tenant.tenantId !== tenantId || tenant.memorySpaceId !== undefined
+ 100:     || tenant.deletedAt !== undefined || !Number.isSafeInteger(tenant.epoch) || tenant.epoch < 1
+ 101:     || await reader.hasTombstone({ tenantId, resourceType: "tenant", resourceId: tenantId })) deny();
+ 102:   if (memorySpaceId === undefined) return { tenantEpoch: tenant.epoch };
+ 103:   const space = await reader.getScope(tenantId, memorySpaceId);
+ 104:   if (!space || space.tenantId !== tenantId || space.memorySpaceId !== memorySpaceId
+ 105:     || space.deletedAt !== undefined || !Number.isSafeInteger(space.epoch) || space.epoch < 1
+ 106:     || await reader.hasTombstone({ tenantId, memorySpaceId, resourceType: "memorySpace", resourceId: memorySpaceId })) deny();
+ 107:   return { tenantEpoch: tenant.epoch, memorySpaceEpoch: space.epoch };
+ 108: }
+ 109: 
+ 110: async function materialize(
+ 111:   reader: AuthorityReader, principal: PrincipalRecord, membership: MembershipRecord,
+ 112:   grant: GrantRecord, requirement: RuntimeAuthorityRequirement, now: number,
+ 113:   pinned?: RuntimeAuthorityReference,
+ 114: ): Promise<RuntimeAuthority> {
+ 115:   const tenantId = requirement.resource?.tenantId ?? requirement.tenantId ?? pinned?.tenantId ?? grant.tenantId;
+ 116:   const memorySpaceId = requirement.resource?.memorySpaceId ?? requirement.memorySpaceId
+ 117:     ?? pinned?.memorySpaceId ?? grant.memorySpaceId;
+ 118:   if (!active(principal) || !active(membership) || !active(grant)
+ 119:     || membership.principalId !== principal._id || grant.principalId !== principal._id
+ 120:     || grant.membershipId !== membership._id || membership.tenantId !== grant.tenantId
+ 121:     || tenantId !== grant.tenantId || !grant.capabilities.includes(requirement.capability)
+ 122:     || (requirement.actorKind !== undefined && requirement.actorKind !== principal.actorKind)
+ 123:     || (grant.expiresAt !== undefined && (!Number.isFinite(grant.expiresAt) || now >= grant.expiresAt))
+ 124:     || (grant.memorySpaceId !== undefined && grant.memorySpaceId !== memorySpaceId)
+ 125:     || (grant.resourceAccess === "space" && grant.memorySpaceId === undefined)
+ 126:     || (grant.resourceAccess === "tenant" && grant.memorySpaceId !== undefined)) deny();
+ 127:   const epochs = await assertCurrentScope(reader, tenantId, memorySpaceId);
+ 128:   if (epochs.tenantEpoch !== grant.tenantEpoch
+ 129:     || (grant.memorySpaceId !== undefined && epochs.memorySpaceEpoch !== grant.memorySpaceEpoch)) deny();
+ 130:   const authority: RuntimeAuthority = {
+ 131:     principalId: principal._id, principalVersion: principal.version,
+ 132:     membershipId: membership._id, membershipVersion: membership.version,
+ 133:     grantId: grant._id, grantVersion: grant.version, tenantId, ...epochs,
+ 134:     ...(memorySpaceId === undefined ? {} : { memorySpaceId }),
+ 135:     actorKind: principal.actorKind, userId: principal.metadataUserId ?? principal._id,
+ 136:     capabilities: [...grant.capabilities], resourceAccess: grant.resourceAccess,
+ 137:   };
+ 138:   if (pinned && (pinned.principalId !== authority.principalId || pinned.principalVersion !== authority.principalVersion
+ 139:     || pinned.membershipId !== authority.membershipId || pinned.membershipVersion !== authority.membershipVersion
+ 140:     || pinned.grantId !== authority.grantId || pinned.grantVersion !== authority.grantVersion
+ 141:     || pinned.tenantId !== authority.tenantId || pinned.tenantEpoch !== authority.tenantEpoch
+ 142:     || pinned.memorySpaceId !== authority.memorySpaceId
+ 143:     || pinned.memorySpaceEpoch !== authority.memorySpaceEpoch)) deny();
+ 144:   if (requirement.resource) {
+ 145:     assertResourceScope(authority, requirement.resource);
+ 146:     const key = { tenantId, memorySpaceId: requirement.resource.memorySpaceId,
+ 147:       resourceType: requirement.resource.resourceType, resourceId: requirement.resource.resourceId };
+ 148:     if (await reader.hasTombstone(key)
+ 149:       || (key.memorySpaceId !== undefined && await reader.hasTombstone({ ...key, memorySpaceId: undefined }))) deny();
+ 150:   }
+ 151:   return authority;
+ 152: }
+ 153: 
+ 154: /** Pure authority resolution. Only Convex-verified issuer/subject enter this function. */
+ 155: export async function resolveAuthority(
+ 156:   reader: AuthorityReader, identity: Pick<UserIdentity, "issuer" | "subject"> | null,
+ 157:   requirement: RuntimeAuthorityRequirement, now = Date.now(),
+ 158: ): Promise<RuntimeAuthority> {
+ 159:   if (!identity?.issuer || !identity.subject) deny("UNAUTHENTICATED");
+ 160:   validateRequirement(requirement);
+ 161:   const principal = await reader.findPrincipal(identity.issuer, identity.subject);
+ 162:   if (!principal || !active(principal) || principal.issuer !== identity.issuer || principal.subject !== identity.subject) deny();
+ 163:   const candidates: RuntimeAuthority[] = [];
+ 164:   const tenantId = requirement.resource?.tenantId ?? requirement.tenantId;
+ 165:   const memorySpaceId = requirement.resource?.memorySpaceId ?? requirement.memorySpaceId;
+ 166:   for (const membership of await reader.listMemberships(principal._id)) {
+ 167:     if (!active(membership) || membership.principalId !== principal._id
+ 168:       || (tenantId !== undefined && membership.tenantId !== tenantId)) continue;
+ 169:     const grants = boundGrants(await reader.listGrants(membership._id), principal._id, membership, memorySpaceId);
+ 170:     assertSingleActiveGeneration(grants);
+ 171:     for (const grant of grants) {
+ 172:       if (!active(grant) || !grant.capabilities.includes(requirement.capability)) continue;
+ 173:       try {
+ 174:         candidates.push(await materialize(reader, principal, membership, grant, requirement, now));
+ 175:       } catch (error) {
+ 176:         if (!(error instanceof ConvexError) || error.data.code !== "FORBIDDEN") throw error;
+ 177:       }
+ 178:     }
+ 179:   }
+ 180:   const scopes = new Set(candidates.map((candidate) => JSON.stringify([candidate.tenantId, candidate.memorySpaceId])));
+ 181:   if (scopes.size !== 1) deny(); // No eligible grant or omitted selectors are ambiguous.
+ 182:   // Provisioning admits only one active grant per membership/scope; fail closed on corrupt duplicates.
+ 183:   if (candidates.length !== 1) deny();
+ 184:   return candidates[0]!;
+ 185: }
+ 186: 
+ 187: /** Background authority is reloaded at each sensitive read/effect/commit; it needs no session JWT. */
+ 188: export async function resolveAuthorityReference(
+ 189:   reader: AuthorityReader, reference: RuntimeAuthorityReference,
+ 190:   requirement: RuntimeAuthorityRequirement, now = Date.now(),
+ 191: ): Promise<RuntimeAuthority> {
+ 192:   validateRequirement(requirement);
+ 193:   const principal = await reader.getPrincipal(reference.principalId);
+ 194:   const membership = await reader.getMembership(reference.membershipId);
+ 195:   const grant = await reader.getGrant(reference.grantId);
+ 196:   if (!principal || !membership || !grant) deny();
+ 197:   // A pinned ID is not an exception to the one-active-generation invariant.
+ 198:   // Group by the grant's raw scope, not an effective space narrowed from a tenant-wide grant.
+ 199:   const grants = boundGrants(await reader.listGrants(membership._id), principal._id, membership, grant.memorySpaceId, true);
+ 200:   assertSingleActiveGeneration(grants);
+ 201:   if (!grants.some((candidate) => candidate._id === grant._id)) deny();
+ 202:   return await materialize(reader, principal, membership, grant, requirement, now, reference);
+ 203: }
+ 204: 
+ 205: /** Avoid native unique() diagnostics containing trusted control document IDs. */
+ 206: async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+ 207:   const rows = await query.take(2);
+ 208:   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+ 209:     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+ 210:   return rows[0] ?? null;
+ 211: }
+ 212: 
+ 213: export function createAuthorityReader(ctx: Pick<QueryCtx, "db">): AuthorityReader {
+ 214:   return {
+ 215:     findPrincipal: async (issuer, subject) => await boundedSingle(ctx.db.query("runtimeAuthPrincipals")
+ 216:       .withIndex("by_issuer_subject", (q) => q.eq("issuer", issuer).eq("subject", subject))),
+ 217:     getPrincipal: async (id) => {
+ 218:       const normalized = ctx.db.normalizeId("runtimeAuthPrincipals", id);
+ 219:       return normalized ? await ctx.db.get("runtimeAuthPrincipals", normalized) : null;
+ 220:     },
+ 221:     listMemberships: async (id) => {
+ 222:       const normalized = ctx.db.normalizeId("runtimeAuthPrincipals", id);
+ 223:       return normalized ? await ctx.db.query("runtimeAuthMemberships")
+ 224:         .withIndex("by_principal_tenant", (q) => q.eq("principalId", normalized)).collect() : [];
+ 225:     },
+ 226:     getMembership: async (id) => {
+ 227:       const normalized = ctx.db.normalizeId("runtimeAuthMemberships", id);
+ 228:       return normalized ? await ctx.db.get("runtimeAuthMemberships", normalized) : null;
+ 229:     },
+ 230:     listGrants: async (id) => {
+ 231:       const normalized = ctx.db.normalizeId("runtimeAuthMemberships", id);
+ 232:       return normalized ? await ctx.db.query("runtimeAuthGrants")
+ 233:         .withIndex("by_membership", (q) => q.eq("membershipId", normalized)).collect() : [];
+ 234:     },
+ 235:     getGrant: async (id) => {
+ 236:       const normalized = ctx.db.normalizeId("runtimeAuthGrants", id);
+ 237:       return normalized ? await ctx.db.get("runtimeAuthGrants", normalized) : null;
+ 238:     },
+ 239:     getScope: async (tenantId, memorySpaceId) => await boundedSingle(ctx.db.query("runtimeAuthScopes")
+ 240:       .withIndex("by_tenant_space", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId))),
+ 241:     hasTombstone: async (key) => (await boundedSingle(ctx.db.query("runtimeAuthTombstones")
+ 242:       .withIndex("by_resource", (q) => q.eq("tenantId", key.tenantId).eq("memorySpaceId", key.memorySpaceId)
+ 243:         .eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)))) !== null,
+ 244:   };
+ 245: }
+ 246: 
+ 247: export async function requireAuthority(
+ 248:   ctx: Pick<QueryCtx, "auth" | "db">, requirement: RuntimeAuthorityRequirement,
+ 249: ): Promise<RuntimeAuthority> {
+ 250:   return await resolveAuthority(createAuthorityReader(ctx), await ctx.auth.getUserIdentity(), requirement);
+ 251: }
+ 252: 
+ 253: export async function recheckAuthority(
+ 254:   ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, requirement: RuntimeAuthorityRequirement,
+ 255: ): Promise<RuntimeAuthority> {
+ 256:   return await resolveAuthorityReference(createAuthorityReader(ctx), reference, requirement);
+ 257: }
+ 258: 
+ 259: /** Actions invoke this internal query with inherited verified Convex auth (codegen in Task 03B/06). */
+ 260: export const authorize = internalQuery({
+ 261:   args: { requirement: runtimeAuthorityRequirement },
+ 262:   handler: async (ctx, args) => await requireAuthority(ctx, args.requirement),
+ 263: });
+ 264: export const recheck = internalQuery({
+ 265:   args: { reference: runtimeAuthorityReference, requirement: runtimeAuthorityRequirement },
+ 266:   handler: async (ctx, args) => await recheckAuthority(ctx, args.reference, args.requirement),
+ 267: });
+ 268: 
+ 269: function nonempty(value: string): void {
+ 270:   if (!value.trim()) deny("INVALID_INPUT");
+ 271: }
+ 272: 
+ 273: async function ensureScope(ctx: MutationCtx, tenantId: string, memorySpaceId?: string): Promise<ScopeRecord> {
+ 274:   const existing = await ctx.db.query("runtimeAuthScopes")
+ 275:     .withIndex("by_tenant_space", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)).unique();
+ 276:   if (existing) {
+ 277:     if (existing.deletedAt !== undefined) deny();
+ 278:     return existing;
+ 279:   }
+ 280:   if (await createAuthorityReader(ctx).hasTombstone({ tenantId, memorySpaceId,
+ 281:     resourceType: memorySpaceId === undefined ? "tenant" : "memorySpace", resourceId: memorySpaceId ?? tenantId })) deny();
+ 282:   const scope = { tenantId, ...(memorySpaceId === undefined ? {} : { memorySpaceId }), epoch: 1, createdAt: Date.now() };
+ 283:   await ctx.db.insert("runtimeAuthScopes", scope);
+ 284:   return scope;
+ 285: }
+ 286: 
+ 287: /** Trusted deployment operator only. No public self-provisioning, even with an admin claim. */
+ 288: export const provision = internalMutation({
+ 289:   args: {
+ 290:     issuer: v.string(), subject: v.string(), actorKind: runtimeActorKind,
+ 291:     metadataUserId: v.optional(v.string()), tenantId: v.string(), memorySpaceId: v.optional(v.string()),
+ 292:     capabilities: v.array(runtimeCapability), resourceAccess: runtimeResourceAccess, expiresAt: v.optional(v.number()),
+ 293:   },
+ 294:   handler: async (ctx, args) => {
+ 295:     [args.issuer, args.subject, args.tenantId].forEach(nonempty);
+ 296:     if (args.memorySpaceId !== undefined) nonempty(args.memorySpaceId);
+ 297:     if (args.metadataUserId !== undefined) nonempty(args.metadataUserId);
+ 298:     if (args.capabilities.length === 0 || (args.resourceAccess === "space" && args.memorySpaceId === undefined)
+ 299:       || (args.resourceAccess === "tenant" && args.memorySpaceId !== undefined)
+ 300:       || (args.expiresAt !== undefined && (!Number.isFinite(args.expiresAt) || args.expiresAt <= Date.now()))) deny("INVALID_INPUT");
+ 301:     const now = Date.now();
+ 302:     const reader = createAuthorityReader(ctx);
+ 303:     const tenant = await ensureScope(ctx, args.tenantId);
+ 304:     const space = args.memorySpaceId === undefined ? undefined : await ensureScope(ctx, args.tenantId, args.memorySpaceId);
+ 305:     let principal = await ctx.db.query("runtimeAuthPrincipals")
+ 306:       .withIndex("by_issuer_subject", (q) => q.eq("issuer", args.issuer).eq("subject", args.subject)).unique();
+ 307:     if (principal && (!active(principal) || principal.actorKind !== args.actorKind
+ 308:       || principal.metadataUserId !== args.metadataUserId)) deny();
+ 309:     if (!principal) {
+ 310:       const id = await ctx.db.insert("runtimeAuthPrincipals", {
+ 311:         issuer: args.issuer, subject: args.subject, actorKind: args.actorKind,
+ 312:         ...(args.metadataUserId === undefined ? {} : { metadataUserId: args.metadataUserId }), version: 1, createdAt: now,
+ 313:       });
+ 314:       principal = await ctx.db.get("runtimeAuthPrincipals", id);
+ 315:     }
+ 316:     if (!principal) deny();
+ 317:     let membership = await ctx.db.query("runtimeAuthMemberships")
+ 318:       .withIndex("by_principal_tenant", (q) => q.eq("principalId", principal._id).eq("tenantId", args.tenantId)).unique();
+ 319:     if (membership && !active(membership)) deny();
+ 320:     if (!membership) {
+ 321:       const id = await ctx.db.insert("runtimeAuthMemberships", {
+ 322:         principalId: principal._id, tenantId: args.tenantId, version: 1, createdAt: now,
+ 323:       });
+ 324:       membership = await ctx.db.get("runtimeAuthMemberships", id);
+ 325:     }
+ 326:     if (!membership) deny();
+ 327:     const previous = (await reader.listGrants(membership._id)).filter((grant) => grant.memorySpaceId === args.memorySpaceId);
+ 328:     const capabilities = [...new Set(args.capabilities)].sort();
+ 329:     const current = previous.filter((grant) => active(grant));
+ 330:     if (current.length > 1) deny();
+ 331:     if (current[0] && JSON.stringify([...current[0].capabilities].sort()) === JSON.stringify(capabilities)
+ 332:       && current[0].resourceAccess === args.resourceAccess && current[0].expiresAt === args.expiresAt
+ 333:       && current[0].tenantEpoch === tenant.epoch && current[0].memorySpaceEpoch === space?.epoch) {
+ 334:       return await materialize(reader, principal, membership, current[0], { capability: capabilities[0]! }, now);
+ 335:     }
+ 336:     // Changing authority creates a new immutable grant generation and invalidates the old reference.
+ 337:     for (const old of current) {
+ 338:       const id = ctx.db.normalizeId("runtimeAuthGrants", old._id);
+ 339:       if (!id) deny();
+ 340:       await ctx.db.patch("runtimeAuthGrants", id, { revokedAt: now });
+ 341:     }
+ 342:     const id = await ctx.db.insert("runtimeAuthGrants", {
+ 343:       principalId: principal._id, membershipId: membership._id, tenantId: args.tenantId,
+ 344:       ...(args.memorySpaceId === undefined ? {} : { memorySpaceId: args.memorySpaceId, memorySpaceEpoch: space!.epoch }),
+ 345:       tenantEpoch: tenant.epoch, capabilities, resourceAccess: args.resourceAccess,
+ 346:       version: Math.max(0, ...previous.map((grant) => grant.version)) + 1, createdAt: now,
+ 347:       ...(args.expiresAt === undefined ? {} : { expiresAt: args.expiresAt }),
+ 348:     });
+ 349:     const grant = await ctx.db.get("runtimeAuthGrants", id);
+ 350:     if (!grant) deny();
+ 351:     return await materialize(reader, principal, membership, grant, { capability: capabilities[0]! }, now);
+ 352:   },
+ 353: });
+ 354: 
+ 355: export const revokeGrant = internalMutation({
+ 356:   args: { grantId: v.id("runtimeAuthGrants") },
+ 357:   handler: async (ctx, args) => {
+ 358:     const grant = await ctx.db.get("runtimeAuthGrants", args.grantId);
+ 359:     if (grant && grant.revokedAt === undefined) await ctx.db.patch("runtimeAuthGrants", grant._id, { revokedAt: Date.now() });
+ 360:   },
+ 361: });
+ 362: export const revokeMembership = internalMutation({
+ 363:   args: { membershipId: v.id("runtimeAuthMemberships") },
+ 364:   handler: async (ctx, args) => {
+ 365:     const membership = await ctx.db.get("runtimeAuthMemberships", args.membershipId);
+ 366:     if (membership && membership.revokedAt === undefined) await ctx.db.patch("runtimeAuthMemberships", membership._id,
+ 367:       { revokedAt: Date.now(), version: membership.version + 1 });
+ 368:   },
+ 369: });
+ 370: export const deletePrincipal = internalMutation({
+ 371:   args: { principalId: v.id("runtimeAuthPrincipals") },
+ 372:   handler: async (ctx, args) => {
+ 373:     const principal = await ctx.db.get("runtimeAuthPrincipals", args.principalId);
+ 374:     if (principal && principal.deletedAt === undefined) await ctx.db.patch("runtimeAuthPrincipals", principal._id,
+ 375:       { deletedAt: Date.now(), version: principal.version + 1 });
+ 376:   },
+ 377: });
+ 378: export const deleteScope = internalMutation({
+ 379:   args: { tenantId: v.string(), memorySpaceId: v.optional(v.string()) },
+ 380:   handler: async (ctx, args) => {
+ 381:     const scope = await ctx.db.query("runtimeAuthScopes")
+ 382:       .withIndex("by_tenant_space", (q) => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId)).unique();
+ 383:     if (scope && scope.deletedAt === undefined) await ctx.db.patch("runtimeAuthScopes", scope._id,
+ 384:       { deletedAt: Date.now(), epoch: scope.epoch + 1 });
+ 385:     const key = { ...args, resourceType: args.memorySpaceId === undefined ? "tenant" as const : "memorySpace" as const,
+ 386:       resourceId: args.memorySpaceId ?? args.tenantId };
+ 387:     if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
+ 388:   },
+ 389: });
+ 390: export const tombstoneResource = internalMutation({
+ 391:   args: { tenantId: v.string(), memorySpaceId: v.optional(v.string()), resourceType: runtimeResourceType, resourceId: v.string() },
+ 392:   handler: async (ctx, args) => {
+ 393:     nonempty(args.tenantId); nonempty(args.resourceId);
+ 394:     if (!await createAuthorityReader(ctx).hasTombstone(args)) await ctx.db.insert("runtimeAuthTombstones", { ...args, deletedAt: Date.now() });
+ 395:   },
+ 396: });

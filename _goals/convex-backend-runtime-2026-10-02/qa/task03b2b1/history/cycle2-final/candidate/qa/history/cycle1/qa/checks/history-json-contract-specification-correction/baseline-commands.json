@@ -1,0 +1,54 @@
+[
+  {
+    "name": "baseline-root-types",
+    "base": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+    "command": [
+      "npx",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/.pinned-base-kevyhsdd",
+    "utcStart": "2026-10-03T11:22:06.281236+00:00",
+    "utcEnd": "2026-10-03T11:22:20.859241+00:00",
+    "exitCode": 2,
+    "stdout": "baseline-root-types.stdout.txt",
+    "stderr": "baseline-root-types.stderr.txt"
+  },
+  {
+    "name": "baseline-root-lint-types",
+    "base": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+    "command": [
+      "npx",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/.pinned-base-kevyhsdd",
+    "utcStart": "2026-10-03T11:22:20.859555+00:00",
+    "utcEnd": "2026-10-03T11:22:36.744853+00:00",
+    "exitCode": 2,
+    "stdout": "baseline-root-lint-types.stdout.txt",
+    "stderr": "baseline-root-lint-types.stderr.txt"
+  },
+  {
+    "temporaryTreeRemoved": true,
+    "scope": "owned QA temp tree; exact pinned Git archive; existing node_modules symlink; no source overlay, installs, builds, deployment or paid calls"
+  }
+]

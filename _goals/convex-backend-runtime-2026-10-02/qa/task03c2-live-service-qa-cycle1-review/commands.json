@@ -1,0 +1,155 @@
+[
+  {
+    "name": "required-assertion",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "required-assertion"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:19.105408+00:00",
+    "endUtc": "2026-10-03T19:52:21.504282+00:00",
+    "exit": 1
+  },
+  {
+    "name": "immediate",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "immediate"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:21.504520+00:00",
+    "endUtc": "2026-10-03T19:52:23.701139+00:00",
+    "exit": 0
+  },
+  {
+    "name": "deferred",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "deferred"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:23.701398+00:00",
+    "endUtc": "2026-10-03T19:52:26.499393+00:00",
+    "exit": 0
+  },
+  {
+    "name": "early-deferred",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "early-deferred"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:26.499610+00:00",
+    "endUtc": "2026-10-03T19:52:28.485124+00:00",
+    "exit": 0
+  },
+  {
+    "name": "forbidden",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "forbidden"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:28.485348+00:00",
+    "endUtc": "2026-10-03T19:52:30.577076+00:00",
+    "exit": 0
+  },
+  {
+    "name": "service-error",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "service-error"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:30.577287+00:00",
+    "endUtc": "2026-10-03T19:52:32.310026+00:00",
+    "exit": 0
+  },
+  {
+    "name": "auth-lookalike",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "auth-lookalike"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:32.310215+00:00",
+    "endUtc": "2026-10-03T19:52:34.147600+00:00",
+    "exit": 0
+  },
+  {
+    "name": "wrong-value",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "wrong-value"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:34.147804+00:00",
+    "endUtc": "2026-10-03T19:52:35.542939+00:00",
+    "exit": 0
+  },
+  {
+    "name": "timeout",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs",
+      "timeout"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:35.543112+00:00",
+    "endUtc": "2026-10-03T19:52:36.988285+00:00",
+    "exit": 0
+  },
+  {
+    "name": "full-client-typecheck",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:36.989133+00:00",
+    "endUtc": "2026-10-03T19:52:45.124935+00:00",
+    "exit": 0
+  },
+  {
+    "name": "scoped-eslint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1/native-regression.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:52:45.125160+00:00",
+    "endUtc": "2026-10-03T19:52:47.857037+00:00",
+    "exit": 0
+  }
+]

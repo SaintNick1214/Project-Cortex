@@ -1,0 +1,39 @@
+import assert from 'node:assert/strict';
+import {fixture} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/tests/unit/runtimeMetadataAuth/fixture.ts';
+import * as immutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/immutable.ts';
+import * as mutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/mutable.ts';
+import * as users from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/users.ts';
+import * as sessions from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/sessions.ts';
+import {sourceId} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/runtimeMetadataAuth.ts';
+const records=[];
+async function outcome(name,work){try {records.push({name,...await work()});}catch(e){records.push({name,probeError:String(e)});}}
+async function attempt(f,registration,args){try{return {accepted:true,result:await f.run(registration,args),writes:f.db.writes};}catch(e){return {accepted:false,error:String(e),writes:f.db.writes};}}
+await outcome('publicly-created foreign user ID: own READ denied by get, admitted by store',async()=>{
+ const f=fixture({space:'space-a',access:'space',capabilities:['write']});
+ const created=await f.run(immutable.store,{type:'user',id:'bob',data:{secret:'pre-read-old-secret'}});
+ f.db.seed('runtimeAuthGrants',{...f.grant,_id:'runtimeAuthGrants:own-reader',memorySpaceId:undefined,memorySpaceEpoch:undefined,capabilities:['read'],resourceAccess:'own'});
+ const read=await attempt(f,users.get,{userId:'bob',memorySpaceId:'space-a'});
+ const store=await attempt(f,immutable.store,{type:'user',id:'bob',data:{replacement:true}});
+ return {created,read,store,leakedPriorValue:store.accepted&&JSON.stringify(store.result).includes('pre-read-old-secret')};
+});
+for (const [name,table,seed,registration,args] of [
+ ['sessions.endAll duplicate','sessions','seedSession',sessions.endAll,{userId:'alice'}],
+ ['sessions.expireIdle duplicate','sessions','seedSession',sessions.expireIdle,{idleTimeout:0}],
+ ['mutable.purgeMany duplicate','mutable','seedMutable',mutable.purgeMany,{namespace:'counter'}],
+ ['immutable.purgeMany duplicate','immutable','seedImmutable',immutable.purgeMany,{type:'note'}],
+]) await outcome(name,async()=>{
+ const f=fixture();f[seed]();f[seed](); let attemptedWrites=0;const patch=f.db.patch.bind(f.db);f.db.patch=async(...a)=>{attemptedWrites++;return await patch(...a)};
+ const call=await attempt(f,registration,{...args,...(name.includes('expireIdle')?{reference:f.reference}:{})});
+ return {...call,attemptedWrites,states:f.db.table(table).map(r=>({id:r._id,status:r.status,tombstonedAt:r.tombstonedAt}))};
+});
+for(const [name,registration,column] of [['touch',sessions.touch,'status'],['message-counter',sessions.incrementMessageCount,'messageCount'],['memory-counter',sessions.incrementMemoryCount,'memoryCount']]) await outcome('session expiry crosses await: '+name,async()=>{
+ const f=fixture(); const now=10000; const originalNow=Date.now; let current=now; Date.now=()=>current;f.seedSession({expiresAt:now+100});const originalGet=f.db.get.bind(f.db);let armed=false;
+ const originalQuery=f.db.query.bind(f.db);f.db.query=(table)=>{const q=originalQuery(table);const take=q.take.bind(q);q.take=async(limit)=>{const value=await take(limit);if(table==='sessions'){assert.equal(limit,2);armed=true;}return value};return q};
+ f.db.get=async(table,id)=>{const result=await originalGet(table,id);if(armed&&table==='runtimeAuthGrants')current=now+101;return result};
+ try {const call=await attempt(f,registration,{sessionId:'one',...(name==='touch'?{}:{reference:f.reference})});assert.equal(armed,true);assert.equal(current,now+101);return {...call,clock:current,expiresAt:f.db.table('sessions')[0].expiresAt,finalValue:f.db.table('sessions')[0][column],lastActiveAt:f.db.table('sessions')[0].lastActiveAt};} finally {Date.now=originalNow;}
+});
+await outcome('immutable version safe integer overflow',async()=>{const f=fixture();f.seedImmutable({version:Number.MAX_SAFE_INTEGER});const call=await attempt(f,immutable.store,{type:'note',id:'one',data:'next'});return {...call,version:f.db.table('immutable')[0].version,safeInteger:Number.isSafeInteger(f.db.table('immutable')[0].version)}});
+await outcome('JSON-array source IDs disambiguate quotes/backslashes/unicode',async()=>{
+ const cases=[['a:b','c'],['a','b:c'],['a"','b\\c'],['a','"b\\c'],['雪','☃:'],['雪:☃','']];const ids=cases.map(([a,b])=>sourceId('immutable',a,b)); assert.equal(new Set(ids).size,cases.length);return {pass:true,ids};
+});
+console.log(JSON.stringify(records,null,2));

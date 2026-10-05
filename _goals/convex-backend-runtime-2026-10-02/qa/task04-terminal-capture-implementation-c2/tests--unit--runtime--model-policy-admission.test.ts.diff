@@ -1,0 +1,76 @@
+--- tests/unit/runtime/model-policy-admission.test.ts (C1)
++++ tests/unit/runtime/model-policy-admission.test.ts (C2)
+@@ -906,3 +906,73 @@
+     expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
+   });
+ });
++
++/** C2 repair: inability to read eligibility is retryable persistence failure, not positive revocation. */
++describe("terminal eligibility unexpected errors preserve exact persistence retry", () => {
++  async function prepared(captureFirst = true) {
++    const { f, a } = await admitted(); await f.checkpoint(a);
++    const receipt = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete receipt.privateResultCanonical;
++    const captureArgs = { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical: canonicalModelJson(receipt) };
++    const result = captureFirst ? await f.invoke<{ evidenceId: string }>("captureTerminalEvidence", captureArgs) : undefined;
++    const attachArgs = { reference: f.reference, attemptId: a.attemptId, evidenceId: result?.evidenceId ?? "not-yet-captured", privateResultCanonical: canonicalModelJson({ text: "answer" }) };
++    return { f, a, captureArgs, attachArgs };
++  }
++  function inject(f: ReturnType<typeof fixture>, error: unknown) {
++    const query = f.db.query.bind(f.db);
++    return jest.spyOn(f.db, "query").mockImplementation((table: string) => { if (table === "runtimeModelPolicies") throw error; return query(table); });
++  }
++  async function identicalFailure(f: ReturnType<typeof fixture>, error: unknown, run: () => Promise<unknown>) {
++    const before = JSON.stringify([...f.db.rows]), writes = f.db.writes;
++    await expect(run()).rejects.toBe(error); expect(JSON.stringify([...f.db.rows])).toBe(before); expect(f.db.writes).toBe(writes);
++  }
++  it("faulted pending attachment preserves all rows and original error/cause; exact retry attaches once after read recovery", async () => {
++    const { f, a, attachArgs } = await prepared(); const cause = new Error("synthetic cause"), error = new Error("synthetic transient database read failure", { cause });
++    const spy = inject(f, error); await identicalFailure(f, error, () => f.invoke("attachTerminalResult", attachArgs));
++    expect(error.cause).toBe(cause); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("pending");
++    spy.mockRestore(); const money = JSON.stringify(f.db.table("runtimeBudgetAccounts"));
++    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: true, resultWithheld: false });
++    const writes = f.db.writes; expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: true, resultWithheld: false });
++    expect(f.db.writes).toBe(writes); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
++    expect(f.attempt(a.attemptId)).toMatchObject({ resultAttachmentState: "attached", privateResultCanonical: attachArgs.privateResultCanonical });
++  });
++  it("faulted first known capture has zero writes/charge/marker/closure; same receipt retry settles full cost once pending", async () => {
++    const { f, a, captureArgs } = await prepared(false); const error = new Error("synthetic eligibility read fault");
++    const spy = inject(f, error); await identicalFailure(f, error, () => f.invoke("captureTerminalEvidence", captureArgs));
++    expect(f.account("tenant")).toMatchObject({ reservedUnits: 100, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 1 });
++    expect(f.attempt(a.attemptId)).toMatchObject({ state: "dispatch_pending", slotReleased: false });
++    expect(f.attempt(a.attemptId).terminalEvidenceHash).toBeUndefined(); expect(f.attempt(a.attemptId).resultAttachmentState).toBeUndefined();
++    spy.mockRestore(); const captured = await f.invoke("captureTerminalEvidence", captureArgs);
++    expect(captured).toMatchObject({ state: "settled", settledCostUnits: 40, overrun: false });
++    expect(f.account("tenant")).toMatchObject({ reservedUnits: 0, settledUnits: 40, uncertainUnits: 0, activeConcurrency: 0 });
++    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("pending"); const writes = f.db.writes;
++    expect(await f.invoke("captureTerminalEvidence", captureArgs)).toEqual(captured); expect(f.db.writes).toBe(writes);
++  });
++  it.each(["domainMessage", "structuredLookingPlainObject", "unknownConvexCode", "malformedConvexData", "dataAccessor", "codeAccessor", "messageAccessor", "inspectionFailure"])("unexpected %s propagates exact identity without getter calls or state change", async (kind) => {
++    const { ConvexError } = await import("convex/values"); const { f, a, attachArgs } = await prepared(); let getterCalls = 0;
++    const structured = { version: 1, code: "FORBIDDEN", message: "Access denied", retryable: false, outcome: "not_dispatched" };
++    let error: unknown;
++    if (kind === "domainMessage") error = new Error("POLICY_DENIED: unexpected runtime failure");
++    if (kind === "structuredLookingPlainObject") error = { data: structured };
++    if (kind === "unknownConvexCode") error = new ConvexError({ ...structured, code: "UNEXPECTED_STORAGE_FAILURE" });
++    if (kind === "malformedConvexData") error = new ConvexError({ ...structured, retryable: true });
++    if (kind === "dataAccessor") error = Object.defineProperty(new ConvexError(structured), "data", { get: () => { getterCalls++; return structured; } });
++    if (kind === "codeAccessor") {
++      const native = new ConvexError(structured);
++      Object.defineProperty(native.data, "code", { get: () => { getterCalls++; return "FORBIDDEN"; } }); error = native;
++    }
++    if (kind === "messageAccessor") error = Object.defineProperty(new Error(), "message", { get: () => { getterCalls++; return "POLICY_DENIED: forged"; } });
++    if (kind === "inspectionFailure") error = new Proxy(new Error("original unexpected runtime failure"), { getPrototypeOf: () => { throw new Error("inspection also failed"); } });
++    const spy = inject(f, error); await identicalFailure(f, error, () => f.invoke("attachTerminalResult", attachArgs));
++    expect(getterCalls).toBe(0); expect(f.attempt(a.attemptId).resultAttachmentState).toBe("pending"); spy.mockRestore();
++    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: true, resultWithheld: false });
++  });
++  it("recognized native policy denial closes pending and preserves monetary accounts without message matching", async () => {
++    const { ConvexError } = await import("convex/values"); const { f, a, attachArgs } = await prepared();
++    const error = new ConvexError({ version: 1, code: "POLICY_DENIED", message: "structured control denial", retryable: false, outcome: "uncertain" });
++    const money = JSON.stringify(f.db.table("runtimeBudgetAccounts")), spy = inject(f, error);
++    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
++    expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed"); spy.mockRestore(); const writes = f.db.writes;
++    expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
++    expect(f.db.writes).toBe(writes); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
++  });
++});

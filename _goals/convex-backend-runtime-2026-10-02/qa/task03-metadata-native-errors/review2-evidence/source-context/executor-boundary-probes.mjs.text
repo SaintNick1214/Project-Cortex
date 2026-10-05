@@ -1,0 +1,63 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {fixture} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/tests/unit/runtimeMetadataAuth/fixture.ts';
+import * as immutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/immutable.ts';
+import * as mutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/mutable.ts';
+import * as sessions from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/sessions.ts';
+import * as users from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/users.ts';
+import {sourceId} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/runtimeMetadataAuth.ts';
+const outputs=[];
+async function outcome(name,work){try{outputs.push({name,pass:true,...await work()});}catch(error){outputs.push({name,pass:false,error:String(error),stack:error.stack});}}
+async function call(f,registration,args){try{return {accepted:true,result:await f.run(registration,args),writes:f.db.writes,attempts:f.db.attemptedWrites}}catch(error){return {accepted:false,error:String(error),writes:f.db.writes,attempts:f.db.attemptedWrites}}}
+function noEffects(f,result,before){assert.equal(result.accepted,false);assert.equal(result.writes,0);assert.equal(result.attempts,0);assert.deepEqual(f.db.rows,before);}
+const writes=[
+ ['immutable.store existing',immutable.store,{type:'note',id:'one',data:'new'},f=>f.seedImmutable()],
+ ['immutable.store new',immutable.store,{type:'note',id:'two',data:'new'},()=>{}],
+ ['immutable.purge',immutable.purge,{type:'note',id:'one'},f=>f.seedImmutable()],
+ ['immutable.purgeMany',immutable.purgeMany,{type:'note'},f=>f.seedImmutable()],
+ ['immutable.purgeVersions',immutable.purgeVersions,{type:'note',id:'one',keepLatest:1},f=>f.seedImmutable({version:2,previousVersions:[{version:1,data:'secret-history',timestamp:900}]})],
+ ['mutable.set existing',mutable.set,{namespace:'counter',key:'one',value:7},f=>f.seedMutable()],
+ ['mutable.set new',mutable.set,{namespace:'counter',key:'two',value:7},()=>{}],
+ ['mutable.update',mutable.update,{namespace:'counter',key:'one',operation:'increment'},f=>f.seedMutable()],
+ ['mutable.transaction',mutable.transaction,{operations:[{op:'increment',namespace:'counter',key:'one'},{op:'set',namespace:'counter',key:'two',value:7}]},f=>f.seedMutable()],
+ ['mutable.purgeMany',mutable.purgeMany,{namespace:'counter'},f=>f.seedMutable()],
+ ['mutable.purgeNamespace',mutable.purgeNamespace,{namespace:'counter'},f=>f.seedMutable()],
+ ['sessions.create',sessions.create,{sessionId:'two',userId:'alice',startedAt:1000},()=>{}],
+ ['sessions.endAll',sessions.endAll,{userId:'alice'},f=>f.seedSession()],
+];
+for(const [name,registration,args,seed] of writes)for(const gate of ['read-expiry','read-revocation','write-expiry','write-revocation'])await outcome(name+' late '+gate,async()=>{
+ const f=fixture({space:'space-a',capabilities:['write']});seed(f);let current=10000;const originalNow=Date.now;Date.now=()=>current;
+ const read=f.db.seed('runtimeAuthGrants',{...f.grant,_id:'runtimeAuthGrants:reader',memorySpaceId:undefined,memorySpaceEpoch:undefined,capabilities:['read'],resourceAccess:'tenant'});
+ const control=gate.startsWith('read')?read:f.grant;if(gate.endsWith('expiry'))control.expiresAt=10100;
+ const before=structuredClone(f.db.rows);f.db.afterWrite=()=>{if(gate.endsWith('expiry'))current=10100;else control.revokedAt=10000;};
+ try{const result=await call(f,registration,args);assert.equal(result.accepted,false);assert.equal(result.writes,0);assert.ok(result.attempts>0);assert.deepEqual(f.db.rows,before);return result}finally{Date.now=originalNow}
+});
+for(const existing of [false,true])for(const type of ['own-profile','foreign-profile','foreign-owner'])await outcome('initial unavailable READ safe receipt '+type+' existing='+existing,async()=>{
+ const f=fixture({space:'space-a',access:'space',capabilities:['write']});let id=type==='own-profile'?'alice':'bob';let owner=type==='foreign-owner'?'runtimeAuthPrincipals:bob':f.principal._id;
+ if(existing)f.seedImmutable({type:'user',id,ownerPrincipalId:owner,data:'private-old'});
+ const read=f.db.seed('runtimeAuthGrants',{...f.grant,_id:'runtimeAuthGrants:reader',memorySpaceId:undefined,memorySpaceEpoch:undefined,capabilities:['read'],resourceAccess:'own',...(type==='own-profile'?{expiresAt:1}:{})});
+ const result=await call(f,immutable.store,{type:'user',id,data:'supplied-new'});assert.equal(result.accepted,true);assert.equal(result.result.updated,true);assert.equal('data' in result.result,false);assert.equal('previousVersions' in result.result,false);assert.equal(JSON.stringify(result.result).includes('private-old'),false);return result;
+});
+const bulks=[['immutable',immutable.purgeMany,{type:'note'},'seedImmutable','id'],['mutable',mutable.purgeMany,{namespace:'counter'},'seedMutable','key'],['namespace',mutable.purgeNamespace,{namespace:'counter'},'seedMutable','key'],['endAll',sessions.endAll,{userId:'alice'},'seedSession','sessionId'],['expireIdle',sessions.expireIdle,{idleTimeout:0},'seedSession','sessionId']];
+for(const [name,registration,args,seed,key] of bulks)for(const conflict of ['own','foreign','missing-owner','tombstoned'])await outcome('later bulk '+name+' '+conflict+' collision zero attempts',async()=>{
+ const f=fixture();f[seed]({[key]:'earlier-valid'});f[seed]({[key]:'later-conflict'});f[seed]({[key]:'later-conflict',...(conflict==='foreign'?{ownerPrincipalId:'runtimeAuthPrincipals:bob'}:conflict==='missing-owner'?{ownerPrincipalId:undefined}:conflict==='tombstoned'?{tombstonedAt:1}:{})});
+ const before=structuredClone(f.db.rows);const result=await call(f,registration,{...args,...(name==='expireIdle'?{reference:f.reference}:{})});noEffects(f,result,before);return result;
+});
+for(const [name,registration,args] of [['touch',sessions.touch,{sessionId:'one'}],['message',sessions.incrementMessageCount,{sessionId:'one'}],['memory',sessions.incrementMemoryCount,{sessionId:'one'}],['create',sessions.create,{sessionId:'new',userId:'alice',startedAt:1000,expiresAt:10100}]]){
+ const setup=()=>{const f=fixture();if(name!=='create')f.seedSession({status:'idle',expiresAt:10100});return f;};
+ let preEffect=0,total=0;const originalNow=Date.now;Date.now=()=>10000;
+ try {const f=setup();const get=f.db.get.bind(f.db);f.db.get=async(table,id)=>{const row=await get(table,id);if(table==='runtimeAuthGrants')total++;return row;};const write=name==='create'?'insert':'patch';const effect=f.db[write].bind(f.db);f.db[write]=async(...a)=>{preEffect=total;return await effect(...a)};await f.run(registration,{...args,...(name==='message'||name==='memory'?{reference:f.reference}:{})});}finally{Date.now=originalNow;}
+ for(const [phase,trigger] of [['last-pre-effect-await',preEffect],['last-final-await',total]])await outcome('session '+name+' expires at '+phase,async()=>{
+  let current=10000;Date.now=()=>current;try{const f=setup();const before=structuredClone(f.db.rows);let gets=0;const get=f.db.get.bind(f.db);f.db.get=async(table,id)=>{const row=await get(table,id);if(table==='runtimeAuthGrants'&&++gets===trigger)current=10100;return row;};
+  const result=await call(f,registration,{...args,...(name==='message'||name==='memory'?{reference:f.reference}:{})});assert.equal(result.accepted,false);assert.equal(result.writes,0);assert.equal(result.attempts,phase==='last-pre-effect-await'?0:1);assert.deepEqual(f.db.rows,before);assert.equal(current,10100);return {...result,trigger,preEffect,total,gets};}finally{Date.now=originalNow;}
+ });
+}
+for(const [name,registration,args] of [['message',sessions.incrementMessageCount,{sessionId:'one'}],['memory',sessions.incrementMemoryCount,{sessionId:'one'}],['expiry',sessions.expireIdle,{idleTimeout:0}]])for(const change of ['owner','user','stored-principal','stored-membership','stored-epoch'])await outcome('broad internal '+name+' malformed '+change,async()=>{
+ const f=fixture({space:'space-a',access:'space'});f.seedSession(change==='owner'?{ownerPrincipalId:'runtimeAuthPrincipals:bob'}:change==='user'?{userId:'bob'}:{authorityReference:{...f.reference,...(change==='stored-principal'?{principalId:'runtimeAuthPrincipals:bob'}:change==='stored-membership'?{membershipId:'runtimeAuthMemberships:bob'}:{memorySpaceEpoch:2})}});
+ const before=structuredClone(f.db.rows);const result=await call(f,registration,{...args,reference:f.reference});noEffects(f,result,before);return result;
+});
+for(const op of ['increment','decrement'])for(const value of [null,'1',NaN,Infinity])await outcome('numeric invalid '+op+' '+String(value),async()=>{const f=fixture();f.seedMutable();const before=structuredClone(f.db.rows);const result=await call(f,mutable.update,{namespace:'counter',key:'one',operation:op,operand:value});noEffects(f,result,before);assert.match(result.error,/INVALID_INPUT/);return result;});
+for(const version of [0,-1,1.5,NaN,Infinity,Number.MAX_SAFE_INTEGER,Number.MAX_SAFE_INTEGER+1])await outcome('invalid canonical version '+String(version),async()=>{const f=fixture();f.seedImmutable({version});const before=structuredClone(f.db.rows);const result=await call(f,immutable.store,{type:'note',id:'one',data:'new'});noEffects(f,result,before);assert.match(result.error,/INVALID_INPUT/);return result;});
+await outcome('last positive safe version increment exact',async()=>{const f=fixture();f.seedImmutable({version:Number.MAX_SAFE_INTEGER-1});const result=await call(f,immutable.store,{type:'note',id:'one',data:'new'});assert.equal(result.result.version,Number.MAX_SAFE_INTEGER);return result;});
+await outcome('all source identities collision-safe canonical JSON arrays',async()=>{const pairs=[['a:b','c'],['a','b:c'],['a"','b\\c'],['a','"b\\c'],['雪','☃:'],['雪:☃',''],['%','"']];for(const table of ['immutable','mutable']){const ids=pairs.map(([a,b])=>sourceId(table,a,b));assert.equal(new Set(ids).size,ids.length);for(let i=0;i<ids.length;i++)assert.deepEqual(JSON.parse(ids[i].slice(ids[i].indexOf(':')+1)),pairs[i]);}const ids=['a:b','a','雪%:"',''].map(a=>sourceId('sessions',a));assert.equal(new Set(ids).size,ids.length);return {pairs:7,tables:3};});
+fs.writeFileSync('/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/work/native-errors-cycle2/replays/boundary-probes.json',JSON.stringify(outputs,null,2)+'\n');console.log(JSON.stringify({total:outputs.length,passed:outputs.filter(r=>r.pass).length,failed:outputs.filter(r=>!r.pass)},null,2));process.exitCode=outputs.some(r=>!r.pass)?1:0;

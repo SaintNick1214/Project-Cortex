@@ -1,0 +1,4 @@
+// UNINSTALLED source pins; per-target private key installation remains ROOT-gated.
+export const STAGE_KEY_ID='dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
+export const STAGE_ISSUER_SOURCE_HASH='4509421de7f8720e2628a859568cd6ee5c935e9651b4fb51fc5d259264ec4fc7';
+export const STAGE_VERIFIER_SOURCE_HASH=STAGE_ISSUER_SOURCE_HASH;

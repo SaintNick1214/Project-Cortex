@@ -1,0 +1,47 @@
+[
+  {
+    "name": "c1-hostile6-red",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-implementation-c2/c1-red/scripts/hostile.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:29:05.264613+00:00",
+    "utcEnd": "2026-10-04T09:29:05.391753+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "stdoutSHA256": "7b0d6174b6b84290760f92c4efcd6ccbeed3ad07f84b962891dbe5eaaf30b980",
+    "stderrSHA256": "6409743189e07f3d4d71ec3ceb0738b8c5c26a8640c8baa14cfea63ad98cc75c"
+  },
+  {
+    "name": "c2-hostile6-green",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/scripts/hostile.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:29:05.392191+00:00",
+    "utcEnd": "2026-10-04T09:29:05.519844+00:00",
+    "exit": 0,
+    "expectedExit": 0,
+    "stdoutSHA256": "6a779add53bf9401c54908d85fa26c72878aa36746cc07dfa5575edcf6fc5893",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "c2-refinement4-green",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/scripts/refinement-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:29:05.520209+00:00",
+    "utcEnd": "2026-10-04T09:29:05.667547+00:00",
+    "exit": 0,
+    "expectedExit": 0,
+    "stdoutSHA256": "5c700af963794686bc74fbb07523c1b0376e814ceb175841f0863c616f240a6c",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

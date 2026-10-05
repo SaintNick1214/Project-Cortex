@@ -1,0 +1,24 @@
+{
+  "networkCalls": 0,
+  "nativeCertification": false,
+  "results": [
+    {
+      "syntheticResponse": true,
+      "serverErrorDataPresent": false,
+      "clientClass": "Error",
+      "data": null
+    },
+    {
+      "syntheticResponse": true,
+      "serverErrorDataPresent": true,
+      "clientClass": "ConvexError",
+      "data": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "message": "Model operation control failed.",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  ]
+}

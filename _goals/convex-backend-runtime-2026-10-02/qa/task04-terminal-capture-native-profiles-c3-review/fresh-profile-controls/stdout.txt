@@ -1,0 +1,129 @@
+{
+  "tests": 20,
+  "passed": 20,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "results": [
+    {
+      "profile": "extension",
+      "name": "healthy",
+      "status": "PASS",
+      "observedError": null
+    },
+    {
+      "profile": "extension",
+      "name": "C2-request",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"06900789-9427-4891-a0f9-91e062fa4b7b\",\"purpose\":\"task04-terminal-capture-native-extension-c2\",\"projectName\":\"cortex-task04-admission-disposable-a2321e5d95b8\",\"projectSlug\":\"cortex-task04-admission-disposable-a2321e5d95b8\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c2/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-969cac44e6164e70a409e309ddd5fbce\"}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "op-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"bad\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "run-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-00000000000000000000000000000000\"}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "purpose-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"other\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "slug-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"other\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "scratch-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_SCRATCH\n+ actual - expected\n\n+ '/workspace/Project-Cortex/work/backend-runtime/task04-terminal-capture-native-extension-c3/other'\n- '/workspace/Project-Cortex/work/backend-runtime/task04-terminal-capture-native-extension-c3'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "root-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_ROOT\n+ actual - expected\n\n+ '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/other'\n- '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "environment-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"other/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "extension",
+      "name": "extra-field",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\",\"extra\":true}'\n- '{\"version\":1,\"operation\":\"ea2619f0-5b60-4b3d-b75d-df584d938c12\",\"purpose\":\"task04-terminal-capture-native-extension-c3\",\"projectName\":\"cortex-task04-admission-disposable-6b012c584158\",\"projectSlug\":\"cortex-task04-admission-disposable-6b012c584158\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-29147d663f2c402681aa661193585216\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "healthy",
+      "status": "PASS",
+      "observedError": null
+    },
+    {
+      "profile": "regression",
+      "name": "C2-request",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"08b467bf-d1dc-428a-ac17-b5850f6697ae\",\"purpose\":\"task04-terminal-capture-native-regression-c2\",\"projectName\":\"cortex-task04-admission-disposable-0aaa48ba1678\",\"projectSlug\":\"cortex-task04-admission-disposable-0aaa48ba1678\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c2/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-0432bc95abb141d99972f0eb88cd9b4c\"}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "op-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"bad\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "run-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-00000000000000000000000000000000\"}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "purpose-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"other\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "slug-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"other\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "scratch-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_SCRATCH\n+ actual - expected\n\n+ '/workspace/Project-Cortex/work/backend-runtime/task04-terminal-capture-native-regression-c3/other'\n- '/workspace/Project-Cortex/work/backend-runtime/task04-terminal-capture-native-regression-c3'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "root-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_ROOT\n+ actual - expected\n\n+ '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression/other'\n- '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "environment-drift",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"other/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    },
+    {
+      "profile": "regression",
+      "name": "extra-field",
+      "status": "PASS",
+      "observedError": "PARENT_PROFILE_CONTRACT\n+ actual - expected\n\n+ '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\",\"extra\":true}'\n- '{\"version\":1,\"operation\":\"e4077318-c2cf-4e9d-8916-06c1f74bbac2\",\"purpose\":\"task04-terminal-capture-native-regression-c3\",\"projectName\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"projectSlug\":\"cortex-task04-admission-disposable-9cf565f286b0\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-terminal-capture-native-regression-c3/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-e77b05c4e8c140e7b0608d139a09ba67\"}'\n"
+    }
+  ]
+}

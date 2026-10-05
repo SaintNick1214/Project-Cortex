@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "preimageSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4",
+  "productSha256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554",
+  "newTestSha256": "6315c0c571ac9ae3e940f2fab2905e5de900100b207101c2f6e266588b514732",
+  "exactTwoReplacementEquality": true,
+  "originalByteOffsets": [
+    8435,
+    9593
+  ],
+  "historicalChecks": [
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27",
+      "matchesHistoricalAssessment": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/memory.test.ts",
+      "sha256": "f2fd7ae91745fb7a7e8c3eb98d0ab9527b638cd434801a3cbb389925a190f4ff",
+      "matchesHistoricalAssessment": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+      "sha256": "ac53e94b7c783ce4d82223f9aa3b5b83f1daa27fcf41c843c7dd3ac8c5455c0f",
+      "matchesHistoricalAssessment": true
+    },
+    {
+      "path": "src/memory/streaming/ProgressiveStorageHandler.ts",
+      "sha256": "b935b32c8f9839cd10abe0a1d0bb2cdb09ebe9a986582672a2f8f143eab5168e",
+      "matchesHistoricalAssessment": true
+    },
+    {
+      "path": "src/resilience/index.ts",
+      "sha256": "ff471991ee393c47d6b6a0a2637da6e1545b392f83fcab5ae853841f19f59ea0",
+      "matchesHistoricalAssessment": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c8/scripts/native-engine.mjs",
+      "sha256": "2608fbf951f772d5f89be0c888c665aaf84e05ce2632c4ff0d1f20d77b2b84df",
+      "matchesHistoricalAssessment": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/facts.test.ts",
+      "sha256": "d59923d0f765f641b93c87844d3734e951ff3d8a5f307f4575c546fd30d4272c",
+      "matchesExecutorPreimageEvidence": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/memory.test.ts",
+      "sha256": "f2fd7ae91745fb7a7e8c3eb98d0ab9527b638cd434801a3cbb389925a190f4ff",
+      "matchesExecutorPreimageEvidence": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts",
+      "sha256": "93732164d708380c9ca34b8483756890164d4733c440f3de56a1063e6b28f8dd",
+      "matchesExecutorPreimageEvidence": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+      "sha256": "137ef88917f4d40a2c228157e9bdc818da0a973e762fd65427132c4ee191c724",
+      "matchesExecutorPreimageEvidence": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+      "sha256": "ac53e94b7c783ce4d82223f9aa3b5b83f1daa27fcf41c843c7dd3ac8c5455c0f",
+      "matchesExecutorPreimageEvidence": true
+    }
+  ],
+  "c8FrozenFiles": 421,
+  "c8AllHashesMatch": true,
+  "c8ManifestSha256": "54b641e93518c43d67364a910865ad71b6d6cb7cdead36795e17cf66188139cd",
+  "c8State": "FROZEN_CANDIDATE_AWAITING_INDEPENDENT_REVIEW"
+}

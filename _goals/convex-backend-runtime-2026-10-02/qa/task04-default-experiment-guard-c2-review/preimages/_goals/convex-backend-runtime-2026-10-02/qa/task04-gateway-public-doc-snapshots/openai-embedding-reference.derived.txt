@@ -1,0 +1,556 @@
+    Create embeddings | OpenAI API Reference        
+Skip to content
+ 
+For the complete documentation index, see llms.txt. Markdown versions of documentation pages are available by appending
+.md to the page URL.
+              ChatGPT        Start searching     API Dashboard  Try ChatGPT                   Home      API         Overview    Get started with the OpenAI API      Models    Explore models and compare capabilities      Agents    Build persistent agents on hosted infrastructure      Tools    Connect models to tools and data      Audio & voice    Build speech and realtime voice experiences      Production    Deploy and scale your API integrations      API reference    Explore endpoints, parameters, and responses         ChatGPT         Sign in with ChatGPT    Apps powered by your user's ChatGPT plan      Plugins    Extend ChatGPT and Codex      Workspace Agents    Trigger published ChatGPT workspace agents      Commerce    Build commerce flows in ChatGPT      Ads    Publish and measure ads in ChatGPT      ChatGPT + Codex user docs    Guides and product docs for ChatGPT and Codex      Use cases    Example workflows and tasks teams can take on with ChatGPT or Codex         Docs      Use cases      Resources      Resources         Showcase    Demo apps to get inspired      Blog    Learnings and experiences from developers      Cookbook    Notebook examples for building with OpenAI models      Learn    Docs, videos, and demo apps for building with OpenAI      Community    Programs, meetups, and support for builders                Overview      Models      Agents      Tools      Audio & voice      Production      API reference           
+ Search the API docs      Search docs
+Suggestedresponses createreasoning_effortrealtimeprompt caching         Primary navigation     API  ChatGPT  Docs  Use cases  Resources  Resources              Search docs
+Suggestedresponses createreasoning_effortrealtimeprompt caching      Overview   Models   Agents   Tools   Audio & voice   Production   API reference     OverviewModelsAgentsToolsAudio & voiceProductionAPI referenceDocsAPI reference                      Overview   Sign in with ChatGPT   Plugins   Workspace Agents   Commerce   Ads   ChatGPT + Codex user docs   Use cases     OverviewSign in with ChatGPTPluginsWorkspace AgentsCommerceAdsChatGPT + Codex user docsUse casesDocsOverview                        Showcase   Blog   Cookbook   Learn   Community     ShowcaseBlogCookbookLearnCommunityDocsSelect...                     API Dashboard  Try ChatGPT                  API  ChatGPT  Docs  Use cases  Resources  Resources          Overview  Models  Agents  Tools  Audio & voice  Production  API reference                
+API Reference
+API Reference
+Introduction
+Authentication
+Workload identity tokens
+Debugging requests
+Backwards compatibility
+Responses API
+Overview
+Responses
+Create a response
+Retrieve a response
+Delete a response
+List input items
+Count input tokens
+Cancel a response
+Compact a response
+Conversations
+Create a conversation
+Retrieve a conversation
+Update a conversation
+Delete a conversation
+Items
+Create an item
+Retrieve an item
+Delete an item
+List items
+Streaming events
+WebSocket events
+Beta APIs
+Responses (Multi-agent)
+Create a responses (multi-agent)
+Retrieve a responses (multi-agent)
+Delete a responses (multi-agent)
+Cancel a responses (multi-agent)
+Compact a responses (multi-agent)
+Input Items
+List input items
+Input Tokens
+Count input tokens
+Streaming events
+WebSocket events
+Webhooks
+Events
+Create a webhook
+Retrieve a webhook
+Update a webhook
+Delete a webhook
+List webhooks
+Rotate Secret
+Test
+Platform APIs
+Live
+Create session
+Primary WebSocket
+Sideband WebSocket
+Fork WebSocket
+Sessions
+Accept session
+Download Recording
+Fork
+Hangup
+Refer
+Reject
+Audio
+Create a speech
+Create a transcription
+Transcription streaming events
+Create a translation
+Create a voice
+Voice Consents
+Create a voice consent
+Retrieve a voice consent
+Update a voice consent
+Delete a voice consent
+List voice consents
+Images
+Generate an Image
+Edit an Image
+Create Variation
+Image generation streaming events
+Image edit streaming events
+Embeddings
+Create an embedding
+Evals
+Create an eval
+Retrieve an eval
+Update an eval
+Delete an eval
+List evals
+Runs
+Create a run
+Retrieve a run
+Delete a run
+List runs
+Cancel a run
+Output Items
+Retrieve an output item
+List output items
+Fine Tuning
+Alpha
+Graders
+Run
+Validate
+Checkpoints
+Permissions
+Create a permission
+Retrieve a permission
+Delete a permission
+List permissions
+Jobs
+Create a job
+Retrieve a job
+List jobs
+List Events
+Cancel a job
+Pause
+Resume
+Checkpoints
+List checkpoints
+Batches
+Create a batch
+Retrieve a batch
+List batches
+Cancel a batch
+Files
+List files
+Create a file
+Retrieve a file
+Delete a file
+Retrieve file content
+Uploads
+Create an upload
+Cancel an upload
+Complete
+Parts
+Create a part
+Models
+Retrieve a model
+Delete a model
+List models
+Moderations
+Create a moderation
+Safety
+Safety Alerts
+Retrieve a safety alert
+Cases
+Retrieve a case
+Content Provenance Checks
+Create a content provenance check
+Agents API
+Create an agent
+Retrieve an agent
+Update an agent
+Delete an agent
+List agents
+Environments
+Retrieve an environment
+Files
+List files
+Create a file
+Templates
+Create a template
+Retrieve a template
+Update a template
+Delete a template
+List templates
+Sessions
+Create a session
+Retrieve a session
+Update a session
+Delete a session
+List sessions
+Artifacts
+Retrieve an artifact
+Delete an artifact
+List artifacts
+Retrieve artifact content
+Events
+Create an event
+Stream
+Streaming events
+Items
+List items
+Subagents
+Retrieve a subagent
+List subagents
+Items
+List items
+Turns
+Retrieve a turn
+List turns
+Items
+List items
+Traces
+List traces
+Turns
+Retrieve a turn
+List turns
+Items
+List items
+Vaults
+Create a vault
+Retrieve a vault
+Delete a vault
+List vaults
+Credentials
+Create a credential
+Retrieve a credential
+Update a credential
+Delete a credential
+List credentials
+Vector Stores
+Vector Stores
+Create a vector store
+Retrieve a vector store
+Update a vector store
+Delete a vector store
+List vector stores
+Search
+File Batches
+Create a file batch
+Retrieve a file batch
+List Files
+Cancel a file batch
+Files
+List files
+Create a file
+Retrieve a file
+Update a file
+Delete a file
+Retrieve file content
+ChatKit
+Sessions
+Create a session
+Cancel a session
+Threads
+Retrieve a thread
+Delete a thread
+List threads
+List Items
+Containers
+Containers
+Create a container
+Retrieve a container
+Delete a container
+List containers
+Files
+List files
+Create a file
+Retrieve a file
+Delete a file
+Content
+Retrieve content
+Skills
+Skills
+Create a skill
+Retrieve a skill
+Retrieve skill content
+Update a skill
+Delete a skill
+List skills
+Versions
+Create skill version
+Retrieve skill version
+Retrieve Skill Version Content
+Delete skill version
+List skill versions
+Realtime
+Translations
+Client Secrets
+Create a client secret
+Translation client events
+Translation server events
+Calls
+Create a call
+Accept
+Hangup
+Refer
+Reject
+Client Secrets
+Create a client secret
+Client events
+Server events
+Administration
+Overview
+Admin API Keys
+Create an admin API key
+Retrieve an admin API key
+Delete an admin API key
+List admin API keys
+Audit Logs
+List audit logs
+Certificates
+Create a certificate
+Retrieve a certificate
+Update a certificate
+Delete a certificate
+List certificates
+Activate
+Deactivate
+Data Retention
+Retrieve a data retention
+Update a data retention
+External Storage
+Create an external storage
+Retrieve an external storage
+Delete an external storage
+List external storage
+Validate
+Groups
+Create a group
+Retrieve a group
+Update a group
+Delete a group
+List groups
+Roles
+Create a role
+Retrieve a role
+Delete a role
+List roles
+Users
+Create a user
+Retrieve a user
+Delete a user
+List users
+Invites
+Create an invite
+Retrieve an invite
+Delete an invite
+List invites
+Projects
+Create a project
+Retrieve a project
+Update a project
+List projects
+Archive
+API Keys
+Retrieve an API key
+Delete an API key
+List API keys
+Certificates
+List certificates
+Activate
+Deactivate
+Data Retention
+Retrieve a data retention
+Update a data retention
+Groups
+Create a group
+Retrieve a group
+Delete a group
+List groups
+Roles
+Create a role
+Retrieve a role
+Delete a role
+List roles
+Hosted Tool Permissions
+Retrieve a hosted tool permission
+Update a hosted tool permission
+Model Permissions
+Retrieve a model permission
+Update a model permission
+Delete a model permission
+Rate Limits
+Update Rate Limit
+List Rate Limits
+Roles
+Create a role
+Retrieve a role
+Update a role
+Delete a role
+List roles
+Service Accounts
+Create a service account
+Retrieve a service account
+Update a service account
+Delete a service account
+List service accounts
+API Keys
+Create an API key
+Spend Alerts
+Create a spend alert
+Retrieve a spend alert
+Update a spend alert
+Delete a spend alert
+List spend alerts
+Spend Limit
+Retrieve a spend limit
+Update a spend limit
+Delete a spend limit
+Users
+Create a user
+Retrieve a user
+Update a user
+Delete a user
+List users
+Roles
+Create a role
+Retrieve a role
+Delete a role
+List roles
+Roles
+Create a role
+Retrieve a role
+Update a role
+Delete a role
+List roles
+Spend Alerts
+Create a spend alert
+Retrieve a spend alert
+Update a spend alert
+Delete a spend alert
+List spend alerts
+Spend Limit
+Retrieve a spend limit
+Update a spend limit
+Delete a spend limit
+Usage
+Audio Speeches
+Audio Transcriptions
+Code Interpreter Sessions
+Completions
+Costs
+Embeddings
+File Search Calls
+Images
+Moderations
+Vector Stores
+Web Search Calls
+Users
+Retrieve a user
+Update a user
+Delete a user
+List users
+Roles
+Create a role
+Retrieve a role
+Delete a role
+List roles
+Chat Completions
+Chat Completions
+Overview
+Create a chat completion
+Retrieve a chat completion
+Update a chat completion
+Delete a chat completion
+List chat completions
+List chat completions
+Streaming events
+Legacy
+Realtime Beta
+Overview
+Sessions
+Create a session
+Transcription Sessions
+Create a transcription session
+Completions
+Create a completion                             API ReferenceEmbeddingsCopy MarkdownOpen in ClaudeOpen in ChatGPTOpen in CursorCopy MarkdownView as Markdown
+Create embeddingsPOST/embeddings
+Creates an embedding vector representing the input text.
+Body ParametersJSONExpand Collapse input: string or array of string or array of number or array of array of number
+Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for all embedding models), cannot be an empty string, and any array must be 2048 dimensions or less. Example Python code for counting tokens. In addition to the per-input token limit, all embedding models enforce a maximum of 300,000 tokens summed across all inputs in a single request.
+One of the following:String = string
+The string that will be turned into an embedding.
+Array = array of string
+The array of strings that will be turned into an embedding.
+Array = array of number
+The array of integers that will be turned into an embedding.
+Array = array of array of number
+The array of arrays containing integers that will be turned into an embedding.
+model: string or EmbeddingModel
+ID of the model to use. You can use the List models API to see all of your available models, or see our Model overview for descriptions of them.
+One of the following:stringEmbeddingModel = "text-embedding-ada-002" or "text-embedding-3-small" or "text-embedding-3-large"One of the following:"text-embedding-ada-002""text-embedding-3-small""text-embedding-3-large"dimensions: optional number
+The number of dimensions the resulting output embeddings should have. Only supported in text-embedding-3 and later models.
+minimum1encoding_format: optional "float" or "base64"
+The format to return the embeddings in. Can be either float or base64.
+One of the following:"float""base64"user: optional string
+A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. Learn more.
+ReturnsExpand Collapse CreateEmbeddingResponse object { data, model, object, usage } data: array of Embedding { embedding, index, object } 
+The list of embeddings generated by the model.
+embedding: array of number or string
+The embedding vector, returned as a list of floats when encoding_format is float (the default), or as a base64-encoded string when encoding_format is base64. The length of the vector depends on the model as listed in the embedding guide.
+One of the following:array of numberstringindex: number
+The index of the embedding in the list of embeddings.
+object: "embedding"
+The object type, which is always “embedding”.
+model: string
+The name of the model used to generate the embedding.
+object: "list"
+The object type, which is always “list”.
+usage: object { prompt_tokens, total_tokens } 
+The usage information for the request.
+prompt_tokens: number
+The number of tokens used by the prompt.
+total_tokens: number
+The total number of tokens used by the request.
+
+Create embeddingsHTTPHTTPHTTPPythonPythonTypeScriptTypeScriptGoGoRubyRubyJavaJavaCLI ToolCLI Toolcurl https://api.openai.com/v1/embeddings \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": "Hello world",
+    "model": "text-embedding-3-small",
+    "encoding_format": "float",
+    "dimensions": 3
+  }'
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "embedding",
+      "embedding": [
+        0.26726124,
+        0.53452248,
+        0.80178373
+      ],
+      "index": 0
+    }
+  ],
+  "model": "text-embedding-3-small",
+  "usage": {
+    "prompt_tokens": 2,
+    "total_tokens": 2
+  }
+}
+Returns Examples{
+  "object": "list",
+  "data": [
+    {
+      "object": "embedding",
+      "embedding": [
+        0.26726124,
+        0.53452248,
+        0.80178373
+      ],
+      "index": 0
+    }
+  ],
+  "model": "text-embedding-3-small",
+  "usage": {
+    "prompt_tokens": 2,
+    "total_tokens": 2
+  }
+}
+                      

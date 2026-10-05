@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-default-native-driver-design-c4-review/verify.py", line 13, in <module>
+    lineage.append({'path':str(p.parent.relative_to(S)),'rows':closure(p.parent)})
+                                                               ^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-default-native-driver-design-c4-review/verify.py", line 7, in closure
+    m=json.loads((p/'qa-manifest.json').read_text());a=inv(p);a=[x for x in a if x['path']!='qa-manifest.json'];assert a==m['files'];return len(a)
+                                                                                                                          ~^^^^^^^^^
+KeyError: 'files'

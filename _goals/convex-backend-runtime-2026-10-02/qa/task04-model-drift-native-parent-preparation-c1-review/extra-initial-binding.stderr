@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /QA_REVIEW_SUBSTITUTION/. Input:
+
+'dependencies.inputs is not iterable'
+
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/independent-initial-binding-v2.mjs:15:31 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'dependencies.inputs is not iterable',
+  expected: /QA_REVIEW_SUBSTITUTION/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

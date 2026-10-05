@@ -1,0 +1,15 @@
+node:internal/url:1582
+    throw new ERR_INVALID_FILE_URL_HOST(platform);
+          ^
+
+TypeError [ERR_INVALID_FILE_URL_HOST]: File URL host must be "localhost" or empty on linux
+    at getPathFromURLPosix (node:internal/url:1582:11)
+    at fileURLToPath (node:internal/url:1630:63)
+    at _goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/scripts/parent-inputs.mjs:103:48
+    at SourceTextModule.evaluate (node:internal/vm/module:233:26)
+    at one (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c2-review/independent-body-controls-v3.mjs:15:247)
+    at async file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c2-review/independent-body-controls-v3.mjs:29:1 {
+  code: 'ERR_INVALID_FILE_URL_HOST'
+}
+
+Node.js v24.19.0

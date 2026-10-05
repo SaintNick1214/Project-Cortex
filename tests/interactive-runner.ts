@@ -18,8 +18,8 @@ dotenv.config({ path: join(__dirname, "..", ".env.test") });
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
-import { api } from "../convex-dev/_generated/api";
-import { StorageInspector, TestCleanup } from "./helpers";
+import { TestCleanupCapabilityError } from "./helpers/cleanup";
+import { StorageInspector } from "./helpers";
 import * as readline from "readline";
 import OpenAI from "openai";
 
@@ -82,7 +82,6 @@ let currentImmutableId: string | null = null;
 // Clients
 let cortex: Cortex;
 let client: ConvexClient;
-let cleanup: TestCleanup;
 let inspector: StorageInspector;
 
 // Initialize
@@ -100,7 +99,6 @@ async function initialize() {
 
   cortex = new Cortex({ convexUrl });
   client = new ConvexClient(convexUrl);
-  cleanup = new TestCleanup(client);
   inspector = new StorageInspector(client);
 
   console.log("✅ SDK and helpers initialized");
@@ -290,102 +288,7 @@ async function showVectorMenu() {
 
 // Test implementations
 async function purgeAllDatabases() {
-  console.log("\n🧹 Purging all databases...");
-
-  // Purge conversations
-  console.log("  Purging conversations...");
-  const convDeleted = await cleanup.purgeConversations();
-
-  await cleanup.verifyConversationsEmpty();
-  currentConversationId = null;
-  console.log(`  ✅ Purged ${convDeleted.deleted} conversation(s)`);
-
-  // Purge immutable
-  console.log("  Purging immutable store...");
-  const entriesResult = await client.query(api.immutable.list, {});
-  let immutableDeleted = 0;
-
-  for (const entry of entriesResult.entries) {
-    try {
-      await client.mutation(api.immutable.purge, {
-        type: entry.type,
-        id: entry.id,
-      });
-      immutableDeleted++;
-    } catch (error: unknown) {
-      if (
-        error instanceof Error &&
-        error.message.includes("IMMUTABLE_ENTRY_NOT_FOUND")
-      ) {
-        continue;
-      }
-    }
-  }
-  currentImmutableType = null;
-  currentImmutableId = null;
-  console.log(`  ✅ Purged ${immutableDeleted} immutable entry/entries`);
-
-  // Purge mutable
-  console.log("  Purging mutable store...");
-  const namespaces = [
-    "test",
-    "inventory",
-    "config",
-    "counters",
-    "sessions",
-    "temp",
-    "purge-test",
-    "count-test",
-    "prefix-test",
-    "user-data",
-    "propagation-test",
-    "sync-test",
-    "sync-test-unique",
-    "rapid-test",
-    "large-test",
-    "test-namespace_with.chars",
-    "empty-test",
-    "concurrent",
-    "integration-test",
-    "acid-test",
-    "overwrite-test",
-    "ns-a",
-    "ns-b",
-    "bulk-delete",
-    "purge-ns-test",
-    "bulk-mut-del",
-  ];
-
-  let mutableDeleted = 0;
-
-  for (const ns of namespaces) {
-    try {
-      const result = await client.mutation(api.mutable.purgeNamespace, {
-        namespace: ns,
-      });
-
-      mutableDeleted += result.deleted;
-    } catch (_error: unknown) {
-      // Namespace might not exist - that's fine
-    }
-  }
-  console.log(`  ✅ Purged ${mutableDeleted} mutable entry/entries`);
-
-  // Purge vector memories
-  console.log("  Purging vector memories...");
-  // Use purgeAll for efficiency (updated for Memory Space Architecture)
-  let memoryDeleted = 0;
-
-  try {
-    const result = await client.mutation(api.memories.purgeAll, {});
-    memoryDeleted = result.deleted;
-  } catch (_error: unknown) {
-    // Purge might fail if no data
-  }
-
-  console.log(`  ✅ Purged ${memoryDeleted} memory/memories`);
-
-  console.log("\n✅ All databases clean\n");
+  throw new TestCleanupCapabilityError();
 }
 
 async function inspectDatabase() {

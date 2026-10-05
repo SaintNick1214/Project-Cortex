@@ -1,0 +1,1 @@
+import fs from 'node:fs';fs.openSync("/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c2-fresh-review/judge-fixture-EI5FxW/launch-Pj25gl/a",'wx');fs.openSync("/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c2-fresh-review/judge-fixture-EI5FxW/launch-Pj25gl/b",'wx');

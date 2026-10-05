@@ -1,0 +1,5 @@
+process.once('message',boot=>{
+ process.send({type:'case-start',name:'operator-provisioning'});
+ process.send({type:'rpc',id:1,action:'operator',args:{name:'runtimeAuth:provision',args:{issuer:'https://cortex-qualification.invalid',subject:`subject-${boot.runId}-probe`,actorKind:'user',metadataUserId:`user-${boot.runId}-probe`,tenantId:`task03c2-${boot.runId}-probe`,memorySpaceId:`space-${boot.runId}-probe`,capabilities:['read','write'],resourceAccess:'own'}}});
+ setInterval(()=>{},1000);
+});process.send({type:'ready'});

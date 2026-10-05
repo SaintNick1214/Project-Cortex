@@ -1,0 +1,63 @@
+{
+  "argv": [
+    "work/resume/task04-evidence-transport-30-c2/prepare-c2.py"
+  ],
+  "utcPre": "2026-10-04T13:33:19.684256+00:00",
+  "failures": [],
+  "sourcePre": {
+    "files": 63544,
+    "manifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+    "fullClosureVerified": true
+  },
+  "sourcePreUtc": "2026-10-04T13:33:28.678480+00:00",
+  "baselineWitness": [
+    {
+      "name": "actual-single-backslash",
+      "inputRepr": "'a\\\\b'",
+      "inputCodepoints": [
+        97,
+        92,
+        98
+      ],
+      "utcPre": "2026-10-04T13:33:28.706397+00:00",
+      "utcPost": "2026-10-04T13:33:28.706409+00:00",
+      "priorDenied": true,
+      "finding": "NOT_REPRODUCED; original literals already correct"
+    },
+    {
+      "name": "actual-NUL",
+      "inputRepr": "'a\\x00b'",
+      "inputCodepoints": [
+        97,
+        0,
+        98
+      ],
+      "utcPre": "2026-10-04T13:33:28.706414+00:00",
+      "utcPost": "2026-10-04T13:33:28.706419+00:00",
+      "priorDenied": true,
+      "finding": "NOT_REPRODUCED; original literals already correct"
+    },
+    {
+      "name": "unbounded-read-at",
+      "utcPre": "2026-10-04T13:33:28.706562+00:00",
+      "utcPost": "2026-10-04T13:33:28.706652+00:00",
+      "trustedExpectedControlBytes": 2,
+      "priorReturnedBytes": 128,
+      "priorReadCall": "stream.read() without bound",
+      "finding": "CONFIRMED"
+    }
+  ],
+  "priorPacketManifestSha256": "8e0571129a46c31c031a751a6f97d532d54a16e4c9c0de86b72e9a169094f4d8",
+  "priorHelperSha256": "2f576990a11d564895a16c2d64734fa7cd6de2cbb79a56866e9fb714a94a9e5b",
+  "correctedHelperSha256": "52127a96ba92de55b1b91996688ba77dd6add3ffa202c6fd6ba80861dcbd761d",
+  "mapBytesUnchanged": true,
+  "archiveBytesUnchanged": true,
+  "sourcePost": {
+    "files": 63544,
+    "manifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+    "fullClosureVerified": true
+  },
+  "sourcePostUtc": "2026-10-04T13:33:37.740045+00:00",
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:33:37.740071+00:00"
+}

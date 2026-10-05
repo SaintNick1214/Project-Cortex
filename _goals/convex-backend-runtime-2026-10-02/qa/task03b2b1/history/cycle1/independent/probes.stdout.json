@@ -1,0 +1,133 @@
+[
+  {
+    "name": "agent-status-bulk-retirement",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "status": "active"
+    },
+    "result": {
+      "deleted": 1,
+      "agentIds": [
+        "private-agent-label-not-in-request"
+      ]
+    },
+    "leaksPrivateStoredIdentifier": true,
+    "writes": 2
+  },
+  {
+    "name": "context-filter-bulk-update",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "updates": {
+        "status": "completed"
+      }
+    },
+    "result": {
+      "updated": 1,
+      "contextIds": [
+        "private-context-label-not-in-request"
+      ]
+    },
+    "leaksPrivateStoredIdentifier": true,
+    "writes": 1
+  },
+  {
+    "name": "context-filter-bulk-retirement",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a"
+    },
+    "result": {
+      "deleted": 1,
+      "contextIds": [
+        "private-context-label-not-in-request"
+      ]
+    },
+    "leaksPrivateStoredIdentifier": true,
+    "writes": 2
+  },
+  {
+    "name": "write-only-orphan-child-identifier-receipt",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "contextId": "known-parent",
+      "orphanChildren": true
+    },
+    "result": {
+      "deleted": true,
+      "contextId": "known-parent",
+      "descendantsDeleted": 0,
+      "orphanedChildren": [
+        "private-child-label-not-in-request"
+      ]
+    },
+    "leaksPrivateStoredIdentifier": true
+  },
+  {
+    "name": "agent-write-only-native-duplicate-error",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "errorType": "Error",
+    "errorMessage": "unique() query returned more than one result from table agents:\n [native-private-document-id-one, native-private-document-id-two, ...]",
+    "errorData": null,
+    "leaksPrivateStoredDocumentId": true,
+    "writes": 0,
+    "nativeUniqueImplementation": "Convex1.46 QueryImpl.prototype.unique (real installed dependency); take(2) delegated to traced fixture"
+  },
+  {
+    "name": "space-write-only-native-duplicate-error",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "errorType": "Error",
+    "errorMessage": "unique() query returned more than one result from table memorySpaces:\n [native-private-document-id-one, native-private-document-id-two, ...]",
+    "errorData": null,
+    "leaksPrivateStoredDocumentId": true,
+    "writes": 0,
+    "nativeUniqueImplementation": "Convex1.46 QueryImpl.prototype.unique (real installed dependency); take(2) delegated to traced fixture"
+  },
+  {
+    "name": "context-write-only-native-duplicate-error",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "errorType": "Error",
+    "errorMessage": "unique() query returned more than one result from table contexts:\n [native-private-document-id-one, native-private-document-id-two, ...]",
+    "errorData": null,
+    "leaksPrivateStoredDocumentId": true,
+    "writes": 0,
+    "nativeUniqueImplementation": "Convex1.46 QueryImpl.prototype.unique (real installed dependency); take(2) delegated to traced fixture"
+  },
+  {
+    "name": "write-only-individual-safe-receipt-positive-control",
+    "result": {
+      "accepted": true,
+      "resourceType": "agents",
+      "resourceId": "agent-a"
+    },
+    "privatePayloadAbsent": true
+  }
+]

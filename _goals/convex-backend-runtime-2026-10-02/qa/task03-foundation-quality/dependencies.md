@@ -1,0 +1,1 @@
+SDK API changes affect CLI statistics callers and provider type imports. Actual npm12.2 CLI `npm run typecheck` and provider `npm run lint` (its TypeScript check) both exit0. This supplements current root checks, not the full CLI/provider unit/e2e or core gate. Initial evidence-wrapper failure is retained separately; no result was inferred from those lost child outputs.

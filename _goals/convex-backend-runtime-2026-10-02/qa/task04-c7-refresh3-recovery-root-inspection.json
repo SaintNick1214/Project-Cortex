@@ -1,0 +1,119 @@
+{
+  "utc": "2026-10-05T05:42:31.007515+00:00",
+  "status": "ROOT_RECOVERY_RAW_BINDINGS_VERIFIED_NOT_RECORDER_RECEIPT",
+  "observation": {
+    "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/refresh3-reconstructed-observation.json",
+    "identity": {
+      "dev": "27",
+      "ino": "870251",
+      "mode": "33152",
+      "uid": "1000",
+      "gid": "1000",
+      "nlink": "1",
+      "size": "5816",
+      "mtime_ns": "1791178684034137022",
+      "ctime_ns": "1791178684034137022"
+    },
+    "bytes": 5816,
+    "sha256": "18d9e2a73953c2c7a77becc7b7c5051c477dce0caa1cd8c7be7e6c7d4587618b"
+  },
+  "groupPRE": {
+    "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/refresh-bindings3-group-PRE.json",
+    "identity": {
+      "dev": "27",
+      "ino": "870240",
+      "mode": "33152",
+      "uid": "1000",
+      "gid": "1000",
+      "nlink": "1",
+      "size": "2836",
+      "mtime_ns": "1791178168449239653",
+      "ctime_ns": "1791178168449239653"
+    },
+    "bytes": 2836,
+    "sha256": "495f1480d55040ae6174dd208f29de002f9988450cbf6521e8b561caf4e1c57e"
+  },
+  "verifiedRawBackings": [
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/refresh3-recovery-observation/owner-proc-stat.raw",
+      "identity": {
+        "dev": "27",
+        "ino": "870249",
+        "mode": "33152",
+        "uid": "1000",
+        "gid": "1000",
+        "nlink": "1",
+        "size": "180",
+        "mtime_ns": "1791178683998649201",
+        "ctime_ns": "1791178683998649201"
+      },
+      "bytes": 180,
+      "sha256": "141ae96656dcf3f31dab4866a5a4d370c5f5888a8ffcb9fb05ffa8df682d5ec7"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/refresh3-recovery-observation/initial-proc-stat.raw",
+      "identity": {
+        "dev": "27",
+        "ino": "870250",
+        "mode": "33152",
+        "uid": "1000",
+        "gid": "1000",
+        "nlink": "1",
+        "size": "178",
+        "mtime_ns": "1791178683999125006",
+        "ctime_ns": "1791178683999125006"
+      },
+      "bytes": 178,
+      "sha256": "c6a616e9888b5f0216e0d36117ed8141db5389a8af927e9459b0719721aedda2"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/refresh-bindings3.stdout",
+      "identity": {
+        "dev": "27",
+        "ino": "870238",
+        "mode": "33152",
+        "uid": "1000",
+        "gid": "1000",
+        "nlink": "1",
+        "size": "657",
+        "mtime_ns": "1791178171596898326",
+        "ctime_ns": "1791178171596898326"
+      },
+      "bytes": 657,
+      "sha256": "a037dbbe44bff33d213d63f973c8c0d9c29c9ae1b05581a1e8eb56ec6e0752c1"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/refresh-bindings3.stderr",
+      "identity": {
+        "dev": "27",
+        "ino": "870239",
+        "mode": "33152",
+        "uid": "1000",
+        "gid": "1000",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791178168448021592",
+        "ctime_ns": "1791178168448021592"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "freshProcessObservations": [
+    {
+      "role": "owner",
+      "pid": 396771,
+      "sameStartTime": true,
+      "state": "Z",
+      "kernelExitCodeRaw": "15"
+    },
+    {
+      "role": "initial",
+      "pid": 396790,
+      "sameStartTime": true,
+      "state": "Z",
+      "kernelExitCodeRaw": "0"
+    }
+  ],
+  "limits": "Fresh kernel termination observations only. Recorder actual exit, deadline accounting and held sourceToolPOST unobserved; no reconstruction or qualification. FDSizeZero and empty effectful census are recorded assertions, not independently re-censused here. No OOM causal attribution."
+}

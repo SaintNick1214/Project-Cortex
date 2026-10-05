@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import shutil,json;old=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1\");q=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2\");[shutil.copytree(old/n,q/n) for n in ['fixture','regression','fixture-vm']];shutil.copy2(old/'eslint.config.mjs',q/'eslint.config.mjs');p=q/'eslint.config.mjs';p.write_text(p.read_text().replace('task04-metadata-retention-implementation-c1','task04-metadata-retention-implementation-c2'));print((q/'fixture/convex/canonical.ts').read_text());print((q/'fixture/checks/metadata-resource.mjs').read_text())"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T15:00:30.487248+00:00",
+  "endUtc": "2026-10-04T15:00:30.522562+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901"
+}

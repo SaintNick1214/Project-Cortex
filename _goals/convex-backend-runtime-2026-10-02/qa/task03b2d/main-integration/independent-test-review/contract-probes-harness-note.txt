@@ -1,0 +1,1 @@
+The initial read-only probe mistakenly included enclosing describe callbacks among individual tests; the changed enclosing describe body was correctly different. Restricted extraction to it/it.each callbacks and retained the initial failure logs. No repository files changed.

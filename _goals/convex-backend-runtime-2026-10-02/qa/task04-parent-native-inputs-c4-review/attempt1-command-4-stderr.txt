@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: fresh-C6-private-path-drift: accepted
+
+true !== false
+
+    at watcherProbe (file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c4-review-independent/independent.mjs:17:278)
+    at async file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c4-review-independent/independent.mjs:71:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

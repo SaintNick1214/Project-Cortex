@@ -1,0 +1,67 @@
+{
+  "tests": 144,
+  "suites": 6,
+  "failed": 0,
+  "pending": 0,
+  "todo": 0,
+  "discovery_matches_execution": true,
+  "pre_repair_failed_witness": [
+    {
+      "name": "remember",
+      "error": {
+        "version": 1,
+        "code": "POLICY_NOT_CONFIGURED",
+        "message": "Governed backend memory model policy is not configured",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "writes": 1,
+      "persistedSources": 1,
+      "privateFactsQueries": 0
+    },
+    {
+      "name": "recall",
+      "error": {
+        "version": 1,
+        "code": "POLICY_NOT_CONFIGURED",
+        "message": "Governed backend memory model policy is not configured",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "writes": 0,
+      "persistedSources": 0,
+      "privateFactsQueries": 1
+    }
+  ],
+  "post_repair_witness": [
+    {
+      "name": "remember",
+      "error": {
+        "version": 1,
+        "code": "CAPABILITY_UNAVAILABLE",
+        "message": "Memory capability unavailable.",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "writes": 0,
+      "persistedSources": 0,
+      "privateFactsQueries": 0
+    },
+    {
+      "name": "recall",
+      "error": {
+        "version": 1,
+        "code": "CAPABILITY_UNAVAILABLE",
+        "message": "Memory capability unavailable.",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "writes": 0,
+      "persistedSources": 0,
+      "privateFactsQueries": 0
+    }
+  ],
+  "independent_review": "PENDING_PARENT",
+  "currentguard_live": "NOT_RUN",
+  "Task04": "HELD"
+}

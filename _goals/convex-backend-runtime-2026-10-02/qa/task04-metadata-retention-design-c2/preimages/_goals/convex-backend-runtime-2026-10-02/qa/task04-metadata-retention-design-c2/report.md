@@ -1,0 +1,17 @@
+# Metadata retention design C2 completion
+
+Status: DESIGN COMPLETE, fresh independent design judgment PENDING. No implementation release or positive actual money qualification.
+
+proposal.md supplies the concrete private providerShape tuple and exact single retained graph budget. Immediate original key names survive as bounded sorted string arrays; no caller count exists. Initial official-native descriptor/prototype/accessor checks are distinguished from capture validation of detached snapshot shape, preserved original number, graph dimensions and raw/context correlation. CPU visits are not data-size units; repeated prefix revalidation neither double-charges nor renews the retained graph allowance. All existing raw/native guard predicates remain prerequisites. The historical C1 NEEDS FIXES/failures/controls remain untouched.
+
+Final resource-controls-v4.mjs imports the EXACT frozen fixture/convex/canonical.ts through Node24 native TypeScript loading. Each resource call independently evaluates local DUMMY accounting and the frozen canonical guard, compares acceptance and exact canonical bytes.16 controls PASS;4232 frozen comparisons;getter0. Boundary controls include4096/4097nodes,180000/180001UTF8bytes,root0 depth16/17, equal scalar/different original parent keys, retained witness charge changes/capture equality, mutated old digests, coherently rehashed malformed witness, cumulative growth and100 repeated identical-prefix checks. These are source-comparison/specification controls, not production observer/capture/stage/native qualification.
+
+Preserved controls chronology:
+- resource-controls:15PASS, graph resource/capture model.
+- resource-controls-v2:FAIL exit1 on UTF8 fixture incorrectly naming a one-row generic object providerShape; exact stdout/stderr/source/receipt retained.
+- resource-controls-v3:16PASS after new-file-only correction of generic fixture key to unicodeKeys.
+- resource-controls-v4:16PASS with exact frozen canonical import/comparison. No earlier script/control/receipt was rewritten.
+
+Original IEEE number preservation/outward conversion semantics, raw costDetails unused alias handling, V2 private source/ID/context binding, immutable V1 history, unchanged raw prefix digests, C09/C10 privacy/purge/closed authority, original1000ms phase/final no-await fence remain. Existing caps512/180000/4096/depth16/raw8/finish1, fixed14 requests/models/options/hashes and one reader remain. Actual categories/allattempt/drift/finality/services/proof registry and money domain remain EMPTY; UNKNOWN/fullK/STOP;embedUNKNOWN. No AI-budget dependency/estimate/architecture/callback/Jev or extra service/paid request.
+
+Initial path listing and recorder bootstrap remain NOT_CAPTURED; subsequent command-specific preimages precede raw recorded executions, with UTC/argv/cwd/exit/stdout/stderr/post. Source comparisons and exact frozen rejection-report/proposal pins are in verification.json. Exact-self-only recursive QA/scratch seals include nested preimages and every preserved failure. No product/protected/current installation/oldQA/environment/key/service/network/native/paid/Git/dependency/subagent action occurred.

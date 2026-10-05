@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+const d=await import('./browser-domain.mjs');
+const limits={inputTokens:1000,contextTokens:2000,outputTokens:500,toolSteps:3,timeoutMs:10000,operationBudgetUnits:1000,runBudgetUnits:5000,tenantBudgetUnits:10000,concurrency:4};
+const pins={promptVersion:'p',schemaVersion:'s',extractionVersion:'e',toolRegistryVersion:'t',priceRevision:'price',boundRevision:'bound'};
+const context={scope:{tenantId:'tenant',tenantEpoch:1,memorySpaceId:'space',memorySpaceEpoch:1,principalId:'owner',principalVersion:1,membershipId:'member',membershipVersion:1,grantId:'grant',grantVersion:1},agent:{agentId:'agent',version:1},operationKey:'agent.respond',runBudgetId:'run',parentOperationId:'parent',source:{sourceId:'source',sourceEventId:'event',sourceRevision:1},authorizedOverrides:[]};
+const policy={policyId:'deployment',version:1,scope:'deployment',rules:{allowedModels:[d.DEFAULT_CHAT_MODEL_ID,'fixture/other'],interfaces:['chat','responses'],capabilities:['text','structured','tools'],allowedOptions:['temperature'],allowedTools:['lookup'],fallbackModels:['fixture/other'],limits,pins}};
+const receipt={receiptId:'synthetic-primary',modelId:d.DEFAULT_CHAT_MODEL_ID,nativeInterface:'chat',capabilities:['text','structured','tools'],allowedOptions:['temperature'],limits,costBound:{kind:'qualified-call-ceiling',maximumCostUnits:500,provenance:'synthetic-only',coversAllProviderCharges:true},priceRevision:'price',boundRevision:'bound'};
+function base(){return JSON.parse(JSON.stringify({context,policies:[policy],qualifications:[receipt,{...receipt,receiptId:'synthetic-other',modelId:'fixture/other'}]}));}
+function req(){return {semanticId:'semantic',childCallId:'child',texts:['hello'],messages:[{role:'user',parts:[{type:'text',text:'hello'}]}],inputTokens:20,outputTokens:100,toolSteps:0,timeoutMs:1000,reservationUnits:500,promptVersion:'p',schemaVersion:'s',extractionVersion:'e',toolRegistryVersion:'t',tools:[],options:{maxRetries:0}};}
+const snap=d.resolveModelPolicy(base()); const safe={outcome:'not_dispatched',proof:'pre_dispatch',outputVisible:false,toolInputVisible:false,toolResultVisible:false,toolEffectCommitted:false,paidLiabilityUncertain:false,cancelled:false,priorAttemptAccounted:true,currentAuthorityChecked:true,currentSourceChecked:true,currentPolicyChecked:true};
+const findings=[];
+for(const family of ['tool definition','output schema','tool call input','tool result output']){
+ const r=req();let s=snap;const payload=JSON.parse('{"__proto__":{"distinct":"meaningful"}}');
+ if(family==='tool definition'){r.toolSteps=1;r.tools=[{name:'lookup',definition:payload}];}
+ else if(family==='output schema'){const b=base();b.context.operationKey='memory.extract';s=d.resolveModelPolicy(b);r.outputSchema=payload;}
+ else {r.toolSteps=1;r.tools=[{name:'lookup',definition:{type:'object'}}];r.messages.push({role:family==='tool call input'?'assistant':'tool',parts:[family==='tool call input'?{type:'tool-call',toolCallId:'id',toolName:'lookup',input:payload}:{type:'tool-result',toolCallId:'id',toolName:'lookup',output:payload}]});}
+ const empty=JSON.parse(JSON.stringify(r));if(family==='tool definition')empty.tools[0].definition={};else if(family==='output schema')empty.outputSchema={};else if(family==='tool call input')empty.messages[1].parts[0].input={};else empty.messages[1].parts[0].output={};
+ const admitted=d.validateModelRequest(s,r),emptyAdmitted=d.validateModelRequest(s,empty);
+ const selected=family==='tool definition'?admitted.request.tools[0].definition:family==='output schema'?admitted.request.outputSchema:family==='tool call input'?admitted.request.messages[1].parts[0].input:admitted.request.messages[1].parts[0].output;
+ const first=await d.createModelRequestIdentity(admitted),second=await d.createModelRequestIdentity(emptyAdmitted);let collisionRejected=false;try{d.assertModelRequestIdentity(first,second)}catch{collisionRejected=true}
+ findings.push({family,accepted:true,originalOwnKeys:Object.keys(payload),admittedOwnKeys:Object.keys(selected),callerFrozen:Object.isFrozen(payload),lostExactJSON:d.canonicalModelJson(payload)!==d.canonicalModelJson(selected),canonicalEqual:first.canonical===second.canonical,hashEqual:first.hash===second.hash,identityComparisonRejects:collisionRejected,pass:!findings.lostExactJSON&&collisionRejected});
+}
+console.log(JSON.stringify({findings},null,2));assert(findings.every(x=>x.pass),'Four canonical record families silently drop own JSON keys and collapse identities');

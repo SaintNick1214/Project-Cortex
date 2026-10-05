@@ -1,0 +1,1 @@
+import {writeFileSync} from 'node:fs';writeFileSync("/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c2-fresh-review/extra-fixture/extra-PXb0GE/named.txt",'owned');

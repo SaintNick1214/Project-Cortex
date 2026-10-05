@@ -1,0 +1,832 @@
+{
+  "verdict": "REJECT",
+  "scope": "ORIGINAL_FULL_FINITE_LAUNCHER_COMPOSITION",
+  "dimensions": {
+    "requirementFulfillment": 2,
+    "codeQuality": 3,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 2
+  },
+  "average": 3.0,
+  "ownRoot": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030",
+  "references": [
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/DUMMY-approval-pin.json",
+      "bytes": 211,
+      "sha256": "6b03657315b46b746a9217934e0e43fcdd66d28ef609de80160ec4945fbf0387",
+      "identity": {
+        "dev": 34,
+        "ino": 802107,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 211,
+        "mtime_ns": 1791155857188724622,
+        "ctime_ns": 1791155857188724622
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/DUMMY-approval.json",
+      "bytes": 512,
+      "sha256": "27e824054a2dacc146bb417f0ec372f2457ae8c74aaac60f15a26c177ab12990",
+      "identity": {
+        "dev": 34,
+        "ino": 802106,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 512,
+        "mtime_ns": 1791155857188724622,
+        "ctime_ns": 1791155857188724622
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/adverse-outcomes.json",
+      "bytes": 9657,
+      "sha256": "c77b4cdb91f12947b9abe31e2981fddb9196aa7a96abbef357f9570e28bf8e90",
+      "identity": {
+        "dev": 34,
+        "ino": 802135,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 9657,
+        "mtime_ns": 1791155900209484510,
+        "ctime_ns": 1791155900209484510
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/control.mjs",
+      "bytes": 1705,
+      "sha256": "6fe3b97020bb81bf7e8104b0507678e32678e0bc1ea6efc369a1366ee58acbbf",
+      "identity": {
+        "dev": 34,
+        "ino": 795385,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 1705,
+        "mtime_ns": 1791156060035067641,
+        "ctime_ns": 1791156060035067641
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/custody-limitation-exact-seam-1.json",
+      "bytes": 408,
+      "sha256": "5108192ff43475df995c85bc09d02b09dffdc582d71c898597a199e31e9bced3",
+      "identity": {
+        "dev": 34,
+        "ino": 802070,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 408,
+        "mtime_ns": 1791155558759848414,
+        "ctime_ns": 1791155558759848414
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/custody-limitation-retraction.json",
+      "bytes": 3172,
+      "sha256": "373d2f951d240b98387f1ddaf8d3bf0e83564d6defb1a193b7dd5519805abb86",
+      "identity": {
+        "dev": 34,
+        "ino": 802140,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 3172,
+        "mtime_ns": 1791156034341617211,
+        "ctime_ns": 1791156034341617211
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/entry.mjs",
+      "bytes": 827,
+      "sha256": "fb89a3f7b70531be2442b256fabd02fb580ba10f89cf322508652b9851f28ee7",
+      "identity": {
+        "dev": 34,
+        "ino": 802105,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 827,
+        "mtime_ns": 1791155857188724622,
+        "ctime_ns": 1791155857188724622
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-sealed-control.mjs",
+      "bytes": 1271,
+      "sha256": "fafdb0af865f3bc952ae8ebea18660019ba051a9968145588de32dbeac1ab090",
+      "identity": {
+        "dev": 34,
+        "ino": 802093,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 1271,
+        "mtime_ns": 1791155754206711295,
+        "ctime_ns": 1791155754206711295
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-POST.json.gz",
+      "bytes": 688944,
+      "sha256": "5e5ee813d7383fcdebae4bcbe366fd376019f4e08f5853e0891dcccd4894ab7a",
+      "identity": {
+        "dev": 34,
+        "ino": 802068,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 688944,
+        "mtime_ns": 1791155484885429307,
+        "ctime_ns": 1791155484885429307
+      },
+      "decodedBytes": 3976746,
+      "decodedSHA256": "82df4813f28e3c4d1d92732966a77d3ed4da33d54fed41e7971844ca8796d9ea",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-PRE.json.gz",
+      "bytes": 688945,
+      "sha256": "f65595ba1617e863bf2cad3627c1e6e80a6293b4ec2e71810b16056d59c7b50b",
+      "identity": {
+        "dev": 34,
+        "ino": 798738,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 688945,
+        "mtime_ns": 1791155344463819894,
+        "ctime_ns": 1791155344463819894
+      },
+      "decodedBytes": 3976745,
+      "decodedSHA256": "ad59418ce9c53357be9abd66b02b84f07eebc08fb0a73b542936c06f88f96cf3",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-complete-custody-POST.json.gz",
+      "bytes": 689425,
+      "sha256": "962ea3f433ffe73e94af6718c2835c17415fd785faa1df5ff0c4b86017c514cf",
+      "identity": {
+        "dev": 34,
+        "ino": 802092,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 689425,
+        "mtime_ns": 1791155752493044563,
+        "ctime_ns": 1791155752493044563
+      },
+      "decodedBytes": 3978921,
+      "decodedSHA256": "8deda6ce27ff5b685b91580c299595828ef3697b4efc95022e7f90edcdabc271",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-complete-custody-PRE.json.gz",
+      "bytes": 689421,
+      "sha256": "5684a522bae0d392669105bdd28b6c6226f58d0b2d7566e02d89b243493fe278",
+      "identity": {
+        "dev": 34,
+        "ino": 802077,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 689421,
+        "mtime_ns": 1791155639857898348,
+        "ctime_ns": 1791155639857898348
+      },
+      "decodedBytes": 3978920,
+      "decodedSHA256": "804b838c959b8dc04c5ba8ebc1352ae3324db919101ed3ff949a729a4612fab1",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-complete-custody-execution.json.gz",
+      "bytes": 617,
+      "sha256": "7f38448c914c56b8c6db604db26a23bc58fe55caaeed8664c64f5c0c9a130bf6",
+      "identity": {
+        "dev": 34,
+        "ino": 802090,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 617,
+        "mtime_ns": 1791155674819528788,
+        "ctime_ns": 1791155674819528788
+      },
+      "decodedBytes": 1408,
+      "decodedSHA256": "e1e99715495d0a42e7e0aa000e245e35baca5acd551daf354aea9d4dbc9a32f8",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-complete-custody.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "identity": {
+        "dev": 34,
+        "ino": 802079,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 0,
+        "mtime_ns": 1791155639857898348,
+        "ctime_ns": 1791155639857898348
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-complete-custody.stdout.raw",
+      "bytes": 33,
+      "sha256": "6ce3090c7470d820c114c1b76a7eaf091955ea3ea2e70da968a249b793854c52",
+      "identity": {
+        "dev": 34,
+        "ino": 802078,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 33,
+        "mtime_ns": 1791155674741740093,
+        "ctime_ns": 1791155674741740093
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam-execution.json.gz",
+      "bytes": 609,
+      "sha256": "279f480c4d6e48e71e316eba7f063423608008a10a574eed9b2830e5b261b13c",
+      "identity": {
+        "dev": 34,
+        "ino": 802065,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 609,
+        "mtime_ns": 1791155382922564067,
+        "ctime_ns": 1791155382922564067
+      },
+      "decodedBytes": 1375,
+      "decodedSHA256": "e5fced25c927013e0a0799f719a78f2286e34f056b1edd0b781dfaa02b09426f",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "identity": {
+        "dev": 34,
+        "ino": 798741,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 0,
+        "mtime_ns": 1791155344463819894,
+        "ctime_ns": 1791155344463819894
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/exact-seam.stdout.raw",
+      "bytes": 33,
+      "sha256": "6ce3090c7470d820c114c1b76a7eaf091955ea3ea2e70da968a249b793854c52",
+      "identity": {
+        "dev": 34,
+        "ino": 798740,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 33,
+        "mtime_ns": 1791155382856963387,
+        "ctime_ns": 1791155382856963387
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/executed-adverse-control.mjs",
+      "bytes": 6906,
+      "sha256": "130d56813ab8cf14b09f043631a9f18b6b3192284f6623ea9a92ffc146391a99",
+      "identity": {
+        "dev": 34,
+        "ino": 802141,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 6906,
+        "mtime_ns": 1791156060034603077,
+        "ctime_ns": 1791156060034603077
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/final-preservation-and-quiescence.json.gz",
+      "bytes": 2413,
+      "sha256": "0f15d0c3587ada0b640620b2a4cdb1088543089a7457b012726b9a7a66769966",
+      "identity": {
+        "dev": 34,
+        "ino": 802156,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 2413,
+        "mtime_ns": 1791156426597122462,
+        "ctime_ns": 1791156426597122462
+      },
+      "decodedBytes": 10227,
+      "decodedSHA256": "dcef0e5df2819b3b060dddafc9038c609179103212c2cab3e87b7c7975ffa1e8",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/fresh-adverse-POST.json.gz",
+      "bytes": 689407,
+      "sha256": "61fb19904ace0fe3f7b1ab39f626a0d487bad286d83fc8142df0e703f980380e",
+      "identity": {
+        "dev": 34,
+        "ino": 802139,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 689407,
+        "mtime_ns": 1791155978289409666,
+        "ctime_ns": 1791155978289409666
+      },
+      "decodedBytes": 3978908,
+      "decodedSHA256": "d45fcc71e4f3931e2068bbb98a2c545ee13e9103ca65ad96071be53e4471062e",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/fresh-adverse-PRE.json.gz",
+      "bytes": 689413,
+      "sha256": "301e395109a490d06b2310e396fd769882fe17bebd15ba34a2a324fb91a11dd6",
+      "identity": {
+        "dev": 34,
+        "ino": 802096,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 689413,
+        "mtime_ns": 1791155840176840907,
+        "ctime_ns": 1791155840176840907
+      },
+      "decodedBytes": 3978907,
+      "decodedSHA256": "6843f4b67a06b74410e439053eb7bafbec56bc9ec24a3595ab9379a5460ba751",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/fresh-adverse-execution.json.gz",
+      "bytes": 607,
+      "sha256": "5cb3e0d55056924aef028bac1382132b07b96ca81db76bf86d60ec7ffd41481b",
+      "identity": {
+        "dev": 34,
+        "ino": 802136,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 607,
+        "mtime_ns": 1791155900312089604,
+        "ctime_ns": 1791155900312089604
+      },
+      "decodedBytes": 1378,
+      "decodedSHA256": "9b83b2bc0f477e66b88731568bc846c0e8bd664fc5bbd3f3ba1b5318f104e7e8",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/fresh-adverse.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "identity": {
+        "dev": 34,
+        "ino": 802098,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 0,
+        "mtime_ns": 1791155840176840907,
+        "ctime_ns": 1791155840176840907
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/fresh-adverse.stdout.raw",
+      "bytes": 27,
+      "sha256": "104e2c2f6a76f4812459b5485364699186031f92a865054555b4a23129a6649d",
+      "identity": {
+        "dev": 34,
+        "ino": 802097,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 27,
+        "mtime_ns": 1791155900209484510,
+        "ctime_ns": 1791155900209484510
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/historical-current-and-captured-backing-audit.json.gz",
+      "bytes": 442889,
+      "sha256": "c1a1fbb77782159f2aa3adc92ee41cb2541bce45f07180adf6158e8b293a3b98",
+      "identity": {
+        "dev": 34,
+        "ino": 802075,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 442889,
+        "mtime_ns": 1791155625441070219,
+        "ctime_ns": 1791155625441070219
+      },
+      "decodedBytes": 2566932,
+      "decodedSHA256": "2d82b6291585af4ebf599afabcb0e75d2b4116e18fca5a7b2cbcd4faff67a09e",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/independent-nine-parent-producer-source-check-corrected.json.gz",
+      "bytes": 4518,
+      "sha256": "1ceefd17a5b5e4a4399467310400cea6a262f771eefc036a73361fb923088060",
+      "identity": {
+        "dev": 34,
+        "ino": 802155,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 4518,
+        "mtime_ns": 1791156308727283298,
+        "ctime_ns": 1791156308727283298
+      },
+      "decodedBytes": 39042,
+      "decodedSHA256": "105760993db3c39988630b06a4651c87c7a4b5f6412b292f7386507b60ef04df",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/independent-nine-parent-producer-source-check.json.gz",
+      "bytes": 4378,
+      "sha256": "93b50fb052e973151c6222563294b0860cac7a8b624cfaa323c5f4c1960aed55",
+      "identity": {
+        "dev": 34,
+        "ino": 802154,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 4378,
+        "mtime_ns": 1791156272813994845,
+        "ctime_ns": 1791156272813994845
+      },
+      "decodedBytes": 36842,
+      "decodedSHA256": "d9e2348f340284c8744fdb5c4f052fbe811639529340922518707f51a8749156",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/independent-raw-evidence-audit.json.gz",
+      "bytes": 6515,
+      "sha256": "e417ca383ba1ff7e34d2e29a6e61f249c1f94b624fc01da2778698a3efb19292",
+      "identity": {
+        "dev": 34,
+        "ino": 802066,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 6515,
+        "mtime_ns": 1791155440326166991,
+        "ctime_ns": 1791155440326166991
+      },
+      "decodedBytes": 68319,
+      "decodedSHA256": "450feb5c337757197d62e2125fa9c469062a47ea63bb4ddff01eb72b794086ab",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/original-recorder.py",
+      "bytes": 4036,
+      "sha256": "5d1ea9ec3007b97dedde7c8310a078d103444afe9170d776881b3589c9532994",
+      "identity": {
+        "dev": 34,
+        "ino": 798734,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 4036,
+        "mtime_ns": 1791156176224035194,
+        "ctime_ns": 1791156176224035194
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/own-actual-service-audit.json.gz",
+      "bytes": 3005,
+      "sha256": "3898bbf576f30a3ceb395483a8a5d08099a4737c253d7605ba12a44776dd23f5",
+      "identity": {
+        "dev": 34,
+        "ino": 802137,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 3005,
+        "mtime_ns": 1791155965719946390,
+        "ctime_ns": 1791155965719946390
+      },
+      "decodedBytes": 15213,
+      "decodedSHA256": "2211f14f80cce5b7afc567393d1d3a7e5b79ec7c8a5c2c5a063d42fce1c7f76a",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/review-attempt-1.py",
+      "bytes": 5985,
+      "sha256": "4afc9e1c5e1ba11fb23b08e322e4ba7401c8e69c0fd60907032f5f4afd27708a",
+      "identity": {
+        "dev": 34,
+        "ino": 795387,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 5985,
+        "mtime_ns": 1791155205585298388,
+        "ctime_ns": 1791155205585298388
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/review-attempt-2.py",
+      "bytes": 5962,
+      "sha256": "f66f4b2436ea778cd6750974bf43abfe15f11ca53e730e898d611d2924ffe235",
+      "identity": {
+        "dev": 34,
+        "ino": 795769,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 5962,
+        "mtime_ns": 1791155229092036299,
+        "ctime_ns": 1791155229092036299
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/review-attempt-3.py",
+      "bytes": 6036,
+      "sha256": "41f3429244b2d35f4ebd6643565dbaa59398aaf7c8a260958c62ec1d1daa8197",
+      "identity": {
+        "dev": 34,
+        "ino": 802069,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 6036,
+        "mtime_ns": 1791155558759805593,
+        "ctime_ns": 1791155558759805593
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/setup-failure-1.json",
+      "bytes": 260,
+      "sha256": "e35ab9fd463965e79c338c18a07fa58f28c5a49c2d6d09f50c1e6b651eec807a",
+      "identity": {
+        "dev": 34,
+        "ino": 795386,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 260,
+        "mtime_ns": 1791155205585237523,
+        "ctime_ns": 1791155205585237523
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/setup-failure-2.json",
+      "bytes": 93,
+      "sha256": "f683323f78bc2861431b83ea2eb6e431cc56d33eb99dc981fb5eed08dc51f786",
+      "identity": {
+        "dev": 34,
+        "ino": 795770,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 93,
+        "mtime_ns": 1791155229092108796,
+        "ctime_ns": 1791155229092108796
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/vm-original-shape-POST.json.gz",
+      "bytes": 689419,
+      "sha256": "2984a31b895296fa8a469ad3964ad77f98646a7d02a0cf5256d26dd98542046b",
+      "identity": {
+        "dev": 34,
+        "ino": 802153,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 689419,
+        "mtime_ns": 1791156244315165320,
+        "ctime_ns": 1791156244315165320
+      },
+      "decodedBytes": 3978911,
+      "decodedSHA256": "0a6424d1eb8b4c347007cb0a583305064bd355a8b6bb277c809b61709e7a199d",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/vm-original-shape-PRE.json.gz",
+      "bytes": 689413,
+      "sha256": "5daa243727e03d6814c0a5a898d39fc80318458ec72f39c9c789f0f0b80a7c27",
+      "identity": {
+        "dev": 34,
+        "ino": 802144,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 689413,
+        "mtime_ns": 1791156153842073026,
+        "ctime_ns": 1791156153842073026
+      },
+      "decodedBytes": 3978910,
+      "decodedSHA256": "5dc128876c0f7385eef1056b524a1152ae3adbf33e15a9023ffbf561406534eb",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/vm-original-shape-execution.json.gz",
+      "bytes": 603,
+      "sha256": "99afe8fc9fd33ea88855a0e8a35cda8b6e51a1d03b6b73ee5b1786bedca59978",
+      "identity": {
+        "dev": 34,
+        "ino": 802149,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 603,
+        "mtime_ns": 1791156168040413977,
+        "ctime_ns": 1791156168040413977
+      },
+      "decodedBytes": 1397,
+      "decodedSHA256": "face26f086ac4720a5753b02a709c9515012f2f67c8649e04de151b36dc50eb0",
+      "encoding": "LOSSLESS_GZIP"
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/vm-original-shape.stderr.raw",
+      "bytes": 174,
+      "sha256": "6a1b616f9a6a8d5e24cf590b47f45579296e344d2e68e82ac5cce698968161f3",
+      "identity": {
+        "dev": 34,
+        "ino": 802146,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 174,
+        "mtime_ns": 1791156167953904171,
+        "ctime_ns": 1791156167953904171
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/vm-original-shape.stdout.raw",
+      "bytes": 1644,
+      "sha256": "e2883be063f796f00509b9650b2dd1520c9cc79a692e3c1a2e2aadaae46c4794",
+      "identity": {
+        "dev": 34,
+        "ino": 802145,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 1644,
+        "mtime_ns": 1791156167953904171,
+        "ctime_ns": 1791156167953904171
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-fresh-7bc323d1-56c7-43bc-bac6-60026125b030/vm-shape-outcomes.json",
+      "bytes": 2405,
+      "sha256": "3da51757c6145a9d6520f3e66fb0e698631a0f711662b6e7fbf3c9777c1cfb15",
+      "identity": {
+        "dev": 34,
+        "ino": 802148,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 2405,
+        "mtime_ns": 1791156167953904171,
+        "ctime_ns": 1791156167953904171
+      }
+    }
+  ],
+  "subjectSeals": [
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-closed-launcher-c5/selfseal.json",
+      "bytes": 3147,
+      "sha256": "b472772d31968e5f47f2af09fe7e993198fb0de90c58e359d2c2294bc479e260",
+      "identity": {
+        "dev": 27,
+        "ino": 1005219,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 3147,
+        "mtime_ns": 1791154782315683631,
+        "ctime_ns": 1791154782315683631
+      }
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c5/selfseal.json",
+      "bytes": 28597,
+      "sha256": "461019d6a2a5bcdd4a9092836171123bd2b080ef750a7b453061a4e27cb03324",
+      "identity": {
+        "dev": 27,
+        "ino": 1005218,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 28597,
+        "mtime_ns": 1791154774106722878,
+        "ctime_ns": 1791154774106722878
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-closed-launcher-c5/selfseal.json.gz",
+      "bytes": 4768510,
+      "sha256": "a90ffbf84422fc2db387b107144a07ac3ad209ae0cdc560e8bd29d18b8972909",
+      "identity": {
+        "dev": 34,
+        "ino": 795380,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 4768510,
+        "mtime_ns": 1791154782297366100,
+        "ctime_ns": 1791154782297366100
+      }
+    },
+    {
+      "path": "/tmp/cortex-native-c5-independent-review-c5-15b2ef7a-3243-4271-a78d-bf819fdf7393/selfseal.json.gz",
+      "bytes": 474716,
+      "sha256": "8a20a05868bd7413268915bf2a1dc74f237c050fa7a0a4f6604573b97fd4e5c5",
+      "identity": {
+        "dev": 34,
+        "ino": 795379,
+        "mode": 33152,
+        "uid": 1000,
+        "gid": 1000,
+        "nlink": 1,
+        "size": 474716,
+        "mtime_ns": 1791154774492274310,
+        "ctime_ns": 1791154774492274310
+      }
+    }
+  ],
+  "report": {
+    "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-composition-c5-fresh-review/report.md",
+    "bytes": 19592,
+    "sha256": "0b72b77540fd242bfe914db404a8d6ff57b1b84e9c67490c050dbf9b314852b4",
+    "identity": {
+      "dev": 27,
+      "ino": 1005245,
+      "mode": 33152,
+      "uid": 1000,
+      "gid": 1000,
+      "nlink": 1,
+      "size": 19592,
+      "mtime_ns": 1791156347894977273,
+      "ctime_ns": 1791156347894977273
+    }
+  },
+  "original122": "HELD",
+  "actualApprovalsCreated": 0,
+  "nativePrivatePaidGit": "NONE",
+  "remaining": [
+    "body VM constructor semantics",
+    "actual generated in-memory VM before-consumer custody/exact recipes",
+    "whole freeze-route120s execution/timing",
+    "unexecuted full setup/rollback fault branches"
+  ]
+}

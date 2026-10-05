@@ -1,0 +1,31 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --config _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/jest.scoped.cjs --runInBand --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/tests-final.json
+(node:51237) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeRegistryAuth/adversarial.test.ts
+  ● native Convex v.any round trips and exact integer/binary witnesses › native optional absent metadata remains searchable without inventing a payload
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:71:148)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:221:3)
+      at spacesIn (convex-dev/runtimeRegistryAuth.ts:243:47)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:90:27)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:457:18)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 336 passed, 337 total
+Snapshots:   0 total
+Time:        7.57 s, estimated 8 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/tests-final.json

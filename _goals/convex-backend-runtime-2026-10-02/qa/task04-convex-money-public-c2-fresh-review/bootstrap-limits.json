@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-10-04T13:35:38.153652+00:00",
+  "commandsBeforeLogger": [
+    "pwd",
+    "rg --files -g AGENTS.md -g *runtime* -g *profile* -g *pessimisticjudge* -g *judge-task* -g *moneybudgetcriteria* -g *task04* .agents goalqa work resume",
+    "python3 inline directory listing and AGENTS read",
+    "python3 inline runtime/profile read and recursive filename discovery",
+    "python3 inline created own review directory/bootstrap-limits/run.py and bounded directory listings"
+  ],
+  "limitations": "No independently captured genuine pre/post UTC/raw argv for these bootstrap invocations; tool transcript preserves literal command text and observed exit/output. rg failed exit 2 for absent goalqa/resume and produced truncated broad output; runtime/profile discovery output also truncated. These bootstrap gaps are not represented as compliant ledger entries. The logger-bootstrap authoring invocation also lacks independently captured pre/post UTC/raw argv; creation is visible in tool transcript. Wrapper receipts capture exact child argv, not the outer functions.exec/tool invocation."
+}

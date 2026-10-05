@@ -1,0 +1,30 @@
+{
+  "command": [
+    "npx",
+    "--offline",
+    "--cache",
+    "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+    "--yes",
+    "--package=npm@12.2.0",
+    "--",
+    "npm",
+    "exec",
+    "--",
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "work/task03b2b1-cycle3-continuation/core-jest.cjs",
+    "--runInBand",
+    "--json",
+    "--outputFile=/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/core-replay/legacy-fixture/tests.json"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+  "utcStart": "2026-10-03T13:45:23.957631+00:00",
+  "utcEnd": "2026-10-03T13:45:33.640925+00:00",
+  "exitCode": 1,
+  "testFile": "tests/unit/runtimeAuth/provisioning.test.ts",
+  "testSha256": "695b0dc0d138a5c62fc334ec1b4e0ee88ffd5a0363a7907a7b224a554b99b576",
+  "coreSha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+  "status": "Literal unchanged old-fixture replay; no correction applied"
+}

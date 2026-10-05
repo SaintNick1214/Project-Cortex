@@ -1,0 +1,34 @@
+{
+  "scope": "All observed exploratory discovery failures retained; no required check/native execution attempted",
+  "failures": [
+    {
+      "command": "cat qa/task04-model-drift-charge-only-c2-design-review/coordinator-design-acceptance.json",
+      "observedDiagnostic": "No such file or directory",
+      "reason": "Parent-supplied abbreviated locator placed coordinator acceptance inside review directory",
+      "correction": "Discovered and read actual sibling task04-model-drift-charge-only-c2-coordinator-design-acceptance.json",
+      "productOrSubjectWrites": false
+    },
+    {
+      "command": "rg --files selected instruction paths including nonexistent roles/skills/qa",
+      "observedExitCode": 2,
+      "reason": "Repository uses .agents/roles and .agents/skills; root qa absent",
+      "correction": "Resolved canonical .agents and _goals/.../qa paths",
+      "productOrSubjectWrites": false
+    },
+    {
+      "command": "rg --files plans qa _research",
+      "observedExitCode": 2,
+      "reason": "plans and root qa absent",
+      "correction": "Used _goals/... paths",
+      "productOrSubjectWrites": false
+    },
+    {
+      "command": "rg ... scripts/native-cases.mjs ...",
+      "observedDiagnostic": "No such file or directory",
+      "reason": "C4 executable cases are scripts/cases.mjs",
+      "correction": "Read actual cases.mjs directly",
+      "productOrSubjectWrites": false
+    }
+  ],
+  "truncatedDiscovery": "Broad historical filename listing exceeded output budget; corrected to bounded exact names and top-level inspection. No absent file or truncated output was labeled passed."
+}

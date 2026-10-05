@@ -1,0 +1,234 @@
+{
+  "kind": "extra",
+  "results": [
+    {
+      "when": "before",
+      "mode": "healthy",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 1,
+      "writes": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "source",
+      "tickets": 0,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "target",
+      "tickets": 0,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_TARGET",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "env",
+      "tickets": 0,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_SELECTOR",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "publication",
+      "tickets": 0,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "Expected values to be strictly equal:\n\ntrue !== false\n",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "pin",
+      "tickets": 0,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "window",
+      "tickets": 0,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_TOTAL_TIME_BUDGET",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "healthy",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 1,
+      "writes": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "source",
+      "tickets": 1,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "target",
+      "tickets": 1,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_TARGET_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "env",
+      "tickets": 1,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_PRIVATE_SELECTOR_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "publication",
+      "tickets": 1,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_PUBLICATION_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "pin",
+      "tickets": 1,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "window",
+      "tickets": 1,
+      "queries": 0,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_TOTAL_TIME_BUDGET",
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "healthy",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 1,
+      "writes": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "source",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "target",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_TARGET_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "env",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_PRIVATE_SELECTOR_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "publication",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_PUBLICATION_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "pin",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-query-entry",
+      "mode": "window",
+      "tickets": 1,
+      "queries": 1,
+      "fetches": 0,
+      "writes": 0,
+      "error": "QA_TOTAL_TIME_BUDGET",
+      "status": "PASS"
+    }
+  ],
+  "scope": "EXACT_PUBLICATION_ENTRY_CONTRACT_AND_ACTUAL_GUARD_DUMMY_QUERY_FETCH_AND_ARTIFACT_SINK_PORTS;NO_NATIVE_PUBLICATION_CLAIM",
+  "sourcePins": [
+    {
+      "path": "scripts/publication.mjs",
+      "sha256": "dd195975bce659e82ac54aa1fce71a9e75499bb1e97c397aebb4b6812fd5bb7a"
+    },
+    {
+      "path": "scripts/publication-contract.mjs",
+      "sha256": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+    },
+    {
+      "path": "scripts/bounded-response.mjs",
+      "sha256": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "sha256": "473e6ae7d6647277aac4369377c77f2d9108e9aaa1dfa207ed862ad47a964261"
+    }
+  ]
+}

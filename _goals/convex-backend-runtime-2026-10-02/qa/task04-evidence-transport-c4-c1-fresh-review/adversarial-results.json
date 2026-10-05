@@ -1,0 +1,294 @@
+{
+  "controls": [
+    {
+      "control": "exact-exclusive-create",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "exact-read-and-unique-nlink-mode",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "exclusive-collision-no-overwrite",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "[Errno 17] File exists: 'fixture'"
+    },
+    {
+      "control": "existing-wrong-hash",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "length/hash mismatch"
+    },
+    {
+      "control": "existing-wrong-mode",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "mode mismatch"
+    },
+    {
+      "control": "pre-fstat-size",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "regular exact pre-size required"
+    },
+    {
+      "control": "unsafe-path-'../escape'",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unsafe path"
+    },
+    {
+      "control": "unsafe-path-'/absolute'",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unsafe path"
+    },
+    {
+      "control": "unsafe-path-'a\\\\b'",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unsafe path"
+    },
+    {
+      "control": "unsafe-path-'a\\x00b'",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unsafe path"
+    },
+    {
+      "control": "unsafe-path-'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/../escape'",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unsafe path"
+    },
+    {
+      "control": "unsafe-path-'other/file'",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "outside frozen namespace"
+    },
+    {
+      "control": "literal-absolute-broken-link-create",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "literal-absolute-broken-link-verify",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "terminal-link-as-ancestor",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "[Errno 20] Not a directory: 'terminal-link'"
+    },
+    {
+      "control": "regular-versus-link-collision",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "regular type collision"
+    },
+    {
+      "control": "link-literal-mismatch",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "literal link mismatch"
+    },
+    {
+      "control": "absolute-ancestral-symlink",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "[Errno 20] Not a directory: 'ancestor-alias'"
+    },
+    {
+      "control": "nlink2-idempotence-denied",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "restored file must have unique inode"
+    },
+    {
+      "control": "zero-write",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "short/invalid write"
+    },
+    {
+      "control": "invalid-negative-write",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "short/invalid write"
+    },
+    {
+      "control": "invalid-oversize-write",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "short/invalid write"
+    },
+    {
+      "control": "write-error",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "INJECTED"
+    },
+    {
+      "control": "positive-partial-write-completes",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "short-read",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "short/invalid read"
+    },
+    {
+      "control": "oversize-read",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "short/invalid read"
+    },
+    {
+      "control": "growth-after-fstat",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "growth detected"
+    },
+    {
+      "control": "decoded-exact-boundary",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "decoded-max-plus-one",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "decoded ceiling exceeded"
+    },
+    {
+      "control": "decoded-bomb",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "decoded ceiling exceeded"
+    },
+    {
+      "control": "gzip-trailing-bytes",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "trailing compressed bytes"
+    },
+    {
+      "control": "gzip-concatenated-member",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "trailing compressed bytes"
+    },
+    {
+      "control": "truncated-gzip",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "truncated compressed stream"
+    },
+    {
+      "control": "missing-decoded-byte",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "missing decoded bytes"
+    },
+    {
+      "control": "extra-encoded-part",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "trailing encoded part"
+    },
+    {
+      "control": "unbounded-decoded-read",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "bounded decoded read"
+    },
+    {
+      "control": "corrupt-index-before-target",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "length/hash mismatch"
+    },
+    {
+      "control": "duplicate-path",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "duplicate path"
+    },
+    {
+      "control": "path-escape",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unsafe path"
+    },
+    {
+      "control": "unknown-kind",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unknown kind"
+    },
+    {
+      "control": "over-object-cap",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "object cap"
+    },
+    {
+      "control": "wrong-content-hash",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "content reference"
+    },
+    {
+      "control": "raw-object-exact-boundary",
+      "expected": "pass",
+      "observed": "pass"
+    },
+    {
+      "control": "raw-unknown-member",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unknown/duplicate/member-size"
+    },
+    {
+      "control": "raw-member-size",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unknown/duplicate/member-size"
+    },
+    {
+      "control": "raw-object-hash-corruption",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "object corrupt"
+    },
+    {
+      "control": "raw-trailing-member",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "decoded ceiling exceeded"
+    },
+    {
+      "control": "raw-duplicate-member",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "unknown/duplicate/member-size"
+    },
+    {
+      "control": "raw-missing-member",
+      "expected": "reject",
+      "observed": "reject",
+      "reason": "missing decoded bytes"
+    }
+  ],
+  "total": 49,
+  "status": "PASS",
+  "fixtures": "OWN/tmp retained; partial writes deliberately retained; injected bounded unit faults not native execution"
+}

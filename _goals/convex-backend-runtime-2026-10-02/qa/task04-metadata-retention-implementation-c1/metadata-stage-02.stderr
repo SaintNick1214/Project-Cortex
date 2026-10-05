@@ -1,0 +1,20 @@
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts' imported from /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/metadata-stage.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts'
+}
+
+Node.js v24.19.0

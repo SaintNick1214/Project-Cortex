@@ -1,0 +1,67 @@
+(node:208961) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"id":"equal-refinements","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: equal-refinements (68.256353ms)
+{"id":"conflicting-refinements","rpc":14,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: conflicting-refinements (28.358986ms)
+{"id":"revoked-live-origin","rpc":12,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: revoked-live-origin (20.945253ms)
+{"id":"initial-duplicates","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: initial-duplicates (28.887451ms)
+{"id":"final-lost-response","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: final-lost-response (23.498956ms)
+{"id":"parent-refinement-rollback","rpc":12,"committedCreates":15,"peakRows":15,"nested":1,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: parent-refinement-rollback (20.829585ms)
+{"id":"released-slot","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: released-slot (22.188832ms)
+{"id":"late-original-window","rpc":16,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: late-original-window (32.338211ms)
+{"id":"facts-add-absent","rpc":10,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: facts-add-absent (19.556772ms)
+{"id":"facts-change-remove","rpc":23,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: facts-change-remove (28.221307ms)
+{"id":"unknown-intermediate","rpc":11,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: unknown-intermediate (20.199742ms)
+{"id":"malformed-private-raw","rpc":31,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: malformed-private-raw (35.067854ms)
+{"id":"no-checkpoint","rpc":9,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: no-checkpoint (13.235723ms)
+{"id":"closed-renew-ordinary","rpc":24,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: closed-renew-ordinary (34.192698ms)
+{"id":"admin-compatibility","rpc":25,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: admin-compatibility (29.312039ms)
+{"id":"operator-compatibility","rpc":26,"committedCreates":16,"peakRows":16,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: operator-compatibility (31.053193ms)
+{"id":"partial-marker","rpc":38,"committedCreates":26,"peakRows":26,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: partial-marker (40.070192ms)
+{"id":"legacy-preserve","rpc":32,"committedCreates":26,"peakRows":26,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: legacy-preserve (41.189828ms)
+{"id":"healthy-known-attach","rpc":23,"committedCreates":15,"peakRows":15,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: healthy-known-attach (36.712338ms)
+{"id":"attachment-current-fences","rpc":75,"committedCreates":61,"peakRows":61,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+{"id":"internal-publication","rpc":0,"committedCreates":0,"peakRows":0,"nested":0,"status":"PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"}
+✔ frozen native case wiring OFFLINE fake-DB ONLY: attachment-current-fences (103.945917ms)
+✔ frozen native case wiring OFFLINE fake-DB ONLY: internal-publication (5.058274ms)
+✖ frozen native case wiring OFFLINE fake-DB ONLY: peer-no-replay (19.459098ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 21
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 919.964442
+
+✖ failing tests:
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/offline-extension.mjs:11:40
+✖ frozen native case wiring OFFLINE fake-DB ONLY: peer-no-replay (19.459098ms)
+  Error: QA_PEER_INVALID
+      at valid2 (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c1/extension/actual-handlers-e9a21bac-8715-43e2-9fbf-2dc81de4c8c6/bundle.mjs:4355:107)
+      at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c1/extension/actual-handlers-e9a21bac-8715-43e2-9fbf-2dc81de4c8c6/bundle.mjs:4358:3)
+      at invoke (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/offline-extension.mjs:15:276)
+      at peer (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/offline-extension.mjs:24:685)
+      at Module.scenario (exact-frozen-extension-cases:70:159)
+      at async TestContext.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/offline-extension.mjs:25:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

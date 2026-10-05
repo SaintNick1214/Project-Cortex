@@ -1,0 +1,240 @@
+[
+  {
+    "selection": 1,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/native-validator-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.243,
+    "stdout": "{\"status\":\"PASS\",\"registered\":259,\"public\":200,\"internal\":59,\"validatorMismatches\":0,\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 2,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.869,
+    "stdout": "{\"scope\":\"OFFLINE_ONLY\",\"status\":\"PASS\",\"negativeControls\":25,\"registered\":259,\"public\":200,\"internal\":59,\"liveQualification\":\"BLOCKED\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 3,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-arguments-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.058,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 4,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-closure-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.153,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CURRENT_TABLE_SHAPES\",\"status\":\"PASS\",\"rows\":12,\"tables\":4,\"realIds\":\"NOT_RUN_REQUIRES_OWNED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 5,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/auth-classifier-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.106,
+    "stdout": "{\"scope\":\"OFFLINE_AUTH_CLASSIFIER\",\"status\":\"PASS\",\"negativeControls\":44,\"arbitraryDeniedAccepted\":false,\"privateDiagnosticAccepted\":false,\"opaqueFailureIsAuthDenial\":false,\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 6,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/callback-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.251,
+    "stdout": "{\"scope\":\"OFFLINE_HOST_CALLBACK_PAYLOAD\",\"status\":\"PASS\",\"malformedRejected\":9,\"serviceCalls\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 7,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/management-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.044,
+    "stdout": "{\"scope\":\"OFFLINE_MANAGEMENT_CONTRACT\",\"status\":\"PASS\",\"partialRecoveryPrepared\":true,\"negativeControls\":10,\"dispatches\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 8,
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--skipLibCheck",
+      "--moduleResolution",
+      "Bundler",
+      "--module",
+      "ESNext",
+      "--target",
+      "ES2022",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/contracts.ts"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.458,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "selection": 9,
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "work/resume/current-guard-live-c5/offline-fixture/convex/tsconfig.json",
+      "--noEmit"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 7.762,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "selection": 10,
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/eslint.config.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/cases"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.312,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "selection": 11,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-mwd.ts"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.223,
+    "stdout": "{\"scope\":\"OFFLINE_AUTHOR_ONLY\",\"status\":\"PASS\",\"syntax\":\"node --check module\",\"actualSchemaRowsValidated\":19,\"tableTypes\":[\"immutable\",\"mutable\",\"sessions\",\"runtimeAuthPrincipals\",\"runtimeAuthMemberships\",\"runtimeAuthGrants\",\"runtimeMemorySources\",\"facts\"],\"registeredPaths\":74,\"metadata\":41,\"worker\":25,\"domain\":8,\"descriptorSuites\":8,\"liveStatus\":\"NOT_RUN\",\"liveDispatches\":0,\"signatures\":0,\"servicesStarted\":0,\"seededRows\":0,\"idValidation\":\"schema-only synthetic string references; actual v.id identity is live prerequisite\"}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 12,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/offline-mra.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.477,
+    "stdout": "{\"status\":\"PASS\",\"scope\":\"OFFLINE_AUTHORING_ONLY\",\"registeredPaths\":117,\"caseDescriptors\":122,\"seedRows\":66,\"nativeSchemaValidated\":true,\"nativeArgumentsValidated\":true,\"serviceCalls\":0,\"signatures\":0,\"liveStatus\":\"NOT_RUN\"}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 13,
+    "argv": [
+      "node",
+      "-e",
+      "import('./_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/cases/mf-registry-artifacts.mjs').then(m=>console.log(JSON.stringify(m.offlineDenialControls())))"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.114,
+    "stdout": "{\"scope\":\"OFFLINE_DENIAL_ASSERTIONS\",\"positiveControls\":2,\"malformedRejected\":10,\"serviceCalls\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 14,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/forwarded-native-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.552,
+    "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_ACTUAL_SERIALIZED_FOREGROUND_CONTROL\",\"status\":\"PASS\",\"healthyCases\":[{\"path\":\"runtimeMemory:remember\",\"forwardedReferenceFields\":10,\"nativeSchemaAccepted\":true,\"noBusinessWrites\":true,\"noPrivateHydration\":true,\"extraFieldNegatives\":4},{\"path\":\"runtimeMemory:recall\",\"forwardedReferenceFields\":10,\"nativeSchemaAccepted\":true,\"noBusinessWrites\":true,\"noPrivateHydration\":true,\"extraFieldNegatives\":4}],\"unknownForwardedControls\":4,\"knownFixedDenialControls\":4,\"extraFieldNegatives\":8,\"handlerOnlyBypass\":false,\"serviceCalls\":0,\"signatures\":0,\"live\":\"NOT_RUN\"}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 15,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/first-preservation-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.206,
+    "stdout": "{\"scope\":\"OFFLINE_CYCLE4_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":273,\"candidateSha256\":\"16fa59a1564dd628bbf1f2507b822f98053bd26140c74fb286840818d3d86cd1\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE3_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":285,\"candidateSha256\":\"db0d0e879c96c5108018f881ce14d43ec16938ef222680136a8e93a7fec1d044\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE2_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":278,\"candidateSha256\":\"d3e9984ebca68860c1a98e09092cca1676a24d15169026b6283d965a3eb8fe4e\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_FIRST_CANDIDATE_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":186,\"reviewFiles\":43,\"firstDigest\":\"8189fbaecd8e5c588b1446644741642f2525e5c27a0451d72b458b72cba0564c\",\"serviceCalls\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 16,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/process-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 3.272,
+    "stdout": "{\"scope\":\"OFFLINE_ACTUAL_OWNED_PROCESS_GROUPS\",\"status\":\"PASS\",\"processes\":3,\"verifiedGroups\":3,\"remainingGroups\":0,\"timeoutUnknownIsFailure\":true,\"serviceCalls\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 17,
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/schema-index-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.439,
+    "stdout": "{\"scope\":\"OFFLINE_FULL_NATIVE_SCHEMA_INDEX_UNIQUENESS\",\"status\":\"PASS\",\"tables\":26,\"allIndexes\":181,\"normalDbIndexes\":173,\"searchVectorIndexes\":8,\"stagedDbIndexes\":0,\"searchVectorDefinitionsPreserved\":true,\"fixtureHelperSoleIndexSubstitutionVerified\":true,\"normalConfigurationDuplicates\":0,\"negativeControls\":2,\"serviceCalls\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 18,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/diagnostics-check.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.192,
+    "stdout": "{\"scope\":\"OFFLINE_PRIVATE_DIAGNOSTICS\",\"status\":\"PASS\",\"routineDenials\":560,\"routineDiskRecords\":0,\"maxRecords\":32,\"maxRecordBytes\":65536,\"mode600\":true,\"unknownStillFails\":true,\"unexpectedSuccessStillFails\":true,\"redaction\":true,\"streamBound\":true,\"publicBeforeClosure\":true,\"boundaryObserved\":[{\"serializedBytes\":65535,\"fileBytes\":65536,\"truncated\":false},{\"serializedBytes\":65536,\"fileBytes\":282,\"truncated\":true},{\"serializedBytes\":65537,\"fileBytes\":282,\"truncated\":true}],\"decodeObserved\":[{\"label\":\"plain\",\"sameText\":true,\"byteCount\":61,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true},{\"label\":\"bom\",\"sameText\":true,\"byteCount\":64,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true},{\"label\":\"invalidUTF8\",\"sameText\":true,\"byteCount\":37,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true}],\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n",
+    "stderr": ""
+  },
+  {
+    "selection": 19,
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c5-review/freeze.mjs"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.363,
+    "stdout": "{\"scope\":\"OFFLINE_CANDIDATE_FREEZE\",\"status\":\"PASS\",\"operationalFiles\":292,\"candidateSha256\":\"ade40d6f694fa0987c0bfa56fa99684444dab37f3ee1a9c990d75179ee310084\",\"dispatches\":0,\"signatures\":0}\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-10-04 07:50:36 UTC",
+  "stage": "GitHub immutable blob upload before tree/ref/commit",
+  "plan": "work/resume/connector-transfer-plan-15.json",
+  "successfulVerifiedBlobs": 1896,
+  "totalUniqueNewBlobs": 4055,
+  "failures": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-historical-catalog-preparation-c1/official-preimages/node_modules/caniuse-lite/data/features/sni.js",
+      "error": "Error: blob mismatch {\"error\":\"RemoteProtocolError: Server disconnected without sending a response.\",\"error_code\":\"UNKNOWN\"}"
+    }
+  ],
+  "mutations": "Immutable blob objects only; no tree/commit/refupdate fortransfer15 yet",
+  "next": "Resume remaining content-addressed objects; exactSHA checked; atmost3total attempts for transientdisconnection; permissions/schema failures not retried unchanged."
+}

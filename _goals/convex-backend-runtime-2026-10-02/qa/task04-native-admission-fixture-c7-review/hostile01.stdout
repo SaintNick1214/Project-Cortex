@@ -1,0 +1,189 @@
+TAP version 13
+# Subtest: unchanged candidate preflight independently verifies real operational inventory and accepted bytes
+ok 1 - unchanged candidate preflight independently verifies real operational inventory and accepted bytes
+  ---
+  duration_ms: 324.237673
+  type: 'test'
+  ...
+# Subtest: unchanged actual candidate staging helper rejects hostile boundary ""
+ok 2 - unchanged actual candidate staging helper rejects hostile boundary ""
+  ---
+  duration_ms: 1.409361
+  type: 'test'
+  ...
+# Subtest: unchanged actual candidate staging helper rejects hostile boundary "-spoof"
+ok 3 - unchanged actual candidate staging helper rejects hostile boundary "-spoof"
+  ---
+  duration_ms: 0.23967
+  type: 'test'
+  ...
+# Subtest: unchanged actual candidate staging helper rejects hostile boundary "/../task04-native-admission-fixture-c7-review"
+not ok 4 - unchanged actual candidate staging helper rejects hostile boundary "/../task04-native-admission-fixture-c7-review"
+  ---
+  duration_ms: 15.100241
+  type: 'test'
+  location: '/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/hostile.mjs:5:112'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/hostile.mjs:5:327)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: unchanged actual candidate staging helper rejects hostile boundary "-review/x"
+ok 5 - unchanged actual candidate staging helper rejects hostile boundary "-review/x"
+  ---
+  duration_ms: 0.258496
+  type: 'test'
+  ...
+# Subtest: unchanged actual candidate staging helper rejects hostile boundary "/../../outside"
+not ok 6 - unchanged actual candidate staging helper rejects hostile boundary "/../../outside"
+  ---
+  duration_ms: 13.655484
+  type: 'test'
+  location: '/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/hostile.mjs:5:112'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /QA_STAGE_PATH/. Input:
+    
+    "Error: ENOENT: no such file or directory, symlink '/workspace/Project-Cortex/node_modules' -> '/workspace/Project-Cortex/work/outside/node_modules'"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: "ENOENT: no such file or directory, symlink '/workspace/Project-Cortex/node_modules' -> '/workspace/Project-Cortex/work/outside/node_modules'"
+  stack: |-
+    Module.symlinkSync (node:fs:1938:11)
+    Module.linkStageInstallation (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cli-prerequisites.mjs:10:419)
+    file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/hostile.mjs:5:342
+    getActual (node:assert:611:5)
+    strict.throws (node:assert:759:24)
+    TestContext.<anonymous> (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/hostile.mjs:5:327)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/hostile.mjs:5:327)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: actual target guard rejects retired/current-mismatch {"projectId":3139288}
+ok 7 - actual target guard rejects retired/current-mismatch {"projectId":3139288}
+  ---
+  duration_ms: 0.422374
+  type: 'test'
+  ...
+# Subtest: actual target guard rejects retired/current-mismatch {"deploymentName":"courteous-boar-322","deploymentUrl":"https://courteous-boar-322.convex.cloud"}
+ok 8 - actual target guard rejects retired/current-mismatch {"deploymentName":"courteous-boar-322","deploymentUrl":"https://courteous-boar-322.convex.cloud"}
+  ---
+  duration_ms: 0.187071
+  type: 'test'
+  ...
+# Subtest: actual target guard rejects retired/current-mismatch {"deleted":true}
+ok 9 - actual target guard rejects retired/current-mismatch {"deleted":true}
+  ---
+  duration_ms: 0.220956
+  type: 'test'
+  ...
+# Subtest: actual target guard rejects retired/current-mismatch {"active":false}
+ok 10 - actual target guard rejects retired/current-mismatch {"active":false}
+  ---
+  duration_ms: 0.752456
+  type: 'test'
+  ...
+# Subtest: actual target guard rejects retired/current-mismatch {"operation":"retired"}
+ok 11 - actual target guard rejects retired/current-mismatch {"operation":"retired"}
+  ---
+  duration_ms: 0.197391
+  type: 'test'
+  ...
+# Subtest: actual target guard rejects retired/current-mismatch {"purpose":"task04-native-admission-c6"}
+ok 12 - actual target guard rejects retired/current-mismatch {"purpose":"task04-native-admission-c6"}
+  ---
+  duration_ms: 0.220404
+  type: 'test'
+  ...
+# Subtest: actual installer exact root rejects revision qa-task04-synthetic-v1/0 before writes
+ok 13 - actual installer exact root rejects revision qa-task04-synthetic-v1/0 before writes
+  ---
+  duration_ms: 1.230324
+  type: 'test'
+  ...
+# Subtest: actual installer exact root rejects revision qa-task04-synthetic-v1/2 before writes
+ok 14 - actual installer exact root rejects revision qa-task04-synthetic-v1/2 before writes
+  ---
+  duration_ms: 0.277832
+  type: 'test'
+  ...
+# Subtest: exact registry identity and altered payload conflict qa-task04-synthetic-v1
+ok 15 - exact registry identity and altered payload conflict qa-task04-synthetic-v1
+  ---
+  duration_ms: 22.980313
+  type: 'test'
+  ...
+# Subtest: actual installer exact root rejects revision qa-task04-synthetic-embedding-v1/0 before writes
+ok 16 - actual installer exact root rejects revision qa-task04-synthetic-embedding-v1/0 before writes
+  ---
+  duration_ms: 0.302248
+  type: 'test'
+  ...
+# Subtest: actual installer exact root rejects revision qa-task04-synthetic-embedding-v1/2 before writes
+ok 17 - actual installer exact root rejects revision qa-task04-synthetic-embedding-v1/2 before writes
+  ---
+  duration_ms: 0.123913
+  type: 'test'
+  ...
+# Subtest: exact registry identity and altered payload conflict qa-task04-synthetic-embedding-v1
+ok 18 - exact registry identity and altered payload conflict qa-task04-synthetic-embedding-v1
+  ---
+  duration_ms: 4.650797
+  type: 'test'
+  ...
+# Subtest: actual installer rejects unknown/suffixed root qa-task04-synthetic-v1-extra
+ok 19 - actual installer rejects unknown/suffixed root qa-task04-synthetic-v1-extra
+  ---
+  duration_ms: 0.358204
+  type: 'test'
+  ...
+# Subtest: actual installer rejects unknown/suffixed root qa-task04-synthetic-embedding-v1-extra
+ok 20 - actual installer rejects unknown/suffixed root qa-task04-synthetic-embedding-v1-extra
+  ---
+  duration_ms: 0.148599
+  type: 'test'
+  ...
+# Subtest: actual installer rejects unknown/suffixed root foreign
+ok 21 - actual installer rejects unknown/suffixed root foreign
+  ---
+  duration_ms: 0.137369
+  type: 'test'
+  ...
+# Subtest: actual cleanup removes exactly both finite roots and keeps foreign/suffixed records
+ok 22 - actual cleanup removes exactly both finite roots and keeps foreign/suffixed records
+  ---
+  duration_ms: 1.090411
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 20
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 874.743541

@@ -1,0 +1,51 @@
+{
+  "scope": "EXACT_DRIVER_SOURCE_VM_DUMMY_PORTS_ONLY_NO_NATIVE_PRIVATE_OR_PROCESS",
+  "sourceSHA256": "35c6d06e48e36f44d776ae0fb7f685d7ba8c14f17fcf498630b4a9dc6a46ce7c",
+  "results": [
+    {
+      "mode": "scenario-cleanup-close",
+      "samePrimaryIdentity": true,
+      "calls": 3,
+      "closes": 1,
+      "raw": "{\"phase\":\"empty\",\"stage\":\"scenario-before-cleanup\",\"error\":\"Error: DUMMY_SCENARIO_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:165\"}\n{\"phase\":\"empty\",\"stage\":\"cleanup-secondary\",\"error\":\"Error: DUMMY_CLEANUP_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:208\"}\n{\"phase\":\"empty\",\"stage\":\"close-secondary\",\"error\":\"Error: DUMMY_CLOSE_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:246\"}\n",
+      "rawBytes": 639,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "scenario-cleanup",
+      "samePrimaryIdentity": true,
+      "calls": 3,
+      "closes": 1,
+      "raw": "{\"phase\":\"empty\",\"stage\":\"scenario-before-cleanup\",\"error\":\"Error: DUMMY_SCENARIO_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:165\"}\n{\"phase\":\"empty\",\"stage\":\"cleanup-secondary\",\"error\":\"Error: DUMMY_CLEANUP_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:208\"}\n",
+      "rawBytes": 431,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "scenario-only",
+      "samePrimaryIdentity": true,
+      "calls": 4,
+      "closes": 1,
+      "raw": "{\"phase\":\"empty\",\"stage\":\"scenario-before-cleanup\",\"error\":\"Error: DUMMY_SCENARIO_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:165\"}\n",
+      "rawBytes": 219,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "cleanup-only",
+      "samePrimaryIdentity": true,
+      "calls": 13,
+      "closes": 1,
+      "raw": "{\"phase\":\"empty\",\"stage\":\"cleanup-secondary\",\"error\":\"Error: DUMMY_CLEANUP_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:208\"}\n",
+      "rawBytes": 212,
+      "native": "NOT_RUN"
+    },
+    {
+      "mode": "close-only",
+      "samePrimaryIdentity": true,
+      "calls": 14,
+      "closes": 1,
+      "raw": "{\"phase\":\"empty\",\"stage\":\"close-secondary\",\"error\":\"Error: DUMMY_CLOSE_FULL_RAW\\n    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/driver-error-controls.mjs:3:246\"}\n",
+      "rawBytes": 208,
+      "native": "NOT_RUN"
+    }
+  ]
+}

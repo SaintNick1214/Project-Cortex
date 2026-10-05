@@ -1,0 +1,10 @@
+--- cycle3
++++ cycle4
+@@ -377,7 +377,6 @@
+       };
+       const response = h.invoke(memories[operation], { memorySpaceId: "space-a", tags: ["updated"] });
+       if (invalidation === "none") expect(await response).toMatchObject({ memoryIds: ["unsupplied-private-id"] });
+-      else if (operation === "updateMany" && invalidation.startsWith("read")) expect(await response).toEqual({ updated: 1, mutationReceipt: true });
+       else { await expect(response).rejects.toMatchObject(forbidden); expect(h.db.rows).toEqual(before); }
+       if (invalidation !== "none") expect(injected).toBe(true);
+     }

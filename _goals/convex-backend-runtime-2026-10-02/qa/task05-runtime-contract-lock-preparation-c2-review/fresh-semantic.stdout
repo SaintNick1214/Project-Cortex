@@ -1,0 +1,8 @@
+{"name":"sparse array accepted and canonicalized with null hole","expected":"reject before mapping","accepted":true,"length":2,"holePresent":false,"requestCanonical":"{\"identity\":[\"cortex.submit.v1\",\"t\",\"s\",\"p\",[\"create\"],\"key\"],\"publicRequest\":{\"agentId\":\"a\",\"agentVersion\":1,\"clientRequestId\":\"key\",\"parts\":[{\"text\":\"x\",\"type\":\"text\"},null],\"version\":1},\"version\":1}"}
+{"name":"array element accessor executed","expected":"reject without evaluating accessor","accepted":true,"getterCalls":1}
+{"name":"overridden array map executed","expected":"reject non-JSON array method before invocation","accepted":true,"mapCalls":1}
+{"name":"array own extra key silently dropped","expected":"reject extra array property","accepted":true,"extraPreserved":false}
+{"name":"array foreign prototype accepted","expected":"reject inherited array prototype","accepted":true}
+{"name":"nonenumerable public field accepted","expected":"reject non-JSON object descriptor","accepted":true}
+{"name":"canonical byte cap absent","expected":"reject canonical UTF8 bytes over180000","accepted":true,"textBytes":120000,"canonicalBytes":720195}
+{"classification":"independent counterexamples against exact C2 detached reference helper, not product admission","counterexamples":7,"originalMappingGroupsUnchanged":11,"strictProductCanonicalSerializerComparisons":"PASS","boundaryIdentityAssertions":"PASS","skips":[],"native":"NOT_RUN"}

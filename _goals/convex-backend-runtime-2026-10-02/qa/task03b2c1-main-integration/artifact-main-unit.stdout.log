@@ -1,0 +1,92 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     9.0s | 31/217 passed | /tests/unit/runtimeArtifactAuth/handlers.test.ts
+  ❌     3.1s | 33/138 passed | /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+  ❌     0.6s | 0/1 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.14s ( 1.1%) - native AST resolves exact selected22, preserves five file registrations and owns temporary output
+    /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+ 2. [31m✗[0m    0.03s ( 0.2%) - cycle2 retained create admission and immutable repeated sources repeated memory preserves every first source/anchor witness for change=deletedAt
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.2%) - get initial-identity extra is an opaque failure before effects
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+ 4. [31m✗[0m    0.03s ( 0.2%) - native artifacts:count preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 5. [31m✗[0m    0.03s ( 0.2%) - create read-scope malformed is an opaque failure before effects
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+ 6. [31m✗[0m    0.02s ( 0.2%) - cycle3 private error output admission absent retryFromError state error contains only a safe typed code and no stored details
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - get initial-identity plain is an opaque failure before effects
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+ 8. [31m✗[0m    0.02s ( 0.1%) - independent03A resource and lifecycle boundary full canonical snapshot detects stale version, owner and linked anchor after awaits
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - native artifacts:create requires verified identity before artifact hydration or effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+10. [31m✗[0m    0.01s ( 0.1%) - official Convex native payload witnesses conversation repeated native bytes change denies without delivery or effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+11. [31m✗[0m    0.01s ( 0.1%) - cycle3 private error output admission scope-owner-denied resumeStreaming state error contains only a safe typed code and no stored details
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+12. [31m✗[0m    0.01s ( 0.1%) - cycle3 private error output admission absent resumeStreaming session error contains only a safe typed code and no stored details
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+13. [31m✗[0m    0.01s ( 0.1%) - cycle3 private error output admission scope-owner-denied redo static availability error preserves its existing code and zero effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+14. [32m✓[0m    0.01s ( 0.0%) - native artifacts:resumeStreaming requires verified identity before artifact hydration or effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+15. [32m✓[0m    0.01s ( 0.0%) - independent03A resource and lifecycle boundary trusted internal purge retains rows/controls and never deletes foreign storage
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+16. [32m✓[0m    0.01s ( 0.0%) - get initial-identity symbol-extra is an opaque failure before effects
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+17. [31m✗[0m    0.01s ( 0.0%) - create initial-scope throwing-field-getter is an opaque failure before effects
+    /tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+
+18. [31m✗[0m    0.01s ( 0.0%) - native artifacts:redo preserves the admitted text operation's actual outcome
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+19. [31m✗[0m    0.01s ( 0.0%) - independent03A resource and lifecycle boundary wrong tenant and space and ambiguous omission deny
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+20. [31m✗[0m    0.01s ( 0.0%) - independent03A resource and lifecycle boundary update rejects retained file history before effects
+    /tests/unit/runtimeArtifactAuth/handlers.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.40s (3.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      13.07s
+  Test suites:        3
+  Individual tests:   231
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+

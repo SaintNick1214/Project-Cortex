@@ -1,0 +1,11 @@
+# Frozen C4 content backing
+
+ROOT authenticated content-only backing for the sealed C4 candidate temporary packet. Independent launcher review remains pending; original122 and source/PARENT/native/private/paid/timing qualification remain held.
+
+The published index has18,106 provenance references (17,872 regular-file references),7,183 distinct content objects. It maps6,513 unchanged objects to the exact prior C3/review content backing index SHA2564a3c61ac138bf864fc93fb2e26636a8ab90582b73ca636dd2e80c087b6c6277f, and670 new objects to this delta archive. Both backing archive object sets were fully streamed and verified by ROOT; prior and delta parts plus concatenation hashes were separately checked. The delta consists of20 parts totaling103,953,238 bytes, concatenated SHA25642d8871b1ae8898dd59b37a4887f4a8fbcdaaa5634ed01f927387ca19daaca24. Index SHA256a0c2f982bbc0f1d97cf0fa34255ea73fa9e9d0ea56c39fd83b3ed38fe26b8399.
+
+Concatenate each backing's listed parts in index order and read only regular `objects/<sha256>` tar members; verify length/hash against the appropriate object list. Resolve an object through its explicit prior/delta backing tag. The prior index and its52parts remain required; this delta alone is incomplete. No executable materializer is supplied. This is authenticated content availability, not a restored checkout or qualification outcome.
+
+Directories, physical inode/mode/uid metadata and two literal symlinks in the index are provenance only. Archive members are regular0600 content objects; symlinks are never followed or recreated and provenance paths must not be extraction destinations. Nothing restores original path/inode/hardlink/custody topology or releases a ROOT gate. Candidate QA/work seals and reports are published separately. Historical failures remain unchanged.
+
+`root-pack-receipt.json` rawUniqueObjectBytes refers only to newly archived delta bytes; the transport-verification receipt separately provides total and prior raw-object byte counts. Candidate exact literal closures were rechecked after packaging. Index/part files are published via verified virtual-source aliases from ROOT-owned /tmp scratch, outside the sealed candidate; no candidate member was added. This packaging is ROOT verified, not an independent runtime review.

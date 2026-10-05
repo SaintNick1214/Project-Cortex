@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-03T08:19:02.699Z",
+  "command": "NODE_USE_ENV_PROXY=1 NODE_USE_SYSTEM_CA=1 npm exec --yes --package=npm@12.2.0 -- npm install --save-exact --no-audit --no-fund @convex-dev/agent@0.7.3 @convex-dev/ai-sdk-provider@0.2.1 @convex-dev/workflow@0.4.8 @convex-dev/workpool@0.4.13 ai@7.0.127 zod@4.6.5",
+  "exitCode": 0,
+  "node": "v24.19.0",
+  "pins": [
+    {
+      "package": "@convex-dev/agent",
+      "declared": "0.7.3",
+      "locked": "0.7.3",
+      "installed": "0.7.3"
+    },
+    {
+      "package": "@convex-dev/ai-sdk-provider",
+      "declared": "0.2.1",
+      "locked": "0.2.1",
+      "installed": "0.2.1"
+    },
+    {
+      "package": "@convex-dev/workflow",
+      "declared": "0.4.8",
+      "locked": "0.4.8",
+      "installed": "0.4.8"
+    },
+    {
+      "package": "@convex-dev/workpool",
+      "declared": "0.4.13",
+      "locked": "0.4.13",
+      "installed": "0.4.13"
+    },
+    {
+      "package": "ai",
+      "declared": "7.0.127",
+      "locked": "7.0.127",
+      "installed": "7.0.127"
+    },
+    {
+      "package": "zod",
+      "declared": "4.6.5",
+      "locked": "4.6.5",
+      "installed": "4.6.5"
+    }
+  ],
+  "changedExistingPackageVersions": [],
+  "stdout": "added14 packages,and changed1 package in2s",
+  "installScriptPolicy": "Existing npm allowScripts policy preserved;four blocked install-script packages not approved",
+  "scope": "Only qualified backend component additions; root existing AI and zod locked versions retained. Product integration qualification downstream; this installation is not a complete runtime PASS."
+}

@@ -1,0 +1,94 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against MANAGED Convex: https://example.convex.cloud
+
+      at tests/env.ts:62:17
+
+  console.log
+       Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:27415) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts (8.211 s)
+  asset safety bridge resilience=absent
+    ✓ artifact-upload uniformly rejects before every transport/resilience/file/identity effect (7 ms)
+    ✓ artifact-url uniformly rejects before every transport/resilience/file/identity effect (2 ms)
+    ✓ attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ attachment-url uniformly rejects before every transport/resilience/file/identity effect (2 ms)
+    ✓ an actual supplied Blob is not inspected or read by uploadFile (1 ms)
+    ✓ unavailable capability is uniform even for empty IDs (1 ms)
+    ✓ neighboring attachment and artifact get methods retain their public transport (2 ms)
+  asset safety bridge resilience=disabled
+    ✓ artifact-upload uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ artifact-url uniformly rejects before every transport/resilience/file/identity effect (2 ms)
+    ✓ attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ attachment-url uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ an actual supplied Blob is not inspected or read by uploadFile
+    ✓ unavailable capability is uniform even for empty IDs (1 ms)
+    ✓ neighboring attachment and artifact get methods retain their public transport (1 ms)
+  asset safety bridge resilience=enabled
+    ✓ artifact-upload uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ artifact-url uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect (1 ms)
+    ✓ attachment-url uniformly rejects before every transport/resilience/file/identity effect
+    ✓ an actual supplied Blob is not inspected or read by uploadFile
+    ✓ unavailable capability is uniform even for empty IDs (1 ms)
+    ✓ neighboring attachment and artifact get methods retain their public transport (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       21 passed, 21 total
+Snapshots:   0 total
+Time:        8.445 s
+Ran all test suites matching tests/unit/runtimeAssetClient.
+Test results written to: work/resume/asset-client/tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

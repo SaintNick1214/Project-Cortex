@@ -1,0 +1,12 @@
+--- convex-dev/runtimePolicySchema.ts (accepted B)
++++ convex-dev/runtimePolicySchema.ts (candidate)
+@@ -39,7 +39,8 @@
+     state: policyState, dispatchIdentity: v.string(), checkpointAt: v.optional(v.number()), slotReleased: v.boolean(),
+     ...visibilityFields, receiptCanonical: v.optional(v.string()), receiptHash: v.optional(v.string()),
+     settledCostUnits: v.optional(v.number()), costProvenance: v.optional(v.string()), actualModel: v.optional(v.string()),
+-    privateResultCanonical: v.optional(v.string()), resultWithheld: v.boolean(), terminalEvidenceCanonical: v.optional(v.string()), createdAt: v.number(),
++    privateResultCanonical: v.optional(v.string()), resultWithheld: v.boolean(), terminalEvidenceCanonical: v.optional(v.string()), terminalEvidenceHash: v.optional(v.string()),
++    resultAttachmentState: v.optional(v.union(v.literal("pending"), v.literal("attached"), v.literal("closed"))), createdAt: v.number(),
+   }).index("by_child_attempt", ["operationDocumentId", "childCallId", "attemptNumber"])
+     .index("by_operation", ["operationDocumentId"]).index("by_state_checkpoint", ["state", "checkpointAt"]),
+ };

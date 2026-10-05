@@ -1,0 +1,3 @@
+process.env.CONVEX_URL="https://qualification.invalid";
+process.env.CONVEX_TEST_MODE="offline-unit";
+globalThis.fetch=async()=>{throw new Error("OFFLINE_UNIT_REAL_NETWORK_FORBIDDEN")};

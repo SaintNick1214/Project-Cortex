@@ -1,0 +1,39 @@
+import {createOpenAICompatible} from '@ai-sdk/openai-compatible';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+const root='/workspace/Project-Cortex';
+const qa=root+'/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-wire-native-check-c1';
+const manifest=JSON.parse(readFileSync(root+'/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-preparation/manifest.json','utf8'));
+const hash=x=>createHash('sha256').update(x).digest('hex');
+const stable=x=>JSON.stringify(Array.isArray(x)?x.map(sort):sort(x));
+function sort(x){if(Array.isArray(x))return x.map(sort);if(x&&typeof x==='object')return Object.fromEntries(Object.keys(x).sort().map(k=>[k,sort(x[k])]));return x;}
+const sources=['node_modules/@convex-dev/ai-sdk-provider/src/index.ts','node_modules/@ai-sdk/openai-compatible/package.json','node_modules/@ai-sdk/openai-compatible/src/openai-compatible-provider.ts','node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts','node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts',fileURLToPath(import.meta.resolve('@ai-sdk/openai-compatible'))];
+const pins=()=>Object.fromEntries(sources.map(p=>[p.replace(root+'/',''),hash(readFileSync(p.startsWith('/')?p:root+'/'+p))]));
+const pre=pins(),rows=[];let total=0;
+for(const id of manifest.executionOrder){
+ const c=manifest.expectedCalls.find(c=>c.scenarioId===id),r=JSON.parse(readFileSync(root+'/work/resume/task04-default-model-qualification-preparation/candidate-requests/'+id+'.json','utf8'));
+ if(hash(stable({method:c.method,modelId:c.modelId,params:r.native}))!==c.normalizedNativeRequestHash)throw Error('NATIVE_IDENTITY_MISMATCH:'+id);
+ let calls=0,actualHash,actualBytes;
+ const fetch=async(input,init)=>{
+  if(new URL(typeof input==='string'?input:input.url??input).host!=='qualification.invalid'||typeof init?.body!=='string')throw Error('NONPAID_FETCH_BOUNDARY:'+id);
+  calls++;total++;const body=JSON.parse(init.body),encoded=stable(body);actualHash=hash(encoded);actualBytes=Buffer.byteLength(encoded);
+  if(actualHash!==c.expectedWireBodyHash||actualBytes!==c.expectedWireBodyBytes){writeFileSync(root+'/work/resume/task04-default-wire-native-check-c1/mismatch-'+id+'.json',init.body,{mode:0o600});throw Error('WIRE_IDENTITY_MISMATCH:'+id+':'+actualHash);}
+  if(c.nativeInterface==='embedding')return Response.json({object:'list',model:c.modelId,data:[{object:'embedding',index:0,embedding:Array(1536).fill(0.125)}],usage:{prompt_tokens:1,total_tokens:1}});
+  const usage={prompt_tokens:1,completion_tokens:1,total_tokens:2};
+  if(c.method==='stream'){
+   const chunks=[{id:'nonpaid-'+id,created:1,model:c.modelId,choices:[{index:0,delta:{content:'nonpaid'},finish_reason:null}]},{id:'nonpaid-'+id,created:1,model:c.modelId,choices:[{index:0,delta:{},finish_reason:'stop'}],usage}];
+   return new Response(chunks.map(x=>'data: '+JSON.stringify(x)+'\n\n').join('')+'data: [DONE]\n\n',{headers:{'content-type':'text/event-stream'}});
+  }
+  return Response.json({id:'nonpaid-'+id,created:1,model:c.modelId,choices:[{index:0,message:{role:'assistant',content:'nonpaid'},finish_reason:'stop'}],usage});
+ };
+ const provider=createOpenAICompatible({name:'convexGateway',baseURL:'https://qualification.invalid/v1',fetch,supportsStructuredOutputs:true,supportedUrls:()=>({'image/*':[/^https?:\/\/.*$/]})});
+ if(c.method==='embed')await provider.embeddingModel(c.modelId).doEmbed(r.native);
+ else if(c.method==='generate')await provider(c.modelId).doGenerate(r.native);
+ else {const result=await provider(c.modelId).doStream({...r.native,includeRawChunks:true});const reader=result.stream.getReader();let chunks=0;try{while(!(await reader.read()).done){if(++chunks>32)throw Error('UNBOUNDED_FIXTURE_STREAM:'+id);}}finally{reader.releaseLock();}}
+ if(calls!==1)throw Error('NONPAID_CALL_COUNT:'+id);
+ rows.push({scenarioId:id,method:c.method,expectedNativeHash:c.normalizedNativeRequestHash,expectedWireHash:c.expectedWireBodyHash,observedUnderlyingAdapterWireHash:actualHash,wireBytes:actualBytes,syntheticFetchCalls:calls,status:'PASS_UNDERLYING_ADAPTER_ONLY'});
+}
+const post=pins();if(stable(pre)!==stable(post))throw Error('SOURCE_DRIFT');
+writeFileSync(qa+'/outcomes.json',JSON.stringify({classification:'OFFLINE_UNDERLYING_OFFICIAL_ADAPTER_TRANSFORM_ONLY',rows,totalSyntheticFetchCalls:total,realNetworkRequests:0,paidCalls:0,convexServiceTokens:0,officialGatewayFactoryExecuted:false,sourcePre:pre,sourcePost:post,limitations:'Official underlying supported-fetch seam only; matching factory body settings source-derived. No Convex hosted factory/token/serving/money/nativeOCC/managed/default-driver readiness.'},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({cases:rows.length,syntheticFetchCalls:total,wireHashesMatched:true,paidCalls:0,realNetworkRequests:0,actualReadiness:false}));

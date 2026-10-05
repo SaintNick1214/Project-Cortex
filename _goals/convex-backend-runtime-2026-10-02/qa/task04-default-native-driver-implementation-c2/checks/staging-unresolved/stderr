@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: ROOT recovery capability must not manufacture new stage
++ actual - expected
+
++ 'triggered'
+- 'denied'
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/independent-staging.mjs:18:806 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'triggered',
+  expected: 'denied',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

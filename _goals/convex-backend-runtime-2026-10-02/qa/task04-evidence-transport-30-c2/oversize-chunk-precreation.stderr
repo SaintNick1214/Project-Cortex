@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/adverse/oversize-chunk-precreation/materialize.py", line 121, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/adverse/oversize-chunk-precreation/materialize.py", line 108, in main
+    require(0<c['bytes']<=LIMIT,'oversize chunk');b=read_at(base,c['path'],c['bytes']);require(len(b)==c['bytes'] and digest(b)==c['sha256'],'chunk mismatch');archivehash.update(b);archivebytes+=len(b)
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/adverse/oversize-chunk-precreation/materialize.py", line 38, in read_at
+    require(metadata.st_size<=maxbytes,'input exceeds trusted byte bound')
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/adverse/oversize-chunk-precreation/materialize.py", line 10, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: input exceeds trusted byte bound

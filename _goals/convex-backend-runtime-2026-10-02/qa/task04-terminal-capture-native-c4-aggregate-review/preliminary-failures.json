@@ -1,0 +1,15 @@
+{
+  "preservedSetupFailures": [
+    {
+      "command": "initial verify-public.py",
+      "exitCode": 1,
+      "reason": "Reviewer assumed product C2 qa-manifest.json; actual manifest.json discovered; no subject edits."
+    },
+    {
+      "command": "source read of scripts/capture-cases.mjs",
+      "exitCode": 2,
+      "reason": "Reviewer selected nonexistent filename; exact scripts/cases.mjs discovered and read."
+    }
+  ],
+  "expectationsWeakened": false
+}

@@ -1,0 +1,11 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/scripts/management-contract.mjs	2026-10-04 07:28:00.670052211 +0000
++++ /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression/scripts/management-contract.mjs	2026-10-04 07:43:28.026740781 +0000
+@@ -1,7 +1,7 @@
+ import { sha256 } from './guard.mjs';
+ const reject=()=>{throw new Error('Exact owned disposable management identity rejected');};
+ export function validateCreatedOwnership(request,ownership){
+- if(request.purpose!=='task04-terminal-capture-native-regression-c2'||request.kind!=='cloud'||request.deploymentType!=='dev'||request.productionDeployment!==false||request.sharedCiTarget!==false||!/^cortex-task04-admission-disposable-[a-f0-9]{12}$/.test(request.projectSlug)||request.projectName.toLowerCase().replaceAll(' ','-')!==request.projectSlug
++ if(request.purpose!=='task04-terminal-capture-native-regression-c3'||request.kind!=='cloud'||request.deploymentType!=='dev'||request.productionDeployment!==false||request.sharedCiTarget!==false||!/^cortex-task04-admission-disposable-[a-f0-9]{12}$/.test(request.projectSlug)||request.projectName.toLowerCase().replaceAll(' ','-')!==request.projectSlug
+  ||ownership.operation!==request.operation||ownership.requestSha256!==sha256(JSON.stringify(request))||!Number.isSafeInteger(ownership.id)||ownership.id<=0||ownership.slug!==request.projectSlug||ownership.requestedName!==request.projectName||!Number.isFinite(Date.parse(ownership.startedAt)))reject();
+ }
+ export function validateRetirement(request,ownership,project,deployments,deployment,target){

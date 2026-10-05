@@ -1,0 +1,159 @@
+{
+  "checks": [
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/adverse.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:49:33.638275+00:00",
+      "endUTC": "2026-10-04T12:49:34.914849+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "adverse-30",
+      "stdoutSHA256": "196f21d6028bd7414ae2320af4364dc7c0fff81f56172e9a02ca45bf2d282e49",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/containment-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:49:33.633063+00:00",
+      "endUTC": "2026-10-04T12:49:55.155725+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "containment-24",
+      "stdoutSHA256": "97fd4a65d2e451c7ad7480cc06080c774f584711e1a4fea7317f0d5c69c127c8",
+      "stderrSHA256": "a64aee0f88fdbfc86c80b59403759d4f34f602bfc4f24e550bc492e43c9231a5"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/adverse.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/containment-controls.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/containment.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/fixture-entry.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/jest.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/offline-guard.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/portability-controls.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/precondition-controls.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/private-compose.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/release-controls.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/release-preconditions.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/repository-location.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/setup.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/socket-proof.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:49:17.060439+00:00",
+      "endUTC": "2026-10-04T12:49:17.548479+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "lint",
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/jest.config.mjs",
+        "--runInBand",
+        "--no-cache",
+        "--json",
+        "--outputFile",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/final-four.json"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:50:05.359805+00:00",
+      "endUTC": "2026-10-04T12:50:32.408276+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "original-454",
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "ff8d7610570945d535c159453c116dbb58c3b34e253fb81a13185ff392d6d07e"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/portability-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:50:50.607928+00:00",
+      "endUTC": "2026-10-04T12:51:22.487919+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "portability-01",
+      "stdoutSHA256": "823b989c318c49de5fc8cc45952811aeed8394cf241f9d155968e002d00cab8d",
+      "stderrSHA256": "78c5b25af001bfb713a0f082be1b70cb547e62fb04153c014293b9cfcd4e01ec"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/precondition-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:49:33.637358+00:00",
+      "endUTC": "2026-10-04T12:49:33.738477+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "preconditions",
+      "stdoutSHA256": "df0c20c21bbf03f3bc345fd2e47c89319d5afe96030324e1124bfe555fd55f55",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/release-controls.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:49:17.065544+00:00",
+      "endUTC": "2026-10-04T12:49:22.201603+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "release-binding-22",
+      "stdoutSHA256": "cc4857c5816cdf2d27b6d475b1b194b032ee948d1468e698a4daa8a2b22246c4",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/tsconfig.json",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T12:49:17.038485+00:00",
+      "endUTC": "2026-10-04T12:49:19.977367+00:00",
+      "exit": 0,
+      "environment": "closed literal offline process environment, no service values/.env loading",
+      "protected": 136,
+      "name": "types",
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "NEW_C3_OFFLINE_INVOCATIONS_ONLY",
+  "bootstrap": "bootstrap-receipt.json/checks/bootstrap-before.py",
+  "readOnlyMissingPath": "discovery-gaps.json; UTC NOT_CAPTURED, exact tool text retained"
+}

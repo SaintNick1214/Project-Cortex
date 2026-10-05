@@ -1,0 +1,10 @@
+from pathlib import Path
+import subprocess,datetime,json,os,sys
+root=Path.cwd(); qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup'
+name=sys.argv[1]; argv=sys.argv[2:]; assert name and not (qa/'checks'/f'{name}.receipt.json').exists()
+tmp=root/'work/native-errors/tmp'; tmp.mkdir(exist_ok=True)
+env={'PATH':str(root/'work/native-errors/bin')+os.pathsep+os.environ['PATH'],'TMPDIR':str(tmp),'CONVEX_URL':'http://127.0.0.1:1','LOCAL_CONVEX_URL':'http://127.0.0.1:1','CONVEX_TEST_MODE':'local','npm_config_cache':str(root/'work/native-errors/npm12-cache'),'npm_config_userconfig':str(root/'work/native-errors/empty.npmrc'),'npm_config_globalconfig':str(root/'work/native-errors/empty-global.npmrc'),'npm_config_offline':'true','npm_config_update_notifier':'false','npm_config_audit':'false','CI':'1'}
+start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+with (qa/'checks'/f'{name}.log').open('w') as log: p=subprocess.run(argv,cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT)
+r={'name':name,'argv':argv,'cwd':str(root),'startedAt':start,'endedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'log':str((qa/'checks'/f'{name}.log').relative_to(root)),'environment':env}
+(qa/'checks'/f'{name}.receipt.json').write_text(json.dumps(r,indent=2)+'\n'); print(json.dumps(r)); sys.exit(p.returncode)

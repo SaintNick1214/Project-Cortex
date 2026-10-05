@@ -1,0 +1,186 @@
+{
+  "observedAtUTC": "2026-10-04T02:46:48.839978+00:00",
+  "classification": "READ_ONLY_DESIGN_REVIEW",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e"
+    },
+    {
+      "path": ".agents/CODEX-RUNTIME.md",
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895"
+    },
+    {
+      "path": ".agents/PROJECT-PROFILE.md",
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12"
+    },
+    {
+      "path": ".agents/roles/pessimistic-judge.md",
+      "sha256": "71e0e99d0709275056fbd15125eeffa71f6ed87d9a9114ea325e3c6efcf29f9a"
+    },
+    {
+      "path": ".agents/skills/judge-task/SKILL.md",
+      "sha256": "2522d7f180dec8492a698007a14b8e1259b4b237cbedba71144a8ad86469497d"
+    },
+    {
+      "path": "package.json",
+      "sha256": "a684600bd22363a6c4127c4dd65e95afa1ffe6659b574a5ea74e0e0a3219f3d6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "sha256": "4667290be427310c4d6988c666925344b8f86b043c09db392542991de0ce0104"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/goal.md",
+      "sha256": "e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "sha256": "d53e18355904cfd7d9db43951468bc4b0aca0de568008ac4c27d7fa783390c8e"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8"
+    },
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "efb337e4ba177d267a714ee317b346a6934c69b59fb5046514bea8f8a97c3139"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-preparation/report.md",
+      "sha256": "42ddc9e5b6662a04dfa5736a906b037cf14febb86cad89c35354967e39fadea9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-preparation/source-evidence.json",
+      "sha256": "9eccd2ba66d706dd5c686148ef568c7fd9f7d9afb2abf29e4ff8445fd75b431e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-ledger-integration-preparation/report.md",
+      "sha256": "6e4316544d85be799ea97e1208e11ae93479573bed923719cafc0af3c365253e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2/native-api.md",
+      "sha256": "94552b5876c2293071c6b5dae2d2651e0f67e40fe686eb28f30fe5c1f53d60de"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2/final-source-evidence.json",
+      "sha256": "093308f5cf264791f82dbf9e41140f45d169d94a3e76ac9f7752b7f33461a975"
+    }
+  ],
+  "acceptedC2SourceComparisons": [
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "expectedSha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "observedSha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "expectedSha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "observedSha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "expectedSha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "observedSha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "expectedSha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+      "observedSha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "expectedSha256": "0e2ed1e2d0910b9d341139b32bd2321b69a68c3734a84b17ccaf7e13a477005b",
+      "observedSha256": "0e2ed1e2d0910b9d341139b32bd2321b69a68c3734a84b17ccaf7e13a477005b",
+      "matches": true
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "expectedSha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "observedSha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "matches": true
+    },
+    {
+      "path": "src/domain/index.ts",
+      "expectedSha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "observedSha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "expectedSha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc",
+      "observedSha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "expectedSha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "observedSha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeAuthSchema.ts",
+      "expectedSha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "observedSha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "expectedSha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "observedSha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeWorkerAuth.ts",
+      "expectedSha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "observedSha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "matches": true
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "expectedSha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "observedSha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "matches": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "expectedSha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "observedSha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "matches": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-token-cost-technical-review/report.md",
+      "expectedSha256": "879b15111c30766200e592a274e0a254eb5fe6f465e8f6885d8ae7392553937d",
+      "observedSha256": "879b15111c30766200e592a274e0a254eb5fe6f465e8f6885d8ae7392553937d",
+      "matches": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-c3-acceptance.json",
+      "expectedSha256": "d8712ba0485b3f0fc1a8f8957592289ed6e86d010429a6c5e9ad160f4ca21ba0",
+      "observedSha256": "d8712ba0485b3f0fc1a8f8957592289ed6e86d010429a6c5e9ad160f4ca21ba0",
+      "matches": true
+    }
+  ],
+  "gatewayIsFreeze": false,
+  "sourceHashCaveat": "Gateway fingerprint is a point-in-time observation; source may change concurrently."
+}

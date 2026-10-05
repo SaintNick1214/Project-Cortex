@@ -1,0 +1,1048 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-terminal-capture-parent-inputs-c8-preparation/effect-matrix-extension.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T07:46:27.653Z",
+  "outcomes": [
+    {
+      "name": "private-key-derivation",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "public-key-derivation",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "auth-source-parsing",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "historical-source-scanner",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "entry-preservation-scanner",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 0,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-1",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-2",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 1,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 1,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-3",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 2,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 2,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-4",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 3,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 3,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-5",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 4,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 4,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-6",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 5,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 5,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-7",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 6,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 6,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "before-sign-8",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 7,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 7,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-1",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 1,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 1,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-2",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 2,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 2,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-3",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 3,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 3,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-4",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 4,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 4,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-5",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 5,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 5,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-6",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 6,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 6,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-7",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 7,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 7,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "during-sign-8",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "pre-output-preservation-scanner",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "after-private-output-1",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "after-private-output-2",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "after-private-output-3",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "after-private-output-4",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "peer-secret-generation-crossing",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "peer-preflight-crossing",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "peer-request-crossing",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "peer-response-body-crossing",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "final-preservation-scanner",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "receipt-source-read-crossing",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "existing-output-no-reissue-initial-physical-id-provenance.json",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_SETUP_EXISTING_OUTPUT",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "existing-output-no-reissue-historical-native-locators.json",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_SETUP_EXISTING_OUTPUT",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "existing-output-no-reissue-identities.json",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_SETUP_EXISTING_OUTPUT",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "existing-output-no-reissue-peer-config.json",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_SETUP_EXISTING_OUTPUT",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "existing-output-no-reissue-parent-inputs-receipt.json",
+      "status": "PASS_EXPECTED_DENIAL",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": ""
+      },
+      "retainedEffects": {
+        "status": "FAIL",
+        "signatures": 0,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "diagnostic": "PARENT_SETUP_EXISTING_OUTPUT",
+      "repeat": "DENIED_NO_EFFECTS",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "healthy-exact8-oneconfig-and-repeat-denial",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json",
+          "parent-inputs-receipt.json"
+        ],
+        "stdout": "{\"status\":\"PASS\",\"keysCreated\":0,\"signatures\":8,\"storageCreated\":0,\"configurationCalls\":1,\"currentTargetDecoder\":\"NOT_RUN\",\"currentCoreOwnership\":\"PENDING\"}\n"
+      },
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    }
+  ],
+  "defined": 38,
+  "executed": 38,
+  "failed": 0,
+  "skipped": 0,
+  "native": "NOT_RUN"
+}

@@ -1,0 +1,93 @@
+{
+  "kind": "offline syntax/oracle only; no native/product checks",
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--check",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/assertions.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:21.634887+00:00",
+      "endedAt": "2026-10-04T06:51:21.667353+00:00",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/native-cases.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:21.667366+00:00",
+      "endedAt": "2026-10-04T06:51:21.697538+00:00",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:21.697554+00:00",
+      "endedAt": "2026-10-04T06:51:21.728442+00:00",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:21.728458+00:00",
+      "endedAt": "2026-10-04T06:51:21.781210+00:00",
+      "exitCode": 0,
+      "stdout": "{\"status\":\"PASS_OFFLINE_ORACLE_ONLY\",\"caseFamilies\":22,\"negativeOracleControls\":10,\"native\":\"NOT_RUN\",\"product\":\"NOT_FROZEN\"}\n",
+      "stderr": ""
+    }
+  ],
+  "sourceBindings": [
+    {
+      "path": "scripts/assertions.mjs",
+      "preimage": "verification-preimages/scripts--assertions.mjs",
+      "bytes": 4089,
+      "sha256Before": "c75a7cdb0f365075ec9a663280beda58079bc7e2c6ada4a71135bfd64b149bf1",
+      "sha256After": "c75a7cdb0f365075ec9a663280beda58079bc7e2c6ada4a71135bfd64b149bf1"
+    },
+    {
+      "path": "scripts/native-cases.mjs",
+      "preimage": "verification-preimages/scripts--native-cases.mjs",
+      "bytes": 3503,
+      "sha256Before": "48c373a6f19685197140798f9c89aaae72f13e45ca6f230c56bce89a218cb8df",
+      "sha256After": "48c373a6f19685197140798f9c89aaae72f13e45ca6f230c56bce89a218cb8df"
+    },
+    {
+      "path": "scripts/offline-check.mjs",
+      "preimage": "verification-preimages/scripts--offline-check.mjs",
+      "bytes": 2425,
+      "sha256Before": "7a5099a53c1b5073f2279d0f3c3c55850cccbf5562a8a1c34a374ca6cefde15c",
+      "sha256After": "7a5099a53c1b5073f2279d0f3c3c55850cccbf5562a8a1c34a374ca6cefde15c"
+    },
+    {
+      "path": "cases.json",
+      "preimage": "verification-preimages/cases.json",
+      "bytes": 6898,
+      "sha256Before": "7d2a9fd77c4d0705cc05855bf136bb809f154823343254ee476bc1862954f899",
+      "sha256After": "7d2a9fd77c4d0705cc05855bf136bb809f154823343254ee476bc1862954f899"
+    },
+    {
+      "path": "fixture-additions/convex/qualificationCapture.ts",
+      "preimage": "verification-preimages/fixture-additions--convex--qualificationCapture.ts",
+      "bytes": 1706,
+      "sha256Before": "9a4cdf5a19dc131a8e6ccf0aa031cc0ab1d133cd4d89785cd217637261a70588",
+      "sha256After": "9a4cdf5a19dc131a8e6ccf0aa031cc0ab1d133cd4d89785cd217637261a70588"
+    }
+  ]
+}

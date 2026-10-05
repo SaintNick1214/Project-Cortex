@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'REGISTRY_OPERATION_FAILED'
+- 'private-driver-payload-in-public-code'
+
+    at <anonymous> (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-stateful.mts:17:102) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'REGISTRY_OPERATION_FAILED',
+  expected: 'private-driver-payload-in-public-code',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,9 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import ts from '/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/node_modules/typescript/lib/typescript.js';
+const root='/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout';
+const out='/tmp/task03b2a-review3-tgufib91';
+const configs=['convex-dev/tsconfig.json','_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.backend.json','_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.tests.json'];const results=[];
+for(const file of configs){const absolute=path.join(root,file),loaded=ts.readConfigFile(absolute,ts.sys.readFile);assert.equal(loaded.error,undefined);const parsed=ts.parseJsonConfigFileContent(loaded.config,ts.sys,path.dirname(absolute));assert.deepEqual(parsed.errors,[]);assert.equal(parsed.options.strict,true);assert.deepEqual(parsed.options.lib.map(v=>v.toLowerCase()),['lib.es2021.d.ts','lib.dom.d.ts']);assert.equal(parsed.options.noEmit,true);results.push({file,strict:parsed.options.strict,lib:parsed.options.lib,noEmit:parsed.options.noEmit,rootCount:parsed.fileNames.length})}
+fs.writeFileSync(out+'/config-controls.json',JSON.stringify({typescriptVersion:ts.version,configs:results},null,2)+'\n');console.log(JSON.stringify({typescriptVersion:ts.version,configs:results}));

@@ -1,0 +1,506 @@
+{
+  "files": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/fault-driver.mjs",
+      "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 3,
+          "operation": "spawn",
+          "argumentExpression": "[resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']}",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "ROOT_ONLY_ACTUAL_ENTRY",
+      "runSiteDisposition": "ROOT_ONLY_NONLAUNCHABLE_EXECUTOR",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-check.mjs",
+      "sha256": "ac5bb2d16765a32605c8cb399dcc7b2f49a2ebc6635704bb0403d806c0efe160",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 17,
+          "operation": "spawn",
+          "argumentExpression": "process.execPath,[\"-e\",\"setInterval(()=>{},1000)\"],{stdio:\"inherit\"}",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "CAPSULE_OFFLINE_ENTRY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "sha256": "dc65b5d2c802a8e2a951f23dd026a2e40badb075ca68fbc7e48aa73d16c95061",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 27,
+          "operation": "spawn",
+          "argumentExpression": "['DUMMY'],options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 27,
+          "operation": "spawn",
+          "argumentExpression": "['DUMMY'],options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "CAPSULE_OFFLINE_ENTRY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/process-owner.mjs",
+      "sha256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 37,
+          "operation": "spawn",
+          "argumentExpression": "args, options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 40,
+          "operation": "spawn",
+          "argumentExpression": "process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true }",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 50,
+          "operation": "spawn",
+          "argumentExpression": "args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] }",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "OPERATIVE_TRANSITIVE_LIBRARY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/fault-driver.mjs",
+      "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 3,
+          "operation": "spawn",
+          "argumentExpression": "[resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']}",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "ROOT_ONLY_ACTUAL_ENTRY",
+      "runSiteDisposition": "ROOT_ONLY_NONLAUNCHABLE_EXECUTOR",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-check.mjs",
+      "sha256": "2ef066b4ccbe685e72f51e0e025b970bf3393bd0bbc96791fbfd8ef3eaee0077",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 17,
+          "operation": "spawn",
+          "argumentExpression": "process.execPath,[\"-e\",\"setInterval(()=>{},1000)\"],{stdio:\"inherit\"}",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "CAPSULE_OFFLINE_ENTRY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "sha256": "9feded3470386654992edd82c07b615bd278b0e5d45758d9609fcbd41a0d30b9",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 28,
+          "operation": "spawn",
+          "argumentExpression": "['DUMMY'],options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 28,
+          "operation": "spawn",
+          "argumentExpression": "['DUMMY'],options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "CAPSULE_OFFLINE_ENTRY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/process-owner.mjs",
+      "sha256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 37,
+          "operation": "spawn",
+          "argumentExpression": "args, options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 40,
+          "operation": "spawn",
+          "argumentExpression": "process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true }",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 50,
+          "operation": "spawn",
+          "argumentExpression": "args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] }",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "OPERATIVE_TRANSITIVE_LIBRARY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/fault-driver.mjs",
+      "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 3,
+          "operation": "spawn",
+          "argumentExpression": "[resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']}",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "ROOT_ONLY_ACTUAL_ENTRY",
+      "runSiteDisposition": "ROOT_ONLY_NONLAUNCHABLE_EXECUTOR",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-check.mjs",
+      "sha256": "279ff882357359337933177e22e7605f1c9291d040786ea08a0d7b2b2ceca439",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 17,
+          "operation": "spawn",
+          "argumentExpression": "process.execPath,[\"-e\",\"setInterval(()=>{},1000)\"],{stdio:\"inherit\"}",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "CAPSULE_OFFLINE_ENTRY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "sha256": "67bbecc73b085ecf3aad604d1fbef2938c31e8f13ef9736c22ed355daf0ddd3c",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 27,
+          "operation": "spawn",
+          "argumentExpression": "['DUMMY'],options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 27,
+          "operation": "spawn",
+          "argumentExpression": "['DUMMY'],options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "CAPSULE_OFFLINE_ENTRY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/process-owner.mjs",
+      "sha256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 37,
+          "operation": "spawn",
+          "argumentExpression": "args, options",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 40,
+          "operation": "spawn",
+          "argumentExpression": "process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true }",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        },
+        {
+          "line": 50,
+          "operation": "spawn",
+          "argumentExpression": "args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] }",
+          "balancedExpression": true,
+          "kind": "LEXICAL_SITE_NOT_REACHABILITY_PROOF"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "OPERATIVE_TRANSITIVE_LIBRARY",
+      "runSiteDisposition": "NEED_FIX_EXACT_DYNAMIC_LAUNCH_ROUTE_IN_CLOSED_ENTRY_CONTRACT",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/batch-checks.py",
+      "sha256": "3f744f4ad3dcacaaddf1a91fa536cbcc6bd46889391c8fdc46a424017fac912c",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 14,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(['python',str(w/'run.py'),label+'-'+k,*args],cwd=repo,capture_output=True,text=True,timeout=135)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/batch-custody.py",
+      "sha256": "2fba77df6f3b83c24d152c552eba5f3da37d350e232a7880166d450e939b02a6",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 6,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(argv,cwd=r,capture_output=True,text=True,timeout=135)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/batch-final-additional.py",
+      "sha256": "8233e5a763fa223672235bc55c3f1a6e32c8c70f3b4aebf7f3cc40cc21708722",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 6,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(['python',str(w/'run.py'),control+'-'+k,'node','--experimental-vm-modules',str(p),k],capture_output=True,text=True)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/final-offline-before-prehash.py",
+      "sha256": "4d1d219e7c4b8cf7072713eb7e942d8795137b25bfe1391432746bfa9bfb8db2",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 22,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(cmd,cwd=repo,capture_output=True,text=True,timeout=120)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/final-offline-before-shadow-repair.py",
+      "sha256": "3b5fb2fa7753081afda989cadd8da65b948df480b121b576ebd8ccf8671799dd",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 22,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(cmd,cwd=repo,capture_output=True,text=True,timeout=120)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/final-offline.py",
+      "sha256": "d027f1a4311481b45fd9bf682093b62959c71f5621ecf45ad1c97863702e8163",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 19,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(['python',str(w/'run.py'),runName,*cmd],cwd=repo,capture_output=True,text=True,timeout=150)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/finalize-after-scratch.py",
+      "sha256": "01fa5c5580c67c2cb2428d50708efe5d6b7aa50750677c3bdb441676f27f0881",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 20,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(argv,cwd=repo,capture_output=True,timeout=120)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/legacy-controls.py",
+      "sha256": "dd8e516367d556f7e1c2316ef84c3fb6949a69cedc44861f243927d21805e025",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 8,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(['python',str(w/'run.py'),f'final-legacy-{k}','node','--experimental-vm-modules',str(out)])"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/offline-checks.py",
+      "sha256": "f390f74cab6ef85ee9dcad20bc545e5f95ed44225a849b604201e10e32ab29bc",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 6,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(cmd,cwd=repo,capture_output=True,text=True,timeout=120)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/refresh-inventory.py",
+      "sha256": "2b90c9c9cca92a3f796b70569c038301a961afbf59e923cb6c24789333c2fab3",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 8,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(['node',str(r/'scripts/inventory.mjs')],check=True)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/run.py",
+      "sha256": "3fb76e7bff87ad5f3c94a75ec6e77a7a6c08be3a3f7b59b63faa799d1e96417a",
+      "moduleExecution": "DENY_UNTIL_EXPLICIT_CLOSED_CONTRACT",
+      "runSites": [
+        {
+          "line": 19,
+          "callee": "subprocess.run",
+          "exactExpression": "subprocess.run(argv,cwd=R,capture_output=True,timeout=120)"
+        }
+      ],
+      "controlWrapperPolicy": "Original helper bodies preserved; proposed wrapper validates exact executable/script/mode/argv and complete transitive outputs BEFORE child. Child/compiler/tool invocation gets FULL pins, no arbitrary argv.",
+      "family": "COPIED_MUTATOR_OR_BATCH",
+      "runSiteDisposition": "DENY_COPIED_PYTHON_MUTATOR_OR_BATCH_UNTIL_NEW_CLOSED_WRAPPER",
+      "allRunSiteRoutes": "No dynamic argv/child output accepted from these originals; retained source remains immutable audit evidence. Future permitted invocation requires exact closed command ID and complete route proof."
+    }
+  ],
+  "siteCount": 32,
+  "scope": "All1539 code module source inventory; Python AST direct process sites, JS source process sites; generated evidence stays nonlaunchable; no site implicitly permitted",
+  "additionalDirectProcessSites": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/cli-prerequisites.mjs",
+      "sha256": "315d5c6aa5ca1605308c4c50fb6e72e6797fa4b96812bdbf7f9038ae392360b8",
+      "line": 7,
+      "operation": "spawnSync",
+      "disposition": "DENY_UNBOUND_DIRECT_PROCESS_SITE"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-public-semantic.mjs",
+      "sha256": "e9ddfb5c69d327847b1be7cf1be5c11c60488b923f065b9ee1d240083b291a8c",
+      "line": 13,
+      "operation": "spawnSync",
+      "disposition": "DENY_UNBOUND_DIRECT_PROCESS_SITE"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/cli-prerequisites.mjs",
+      "sha256": "dbaa899a766cb28073510f65a3005d2028f676f7fc68bf0d3be3218d30675f8a",
+      "line": 7,
+      "operation": "spawnSync",
+      "disposition": "DENY_UNBOUND_DIRECT_PROCESS_SITE"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-public-semantic.mjs",
+      "sha256": "6df24f379f727cd682390c19974421b3c5a815ea3eb2bc0f894e86dbef3afd4b",
+      "line": 13,
+      "operation": "spawnSync",
+      "disposition": "DENY_UNBOUND_DIRECT_PROCESS_SITE"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/cli-prerequisites.mjs",
+      "sha256": "6d728348ee6c5064569be501b70043bbcf2d2fc417fb51e6073fa552b29bc01e",
+      "line": 7,
+      "operation": "spawnSync",
+      "disposition": "DENY_UNBOUND_DIRECT_PROCESS_SITE"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-public-semantic.mjs",
+      "sha256": "68fac3d693a77637875493e2eda3a730b95048f6f4e71796a348ffecf071d6c2",
+      "line": 13,
+      "operation": "spawnSync",
+      "disposition": "DENY_UNBOUND_DIRECT_PROCESS_SITE"
+    }
+  ],
+  "completeMappingScope": "Source inventories include all copied operative/test/inventory helpers, every Python AST direct subprocess site and JS direct spawn/execFile/spawnSync/execFileSync/execSync/fork occurrence; generated evidence is categorically nonlaunchable. Imported process libraries and dynamic callable forwarding remain excluded unless exact finite transitive contract proves them. No lexical enumeration becomes an acceptance proof."
+}

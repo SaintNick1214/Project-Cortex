@@ -1,0 +1,9 @@
+from pathlib import Path
+import subprocess
+r=Path.cwd();w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review'
+for k in ['regression','extra']:
+ for name,out in [('final-inherited106',None),('added16','added16-results.json'),('final-watch','watch17-results.json'),('body18','body18-results.json')]:
+  src=w/k/(name+'.mjs') if name!='body18' else w/'body18.mjs';args=['node','--experimental-vm-modules',str(src)]
+  if name=='body18':args +=[str(r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c3/scripts/parent-inputs.mjs')]
+  if out:args +=[str(q/k/out)]
+  p=subprocess.run(['python',str(w/'record.py'),name+'-'+k,*args],cwd=r,capture_output=True,text=True);print(p.stdout,end='');assert p.returncode==0,p.stderr

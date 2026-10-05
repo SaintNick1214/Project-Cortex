@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c8-review/run.py", line 35, in <module>
+    run('toolchain',['node','--version'])
+  File "/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c8-review/run.py", line 34, in run
+    start=datetime.datetime.now(datetime.timezone.utc).isoformat(); p=subprocess.run(args,cwd=R,env=ENV,capture_output=True,timeout=timeout);(O/(label+'.stdout')).write_bytes(p.stdout);(O/(label+'.stderr')).write_bytes(p.stderr);put(label+'.receipt.json',{'argv':args,'cwd':str(R),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdoutSHA256':sha(p.stdout),'stderrSHA256':sha(p.stderr)});print(label,p.returncode,flush=True)
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'node'

@@ -1,0 +1,30 @@
+from pathlib import Path
+import json,shutil,hashlib,os
+r=Path('/workspace/Project-Cortex'); b=r/'work/resume/c11-review/mirror'; b.mkdir()
+q='_goals/convex-backend-runtime-2026-10-02/qa'
+def copytree(src,dst):
+ shutil.copytree(src,dst,ignore=shutil.ignore_patterns('node_modules','.env','.env.local','.env.test','*.pem','*.key'),dirs_exist_ok=True)
+for p in ['convex-dev','src','dist',q]:copytree(r/p,b/p)
+for p in ['package.json','package-lock.json','tests/unit/runtimeMemory/fixture.ts']:
+ (b/p).parent.mkdir(parents=True,exist_ok=True);shutil.copy2(r/p,b/p)
+shutil.copytree(r/'node_modules',b/'node_modules',symlinks=True)
+p=q+'/task03-foundation-live-fixture-c11/fixture/node_modules';(b/p).mkdir()
+for n in ['typescript']:
+ shutil.copytree(r/p/n,b/p/n)
+s='work/backend-runtime/task03-foundation-live-c11';(b/s).mkdir(parents=True,mode=0o700)
+for n in ['offline-mwd.ts','offline-mra.mjs']:
+ shutil.copy2(r/s/n,b/s/n)
+(b/s/'mra-revised').mkdir()
+copytree(r/s/'offline-fixture',b/s/'offline-fixture')
+# Dependency resolution only; no private operational artifacts copied.
+for d in [b/s/'offline-fixture',b/s/'offline-fixture/convex']:
+ if not (d/'node_modules').exists(): (d/'node_modules').symlink_to(r/'node_modules',target_is_directory=True)
+for p in ['eslint.config.mjs']:
+ if (r/p).exists():shutil.copy2(r/p,b/p)
+f=r/q/'task03-foundation-live-preparation-c11/runtime-freeze.json';data=json.loads(f.read_text());assert len(data['files'])==622
+bad=[x['path'] for x in data['files'] if hashlib.sha256((r/x['path']).read_bytes()).hexdigest()!=x['sha256']];assert not bad
+assert hashlib.sha256(f.read_bytes()).hexdigest()=='e2b015f14d57692544cf73242e1a5bd784b342b43a0d3c1e6d0ecdb5b0c2fbc6'
+hp=Path(q)/'task03c2-live-resume-fixture/fixture/.env.local'
+hb=(r/hp).read_bytes();assert len(hb)==274 and hashlib.sha256(hb).hexdigest()=='3d8da0d6babcfb114959d7f225dadc173c7d5588616870d879185e41229e13b6'
+shutil.copy2(r/hp,b/hp)
+print(json.dumps({'frozenFiles':622,'badHashes':bad,'mirror':str(b)}))

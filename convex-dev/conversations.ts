@@ -1,3 +1,4 @@
+import { runtimeUnavailable, internalUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - Conversations API (Layer 1a)
  *
@@ -7,7 +8,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Helper Functions
@@ -139,6 +140,9 @@ export const create = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Validate participants based on type
     if (args.type === "user-agent") {
       // Check for collaborative (userIds) OR single user (userId)
@@ -207,6 +211,8 @@ export const create = mutation({
  */
 export const setVisibility = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     visibility: v.union(
       v.literal("private"),
@@ -217,6 +223,9 @@ export const setVisibility = mutation({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -249,12 +258,17 @@ export const setVisibility = mutation({
  */
 export const setMetadata = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     metadata: v.any(),
     // Required for authorization - must verify ownership before modifying metadata
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -292,11 +306,15 @@ export const setMetadata = mutation({
  */
 export const checkAccess = query({
   args: {
+    tenantId: v.optional(v.string()),
     conversationId: v.string(),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -368,6 +386,8 @@ export const checkAccess = query({
  */
 export const addMessage = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     message: v.object({
       id: v.string(),
@@ -378,6 +398,9 @@ export const addMessage = mutation({
     }),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Get conversation
     const conversation = await ctx.db
       .query("conversations")
@@ -433,11 +456,16 @@ export const addMessage = mutation({
  */
 export const approveMessage = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageId: v.string(),
     approverId: v.string(), // userId of the approver
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -493,11 +521,16 @@ export const approveMessage = mutation({
  */
 export const rejectMessage = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageId: v.string(),
     rejecterId: v.string(), // userId of the rejecter
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -553,9 +586,14 @@ export const rejectMessage = mutation({
  */
 export const deleteConversation = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -586,6 +624,7 @@ export const deleteConversation = mutation({
  */
 export const deleteMany = mutation({
   args: {
+    tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // Filter by memory space
     type: v.optional(
@@ -595,6 +634,9 @@ export const deleteMany = mutation({
     confirmationThreshold: v.optional(v.number()), // Auto-confirm threshold (default: 10)
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     let conversations;
 
     // Use index if memorySpaceId provided (fast)
@@ -671,9 +713,14 @@ export const deleteMany = mutation({
  */
 export const deleteByIds = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const deletedIds: string[] = [];
     let totalMessagesDeleted = 0;
 
@@ -705,9 +752,12 @@ export const deleteByIds = mutation({
 /**
  * Purge ALL conversations (development/testing only)
  */
-export const purgeAll = mutation({
+export const purgeAll = internalMutation({
   args: {},
   handler: async (ctx) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const conversations = await ctx.db.query("conversations").collect();
 
     let deleted = 0;
@@ -731,10 +781,15 @@ export const purgeAll = mutation({
  */
 export const getMessage = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -757,10 +812,15 @@ export const getMessage = query({
  */
 export const getMessagesByIds = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -785,6 +845,7 @@ export const getMessagesByIds = query({
  */
 export const getOrCreate = mutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // NEW: Required
     participantId: v.optional(v.string()), // NEW: Hive Mode
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
@@ -810,6 +871,9 @@ export const getOrCreate = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Try to find existing
     let existing = null;
 
@@ -911,12 +975,16 @@ export const getOrCreate = mutation({
  */
 export const findConversation = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // NEW: Required
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     userId: v.optional(v.string()),
     memorySpaceIds: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     if (args.type === "user-agent") {
       if (!args.userId) {
         return null;
@@ -973,12 +1041,16 @@ export const findConversation = query({
  */
 export const get = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant
     includeMessages: v.optional(v.boolean()), // Default: true
     messageLimit: v.optional(v.number()), // Limit messages returned
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -1052,6 +1124,9 @@ export const list = query({
     includeMessages: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const limit = args.limit || 50;
     const offset = args.offset || 0;
 
@@ -1239,6 +1314,7 @@ export const list = query({
  */
 export const count = query({
   args: {
+    tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // NEW
     type: v.optional(
@@ -1246,6 +1322,9 @@ export const count = query({
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     let conversations;
 
     // Use index if memorySpaceId provided
@@ -1279,6 +1358,8 @@ export const count = query({
  */
 export const getHistory = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
@@ -1292,6 +1373,9 @@ export const getHistory = query({
     ), // Filter by role
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -1366,6 +1450,9 @@ export const search = query({
     ), // Default: "contains"
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     // Get conversations (use index if memorySpace provided)
     let allConversations;
 
@@ -1489,6 +1576,7 @@ export const search = query({
  */
 export const exportConversations = query({
   args: {
+    tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
     conversationIds: v.optional(v.array(v.string())),
@@ -1501,6 +1589,9 @@ export const exportConversations = query({
     includeMetadata: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     let conversations;
 
     // Use index if memorySpaceId provided

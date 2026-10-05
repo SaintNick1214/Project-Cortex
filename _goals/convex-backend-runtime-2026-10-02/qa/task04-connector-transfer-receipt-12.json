@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-04 06:46:30 UTC",
+  "remoteCommit": "8156165ebb3a419a1cacd270941ca49ba5d4f459",
+  "remoteTree": "c46382f100f20430c255ceed2accd77bebbf220a",
+  "localHead": "dee3308d351fb609b8a969fcd7f040fb0556e183",
+  "uploadedBlobs": 508,
+  "uploadErrors": [],
+  "ref": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "success": true
+    },
+    "isError": false
+  },
+  "pr": {
+    "url": "https://github.com/SaintNick1214/Project-Cortex/pull/134",
+    "number": 134,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "This draft adds Cortex runtime foundations for verified identity, scoped grants, governed domain access, and model admission/accounting. A changed model request that reuses a call identity now produces a structured Convex denial, allowing callers to recognize the refusal consistently. The private ledger reserves tenant/run budgets, retains unknown liabilities, records full known charges once, and fences dispatch against current authority and policy. The governed Gateway helper is implemented but still has no production caller.\n\nIndependent offline review accepted the error-boundary repair at4.4/5:76 handler tests,638 dependency outcomes and23 fresh probes passed. The earlier foundation live qualification passed and its disposable target was retired. Each receipt in the goal QA directory identifies its exact source and coverage.\n\nNative ledger qualification is incomplete. The latest C7 target passed official deployment, codegen, enabled types and complete281-function publication, then32 core cases passed before a second admission returned BUDGET_EXCEEDED. All510 owned rows were deleted and retirement verified deletion200/absence404. Independent clock probes reproduced minute-boundary failure and expiry masking; historical account windows were not retained, so no definitive historical cause is claimed. C8 preparation preserves the original assertions and ceilings while adding scheduling and healthy-window evidence. All prior failures remain available.\n\nThe approved17-task scope remains in progress. Terminal capture/attachment, canonical transcripts and runs, additive installation, Agent tools/streaming, ingestion/managed recall, clients/UI, embedding extensions, graph, private assets/media, integration and final audit are incomplete. Required native browser access is unavailable. No full runtime, model, media or UI pass is claimed. No production deployment, package publication or merge is included.\n\nPlan and evidence: `_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md` and its `qa/` directory; settled decisions: `_research/convex-ai-gateway-2026-10-02/decision-gates.md`.\n",
+    "title": "feat: add Cortex runtime authority and model admission foundations",
+    "base": "dev",
+    "base_sha": "3341d64ddc06f1de26ed525312ef2c1b89b16952",
+    "head": "feat/convex-backend-runtime",
+    "head_sha": "8156165ebb3a419a1cacd270941ca49ba5d4f459",
+    "head_repo_id": 1082186834,
+    "head_repo_full_name": "SaintNick1214/Project-Cortex",
+    "merge_commit_sha": "641d5a9347e04296df066aafd03d9d2f0ec2c360",
+    "user": {
+      "login": "SaintNick1214",
+      "name": "SaintNick1214",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/63267399?v=4",
+      "id": 63267399
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-04T05:58:40Z",
+    "updated_at": "2026-10-04T06:40:31Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 309,
+    "changed_files": 33019,
+    "additions": 13433514,
+    "deletions": 9834,
+    "display_url": "https://github.com/SaintNick1214/Project-Cortex/pull/134",
+    "display_title": "feat: add Cortex runtime authority and model admission foundations"
+  },
+  "localTreeVerification": "work/resume/task04-transfer-12-tree-verification.json",
+  "unsignedCommit": true,
+  "signatureCINotPassed": true,
+  "rawRemoteCommitUnavailable": true,
+  "authenticationFailures": [
+    "Git fetch credentials unavailable",
+    "Anonymous REST raw commit HTTP401"
+  ],
+  "sourceSnapshot": "C8 preparation/review; execution-progress snapshot before native completion",
+  "actualNativeEvidenceIncluded": false
+}

@@ -1,0 +1,38 @@
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c2-review/task04-native-admission-fixture-c4/scripts/guard.mjs' imported from /workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c2-review/extension/scripts/offline-publication-artifacts.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c2-review/task04-native-admission-fixture-c4/scripts/guard.mjs'
+}
+
+Node.js v24.19.0
+✖ /workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c2-review/extension/scripts/offline-publication-artifacts.mjs (60.517816ms)
+✔ actual stage helper good canonical owned path links only existing installation (33.630054ms)
+✔ actual unchanged C7 helper traversal red is preserved by exact source contract; repaired helper denies both traversal paths BEFORE write (1.141587ms)
+✔ actual stage helper rejects symlink and nonexistent directory before any link creation (0.650364ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 398.242211
+
+✖ failing tests:
+
+test at work/resume/task04-terminal-capture-native-profiles-c2-review/extension/scripts/offline-publication-artifacts.mjs:1:1
+✖ /workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c2-review/extension/scripts/offline-publication-artifacts.mjs (60.517816ms)
+  'test failed'

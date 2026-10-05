@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'summary'
+- 'denied'
+
+    at file:///workspace/Project-Cortex/work/resume/task04-default-native-driver-implementation-c1-review/fixture/checks/independent-account-load.mjs:13:1060 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'summary',
+  expected: 'denied',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

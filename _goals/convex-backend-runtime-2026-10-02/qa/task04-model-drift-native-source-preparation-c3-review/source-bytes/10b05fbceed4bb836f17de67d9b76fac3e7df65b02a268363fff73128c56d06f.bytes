@@ -1,0 +1,29 @@
+from pathlib import Path
+import json,hashlib,datetime
+R=Path('/workspace/Project-Cortex');O=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review';sha=lambda b:hashlib.sha256(b).hexdigest();results=[];errors=[];cache={}
+def checkbytes(p,row):
+ if p not in cache:
+  b=p.read_bytes();cache[p]=(len(b),sha(b))
+ if cache[p]!=(row['bytes'],row['sha256']):errors.append({'path':str(p),'error':'byte-preimage-mismatch'})
+for kind in ['extension','regression','extra']:
+ p=R/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{kind}-preparation-c3';index=json.loads((p/'evidence/c3-command-custody-index.json').read_bytes());commands=[]
+ for c in index['commands']:
+  receipt=json.loads((p/c['receipt']).read_bytes());fields=['argv','cwd','startedAt','observedAt','exitCode']
+  for f in fields:
+   if c.get(f)!=receipt.get(f):errors.append({'kind':kind,'receipt':c['receipt'],'error':'index-receipt-'+f})
+  if receipt.get('startedAt') and receipt.get('observedAt'):
+   if datetime.datetime.fromisoformat(receipt['startedAt'])>datetime.datetime.fromisoformat(receipt['observedAt']):errors.append({'kind':kind,'receipt':c['receipt'],'error':'time-order'})
+  for row in c['preimageRefs']:checkbytes(p/row['packetBytePath'],row)
+  immutable=receipt.get('immutableRunArchive');immutableChecks=None
+  if '/immutable-operation-runs/' in c['receipt']:
+   archive=R/immutable;pre=json.loads((archive/'prebytes/index.json').read_bytes())['files'];before=receipt['sourceBefore'];after=receipt['sourceAfter'];
+   if pre!=before:errors.append({'kind':kind,'receipt':c['receipt'],'error':'preindex-before'})
+   for row in pre:checkbytes(R/receipt['sourceByteStore']/(row['sha256']+'.bytes'),row)
+   for name in ['receipt.json','stdout','stderr']:
+    if (p/c['receipt']).with_name('run.'+name).read_bytes()!=(archive/('run.'+name)).read_bytes():errors.append({'kind':kind,'receipt':c['receipt'],'error':'archive-'+name})
+   refs={(x['path'],x['bytes'],x['sha256']) for x in c['preimageRefs']};expected={(x['path'],x['bytes'],x['sha256']) for x in before}
+   if refs!=expected:errors.append({'kind':kind,'receipt':c['receipt'],'error':'full-preimage-reference-union'})
+   immutableChecks={'rows':len(pre),'changedPaths':[a['path'] for a,b in zip(before,after) if a!=b],'preindexAndArchivedBytesExact':True}
+  commands.append({'receipt':c['receipt'],'scope':c['sourceBeforeScope'],'preimageRows':len(c['preimageRefs']),'immutableChecks':immutableChecks,'earlierGapAcceptance':'NOT_GRANTED'})
+ results.append({'kind':kind,'commands':commands,'missingPreimages':index['missingPreimages'],'earlierMissingData':index['earlierMissingData']})
+O.joinpath('command-custody-audit.json').write_text(json.dumps({'results':results,'errors':errors,'uniquePreimageFilesRead':len(cache),'limit':'Recorded times/order and code provenance only. Historical overwritten fields remain NOT_CAPTURED; immutable reruns do not backfill.'},indent=2)+'\n');print(json.dumps({'commands':[len(x['commands']) for x in results],'immutable':[sum(c['immutableChecks'] is not None for c in x['commands']) for x in results],'uniquePreimages':len(cache),'errors':errors}))

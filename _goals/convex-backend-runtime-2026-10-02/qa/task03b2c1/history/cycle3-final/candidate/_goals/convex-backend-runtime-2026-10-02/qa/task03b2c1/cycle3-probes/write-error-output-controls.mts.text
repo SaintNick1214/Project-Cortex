@@ -1,0 +1,13 @@
+import fs from "node:fs";import assert from "node:assert/strict";
+import {fixture} from "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts";
+const results:any[]=[];
+for(const scenario of ["resource-read-owner-denied","resource-read-admitted"]) {
+ const f=fixture(["write"],"space");f.db.add("runtimeAuthGrants",{principalId:f.principal._id,membershipId:f.membership._id,tenantId:"tenant-a",tenantEpoch:1,capabilities:["read"],resourceAccess:scenario==="resource-read-owner-denied"?"own":"tenant",version:1});
+ f.row({ownerPrincipalId:"other-canonical-owner",streamingState:"streaming",streamingMetadata:{sessionId:"private-owner-stream-session",startedAt:1,bytesReceived:7}});
+ let readError:any,readOutput:any;try{readOutput=await f.invoke("get",{artifactId:"artifact-a",memorySpaceId:"space-a"});}catch(e:any){readError=e.data;}
+ if(scenario==="resource-read-owner-denied")assert.equal(readError?.code,"FORBIDDEN");else assert.equal(readOutput.streamingMetadata.sessionId,"private-owner-stream-session");
+ let error:any;try{await f.invoke("appendContent",{artifactId:"artifact-a",sessionId:"guessed",chunk:"text"});}catch(e:any){error=e.data;}
+ assert.equal(error?.code,"STREAMING_SESSION_INVALID");assert.equal(error.expectedSessionId,"private-owner-stream-session");assert.equal(f.db.attempts.length,0);
+ results.push({scenario,readDenied:!!readError,error,attempts:f.db.attempts.length});
+}
+fs.writeFileSync("/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output-controls-results.json",JSON.stringify(results,null,2)+"\n");for(const r of results)console.log(JSON.stringify(r));

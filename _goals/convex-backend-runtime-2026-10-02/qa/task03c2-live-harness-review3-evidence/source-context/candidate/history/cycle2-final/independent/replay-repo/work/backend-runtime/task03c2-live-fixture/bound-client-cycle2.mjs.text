@@ -1,0 +1,17 @@
+import ts from '/workspace/Project-Cortex/node_modules/typescript/lib/typescript.js';
+import {readFileSync,writeFileSync} from 'node:fs';
+const path='_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts';
+let source=readFileSync(path,'utf8'); const ast=ts.createSourceFile(path,source,ts.ScriptTarget.Latest,true);
+const edits=[];
+const methods=new Set(['query','mutation','withHttpAuth','getAuthorizationHeaders','expireIdle']);
+function visit(node){
+ if(ts.isCallExpression(node)&&ts.isPropertyAccessExpression(node.expression)&&methods.has(node.expression.name.text)){
+  const parent=node.parent;
+  if(!(ts.isCallExpression(parent)&&ts.isIdentifier(parent.expression)&&['bounded','denied'].includes(parent.expression.text))) {
+   edits.push([node.getStart(ast),'bounded(']);edits.push([node.end,')']);
+  }
+ }
+ ts.forEachChild(node,visit);
+}
+visit(ast); for(const [pos,text] of edits.sort((a,b)=>b[0]-a[0])) source=source.slice(0,pos)+text+source.slice(pos);
+writeFileSync(path,source);process.stdout.write(JSON.stringify({boundedPositiveOperations:edits.length/2})+'\n');

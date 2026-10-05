@@ -1,0 +1,143 @@
+{
+  "scope": "PIPELINE_POLICY_REPAIR_ONLY_NOT_BACKEND_RUNTIME_QUALIFICATION",
+  "utc": "2026-10-05 18:34:03 UTC",
+  "userAuthorization": {
+    "removeCommitSignatureRequirement": true,
+    "readyForReviewAfterPipelineResolution": true
+  },
+  "baseCommit": "451438488b2b96d55ae3818f9d02463ce7c5c842",
+  "baseTree": "823dd7fea3aa5fab215455c0f980651a353538c5",
+  "changes": [
+    {
+      "path": ".github/workflows/security.yml",
+      "proposedGitBlobSHA": "a665553b5b548f7d4563db0cc45f3a1f84a4adce",
+      "removedJob": "commit-signature-check",
+      "summaryDependenciesAndFailurePredicateUpdated": true,
+      "otherJobsByteIdentical": true
+    },
+    {
+      "path": ".github/codeql/codeql-config.yml",
+      "proposedGitBlobSHA": "400a30d85412f765363180e9ecdb7ff7a43ba6d4",
+      "addedNonShippedPathExclusions": [
+        "_goals/**",
+        "_research/**",
+        "work/**"
+      ],
+      "securityQueriesUnchanged": true,
+      "reason": "Convex source captures and disposable QA fixtures are not shipped implementations; retain seeded transaction randomness and immutable historical captures."
+    }
+  ],
+  "observedBaselineChecks": {
+    "prChecks": "SUCCESS",
+    "securityWorkflow": "FAILURE_SIGNATURE_JOB",
+    "codeqlAnalysisJob": "SUCCESS",
+    "codeqlFindingCheck": {
+      "conclusion": "failure",
+      "annotations": 16,
+      "high": 15,
+      "medium": 1
+    }
+  },
+  "visibleCodeqlReviewComments": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/resume-dependency-refinement-c2/current-source-snapshot/convex-dev/artifacts.ts",
+      "line": 859,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/371)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/artifacts.ts",
+      "line": 859,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/373)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/convex-dev/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/372)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-aggregate-c3-review/source/convex-dev--artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/374)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c10/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/376)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c11/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/377)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c2/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/378)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c3/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/379)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c4/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/380)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c5/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/381)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-fixture-c6/fixture/convex/artifacts.ts",
+      "line": 864,
+      "body": "## CodeQL / Insecure randomness\n\nThis uses a cryptographically insecure random number generated at [Math.random()](1) in a security context.\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/382)"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+      "line": 43,
+      "body": "## CodeQL / File data in outbound network request\n\nOutbound network request depends on [file data](1).\n\n[Show more details](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning/368)"
+    }
+  ],
+  "validation": {
+    "workflowJobs": [
+      "codeql-analysis",
+      "dependency-scan",
+      "secret-scan",
+      "dependency-review",
+      "license-check",
+      "scorecard",
+      "api-security",
+      "openapi-security",
+      "security-summary"
+    ],
+    "remainingSummaryJobs": [
+      "codeql-analysis",
+      "dependency-scan",
+      "secret-scan",
+      "api-security"
+    ],
+    "unknownNeeds": [],
+    "signatureJobAbsent": true,
+    "codeqlSecurityQueriesUnchanged": true,
+    "addedNonShippedPaths": [
+      "_goals/**",
+      "_research/**",
+      "work/**"
+    ],
+    "literalUnrelatedWorkflowPrefixUnchanged": true,
+    "localYamlOrBashExecution": "UNAVAILABLE_ENVIRONMENT_OFFLINE",
+    "codeqlSecurityExtendedStillEnabled": true
+  },
+  "independentReview": {
+    "agent": "pipeline_policy_review",
+    "observedStatus": "pending_init",
+    "reason": "Managed environment offline; no independent verdict claimed."
+  },
+  "plannedValidation": "Actual GitHub Actions parsing/security scan and separate CodeQL finding check on new commit.",
+  "backendTask04": "REJECT2.8_UNCHANGED",
+  "remainingBackendTasks": "05–17 incomplete",
+  "productionDeployed": false,
+  "merged": false
+}

@@ -1,0 +1,568 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+... Skipped lines
+
+  [
+    {
+      exported: {
+        documentType: {
+          type: 'object',
+...
+        stagedDbIndexes: [],
++       stagedDocumentType: undefined,
+        stagedSearchIndexes: [],
+        stagedVectorIndexes: [],
+        vectorIndexes: []
+      },
+      indexes: [
+...
+        stagedDbIndexes: [],
++       stagedDocumentType: undefined,
+        stagedSearchIndexes: [],
+        stagedVectorIndexes: [],
+        vectorIndexes: []
+      },
+      indexes: [
+...
+        stagedDbIndexes: [],
++       stagedDocumentType: undefined,
+        stagedSearchIndexes: [],
+        stagedVectorIndexes: [],
+        vectorIndexes: []
+      },
+      indexes: [
+...
+        stagedDbIndexes: [],
++       stagedDocumentType: undefined,
+        stagedSearchIndexes: [],
+        stagedVectorIndexes: [],
+        vectorIndexes: []
+      },
+      indexes: [
+...
+        stagedDbIndexes: [],
++       stagedDocumentType: undefined,
+        stagedSearchIndexes: [],
+        stagedVectorIndexes: [],
+        vectorIndexes: []
+      },
+      indexes: [
+
+    at <anonymous> (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/independent-approved-probe.mts:11:8)
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    {
+      table: 'runtimeModelPolicies',
+      indexes: [
+        {
+          indexDescriptor: 'by_policy_version',
+          fields: [ 'policyId', 'version' ]
+        },
+        {
+          indexDescriptor: 'by_scope_active',
+          fields: [ 'scope', 'tenantId', 'active' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_policy_version', fields: [Array] },
+          { indexDescriptor: 'by_scope_active', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            policyId: [Object],
+            version: [Object],
+            scope: [Object],
+            tenantId: [Object],
+            agentId: [Object],
+            agentVersion: [Object],
+            operationKey: [Object],
+            canonical: [Object],
+            root: [Object],
+            actorReference: [Object],
+            active: [Object],
+            revokedAt: [Object],
+            createdAt: [Object]
+          }
+        },
+        stagedDocumentType: undefined
+      }
+    },
+    {
+      table: 'runtimeModelQualifications',
+      indexes: [
+        {
+          indexDescriptor: 'by_receipt',
+          fields: [ 'receiptId', 'version' ]
+        },
+        { indexDescriptor: 'by_active', fields: [ 'active' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_receipt', fields: [Array] },
+          { indexDescriptor: 'by_active', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            receiptId: [Object],
+            version: [Object],
+            canonical: [Object],
+            root: [Object],
+            active: [Object],
+            revokedAt: [Object],
+            createdAt: [Object]
+          }
+        },
+        stagedDocumentType: undefined
+      }
+    },
+    {
+      table: 'runtimeBudgetAccounts',
+      indexes: [
+        { indexDescriptor: 'by_account_key', fields: [ 'accountKey' ] },
+        {
+          indexDescriptor: 'by_scope_current',
+          fields: [ 'scopeKey', 'current' ]
+        },
+        { indexDescriptor: 'by_run', fields: [ 'runBudgetId' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_account_key', fields: [Array] },
+          { indexDescriptor: 'by_scope_current', fields: [Array] },
+          { indexDescriptor: 'by_run', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            accountKey: [Object],
+            scopeKey: [Object],
+            kind: [Object],
+            tenantId: [Object],
+            runBudgetId: [Object],
+            reference: [Object],
+            requestCanonical: [Object],
+            agentId: [Object],
+            agentVersion: [Object],
+            windowId: [Object],
+            windowStart: [Object],
+            windowEnd: [Object],
+            currency: [Object],
+            monetaryUnit: [Object],
+            root: [Object],
+            limitUnits: [Object],
+            reservedUnits: [Object],
+            settledUnits: [Object],
+            uncertainUnits: [Object],
+            concurrencyLimit: [Object],
+            activeConcurrency: [Object],
+            overrun: [Object],
+            current: [Object],
+            cancelled: [Object],
+            predecessor: [Object],
+            version: [Object],
+            createdAt: [Object]
+          }
+        },
+        stagedDocumentType: undefined
+      }
+    },
+    {
+      table: 'runtimeModelOperations',
+      indexes: [
+        {
+          indexDescriptor: 'by_identity',
+          fields: [
+            'tenantId',
+            'memorySpaceId',
+            'principalId',
+            'semanticId',
+            'operationKey'
+          ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_identity', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            operationId: [Object],
+            reference: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            principalId: [Object],
+            semanticId: [Object],
+            operationKey: [Object],
+            runAccountId: [Object],
+            parentOperationId: [Object],
+            source: [Object],
+            resolutionCanonical: [Object],
+            snapshotCanonical: [Object],
+            identityCanonical: [Object],
+            identityHash: [Object],
+            reservedUnits: [Object],
+            settledUnits: [Object],
+            uncertainUnits: [Object],
+            overrun: [Object],
+            cancelled: [Object],
+            createdAt: [Object]
+          }
+        },
+        stagedDocumentType: undefined
+      }
+    },
+    {
+      table: 'runtimeModelAttempts',
+      indexes: [
+        {
+          indexDescriptor: 'by_child_attempt',
+          fields: [ 'operationDocumentId', 'childCallId', 'attemptNumber' ]
+        },
+        {
+          indexDescriptor: 'by_operation',
+          fields: [ 'operationDocumentId' ]
+        },
+        {
+          indexDescriptor: 'by_state_checkpoint',
+          fields: [ 'state', 'checkpointAt' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_child_attempt', fields: [Array] },
+          { indexDescriptor: 'by_operation', fields: [Array] },
+          { indexDescriptor: 'by_state_checkpoint', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            operationDocumentId: [Object],
+            childCallId: [Object],
+            ordinal: [Object],
+            attemptNumber: [Object],
+            fallbackModelId: [Object],
+            priorAttemptId: [Object],
+            canonical: [Object],
+            hash: [Object],
+            resolutionCanonical: [Object],
+            snapshotCanonical: [Object],
+            inputProofCanonical: [Object],
+            measuredInputTokens: [Object],
+            maximumOutputTokens: [Object],
+            tenantAccountId: [Object],
+            runAccountId: [Object],
+            reservationUnits: [Object],
+            state: [Object],
+            dispatchIdentity: [Object],
+            checkpointAt: [Object],
+            slotReleased: [Object],
+            outputVisible: [Object],
+            toolInputVisible: [Object],
+            toolResultVisible: [Object],
+            toolEffectCommitted: [Object],
+            receiptCanonical: [Object],
+            receiptHash: [Object],
+            settledCostUnits: [Object],
+            costProvenance: [Object],
+            actualModel: [Object],
+            privateResultCanonical: [Object],
+            resultWithheld: [Object],
+            terminalEvidenceCanonical: [Object],
+            terminalEvidenceHash: [Object],
+            resultAttachmentState: [Object],
+            createdAt: [Object]
+          }
+        },
+        stagedDocumentType: undefined
+      }
+    }
+  ],
+  expected: [
+    {
+      table: 'runtimeModelPolicies',
+      indexes: [
+        {
+          indexDescriptor: 'by_policy_version',
+          fields: [ 'policyId', 'version' ]
+        },
+        {
+          indexDescriptor: 'by_scope_active',
+          fields: [ 'scope', 'tenantId', 'active' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_policy_version', fields: [Array] },
+          { indexDescriptor: 'by_scope_active', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            policyId: [Object],
+            version: [Object],
+            scope: [Object],
+            tenantId: [Object],
+            agentId: [Object],
+            agentVersion: [Object],
+            operationKey: [Object],
+            canonical: [Object],
+            root: [Object],
+            actorReference: [Object],
+            active: [Object],
+            revokedAt: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeModelQualifications',
+      indexes: [
+        {
+          indexDescriptor: 'by_receipt',
+          fields: [ 'receiptId', 'version' ]
+        },
+        { indexDescriptor: 'by_active', fields: [ 'active' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_receipt', fields: [Array] },
+          { indexDescriptor: 'by_active', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            receiptId: [Object],
+            version: [Object],
+            canonical: [Object],
+            root: [Object],
+            active: [Object],
+            revokedAt: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeBudgetAccounts',
+      indexes: [
+        { indexDescriptor: 'by_account_key', fields: [ 'accountKey' ] },
+        {
+          indexDescriptor: 'by_scope_current',
+          fields: [ 'scopeKey', 'current' ]
+        },
+        { indexDescriptor: 'by_run', fields: [ 'runBudgetId' ] }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_account_key', fields: [Array] },
+          { indexDescriptor: 'by_scope_current', fields: [Array] },
+          { indexDescriptor: 'by_run', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            accountKey: [Object],
+            scopeKey: [Object],
+            kind: [Object],
+            tenantId: [Object],
+            runBudgetId: [Object],
+            reference: [Object],
+            requestCanonical: [Object],
+            agentId: [Object],
+            agentVersion: [Object],
+            windowId: [Object],
+            windowStart: [Object],
+            windowEnd: [Object],
+            currency: [Object],
+            monetaryUnit: [Object],
+            root: [Object],
+            limitUnits: [Object],
+            reservedUnits: [Object],
+            settledUnits: [Object],
+            uncertainUnits: [Object],
+            concurrencyLimit: [Object],
+            activeConcurrency: [Object],
+            overrun: [Object],
+            current: [Object],
+            cancelled: [Object],
+            predecessor: [Object],
+            version: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeModelOperations',
+      indexes: [
+        {
+          indexDescriptor: 'by_identity',
+          fields: [
+            'tenantId',
+            'memorySpaceId',
+            'principalId',
+            'semanticId',
+            'operationKey'
+          ]
+        }
+      ],
+      exported: {
+        indexes: [ { indexDescriptor: 'by_identity', fields: [Array] } ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            operationId: [Object],
+            reference: [Object],
+            tenantId: [Object],
+            memorySpaceId: [Object],
+            principalId: [Object],
+            semanticId: [Object],
+            operationKey: [Object],
+            runAccountId: [Object],
+            parentOperationId: [Object],
+            source: [Object],
+            resolutionCanonical: [Object],
+            snapshotCanonical: [Object],
+            identityCanonical: [Object],
+            identityHash: [Object],
+            reservedUnits: [Object],
+            settledUnits: [Object],
+            uncertainUnits: [Object],
+            overrun: [Object],
+            cancelled: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    },
+    {
+      table: 'runtimeModelAttempts',
+      indexes: [
+        {
+          indexDescriptor: 'by_child_attempt',
+          fields: [ 'operationDocumentId', 'childCallId', 'attemptNumber' ]
+        },
+        {
+          indexDescriptor: 'by_operation',
+          fields: [ 'operationDocumentId' ]
+        },
+        {
+          indexDescriptor: 'by_state_checkpoint',
+          fields: [ 'state', 'checkpointAt' ]
+        }
+      ],
+      exported: {
+        indexes: [
+          { indexDescriptor: 'by_child_attempt', fields: [Array] },
+          { indexDescriptor: 'by_operation', fields: [Array] },
+          { indexDescriptor: 'by_state_checkpoint', fields: [Array] }
+        ],
+        stagedDbIndexes: [],
+        searchIndexes: [],
+        stagedSearchIndexes: [],
+        vectorIndexes: [],
+        stagedVectorIndexes: [],
+        documentType: {
+          type: 'object',
+          value: {
+            operationDocumentId: [Object],
+            childCallId: [Object],
+            ordinal: [Object],
+            attemptNumber: [Object],
+            fallbackModelId: [Object],
+            priorAttemptId: [Object],
+            canonical: [Object],
+            hash: [Object],
+            resolutionCanonical: [Object],
+            snapshotCanonical: [Object],
+            inputProofCanonical: [Object],
+            measuredInputTokens: [Object],
+            maximumOutputTokens: [Object],
+            tenantAccountId: [Object],
+            runAccountId: [Object],
+            reservationUnits: [Object],
+            state: [Object],
+            dispatchIdentity: [Object],
+            checkpointAt: [Object],
+            slotReleased: [Object],
+            outputVisible: [Object],
+            toolInputVisible: [Object],
+            toolResultVisible: [Object],
+            toolEffectCommitted: [Object],
+            receiptCanonical: [Object],
+            receiptHash: [Object],
+            settledCostUnits: [Object],
+            costProvenance: [Object],
+            actualModel: [Object],
+            privateResultCanonical: [Object],
+            resultWithheld: [Object],
+            terminalEvidenceCanonical: [Object],
+            terminalEvidenceHash: [Object],
+            resultAttachmentState: [Object],
+            createdAt: [Object]
+          }
+        }
+      }
+    }
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

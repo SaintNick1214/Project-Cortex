@@ -1,0 +1,12 @@
+from pathlib import Path
+import json,subprocess,os,datetime,hashlib
+q=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-current-offline-unit-check'); discovery=json.loads((q/'discovery.json').read_text());argv=['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','work/resume/task04-current-offline-units/jest.config.mjs','--runInBand','--forceExit','--json','--outputFile='+str(q/'outcomes.json'),'--runTestsByPath']+discovery['selectedOffline']
+paths=discovery['selectedOffline']+['convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeGateway.ts','jest.config.mjs','package.json','package-lock.json','work/resume/task04-current-offline-units/setup.mjs','work/resume/task04-current-offline-units/jest.config.mjs']
+def pins():return {p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in paths}
+pre=pins();start=datetime.datetime.now(datetime.timezone.utc).isoformat();e=os.environ.copy();e['NODE_USE_ENV_PROXY']='1';e['NO_COLOR']='1'
+# Normal env.ts dotenv loading deliberately absent for offline mocks; no credential/service authorization.
+with (q/'stdout').open('xb') as out,(q/'stderr').open('xb') as err:
+ try:code=subprocess.run(argv,cwd='/workspace/Project-Cortex',env=e,stdout=out,stderr=err,timeout=300).returncode
+ except subprocess.TimeoutExpired:code=124
+post=pins();receipt=dict(argv=argv,cwd='/workspace/Project-Cortex',startUTC=start,endUTC=datetime.datetime.now(datetime.timezone.utc).isoformat(),exit=code,sourcePre=pre,sourcePost=post,stable=pre==post,scope='70 offline suites; memory-observer live pending; blocked real fetch/no dotenv/setup substitution does not certify services/fullgate')
+(q/'receipt.json').open('x').write(json.dumps(receipt,indent=2)+'\n');print(json.dumps(dict(exit=code,stable=pre==post)));raise SystemExit(code if pre==post else 2)

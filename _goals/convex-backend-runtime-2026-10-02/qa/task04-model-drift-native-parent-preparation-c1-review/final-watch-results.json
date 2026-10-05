@@ -1,0 +1,491 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/final-watch.mjs",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/final-watch-results.json"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T10:59:50.362Z",
+  "scope": "PROVISIONAL_EXACT_PUBLIC_SOURCE_VM_DUMMY_ONLY",
+  "sourcePins": [
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/final-control-inputs/scripts/parent-inputs.mjs",
+      "sha256": "f2821e1cb0b4b197d09086a0297c2e6b189e9b185e093f64a7e72daa1d127de1"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/final-control-inputs/scripts/current-inputs.mjs",
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/final-control-inputs/scripts/guard.mjs",
+      "sha256": "419f386149acc725ee3ace38f22e4b7145f97fc1d31407b40e51ce707fe11874"
+    }
+  ],
+  "defined": 17,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "name": "independent-current-owned-pair",
+      "status": "PASS",
+      "expectedWrites": 3,
+      "observed": {
+        "preflightCalls": 10,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [
+          "current-physical-id-input-receipt.json",
+          "argument-scope.json",
+          "public-arguments.json"
+        ],
+        "stdout": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[\"runtimeModelAttempts\",\"runtimeModelOperations\"],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+        "openFDs": 0
+      },
+      "error": null,
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-multiple-legitimate-pairs",
+      "status": "PASS",
+      "expectedWrites": 3,
+      "observed": {
+        "preflightCalls": 10,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [
+          "current-physical-id-input-receipt.json",
+          "argument-scope.json",
+          "public-arguments.json"
+        ],
+        "stdout": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[\"runtimeModelAttempts\",\"runtimeModelOperations\"],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+        "openFDs": 0
+      },
+      "error": null,
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-future-window",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_WINDOW_EXPIRED_OR_FUTURE",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-expired-window",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_WINDOW_EXPIRED_OR_FUTURE",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-expanded-window",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_WINDOW_LIMIT\n+ actual - expected\n\n+ 1200001\n- 1200000\n        ^\n",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-invalid-window-start",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_WINDOW_START",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-runtimeModelOperations-stale",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_RECEIPT_WINDOW",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-runtimeModelOperations-future",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_RECEIPT_WINDOW",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-runtimeModelAttempts-stale",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_RECEIPT_WINDOW",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-runtimeModelAttempts-future",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_RECEIPT_WINDOW",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-receipt-wrong-operation",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_RECEIPT_OPERATION\n+ actual - expected\n\n+ 'DUMMY-foreign'\n- 'ae1e4f33-c7da-4434-9fc4-265d9c97835f'\n",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-private-mode-denial",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "QA_PRIVATE",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-hardlink-denial",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "QA_LINK",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-symlink-denial",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "QA_PATH",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-late-windowchange",
+      "status": "PASS",
+      "expectedWrites": 1,
+      "observed": {
+        "preflightCalls": 7,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [
+          "current-physical-id-input-receipt.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_WINDOW_CHANGED\n+ actual - expected\n\n+ 'dcfe5e5bd039bb39c9d1d8cd74530d0bd4d6b2753bfd7e62db5faa178957388c'\n- 'ac7ff8bd70b4a1ec3ce0b6157df558b5b865b75b1cbeb87713a17be9ed22248a'\n",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [
+            "current-physical-id-input-receipt.json"
+          ],
+          "privateOutputStates": [
+            {
+              "name": "current-physical-id-input-receipt.json",
+              "created": true,
+              "written": true,
+              "durable": true,
+              "closed": true
+            }
+          ]
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-late-physicaltarget",
+      "status": "PASS",
+      "expectedWrites": 1,
+      "observed": {
+        "preflightCalls": 7,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [
+          "current-physical-id-input-receipt.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_TARGET_CHANGED\n+ actual - expected\n\n  {\n    deploymentName: 'dummy-current-owned',\n    deploymentUrl: 'https://dummy-current-owned.convex.cloud',\n    operation: 'ae1e4f33-c7da-4434-9fc4-265d9c97835f',\n    privateEnvironmentFile: 'work/backend-runtime/task04-model-drift-native-extension-c1/deploy.env',\n+   projectId: 100000000,\n-   projectId: 99999999,\n    projectName: 'cortex-task04-admission-disposable-ae68431009a8',\n    projectSlug: 'cortex-task04-admission-disposable-ae68431009a8',\n    requestSha256: '412a2ebc4f83a8c20e5a148121fb8d1e6c95766aef3cee721a4346aa24008251',\n    runId: 'admission-70582c37240c4b77bacb2e3add9661d0'\n  }\n",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [
+            "current-physical-id-input-receipt.json"
+          ],
+          "privateOutputStates": [
+            {
+              "name": "current-physical-id-input-receipt.json",
+              "created": true,
+              "written": true,
+              "durable": true,
+              "closed": true
+            }
+          ]
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    },
+    {
+      "name": "independent-source-drift",
+      "status": "PASS",
+      "expectedWrites": 0,
+      "observed": {
+        "preflightCalls": 0,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": {
+        "message": "PARENT_ACCEPTED_SOURCE_DRIFT\n+ actual - expected\n\n+ '20e3a7060717b9f030a3838a750f277c033bdee5d781ba1ea7e35228c1153111'\n- 'c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710'\n",
+        "partial": {
+          "status": "FAIL",
+          "privateOutputs": [],
+          "privateOutputStates": []
+        }
+      },
+      "actualPrivateReads": 0,
+      "actualNetwork": 0,
+      "actualSigning": 0
+    }
+  ],
+  "native": "NOT_RUN",
+  "paid": "NOT_RUN"
+}

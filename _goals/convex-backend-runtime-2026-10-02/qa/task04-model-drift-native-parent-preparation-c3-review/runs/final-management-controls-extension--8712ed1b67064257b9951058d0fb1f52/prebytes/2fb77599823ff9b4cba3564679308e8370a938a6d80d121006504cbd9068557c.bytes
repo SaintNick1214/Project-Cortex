@@ -1,0 +1,20 @@
+from pathlib import Path
+import json,hashlib,datetime,sys
+r=Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review';H=lambda b:hashlib.sha256(b).hexdigest();out=[]
+for k in ['extension','regression','extra']:
+ root=r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c3';index=json.loads((root/'evidence/c3-command-custody-index.json').read_bytes());assert not index['missingPreimages'];refs=0;receipts=[]
+ for c in index['commands']:
+  b=(root/c['receipt']).read_bytes();d=json.loads(b);assert d['argv']==c['argv'] and d['cwd']==c['cwd'];assert d['startedAt']==c['startedAt'] and d['observedAt']==c['observedAt'];assert d['exitCode']==c['exitCode']
+  for p in c['preimageRefs']:
+   x=(root/p['packetBytePath']).read_bytes();assert len(x)==p['bytes'] and H(x)==p['sha256'];refs+=1
+  if 'immutableRunArchive' in d:
+   archive=root/'evidence/c3-command-runs/immutable-operation-runs'/Path(d['immutableRunArchive']).name
+   assert (archive/'run.receipt.json').read_bytes()==b
+   assert (archive/'run.stdout').read_bytes()==(root/(c['receipt'].removesuffix('.receipt.json')+'.stdout')).read_bytes()
+   assert (archive/'run.stderr').read_bytes()==(root/(c['receipt'].removesuffix('.receipt.json')+'.stderr')).read_bytes()
+   pre=json.loads((r/d['sourcePreimages']/'index.json').read_bytes())['files'];assert pre==d['sourceBefore'];assert d['sourceBeforeScope'].startswith('FULL_');assert len(pre)==len({p['path'] for p in pre});assert d['sourceAfter'] and len(d['sourceAfter'])==len(pre)
+   # archived before bytes, never actual/private originals; retained versions can differ from current frozen graph
+   assert [(x['path'],x['bytes'],x['sha256']) for x in pre]==[(x['path'],x['bytes'],x['sha256']) for x in c['preimageRefs']]
+   receipts.append(dict(run=archive.name,exitCode=d['exitCode'],beforeRows=len(pre),afterRows=len(d['sourceAfter']),receiptSHA256=H(b)))
+ out.append(dict(profile=k,commands=len(index['commands']),preimageRefsVerified=refs,immutableRuns=len(receipts),runs=receipts,earlierEvidence='NON_CERTIFYING_WHERE_FULL_PRESTATE_RAW_UTC_MISSING',historicalGapNotBackfilled=True))
+(q/'custody-results.json').write_text(json.dumps(dict(argv=sys.argv,cwd=str(r),utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),status='PASS_CUSTODY_ONLY',results=out),indent=2)+'\n');print(json.dumps(dict(status='PASS_CUSTODY_ONLY',profiles=len(out),immutableRuns=[x['immutableRuns'] for x in out])))

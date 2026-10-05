@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/oversize-map-precreation/materialize.py", line 121, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/oversize-map-precreation/materialize.py", line 98, in main
+    packed=read_at(base,'transport-map.json.gz',LIMIT);require(len(packed)<=LIMIT and digest(packed)==MAP_SHA256,'transport map changed')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/oversize-map-precreation/materialize.py", line 38, in read_at
+    require(metadata.st_size<=maxbytes,'input exceeds trusted byte bound')
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/oversize-map-precreation/materialize.py", line 10, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: input exceeds trusted byte bound

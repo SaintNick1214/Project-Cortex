@@ -1,0 +1,123 @@
+(node:47120) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts (5.115 s)
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        handler: async (ctx, args) => artifactHandler(async () => {
+          // Only authenticated Convex deployment-operator internal tooling may invoke
+          // this registration. URL/environment names and public JWT admin labels are
+          // never operator credentials. This does not remove other control tables.
+          if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");
+    -     const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>
+    +     const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>
+            q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();
+          // Full preflight, including retained history, before the first mutation.
+          for (const row of rows) {
+            if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");
+            if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");
+
+      199 |   const accepted = JSON.parse(fs.readFileSync(qa + 'accepted22.json', 'utf8')) as { path: string; declaration: string; sha256: string }[];
+      200 |   const current = declarations(fs.readFileSync('convex-dev/artifacts.ts', 'utf8')); expect(accepted).toHaveLength(22);
+    > 201 |   for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
+          |                                                                                                             ^
+      202 |   for (const module of ['artifacts', 'attachments']) {
+      203 |     const before = declarations(fs.readFileSync(qa + module + '.ts', 'utf8')); const after = declarations(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
+      204 |     expect([...after.keys()]).toEqual([...before.keys()]);
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:201:109)
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+PASS tests/unit/auth/credentials.test.ts (7.377 s)
+PASS tests/unit/runtimeRegistryAuth/adversarial.test.ts
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+PASS tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+PASS tests/unit/runtimeEndpointAuth/facts.test.ts
+PASS tests/unit/runtimeRegistryAuth/catalog.test.ts
+PASS tests/unit/runtimeEndpointAuth/memory.test.ts
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+PASS tests/unit/runtimeArtifactAuth/handlers.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+PASS tests/unit/runtimeRegistryAuth/registered.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+PASS tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts
+PASS tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts (6.087 s)
+PASS tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts
+PASS tests/unit/runtimeMetadataAuth/native-errors.test.ts
+PASS tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+PASS tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+PASS tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts (6.16 s)
+PASS tests/unit/runtimeHistoryClient/operator-bridge.test.ts (5.759 s)
+PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+PASS tests/unit/runtimeRegistryStats/registered.test.ts
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts (5.876 s)
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts (5.813 s)
+PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+PASS tests/unit/runtimeWorkerClient/governance.test.ts
+PASS tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+PASS tests/unit/runtimeAuth/authority.test.ts
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/auth/validators.test.ts
+PASS tests/unit/auth/context.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+PASS tests/unit/domain/profile.test.ts
+
+Summary of all failing tests
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        handler: async (ctx, args) => artifactHandler(async () => {
+          // Only authenticated Convex deployment-operator internal tooling may invoke
+          // this registration. URL/environment names and public JWT admin labels are
+          // never operator credentials. This does not remove other control tables.
+          if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");
+    -     const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>
+    +     const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>
+            q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();
+          // Full preflight, including retained history, before the first mutation.
+          for (const row of rows) {
+            if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");
+            if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");
+
+      199 |   const accepted = JSON.parse(fs.readFileSync(qa + 'accepted22.json', 'utf8')) as { path: string; declaration: string; sha256: string }[];
+      200 |   const current = declarations(fs.readFileSync('convex-dev/artifacts.ts', 'utf8')); expect(accepted).toHaveLength(22);
+    > 201 |   for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
+          |                                                                                                             ^
+      202 |   for (const module of ['artifacts', 'attachments']) {
+      203 |     const before = declarations(fs.readFileSync(qa + module + '.ts', 'utf8')); const after = declarations(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
+      204 |     expect([...after.keys()]).toEqual([...before.keys()]);
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:201:109)
+
+
+Test Suites: 1 failed, 47 passed, 48 total
+Tests:       1 failed, 4824 passed, 4825 total
+Snapshots:   0 total
+Time:        81.709 s
+Ran all test suites.
+Test results written to: work/resume/artifact-index-integration.tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

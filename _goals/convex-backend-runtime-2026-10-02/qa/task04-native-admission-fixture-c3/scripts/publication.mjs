@@ -1,0 +1,10 @@
+/** Parent-only actual apiSpec observation after official codegen; freezes exact deployed tuples. */
+import {normalizeApiSpec,assertPublishedArguments} from './publication-contract.mjs';
+import assert from 'node:assert/strict';import {ConvexHttpClient} from 'convex/browser';import {makeFunctionReference} from 'convex/server';import {readFileSync} from 'node:fs';import {resolve} from 'node:path';
+import {livePreflight,root,scratch,json,sha256,exclusive,limits,reserveTicket} from './guard.mjs';import {boundedBody} from './peer.mjs';
+const phase=process.argv[2];if(!['synthetic','empty'].includes(phase))throw Error('QA_PHASE');const {target,values}=livePreflight();const receipt=json(resolve(scratch,'codegen-'+phase+'.json'),scratch,true);assert.equal(receipt.operation,target.operation);assert.equal(receipt.status,'PASS');
+const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:async(url,options)=>{if(new URL(url).origin!==target.deploymentUrl)throw Error('QA_ORIGIN');const r=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(limits.rpcMs)});const body=await boundedBody(r);return new Response(body,{status:r.status,headers:r.headers});}});client.setAdminAuth(values.CONVEX_DEPLOY_KEY);
+await reserveTicket('native',limits.nativeClientRpc);const published=await client.query(makeFunctionReference('_system/cli/modules:apiSpec'),{});assert.ok(Array.isArray(published));const functions=normalizeApiSpec(published);
+const expected=json(resolve(root,'registration-inventory.json')).registrations;const equality=assertPublishedArguments(functions,expected,phase);
+const http=published.filter(fn=>fn.functionType==='HttpAction');assert.equal(http.length,1);assert.equal(http[0].identifier.replace(/\.js:/,':'),'qualificationPeer:effect');
+exclusive(resolve(scratch,'publication-'+phase+'.json'),{...receipt,...equality,functions,httpRoutes:[{path:'/qa/task04-peer/effect',method:'POST',handler:'qualificationPeer:effect'}],apiSpecSha256:sha256(JSON.stringify(published)),publicationCalls:1});

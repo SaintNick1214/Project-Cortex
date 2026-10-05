@@ -1,0 +1,56 @@
+{
+  "kind": "offline syntax/oracle only; no native/product checks",
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--check",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/assertions.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:00.929210+00:00",
+      "endedAt": "2026-10-04T06:51:00.971463+00:00",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/native-cases.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:00.971480+00:00",
+      "endedAt": "2026-10-04T06:51:00.995365+00:00",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:00.995377+00:00",
+      "endedAt": "2026-10-04T06:51:01.027091+00:00",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/offline-check.mjs:5\nconst plan=JSON.parse(readFileSync(fileURLToPath(new URL('../cases.json',import.meta.url)),'utf8')));\n                                                                                                   ^\n\nSyntaxError: Unexpected token ')'\n    at checkSyntax (node:internal/main/check_syntax:72:5)\n\nNode.js v24.19.0\n"
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T06:51:01.027106+00:00",
+      "endedAt": "2026-10-04T06:51:01.056148+00:00",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c1/scripts/offline-check.mjs:5\nconst plan=JSON.parse(readFileSync(fileURLToPath(new URL('../cases.json',import.meta.url)),'utf8')));\n                                                                                                   ^\n\nSyntaxError: Unexpected token ')'\n    at compileSourceTextModule (node:internal/modules/esm/utils:318:16)\n    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:89:18)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12)\n    at node:internal/modules/esm/loader:632:32\n    at TracingChannel.tracePromise (node:diagnostics_channel:362:14)\n\nNode.js v24.19.0\n"
+    }
+  ]
+}

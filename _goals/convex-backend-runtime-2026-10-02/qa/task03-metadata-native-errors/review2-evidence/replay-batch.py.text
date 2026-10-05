@@ -1,0 +1,15 @@
+import pathlib,sys,concurrent.futures
+sys.path.insert(0,str(pathlib.Path(__file__).parent));from run import *
+replays=['boundary-probes','extra-probes','closure-controls','historical-probes','historical-additional-probes','historical-numeric-probe']
+for name in ['old-exact-finding-collector','current-required18']:
+ run(name,['node','--import','tsx',str(OUT/('ambiguity-pruning-probe.mjs' if name.startswith('old') else 'current-required18-probe.mjs'))])
+run('current-required-denial',['node',str(OUT/'current-required-denial.mjs')])
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as p:
+ fs=[p.submit(run,n,['node','--import','tsx',str(OUT/'replays'/(n+'.mjs'))]) for n in replays]
+ for f in fs:f.result()
+run('historical19-check',['node',str(OUT/'replays/historical-probe-check.mjs')])
+run('native-registration',['node','--import','tsx',str(OUT/'replays/registration.mjs')])
+run('ast-inventory',['node','_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs',str(OUT/'catalog')])
+run('node-version',['node','--version']);run('npm-version',['npm','--version']);run('diff-check',['git','diff','--check'])
+run('root-build',['npm','run','build'],OUT/'accepted-copy')
+run('packed-contracts',['npm','run','test:contracts'],OUT/'accepted-copy')

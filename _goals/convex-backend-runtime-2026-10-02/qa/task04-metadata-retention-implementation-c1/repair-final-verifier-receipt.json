@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;p=Path(\"work/resume/task04-metadata-retention-implementation-c1/verify-final.py\");s=p.read_text().replace(\"'NATIVE_INSTALLATION_ENABLED=false' in runner.replace(' ','')\",\"'NATIVE_INSTALLATION_ENABLED=false' in (q/'fixture/convex/installed.ts').read_text().replace(' ','')\").replace(\"re.search(r'ACTUAL_PROOFS[^=]*=\\\\s*\\\\[\\\\]',proof)\",\"'ACTUAL_PROOFS:readonly Data[]=Object.freeze([]);' in proof\");p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:44:58.661423+00:00",
+  "endUtc": "2026-10-04T14:44:58.683541+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "22b0c7cd03ea9ed7724372bb736f48dcacf7204bbb87a57271b7a06daa6d2db5"
+}
