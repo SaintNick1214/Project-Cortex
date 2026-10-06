@@ -1,0 +1,37 @@
+{
+  "rootDir": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "testEnvironment": "node",
+  "roots": [
+    "<rootDir>/tests"
+  ],
+  "testMatch": [
+    "**/*.test.ts"
+  ],
+  "setupFiles": [],
+  "setupFilesAfterEnv": [],
+  "reporters": [
+    "default"
+  ],
+  "cache": false,
+  "extensionsToTreatAsEsm": [
+    ".ts"
+  ],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "transform": {
+    "^.+\\.(ts|tsx|js)$": [
+      "ts-jest",
+      {
+        "useESM": true,
+        "tsconfig": {
+          "allowJs": true,
+          "module": "ESNext",
+          "moduleResolution": "bundler"
+        }
+      }
+    ]
+  },
+  "testTimeout": 10000,
+  "forceExit": false
+}

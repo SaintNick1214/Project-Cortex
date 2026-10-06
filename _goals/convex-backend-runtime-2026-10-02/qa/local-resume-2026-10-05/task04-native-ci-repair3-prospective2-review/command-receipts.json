@@ -1,0 +1,30 @@
+{
+  "scope": "ACTUAL_REVIEWER_COMMAND_RESULTS_ONLY",
+  "commands": [
+    {
+      "command": "python3 -B .../task04-native-ci-repair3-prospective2-review/fresh-guards.py",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "result": {
+        "chunk_id": "f77c84",
+        "wall_time_seconds": 0.298494,
+        "exit_code": 0,
+        "original_token_count": 101,
+        "output": "{\"status\": \"PASS\", \"scope\": \"FOUR_FRESH_BOUNDED_HOST_GUARDS_ONLY_NO_NATIVE_RUNTIME\", \"checks\": 4, \"sourceSHA256\": {\"tar_export.py\": \"db066c87b1c946f27f90d4bf2aff8977bf0b42213a60bedddbc1a638c37d94b7\", \"bounded_process.py\": \"94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3\"}, \"retainedPrior22And6NotRerun\": true, \"actualDocker\": false, \"nativeAccepted\": false, \"Task04Accepted\": false}\n"
+      }
+    },
+    {
+      "command": "python3 -B .../task04-native-ci-repair3-prospective2-review/audit.py",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "reviewerFinishInput": "finish\n",
+      "finalResult": {
+        "chunk_id": "5d00df",
+        "wall_time_seconds": 0.000018625,
+        "exit_code": 0,
+        "original_token_count": 28,
+        "output": "finish\r\n{\"status\": \"PASS_CURRENT_PROSPECTIVE_BINDINGS_STABLE\", \"bindings\": 309, \"allDescriptorsClosed\": true}\r\n"
+      },
+      "initialResultSource": "source-audit.json",
+      "heldDescriptors": "309 bindings held throughout review; full current final recheck then closed"
+    }
+  ]
+}

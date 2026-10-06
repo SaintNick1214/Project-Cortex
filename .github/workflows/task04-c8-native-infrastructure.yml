@@ -24,10 +24,10 @@ jobs:
           fetch-depth: 1
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/
+            /work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3/
             /.github/workflows/task04-c8-native-infrastructure.yml
       - name: Native infrastructure capability and source capture only
-        run: python3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/ci-run.py
+        run: python3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3/ci-run.py
       - name: Export bounded allowlisted infrastructure receipts and source bytes
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
