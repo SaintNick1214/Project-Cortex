@@ -1,0 +1,235 @@
+{
+  "Id": "3fa39901e152fff5386e7e7af3ace1cbea705a59ca52073b8e7449f60b598c87",
+  "Created": "2026-10-06T09:39:27.297282756Z",
+  "Path": "/usr/local/bin/python3.12",
+  "Args": [
+    "-B",
+    "-c",
+    "import os,json,hashlib\nfrom pathlib import Path\nrows=[]\nfor name in ['/input','/helper','/helper/task03-attempt5-linux-public-transfer.py','/input/candidate-freeze-attempt5.json','/input/managed-fixture-copy-manifest.json']:\n p=Path(name);row={'path':name}\n try:\n  s=p.stat();row.update(uid=s.st_uid,gid=s.st_gid,mode=s.st_mode,bytes=s.st_size)\n  if p.is_dir():row['traversable']=os.access(p,os.R_OK|os.X_OK);row['members']=len(list(p.iterdir()))\n  else:\n   h=hashlib.sha256();count=0\n   with p.open('rb') as f:\n    while True:\n     b=f.read(1048576)\n     if not b:break\n     h.update(b);count+=len(b)\n   row.update(readable=True,EOF=True,sha256=h.hexdigest(),readBytes=count)\n except OSError as e:row.update(error=type(e).__name__,errno=e.errno)\n rows.append(row)\nok=all('error' not in x and x.get('traversable',x.get('readable',False)) for x in rows)\nprint(json.dumps({'status':'PASS' if ok else 'FAIL','uid':os.getuid(),'gid':os.getgid(),'rows':rows,'privateBytes':False,'candidateCopy':False,'services':False}))\nraise SystemExit(0 if ok else 1)\n"
+  ],
+  "State": {
+    "Status": "created",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "0001-01-01T00:00:00Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "ResolvConfPath": "",
+  "HostnamePath": "",
+  "HostsPath": "",
+  "LogPath": "",
+  "Name": "/cortex-task03-public-bind-access-95f96927",
+  "RestartCount": 0,
+  "Driver": "overlayfs",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": null,
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "none",
+    "PortBindings": {},
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": null,
+    "CgroupnsMode": "private",
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": true,
+    "SecurityOpt": null,
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 536870912,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteIOps": [],
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": [],
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 536870912,
+    "MemorySwappiness": null,
+    "OomKillDisable": false,
+    "PidsLimit": 32,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+        "Target": "/input",
+        "ReadOnly": true
+      },
+      {
+        "Type": "bind",
+        "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair1",
+        "Target": "/helper",
+        "ReadOnly": true
+      }
+    ],
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair1",
+      "Destination": "/helper",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+      "Destination": "/input",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Config": {
+    "Hostname": "3fa39901e152",
+    "Domainname": "",
+    "User": "501:20",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "LANG=C.UTF-8",
+      "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+      "PYTHON_VERSION=3.12.15",
+      "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+    ],
+    "Cmd": [
+      "-B",
+      "-c",
+      "import os,json,hashlib\nfrom pathlib import Path\nrows=[]\nfor name in ['/input','/helper','/helper/task03-attempt5-linux-public-transfer.py','/input/candidate-freeze-attempt5.json','/input/managed-fixture-copy-manifest.json']:\n p=Path(name);row={'path':name}\n try:\n  s=p.stat();row.update(uid=s.st_uid,gid=s.st_gid,mode=s.st_mode,bytes=s.st_size)\n  if p.is_dir():row['traversable']=os.access(p,os.R_OK|os.X_OK);row['members']=len(list(p.iterdir()))\n  else:\n   h=hashlib.sha256();count=0\n   with p.open('rb') as f:\n    while True:\n     b=f.read(1048576)\n     if not b:break\n     h.update(b);count+=len(b)\n   row.update(readable=True,EOF=True,sha256=h.hexdigest(),readBytes=count)\n except OSError as e:row.update(error=type(e).__name__,errno=e.errno)\n rows.append(row)\nok=all('error' not in x and x.get('traversable',x.get('readable',False)) for x in rows)\nprint(json.dumps({'status':'PASS' if ok else 'FAIL','uid':os.getuid(),'gid':os.getgid(),'rows':rows,'privateBytes':False,'candidateCopy':False,'services':False}))\nraise SystemExit(0 if ok else 1)\n"
+    ],
+    "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "Volumes": null,
+    "WorkingDir": "/var/tmp/cortex-native-c8-prospective-preparation",
+    "Entrypoint": [
+      "/usr/local/bin/python3.12"
+    ],
+    "Labels": {
+      "cortex.runtime.operation": "95f96927-0f58-4380-b9f3-dc7362ef9005",
+      "cortex.scope": "task03-public-bind-access"
+    }
+  },
+  "NetworkSettings": {
+    "SandboxID": "",
+    "SandboxKey": "",
+    "Ports": {},
+    "Networks": {
+      "none": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": null,
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "",
+        "EndpointID": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "MacAddress": "",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": null
+      }
+    }
+  },
+  "ImageManifestDescriptor": {
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "digest": "sha256:67e2cf4f915add39556c76425936bc1ec02e63a74455930014fd1d65d32b08b1",
+    "size": 1815,
+    "platform": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  }
+}

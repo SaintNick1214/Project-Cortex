@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "docker",
+    "volume",
+    "create",
+    "--label",
+    "cortex.scope=task04-c8-native-infrastructure",
+    "cortex-task04-c8-native-37444733993-1-tmp"
+  ],
+  "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+  "stdoutLimit": 1048576,
+  "stderrLimit": 1048576,
+  "timeoutSeconds": 30,
+  "signals": [],
+  "terminal": true,
+  "closeErrors": [],
+  "createdChildPID": 2408,
+  "exit": 0,
+  "elapsedSeconds": 0.008775430000000028,
+  "stdout": {
+    "path": "command-00006.stdout",
+    "bytes": 42,
+    "sha256": "a7019d5fad8aca743063d2d4c8123d480f0fafee895923e1102f752ed1022cfe",
+    "contentCopyNotRuntimeAuthority": true
+  },
+  "stderr": {
+    "path": "command-00006.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentCopyNotRuntimeAuthority": true
+  }
+}

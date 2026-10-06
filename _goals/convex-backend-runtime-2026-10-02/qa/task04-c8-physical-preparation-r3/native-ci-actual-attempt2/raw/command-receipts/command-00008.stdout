@@ -1,0 +1,265 @@
+[
+    {
+        "Id": "b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b",
+        "Created": "2026-10-06T09:42:06.524587749Z",
+        "Path": "/usr/local/bin/python3.12",
+        "Args": [
+            "/source/native-owner.py"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 2460,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-06T09:42:06.547629928Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:fc5a47d5ed511ef44c9f6dc48ac2e43fb8cf42193c555a585a52b653fc8f2407",
+        "ResolvConfPath": "/var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/hostname",
+        "HostsPath": "/var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/hosts",
+        "LogPath": "/var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b-json.log",
+        "Name": "/cortex-task04-c8-native-37444733993-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 6442450944,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 6442450944,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 128,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "cortex-task04-c8-native-37444733993-1-phase",
+                    "Target": "/phase",
+                    "VolumeOptions": {
+                        "NoCopy": true,
+                        "DriverConfig": {}
+                    }
+                },
+                {
+                    "Type": "volume",
+                    "Source": "cortex-task04-c8-native-37444733993-1-tmp",
+                    "Target": "/tmp",
+                    "VolumeOptions": {
+                        "NoCopy": true,
+                        "DriverConfig": {}
+                    }
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3",
+                    "Target": "/source",
+                    "ReadOnly": true
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b",
+                "LowerDir": "/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d-init/diff:/var/lib/docker/overlay2/07yras0vb2siitwtwcpj2oqxw/diff:/var/lib/docker/overlay2/9uh92ecixsds6hh1ws4ao8pat/diff:/var/lib/docker/overlay2/4icwq592neojnw8ijardfu9gm/diff:/var/lib/docker/overlay2/2dn8h7zejyl9ya9onk97j2k31/diff:/var/lib/docker/overlay2/9be2243997c1f178d094f8b24759ae8c8ac611c57aefffea3e2eb368c39122a8/diff:/var/lib/docker/overlay2/98146b42c22a8381fb0d105295f94699a8665711946ba970861c735c18fbf73f/diff:/var/lib/docker/overlay2/efaf92bbcee14446dcffd2539ef08a582daa4c454d15faa50bb8ce74922cb2af/diff:/var/lib/docker/overlay2/301b7989658fe04af2c06d5c300b8b8c64fcf6d3f0df5666ec808b59166f4631/diff",
+                "MergedDir": "/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/merged",
+                "UpperDir": "/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/diff",
+                "WorkDir": "/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "cortex-task04-c8-native-37444733993-1-phase",
+                "Source": "/var/lib/docker/volumes/cortex-task04-c8-native-37444733993-1-phase/_data",
+                "Destination": "/phase",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "volume",
+                "Name": "cortex-task04-c8-native-37444733993-1-tmp",
+                "Source": "/var/lib/docker/volumes/cortex-task04-c8-native-37444733993-1-tmp/_data",
+                "Destination": "/tmp",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3",
+                "Destination": "/source",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "b7b5e062c26a",
+            "Domainname": "",
+            "User": "0:0",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "HOME=/phase/home",
+                "TMPDIR=/tmp",
+                "PATH=/usr/local/bin:/usr/bin:/bin",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.15",
+                "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+            ],
+            "Cmd": [
+                "/source/native-owner.py"
+            ],
+            "Image": "sha256:fc5a47d5ed511ef44c9f6dc48ac2e43fb8cf42193c555a585a52b653fc8f2407",
+            "Volumes": null,
+            "WorkingDir": "/phase",
+            "Entrypoint": [
+                "/usr/local/bin/python3.12"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "faa8c7dab924fdd2784e45d57887c149ab3e688388dc5c42f42b6c9d257ae9fb",
+            "SandboxKey": "/var/run/docker/netns/faa8c7dab924",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "14979f5b58b2bf0ccc75179110f56d24ce3a4d4544fa3e4e70b6fad5320be1f9",
+                    "EndpointID": "9d5ae1aabee03d82982e4e211065d345e95ad7440ab4b26aaf5388277dd3bb5a",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        }
+    }
+]
