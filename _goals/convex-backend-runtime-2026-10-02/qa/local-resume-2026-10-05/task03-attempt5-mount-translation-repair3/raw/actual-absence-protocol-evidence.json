@@ -1,0 +1,140 @@
+{
+  "scope": "PRESERVED_ACTUAL_QUALIFIED_DOCKER_ABSENT_RESPONSE_ONLY",
+  "status": "PASS",
+  "sources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair2/task03-attempt5-public-acquisition/final-inspect-init.stdout",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "identityDecimal": {
+        "dev": "16777234",
+        "ino": "92218594",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "3",
+        "mtime_ns": "1791284871546413511",
+        "ctime_ns": "1791284878598243014"
+      },
+      "EOF": true,
+      "all9ThroughRead": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair2/task03-attempt5-public-acquisition/final-inspect-init.stderr",
+      "bytes": 67,
+      "sha256": "6e0f67916e97672ffec8acd1f7afa41ff4708d538509995f5de9a5e27106279a",
+      "identityDecimal": {
+        "dev": "16777234",
+        "ino": "92218595",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "67",
+        "mtime_ns": "1791284871546864882",
+        "ctime_ns": "1791284878592491061"
+      },
+      "EOF": true,
+      "all9ThroughRead": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair2/task03-attempt5-public-acquisition/final-inspect-init.receipt.json",
+      "bytes": 1688,
+      "sha256": "d379eb5fca0e340155804f5d8cf958c73c4bda57c2daa7f04ef34cf8b1776bce",
+      "identityDecimal": {
+        "dev": "16777234",
+        "ino": "92218596",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1688",
+        "mtime_ns": "1791284871547100672",
+        "ctime_ns": "1791284879333462754"
+      },
+      "EOF": true,
+      "all9ThroughRead": true
+    }
+  ],
+  "qualifiedStdoutHex": "5b5d0a",
+  "qualifiedExitCode": 1,
+  "qualifiedStderr": "error: no such object: cortex-task03-attempt5-public-init-ba2253a8\n",
+  "actualCommandReceipt": {
+    "label": "final-inspect-init",
+    "argv": [
+      "/usr/local/bin/docker",
+      "inspect",
+      "cortex-task03-attempt5-public-init-ba2253a8"
+    ],
+    "observedAtUtc": "2026-10-06T11:07:51.207842+00:00",
+    "elapsedSeconds": 0.33817375000217,
+    "exitCode": 1,
+    "failureClass": null,
+    "streamByteCounts": {
+      "stdout": 3,
+      "stderr": 67
+    },
+    "stdinBytes": 0,
+    "pipeLimits": 262144,
+    "stdinLimit": 327692,
+    "stdinDeadlineSeconds": 12,
+    "terminal": true,
+    "closeErrors": [],
+    "privateContentsPrinted": false,
+    "ownedGroup": {
+      "anchorIdentity": {
+        "pid": 69484,
+        "birthSeconds": "1791284871",
+        "birthMicroseconds": "208223",
+        "group": 69484,
+        "session": 69484,
+        "uid": 501,
+        "platform": "darwin-proc-pidinfo-bsdinfo"
+      },
+      "commandPid": 69487,
+      "observations": [
+        {
+          "phase": "gated-spawn",
+          "members": [
+            {
+              "pid": 69484,
+              "state": "Ss"
+            }
+          ]
+        },
+        {
+          "phase": "command-exited-pipes-closed",
+          "members": [
+            {
+              "pid": 69484,
+              "state": "Ss"
+            }
+          ]
+        },
+        {
+          "phase": "before-release",
+          "members": [
+            {
+              "pid": 69484,
+              "state": "Ss"
+            }
+          ]
+        },
+        {
+          "phase": "after-release",
+          "members": []
+        }
+      ],
+      "reconciliation": null,
+      "absenceObserved": true,
+      "controlByteCount": 78,
+      "unknownOwnershipNeverSignaled": true
+    },
+    "stdoutSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "stderrSha256": "6e0f67916e97672ffec8acd1f7afa41ff4708d538509995f5de9a5e27106279a"
+  },
+  "newDiagnosticExecuted": false,
+  "privateSourceDelta": "cleanup_owned requires exact b[]newline in BOTH before-remove and post-remove absence predicates; no empty stdout accepted",
+  "historicalB2SourceOnlyLatentFirstUseLimitationPreserved": true
+}

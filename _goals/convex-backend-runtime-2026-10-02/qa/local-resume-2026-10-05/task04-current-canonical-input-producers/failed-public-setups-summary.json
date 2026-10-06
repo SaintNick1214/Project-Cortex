@@ -1,0 +1,133 @@
+{
+  "scope": "DIAGNOSTIC_AFTER_FAILURES_ONLY",
+  "runs": [
+    {
+      "run": "run1",
+      "regularFiles": 2549,
+      "literalLinks": 8,
+      "directoriesIncludingRunRoot": 512,
+      "regularBytes": 7138405,
+      "allocatedRegularBytesAtDiagnostic": 17379328,
+      "diagnosticReadDriftRows": 0,
+      "inventoryRowsSHA256": "913a34c043ad9750f760d1270b0ea226ac7923460a2e60621bf4ddc3669ed6ce",
+      "controlsReached": 0,
+      "failure": null,
+      "historicalPinRefresh": false,
+      "cause": "UNKNOWN"
+    },
+    {
+      "run": "run2",
+      "regularFiles": 2550,
+      "literalLinks": 8,
+      "directoriesIncludingRunRoot": 512,
+      "regularBytes": 7247020,
+      "allocatedRegularBytesAtDiagnostic": 17489920,
+      "diagnosticReadDriftRows": 0,
+      "inventoryRowsSHA256": "b5ac2060e20ed473bbe6fe9cd4fec8b260b5e3a042431925ab4a4b8ec9e8f66e",
+      "controlsReached": 0,
+      "failure": null,
+      "historicalPinRefresh": false,
+      "cause": "UNKNOWN"
+    },
+    {
+      "run": "run3",
+      "regularFiles": 2574,
+      "literalLinks": 8,
+      "directoriesIncludingRunRoot": 513,
+      "regularBytes": 24616535,
+      "allocatedRegularBytesAtDiagnostic": 34906112,
+      "diagnosticReadDriftRows": 0,
+      "inventoryRowsSHA256": "0b99d48f230cc0bbca0189851ae27b330817877e918a8c11dd0cf72aad80c109",
+      "controlsReached": 0,
+      "failure": null,
+      "historicalPinRefresh": false,
+      "cause": "UNKNOWN"
+    },
+    {
+      "run": "run4",
+      "regularFiles": 2555,
+      "literalLinks": 8,
+      "directoriesIncludingRunRoot": 513,
+      "regularBytes": 9664164,
+      "allocatedRegularBytesAtDiagnostic": 19918848,
+      "diagnosticReadDriftRows": 0,
+      "inventoryRowsSHA256": "fe136f999c61ddfcfa021e5bae6291cd1798d5913d0ea5cff4750072b436a54c",
+      "controlsReached": 0,
+      "failure": null,
+      "historicalPinRefresh": false,
+      "cause": "UNKNOWN"
+    },
+    {
+      "run": "current-assessment5",
+      "regularFiles": 26,
+      "literalLinks": 0,
+      "directoriesIncludingRunRoot": 3,
+      "regularBytes": 12415744,
+      "allocatedRegularBytesAtDiagnostic": 12468224,
+      "diagnosticReadDriftRows": 0,
+      "inventoryRowsSHA256": "43a106598d4b6c81c8f6c1747f3f233ee3c237d8fd265d7942f1aadf4b48e1ca",
+      "controlsReached": 0,
+      "failure": null,
+      "historicalPinRefresh": false,
+      "cause": "UNKNOWN"
+    },
+    {
+      "run": "current-assessment6",
+      "regularFiles": 26,
+      "literalLinks": 0,
+      "directoriesIncludingRunRoot": 3,
+      "regularBytes": 12416537,
+      "allocatedRegularBytesAtDiagnostic": 12468224,
+      "diagnosticReadDriftRows": 0,
+      "inventoryRowsSHA256": "723a61249cae54236229f5bbb424cda76128e11521aa6cc6e4cf99dfb229fcc7",
+      "controlsReached": 0,
+      "failure": {
+        "evidence": {
+          "actual": {
+            "fields": {
+              "ctime_ns": "1791291411783277590",
+              "dev": "16777234",
+              "gid": "20",
+              "ino": "92332896",
+              "mode": "33152",
+              "mtime_ns": "1791291406018942327",
+              "nlink": "1",
+              "size": "1973029",
+              "uid": "501"
+            },
+            "schema": "FS_IDENTITY_DECIMAL_V1"
+          },
+          "changedFields": [
+            "ctime_ns"
+          ],
+          "expected": {
+            "fields": {
+              "ctime_ns": "1791291406064900931",
+              "dev": "16777234",
+              "gid": "20",
+              "ino": "92332896",
+              "mode": "33152",
+              "mtime_ns": "1791291406018942327",
+              "nlink": "1",
+              "size": "1973029",
+              "uid": "501"
+            },
+            "schema": "FS_IDENTITY_DECIMAL_V1"
+          },
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/current-assessment6/healthy/prospective-current-baseline-1/comparison-source-rows.jsonl"
+        },
+        "message": "FINAL_INPUT_PATH_IDENTITY_DRIFT",
+        "type": "Hold"
+      },
+      "historicalPinRefresh": false,
+      "cause": "UNKNOWN"
+    }
+  ],
+  "unknownAttribution": "Only changed ctime fields are observed; underlying actor/cause unproved.",
+  "run3ByteBound": {
+    "file": "draft-to-prospective-observations.json",
+    "actualBytes": 10379692,
+    "unchangedReadLimit": 8388608
+  },
+  "priorFailedPins": "PRESERVED_NOT_ADOPTED"
+}

@@ -1,0 +1,136 @@
+{
+  "scope": "MOCKED_PARENT_METADATA_CONTROLS_ONLY_NO_DOCKER",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "valid-created-complete-desktop-coordinates",
+      "status": "PASS",
+      "evidence": {
+        "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+        "coordinateChoice": "desktopSourceLiteral",
+        "requiredGuards": "PASS",
+        "observedExtraOomKillDisable": false,
+        "extraValueIsNotNormalizedOrRequired": true
+      }
+    },
+    {
+      "name": "valid-created-complete-literal-host-coordinates",
+      "status": "PASS",
+      "evidence": {
+        "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+        "coordinateChoice": "hostSourceLiteral",
+        "requiredGuards": "PASS",
+        "observedExtraOomKillDisable": false,
+        "extraValueIsNotNormalizedOrRequired": true
+      }
+    },
+    {
+      "name": "valid-started-declared-guards-and-raw-unset-OOM-field",
+      "status": "PASS",
+      "evidence": {
+        "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+        "coordinateChoice": "desktopSourceLiteral",
+        "requiredGuards": "PASS",
+        "observedExtraOomKillDisable": null,
+        "extraValueIsNotNormalizedOrRequired": true
+      }
+    },
+    {
+      "name": "wrong-ID",
+      "status": "PASS",
+      "evidence": "ValueError('exact owned ID/name/five labels')"
+    },
+    {
+      "name": "wrong-UUID",
+      "status": "PASS",
+      "evidence": "ValueError('exact owned ID/name/five labels')"
+    },
+    {
+      "name": "bool-memory",
+      "status": "PASS",
+      "evidence": "ValueError('exact required guard:HostConfig.Memory')"
+    },
+    {
+      "name": "mixed-coordinate",
+      "status": "PASS",
+      "evidence": "ValueError('one complete enumerated coordinate choice; no mixed or general aliases')"
+    },
+    {
+      "name": "different-full-root",
+      "status": "PASS",
+      "evidence": "ValueError('one complete enumerated coordinate choice; no mixed or general aliases')"
+    },
+    {
+      "name": "writable-bind",
+      "status": "PASS",
+      "evidence": "ValueError('readonly private binds')"
+    },
+    {
+      "name": "extra-mount",
+      "status": "PASS",
+      "evidence": "ValueError('exact seven mounts')"
+    },
+    {
+      "name": "extra-capability",
+      "status": "PASS",
+      "evidence": "ValueError('no extra capability/device/mount/remove')"
+    },
+    {
+      "name": "network-enabled",
+      "status": "PASS",
+      "evidence": "ValueError('exact required guard:HostConfig.NetworkMode')"
+    },
+    {
+      "name": "bool-PID",
+      "status": "PASS",
+      "evidence": "ValueError('exact state types')"
+    },
+    {
+      "name": "bool-exit",
+      "status": "PASS",
+      "evidence": "ValueError('exact state types')"
+    },
+    {
+      "name": "OOM-disable-true",
+      "status": "PASS",
+      "evidence": "ValueError('only observed unset OOM field representations')"
+    },
+    {
+      "name": "OOM-disable-int-zero",
+      "status": "PASS",
+      "evidence": "ValueError('only observed unset OOM field representations')"
+    },
+    {
+      "name": "false-restart-counter",
+      "status": "PASS",
+      "evidence": "ValueError('no restart')"
+    },
+    {
+      "name": "extra-environment",
+      "status": "PASS",
+      "evidence": "ValueError('fixed public env')"
+    },
+    {
+      "name": "ownership-only-cleanup-eligible-despite-failed-resource-guard",
+      "status": "PASS",
+      "evidence": {
+        "Id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6"
+      }
+    },
+    {
+      "name": "ownership-only-cleanup-refuses-foreign-UUID",
+      "status": "PASS",
+      "evidence": "ValueError('exact owned ID/name/five labels')"
+    }
+  ],
+  "moduleSHA256": "d757f1524ae22d7f4f40da8fef509e5b080413c769a12e68ad7baab7ee528661",
+  "recipeSHA256": "22b9daa94d050a24fcc14a3c5df0e214b8ff3f6e98d4742b653710e05c7366dc",
+  "originalFailedMonitor": "PRESERVED",
+  "actualPipelineControls": 0,
+  "native": false,
+  "wholeGoal": "OPEN"
+}

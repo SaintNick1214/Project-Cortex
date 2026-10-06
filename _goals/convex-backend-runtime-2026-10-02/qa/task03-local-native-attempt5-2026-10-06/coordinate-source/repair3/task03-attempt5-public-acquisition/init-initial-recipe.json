@@ -1,0 +1,27 @@
+{
+  "containerId": "ad463c96b0466035fd7b972adf95a446628f21f115e631b55c5ff7f6f4042fbd",
+  "selectedDaemonSourceMapping": "volume-only",
+  "requestedLiteralSources": {},
+  "HostConfigMounts": [
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+      "Target": "/owned",
+      "VolumeOptions": {
+        "NoCopy": true
+      }
+    }
+  ],
+  "actualMounts": [
+    {
+      "Type": "volume",
+      "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+      "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+      "Destination": "/owned",
+      "Driver": "local",
+      "Mode": "z",
+      "RW": true,
+      "Propagation": ""
+    }
+  ]
+}

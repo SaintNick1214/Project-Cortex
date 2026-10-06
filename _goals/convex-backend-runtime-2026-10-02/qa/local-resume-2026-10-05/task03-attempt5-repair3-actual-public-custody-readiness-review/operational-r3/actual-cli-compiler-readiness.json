@@ -1,0 +1,72 @@
+{
+  "scope": "CREDENTIAL_FREE_ACTUAL_CLI_COMPILER_READINESS",
+  "status": "PASS",
+  "nodeVersion": "v24.15.0",
+  "npmVersion": "12.2.0",
+  "compilerVersion": "Version 6.0.3",
+  "projectedCompilerVersion": "Version 6.0.3",
+  "childPathPrefix": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/.bin",
+  "runtimeHome": "/tmp",
+  "resourceBefore": {
+    "parentHeapLimitBytes": 1174405120,
+    "parentHeapUsedBytes": 28759912,
+    "cgroupMemoryMax": "2147483648",
+    "cgroupMemoryCurrent": "141606912",
+    "cgroupMemoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+  },
+  "resourceAfter": {
+    "parentHeapLimitBytes": 1174405120,
+    "parentHeapUsedBytes": 28841000,
+    "cgroupMemoryMax": "2147483648",
+    "cgroupMemoryCurrent": "175886336",
+    "cgroupMemoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+  },
+  "actualCliSourceSha256": "545a5a6dff5219758ba093e211201918d47ad9123ada2e9c3f35fb53ff2335b8",
+  "actualCompilerDiscoveryFunctionSha256": "b66be9af61d2ecdf3a6b7081080c7cadc6c1d7b84bcf1cc9875bc600b6ee142e",
+  "pathOnlyHypothesis": "SUPERSEDED_BY_ACTUAL_CWD_RELATIVE_LOOKUP",
+  "oldFixtureCompilerFound": false,
+  "newFixtureCompilerFound": "node_modules/typescript/bin/tsc",
+  "actualExternalRequests": 0,
+  "serviceDeployments": 0,
+  "results": [
+    {
+      "name": "official-cli-version",
+      "argv": [
+        "/usr/local/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/bin/main.js",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/managed-fixture/fixture",
+      "exitCode": 0,
+      "stdout": "1.46.0\n",
+      "stderr": ""
+    },
+    {
+      "name": "official-cli-help",
+      "argv": [
+        "/usr/local/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/bin/main.js",
+        "dev",
+        "--help"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/managed-fixture/fixture",
+      "exitCode": 0,
+      "stdout": "Usage: convex dev [options]\n\nDevelop against a dev deployment, watching for changes\n\n  1. Configures a new or existing project (if needed)\n  2. Updates generated types and pushes code to the configured dev deployment\n  3. Runs the provided command (if `--start` or `--run` is used)\n  4. Watches for file changes, and repeats step 2\n\n\nOptions:\n  -v, --verbose                   Show full listing of changes\n  --typecheck <mode>              Check TypeScript files with `tsc --noEmit`.\n                                  (choices: \"enable\", \"try\", \"disable\", default:\n                                  \"try\")\n  --typecheck-components          Check TypeScript files within component\n                                  implementations with `tsc --noEmit`. (default:\n                                  false)\n  --codegen <mode>                Regenerate code in `convex/_generated/`\n                                  (choices: \"enable\", \"disable\", default:\n                                  \"enable\")\n  --once                          Execute only the first 3 steps, stop on any\n                                  failure (default: false)\n  --until-success                 Execute only the first 3 steps, on failure\n                                  watch for local and remote changes and retry\n                                  steps 2 and 3 (default: false)\n  --start <command>               Start a long-running command alongside `npx\n                                  convex dev`, like a frontend dev server. The\n                                  command inherits stdin/stdout so you can\n                                  interact with it directly. Example: npx convex\n                                  dev --start 'vite --open'\n  --run <functionName>            The identifier of the function to run in step\n                                  3, like `api.init.createData` or\n                                  `myDir/myFile:myFunction`\n  --run-component <functionName>  If --run is used and the function is in a\n                                  component, the path to the component (e.g.\n                                  \"workflow\" or \"workflow/workpool\"). Components\n                                  are a beta feature. This flag is unstable and\n                                  may change in subsequent releases.\n  --tail-logs [mode]              Choose whether to tail Convex function logs in\n                                  this terminal:\n                                  \u2022 `always` shows logs continuously\n                                  \u2022 `pause-on-deploy` (the default) pauses logs\n                                  during deploys so you can spot sync issues\n                                  \u2022 `disable` hides logs while developing.\n                                  (choices: \"always\", \"pause-on-deploy\",\n                                  \"disable\", default: \"pause-on-deploy\")\n  --configure [choice]            Ignore existing configuration and configure\n                                  new or existing project, interactively or set\n                                  by --team <team_slug>, --project\n                                  <project_slug>, and --dev-deployment\n                                  local|cloud (choices: \"new\", \"existing\")\n  --env-file <envFile>            Path to a custom file of environment\n                                  variables, for choosing the deployment, e.g.\n                                  CONVEX_DEPLOYMENT or CONVEX_SELF_HOSTED_URL.\n                                  Same format as .env.local or .env files, and\n                                  overrides them.\n  -h, --help                      display help for command\n",
+      "stderr": ""
+    },
+    {
+      "name": "projected-compiler-fixture-types",
+      "argv": [
+        "/usr/local/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/managed-fixture/fixture/node_modules/typescript/bin/tsc",
+        "--project",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/managed-fixture/fixture/convex/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/managed-fixture/fixture",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

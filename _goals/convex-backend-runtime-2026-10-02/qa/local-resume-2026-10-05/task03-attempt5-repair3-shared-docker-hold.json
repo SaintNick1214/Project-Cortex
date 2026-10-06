@@ -1,0 +1,28 @@
+{
+  "scope": "PARENT_READ_ONLY_SHARED_DOCKER_RESOURCE_OBSERVATION_NOT_OWNERSHIP_OR_RUNTIME_ACCEPTANCE",
+  "observedAtUtc": "2026-10-06T12:25:29Z",
+  "status": "HELD",
+  "foreignContainerId": "b551bbf5025aba25568eb1bb6fb42009edf15d31e39771fea617d2fbccea034c",
+  "foreignContainerName": "cortex-task04-method1",
+  "imageTag": "cortex-task04-method1:qualified",
+  "observedMemoryUsage": "27.66MiB",
+  "observedMemoryLimit": "2GiB",
+  "readOnlyInventoryCommands": [
+    "docker ps --no-trunc --format ID_NAMES_IMAGE",
+    "docker stats --no-stream --format ID_MEMUSAGE_MEMPERC b551bbf5025a"
+  ],
+  "foreignMountContentProcessInspections": 0,
+  "foreignSignalsStopsDeletes": 0,
+  "currentOperationOwnership": "NOT_ESTABLISHED",
+  "currentTask03FinalLinuxObservation": "HELD_REQUIRES_SERIALIZED_IDLE_DAEMON",
+  "privateCoordinatorResourceGuard": "docker ps quiet must be empty before receiver/provision",
+  "actualUserQuestionSubmitted": true,
+  "userApprovalReceived": false,
+  "privateProvisioningEffects": 0,
+  "independentWork": "Task04 seven current canonical producer source/host outcome controls in separate namespace",
+  "actualPublicCustodyObserved": "PASS1912_DEST_ALL9_FULL_CONTENT_SNAPSHOT_PENDING_FINAL_SUPPLEMENTAL_OBSERVATION",
+  "actualCredentialFreeReadinessObserved": "PASS_NODE24.15_NPM12.2_CONVEX1.46_TYPESCRIPT6.0.3_PROJECTED114_NOEMIT_2GIB_NOOOM_ZEROEXTERNAL",
+  "auditorOwnEvidenceSeal": "FAILED_PRESERVED_CTIME_UNKNOWN_NO_OWN_SOURCE_PIN",
+  "originalAssertionsDeadlinesWaived": false,
+  "goalAccepted": false
+}

@@ -1,0 +1,103 @@
+{
+  "label": "create",
+  "argv": [
+    "/usr/local/bin/docker",
+    "create",
+    "--name",
+    "cortex-task03-repair3-mount-diagnostic-714fa877",
+    "--label",
+    "cortex.operation=714fa877-8417-4dd3-aedb-eef4cb2fc41d",
+    "--label",
+    "cortex.scope=task03-repair3-public-readonly-diagnostic",
+    "--platform",
+    "linux/amd64",
+    "--network",
+    "none",
+    "--memory",
+    "512m",
+    "--memory-swap",
+    "512m",
+    "--cpus",
+    "2",
+    "--pids-limit",
+    "64",
+    "--read-only",
+    "--user",
+    "501:20",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06,target=/input,readonly",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3,target=/helper,readonly",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import hashlib,json,os,stat\nfrom pathlib import Path\nFIELDS=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')\ndef identity(s):return {f:str(getattr(s,'st_'+f)) for f in FIELDS}\nassert os.getuid()==501 and os.getgid()==20\nassert Path('/sys/fs/cgroup/memory.max').read_text().strip()=='536870912'\nassert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip()=='0'\nEXPECTED=[{'root': '/input', 'name': 'candidate-freeze-attempt5.json', 'sha256': '053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570', 'bytes': 352564}, {'root': '/helper', 'name': 'task03-attempt5-linux-public-transfer.py', 'sha256': '8faad381879d628e7c2c67cbab25b64b3135e09eb004e903e5b4b42c50dcc13f', 'bytes': 5402}, {'root': '/helper', 'name': 'task03-attempt5-coordinate-common.py', 'sha256': '1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2', 'bytes': 21309}]\nroots={};held=[];rows=[];errors=[]\ntry:\n for root in ('/input','/helper'):\n  p=Path(root);before=p.lstat();assert stat.S_ISDIR(before.st_mode) and before.st_uid==501 and before.st_gid==20\n  assert not p.is_symlink() and os.access(p,os.R_OK|os.X_OK)\n  fd=os.open(p,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW);pin=identity(before);assert identity(os.fstat(fd))==identity(p.lstat())==pin\n  roots[root]={'fd':fd,'pin':pin,'path':p}\n for spec in EXPECTED:\n  root=roots[spec['root']];name=spec['name'];before=os.stat(name,dir_fd=root['fd'],follow_symlinks=False)\n  assert stat.S_ISREG(before.st_mode) and before.st_uid==501 and before.st_gid==20 and before.st_nlink==1\n  pin=identity(before);fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW,dir_fd=root['fd']);held.append((fd,root,name,pin))\n  opened=identity(os.fstat(fd));assert opened==pin;count=0;h=hashlib.sha256()\n  while True:\n   block=os.read(fd,65536)\n   if not block:break\n   count+=len(block);assert count<=spec['bytes'];h.update(block)\n  postFD=identity(os.fstat(fd));postPath=identity(os.stat(name,dir_fd=root['fd'],follow_symlinks=False))\n  assert postFD==postPath==pin and count==before.st_size==spec['bytes'] and h.hexdigest()==spec['sha256']\n  rows.append({**spec,'readBytes':count,'EOF':True,'observedSha256':h.hexdigest(),'before':pin,'opened':opened,'postFD':postFD,'postPath':postPath})\n for row,(fd,root,name,pin) in zip(rows,held):\n  row['finalFD']=identity(os.fstat(fd));row['finalPath']=identity(os.stat(name,dir_fd=root['fd'],follow_symlinks=False));assert row['finalFD']==row['finalPath']==pin\n for root in roots.values():assert identity(os.fstat(root['fd']))==identity(root['path'].lstat())==root['pin']\nfinally:\n for fd,root,name,pin in held:\n  try:os.close(fd)\n  except BaseException as e:errors.append({'file':name,'class':type(e).__name__})\n for name,root in roots.items():\n  try:os.close(root['fd'])\n  except BaseException as e:errors.append({'root':name,'class':type(e).__name__})\nassert not errors\nprint(json.dumps({'status':'PASS','scope':'THREE_FINITE_PUBLIC_READONLY_FULL_EOF_ALL9_ONLY','uid':os.getuid(),'gid':os.getgid(),'roots':{k:{'identityDecimal':v['pin'],'traversable':True,'owner50120':True} for k,v in roots.items()},'rows':rows,'closeErrors':errors,'privateReads':0,'privateStats':0,'volumeMounts':0,'candidateCopy':False,'serviceCalls':0}))\n"
+  ],
+  "observedAtUtc": "2026-10-06T11:21:40.321373+00:00",
+  "elapsedSeconds": 2.1343296249979176,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 65,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 72054,
+      "birthSeconds": "1791285700",
+      "birthMicroseconds": "321574",
+      "group": 72054,
+      "session": 72054,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 72056,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 72054,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 72054,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 72054,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "c3aebe87a78756b032b1758fdf93759bf947db26bc92a4dc263e866de7960289",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

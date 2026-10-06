@@ -1,0 +1,140 @@
+{
+  "scope": "EXPLICIT_CURRENT_OPERATIVE_SOURCE_PACKET_DEFINITION_ONLY_NOT_PROSPECTIVE_BASELINE",
+  "status": "PARTIAL_PROSPECTIVE_BASELINE_FINALIZATION_FAILED",
+  "pathBase": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sources": {
+    "publicCoordinator": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/task03-attempt5-public-coordinate.py",
+      "sha256": "da50bc9987399d76d7f795990ffd93127713b47d4943ec2185be7bcbb61b56b7",
+      "bytes": 13004
+    },
+    "common": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/task03-attempt5-coordinate-common.py",
+      "sha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+      "bytes": 21309
+    },
+    "publicHelper": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/task03-attempt5-linux-public-transfer.py",
+      "sha256": "8faad381879d628e7c2c67cbab25b64b3135e09eb004e903e5b4b42c50dcc13f",
+      "bytes": 5402
+    },
+    "publicBinding": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/public-recipe-binding.json",
+      "sha256": "531b6ee19136a00f03b560640a0ff6cc341f91ed2921be225bdac56ae9cf7209",
+      "bytes": 4262
+    },
+    "sourceManifest": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/source-receipt-manifest.json",
+      "sha256": "f8486d1296f696924820c932199fcbf10e1dbf46f84de6162fadb1c2bba3d5cd",
+      "bytes": 5758
+    },
+    "privateCoordinator": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair3/task03-attempt5-private-coordinate.py",
+      "sha256": "3c96070d68afd81c437283c99b0aebb4b4fdd1aaed06c2ca668075a96491f142",
+      "bytes": 21816
+    },
+    "selector": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair3/task03-attempt5-retire-selector.py",
+      "sha256": "6ed06bdfb8a5499bdc2fabeda7ef2e3f4aa23a881011172ed810dd969818550a",
+      "bytes": 7590
+    }
+  },
+  "sourceManifestSchema": "pathBase is exact repository root; files array of eight exact repository-relative members with sha256, bytes and all nine decimal identity fields; fullEOF/allNineThroughRead; five current public code/common/helper/binding/readme plus freeze/preparation-review/management-review qualification dependencies; selfExcluded true",
+  "privateFutureDependencies": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/task03-attempt5-coordinate-common.py",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+      "bytes": 21309
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-target-management.mjs",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "3b52d3f99eb66294a0ffc1ed11c43cabe7062400da53b978db8878b6389a6216",
+      "bytes": 11721
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/candidate-freeze-attempt5.json",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+      "bytes": 352564
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/independent-preparation-review.json",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "1150e59c8c49c2d839976bd3bc8fb418940166a0faa4210b13096c804c3d6550",
+      "bytes": 1164
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-management-review.json",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "3b25ce84cbddb12806342f9f87ce02ebfb2bc705bb361d180ba76140334822cf",
+      "bytes": 1396
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-linux-public-custody-review.json",
+      "state": "ABSENT_FUTURE_ACTUAL_CUSTODY_REQUIRED",
+      "sha256": null
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/attempt5/source-acquisition.py",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "bytes": 9774
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/transport-prep/private-transport.py",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "bytes": 9220
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/transport-prep/transport-binding.json",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "8d4333f25093acdc534c324b38071b3cc21906c1f1824f179515110c16e9a1e2",
+      "bytes": 591
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair3/task03-attempt5-retire-selector.py",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "6ed06bdfb8a5499bdc2fabeda7ef2e3f4aa23a881011172ed810dd969818550a",
+      "bytes": 7590
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/source-receipt-manifest.json",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "f8486d1296f696924820c932199fcbf10e1dbf46f84de6162fadb1c2bba3d5cd",
+      "bytes": 5758
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/public-recipe-binding.json",
+      "state": "PRESENT_SOURCE_ONLY",
+      "sha256": "531b6ee19136a00f03b560640a0ff6cc341f91ed2921be225bdac56ae9cf7209",
+      "bytes": 4262
+    }
+  ],
+  "privateSourceCurrentSnapshot": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-mount-translation-repair3/raw/post-finalization-failure-observation.json",
+  "failedWriterObservation": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-mount-translation-repair3/raw/finalization-source-failure.json",
+  "failedPhase0And1FifteenthFileIdentityRows": "NOT_RETAINED; original delta/cause cannot be reconstructed",
+  "distinctCurrent14ComparisonDeltas": [],
+  "futurePublicCurrentBaselineDefinition": "Exact public-copy1912 from unchanged freeze1905 plus freeze/preparation-review/five generated files; exact161 product source paths from original successful prospective3 current baseline; new public operative9 and private operative12 union gives2086 distinct regular bindings. NOT WRITTEN OR CERTIFIED in this repair.",
+  "priorCurrentPublicBaseline": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-public-repair2-prospective3/current-source-baseline.json",
+    "sha256": "07efed2f6f9381a4bb884d7bd8c65edbba5513b6754a9aaa3a3987f68976601e"
+  },
+  "priorCurrentPrivateOperativeBaseline": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-repair2-operative-current-observation/current-operative-baseline.json",
+    "sha256": "fb2d3d81e04d4de99c4b93ee211e151e6092882da6f8e92d80cd33f9cfb0b0aa"
+  },
+  "sourceApproved": false,
+  "operationalWrapperWritten": false,
+  "actualPublic1912Acquisition": false,
+  "privateProvisioningReleased": false,
+  "Task03Accepted": false,
+  "goalAccepted": false,
+  "historicalFailedPinsRefreshed": false,
+  "historicalCustodyRestored": false,
+  "B2AllFourBroaderSeals": "FAILED_EXCLUDED_FROM_RUNTIME_AUTHORITY",
+  "historical23SourceDocsCopied": false,
+  "dummyCohortFilesystemAuthority": false
+}

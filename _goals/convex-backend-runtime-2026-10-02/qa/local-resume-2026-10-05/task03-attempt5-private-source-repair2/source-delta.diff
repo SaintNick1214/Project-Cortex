@@ -1,0 +1,36 @@
+--- _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/task03-attempt5-private-coordinate.py
++++ _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair2/task03-attempt5-private-coordinate.py
+@@ -16,7 +16,7 @@
+ R = Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+ P = R / '_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05'
+ Q = P.parent / 'task03-local-native-attempt5-2026-10-06'
+-B = P / 'task03-attempt5-private-source-repair1'
++B = P / 'task03-attempt5-private-source-repair2'
+ RECIPE = Q / 'coordinate-source/repair2'
+ COMMON = RECIPE / 'task03-attempt5-coordinate-common.py'
+ SELECTOR = B / 'task03-attempt5-retire-selector.py'
+@@ -171,6 +171,7 @@
+     inspect_owned(obj, name)
+     host = obj['HostConfig']
+     assert obj['Config']['User'] == '501:20' and obj['State']['Running'] is False
++    assert type(host['ReadonlyRootfs']) is bool
+     assert host['NetworkMode'] == 'none' and host['ReadonlyRootfs'] is True
+     assert host['Memory'] == host['MemorySwap'] == 536870912
+     assert host['PidsLimit'] == 64 and host['NanoCpus'] == 2000000000
+@@ -178,9 +179,16 @@
+     if not selector:
+         expected.append({'Type': 'volume', 'Source': VOLUME, 'Target': '/prep', 'ReadOnly': True,
+                          'VolumeOptions': {'NoCopy': True, 'Subpath': 'candidate'}})
++    # Equality alone accepts JSON numeric aliases for Python booleans.
++    # Type-check every represented boolean before comparing the exact recipe.
++    for mount in host['Mounts']:
++        assert type(mount['VolumeOptions']['NoCopy']) is bool
++        if 'ReadOnly' in mount:
++            assert type(mount['ReadOnly']) is bool
+     assert host['Mounts'] == expected
+     mounts = obj['Mounts']
+     assert len(mounts) == len(expected)
++    assert all(type(m['RW']) is bool for m in mounts)
+     assert all(m['Type'] == 'volume' and m['Name'] == VOLUME for m in mounts)
+     assert {m['Destination']: m['RW'] for m in mounts} == ({'/owned': True} if selector else {'/owned': True, '/prep': False})
+ 

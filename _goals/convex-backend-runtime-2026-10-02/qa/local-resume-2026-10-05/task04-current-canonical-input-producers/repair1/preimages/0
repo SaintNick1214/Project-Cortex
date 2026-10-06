@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/var/tmp/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 462, in <module>
+    try: main()
+         ^^^^^^
+  File "/var/tmp/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 310, in main
+    result = produce_public_control(request,contract,owner,W/'controls',lambda:time.sleep(0.4)if sys.platform!='linux'else None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/task04-c8-current-canonical-input-producers/source/producers.py", line 584, in produce_public_control
+    prepared = Prepared(request, contract, authority, synthetic=True).prepare()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/task04-c8-current-canonical-input-producers/source/producers.py", line 138, in prepare
+    self.build_rules()
+  File "/var/tmp/task04-c8-current-canonical-input-producers/source/producers.py", line 430, in build_rules
+    require(call['argumentExpression'] == "'JSON'" if template['json'] else bool(selected), 'FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON')
+  File "/var/tmp/task04-c8-current-canonical-input-producers/source/strict_io.py", line 30, in require
+    raise Hold(reason)
+strict_io.Hold: FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON

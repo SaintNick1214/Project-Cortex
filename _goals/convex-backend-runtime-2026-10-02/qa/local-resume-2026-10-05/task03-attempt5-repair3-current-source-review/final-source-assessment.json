@@ -1,0 +1,89 @@
+{
+  "scope": "FINAL_POST_REPORT_AND_VERDICT_CURRENT_OPERATIVE_SOURCE_COMPARISON_ONLY",
+  "sourceEligibilityStatus": "PASS",
+  "observedAfterReportAndVerdict": true,
+  "sourceBindings": 2083,
+  "privateBindings": 12,
+  "publicManifestBindingsPlusSelf": 9,
+  "allSourceBindingsFullEOFAllNineFinalPath": "PASS",
+  "currentSourceVsParentBaselineDifferences": [],
+  "initialVsFinalCurrentOperativeDifferences": [],
+  "all260FiniteEvidenceFullEOFHashSize": "PASS",
+  "initialVsFinalFiniteEvidenceCurrentDifferences": [],
+  "failedImplementerEvidencePinStatus": "FAIL_PRESERVED",
+  "failedPinDifferences": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-mount-translation-repair3/command-receipts.json",
+      "differences": [
+        "identityDecimal"
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-mount-translation-repair3/finalize-evidence.py",
+      "differences": [
+        "identityDecimal"
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-mount-translation-repair3/raw/current-source-manifest-complete-body.json",
+      "differences": [
+        "identityDecimal"
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-mount-translation-repair3/raw/final-current-operative-observation.json",
+      "differences": [
+        "identityDecimal"
+      ]
+    }
+  ],
+  "failedManifestProducerPinDifferences": [
+    "identityDecimal"
+  ],
+  "failedImplementerEvidenceCause": "UNKNOWN",
+  "failedPinRefresh": false,
+  "strictCombinedVerifierExitCode": 1,
+  "strictCombinedVerifierStatus": "FAIL_OLD_EVIDENCE_PINS_NOT_SOURCE",
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-current-source-review/report.md",
+    "sha256": "54a739127470330e084c27e151578fd55b3696c136c0442742b767e5cdd6f6cb",
+    "bytes": 14527,
+    "identityDecimal": {
+      "dev": "16777234",
+      "ino": "92238451",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "14527",
+      "mtime_ns": "1791287448937309779",
+      "ctime_ns": "1791287453181955226"
+    },
+    "fullEOF": true,
+    "allNineThroughRead": true,
+    "finalPathIdentityMatches": true
+  },
+  "verdict": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-current-source-review/verdict.json",
+    "sha256": "788cf60b2f47bf580ea9cd8d2c2c48a16cc5644d11160ea38ed9d75c73b32201",
+    "bytes": 4814,
+    "identityDecimal": {
+      "dev": "16777234",
+      "ino": "92238666",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "4814",
+      "mtime_ns": "1791287449001174492",
+      "ctime_ns": "1791287455149096106"
+    },
+    "fullEOF": true,
+    "allNineThroughRead": true,
+    "finalPathIdentityMatches": true
+  },
+  "actualEffects": 0,
+  "privateScratchReads": 0,
+  "privateScratchStats": 0,
+  "allWritersStoppedBeforeOwnInitialSeal": true
+}

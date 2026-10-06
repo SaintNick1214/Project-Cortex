@@ -1,0 +1,6283 @@
+{
+  "scope": "IMPORTED_ACTUAL_PUBLIC_REPAIR3_SOURCE_GUARDS_ONLY",
+  "status": "PASS",
+  "controls": 111,
+  "positive": 3,
+  "initialNegativesBeforeStart": 106,
+  "terminalNegativesAfterMockStart": 2,
+  "sourceSha256": "da50bc9987399d76d7f795990ffd93127713b47d4943ec2185be7bcbb61b56b7",
+  "allEffectsMocked": true,
+  "actualDockerCalls": 0,
+  "privateReads": 0,
+  "cases": [
+    {
+      "name": "valid-literal",
+      "status": "PASS",
+      "expectedReject": false,
+      "observedException": null,
+      "deniedBeforeStart": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-run",
+          "argv": [
+            "/usr/local/bin/docker",
+            "start",
+            "--attach",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 120
+        },
+        {
+          "label": "copy-terminal-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-remove",
+          "argv": [
+            "/usr/local/bin/docker",
+            "rm",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": [
+        {
+          "containerId": "8533dc904b735d674d114a4f9bda3ed3e49f50660d9c4e4355468340300822ea",
+          "selectedDaemonSourceMapping": "literal",
+          "requestedLiteralSources": {
+            "/input": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+            "/helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3"
+          },
+          "HostConfigMounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Target": "/input",
+              "ReadOnly": true
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Target": "/helper",
+              "ReadOnly": true
+            }
+          ],
+          "actualMounts": [
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Destination": "/helper",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Destination": "/input",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "volume",
+              "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+              "Destination": "/owned",
+              "Driver": "local",
+              "Mode": "z",
+              "RW": true,
+              "Propagation": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "valid-desktop-host_mnt",
+      "status": "PASS",
+      "expectedReject": false,
+      "observedException": null,
+      "deniedBeforeStart": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-run",
+          "argv": [
+            "/usr/local/bin/docker",
+            "start",
+            "--attach",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 120
+        },
+        {
+          "label": "copy-terminal-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-remove",
+          "argv": [
+            "/usr/local/bin/docker",
+            "rm",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": [
+        {
+          "containerId": "8533dc904b735d674d114a4f9bda3ed3e49f50660d9c4e4355468340300822ea",
+          "selectedDaemonSourceMapping": "docker-desktop-host_mnt",
+          "requestedLiteralSources": {
+            "/input": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+            "/helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3"
+          },
+          "HostConfigMounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "bind",
+              "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Target": "/input",
+              "ReadOnly": true
+            },
+            {
+              "Type": "bind",
+              "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Target": "/helper",
+              "ReadOnly": true
+            }
+          ],
+          "actualMounts": [
+            {
+              "Type": "bind",
+              "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Destination": "/helper",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "bind",
+              "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Destination": "/input",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "volume",
+              "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+              "Destination": "/owned",
+              "Driver": "local",
+              "Mode": "z",
+              "RW": true,
+              "Propagation": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "valid-init-volume-only",
+      "status": "PASS",
+      "expectedReject": false,
+      "observedException": null,
+      "deniedBeforeStart": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "init-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-init-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "0:0",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "init-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-init-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "init-run",
+          "argv": [
+            "/usr/local/bin/docker",
+            "start",
+            "--attach",
+            "cortex-task03-attempt5-public-init-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "init-terminal-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-init-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "init-remove",
+          "argv": [
+            "/usr/local/bin/docker",
+            "rm",
+            "cortex-task03-attempt5-public-init-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": [
+        {
+          "containerId": "427322d28787834634a7c8d5f4dff71ced24faac1ba2d28c6cc5932181ac1738",
+          "selectedDaemonSourceMapping": "volume-only",
+          "requestedLiteralSources": {},
+          "HostConfigMounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            }
+          ],
+          "actualMounts": [
+            {
+              "Type": "volume",
+              "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+              "Destination": "/owned",
+              "Driver": "local",
+              "Mode": "z",
+              "RW": true,
+              "Propagation": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.ReadonlyRootfs-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.Running-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-State.OOMKilled-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.0.VolumeOptions.NoCopy-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.1.ReadOnly-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-HostConfig.Mounts.2.ReadOnly-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.0.RW-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.1.RW-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-1",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-0.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-1.0",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-None",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-'true'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "strict-bool-Mounts.2.RW-'false'",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "mixed-host-mapping",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "mixed-actual-mapping",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "foreign-prefix",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "wrong-old-helper-alias",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "host-parent-root",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "actual-parent-root",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "host-traversal",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "actual-traversal",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "crossmount-source",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "duplicate-target",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "host-cardinality",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "actual-cardinality",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "host-extra-option",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "host-volume-source",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "actual-volume-source",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "actual-volume-name",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "actual-volume-driver",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "volume-extra-readonly",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "foreign-operation",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "foreign-scope",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "extra-label",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "foreign-image",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "foreign-config-image",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "foreign-name",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "bad-container-id",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "wrong-platform",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "wrong-user",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "wrong-command",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "wrong-entrypoint",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "host-network",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "root-writable",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "memory-wrong",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "swap-wrong",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "cpu-wrong",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "pids-wrong",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "float-resource",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "running-true",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "OOM-true",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "nonterminal",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "numeric-terminal",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "close-error",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "failure-unknown",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "numeric-exit-bool",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": []
+    },
+    {
+      "name": "terminal-id-drift",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-run",
+          "argv": [
+            "/usr/local/bin/docker",
+            "start",
+            "--attach",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 120
+        },
+        {
+          "label": "copy-terminal-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": [
+        {
+          "containerId": "8533dc904b735d674d114a4f9bda3ed3e49f50660d9c4e4355468340300822ea",
+          "selectedDaemonSourceMapping": "literal",
+          "requestedLiteralSources": {
+            "/input": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+            "/helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3"
+          },
+          "HostConfigMounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Target": "/input",
+              "ReadOnly": true
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Target": "/helper",
+              "ReadOnly": true
+            }
+          ],
+          "actualMounts": [
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Destination": "/helper",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Destination": "/input",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "volume",
+              "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+              "Destination": "/owned",
+              "Driver": "local",
+              "Mode": "z",
+              "RW": true,
+              "Propagation": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "terminal-consistent-but-changed-mapping",
+      "status": "PASS",
+      "expectedReject": true,
+      "observedException": "AssertionError",
+      "deniedBeforeStart": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "PUBLIC_DUMMY_HELPER_NO_EXECUTION"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        },
+        {
+          "label": "copy-run",
+          "argv": [
+            "/usr/local/bin/docker",
+            "start",
+            "--attach",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 120
+        },
+        {
+          "label": "copy-terminal-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8-r3"
+          ],
+          "timeout": 30
+        }
+      ],
+      "selectedMappingReceipts": [
+        {
+          "containerId": "8533dc904b735d674d114a4f9bda3ed3e49f50660d9c4e4355468340300822ea",
+          "selectedDaemonSourceMapping": "literal",
+          "requestedLiteralSources": {
+            "/input": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+            "/helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3"
+          },
+          "HostConfigMounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Target": "/input",
+              "ReadOnly": true
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Target": "/helper",
+              "ReadOnly": true
+            }
+          ],
+          "actualMounts": [
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+              "Destination": "/helper",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "bind",
+              "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+              "Destination": "/input",
+              "Mode": "",
+              "RW": false,
+              "Propagation": "rprivate"
+            },
+            {
+              "Type": "volume",
+              "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+              "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+              "Destination": "/owned",
+              "Driver": "local",
+              "Mode": "z",
+              "RW": true,
+              "Propagation": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

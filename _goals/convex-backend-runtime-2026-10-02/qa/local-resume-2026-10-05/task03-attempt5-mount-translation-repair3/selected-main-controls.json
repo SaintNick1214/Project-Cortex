@@ -1,0 +1,182 @@
+{
+  "scope": "SELECTED_ACTUAL_REPAIR3_PRIVATE_MAIN_SOURCE_ONLY_MOCKS",
+  "status": "PASS",
+  "controls": 28,
+  "cases": [
+    {
+      "name": "happy-flow",
+      "status": "PASS",
+      "expectedCandidateOutcome": "PASS",
+      "observedCandidateOutcome": "PASS"
+    },
+    {
+      "name": "cleanup-foreign",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-foreign-image",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-multiple",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-false-absence",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-terminal-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-absent",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-subpath",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-network",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-NoCopy-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-RW-zero",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-close-error",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "descriptor-close",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "producer-close",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "source-drift",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "retirement-command-failure",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-scope-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-dependency-missing",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-dependency-extra",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-volume-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-count-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-all9-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-content-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-manifest-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-scope-invalid",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    }
+  ],
+  "allExternalEffectsMocked": true,
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "realPrivateReads": 0,
+  "sourceApproved": false,
+  "independentJudgment": false,
+  "originalBroadFixtureCohortsRerun": false
+}

@@ -1,0 +1,58 @@
+{
+  "containerId": "b47b2415b1d131fddbb2b684722d464667b42495389873d409f10aaf09f0c96c",
+  "selectedDaemonSourceMapping": "literal",
+  "literalRequestedMounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Target": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "ReadOnly": true
+    },
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+      "Target": "/owned",
+      "ReadOnly": true,
+      "VolumeOptions": {
+        "NoCopy": true
+      }
+    }
+  ],
+  "HostConfigMounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Target": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "ReadOnly": true
+    },
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+      "Target": "/owned",
+      "ReadOnly": true,
+      "VolumeOptions": {
+        "NoCopy": true
+      }
+    }
+  ],
+  "actualMounts": [
+    {
+      "Type": "volume",
+      "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+      "Source": "/var/lib/docker/volumes/cortex-task03-attempt5-fixture-20261006-ba2253a8-r3/_data",
+      "Destination": "/owned",
+      "Driver": "local",
+      "Mode": "z",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Destination": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ]
+}

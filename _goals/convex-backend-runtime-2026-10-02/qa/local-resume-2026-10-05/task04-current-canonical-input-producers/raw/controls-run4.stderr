@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 379, in <module>
+    try: main()
+         ~~~~^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 273, in main
+    request,fixtures=prospective_fixture_baseline(run/'healthy',request,contract,owner)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 223, in prospective_fixture_baseline
+    item['beforeByteBacking']=fresh(bare) | ({'encoding':before['encoding']}if 'encoding'in before else {})
+                              ~~~~~^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 206, in fresh
+    row,_=reader.read(old['path'],67108864)
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py", line 190, in read
+    require(previous is None or previous == row, 'INPUT_REOBSERVATION_DRIFT')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py", line 21, in require
+    raise Hold(reason)
+strict_io.Hold: INPUT_REOBSERVATION_DRIFT

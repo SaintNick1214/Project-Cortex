@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 399, in <module>
+    try: main()
+         ~~~~^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 293, in main
+    request,fixtures=prospective_fixture_baseline(run/'healthy',request,contract,owner)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 268, in prospective_fixture_baseline
+    reader.final()
+    ~~~~~~~~~~~~^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py", line 210, in final
+    stable(ident(os.lstat(path)), row['PRE'], 'FINAL_INPUT_PATH_IDENTITY_DRIFT', path)
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py", line 23, in stable
+    raise Hold(reason, {"path": str(path), "expected": expected, "actual": actual,
+                       "changedFields": [k for k in FIELDS if actual["fields"][k] != expected["fields"][k]]})
+strict_io.Hold: FINAL_INPUT_PATH_IDENTITY_DRIFT

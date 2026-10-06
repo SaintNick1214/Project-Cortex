@@ -1,0 +1,317 @@
+{
+  "Id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "Created": "2026-10-06T14:22:52.244095511Z",
+  "Path": "/usr/local/bin/python3.12",
+  "Args": [
+    "-B",
+    "/reviewed-bootstrap.py"
+  ],
+  "State": {
+    "Status": "created",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "0001-01-01T00:00:00Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "ResolvConfPath": "",
+  "HostnamePath": "",
+  "HostsPath": "",
+  "LogPath": "",
+  "Name": "/cortex-task04-current-producer-public-repair1",
+  "RestartCount": 0,
+  "Driver": "overlayfs",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": null,
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "none",
+    "PortBindings": {},
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": [
+      "ALL"
+    ],
+    "CgroupnsMode": "private",
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": true,
+    "SecurityOpt": null,
+    "Tmpfs": {
+      "/tmp": "rw,nosuid,nodev,size=16777216,mode=1777"
+    },
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 1073741824,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteIOps": [],
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": [],
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 1073741824,
+    "MemorySwappiness": null,
+    "OomKillDisable": false,
+    "PidsLimit": 128,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Source": "cortex-task04-current-producer-public-repair1",
+        "Target": "/var/tmp",
+        "VolumeOptions": {
+          "NoCopy": true
+        }
+      },
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/source",
+        "Target": "/reviewed-source",
+        "ReadOnly": true
+      },
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/controls/run_controls.py",
+        "Target": "/reviewed-control.py",
+        "ReadOnly": true
+      },
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/lib/typescript.js",
+        "Target": "/reviewed-typescript.js",
+        "ReadOnly": true
+      },
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-model-drift-native-preparation-c5/output-route-audit/proposed-closed-command-contract.json",
+        "Target": "/reviewed-command.json",
+        "ReadOnly": true
+      },
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/proposal/input-manifest.json",
+        "Target": "/reviewed-manifest.json",
+        "ReadOnly": true
+      },
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/proposal/bootstrap.py",
+        "Target": "/reviewed-bootstrap.py",
+        "ReadOnly": true
+      }
+    ],
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/proposal/bootstrap.py",
+      "Destination": "/reviewed-bootstrap.py",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-model-drift-native-preparation-c5/output-route-audit/proposed-closed-command-contract.json",
+      "Destination": "/reviewed-command.json",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/controls/run_controls.py",
+      "Destination": "/reviewed-control.py",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/proposal/input-manifest.json",
+      "Destination": "/reviewed-manifest.json",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/source",
+      "Destination": "/reviewed-source",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/lib/typescript.js",
+      "Destination": "/reviewed-typescript.js",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "volume",
+      "Name": "cortex-task04-current-producer-public-repair1",
+      "Source": "/var/lib/docker/volumes/cortex-task04-current-producer-public-repair1/_data",
+      "Destination": "/var/tmp",
+      "Driver": "local",
+      "Mode": "z",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "Config": {
+    "Hostname": "1044af770dbc",
+    "Domainname": "",
+    "User": "0:0",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PYTHONDONTWRITEBYTECODE=1",
+      "HOME=/var/tmp/task04-c8-producer-repair1/home",
+      "PATH=/usr/local/bin:/usr/bin:/bin",
+      "TMPDIR=/tmp",
+      "LANG=C.UTF-8",
+      "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+      "PYTHON_VERSION=3.12.15",
+      "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+    ],
+    "Cmd": [
+      "-B",
+      "/reviewed-bootstrap.py"
+    ],
+    "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "Volumes": null,
+    "WorkingDir": "/var/tmp/cortex-native-c8-prospective-preparation",
+    "Entrypoint": [
+      "/usr/local/bin/python3.12"
+    ],
+    "Labels": {
+      "com.cortex.owner": "task04-current-canonical-input-producers",
+      "com.cortex.scope": "PUBLIC_SOURCE_CONTROLS_ONLY",
+      "com.cortex.attempt": "linux-public-repair1",
+      "com.cortex.goal": "convex-backend-runtime-2026-10-02",
+      "com.cortex.operation": "f83336fb-794a-4878-87ec-f85612ade6a6"
+    }
+  },
+  "NetworkSettings": {
+    "SandboxID": "",
+    "SandboxKey": "",
+    "Ports": {},
+    "Networks": {
+      "none": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": null,
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "",
+        "EndpointID": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "MacAddress": "",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": null
+      }
+    }
+  },
+  "ImageManifestDescriptor": {
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "digest": "sha256:67e2cf4f915add39556c76425936bc1ec02e63a74455930014fd1d65d32b08b1",
+    "size": 1815,
+    "platform": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  }
+}

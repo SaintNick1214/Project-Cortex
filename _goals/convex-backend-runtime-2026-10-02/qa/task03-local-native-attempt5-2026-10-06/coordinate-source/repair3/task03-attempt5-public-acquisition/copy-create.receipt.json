@@ -1,0 +1,104 @@
+{
+  "label": "copy-create",
+  "argv": [
+    "/usr/local/bin/docker",
+    "create",
+    "--name",
+    "cortex-task03-attempt5-public-copy-ba2253a8-r3",
+    "--label",
+    "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+    "--label",
+    "cortex.scope=public-candidate-only",
+    "--platform",
+    "linux/amd64",
+    "--network",
+    "none",
+    "--memory",
+    "512m",
+    "--memory-swap",
+    "512m",
+    "--cpus",
+    "2",
+    "--pids-limit",
+    "64",
+    "--read-only",
+    "--user",
+    "501:20",
+    "--mount",
+    "type=volume,source=cortex-task03-attempt5-fixture-20261006-ba2253a8-r3,target=/owned,volume-nocopy",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06,target=/input,readonly",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3,target=/helper,readonly",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "/usr/local/bin/python3.12",
+    "-B",
+    "/helper/task03-attempt5-linux-public-transfer.py"
+  ],
+  "observedAtUtc": "2026-10-06T11:57:26.896395+00:00",
+  "elapsedSeconds": 0.251556208000693,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 65,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 79000,
+      "birthSeconds": "1791287846",
+      "birthMicroseconds": "896628",
+      "group": 79000,
+      "session": 79000,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 79002,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 79000,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 79000,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 79000,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "19c6167cd8aba0636015192ae5b1a42e8c29035fc8c811ff319633bf6e55d521",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

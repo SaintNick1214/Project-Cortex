@@ -1,0 +1,15 @@
+--- executed-initial-inspect-source.py
++++ final-inspect-source.py
+@@ -48,9 +48,9 @@
+ assert "'provision'], 190)" in text and "'retire'], 190)" in text
+ assert "NAME], 60," in text and "SELECTOR_NAME], 60," in text
+ assert "RECIPE = Q / 'coordinate-source/repair2'" in text
+-assert "'common" not in text or True
++assert "assert public['ownedSourceMounts'] == {'candidate': str(Q), 'helper': str(RECIPE)}" in text
+ manifest=next(row for row in rows if row['path'].endswith('coordinate-source/repair2/source-receipt-manifest.json'))
+ assert manifest['sha256']=='73cde47e71c30a1fa63f8d9d04ee10c8950ef15d964ddd1a8f7dbfe01751b304'
+-io.dump_new(B/'dependency-pins.json',{'scope':'CURRENT_PUBLIC_DEPENDENCY_INVENTORY_NOT_APPROVAL','dependencies':rows,'approvalDependenciesExactCount':12,'sourceApprovalPresent':False,'actualCustodyHeld':True,'futureSourceApprovalPath':str((B/'independent-private-coordinator-source-review.json').relative_to(R)),'realTargetOperation':'ba2253a8-26a7-4db5-b503-9bca6710471c','actualProvisioning':False})
+-io.dump_new(B/'source-quality.json',{'scope':'SCOPED_SOURCE_SYNTAX_AST_AND_PUBLIC_DEPENDENCIES_ONLY','status':'PASS','oldSource':old,'newSource':new,'selector':sp,'changedTopLevelASTNodes':changes,'unchangedFunctionsASTExact':unchanged,'syntax':syntax,'unchangedReviewedSupervisorDependency':common,'limits':{'commandSeconds':190,'stdinSeconds':12,'inputBytes':327692,'pipeBytes':262144,'receiverSeconds':60,'selectorSeconds':60,'reviewWindowSeconds':2400},'allNinePublicDependencyReadStableFullEOF':True,'independentJudgment':False,'sourceApproved':False,'actualPrivateReads':0,'actualPrivateStats':0,'actualDockerCalls':0,'actualAPICalls':0})
++io.dump_new(B/'dependency-pins-final.json',{'scope':'CURRENT_PUBLIC_DEPENDENCY_INVENTORY_NOT_APPROVAL','dependencies':rows,'approvalDependenciesExactCount':12,'sourceApprovalPresent':False,'actualCustodyHeld':True,'futureSourceApprovalPath':str((B/'independent-private-coordinator-source-review.json').relative_to(R)),'realTargetOperation':'ba2253a8-26a7-4db5-b503-9bca6710471c','actualProvisioning':False})
++io.dump_new(B/'source-quality-final.json',{'scope':'SCOPED_SOURCE_SYNTAX_AST_AND_PUBLIC_DEPENDENCIES_ONLY','status':'PASS','oldSource':old,'newSource':new,'selector':sp,'changedTopLevelASTNodes':changes,'unchangedFunctionsASTExact':unchanged,'syntax':syntax,'unchangedReviewedSupervisorDependency':common,'limits':{'commandSeconds':190,'stdinSeconds':12,'inputBytes':327692,'pipeBytes':262144,'receiverSeconds':60,'selectorSeconds':60,'reviewWindowSeconds':2400},'allNinePublicDependencyReadStableFullEOF':True,'independentJudgment':False,'sourceApproved':False,'actualPrivateReads':0,'actualPrivateStats':0,'actualDockerCalls':0,'actualAPICalls':0})
+ print(json.dumps({'status':'PASS','syntaxFiles':len(syntax),'changedASTNodes':changes,'publicDependenciesPresent':11,'actualCustodyDependency':'ABSENT_HELD','sourceApproved':False}))

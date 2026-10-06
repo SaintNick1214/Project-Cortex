@@ -1,0 +1,41 @@
+{
+  "scope": "SOURCE_REPAIR_COMMAND_INDEX_ONLY",
+  "records": [
+    {
+      "command": "python3 -B run-source-checks.py",
+      "status": "PASS_PREIMAGE_SOURCE_ONLY",
+      "receipt": "raw/source-checks/commands.json"
+    },
+    {
+      "command": "python3 -B mount-diagnostic.py",
+      "status": "PASS_ONE_ACTUAL_PUBLIC_READONLY_DIAGNOSTIC_ONLY",
+      "receipt": "raw/mount-diagnostic/outcome.json"
+    },
+    {
+      "command": "python3 -B run-qualified-absence-source-checks.py",
+      "status": "PASS_FINAL_PRIVATE_SOURCE_ONLY",
+      "receipt": "raw/source-checks-qualified-absence/commands.json"
+    },
+    {
+      "command": "source evidence writer",
+      "status": "FAIL_PRESERVED_THEN_CORRECTED_WRITER_CASE_ONLY",
+      "receipt": "raw/absence-evidence-writer-failure-1.json"
+    },
+    {
+      "command": "python3 -B finalize-source.py",
+      "status": "FAIL_NEW15_FILE_WRITER_OBSERVATION_NO_BASELINE_CREATED",
+      "receipt": "raw/finalization-source-failure.json"
+    },
+    {
+      "command": "post-failure source observation",
+      "status": "OBSERVED_CURRENT14_ZERO_DELTAS_NOT_RESEAL",
+      "receipt": "raw/post-finalization-failure-observation.json"
+    }
+  ],
+  "privateReads": 0,
+  "privateStats": 0,
+  "APICalls": 0,
+  "officialCLI": false,
+  "nativeFoundationAccepted": false,
+  "sourceAccepted": false
+}

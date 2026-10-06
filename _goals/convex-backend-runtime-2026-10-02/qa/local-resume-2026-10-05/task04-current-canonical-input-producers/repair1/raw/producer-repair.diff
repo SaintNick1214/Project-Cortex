@@ -1,0 +1,43 @@
+--- preserved/producers.py
++++ repair1/source/producers.py
+@@ -60,6 +60,31 @@
+             require(declared['kind'] in ('EXACT_OLD_GUARD_NEGATIVE_HISTORY_FIXTURE', 'HISTORICAL_MANIFEST_MEMBER'), 'UNKNOWN_HISTORY_ROW_KIND')
+     integer(declared['bytes']); digest(declared['sha256'])
+     return (package + '::' if phase == 'packages' else '') + declared['path']
++
++
++def validate_selector_recipe(command_id, template, call, selected, own_vm_producer):
++    """Validate source-bound recipe shape, not the value later passed to a VM.
++
++    The original own-control run(source) wrapper is current-AST/pin bound by
++    build_rules. Its json=True selector authorizes only runtime JSON in the
++    unchanged VM consumer; it does not spell 'JSON' in the wrapper's AST.
++    """
++    require(type(template['json']) is bool, 'FINITE_SELECTOR_JSON_BOOLEAN')
++    require(call['kind'] == template['kind'] and
++            call['argumentExpression'] == template['argumentExpression'],
++            'CURRENT_AST_RECIPE_ARGUMENT_DRIFT')
++    if not template['json']:
++        require(bool(selected), 'FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON')
++        return
++    literal_json = call['kind'] == 'runInContext' and call['argumentExpression'] == "'JSON'"
++    marked_own_wrapper = (
++        command_id == 'OWN_VM_CONSUMER_CONTROL' and
++        template['producerLogical'] == own_vm_producer and
++        call['kind'] == 'runInContext' and call['argumentExpression'] == 'source' and
++        template['resolution'] == 'EXACT_MARKED_OWN_TEST_SELECTOR_SET_NOT_ORIGINAL_OR_ROOT_ROUTE' and
++        template['parent'] is False and template['canonical'] is False)
++    require(not selected and (literal_json or marked_own_wrapper),
++            'FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON')
+ 
+ 
+ class Prepared:
+@@ -427,7 +452,7 @@
+                 selected = []
+                 for logical in template['sourceLogicalPaths']:
+                     require(logical in map_logical, 'UNKNOWN_FINITE_SELECTOR_SOURCE'); selected.append(map_logical[logical])
+-                require(call['argumentExpression'] == "'JSON'" if template['json'] else bool(selected), 'FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON')
++                validate_selector_recipe(command_id, template | {'argumentExpression': expected_argument}, call, selected, self.contract['ownSelectorLogicalPaths'][0])
+                 calls.append({'producer': path, 'producerSHA256': producer['sha256'], 'producerIdentity': producer['identity'],
+                               'line': call['line'], 'columnStart': call['columnStart'], 'columnEnd': call['columnEnd'],
+                               'kind': call['kind'], 'argumentExpression': call['argumentExpression'], 'sources': selected,

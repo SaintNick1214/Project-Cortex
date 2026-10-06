@@ -1,0 +1,69 @@
+{
+  "scope": "REVIEWER_HELPER_BOUNDARY_ONLY_NO_PRODUCER_PIPELINE",
+  "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py",
+  "helperBytes": 11071,
+  "helperSHA256": "67bb05e7bd1d924c01abfe53d54ecc2e25b92f9a9e9b396933617ed40604a722",
+  "controls": [
+    {
+      "name": "duplicate-key",
+      "status": "PASS",
+      "expected": "DUPLICATE_JSON_KEY",
+      "denied": "DUPLICATE_JSON_KEY"
+    },
+    {
+      "name": "trailing-record",
+      "status": "PASS",
+      "expected": "STRICT_JSON_PARSE",
+      "denied": "STRICT_JSON_PARSE"
+    },
+    {
+      "name": "partial-record",
+      "status": "PASS",
+      "expected": "STRICT_JSON_PARSE",
+      "denied": "STRICT_JSON_PARSE"
+    },
+    {
+      "name": "nonfinite-NaN",
+      "status": "PASS",
+      "expected": "NONFINITE_JSON",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "name": "nonfinite-Infinity",
+      "status": "PASS",
+      "expected": "NONFINITE_JSON",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "name": "nonfinite-positive-exponent",
+      "status": "PASS",
+      "expected": "NONFINITE_JSON",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "name": "nonfinite-negative-exponent",
+      "status": "PASS",
+      "expected": "NONFINITE_JSON",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "name": "finite-fraction",
+      "status": "PASS",
+      "value": 0.125,
+      "expected": 0.125
+    },
+    {
+      "name": "safe-exponent-integer",
+      "status": "PASS",
+      "value": 1000.0,
+      "expected": 1000.0
+    },
+    {
+      "name": "reviewed-helper-content-unchanged",
+      "status": "PASS"
+    }
+  ],
+  "ROOT": "ABSENT",
+  "original122": "HELD",
+  "nativeQualification": false
+}

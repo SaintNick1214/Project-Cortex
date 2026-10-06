@@ -1,0 +1,88 @@
+{
+  "containerId": "b51cc809c8260ab53491ca62a24bd2cb43abe451834dc253028deca60aa9f080",
+  "selectedDaemonSourceMapping": "literal",
+  "literalRequestedMounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Target": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "ReadOnly": true
+    },
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-deps-20261005-b681774e",
+      "Target": "/deps",
+      "ReadOnly": true,
+      "VolumeOptions": {
+        "NoCopy": true
+      }
+    },
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-deps-20261005-b681774e",
+      "Target": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules",
+      "ReadOnly": true,
+      "VolumeOptions": {
+        "NoCopy": true,
+        "Subpath": "node_modules"
+      }
+    }
+  ],
+  "HostConfigMounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Target": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "ReadOnly": true
+    },
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-deps-20261005-b681774e",
+      "Target": "/deps",
+      "ReadOnly": true,
+      "VolumeOptions": {
+        "NoCopy": true
+      }
+    },
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-deps-20261005-b681774e",
+      "Target": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules",
+      "ReadOnly": true,
+      "VolumeOptions": {
+        "NoCopy": true,
+        "Subpath": "node_modules"
+      }
+    }
+  ],
+  "actualMounts": [
+    {
+      "Type": "volume",
+      "Name": "cortex-task03-deps-20261005-b681774e",
+      "Source": "/var/lib/docker/volumes/cortex-task03-deps-20261005-b681774e/_data",
+      "Destination": "/deps",
+      "Driver": "local",
+      "Mode": "z",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Destination": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "volume",
+      "Name": "cortex-task03-deps-20261005-b681774e",
+      "Source": "/var/lib/docker/volumes/cortex-task03-deps-20261005-b681774e/_data",
+      "Destination": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules",
+      "Driver": "local",
+      "Mode": "z",
+      "RW": false,
+      "Propagation": ""
+    }
+  ]
+}

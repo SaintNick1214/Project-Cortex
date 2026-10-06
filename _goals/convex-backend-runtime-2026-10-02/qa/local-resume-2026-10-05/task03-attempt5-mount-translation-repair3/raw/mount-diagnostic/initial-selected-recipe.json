@@ -1,0 +1,40 @@
+{
+  "containerId": "a5c23c05580ac3463839efaea1847e92d01f84df7b8c395ad24f25587cfc6f09",
+  "selectedDaemonSourceMapping": "literal",
+  "literalRequestedPaths": {
+    "input": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+    "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3"
+  },
+  "HostConfigMounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+      "Target": "/input",
+      "ReadOnly": true
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+      "Target": "/helper",
+      "ReadOnly": true
+    }
+  ],
+  "actualMounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3",
+      "Destination": "/helper",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06",
+      "Destination": "/input",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ]
+}

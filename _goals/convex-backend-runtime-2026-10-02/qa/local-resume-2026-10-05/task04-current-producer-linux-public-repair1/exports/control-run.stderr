@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/var/tmp/task04-c8-producer-repair1/controls/run_controls.py", line 462, in <module>
+    try: main()
+         ^^^^^^
+  File "/var/tmp/task04-c8-producer-repair1/controls/run_controls.py", line 310, in main
+    result = produce_public_control(request,contract,owner,W/'controls',lambda:time.sleep(0.4)if sys.platform!='linux'else None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/task04-c8-producer-repair1/source/producers.py", line 604, in produce_public_control
+    require(root.is_absolute() and root.resolve() == root and
+  File "/var/tmp/task04-c8-producer-repair1/source/strict_io.py", line 30, in require
+    raise Hold(reason)
+strict_io.Hold: SYNTHETIC_SCOPE_CANNOT_BECOME_NATIVE_AUTHORITY

@@ -1,0 +1,45 @@
+{
+  "scope": "ACTUAL_FAILED_PUBLIC_SOURCE_CONTROLS_HANDOFF",
+  "status": "FAIL",
+  "utc": "2026-10-06T14:39:35.564408+00:00",
+  "containerId": "1044af770dbcb88c25b73d2821440075f5024db16f975b07ed3e8b7f64abf56f",
+  "operationUUID": "9655f70c-0ac7-4d89-9135-3da95e3c6662",
+  "state": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 1,
+    "Error": "",
+    "StartedAt": "2026-10-06T14:34:53.459497137Z",
+    "FinishedAt": "2026-10-06T14:35:07.202764129Z"
+  },
+  "requiredRecipeMetadata": "UNCHANGED",
+  "additionalMonitorFieldTransition": {
+    "OomKillDisable": {
+      "created": false,
+      "terminal": null
+    }
+  },
+  "monitorFailure": "PRESERVED",
+  "actualPipelineFailure": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON_BEFORE_FIRST_CONTROL",
+  "executedPipelineControls": 0,
+  "expectedPipelineControls": 48,
+  "firstExportAggregateSeal": "PRESERVED_FAILED_WITH_16_CTIME_DELTAS_ATTRIBUTION_UNKNOWN",
+  "freshFinite17ExportByteObservation": "PASS_48379_BYTES_NO_HISTORICAL_IDENTITY_ADOPTION",
+  "childTerminalReceipt": "cleanupErrors empty, allDescendantsTerminal true, actualExitCode1",
+  "noStopNeeded": true,
+  "ownedVolume": "RETAINED",
+  "ownedContainer": "RETAINED_TERMINAL",
+  "foreignContainer": "UNTOUCHED",
+  "allParentRunWriters": "STOPPED_AFTER_THIS_HANDOFF",
+  "noRerun": true,
+  "native": false,
+  "private": false,
+  "Task03": "HELD",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN"
+}
