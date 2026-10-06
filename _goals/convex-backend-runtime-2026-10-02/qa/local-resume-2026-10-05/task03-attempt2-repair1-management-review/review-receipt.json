@@ -1,0 +1,59 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "verdict": "PASS",
+  "independent": true,
+  "reviewedAt": "2026-10-06T05:41:53.198Z",
+  "managementSourceSha256": "213739458a90078a164cb4b87a583364109d43c2e2ee6687b8a2c97a0600a457",
+  "requestSha256": "e085a6822de67476645f04d89f5ca6b8951ab845ae1b0663382abfbef95a13c2",
+  "guardSourceSha256": "8c99c99ff562d7c8cdc23a8870dd0461774b2aeeae92b1fc789e4dc8a1dcc9b5",
+  "candidateSha256": "cd5e0c71e1839f079906becb9c5e0a90aba2261890ec4fb7997bc2981db966f5",
+  "candidateFileCount": 833,
+  "requestOperation": "511363b3-8cec-4e98-95d8-ecd4865457a8",
+  "requestProjectSlug": "cortex-foundation-delta-cd358019d808",
+  "runtime": "v24.15.0",
+  "npm": "12.2.0",
+  "cases": 176,
+  "originalCases": 162,
+  "additionalCases": 14,
+  "passedCases": 176,
+  "failedCases": 0,
+  "assertionsConserved": true,
+  "realServiceRequests": 0,
+  "actualPrivateConfigReads": 0,
+  "actualPrivateTokenKeyReads": 0,
+  "actualNativeFoundationCases": 0,
+  "nativeHeaderChecks": 486,
+  "helperPrivateMutations": 0,
+  "candidateEdits": 0,
+  "enablingAttestationWritten": false,
+  "preparationCertified": false,
+  "fullTask03Certified": false,
+  "sourceUnchanged": true,
+  "scopeCertifications": {
+    "management": true,
+    "preparation": false,
+    "nativeFoundation": false,
+    "fullTask03": false,
+    "goal": false
+  },
+  "dimensions": {
+    "requirementFulfillment": 5,
+    "codeQuality": 4,
+    "testQuality": 5,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.4,
+  "lint": {
+    "files": 2,
+    "errors": 0,
+    "fatals": 0,
+    "warnings": 0,
+    "suppressed": 0
+  },
+  "syntax": {
+    "helper": 0,
+    "guard": 0
+  },
+  "releaseGate": "Coordinator must inspect both fresh matching management PASS and preparation PASS before enabling attestation"
+}

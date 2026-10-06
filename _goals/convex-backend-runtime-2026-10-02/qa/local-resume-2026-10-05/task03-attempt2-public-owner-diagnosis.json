@@ -1,0 +1,41 @@
+{
+  "scope": "READONLY_DOCKER_SOURCE_OWNER_VIEW_DIAGNOSTIC",
+  "observedAt": "2026-10-06T05:50:00.458782+00:00",
+  "rootUserObservation": {
+    "sourceUid": 0,
+    "sourceGid": 0,
+    "mode": 33188,
+    "nlink": 1,
+    "rawRootProbeWasNotSaved": true
+  },
+  "currentUserObservation": {
+    "processUid": 501,
+    "processGid": 20,
+    "sourceUid": 501,
+    "sourceGid": 20,
+    "mode": 33188,
+    "nlink": 1
+  },
+  "finding": "Docker Desktop bind owner is presented according to container user. Use reviewed UID501 source requirement with actual UID501 transfer, after exclusive empty-volume initialization. Root-user failed transfer preserved; no candidate or private files were copied.",
+  "actualServiceRequests": 0,
+  "argv": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--platform",
+    "linux/amd64",
+    "--memory",
+    "128m",
+    "--user",
+    "501:20",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05,target=/input,readonly",
+    "--entrypoint",
+    "/usr/local/bin/python3.12",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "-c",
+    "import os,json; s=os.lstat(\"/input/candidate-freeze-attempt2-repair1.json\");print(json.dumps({\"processUid\":os.getuid(),\"processGid\":os.getgid(),\"sourceUid\":s.st_uid,\"sourceGid\":s.st_gid,\"mode\":s.st_mode,\"nlink\":s.st_nlink}))"
+  ]
+}

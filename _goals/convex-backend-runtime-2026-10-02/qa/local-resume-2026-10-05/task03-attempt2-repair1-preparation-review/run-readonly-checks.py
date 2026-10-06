@@ -1,0 +1,13 @@
+import subprocess,json,datetime,os,hashlib
+from pathlib import Path
+repo=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion');q=repo/'_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05';r=Path(__file__).resolve().parent
+bin=Path('/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin');node=str(bin/'node')
+env={'PATH':str(bin)+':/usr/bin:/bin','TMPDIR':str(r/'tmp'),'NO_COLOR':'1','NODE_OPTIONS':'--require '+str(r/'offline-network-v2.cjs')}
+commands=[('node-version',[node,'--version']),('npm-version',[str(bin/'npm'),'--version']),('actual-source-47-controls',[node,'--experimental-vm-modules',str(q/'attempt2/affected-controls.mjs')]),('actual-filesystem-3-controls',[node,'--experimental-vm-modules',str(r/'readonly-boundaries.mjs'),'actual-filesystem-controls']),('conserved-28-cleanup-driver-controls',[node,'--experimental-vm-modules',str(q/'repair-cycle2/offline-repair-check.mjs')]),('readonly-39-guard-controls',[node,'--experimental-vm-modules',str(r/'readonly-boundaries.mjs'),'guard-controls']),('independent-source-preflight',[node,'--experimental-vm-modules',str(r/'readonly-boundaries.mjs'),'source-preflight'])]
+files=[q/'scripts/deploy.mjs',q/'scripts/incidental-custody.mjs',q/'scripts/guard.mjs',q/'attempt2/affected-controls.mjs',q/'attempt2-repair1/real-owned-custody-controls.mjs']
+commands += [('scoped-5-file-lint',[node,str(repo/'node_modules/eslint/bin/eslint.js'),'--config',str(q/'attempt2/eslint.config.mjs'),'--no-ignore','--max-warnings','0',*[str(p) for p in files]])]
+commands += [('syntax-'+p.stem,[node,'--check',str(p)])for p in files[:3]]
+rows=[]
+for name,argv in commands:
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=repo,env=env,text=True,capture_output=True,timeout=60);(r/(name+'.stdout')).write_text(p.stdout);(r/(name+'.stderr')).write_text(p.stderr);row={'name':name,'argv':argv,'cwd':str(repo),'startedAtUtc':start,'endedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'status':'PASS'if p.returncode==0 else'FAIL','stdout':name+'.stdout','stderr':name+'.stderr','stdoutSha256':hashlib.sha256(p.stdout.encode()).hexdigest(),'stderrSha256':hashlib.sha256(p.stderr.encode()).hexdigest()};rows.append(row);(r/'command-receipts.json').write_text(json.dumps({'scope':'INDEPENDENT_READ_ONLY_PREPARATION_REVIEW','commands':rows,'candidateWrites':0,'actualPrivateReads':0,'serviceCalls':0},indent=2)+'\n');print(json.dumps(row),flush=True)
+ if p.returncode:print(p.stdout[-2500:]+p.stderr[-2500:]);raise RuntimeError(name)

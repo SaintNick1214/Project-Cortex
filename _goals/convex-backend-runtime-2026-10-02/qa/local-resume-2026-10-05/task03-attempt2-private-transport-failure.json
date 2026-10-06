@@ -1,0 +1,84 @@
+{
+  "scope": "NATIVE_ATTEMPT2_PRIVATE_TRANSPORT_FAILED_BEFORE_CLI",
+  "projectId": 3156031,
+  "deploymentName": "joyous-ostrich-974",
+  "operation": "511363b3-8cec-4e98-95d8-ecd4865457a8",
+  "provision": "VERIFIED_FRESH_SOLE_CLOUD_DEV_6_CALLS",
+  "privateTransfer": "FAIL_SOURCE_DIRECTORY_OWNER_ASSERTION_LINE15_ZERO_FILES_COPIED",
+  "sourceHostDirectory": {
+    "uid": 501,
+    "gid": 20,
+    "mode": "0700"
+  },
+  "observedBindRootDirectory": {
+    "uid": 0,
+    "gid": 0,
+    "mode": "0700"
+  },
+  "observedPrivateFiles": {
+    "uid": 501,
+    "gid": 20,
+    "mode": "0600",
+    "nlink": 1
+  },
+  "actualReadonlyProbe": "task03-attempt2-private-source-metadata-probe.stdout",
+  "linuxPrivateDirectoryEmpty": true,
+  "cliInvocations": 0,
+  "nativeCases": 0,
+  "inferenceCalls": 0,
+  "retirement": {
+    "deleteHttp": 200,
+    "readbackHttp": 404,
+    "retiredAt": "2026-10-06T06:03:55.998Z",
+    "calls": 5
+  },
+  "targetReused": false,
+  "privateRawLogs": [
+    {
+      "privateReference": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/coordination/provision.stdout",
+      "sha256": "a2c78bbd8605ecc930ee9756edb4287c2350193cf101d1743d9873aa607d717c",
+      "bytes": 78,
+      "currentMode": "0600",
+      "scope": "CURRENT_PROSPECTIVE_LOG_METADATA_ONLY"
+    },
+    {
+      "privateReference": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/coordination/provision.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "currentMode": "0600",
+      "scope": "CURRENT_PROSPECTIVE_LOG_METADATA_ONLY"
+    },
+    {
+      "privateReference": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/coordination/private-transfer.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "currentMode": "0600",
+      "scope": "CURRENT_PROSPECTIVE_LOG_METADATA_ONLY"
+    },
+    {
+      "privateReference": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/coordination/private-transfer.stderr",
+      "sha256": "a5b710ecd9e07822444cb7cd3ee08be4bcca56851413e09a34ab7c1205c7ac3e",
+      "bytes": 89,
+      "currentMode": "0600",
+      "scope": "CURRENT_PROSPECTIVE_LOG_METADATA_ONLY"
+    },
+    {
+      "privateReference": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/coordination/failure-retirement.stdout",
+      "sha256": "6189f6511ee194adca31a9688e979ec8f83d7f95fff3372315d765ec3010a3b2",
+      "bytes": 50,
+      "currentMode": "0600",
+      "scope": "CURRENT_PROSPECTIVE_LOG_METADATA_ONLY"
+    },
+    {
+      "privateReference": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/coordination/failure-retirement.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "currentMode": "0600",
+      "scope": "CURRENT_PROSPECTIVE_LOG_METADATA_ONLY"
+    }
+  ],
+  "privacyCorrection": "Coordination raw log modes explicitly made0600 after failure. Prior mode identities were not recorded; no historical mode/custody assertion is made. Contents retained in private0700 directory.",
+  "next": "Distinct attempt3 with fresh request/key and dummy-proved owned-child transport before any new provisioning",
+  "fullTask03": "INCOMPLETE",
+  "goal": "INCOMPLETE"
+}

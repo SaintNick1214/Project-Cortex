@@ -1,0 +1,70 @@
+[
+  {
+    "name": "image-inspect",
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3"
+    ],
+    "start": "2026-10-06T05:54:44.537088+00:00",
+    "end": "2026-10-06T05:54:44.574071+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "72c8cf3d7749f02fa5b31d876cf60d2e5f725d9db7348e1d623cd3123774237f",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdinSha256": null
+  },
+  {
+    "name": "volume-inspect",
+    "argv": [
+      "docker",
+      "volume",
+      "inspect",
+      "cortex-task03-attempt2-fixture-20261005-511363b3"
+    ],
+    "start": "2026-10-06T05:54:44.574257+00:00",
+    "end": "2026-10-06T05:54:44.589134+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "b8d7f6f6c9e0b15ed9f7ea4b789807038aeb35791f8bc1da1d0a52b5470d4e86",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdinSha256": null
+  },
+  {
+    "name": "actual-public-custody",
+    "argv": [
+      "docker",
+      "run",
+      "--rm",
+      "-i",
+      "--network",
+      "none",
+      "--platform",
+      "linux/amd64",
+      "--memory",
+      "512m",
+      "--memory-swap",
+      "512m",
+      "--read-only",
+      "--user",
+      "501:20",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges",
+      "--mount",
+      "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05,target=/input,readonly",
+      "--mount",
+      "type=volume,source=cortex-task03-attempt2-fixture-20261005-511363b3,target=/owned,readonly,volume-nocopy",
+      "--entrypoint",
+      "/usr/local/bin/python3.12",
+      "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "-"
+    ],
+    "start": "2026-10-06T05:54:44.589355+00:00",
+    "end": "2026-10-06T05:54:45.115117+00:00",
+    "exitCode": 1,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "95c16fa2f9e056de5c3b4bce4421a424682c5ebf73b71714e8512a75476c9bf8",
+    "stdinSha256": "3f09438c8600efa6b8669d79bd19263cbefbbae5ed5218c04a6727f8342d72b4"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "scope": "REVIEW_SETUP_METADATA_DESCRIPTION_ONLY",
+  "firstAttemptStoppedBeforeContainerRead": true,
+  "expectedFromParentDescription": {
+    "cortex.operation": "511363b3-8cec-4e98-95d8-ecd4865457a8"
+  },
+  "observedLabels": {
+    "cortex.goal": "convex-backend-runtime-2026-10-02",
+    "cortex.operation": "511363b3-8cec-4e98-95d8-ecd4865457a8"
+  },
+  "candidateOrVolumeWrites": 0,
+  "finding": "Actual volume has the matching operation plus matching goal label. Retain exact observed label predicate for identity, and report this description discrepancy."
+}
