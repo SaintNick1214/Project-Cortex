@@ -1,0 +1,18 @@
+{
+  "scope": "EXACT_PUBLIC_CONTENT_CHECKPOINT_BOOKKEEPING_CORRECTION_NOT_RUNTIME",
+  "status": "PASS",
+  "checkpointCommit": "335ac43d",
+  "selectedIncludingAlreadyTrackedUnchanged": 159,
+  "actualChangedCommittedFiles": 158,
+  "allActualPathsAuthorized": true,
+  "selectedUnchangedPaths": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-coordinator-prospective-notes.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-dispatch-held.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-management-parent-candidate.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-target-management.mjs"
+  ],
+  "twoPriorAssertionFailures": "Expected every selected path in git diff names; Git correctly omits already tracked unchanged paths. Both failures preserved; independent content/whitespace checks passed before each names assertion. Shell continued to authorized commit after failed assertion. No secret or unrelated path was staged.",
+  "priorUnknownCause": "SUPERSEDED_BY_ACTUAL_COMMIT_PATHSET_COMPARISON",
+  "historicalFailureVerdictsPreserved": true,
+  "fullGoalComplete": false
+}
