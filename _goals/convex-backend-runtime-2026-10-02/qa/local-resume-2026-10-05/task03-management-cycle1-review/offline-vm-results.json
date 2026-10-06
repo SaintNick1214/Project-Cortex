@@ -1,0 +1,441 @@
+{
+  "runtime": "v24.15.0",
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "managementSourceSha256": "1eddca2bf811de11622705492c67da01c269a20fa52bd9efdb84143f62fafad9",
+  "guardSourceSha256": "ac0ba9104aa2debb63b61ed95ee2dceb418517935a4ffa8c6d8a7a6a38977eaf",
+  "requestSha256": "e22be908a45fbdfb54d57efae992c137769b5f54aad1844a40a4cf11ef0f8255",
+  "caseCount": 49,
+  "results": [
+    {
+      "name": "happy provision native validateTarget",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ]
+    },
+    {
+      "name": "happy retire verified target",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ]
+    },
+    {
+      "name": "retire ownershiponly after source preflight failure",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ]
+    },
+    {
+      "name": "selector CONVEX_DEPLOY_KEY",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "selector CONVEX_DEPLOYMENT",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "selector CONVEX_URL",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "selector CONVEX_DEPLOYMENT_TOKEN",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "selector CONVEX_OVERRIDE_ACCESS_TOKEN",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "selector CONVEX_SELF_HOSTED_URL",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "selector CONVEX_SELF_HOSTED_ADMIN_KEY",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning"
+    },
+    {
+      "name": "request teamId",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request teamSlug",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request teamName",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request requiredDeploymentType",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request requiredKind",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request sharedCiTarget",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request productionDeployment",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request maximumPaidCalls",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request retirementRequired",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request projectSlug",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request projectName",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request privateEnvironmentFile",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request privateTargetReceipt",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request operation",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "request purpose",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required"
+    },
+    {
+      "name": "review verdict",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required"
+    },
+    {
+      "name": "review independent",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required"
+    },
+    {
+      "name": "review scope",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required"
+    },
+    {
+      "name": "review managementSourceSha256",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required"
+    },
+    {
+      "name": "review requestSha256",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required"
+    },
+    {
+      "name": "scratch mode",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Private ownership or mode rejected"
+    },
+    {
+      "name": "scratch ancestor symlink",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Private path alias rejected"
+    },
+    {
+      "name": "source preflight fail before effects",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "FAKE_SOURCE_PREFLIGHT_REJECTION"
+    },
+    {
+      "name": "uncertain create preserves fsynced attempt",
+      "status": "PASS",
+      "calls": 2,
+      "timeouts": [
+        30000,
+        30000
+      ],
+      "error": "FAKE_UNKNOWN_CREATE"
+    },
+    {
+      "name": "uncertain attempt blocks blind retry",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exclusive output exists; inspect prior outcome before retry"
+    },
+    {
+      "name": "invalid created URL retains ownership",
+      "status": "PASS",
+      "calls": 2,
+      "timeouts": [
+        30000,
+        30000
+      ],
+      "error": "Created response mismatch; exclusive ownership retained"
+    },
+    {
+      "name": "project team",
+      "status": "PASS",
+      "calls": 3,
+      "timeouts": [
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Observed owned project mismatch"
+    },
+    {
+      "name": "deployment cloud",
+      "status": "PASS",
+      "calls": 4,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Observed isolated development deployment mismatch"
+    },
+    {
+      "name": "deployment dev",
+      "status": "PASS",
+      "calls": 4,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Observed isolated development deployment mismatch"
+    },
+    {
+      "name": "sole dev",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Target is not a sole disposable development deployment"
+    },
+    {
+      "name": "native validator empty dev suffix",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Current foundation preflight rejected; no operation dispatched"
+    },
+    {
+      "name": "owned record hardlink",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Private ownership or mode rejected"
+    },
+    {
+      "name": "ownership request mismatch",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exclusive created-project ownership mismatch"
+    },
+    {
+      "name": "current target ownership mismatch",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Current target ownership mismatch"
+    },
+    {
+      "name": "GET404 required retirement",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management GET /projects/991 returned HTTP 200"
+    },
+    {
+      "name": "180s deadline and30s call timeout",
+      "status": "PASS",
+      "calls": 3,
+      "timeouts": [
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management operation ceiling"
+    },
+    {
+      "name": "7call ceiling exact api directprobe",
+      "status": "PASS",
+      "calls": 7,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ]
+    },
+    {
+      "name": "malformed key JSON reflects private bytes",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Unexpected token 'S', \"SECRET_SENTINEL_123\" is not valid JSON",
+      "diagnosticReflectsInjectedPrivateBytes": true
+    },
+    {
+      "name": "newline key accepted fourth env entry",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "errorAbsent": true,
+      "envEntries": 4
+    }
+  ],
+  "limitations": [
+    "All config/fs/fetch substituted in-memory; no actual credential read, network or disk mutation.",
+    "Exact helper source plus ephemeral export of api for one bound probe; real source never changed.",
+    "Exact guard validateTarget executes; preparationReviewed injectable pass/fail represents reviewed prerequisite, not sourcePreflight certification.",
+    "This does not certify live API shape/availability, native foundation, or fullTask03."
+  ]
+}

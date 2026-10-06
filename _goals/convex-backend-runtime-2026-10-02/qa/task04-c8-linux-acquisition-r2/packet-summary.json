@@ -1,0 +1,64 @@
+{
+  "scope": "COMPLETE_BOUNDED_R2_ACQUISITION_AND_SOURCE_BASELINE_REPAIR_ONLY",
+  "utc": "2026-10-06T04:43:07.011155+00:00",
+  "exclusiveVolume": "cortex-runtime-c8-r2-acquisition-20261005-01",
+  "authoritativeLinuxSeal": {
+    "path": "/repair/final-linux-packet-manifest.json",
+    "sha256": "2e55621b73fed30c608559d76f215b1f5ccf8cda72857d5122acb4ea9d7f79c6",
+    "bytes": 1031477,
+    "files": 697,
+    "literalDirectories": 66,
+    "sealedRegularFileBytesExcludingSelfSeal": 260065471
+  },
+  "ownPostSealReadOnlyVerification": "PASS_OWN_READONLY_SOURCE_SEAL_EQUALITY_NOT_INDEPENDENT_REVIEW",
+  "postSealVolumeWrites": false,
+  "sourceAids": {
+    "paths": 138,
+    "bytes": 2131210
+  },
+  "selectedObjects": {
+    "count": 489,
+    "bytes": 33206385
+  },
+  "requiredContentMissing": {
+    "FULL8": 0,
+    "HIST70020": 0
+  },
+  "currentTrackedMembership": {
+    "trackedPaths": 166485,
+    "FULL8MappedRowsPresent": 19,
+    "notTrackedMappedRows": 148306,
+    "contentMissingInferredFromPaths": false
+  },
+  "knownNextSourcePhysicalAndRawSubtotalBytes": 12452908282,
+  "runtimeVersionDisposition": "Node24.15 meets authorizedminimum; no exact24.19 executableassertion found; original24.19metadata historical; newruntimebindings/review required.",
+  "runtimeIdentityDiscipline": "OWNED_VOLUME_SOURCE_ALL9_AUTHORITATIVE; INTERPRETER_OVERLAY_ALL9_SCOPED_TO_ACTUAL_CONTAINER; IMAGE_HASH_NOT_FULL_PHYSICAL_IDENTITY",
+  "original122": "HELD",
+  "eightNative20": "HELD",
+  "whole120": "HELD",
+  "FULL_RPC": "UNCHANGED",
+  "semanticSites": 501,
+  "unresolvedInterpretations": 301,
+  "ROOT": "ABSENT",
+  "candidateOrRecorderOrConsumerOrNativeOrPrivateOrPaidOrDeploymentEffects": false,
+  "independentReview": "REQUIRED_BEFORE_LARGER_PHYSICAL_PREPARATION",
+  "reviewInputs": [
+    "final-linux-packet-manifest.json",
+    "report.md",
+    "runtime-lifecycle-and-review-recipe.md",
+    "acquisition-contract.json",
+    "archive-stream-proofs.json",
+    "selected-object-baselines.json",
+    "seven-package-source-inventory.json",
+    "original-package-obligation-comparison.json",
+    "next-phase-demand-accounting.json",
+    "six-route-catalog-and-demand.json",
+    "runtime-version-disposition.json",
+    "version-source-inspection.json",
+    "original-gate-conservation.json",
+    "attempt1-preserved-failure.json",
+    "attempt2-preserved-failure.json",
+    "/repair/attempt2/report/historical70020-coverage.json"
+  ],
+  "missingOldReviewerCoverageArtifactClaimed": false
+}

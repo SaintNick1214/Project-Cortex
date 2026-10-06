@@ -36,3 +36,11 @@ The older row descriptions above retain historical verdicts. Numerical review-cy
 | Task04 C8 preparation | Declared content hashes recoverable, but prior filesystem identity pins failed; independent NEEDS REVISION3.8 | Fresh bounded Linux acquisition/source baseline underway; functional Task04 remains incomplete |
 
 The production qualification registry remains empty. Tasks05–17 and complete functional02/03 acceptance remain pending. No full success criterion is newly certified by these prerequisites.
+
+Subsequent current observations: Task03 repaired preparation PASS4.6 and management
+PASS4.4 are bounded. Actual native attempt1 failed at official CLI compiler discovery
+before any native case; owned processes terminated and fresh target3155546 was
+physically deleted200/404. Fresh attempt2 preparation retains required typechecking.
+Task04 r2 source/content preparation PASS4.2 releases separately reviewed source-only
+physical preparation, while original/runtime/native/whole/ROOT/functional policy gates
+remain held. None of these observations certify a complete product success criterion.

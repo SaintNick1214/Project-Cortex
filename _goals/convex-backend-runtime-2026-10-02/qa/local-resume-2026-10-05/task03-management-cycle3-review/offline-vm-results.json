@@ -1,0 +1,1990 @@
+{
+  "runtime": "v24.15.0",
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "managementSourceSha256": "31b06108a5e3dc55693b9963d6c662032c3b3ecfea6cc06cdf790a9168101fe4",
+  "guardSourceSha256": "ac0ba9104aa2debb63b61ed95ee2dceb418517935a4ffa8c6d8a7a6a38977eaf",
+  "requestSha256": "e22be908a45fbdfb54d57efae992c137769b5f54aad1844a40a4cf11ef0f8255",
+  "caseCount": 162,
+  "results": [
+    {
+      "name": "happy provision native validateTarget",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "happy retire verified target",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "retire ownershiponly after source preflight failure",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_DEPLOY_KEY",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_DEPLOYMENT",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_URL",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_DEPLOYMENT_TOKEN",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_OVERRIDE_ACCESS_TOKEN",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_SELF_HOSTED_URL",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "selector CONVEX_SELF_HOSTED_ADMIN_KEY",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Inherited target selector rejected before provisioning",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request teamId",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request teamSlug",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request teamName",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request requiredDeploymentType",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request requiredKind",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request sharedCiTarget",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request productionDeployment",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request maximumPaidCalls",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request retirementRequired",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request projectSlug",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request projectName",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request privateEnvironmentFile",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request privateTargetReceipt",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request operation",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "request purpose",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exact fresh nonpaid foundation request required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "review verdict",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "review independent",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "review scope",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "review managementSourceSha256",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "review requestSha256",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Independent exact-source management review required",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "scratch mode",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Private ownership or mode rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "scratch ancestor symlink",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Private path alias rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "source preflight fail before effects",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "FAKE_SOURCE_PREFLIGHT_REJECTION",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "uncertain create preserves fsynced attempt",
+      "status": "PASS",
+      "calls": 2,
+      "timeouts": [
+        30000,
+        30000
+      ],
+      "error": "Management POST /teams/325340/create_project transport failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 2,
+      "causePresent": false
+    },
+    {
+      "name": "uncertain attempt blocks blind retry",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exclusive output exists; inspect prior outcome before retry",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "invalid created URL retains ownership",
+      "status": "PASS",
+      "calls": 2,
+      "timeouts": [
+        30000,
+        30000
+      ],
+      "error": "Created response mismatch; exclusive ownership retained",
+      "nativeHeaderChecks": 2,
+      "causePresent": false
+    },
+    {
+      "name": "project team",
+      "status": "PASS",
+      "calls": 3,
+      "timeouts": [
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Observed owned project mismatch",
+      "nativeHeaderChecks": 3,
+      "causePresent": false
+    },
+    {
+      "name": "deployment cloud",
+      "status": "PASS",
+      "calls": 4,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Observed isolated development deployment mismatch",
+      "nativeHeaderChecks": 4,
+      "causePresent": false
+    },
+    {
+      "name": "deployment dev",
+      "status": "PASS",
+      "calls": 4,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Observed isolated development deployment mismatch",
+      "nativeHeaderChecks": 4,
+      "causePresent": false
+    },
+    {
+      "name": "sole dev",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Target is not a sole disposable development deployment",
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "empty dev suffix rejection",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "owned record hardlink",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Private ownership or mode rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "ownership request mismatch",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exclusive created-project ownership mismatch",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "current target ownership mismatch",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Current target ownership mismatch",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "GET404 required retirement",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management GET /projects/991 returned HTTP 200",
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "180s deadline and30s call timeout",
+      "status": "PASS",
+      "calls": 3,
+      "timeouts": [
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management operation ceiling",
+      "nativeHeaderChecks": 3,
+      "causePresent": false
+    },
+    {
+      "name": "7call ceiling exact api directprobe",
+      "status": "PASS",
+      "calls": 7,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 7,
+      "causePresent": false
+    },
+    {
+      "name": "malformed key JSON private-safe failure",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management JSON rejected; private contents withheld",
+      "nativeHeaderChecks": 6,
+      "causePresent": false,
+      "privateDiagnosticSafe": true
+    },
+    {
+      "name": "newline key denied before envwrite",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "malformed account JSON private-safe before effects",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Management JSON rejected; private contents withheld",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account accessToken type undefined",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account accessToken type null",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account accessToken type 1",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account accessToken type false",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account accessToken type ",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0000",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0001",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0002",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0003",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0004",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0005",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0006",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0007",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0008",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0009",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+000a",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+000b",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+000c",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+000d",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+000e",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+000f",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0010",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0011",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0012",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0013",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0014",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0015",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0016",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0017",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0018",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0019",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+001a",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+001b",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+001c",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+001d",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+001e",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+001f",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+0020",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+007f",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+2028",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key control U+2029",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring undefined",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring null",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring 0",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring 1",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring true",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring false",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring []",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring {}",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key nonstring [\"dev:new-disposable-123|FAKE_KEY\"]",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key wrong production prefix",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key too long8193",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "key boundary8192 exact3 roundtrip",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "env parser loss case FAKE#COMMENT",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Private environment roundtrip rejected",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "env parser loss case FAKE\"VALUE",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "env parser loss case FAKE'VALUE",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "private response size ceiling",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management response size rejected; private contents withheld",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "ownership durable before verification",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "postcreate key denial retains exclusive ownership",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Development key mismatch",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "retire exact postcreate key failure despite sourcefailure",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "postcreate targetsave diskfailure preserves ownership env",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "FAKE_DISK_FAILURE",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "retire exact partial envsave targetfailure",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0000",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0001",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0002",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0003",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0004",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0005",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0006",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0007",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0008",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0009",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+000a",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+000b",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+000c",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+000d",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+000e",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+000f",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0010",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0011",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0012",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0013",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0014",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0015",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0016",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0017",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0018",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0019",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+001a",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+001b",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+001c",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+001d",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+001e",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+001f",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+0020",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+007f",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+2028",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account control U+2029",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account token length8193 rejects prefetch",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Configured Convex account authentication rejected",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "account token boundary8192 native Header positive",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "account outside Header Latin1 sanitized",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [
+        30000
+      ],
+      "error": "Management GET /teams transport failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 1,
+      "causePresent": false
+    },
+    {
+      "name": "account outside Header Latin1 sanitized",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [
+        30000
+      ],
+      "error": "Management GET /teams transport failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 1,
+      "causePresent": false
+    },
+    {
+      "name": "private fetch exception sanitized",
+      "status": "PASS",
+      "calls": 1,
+      "timeouts": [
+        30000
+      ],
+      "error": "Management GET /teams transport failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 1,
+      "causePresent": false
+    },
+    {
+      "name": "private body exception sanitized",
+      "status": "PASS",
+      "calls": 1,
+      "timeouts": [
+        30000
+      ],
+      "error": "Management GET /teams response failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 1,
+      "causePresent": false
+    },
+    {
+      "name": "aborted uncertain POST durable journal",
+      "status": "PASS",
+      "calls": 2,
+      "timeouts": [
+        30000,
+        30000
+      ],
+      "error": "Management POST /teams/325340/create_project transport failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 2,
+      "causePresent": false
+    },
+    {
+      "name": "aborted POST blind retry denied",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exclusive output exists; inspect prior outcome before retry",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "uncertain POST body failure durable journal",
+      "status": "PASS",
+      "calls": 2,
+      "timeouts": [
+        30000,
+        30000
+      ],
+      "error": "Management POST /teams/325340/create_project response failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 2,
+      "causePresent": false
+    },
+    {
+      "name": "uncertain POST body blind retry denied",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [],
+      "error": "Exclusive output exists; inspect prior outcome before retry",
+      "nativeHeaderChecks": 0,
+      "causePresent": false
+    },
+    {
+      "name": "known ownership after private key fetch failure",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management POST /deployments/new-disposable-123/create_deploy_key transport failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "retire known ownership after key transport failure",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    },
+    {
+      "name": "known ownership after private key body failure",
+      "status": "PASS",
+      "calls": 6,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "error": "Management POST /deployments/new-disposable-123/create_deploy_key response failure; dispatch uncertain; private diagnostics withheld",
+      "nativeHeaderChecks": 6,
+      "causePresent": false
+    },
+    {
+      "name": "retire known ownership after key body failure",
+      "status": "PASS",
+      "calls": 5,
+      "timeouts": [
+        30000,
+        30000,
+        30000,
+        30000,
+        30000
+      ],
+      "nativeHeaderChecks": 5,
+      "causePresent": false
+    }
+  ],
+  "limitations": [
+    "All helper config/fs/fetch substituted in-memory; no actual credential read, network or helper disk mutation. Evidence files are written only outside VM by authorized reviewer persistence.",
+    "Exact helper source plus ephemeral export of api for one bound probe; real source never changed.",
+    "Exact guard validateTarget, native Node parseEnv and native Node Headers execute; preparationReviewed injectable pass/fail represents reviewed prerequisite, not sourcePreflight certification.",
+    "This does not certify live API shape/availability, native foundation, or fullTask03."
+  ]
+}

@@ -1344,3 +1344,24 @@ Task03 current foundation preparation cycle1 is NEEDS REVISION3.4. Independent a
 Task04 C8 finite source/content preparation is NEEDS REVISION3.8. Content is recoverable for the declared operational cohorts, including the additional C5 closure-audit backing object, but old all-nine identities have ctime drift. A distinct finite Linux acquisition/source baseline is in progress. No larger physical cohort, original122 ROOT qualification, native consumer, production qualification registry or Task04 functional acceptance has been released. Historical C7 FULL REJECT2.8, recorder STATIC ONLY PASS4.25 and incomplete published transport/custody remain unchanged.
 
 The full original goal remains incomplete. The accepted c2 dependency order and all original success criteria remain in force.
+
+## 2026-10-06 UTC — current Task03 native attempt failed; r2 source preparation accepted
+
+Task03 management cycle3 independently PASS4.4/162controls, after preserved2.8/3.0
+rejections and exact preimages. Verified fresh cloud/dev project3155546 was provisioned;
+official CLI with codegen/typecheck enabled failed exit1/3840ms before native cases.
+Actual installed Convex source discovers TypeScript only under fixture-local
+node_modules; PATH-only inference is superseded. All owned groups terminal, no native
+case PASS inferred. Target physically deletedPOST200/readback404. Exact private CLI
+diagnostics/incidental environment, generated change and active-selector preimage are
+retained in the owned Linux volume; retired selector invalidated. New candidate/private
+attempt namespace is under bounded preparation and requires fresh independent review.
+
+Fresh independent Task04 r2 preparation PASS4.2 (Requirement5/other4dimensions4)
+verified complete697file/66directory Linux seal, six361part streams, all declared
+source/package cohorts and59,756 current historical file reads/1,914,201,418B. Ten
+thousand264 absent physical paths all have verified backing, with no required content
+missing. Known physical plus raw demand12,452,908,282B; canonical dispatch capacity
+still held. This releases separate source-only physical preparation subject to fresh
+runtime binding/resource review, not subjects/native/whole122/ROOT/Task04 acceptance.
+Historical C7 transport/custody and scoped rejections remain unchanged. Full goal open.

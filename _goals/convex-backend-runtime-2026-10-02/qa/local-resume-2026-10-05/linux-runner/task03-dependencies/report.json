@@ -1,0 +1,20 @@
+{
+  "scope": "LINUX_DEPENDENCY_INFRASTRUCTURE_ONLY",
+  "imageId": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "ownedVolume": "cortex-task03-deps-20261005-b681774e",
+  "toolchain": {"node": "24.15.0", "npm": "12.2.0", "platform": "linux", "arch": "x64", "uid": 501, "gid": 20},
+  "resourceLimit": {"installMemoryBytes": 2147483648, "verificationMemoryBytes": 536870912},
+  "preservedFailures": [
+    {"receipt": "linux-deps-install.log", "exit": 1, "cause": "Empty volume directory root-owned; COPYFILE_EXCL rejected with EACCES before install"},
+    {"receipt": "linux-deps-install-r2.log", "exit": 1, "cause": "Default empty-volume copy-up reset ownership; explicit ownership guard rejected before copy/install"},
+    {"receipt": "linux-deps-verification.stderr", "exit": 1, "cause": "Root-only --workspaces=false installation omitted required https-proxy-agent declared through workspace dependencies"}
+  ],
+  "repairs": [
+    "Read-only inspections proved the empty volume state before repair. All subsequent mounts use volume-nocopy; ownership501:20/0700 was checked before COPYFILE_EXCL metadata transfer.",
+    "Transferred only exact root manifests plus the two declared workspace manifests; npm ci used the original lock and --ignore-scripts, with no blanket lifecycle approval."
+  ],
+  "successfulChecks": {"rootOnlyInstall": "PASS;476 packages; insufficient dependency scope retained", "completeDeclaredWorkspacesInstall": "PASS;567 packages", "nativeEsbuildTransform": "PASS", "fourManifestHashes": "PASS", "requiredInstalledVersions": "PASS"},
+  "actualServiceRequests": 0,
+  "actualDeployments": 0,
+  "nativeFoundationAcceptance": false
+}

@@ -1,0 +1,23 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "vm": {
+    "runtime": "v24.15.0",
+    "command": "node --experimental-vm-modules _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-management-cycle3-review/offline-vm-harness.mjs",
+    "exitCode": 0,
+    "cases": 162
+  },
+  "syntax": {
+    "command": "node --check _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-target-management.mjs",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": "ESLint10 API with overrideConfigFile=true, recommended JS rules, Node globals, ESM/latest, no cache/fix",
+    "exitCode": 0
+  },
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "workingDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+}

@@ -1,0 +1,15 @@
+[eval]:1
+const fs=require("node:fs"),cp=require("node:child_process");const s=fs.statSync("/deps");if(s.uid!==501||s.gid!==20||fs.readdirSync("/deps").length!==0)throw Error("unexpected volume ownership or contents");for(const p of ["package.json","package-lock.json"])fs.copyFileSync("/input/"+p,"/deps/"+p,fs.constants.COPYFILE_EXCL);console.log(JSON.stringify({node:process.version,npm:cp.execFileSync("npm",["--version"],{encoding:"utf8"}).trim(),uid:process.getuid(),cgroupMax:fs.readFileSync("/sys/fs/cgroup/memory.max","utf8").trim()}));process.exitCode=cp.spawnSync("npm",["ci","--workspaces=false","--ignore-scripts","--no-audit","--no-fund","--cache","/deps/npm-cache"],{stdio:"inherit"}).status
+                                                                                                                                                         ^
+
+Error: unexpected volume ownership or contents
+    at [eval]:1:160
+    at runScriptInThisContext (node:internal/vm:219:10)
+    at node:internal/process/execution:451:12
+    at [eval]-wrapper:6:24
+    at runScriptInContext (node:internal/process/execution:449:60)
+    at evalFunction (node:internal/process/execution:283:30)
+    at evalTypeScript (node:internal/process/execution:295:3)
+    at node:internal/main/eval_string:71:3
+
+Node.js v24.15.0

@@ -1,0 +1,49 @@
+{
+  "runtime": "v24.15.0",
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "managementSourceSha256": "d27838fbf4a0c9a4d4dedbcfb94ad453f1a0d3e5e5d00b32b4229abeb3303aba",
+  "guardSourceSha256": "ac0ba9104aa2debb63b61ed95ee2dceb418517935a4ffa8c6d8a7a6a38977eaf",
+  "requestSha256": "e22be908a45fbdfb54d57efae992c137769b5f54aad1844a40a4cf11ef0f8255",
+  "caseCount": 3,
+  "results": [
+    {
+      "name": "native account header CR diagnostic reflection",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [
+        30000
+      ],
+      "error": "Headers.append: \"Bearer SECRET_SENTINEL_123\rSECOND_LINE\" is an invalid header value.",
+      "diagnosticReflectsPrivateAccountValue": true,
+      "noPlatformRequests": true
+    },
+    {
+      "name": "native account header LF diagnostic reflection",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [
+        30000
+      ],
+      "error": "Headers.append: \"Bearer SECRET_SENTINEL_123\nSECOND_LINE\" is an invalid header value.",
+      "diagnosticReflectsPrivateAccountValue": true,
+      "noPlatformRequests": true
+    },
+    {
+      "name": "native account header NUL diagnostic reflection",
+      "status": "PASS",
+      "calls": 0,
+      "timeouts": [
+        30000
+      ],
+      "error": "Headers.append: \"Bearer SECRET_SENTINEL_123\u0000SECOND_LINE\" is an invalid header value.",
+      "diagnosticReflectsPrivateAccountValue": true,
+      "noPlatformRequests": true
+    }
+  ],
+  "limitations": [
+    "All helper config/fs/fetch substituted in-memory; no actual credential read, network or helper disk mutation. Evidence files are written only outside VM by authorized reviewer persistence.",
+    "Exact helper source; inherited ephemeral api export is unused in these three probes. Real source never changed.",
+    "Exact guard validateTarget and native Node parseEnv execute; preparationReviewed injectable pass/fail represents reviewed prerequisite, not sourcePreflight certification.",
+    "This does not certify live API shape/availability, native foundation, or fullTask03."
+  ]
+}
