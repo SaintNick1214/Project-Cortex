@@ -1,0 +1,427 @@
+[
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/auth.config.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import type { AuthConfig } from \"convex/server\";\nexport default { providers: [{ type: \"customJwt\", applicationID: \"cortex-task01\", issuer: \"https://cortex-qualification.invalid\", jwks: \"data:text/plain;charset=utf-8;base64,eyJrZXlzIjpbeyJrdHkiOiJSU0EiLCJuIjoic1VZeEFtREVBblE5V1RzdW9rNGlycFF1ZDRvcUQ0S0c5d0hBS3ZzWFhzMXdrMmJFWDk5ZmdZZzA5WmcwS3h3TGxrU0tHb3d2U1h2X3JwQmxNQVBUclFBX2QtOWpacVctVDFEMGJnRV9Pb1lHWnhfanNpU19HZTBXdEtsZDE2VGNOOXJmM2lqVzBMS2M3R1RjYXZ0aXR3T1hvQkhSdzV0ZmNnMU92WnprYjVHTEM1OEVGd1hCSDlpVFFTdm9tMEVrcmdwcklHdjBLdTlXWlk0eHd0X3ZmclVTWUt5Y0d0TnVoVUpRa05CN3Y2ellmNzBYZ29yaUNXNWlia3BuOFVLSE5Xd2thY3BQQ2Z0M212Yk14WnRRLURSZjBWWkU4SXU3SUx0ZVVuNFdDeF9FMTlRSVJrOTEtZ0lxR1RodGlHWFJILUtGYmFZMEtkVFZSOFhkcy1LSXBRIiwiZSI6IkFRQUIiLCJraWQiOiJ0YXNrMDEtcnMyNTYtdjEiLCJhbGciOiJSUzI1NiIsInVzZSI6InNpZyJ9XX0=\", algorithm: \"RS256\" }] } satisfies AuthConfig;\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/auth.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { ConvexError } from \"convex/values\";\nimport type { QueryCtx, MutationCtx, ActionCtx } from \"./_generated/server\";\n\nexport async function principal(ctx: Pick<QueryCtx | MutationCtx | ActionCtx, \"auth\">): Promise<string> {\n  const identity = await ctx.auth.getUserIdentity();\n  if (!identity) throw new ConvexError({ version: 1, code: \"UNAUTHENTICATED\", retryable: false });\n  if (![\"task01-owner\", \"task01-other-owner\"].includes(identity.subject)) throw new ConvexError({ version: 1, code: \"FORBIDDEN\", retryable: false });\n  return identity.subject;\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/convex.config.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { defineApp } from \"convex/server\";\nimport agent from \"@convex-dev/agent/convex.config\";\nimport workflow from \"@convex-dev/workflow/convex.config\";\nimport workpool from \"@convex-dev/workpool/convex.config\";\n\nconst app = defineApp();\napp.use(agent);\napp.use(workflow);\napp.use(workpool);\nexport default app;\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/execution.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { v } from \"convex/values\";\nimport { internal } from \"./_generated/api\";\nimport { workflow } from \"./runtime\";\n\nexport const execute = workflow.define({\n  args: { runId: v.id(\"runs\") },\n  returns: v.null(),\n  handler: async (step,args): Promise<null> => {\n    await step.runAction(internal.inference.execute, args, { retry: false });\n    return null;\n  },\n});\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/http.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { httpRouter } from \"convex/server\";\nimport { internal } from \"./_generated/api\";\nimport { httpAction } from \"./_generated/server\";\n\nconst http=httpRouter();\nhttp.route({path:\"/fixture-effect\",method:\"POST\",handler:httpAction(async(ctx,request)=>{\n  const expected=process.env.QUALIFICATION_EFFECT_SECRET;\n  if(!expected||request.headers.get(\"x-fixture-secret\")!==expected) return new Response(\"Forbidden\",{status:403});\n  const body:unknown=await request.json();\n  if(!body||typeof body!==\"object\"||!(\"operationId\" in body)||typeof body.operationId!==\"string\") return new Response(\"Bad request\",{status:400});\n  return Response.json(await ctx.runMutation(internal.interrupted.effect,{operationId:body.operationId}));\n})});\nexport default http;\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/inference.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { Agent, createTool, mockModel, type ToolCtx } from \"@convex-dev/agent\";\nimport { convexGateway } from \"@convex-dev/ai-sdk-provider\";\nimport { Output, generateText, stepCountIs } from \"ai\";\nimport { ConvexError, v } from \"convex/values\";\nimport { z } from \"zod\";\nimport { components, internal } from \"./_generated/api\";\nimport { action, internalAction, type ActionCtx } from \"./_generated/server\";\nimport { principal } from \"./auth\";\n\ntype ErrorInfo = { version: 1; code: \"CAPABILITY_UNAVAILABLE\" | \"CAPABILITY_UNSUPPORTED\" | \"UPSTREAM_REJECTED\" | \"UNCERTAIN_OUTCOME\"; retryable: false; errorType: string; statusCode: number | null; message: string };\nfunction unavailable(error: unknown): ErrorInfo {\n  const record = error instanceof Error ? error as Error & { statusCode?: number; responseBody?: string } : null;\n  const statusCode=record?.statusCode??null;\n  const code=statusCode===401||statusCode===403 ? \"CAPABILITY_UNAVAILABLE\" : statusCode===404||statusCode===501 ? \"CAPABILITY_UNSUPPORTED\" : statusCode!==null&&statusCode>=400&&statusCode<500 ? \"UPSTREAM_REJECTED\" : \"UNCERTAIN_OUTCOME\";\n  return { version: 1, code, retryable: false, errorType: record?.name ?? \"UnknownError\", statusCode, message: (record?.message ?? \"Gateway operation outcome unknown\").slice(0, 700) };\n}\n\nexport const capability = action({ args: { interface: v.union(v.literal(\"chat\"),v.literal(\"responses\"),v.literal(\"structured\")) }, handler: async (ctx,args) => {\n  await principal(ctx);\n  try {\n    const model=args.interface===\"responses\" ? convexGateway.responses(\"openai/gpt-4o-mini\") : convexGateway(\"openai/gpt-4o-mini\");\n    const result=await generateText({model,prompt:args.interface===\"structured\" ? \"Return JSON with ready set to true.\" : \"Reply exactly READY.\",maxRetries:0,maxOutputTokens:32,...(args.interface===\"structured\" ? {output:Output.object({schema:z.object({ready:z.boolean()})})} : {})});\n    return {version:1,ok:true,interface:args.interface,text:result.text,output:args.interface===\"structured\"?result.output:null,usage:result.usage};\n  } catch(error) { return {ok:false,interface:args.interface,error:unavailable(error)}; }\n} });\n\nexport const cursorGap = action({ args: { runId:v.id(\"runs\") }, handler: async(ctx,args) => {\n  const owner=await principal(ctx);\n  const run=await ctx.runQuery(internal.runtime.getRun,args);\n  if(!run||run.owner!==owner) throw new ConvexError({version:1,code:\"FORBIDDEN\",retryable:false});\n  await ctx.runMutation(internal.runtime.canonicalOnly,args);\n  throw new ConvexError({version:1,code:\"FORCED_AFTER_FINAL_BEFORE_RECEIPT\",retryable:false});\n} });\n\nexport const execute = internalAction({ args: { runId:v.id(\"runs\") }, handler: async(ctx,args):Promise<null> => {\n  const run=await ctx.runQuery(internal.runtime.getRun,args);\n  if(!run||run.status===\"cancelled\") return null;\n  if(!await ctx.runMutation(internal.runtime.checkpoint,{...args,status:\"running\",incrementAttempt:true})) return null;\n  const synthetic=run.scenario===\"synthetic-stream\";\n  const model=synthetic ? mockModel({content:[{type:\"reasoning\",text:\"private fixture reasoning\"},{type:\"text\",text:\"Cortex durable stream one two three four five six seven eight nine ten.\"}],initialDelayInMs:400,chunkDelayInMs:200}) : convexGateway(\"openai/gpt-4o-mini\");\n  const add=createTool({inputSchema:z.object({a:z.number(),b:z.number()}),description:\"Add two numbers in the authorized backend.\",execute:async(_toolCtx:ToolCtx,input,{toolCallId})=>{\n    const result=await ctx.runMutation(internal.runtime.add,{runId:run._id,operationId:`${run._id}:tool:${toolCallId}`,a:input.a,b:input.b});\n    // Owned nonbillable tool delay creates a bounded real observer disconnect window.\n    await new Promise(resolve=>setTimeout(resolve,1800));\n    return result;\n  }});\n  const agent=new Agent<ActionCtx>(components.agent,{name:\"task01-qualified-agent\",languageModel:model,instructions:\"Be brief. Use add once when asked to calculate.\",tools:run.scenario===\"gateway-tool\"?{add}:{},stopWhen:stepCountIs(2),contextOptions:{searchOtherThreads:false,recentMessages:10}});\n  try {\n    const result=await agent.streamText(ctx,{threadId:run.threadId,userId:run.owner},{promptMessageId:run.promptMessageId,maxRetries:0,maxOutputTokens:64},{saveStreamDeltas:{throttleMs:50,chunking:\"word\"}});\n    await result.text;\n    await ctx.runMutation(internal.runtime.checkpoint,{runId:run._id,status:\"completed\"});\n  } catch(error) {\n    await ctx.runMutation(internal.runtime.checkpoint,{runId:run._id,status:\"failed\",errorCode:synthetic?\"STREAM_ABORTED\":unavailable(error).code});\n  }\n  return null;\n} });\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/interrupted.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { v } from \"convex/values\";\nimport { internal } from \"./_generated/api\";\nimport { internalAction, internalMutation, mutation, query } from \"./_generated/server\";\nimport { principal } from \"./auth\";\nimport { workflow } from \"./runtime\";\n\nexport const start = mutation({args:{operationId:v.string()},handler:async(ctx,args):Promise<string>=>{\n  const owner=await principal(ctx);\n  const operationId=`${owner}:${args.operationId}`;\n  const old=await ctx.db.query(\"operations\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",operationId)).unique();\n  if(old) return old._id;\n  const id=await ctx.db.insert(\"operations\",{owner,operationId,state:\"queued\",attempts:0,effects:0});\n  await workflow.start(ctx,internal.interrupted.flow,{operationId});\n  return id;\n}});\nexport const observe=query({args:{operationId:v.string()},handler:async(ctx,args)=>{\n  const owner=await principal(ctx);\n  return ctx.db.query(\"operations\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",`${owner}:${args.operationId}`)).unique();\n}});\nexport const recover=mutation({args:{operationId:v.string()},handler:async(ctx,args)=>{\n  const owner=await principal(ctx);\n  const operation=await ctx.db.query(\"operations\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",`${owner}:${args.operationId}`)).unique();\n  if(!operation) throw new Error(\"OPERATION_NOT_FOUND\");\n  return {version:1,code:operation.state===\"uncertain\"?\"UNCERTAIN_OUTCOME\":\"OPERATION_IN_PROGRESS\",replayAllowed:false,attempts:operation.attempts};\n}});\nexport const begin=internalMutation({args:{operationId:v.string()},handler:async(ctx,args)=>{\n  const operation=await ctx.db.query(\"operations\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",args.operationId)).unique();\n  if(!operation||operation.state!==\"queued\") return false;\n  await ctx.db.patch(operation._id,{state:\"started\",attempts:operation.attempts+1});\n  return true;\n}});\nexport const effect=internalMutation({args:{operationId:v.string()},handler:async(ctx,args)=>{\n  const operation=await ctx.db.query(\"operations\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",args.operationId)).unique();\n  if(!operation) throw new Error(\"OPERATION_NOT_FOUND\");\n  await ctx.db.patch(operation._id,{effects:operation.effects+1});\n  return {effectCommitted:true};\n}});\nexport const uncertain=internalMutation({args:{operationId:v.string()},handler:async(ctx,args)=>{\n  const operation=await ctx.db.query(\"operations\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",args.operationId)).unique();\n  if(operation) await ctx.db.patch(operation._id,{state:\"uncertain\"});\n}});\nexport const call=internalAction({args:{operationId:v.string()},handler:async(ctx,args):Promise<null>=>{\n  if(!await ctx.runMutation(internal.interrupted.begin,args)) return null;\n  const response=await fetch(`${process.env.CONVEX_SITE_URL}/fixture-effect`,{method:\"POST\",headers:{\"content-type\":\"application/json\",\"x-fixture-secret\":process.env.QUALIFICATION_EFFECT_SECRET??\"\"},body:JSON.stringify(args)});\n  if(!response.ok) throw new Error(\"EXTERNAL_EFFECT_UNAVAILABLE\");\n  await response.json();\n  // Real HTTP side effect committed. Deliberately lose the outcome before local receipt.\n  throw new Error(\"FORCED_INTERRUPTION_AFTER_EXTERNAL_EFFECT\");\n}});\nexport const flow=workflow.define({args:{operationId:v.string()},returns:v.null(),handler:async(step,args):Promise<null>=>{\n  try { await step.runAction(internal.interrupted.call,args,{retry:false}); }\n  catch { await step.runMutation(internal.interrupted.uncertain,args); }\n  return null;\n}});\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/runtime.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { abortStream, createThread, listMessages, listStreams, saveMessages, syncStreams, vStreamArgs } from \"@convex-dev/agent\";\nimport { WorkflowManager } from \"@convex-dev/workflow\";\nimport { ConvexError, v } from \"convex/values\";\nimport { components, internal } from \"./_generated/api\";\nimport { internalMutation, internalQuery, mutation, query, type MutationCtx, type QueryCtx } from \"./_generated/server\";\nimport type { Doc, Id } from \"./_generated/dataModel\";\nimport { principal } from \"./auth\";\n\nexport const workflow = new WorkflowManager(components.workflow, { workpoolOptions: { maxParallelism: 2, retryActionsByDefault: false } });\n\nfunction publicPart(part:unknown):Record<string,unknown>|null{\n  if(!part||typeof part!==\"object\"||!(\"type\" in part))return null;\n  const p=part as Record<string,unknown>;\n  if(p.type===\"text\"&&typeof p.text===\"string\")return{type:\"text\",text:p.text};\n  if(p.type===\"tool-call\"&&p.toolName===\"add\"&&typeof p.toolCallId===\"string\"){\n    const input=p.input??p.args;\n    if(input&&typeof input===\"object\"&&\"a\" in input&&\"b\" in input&&typeof input.a===\"number\"&&typeof input.b===\"number\")return{type:\"tool-call\",toolCallId:p.toolCallId,toolName:\"add\",input:{a:input.a,b:input.b}};\n  }\n  if(p.type===\"tool-result\"&&p.toolName===\"add\"&&typeof p.toolCallId===\"string\"){\n    const output=p.output??p.result;\n    const value=typeof output===\"number\"?output:output&&typeof output===\"object\"&&\"value\" in output?output.value:null;\n    if(typeof value===\"number\")return{type:\"tool-result\",toolCallId:p.toolCallId,toolName:\"add\",output:{type:\"json\",value}};\n  }\n  return null;\n}\nfunction publicStreamPart(part:unknown):Record<string,unknown>|null{\n  if(!part||typeof part!==\"object\"||!(\"type\" in part))return null;\n  const p=part as Record<string,unknown>;\n  if(p.type===\"start\")return{type:\"start\",...(typeof p.messageId===\"string\"?{messageId:p.messageId}:{})};\n  if(p.type===\"start-step\"||p.type===\"finish-step\")return{type:p.type};\n  if(p.type===\"finish\")return{type:\"finish\",finishReason:[\"stop\",\"length\",\"tool-calls\",\"content-filter\",\"error\",\"other\",\"unknown\"].includes(String(p.finishReason))?p.finishReason:\"other\"};\n  if([\"text-start\",\"text-end\"].includes(String(p.type))&&typeof p.id===\"string\")return{type:p.type,id:p.id};\n  if(p.type===\"text-delta\"&&typeof p.id===\"string\"&&typeof p.delta===\"string\")return{type:p.type,id:p.id,delta:p.delta};\n  if(p.type===\"tool-input-start\"&&p.toolName===\"add\"&&typeof p.toolCallId===\"string\")return{type:p.type,toolName:\"add\",toolCallId:p.toolCallId};\n  if(p.type===\"tool-input-available\"&&p.toolName===\"add\"&&typeof p.toolCallId===\"string\"){\n    const input=p.input;\n    if(input&&typeof input===\"object\"&&\"a\" in input&&\"b\" in input&&typeof input.a===\"number\"&&typeof input.b===\"number\")return{type:p.type,toolName:\"add\",toolCallId:p.toolCallId,input:{a:input.a,b:input.b}};\n  }\n  if(p.type===\"tool-output-available\"&&typeof p.toolCallId===\"string\"&&typeof p.output===\"number\")return{type:p.type,toolCallId:p.toolCallId,output:p.output};\n  if(p.type===\"error\")return{type:\"error\",errorText:\"RUN_FAILED\"};\n  if(p.type===\"abort\")return{type:\"abort\",reason:\"cancelled\"};\n  return null;\n}\n\nasync function owned(ctx: QueryCtx | MutationCtx, runId: Id<\"runs\">): Promise<Doc<\"runs\">> {\n  const owner = await principal(ctx);\n  const run = await ctx.db.get(runId);\n  if (!run || run.owner !== owner) throw new ConvexError({ version: 1, code: \"FORBIDDEN\", retryable: false });\n  return run;\n}\n\nexport const identity = query({ args: {}, handler: async (ctx) => ({ version: 1, principal: await principal(ctx), grant: \"fixture-text-only\" }) });\n\nexport const start = mutation({\n  args: { requestId: v.string(), scenario: v.union(v.literal(\"atomic\"), v.literal(\"cursor\"), v.literal(\"synthetic-stream\"), v.literal(\"gateway-text\"), v.literal(\"gateway-tool\")) },\n  handler: async (ctx, args): Promise<Id<\"runs\">> => {\n    const owner = await principal(ctx);\n    const old = await ctx.db.query(\"runs\").withIndex(\"by_request\", (q) => q.eq(\"owner\", owner).eq(\"requestId\", args.requestId)).unique();\n    if (old) {\n      if (old.scenario !== args.scenario) throw new ConvexError({ version: 1, code: \"IDEMPOTENCY_CONFLICT\", retryable: false });\n      return old._id;\n    }\n    const threadId = await createThread(ctx, components.agent, { userId: owner });\n    const prompt = args.scenario === \"gateway-tool\" ? \"Use add exactly once to add 2 and 3, then reply with the sum.\" : \"Say exactly: Cortex qualification ready.\";\n    const { messages } = await saveMessages(ctx, components.agent, { threadId, userId: owner, messages: [{ role: \"user\", content: prompt }] });\n    const runId = await ctx.db.insert(\"runs\", { owner, requestId: args.requestId, scenario: args.scenario, threadId, promptMessageId: messages[0]._id, status: \"queued\", attempt: 0 });\n    if (![\"atomic\", \"cursor\"].includes(args.scenario)) {\n      const workflowId = await workflow.start(ctx, internal.execution.execute, { runId });\n      await ctx.db.patch(runId, { workflowId });\n    }\n    return runId;\n  },\n});\n\nexport const observe = query({\n  args: { runId: v.id(\"runs\"), streamArgs: v.optional(vStreamArgs) },\n  handler: async (ctx, args) => {\n    const run = await owned(ctx, args.runId);\n    const messages = await listMessages(ctx, components.agent, { threadId: run.threadId, paginationOpts: { numItems: 100, cursor: null } });\n    const streams = await listStreams(ctx, components.agent, { threadId: run.threadId, includeStatuses: [\"streaming\", \"finished\", \"aborted\"] });\n    const deltas = args.streamArgs ? await syncStreams(ctx, components.agent, { threadId: run.threadId, streamArgs: args.streamArgs, includeStatuses: [\"streaming\", \"finished\", \"aborted\"] }) : undefined;\n    let hiddenReasoningParts=0;\n    const publicMessages=messages.page.map(doc=>{\n      // Reconstruct approved fields; never spread raw Agent documents/parts.\n      if(doc.message&&typeof doc.message.content!==\"string\")hiddenReasoningParts+=doc.message.content.filter(part=>part.type.startsWith(\"reasoning\")||part.type===\"redacted-reasoning\").length;\n      const content=!doc.message?null:typeof doc.message.content===\"string\"?doc.message.content:doc.message.content.flatMap(part=>{const visible=publicPart(part);return visible?[visible]:[];});\n      return{_id:doc._id,_creationTime:doc._creationTime,order:doc.order,stepOrder:doc.stepOrder,status:doc.status,message:doc.message?{role:doc.message.role,content}:null};\n    });\n    const publicDeltas=deltas?.kind===\"deltas\" ? {kind:\"deltas\",deltas:deltas.deltas.map(delta=>({streamId:delta.streamId,start:delta.start,end:delta.end,parts:delta.parts.flatMap(part=>{const visible=publicStreamPart(part);return visible?[visible]:[];})}))} : deltas;\n    return { version: 1, run, messages: publicMessages, hiddenReasoningParts, streams, deltas: publicDeltas ?? null, receipts: await ctx.db.query(\"receipts\").withIndex(\"by_run\", q => q.eq(\"runId\", run._id)).collect(), tools: await ctx.db.query(\"tools\").filter(q => q.eq(q.field(\"runId\"), run._id)).collect() };\n  },\n});\n\nexport const atomicFinalize = mutation({\n  args: { runId: v.id(\"runs\"), forceFailure: v.boolean() },\n  handler: async (ctx, args) => {\n    const run = await owned(ctx, args.runId);\n    const { messages } = await saveMessages(ctx, components.agent, { threadId: run.threadId, promptMessageId: run.promptMessageId, messages: [{ role: \"assistant\", content: \"atomic-final\" }] });\n    await ctx.db.insert(\"receipts\", { runId: run._id, messageId: messages[0]._id, revision: 1, stage: \"registered\" });\n    if (args.forceFailure) throw new ConvexError({ version: 1, code: \"FORCED_TRANSACTION_FAILURE\", retryable: false });\n    await ctx.db.patch(run._id, { status: \"completed\" });\n    return messages[0]._id;\n  },\n});\n\nasync function reconcileMessages(ctx: MutationCtx, run: Doc<\"runs\">): Promise<number> {\n  const { page } = await listMessages(ctx, components.agent, { threadId: run.threadId, paginationOpts: { numItems: 100, cursor: null }, statuses: [\"success\"] });\n  const receipts = await ctx.db.query(\"receipts\").withIndex(\"by_run\", q => q.eq(\"runId\", run._id)).collect();\n  let added = 0;\n  const finalMessages=page.filter(message=>message.message?.role===\"assistant\"&&(typeof message.message.content===\"string\" ? message.message.content.trim().length>0 : message.message.content.some(part=>part.type===\"text\"&&part.text.trim().length>0))).slice(0,1);\n  for (const message of finalMessages) {\n    if (message.message?.role === \"assistant\" && !receipts.some(r => r.messageId === message._id)) {\n      await ctx.db.insert(\"receipts\", { runId: run._id, messageId: message._id, revision: 1, stage: \"registered\" });\n      added++;\n    }\n  }\n  return added;\n}\n\nexport const reconcile = mutation({ args: { runId: v.id(\"runs\") }, handler: async (ctx,args) => reconcileMessages(ctx,await owned(ctx,args.runId)) });\nexport const getRun = internalQuery({ args: { runId: v.id(\"runs\") }, handler: async (ctx,args) => ctx.db.get(args.runId) });\nexport const checkpoint = internalMutation({\n  args: { runId: v.id(\"runs\"), status: v.string(), errorCode: v.optional(v.string()), incrementAttempt: v.optional(v.boolean()) },\n  handler: async (ctx,args) => {\n    const run = await ctx.db.get(args.runId);\n    if (!run) throw new Error(\"RUN_NOT_FOUND\");\n    if (run.status === \"cancelled\") return false;\n    await ctx.db.patch(run._id, { status: args.status, ...(args.errorCode ? { errorCode: args.errorCode } : {}), attempt: run.attempt + (args.incrementAttempt ? 1 : 0) });\n    if (args.status === \"completed\") await reconcileMessages(ctx,run);\n    return true;\n  },\n});\nexport const canonicalOnly = internalMutation({ args: { runId: v.id(\"runs\") }, handler: async (ctx,args) => {\n  const run = await ctx.db.get(args.runId);\n  if (!run) throw new Error(\"RUN_NOT_FOUND\");\n  const { messages } = await saveMessages(ctx, components.agent, { threadId: run.threadId, promptMessageId: run.promptMessageId, messages: [{ role: \"assistant\", content: \"cursor-final\" }] });\n  return messages[0]._id;\n} });\nexport const cancel = mutation({ args: { runId: v.id(\"runs\") }, handler: async (ctx,args) => {\n  const run = await owned(ctx,args.runId);\n  if([\"completed\",\"failed\",\"uncertain\",\"cancelled\"].includes(run.status))return{version:1,status:run.status,abortedStreams:0,upstreamReversalGuaranteed:false};\n  await ctx.db.patch(run._id,{ status:\"cancelled\" });\n  const streams=await listStreams(ctx,components.agent,{threadId:run.threadId});\n  for (const stream of streams) await abortStream(ctx,components.agent,{streamId:stream.streamId,reason:\"fixture-user-cancel\"});\n  if(run.workflowId) await workflow.cancel(ctx,run.workflowId as import(\"@convex-dev/workflow\").WorkflowId);\n  return { version:1,status:\"cancelled\",abortedStreams:streams.length,upstreamReversalGuaranteed:false };\n} });\nexport const add = internalMutation({args:{runId:v.id(\"runs\"),operationId:v.string(),a:v.number(),b:v.number()},handler:async(ctx,args)=>{\n  const run=await ctx.db.get(args.runId);\n  if(!run||run.status===\"cancelled\") throw new Error(\"CANCELLED\");\n  const old=await ctx.db.query(\"tools\").withIndex(\"by_operation\",q=>q.eq(\"operationId\",args.operationId)).unique();\n  if(old) return old.result;\n  const result=args.a+args.b;\n  await ctx.db.insert(\"tools\",{runId:args.runId,operationId:args.operationId,result});\n  return result;\n}});\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/schema.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { defineSchema, defineTable } from \"convex/server\";\nimport { v } from \"convex/values\";\n\nexport default defineSchema({\n  runs: defineTable({\n    owner: v.string(), requestId: v.string(), scenario: v.string(), threadId: v.string(), promptMessageId: v.string(),\n    status: v.string(), attempt: v.number(), errorCode: v.optional(v.string()), workflowId: v.optional(v.string()),\n  }).index(\"by_request\", [\"owner\", \"requestId\"]),\n  receipts: defineTable({ runId: v.id(\"runs\"), messageId: v.string(), revision: v.number(), stage: v.string() }).index(\"by_run\", [\"runId\"]),\n  tools: defineTable({ runId: v.id(\"runs\"), operationId: v.string(), result: v.number() }).index(\"by_operation\", [\"operationId\"]),\n  operations: defineTable({ owner: v.string(), operationId: v.string(), state: v.string(), attempts: v.number(), effects: v.number() }).index(\"by_operation\", [\"operationId\"]),\n});\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/client.mjs",
+    "messages": [
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'resolve' is defined but never used.",
+        "line": 3,
+        "column": 10,
+        "messageId": "unusedVar",
+        "endLine": 3,
+        "endColumn": 17,
+        "suggestions": [
+          {
+            "messageId": "removeVar",
+            "data": {
+              "varName": "resolve"
+            },
+            "fix": {
+              "range": [
+                76,
+                112
+              ],
+              "text": ""
+            },
+            "desc": "Remove unused variable 'resolve'."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { sign } from \"node:crypto\";\nimport { readFileSync } from \"node:fs\";\nimport { resolve } from \"node:path\";\nimport { ConvexHttpClient } from \"convex/browser\";\nimport { qualificationTarget, repo } from \"./paths.mjs\";\n\nexport { repo };\nexport const target=qualificationTarget();\nexport function jwt(subject=\"task01-owner\",patch={},wrongSignature=false){\n  const header=Buffer.from(JSON.stringify({alg:\"RS256\",typ:\"JWT\",kid:\"task01-rs256-v1\"})).toString(\"base64url\");\n  const now=Math.floor(Date.now()/1000);\n  const payload=Buffer.from(JSON.stringify({iss:\"https://cortex-qualification.invalid\",aud:\"cortex-task01\",sub:subject,iat:now,exp:now+3600,...patch})).toString(\"base64url\");\n  const signingInput=header+\".\"+payload;\n  const key=readFileSync(\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/jwt-private.pem\");\n  const signature=sign(\"RSA-SHA256\",Buffer.from(signingInput),key).toString(\"base64url\");\n  return signingInput+\".\"+(wrongSignature?signature.slice(0,-6)+\"abcdef\":signature);\n}\nexport function client(token=jwt()){\n  const c=new ConvexHttpClient(target.deploymentUrl);\n  if(token)c.setAuth(token);\n  return c;\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/deploy.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/effect-secret.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/gateway-check.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/keys-check.mjs",
+    "messages": [
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'repo' is defined but never used.",
+        "line": 6,
+        "column": 42,
+        "messageId": "unusedVar",
+        "endLine": 6,
+        "endColumn": 46,
+        "suggestions": [
+          {
+            "messageId": "removeVar",
+            "data": {
+              "varName": "repo"
+            },
+            "fix": {
+              "range": [
+                317,
+                323
+              ],
+              "text": ""
+            },
+            "desc": "Remove unused variable 'repo'."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import assert from \"node:assert/strict\";\nimport { spawn } from \"node:child_process\";\nimport { createHash, createPublicKey } from \"node:crypto\";\nimport { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from \"node:fs\";\nimport { resolve } from \"node:path\";\nimport { evidenceFile, fixtureDirectory, repo } from \"./paths.mjs\";\n\nevidenceFile(\"key-generator.json\");\nconst privateRoot=\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005\";\nmkdirSync(privateRoot,{recursive:true,mode:0o700});\nconst scratch=mkdtempSync(resolve(privateRoot,\"key-race-\"));\nconst privateDir=resolve(scratch,\"private\"),publicFixture=resolve(scratch,\"fixture\");\nmkdirSync(resolve(publicFixture,\"convex\"),{recursive:true,mode:0o700});\nconst run=()=>new Promise((resolveResult,reject)=>{\n  const child=spawn(process.execPath,[resolve(fixtureDirectory,\"scripts/keys.mjs\")],{cwd:publicFixture,env:{...process.env,QUALIFICATION_PRIVATE_DIR:privateDir},stdio:[\"ignore\",\"pipe\",\"pipe\"]});\n  let stdout=\"\",stderr=\"\";\n  child.stdout.on(\"data\",chunk=>{stdout+=chunk;});child.stderr.on(\"data\",chunk=>{stderr+=chunk;});\n  child.on(\"error\",reject);child.on(\"close\",exitCode=>resolveResult({exitCode,stdout,stderr}));\n});\nconst hash=file=>createHash(\"sha256\").update(readFileSync(file)).digest(\"hex\");\nlet receipt;\ntry{\n  // Both real processes generate independently, racing for one exclusive key path.\n  const processes=await Promise.all([run(),run()]);\n  assert.equal(processes.filter(process=>process.exitCode===0).length,1);\n  const loser=processes.find(process=>process.exitCode!==0);assert.match(loser.stderr,/Private key exists; preserve it and its matching public JWKS/);\n  const privatePath=resolve(privateDir,\"jwt-private.pem\"),publicPath=resolve(publicFixture,\"convex/auth.config.ts\");\n  const publicJwk=createPublicKey(readFileSync(privatePath)).export({format:\"jwk\"});\n  const encoded=readFileSync(publicPath,\"utf8\").match(/data:text\\/plain;charset=utf-8;base64,([A-Za-z0-9+/=]+)/)?.[1];assert.ok(encoded);\n  const published=JSON.parse(Buffer.from(encoded,\"base64\").toString(\"utf8\")).keys[0];\n  assert.equal(published.n,publicJwk.n);assert.equal(published.e,publicJwk.e);\n  assert.equal(statSync(privatePath).mode&0o777,0o600);\n  const before={private:hash(privatePath),public:hash(publicPath)};\n  const repeated=await run();assert.notEqual(repeated.exitCode,0);assert.match(repeated.stderr,/Private key exists/);\n  assert.deepEqual({private:hash(privatePath),public:hash(publicPath)},before);\n  receipt={version:1,status:\"PASS\",networkCalls:0,concurrentProcesses:2,successfulCreators:1,losersRejected:1,publishedJwksMatchesWinningKey:true,privateKeyMode:\"0600\",repeatRejectedWithoutChangingKeyOrJwks:true,realQualificationKeyGeneratorNotRun:true,privateKeysCreatedOnlyInScratch:true};\n}finally{rmSync(scratch,{recursive:true,force:true});}\nwriteFileSync(evidenceFile(\"key-generator.json\"),JSON.stringify({...receipt,temporaryPrivateKeysCleaned:true},null,2));\nconsole.log(JSON.stringify({status:\"PASS\",concurrentCreators:1,overwrites:0,temporaryPrivateKeysCleaned:true,networkCalls:0}));\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/keys.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/ordering-check.mjs",
+    "messages": [
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'repo' is defined but never used.",
+        "line": 6,
+        "column": 42,
+        "messageId": "unusedVar",
+        "endLine": 6,
+        "endColumn": 46,
+        "suggestions": [
+          {
+            "messageId": "removeVar",
+            "data": {
+              "varName": "repo"
+            },
+            "fix": {
+              "range": [
+                350,
+                356
+              ],
+              "text": ""
+            },
+            "desc": "Remove unused variable 'repo'."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import assert from \"node:assert/strict\";\nimport { spawnSync } from \"node:child_process\";\nimport { createHash } from \"node:crypto\";\nimport { chmodSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from \"node:fs\";\nimport { resolve } from \"node:path\";\nimport { evidenceFile, fixtureDirectory, repo } from \"./paths.mjs\";\n\nevidenceFile(\"effect-ordering.json\");\nconst privateRoot=\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005\";\nmkdirSync(privateRoot,{recursive:true,mode:0o700});\nconst scratch=mkdtempSync(resolve(privateRoot,\"ordering-\"));\nconst archive=resolve(fixtureDirectory,\"../../task01/evidence\");\nconst originalLive=resolve(archive,\"live-receipts.json\");\nconst hash=file=>createHash(\"sha256\").update(readFileSync(file)).digest(\"hex\");\nconst beforeLive=hash(originalLive);\nconst targetPath=resolve(scratch,\"target.json\"),envPath=resolve(scratch,\"deploy.env\");\nwriteFileSync(targetPath,JSON.stringify({operation:\"create-disposable-development-target\",purpose:\"qualification-security\",projectId:12345,projectSlug:\"cortex-runtime-disposable-qualification-security-a1b2c3d4\",projectName:\"Cortex runtime disposable qualification security a1b2c3d4\",deploymentName:\"qualification-test-001\",deploymentUrl:\"https://qualification-test-001.convex.cloud\",deploymentType:\"dev\",kind:\"cloud\",isolationVerified:true,productionDeployment:false,sharedCiTarget:false,privateEnvironmentFile:envPath}));\nwriteFileSync(envPath,\"CONVEX_DEPLOY_KEY=dev:qualification-test-001|test-only-placeholder\\n\",{mode:0o600});\n\n// Builtin ESM bindings and the actual Convex client are intercepted in each child.\n// Positive controls prove interception is active; all outbound fallbacks fail closed.\nconst preload=resolve(scratch,\"intercept.mjs\");\nwriteFileSync(preload,`\nimport fs from \"node:fs\";\nimport cp from \"node:child_process\";\nimport crypto from \"node:crypto\";\nimport http from \"node:http\";\nimport https from \"node:https\";\nimport net from \"node:net\";\nimport tls from \"node:tls\";\nimport { syncBuiltinESMExports } from \"node:module\";\nimport { ConvexHttpClient } from ${JSON.stringify(import.meta.resolve(\"convex/browser\"))};\nconst record=kind=>fs.appendFileSync(process.env.INTERCEPT_EVENTS,JSON.stringify({kind})+\"\\\\n\");\nconst blocked=kind=>(..._args)=>{record(kind);throw new Error(\"Unexpected intercepted outbound operation: \"+kind);};\ncp.spawnSync=(..._args)=>{record(\"spawnSync\");return {status:0,stdout:\"INTERCEPTED subprocess; no network\\\\n\",stderr:\"\"};};\ncp.spawn=blocked(\"spawn\");\nglobalThis.fetch=blocked(\"fetch\");\nhttp.request=blocked(\"http.request\");http.get=blocked(\"http.get\");\nhttps.request=blocked(\"https.request\");https.get=blocked(\"https.get\");\nnet.connect=blocked(\"net.connect\");net.createConnection=blocked(\"net.createConnection\");\ntls.connect=blocked(\"tls.connect\");\nconst originalRead=fs.readFileSync;\nfs.readFileSync=function(path,...args){if(String(path).endsWith(\"/cortex-runtime-task01-private-20261005/jwt-private.pem\")){record(\"private-key-read\");return Buffer.from(\"test-only intercepted signing key\");}return originalRead.call(this,path,...args);};\ncrypto.sign=(..._args)=>Buffer.from(\"test-only-signature\");\nConvexHttpClient.prototype.action=async function(){record(\"ConvexHttpClient.action\");return {ok:true,intercepted:true};};\nConvexHttpClient.prototype.query=blocked(\"ConvexHttpClient.query\");\nConvexHttpClient.prototype.mutation=blocked(\"ConvexHttpClient.mutation\");\nsyncBuiltinESMExports();\n`);\n\nconst cases=[];\nlet sequence=0;\nfunction run(script,evidence,secret){\n  const eventsFile=resolve(scratch,`events-${sequence++}.jsonl`);\n  const child=spawnSync(process.execPath,[\"--import\",preload,resolve(fixtureDirectory,\"scripts\",script)],{cwd:fixtureDirectory,encoding:\"utf8\",env:{...process.env,CORTEX_QUALIFICATION_TARGET_RECEIPT:targetPath,CORTEX_QUALIFICATION_DEPLOY_ENV:envPath,CORTEX_QUALIFICATION_EVIDENCE_DIR:evidence,CORTEX_QUALIFICATION_EFFECT_SECRET_FILE:secret??resolve(scratch,\"never-created-secret.txt\"),INTERCEPT_EVENTS:eventsFile}});\n  const events=existsSync(eventsFile)?readFileSync(eventsFile,\"utf8\").trim().split(\"\\n\").filter(Boolean).map(line=>JSON.parse(line)):[];\n  return {child,events};\n}\nfunction deny(name,script,evidence,secret,pattern=/Archived Task01 evidence is immutable|symlink|Private secret|private secret/){\n  const {child,events}=run(script,evidence,secret);\n  assert.notEqual(child.status,0,name);assert.match(child.stderr,pattern,name);assert.equal(events.length,0,name+\": external/signing effects must be zero\");\n  cases.push({name,status:\"PASS\",exitCode:child.status,interceptedEffects:0});\n}\nfunction fresh(name){const path=resolve(scratch,name);mkdirSync(path,{recursive:true});return path;}\n\ntry{\n  const directoryAlias=resolve(scratch,\"archive-alias\");symlinkSync(archive,directoryAlias,\"dir\");\n  const nonexistentSuffix=\"guard-probe-must-not-create\";\n  assert.equal(existsSync(resolve(archive,nonexistentSuffix)),false);\n  for(const script of [\"deploy.mjs\",\"gateway-check.mjs\",\"qualify.mjs\",\"effect-secret.mjs\",\"verify.mjs\",\"keys-check.mjs\"]){\n    deny(script+\"-directory-alias-before-effects\",script,directoryAlias);\n    deny(script+\"-nonexistent-suffix-alias-before-effects\",script,resolve(directoryAlias,nonexistentSuffix,\"nested\"));\n  }\n  assert.equal(existsSync(resolve(archive,nonexistentSuffix)),false);\n  for(const [script,names] of [[\"deploy.mjs\",[\"deploy.txt\"]],[\"gateway-check.mjs\",[\"gateway-chat.json\"]],[\"qualify.mjs\",[\"live-receipts.json\"]],[\"effect-secret.mjs\",[\"effect-secret-setup.json\"]],[\"verify.mjs\",[\"check-commands.json\",\"transport.json\",\"live-receipts.json\"]],[\"keys-check.mjs\",[\"key-generator.json\"]]]){\n    for(const name of names){\n      const dir=fresh(`output-${sequence}`);symlinkSync(originalLive,resolve(dir,name));\n      deny(script+\"-\"+name+\"-archive-file-alias-before-effects\",script,dir);\n    }\n  }\n  const danglingEvidence=fresh(\"dangling-output\");symlinkSync(resolve(archive,\"guard-never-existing-output.json\"),resolve(danglingEvidence,\"deploy.txt\"));\n  deny(\"dangling-output-symlink-fails-before-deploy\",\"deploy.mjs\",danglingEvidence,undefined,/ENOENT/);\n  const linkedEvidence=fresh(\"hardlinked-output\");const linkSource=resolve(scratch,\"nonarchive-source.txt\");writeFileSync(linkSource,\"private scratch marker\");linkSync(linkSource,resolve(linkedEvidence,\"deploy.txt\"));\n  deny(\"hardlinked-output-fails-before-deploy\",\"deploy.mjs\",linkedEvidence,undefined,/hardlink/);\n\n  const publicDir=fresh(\"public-outside-private-root\");\n  // This outside destination is an OS temp-like work fixture, never real QA.\n  // Its canonical location is outside the allowed private root.\n  const outside=resolve(fixtureDirectory,\"../evidence\",`ordering-outside-${process.pid}`);mkdirSync(outside,{mode:0o700});\n  try{\n    const privateAlias=resolve(scratch,\"private-parent-alias\");symlinkSync(outside,privateAlias,\"dir\");\n    const escaped=resolve(privateAlias,\"missing-parent/secret.txt\");\n    deny(\"private-parent-symlink-nonexistent-suffix-rejected\",\"effect-secret.mjs\",publicDir,escaped);\n    assert.equal(existsSync(resolve(outside,\"missing-parent\")),false);\n    const publicAlias=resolve(scratch,\"qa-parent-alias\");symlinkSync(resolve(fixtureDirectory,\"../../task01-security\"),publicAlias,\"dir\");\n    deny(\"private-parent-symlink-into-QA-rejected\",\"effect-secret.mjs\",publicDir,resolve(publicAlias,\"guard-no-secret.txt\"));\n    assert.equal(existsSync(resolve(fixtureDirectory,\"../../task01-security/guard-no-secret.txt\")),false);\n    const outsideFile=resolve(outside,\"existing.txt\");writeFileSync(outsideFile,\"a\".repeat(64),{mode:0o600});\n    const fileAlias=resolve(scratch,\"private-file-alias.txt\");symlinkSync(outsideFile,fileAlias);\n    deny(\"existing-private-file-symlink-rejected\",\"effect-secret.mjs\",publicDir,fileAlias);\n    const internalAlias=resolve(scratch,\"private-internal-alias.txt\"),internalFile=resolve(scratch,\"private-real.txt\");writeFileSync(internalFile,\"b\".repeat(64),{mode:0o600});symlinkSync(internalFile,internalAlias);\n    deny(\"internal-private-file-symlink-rejected\",\"effect-secret.mjs\",publicDir,internalAlias);\n    const danglingSecret=resolve(scratch,\"private-dangling.txt\");symlinkSync(resolve(outside,\"absent.txt\"),danglingSecret);\n    deny(\"dangling-private-file-symlink-rejected\",\"effect-secret.mjs\",publicDir,danglingSecret,/ENOENT/);\n    const linkedSecret=resolve(scratch,\"private-hardlinked.txt\");linkSync(internalFile,linkedSecret);\n    deny(\"hardlinked-private-file-rejected\",\"effect-secret.mjs\",publicDir,linkedSecret,/hardlink/);\n    const openSecret=resolve(scratch,\"open-secret.txt\");writeFileSync(openSecret,\"c\".repeat(64),{mode:0o600});chmodSync(openSecret,0o644);\n    const before=hash(openSecret);\n    deny(\"existing-private-secret-mode-0644-rejected\",\"effect-secret.mjs\",publicDir,openSecret,/mode 0600/);\n    assert.equal(hash(openSecret),before);assert.equal(statSync(openSecret).mode&0o777,0o644);\n  }finally{rmSync(outside,{recursive:true,force:true});}\n  for(const script of [\"deploy.mjs\",\"gateway-check.mjs\"]){\n    const {child,events}=run(script,fresh(`positive-${script}`));\n    assert.equal(child.status,0);assert.ok(events.some(event=>event.kind===(script===\"deploy.mjs\"?\"spawnSync\":\"ConvexHttpClient.action\")));\n    cases.push({name:script+\"-positive-control-interception-active\",status:\"PASS\",interceptedEffects:events.length,liveEffects:0});\n  }\n  const secureFile=resolve(scratch,\"created-secret.txt\");\n  const created=run(\"effect-secret.mjs\",fresh(\"positive-secret-create\"),secureFile);\n  assert.equal(created.child.status,0);assert.deepEqual(created.events,[{kind:\"spawnSync\"}]);assert.equal(statSync(secureFile).mode&0o777,0o600);\n  const secureHash=hash(secureFile);\n  const reused=run(\"effect-secret.mjs\",fresh(\"positive-secret-reuse\"),secureFile);\n  assert.equal(reused.child.status,0);assert.deepEqual(reused.events,[{kind:\"spawnSync\"}]);assert.equal(hash(secureFile),secureHash);\n  cases.push({name:\"secure-private-secret-create-and-reuse-no-overwrite\",status:\"PASS\",interceptedEffects:2,mode:\"0600\",liveEffects:0});\n  assert.equal(hash(originalLive),beforeLive);\n}finally{rmSync(scratch,{recursive:true,force:true});}\nconst receipt={version:1,status:\"PASS\",observedAt:new Date().toISOString(),networkCalls:0,paidCalls:0,deployments:0,deniedCases:cases.filter(check=>check.interceptedEffects===0).length,cases,archiveLiveReceiptUnchanged:true,noArchiveDirectoriesOrSecretsCreated:true,privateTestSecretsCleaned:true,realQualificationKeyNotRead:true,interceptionPositiveControls:true};\nwriteFileSync(evidenceFile(\"effect-ordering.json\"),JSON.stringify(receipt,null,2));\nconsole.log(JSON.stringify({status:\"PASS\",cases:cases.length,networkCalls:0,paidCalls:0,deployments:0,privateTestSecretsCleaned:true}));\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/paths-check.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/paths.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/qualify.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/transpile-check.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/transport-check.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import assert from \"node:assert/strict\";\nimport { writeFileSync } from \"node:fs\";\nimport { build } from \"esbuild\";\nimport { readUIMessageStream, type UIMessage, type UIMessageChunk } from \"ai\";\nimport { CortexTextTransport, type RemoteTextRuns, type TextSnapshot } from \"../transport\";\nimport { evidenceFile } from \"./paths.mjs\";\n\nevidenceFile(\"transport.json\");\nlet submissions=0,cancellations=0,observers=0;\nconst remote:RemoteTextRuns={\n  async start(input){assert.equal(input.text,\"Hello\");submissions++;return \"run-1\";},\n  async current(){return \"run-1\";},\n  observe(runId,onSnapshot){observers++;queueMicrotask(()=>{\n    for(const snapshot of [{version:1,runId,text:\"Cortex\",status:\"running\"},{version:1,runId,text:\"Cortex ready\",status:\"completed\"}] satisfies TextSnapshot[])onSnapshot(snapshot);\n  });return ()=>{observers--;};},\n  async cancel(){cancellations++;},\n};\nconst transport=new CortexTextTransport(remote);\nconst input:UIMessage={id:\"request-1\",role:\"user\",parts:[{type:\"text\",text:\"Hello\"}]};\nconst first=await transport.sendMessages({trigger:\"submit-message\",chatId:\"conversation-1\",messageId:undefined,messages:[input],abortSignal:undefined});\nlet final:UIMessage|undefined;\nfor await(const message of readUIMessageStream({stream:first,terminateOnError:true}))final=message;\nassert.equal(final?.id,\"assistant:run-1\");\nassert.deepEqual(final?.parts,[{type:\"text\",text:\"Cortex ready\",state:\"done\",providerMetadata:undefined}]);\nconst reconnect=await transport.reconnectToStream({chatId:\"conversation-1\"});\nassert.ok(reconnect);\nfor await(const message of readUIMessageStream({stream:reconnect,terminateOnError:true}))final=message;\nassert.equal(submissions,1);assert.equal(cancellations,0);assert.equal(observers,0);\nawait assert.rejects(()=>transport.sendMessages({trigger:\"regenerate-message\",chatId:\"conversation-1\",messageId:undefined,messages:[input],abortSignal:undefined}),/UNSUPPORTED_OPERATION/);\nconst toolChunks:UIMessageChunk[]=[{type:\"start\",messageId:\"assistant:tool-run\"},{type:\"tool-input-available\",toolCallId:\"tool-1\",toolName:\"add\",input:{a:2,b:3}},{type:\"tool-output-available\",toolCallId:\"tool-1\",output:5},{type:\"finish\",finishReason:\"stop\"}];\nlet toolMessage:UIMessage|undefined;\nfor await(const message of readUIMessageStream({stream:new ReadableStream({start(controller){for(const chunk of toolChunks)controller.enqueue(chunk);controller.close();}}),terminateOnError:true}))toolMessage=message;\nconst toolPart=toolMessage?.parts.find(part=>part.type===\"tool-add\");\nassert.ok(toolPart&&\"state\" in toolPart&&toolPart.state===\"output-available\");\nassert.ok(\"input\" in toolPart);assert.deepEqual(toolPart.input,{a:2,b:3});assert.ok(\"output\" in toolPart);assert.equal(toolPart.output,5);\nconst held:RemoteTextRuns={...remote,observe(){observers++;return()=>{observers--;};}};\nconst detached=await new CortexTextTransport(held).reconnectToStream({chatId:\"conversation-1\"});assert.ok(detached);await detached.cancel();assert.equal(cancellations,0);assert.equal(observers,0);\nconst abortController=new AbortController();\nconst aborted=await new CortexTextTransport(held).reconnectToStream({chatId:\"conversation-1\",abortSignal:abortController.signal});assert.ok(aborted);abortController.abort();\nconst reader=aborted.getReader();const abortedChunks:UIMessageChunk[]=[];\nfor(;;){const chunk=await reader.read();if(chunk.done)break;abortedChunks.push(chunk.value);}\nassert.ok(abortedChunks.some(chunk=>chunk.type===\"abort\"));assert.equal(cancellations,1);assert.equal(observers,0);\nconst bundled=await build({entryPoints:[\"transport.ts\"],bundle:true,platform:\"browser\",format:\"esm\",write:false,metafile:true});\nconst inputs=Object.keys(bundled.metafile!.inputs);\nassert.ok(inputs.every(path=>!path.includes(\"convex/\")&&!path.includes(\"@convex-dev\")&&!path.includes(\"node:\")));\nconst result={version:1,status:\"PASS\",protocol:\"AI SDK 7 ChatTransport / UIMessageChunk\",submissions,cancellations,activeObservers:observers,browserBundleInputs:inputs,text:\"Cortex ready\",toolInput:{a:2,b:3},toolOutput:5,toolState:\"output-available\",observerDetachDidNotCancel:true,explicitAbortRequestedCancellationOnce:true,browserInteraction:\"not run; credential-free protocol and bundle preparation only\"};\nwriteFileSync(evidenceFile(\"transport.json\"),JSON.stringify(result,null,2));\nconsole.log(JSON.stringify(result));\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/verify.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/transport.ts",
+    "messages": [
+      {
+        "ruleId": null,
+        "fatal": true,
+        "severity": 2,
+        "message": "Parsing error: Cannot read file '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/tsconfig.json'."
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 1,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import type { ChatTransport, UIMessage, UIMessageChunk } from \"ai\";\n\nexport type ResponseStatus = \"queued\" | \"running\" | \"completed\" | \"cancelled\" | \"failed\" | \"uncertain\";\nexport type TextSnapshot = { version: 1; runId: string; text: string; status: ResponseStatus };\nexport type RemoteTextRuns = {\n  start(input: { version: 1; conversationId: string; clientRequestId: string; text: string }): Promise<string>;\n  current(conversationId: string): Promise<string | null>;\n  observe(runId: string, onSnapshot: (snapshot: TextSnapshot) => void): () => void;\n  cancel(runId: string): Promise<void>;\n};\n\nexport class CortexTextTransport implements ChatTransport<UIMessage> {\n  constructor(private readonly remote: RemoteTextRuns) {}\n  async sendMessages(options: Parameters<ChatTransport<UIMessage>[\"sendMessages\"]>[0]): Promise<ReadableStream<UIMessageChunk>> {\n    if (options.trigger !== \"submit-message\") throw new Error(\"UNSUPPORTED_OPERATION: regeneration needs a distinct backend run\");\n    const input = options.messages.at(-1);\n    if (!input || input.role !== \"user\") throw new Error(\"INVALID_INPUT: latest user message required\");\n    const text = input.parts.flatMap(part => part.type === \"text\" ? [part.text] : []).join(\"\\n\");\n    if (!text) throw new Error(\"INVALID_INPUT: text required\");\n    const runId = await this.remote.start({ version: 1, conversationId: options.chatId, clientRequestId: input.id, text });\n    return this.stream(runId, options.abortSignal);\n  }\n  async reconnectToStream(options: Parameters<ChatTransport<UIMessage>[\"reconnectToStream\"]>[0]): Promise<ReadableStream<UIMessageChunk> | null> {\n    const runId = await this.remote.current(options.chatId);\n    return runId ? this.stream(runId, options.abortSignal) : null;\n  }\n  private stream(runId: string, signal?: AbortSignal): ReadableStream<UIMessageChunk> {\n    let unsubscribe: (() => void) | undefined;\n    let previous = \"\";\n    let done = false;\n    const remote = this.remote;\n    const finish = () => { done = true; unsubscribe?.(); signal?.removeEventListener(\"abort\", onAbort); };\n    let onAbort: () => void = () => {};\n    return new ReadableStream<UIMessageChunk>({\n      start(controller) {\n        onAbort = () => {\n          if (done) return;\n          controller.enqueue({ type: \"abort\", reason: \"cancelled\" });\n          finish(); controller.close();\n          void remote.cancel(runId).catch(() => {});\n        };\n        controller.enqueue({ type: \"start\", messageId: `assistant:${runId}` });\n        controller.enqueue({ type: \"text-start\", id: `text:${runId}` });\n        unsubscribe = remote.observe(runId, snapshot => {\n          if (done) return;\n          if (snapshot.version !== 1 || snapshot.runId !== runId || !snapshot.text.startsWith(previous)) {\n            controller.enqueue({ type: \"error\", errorText: \"PROTOCOL_CONFLICT\" });\n            finish(); controller.close(); return;\n          }\n          const delta = snapshot.text.slice(previous.length);\n          if (delta) controller.enqueue({ type: \"text-delta\", id: `text:${runId}`, delta });\n          previous = snapshot.text;\n          if ([\"completed\", \"cancelled\", \"failed\", \"uncertain\"].includes(snapshot.status)) {\n            controller.enqueue({ type: \"text-end\", id: `text:${runId}` });\n            if (snapshot.status === \"cancelled\") controller.enqueue({ type: \"abort\", reason: \"cancelled\" });\n            else if (snapshot.status !== \"completed\") controller.enqueue({ type: \"error\", errorText: snapshot.status === \"uncertain\" ? \"UNCERTAIN_OUTCOME\" : \"RUN_FAILED\" });\n            controller.enqueue({ type: \"finish\", finishReason: snapshot.status === \"completed\" ? \"stop\" : \"other\" });\n            finish(); controller.close();\n          }\n        });\n        if (done) unsubscribe();\n        if (signal?.aborted) onAbort();\n        else signal?.addEventListener(\"abort\", onAbort, { once: true });\n      },\n      // Observer disconnect only detaches. Explicit AbortSignal is cancellation.\n      cancel() { finish(); },\n    });\n  }\n}\n",
+    "usedDeprecatedRules": []
+  }
+]

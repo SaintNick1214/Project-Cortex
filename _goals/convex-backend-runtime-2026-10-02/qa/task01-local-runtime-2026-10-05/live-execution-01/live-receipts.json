@@ -1,0 +1,589 @@
+{
+  "version": 1,
+  "startedAt": "2026-10-06T03:35:28.329Z",
+  "deployment": "elegant-pika-574",
+  "targetType": "dev",
+  "checks": [
+    {
+      "name": "signed-JWT-identity-and-boundary",
+      "status": "PASS",
+      "result": {
+        "verifiedSignedIdentity": true,
+        "negativeCases": [
+          "no-token",
+          "valid-but-no-grant",
+          "wrong-audience",
+          "expired",
+          "bad-signature"
+        ],
+        "privateHttpEffectWithoutSecret": 403,
+        "adminImpersonation": false
+      }
+    },
+    {
+      "name": "live-gateway-structured",
+      "status": "PASS",
+      "result": {
+        "interface": "structured",
+        "ok": true,
+        "output": {
+          "ready": true
+        },
+        "text": "{\"ready\":true}",
+        "usage": {
+          "inputTokenDetails": {
+            "cacheReadTokens": 0,
+            "noCacheTokens": 43
+          },
+          "inputTokens": 43,
+          "outputTokenDetails": {
+            "reasoningTokens": 0,
+            "textTokens": 5
+          },
+          "outputTokens": 5,
+          "totalTokens": 48
+        },
+        "version": 1
+      }
+    },
+    {
+      "name": "live-gateway-responses",
+      "status": "PASS",
+      "result": {
+        "interface": "responses",
+        "ok": true,
+        "output": null,
+        "text": "READY.",
+        "usage": {
+          "inputTokenDetails": {
+            "cacheReadTokens": 0,
+            "noCacheTokens": 11
+          },
+          "inputTokens": 11,
+          "outputTokenDetails": {
+            "reasoningTokens": 0,
+            "textTokens": 2
+          },
+          "outputTokens": 2,
+          "totalTokens": 13
+        },
+        "version": 1
+      }
+    },
+    {
+      "name": "cross-component-atomic-final-and-ingestion",
+      "status": "PASS",
+      "result": {
+        "runId": "jd72cn7ekek2g8gvnbsv8tfveh8frs4r",
+        "forcedFailure": {
+          "assistantMessages": 0,
+          "ingestionReceipts": 0
+        },
+        "success": {
+          "assistantMessages": 1,
+          "ingestionReceipts": 1
+        }
+      }
+    },
+    {
+      "name": "durable-cursor-reconciliation-after-forced-gap",
+      "status": "PASS",
+      "result": {
+        "runId": "jd76p42ky0zvh4mnd63754v4bx8fsg3h",
+        "committedGap": {
+          "assistantMessages": 1,
+          "receipts": 0
+        },
+        "idempotentRecovery": {
+          "firstAdded": 1,
+          "secondAdded": 0,
+          "receipts": 1
+        },
+        "crossOwnerReadAndWriteDenied": true
+      }
+    },
+    {
+      "name": "live-agent-gateway-backend-tool-and-dedup",
+      "status": "PASS",
+      "result": {
+        "runId": "jd7dzybm8tffskzjab8m7fcvcs8frfm9",
+        "status": "completed",
+        "attempts": 1,
+        "toolExecutions": 1,
+        "toolResult": 5,
+        "receipts": 1,
+        "canonicalMessages": [
+          {
+            "id": "kx7ce5s6dk5d08sqtc20myrmqn8fsjq4",
+            "status": "success",
+            "role": "assistant",
+            "content": [
+              {
+                "text": "The sum is 5.",
+                "type": "text"
+              }
+            ]
+          },
+          {
+            "id": "kx716xt9n1zwqazc2hytdn63n98fr3bb",
+            "status": "success",
+            "role": "tool",
+            "content": [
+              {
+                "output": {
+                  "type": "json",
+                  "value": 5
+                },
+                "toolCallId": "call_lR0sYO2RpSrDzairnJDQYvjE",
+                "toolName": "add",
+                "type": "tool-result"
+              }
+            ]
+          },
+          {
+            "id": "kx71aemn09yhrhnrsbk441946d8fr14t",
+            "status": "success",
+            "role": "assistant",
+            "content": [
+              {
+                "input": {
+                  "a": 2,
+                  "b": 3
+                },
+                "toolCallId": "call_lR0sYO2RpSrDzairnJDQYvjE",
+                "toolName": "add",
+                "type": "tool-call"
+              }
+            ]
+          },
+          {
+            "id": "kx71h0nvygknpacj8havmdpnfd8fs66f",
+            "status": "success",
+            "role": "user",
+            "content": "Use add exactly once to add 2 and 3, then reply with the sum."
+          }
+        ],
+        "persistedStreams": [
+          {
+            "agentName": "task01-qualified-agent",
+            "format": "UIMessageChunk",
+            "model": "openai/gpt-4o-mini",
+            "order": 0,
+            "provider": "convexGateway.chat",
+            "status": "finished",
+            "stepOrder": 1,
+            "streamId": "m579g4trsxkd8qdgycb0wgjp298fr590",
+            "userId": "task01-owner"
+          }
+        ]
+      }
+    },
+    {
+      "name": "live-Gateway-tool-disconnect-multiple-observers-no-replay",
+      "status": "PASS",
+      "result": {
+        "evidenceKind": "actual-Gateway-Agent-backend-tool-and-managed-Convex-WebSocket",
+        "runId": "jd7dp25vptz0m66y56gaqjadpx8fs064",
+        "disconnectStatus": "running",
+        "toolEffectsAtDisconnect": 1,
+        "aSnapshots": 3,
+        "bSnapshots": 6,
+        "finalStatus": "completed",
+        "modelActionAttempts": 1,
+        "toolEffects": 1,
+        "finalIngestionReceipts": 1,
+        "sameCanonicalFinalIds": [
+          "kx72nfqwh655666y5rg2xqw82x8frwv2",
+          "kx765cab4x93ff1f49zrzv46w58fsdft"
+        ],
+        "persistedStreams": [
+          {
+            "agentName": "task01-qualified-agent",
+            "format": "UIMessageChunk",
+            "model": "openai/gpt-4o-mini",
+            "order": 0,
+            "provider": "convexGateway.chat",
+            "status": "finished",
+            "stepOrder": 1,
+            "streamId": "m576azcex7djcvm8mk84jqvkn18fsgkq",
+            "userId": "task01-owner"
+          }
+        ]
+      }
+    },
+    {
+      "name": "persisted-Agent-stream-multiple-observers-reconnect",
+      "status": "PASS",
+      "result": {
+        "evidenceKind": "synthetic-model-on-real-Agent-Workflow-and-managed-Convex",
+        "runId": "jd7epzzhtppnjjq1znwdz47xrh8frcvp",
+        "aSnapshots": 3,
+        "bSnapshots": 5,
+        "disconnectDidNotCancel": true,
+        "savedCursor": 1,
+        "resumedDeltas": {
+          "deltas": [
+            {
+              "end": 2,
+              "parts": [
+                {
+                  "type": "start-step"
+                }
+              ],
+              "start": 1,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 3,
+              "parts": [],
+              "start": 2,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 4,
+              "parts": [],
+              "start": 3,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 5,
+              "parts": [],
+              "start": 4,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 6,
+              "parts": [],
+              "start": 5,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 7,
+              "parts": [],
+              "start": 6,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 8,
+              "parts": [
+                {
+                  "id": "txt-1",
+                  "type": "text-start"
+                }
+              ],
+              "start": 7,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 9,
+              "parts": [
+                {
+                  "delta": "Cortex ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 8,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 10,
+              "parts": [
+                {
+                  "delta": "durable ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 9,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 11,
+              "parts": [
+                {
+                  "delta": "stream ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 10,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 12,
+              "parts": [
+                {
+                  "delta": "one ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 11,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 13,
+              "parts": [
+                {
+                  "delta": "two ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 12,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 14,
+              "parts": [
+                {
+                  "delta": "three ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 13,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 15,
+              "parts": [
+                {
+                  "delta": "four ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 14,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 16,
+              "parts": [
+                {
+                  "delta": "five ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 15,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 17,
+              "parts": [
+                {
+                  "delta": "six ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 16,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 18,
+              "parts": [
+                {
+                  "delta": "seven ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 17,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 19,
+              "parts": [
+                {
+                  "delta": "eight ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 18,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 20,
+              "parts": [
+                {
+                  "delta": "nine ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 19,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 21,
+              "parts": [
+                {
+                  "delta": "ten.",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 20,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 22,
+              "parts": [
+                {
+                  "id": "txt-1",
+                  "type": "text-end"
+                }
+              ],
+              "start": 21,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 23,
+              "parts": [
+                {
+                  "type": "finish-step"
+                }
+              ],
+              "start": 22,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            },
+            {
+              "end": 24,
+              "parts": [
+                {
+                  "finishReason": "stop",
+                  "type": "finish"
+                }
+              ],
+              "start": 23,
+              "streamId": "m57bhsetzkzzd3agz1rhrhb7yh8fs9f7"
+            }
+          ],
+          "kind": "deltas"
+        },
+        "finalStatus": "completed",
+        "attempts": 1,
+        "hiddenReasoningParts": 1,
+        "rawReasoningSuppressed": true,
+        "reconnectedCanonicalMessages": [
+          {
+            "id": "kx73mg78m4cq5wybpe8ty3k0898fra0x",
+            "status": "success",
+            "role": "assistant",
+            "content": [
+              {
+                "text": "Cortex durable stream one two three four five six seven eight nine ten.",
+                "type": "text"
+              }
+            ]
+          },
+          {
+            "id": "kx76c3vt95m3j4e41kj5kdbqg18fsq0j",
+            "status": "success",
+            "role": "user",
+            "content": "Say exactly: Cortex qualification ready."
+          }
+        ],
+        "snapshots": [
+          {
+            "observer": "A",
+            "status": "running",
+            "streams": 0
+          },
+          {
+            "observer": "B",
+            "status": "running",
+            "streams": 0
+          },
+          {
+            "observer": "A",
+            "status": "running",
+            "streams": 0
+          },
+          {
+            "observer": "B",
+            "status": "running",
+            "streams": 0
+          },
+          {
+            "observer": "A",
+            "status": "running",
+            "streams": 1
+          },
+          {
+            "observer": "B",
+            "status": "running",
+            "streams": 1
+          },
+          {
+            "observer": "B",
+            "status": "running",
+            "streams": 1
+          },
+          {
+            "observer": "B",
+            "status": "completed",
+            "streams": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "persisted-Agent-stream-cancellation",
+      "status": "PASS",
+      "result": {
+        "evidenceKind": "synthetic-model-on-real-Agent-Workflow-and-managed-Convex",
+        "runId": "jd77dgszer7fk6rc44txkmwggh8fsqxe",
+        "ack": {
+          "abortedStreams": 1,
+          "status": "cancelled",
+          "upstreamReversalGuaranteed": false,
+          "version": 1
+        },
+        "attempts": 1,
+        "receipts": 0,
+        "streams": [
+          {
+            "agentName": "task01-qualified-agent",
+            "format": "UIMessageChunk",
+            "model": "mock-model-id",
+            "order": 0,
+            "provider": "mock-provider",
+            "status": "aborted",
+            "stepOrder": 1,
+            "streamId": "m572a1jjkjx9bed02mb94zhdgh8fst4b",
+            "userId": "task01-owner"
+          }
+        ]
+      }
+    },
+    {
+      "name": "interrupted-external-HTTP-effect-uncertain-no-replay",
+      "status": "PASS",
+      "result": {
+        "operationId": "task01-owner:task01-0f9a7c9b-1713-4a31-9671-f5f831f75837:interrupt",
+        "state": "uncertain",
+        "effects": 1,
+        "attempts": 1,
+        "recovery": {
+          "attempts": 1,
+          "code": "UNCERTAIN_OUTCOME",
+          "replayAllowed": false,
+          "version": 1
+        },
+        "otherOwnerLookup": null,
+        "effectProtocol": "real HTTPS to private peer fixture; loss forced after response and before local outcome receipt",
+        "paidProviderInterruption": "not force-killed; deterministic private peer tests replay decision"
+      }
+    }
+  ],
+  "selectedChecks": [],
+  "wsVersion": "8.21.0",
+  "fixtureLockSha256": "1f4759e9a5b58cd177f2486a685f00481510409347a4e0c3992fc32a13bbfa76",
+  "finishedAt": "2026-10-06T03:36:15.982Z",
+  "status": "PASS"
+}

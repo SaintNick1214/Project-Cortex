@@ -24,3 +24,15 @@ Detailed counts, independent verdicts and raw receipt locations are in
 The product development target is verified in [integration-target.json](integration-target.json).
 Retired qualification targets are historical evidence; they do not certify the current
 product revision. A PASS in a bounded foundation never changes a pending row to PASS.
+
+## Current continuation receipts — 2026-10-05 local / 2026-10-06 UTC
+
+The older row descriptions above retain historical verdicts. Numerical review-cycle limits have been explicitly waived by the user; failures and acceptance assertions have not been waived.
+
+| Bounded prerequisite | Fresh current evidence | Release state |
+|---|---|---|
+| Task01 applicability | All ten original live checks and actual Gateway chat on fresh project3155191; target physically retired; independent PASS4.2 in `local-resume-2026-10-05/task01-runtime-review.json` | Accepted only for the bounded prerequisite; product and interactive UI criteria remain open |
+| Task03 current foundation delta | Original registrations conserved and16 policy internals added; offline1005 tests; independent preparation NEEDS REVISION3.4 exposed false cleanup certification | Live execution held pending repair, new freeze and fresh review |
+| Task04 C8 preparation | Declared content hashes recoverable, but prior filesystem identity pins failed; independent NEEDS REVISION3.8 | Fresh bounded Linux acquisition/source baseline underway; functional Task04 remains incomplete |
+
+The production qualification registry remains empty. Tasks05–17 and complete functional02/03 acceptance remain pending. No full success criterion is newly certified by these prerequisites.
