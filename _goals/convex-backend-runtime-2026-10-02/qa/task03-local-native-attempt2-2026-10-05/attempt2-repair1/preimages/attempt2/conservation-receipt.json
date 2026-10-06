@@ -1,0 +1,121 @@
+{
+  "state": "OFFLINE_PREPARATION_PASS_FINAL_FREEZE_AND_INDEPENDENT_REVIEW_PENDING",
+  "acceptedPreparationSha256": "2fa7ddfd9898216a84ac5079edd0661604b709d09384d847ced94e6c725e4c55",
+  "acceptedFiles": 559,
+  "acceptedFilesReusedByteExact": 551,
+  "declaredFreshDeltas": [
+    {
+      "path": "fresh-identity-public.json",
+      "acceptedSha256": "c127ad587d0f460149dc6138cda4f99359e52afd2a3bdf3491d72df04b40f4ad",
+      "currentSha256": "f4d97a75ba10fc782f4d3ce78987b8406435b7d46cc996ca9070881ebe5af652",
+      "exactPreimage": "attempt2/preimages/fresh-identity-public.json",
+      "diff": "attempt2/diffs/fresh-identity-public.json.diff"
+    },
+    {
+      "path": "managed-fixture/fixture/convex/auth.config.ts",
+      "acceptedSha256": "cf4933337d7072a4fefce56acef64655c1b863bfdda571f588ea5b2f4f241989",
+      "currentSha256": "d04e03175f7377ee9b0c603b2056749caa9a02af3477d3f570afc22d31ae4191",
+      "exactPreimage": "attempt2/preimages/managed-fixture/fixture/convex/auth.config.ts",
+      "diff": "attempt2/diffs/managed-fixture/fixture/convex/auth.config.ts.diff"
+    },
+    {
+      "path": "project-request.json",
+      "acceptedSha256": "e16bf61be0116bb315b164e5c418cc5479e8ff5f480fd6abaadc69397a36fddf",
+      "currentSha256": "05bc7fe494ca654a1ae6f1e9cabecfc00d3b8507a9920cfed09e1d8664b2b6bc",
+      "exactPreimage": "attempt2/preimages/project-request.json",
+      "diff": "attempt2/diffs/project-request.json.diff"
+    },
+    {
+      "path": "repair-cycle2/offline-injection-harness.mjs",
+      "acceptedSha256": "72a705a2247bc15842a71ee67d34504ca90d02324268801c9d032f17fb0ac06e",
+      "currentSha256": "f5af0142aea6128ec657ba6bec936b0da1807e309007c53eac8b0b0a7bbf640b",
+      "exactPreimage": "attempt2/preimages/repair-cycle2/offline-injection-harness.mjs",
+      "diff": "attempt2/diffs/repair-cycle2/offline-injection-harness.mjs.diff"
+    },
+    {
+      "path": "scripts/deploy.mjs",
+      "acceptedSha256": "cb1bcb6f6eef6fca7ce8bd793c83fd68fb039e07bf6b2647262f52b4f5e57fc7",
+      "currentSha256": "0643c3753c76285ab6554e8d67174d244473a4e5edaff1b8e1b7aabca7c2064d",
+      "exactPreimage": "attempt2/preimages/scripts/deploy.mjs",
+      "diff": "attempt2/diffs/scripts/deploy.mjs.diff"
+    },
+    {
+      "path": "scripts/driver.mjs",
+      "acceptedSha256": "61e63866f4a61d1ee5e722894006590b513f8c495e8962ef72cdba6a948f639f",
+      "currentSha256": "473e8cbdceac8305ada3f085b19f884dadc6b5764a9427a6b466072cef174178",
+      "exactPreimage": "attempt2/preimages/scripts/driver.mjs",
+      "diff": "attempt2/diffs/scripts/driver.mjs.diff"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "acceptedSha256": "ac0ba9104aa2debb63b61ed95ee2dceb418517935a4ffa8c6d8a7a6a38977eaf",
+      "currentSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+      "exactPreimage": "attempt2/preimages/scripts/guard.mjs",
+      "diff": "attempt2/diffs/scripts/guard.mjs.diff"
+    },
+    {
+      "path": "scripts/offline-guard-check.mjs",
+      "acceptedSha256": "175115fe2c7a70a3029596115905ddd28962a17a56c7f8ffc3db0802edd66317",
+      "currentSha256": "3cbf64326830eded781622e92c988bdfb31c82d72ffce07f3eb372d0a3009f0d",
+      "exactPreimage": "attempt2/preimages/scripts/offline-guard-check.mjs",
+      "diff": "attempt2/diffs/scripts/offline-guard-check.mjs.diff"
+    }
+  ],
+  "acceptedPublicAidCopiedBytesIncludingPreimages": 11651242,
+  "copyMaximumBytes": 12000000,
+  "compilerProjection": "114 exact installed TypeScript6.0.3 executable/compiler/declaration assets; separate newly pinned dependency projection, no install/wrapper/link",
+  "compilerProjectionBytes": 10617006,
+  "sourceHead": "00fd5c32084d169672c0f08105af2ea77e394d24",
+  "sourcePinsExact": 161,
+  "testSourcePinsExact": 155,
+  "managedProductCopiesExact": 138,
+  "selectedC11OperationalReferencesExact": 23,
+  "oldC11SourceCustody": "Historical and byte-exact; never relabeled",
+  "unaffected1005Tests": "REUSED;17 suites/1005 pass/0 failures/0 pending/0 todo/0 skipped, source/discovery pins exact; not newly executed",
+  "newActualSourceControls": 35,
+  "newConservedCleanupDriverControls": 28,
+  "newGuardNegatives": 39,
+  "newScopedLintFiles": 9,
+  "newSyntaxChecks": 6,
+  "newRootBackendTypes": "PASS; final unchanged source pins rechecked",
+  "newProjectedFixtureTypes": "PASS on actual Node24.15/npm12.2 Linux runtime, exact 2GiB cgroup, networknone, read-only repo/deps",
+  "privateHostWitness": {
+    "path": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005",
+    "uid": 501,
+    "directoryMode": "0700",
+    "keyMode": "0600",
+    "keyLinks": 1,
+    "keyBytesRead": false,
+    "secretBytesOutput": false,
+    "LinuxCopyStatus": "NOT_YET_TRANSFERRED; parent must verify exact owned canonical private paths/UID/modes before live use"
+  },
+  "requiredConservedCounts": {
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "original275/200/75/259Conservation": true,
+  "expectedNativePublished": 287,
+  "fullTask03": "OPEN; foundation cannot substitute functional requirements",
+  "requiredRuntimeBounds": "Original CLI120s/native20min/driver21min/12s call/10000RPC/320rows/16subjects/2storage64bytes/2cleanup attempts unchanged",
+  "policyRegistry": "Current product empty policy[] unchanged; all5 empty tables remain mandatory; no foreign policy deletion",
+  "firstManagedAttemptCustody": "Original accepted public namespace/private/volume untouched; first target retired200/404; native cases0; parent preserved exact env/gitignore/binding/diagnostics; no claimed historical filesystem identity",
+  "failedPreparationReadiness": "HOME failure and512MiB heap failure preserved; vanished original child/cgroup evidence explicitly unavailable; one distinct instrumented diagnostic gives actual raw V8 heap exhaustion",
+  "guardCheckpoint": "guard-test-checkpoint-freeze.json is a pre-final guard test checkpoint, not an independently accepted candidate",
+  "productWrites": 0,
+  "oldNamespaceWrites": 0,
+  "originalVolumeWrites": 0,
+  "serviceCalls": 0,
+  "actualDeployments": 0,
+  "paidCalls": 0,
+  "fullTaskAcceptanceClaimed": false
+}
