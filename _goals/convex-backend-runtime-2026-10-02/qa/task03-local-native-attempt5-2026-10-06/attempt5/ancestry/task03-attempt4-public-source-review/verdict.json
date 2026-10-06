@@ -1,0 +1,47 @@
+{
+  "verdict": "REJECT",
+  "independent": true,
+  "scope": "TASK03_PUBLIC_RECIPE_SOURCE_ONLY",
+  "candidateSha256": "1030329b0f57cfb98de6135c4b8de7031d11a5c856fe56fa2d1d57d05d144799",
+  "candidateBytes": 242545,
+  "candidateMembers": 1338,
+  "candidateReceiptManifestSha256": "0b765da3ee7688f368e23dc238e173fff9ab8dc6ca56b44c3fb9caadf547429c",
+  "manifestMembers": 1337,
+  "report": "report.md",
+  "reportSha256": "4c999477aef543e48ba8696b247cba61ef7bc3946f175474fbb9e6cb1f62b242",
+  "dimensionScores": {
+    "RequirementFulfillment": 2,
+    "CodeQuality": 2,
+    "TestQuality": 3,
+    "PatternAdherence": 5,
+    "Completeness": 2
+  },
+  "average": 2.8,
+  "sourcePins": {
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-coordinate-common.py": "46a02cf65d5e4e58e94a9c86d69130f5b0b0a9e6483b6acdd76f1b394de1ef9d",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-linux-public-transfer.py": "dbd8da0ae40f4023849628276081f2c76e939173b4d26864d84063ee4454fcbe",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt4-public-coordinate.py": "e9c6776a102683f0d0284d655bb19372d0b0d8844eed231f0ca03f0867df6090"
+  },
+  "enablingAttestationWritten": false,
+  "actualPrivateCredentialReads": 0,
+  "actualDockerCalls": 0,
+  "actualManagementServiceCalls": 0,
+  "actualPaidCalls": 0,
+  "actualCliDispatches": 0,
+  "nativeCases": 0,
+  "originalTask03FunctionalAcceptance": "OPEN",
+  "nativeFoundationAcceptance": false,
+  "headAtDispatch": "a6517cfaf2d76fa52e5c5890c54bbfa732cca359",
+  "headAtCompletion": "5928aa83a671dd0f4fd26d9ab14f1ce7242c185e",
+  "parentConcurrentTask04Checkpoint": "Observed5928aa83; relevant frozen Q4/current source bytes unchanged",
+  "freshIndependentParentControls": {
+    "actualHostChildOutcomes": 9,
+    "invalidBoundsBeforeSpawn": 4
+  },
+  "newOwnedDescendantCases": 2,
+  "criticalFailure": "DIRECT_CHILD_TERMINAL_RETURN_WITH_LIVE_DESCENDANT",
+  "reviewerOwnedGroupsCleanedAndAbsent": true,
+  "failureProof": "owned-descendant-observations.json",
+  "actualPublicCopy": "NOT_DISPATCHED",
+  "actualPrivateCoordinator": "EXCLUDED_UNREVIEWED"
+}

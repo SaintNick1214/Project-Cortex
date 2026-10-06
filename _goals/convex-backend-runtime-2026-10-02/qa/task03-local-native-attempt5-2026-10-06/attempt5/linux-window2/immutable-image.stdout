@@ -1,0 +1,65 @@
+[
+    {
+        "Id": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "RepoTags": [
+            "cortex-runtime-c8:node24.15-npm12.2-python3.12"
+        ],
+        "RepoDigests": [
+            "cortex-runtime-c8@sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-06T03:23:38.197870968Z",
+        "Config": {
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.15",
+                "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+            ],
+            "Cmd": [
+                "node",
+                "--version"
+            ],
+            "WorkingDir": "/var/tmp/cortex-native-c8-prospective-preparation",
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 381656494,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:34467cc93912af891dfee8a3902adf9b4f355a9bca4eaa46f658d1181a21de0d",
+                "sha256:d476c6746ca1e1594f36c28af7f3ebee76d63c6a6adaabcc2824c388930bf846",
+                "sha256:bb21db850823bcb6669b652ce8bff42787673cc8136550cc2d783af0415dc486",
+                "sha256:f4572018cf8016fadccf2df095d62525be857901cf1d837892078204a8f6cf43",
+                "sha256:3e97c5d646b1e987806cbfbf06b1e259b08c8562be8346503aeb470b279657bb",
+                "sha256:2733f557a34da72d1c4c840ae6185d2cba489ca244b25e1943aaae1e313f2429",
+                "sha256:1569d6f64af8af6f2beb6725e891050a57fbfee1140b8c8ebd427141b61885d0",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-06T03:23:40.778768636Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "size": 856
+        },
+        "Identity": {
+            "Pull": [
+                {
+                    "Repository": "docker.io/library/cortex-runtime-c8"
+                }
+            ],
+            "Build": [
+                {
+                    "Ref": "o6lx24xqgs6fw4obr5asmtkx0",
+                    "CreatedAt": "2026-10-06T03:23:40.781455636Z"
+                }
+            ]
+        }
+    }
+]

@@ -1,0 +1,232 @@
+{
+  "scope": "ACTUAL_DUMMY_TRANSPORT_ONLY",
+  "status": "PASS",
+  "receiver": {
+    "scope": "ACTUAL_DUMMY_LINUX_PRIVATE_RECEIVER_ONLY",
+    "status": "PASS",
+    "cases": 14,
+    "bindRootObserved": {
+      "uid": 0,
+      "gid": 0,
+      "mode": "0o700"
+    },
+    "selectedChildRequiredAndObserved": {
+      "uid": 501,
+      "gid": 20,
+      "mode": "0o700"
+    },
+    "uid": 501,
+    "gid": 20,
+    "memoryMaxBytes": "536870912",
+    "network": "none",
+    "compilerInvocations": 0,
+    "actualCredentialReads": 0,
+    "actualServiceCalls": 0,
+    "results": [
+      {
+        "name": "actual-docker-parent-selected-owned-child",
+        "status": "PASS",
+        "rejected": false,
+        "outputFiles": 4,
+        "privateFiles": 3,
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "foreign-source-directory-owner",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "foreign-source-file-owner",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-directory-mode",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-file-mode",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-file-hardlink",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-file-symlink",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-file-directory",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-zero-length",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-unselected-extra",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "source-manifest-digest-drift",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "foreign-destination-directory-owner",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "ROOT_POSTCHECK_REQUIRED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "destination-directory-mode",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      },
+      {
+        "name": "destination-nonempty",
+        "status": "PASS",
+        "rejected": true,
+        "newOutputFiles": 0,
+        "baselinePreserved": true,
+        "foreignDestinationContents": "DIRECT_CHECKED",
+        "heldDescriptorsClosed": true
+      }
+    ]
+  },
+  "postcheck": {
+    "scope": "ACTUAL_DUMMY_ROOT_METADATA_POSTCHECK_ONLY",
+    "status": "PASS",
+    "negativeCases": 13,
+    "results": [
+      {
+        "case": "destination-directory-mode",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "destination-nonempty",
+        "baselineFiles": [
+          "owned-existing"
+        ],
+        "newOutputs": 0
+      },
+      {
+        "case": "foreign-destination-directory-owner",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "foreign-source-directory-owner",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "foreign-source-file-owner",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-directory-mode",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-file-directory",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-file-hardlink",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-file-mode",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-file-symlink",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-manifest-digest-drift",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-unselected-extra",
+        "baselineFiles": [],
+        "newOutputs": 0
+      },
+      {
+        "case": "source-zero-length",
+        "baselineFiles": [],
+        "newOutputs": 0
+      }
+    ],
+    "actualCredentialReads": 0,
+    "services": 0
+  },
+  "firstProbe": "FAIL preserved; original failing childstat unavailable; no inferred cause",
+  "privateCredentialReads": 0,
+  "services": 0
+}

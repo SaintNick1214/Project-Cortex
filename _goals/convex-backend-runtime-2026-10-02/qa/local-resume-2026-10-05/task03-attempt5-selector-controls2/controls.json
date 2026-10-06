@@ -1,0 +1,199 @@
+{
+  "status": "PASS",
+  "actualFilesystemChecks": 9,
+  "strictInputChecks": 2,
+  "sourceBytes": 7384,
+  "sourceSHA256": "5bdac8c0dc7cc5ff69be43cb780a28a8546ab9dd1954972bc71bf7ada8538214",
+  "rows": [
+    {
+      "label": "no-copied-target",
+      "expected": "PASS",
+      "failure": null,
+      "outcome": {
+        "status": "PASS",
+        "targetAbsent": true,
+        "activeCopiedSelectorPresent": false,
+        "rootPRE": {
+          "dev": "16777234",
+          "ino": "92031709",
+          "mode": "16832",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "2",
+          "size": "64",
+          "mtime_ns": "1791277737023168847",
+          "ctime_ns": "1791277737023184596"
+        },
+        "rootPOST": {
+          "dev": "16777234",
+          "ino": "92031709",
+          "mode": "16832",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "2",
+          "size": "64",
+          "mtime_ns": "1791277737023168847",
+          "ctime_ns": "1791277737023184596"
+        },
+        "members": [],
+        "copiedSelectorMutated": false,
+        "historicalCustodyRepaired": false
+      },
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": []
+    },
+    {
+      "label": "copied-target-retired",
+      "expected": "PASS",
+      "failure": null,
+      "outcome": {
+        "status": "PASS",
+        "targetAbsent": false,
+        "retiredSelectorInvalidated": true,
+        "originalTargetPRE": {
+          "dev": "16777234",
+          "ino": "92031712",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "191",
+          "mtime_ns": "1791277737023491793",
+          "ctime_ns": "1791277737023509417"
+        },
+        "retiredTargetPRE": {
+          "dev": "16777234",
+          "ino": "92031714",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "321",
+          "mtime_ns": "1791277737023742783",
+          "ctime_ns": "1791277737023837279"
+        },
+        "retiredTargetPOST": {
+          "dev": "16777234",
+          "ino": "92031714",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "321",
+          "mtime_ns": "1791277737023742783",
+          "ctime_ns": "1791277737023837279"
+        },
+        "rootPRE": {
+          "dev": "16777234",
+          "ino": "92031711",
+          "mode": "16832",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "3",
+          "size": "96",
+          "mtime_ns": "1791277737023457002",
+          "ctime_ns": "1791277737023457002"
+        },
+        "rootPOST": {
+          "dev": "16777234",
+          "ino": "92031711",
+          "mode": "16832",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "4",
+          "size": "128",
+          "mtime_ns": "1791277737023837279",
+          "ctime_ns": "1791277737023837279"
+        },
+        "originalTargetSHA256": "4dd9a57103ba237e1cda338d4edf9928166b48305650b2a9a839fb519ce98b70",
+        "retiredTargetSHA256": "1f65036ebc1e51d93bddb8dee3b9432206e763041b569d3f98b57e675e621e4a",
+        "trackedMutation": "TWO_EXCLUSIVE_FILES_AND_ATOMIC_OWNED_SELECTOR_REPLACEMENT",
+        "historicalCustodyRepaired": false
+      },
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target-before-physical-retirement.json",
+        "target.json"
+      ]
+    },
+    {
+      "label": "wrong-active-retirement",
+      "expected": "VERIFIED_RETIRED_SELECTOR",
+      "failure": "VERIFIED_RETIRED_SELECTOR_REQUIRED",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target.json"
+      ]
+    },
+    {
+      "label": "changed-project",
+      "expected": "IMMUTABLE_SELECTOR_FIELD",
+      "failure": "IMMUTABLE_SELECTOR_FIELD_CHANGED",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target.json"
+      ]
+    },
+    {
+      "label": "boolean-project-alias",
+      "expected": "IMMUTABLE_SELECTOR_FIELD",
+      "failure": "IMMUTABLE_SELECTOR_FIELD_CHANGED",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target.json"
+      ]
+    },
+    {
+      "label": "wrong-byte-preimage-hash",
+      "expected": "EXACT_MANAGEMENT_SELECTOR_PREIMAGE_HASH",
+      "failure": "EXACT_MANAGEMENT_SELECTOR_PREIMAGE_HASH_REQUIRED",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target.json"
+      ]
+    },
+    {
+      "label": "exclusive-preimage-already-present",
+      "expected": "EXCLUSIVE_SELECTOR",
+      "failure": "EXCLUSIVE_SELECTOR_RETIREMENT_OUTPUT_EXISTS",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target-before-physical-retirement.json",
+        "target.json"
+      ]
+    },
+    {
+      "label": "replacement-inode-before-atomic-write",
+      "expected": "SELECTOR_CHANGED_BEFORE_OWNED_REPLACEMENT",
+      "failure": "SELECTOR_CHANGED_BEFORE_OWNED_REPLACEMENT",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target-before-physical-retirement.json",
+        "target-retired-replacement.json",
+        "target.json"
+      ],
+      "foreignRoleReplacementUntouched": true
+    },
+    {
+      "label": "directory-replacement-after-owned-write",
+      "expected": "RETIRED_SELECTOR_FINAL_ROOT_CUSTODY",
+      "failure": "RETIRED_SELECTOR_FINAL_ROOT_CUSTODY_MISMATCH",
+      "outcome": null,
+      "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+      "members": [
+        "target.json"
+      ],
+      "foreignRoleReplacementUntouched": true
+    }
+  ],
+  "Linux": false,
+  "privateBytes": false,
+  "services": false,
+  "sourceApproved": false
+}

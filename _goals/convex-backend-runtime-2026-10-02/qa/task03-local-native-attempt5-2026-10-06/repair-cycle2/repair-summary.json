@@ -1,0 +1,72 @@
+{
+  "scope": "CYCLE2_PREPARATION_REPAIR_ONLY",
+  "state": "OFFLINE_CHECKS_PASS_AWAITING_FRESH_INDEPENDENT_REVIEW",
+  "firstCandidateStatus": "NEEDS REVISION3.4",
+  "firstCandidateSha256": "55021f56ef02023578d2965a6c0290aba84cdef74a4b8725dc236d82de9fc976",
+  "firstFreezeAndReceiptManifestByteExact": true,
+  "oldC11OperationalSourcesExact": 23,
+  "firstCandidateFilesUnchangedExceptDeclared": 493,
+  "declaredChangedExistingFiles": [
+    {
+      "path": "scripts/cleanup.mjs",
+      "beforeSha256": "09c71091ad226d0f3abf86e4f508e197d6cfe9dd1c31c8b3daa60adccccf6f2b",
+      "currentSha256": "e32edc7f82f658fd656688d7543f71d3321c0a847e3eec0fba6499e7dd522e22",
+      "exactPreimage": "repair-cycle2/preimages/scripts/cleanup.mjs",
+      "diff": "repair-cycle2/cleanup.mjs.diff"
+    },
+    {
+      "path": "scripts/driver.mjs",
+      "beforeSha256": "72b78629060ad6acee6c1ed357ef770d42b602ee50d9019691b626b4d339916d",
+      "currentSha256": "61e63866f4a61d1ee5e722894006590b513f8c495e8962ef72cdba6a948f639f",
+      "exactPreimage": "repair-cycle2/preimages/scripts/driver.mjs",
+      "diff": "repair-cycle2/driver.mjs.diff"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "beforeSha256": "a5b75261f903c6c06915a0dadbb16115f477cb996cc2603220f3d07aa108573d",
+      "currentSha256": "ac0ba9104aa2debb63b61ed95ee2dceb418517935a4ffa8c6d8a7a6a38977eaf",
+      "exactPreimage": "repair-cycle2/preimages/scripts/guard.mjs",
+      "diff": "repair-cycle2/guard.mjs.diff"
+    }
+  ],
+  "currentSourceHead": "de055f9305bedfc277d3a4400587f01a5e28bcdc",
+  "sourceInventoryBaselineHead": "1f5e6d16ee659e0896dd13df7d798abaf0c8fa63",
+  "sourceInventoryBaselineNote": "Git may advance for QA receipts; all161 source/test/config content pins remain exact. No historical custody relabeling.",
+  "currentSourcePinsExact": 161,
+  "prePostTestSourcePinsExact": 155,
+  "actualSourceInjectionCases": 28,
+  "guardNegativeControls": 38,
+  "scopedLintFiles": 5,
+  "rootBackendFixtureTyping": "PASS",
+  "original1005Tests": "Retained exact source and discovery/skips evidence; unaffected tests not rerun.",
+  "originalConservation": {
+    "productRegistered": 275,
+    "public": 200,
+    "internal": 75,
+    "sourceOriginal259Conserved": true,
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "runtimeBounds": "All original limits unchanged;2 bounded idempotent storage absence confirmations remain within the existing cleanup process deadline.",
+  "policyRegistry": "Empty current product policy[] unchanged; no foreign policy deletion.",
+  "privateOwnerUid": 501,
+  "privateDirectoryMode": "0700",
+  "privateKeyMode": "0600",
+  "privateBytesRead": false,
+  "productWrites": 0,
+  "oldC11Writes": 0,
+  "serviceCalls": 0,
+  "actualDeployments": 0,
+  "paidCalls": 0,
+  "newAcceptanceClaimed": false
+}

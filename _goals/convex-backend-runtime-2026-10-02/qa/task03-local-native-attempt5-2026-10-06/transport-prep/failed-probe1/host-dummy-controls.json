@@ -1,0 +1,138 @@
+{
+  "scope": "ACTUAL_HOST_DUMMY_SOURCE_ONLY",
+  "status": "PASS",
+  "cases": 5,
+  "results": [
+    {
+      "name": "actual-host-held-source-stage",
+      "status": "PASS",
+      "privateFiles": 3,
+      "heldDescriptorsClosed": true,
+      "actualCredentialReads": 0
+    },
+    {
+      "name": "host-source-directory-mode",
+      "status": "PASS",
+      "outputFiles": 0,
+      "heldDescriptorsClosed": true
+    },
+    {
+      "name": "host-source-file-mode",
+      "status": "PASS",
+      "outputFiles": 0,
+      "heldDescriptorsClosed": true
+    },
+    {
+      "name": "host-source-hardlink",
+      "status": "PASS",
+      "outputFiles": 0,
+      "heldDescriptorsClosed": true
+    },
+    {
+      "name": "host-source-symlink",
+      "status": "PASS",
+      "outputFiles": 0,
+      "heldDescriptorsClosed": true
+    }
+  ],
+  "stageReceipt": {
+    "scope": "NEW_PROSPECTIVE_PRIVATE_STAGE",
+    "operation": "d98bad88-5157-4816-b458-4160e7945361",
+    "requestSha256": "172bbc4c5fb38f1b5affd81d4a7a0d90d39b163e221b37f5ca0695ecc7d0128c",
+    "files": [
+      {
+        "path": "jwt-private.pem",
+        "bytes": 37,
+        "sha256": "6d0645e34273767146a8a60918893a4cc1a732a4f12e225d6afc77eab3cd6e8f",
+        "sourceIdentityDecimal": {
+          "st_dev": "16777234",
+          "st_ino": "91897950",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "37",
+          "st_mtime_ns": "1791267295955062241",
+          "st_ctime_ns": "1791267295955062241"
+        },
+        "destinationIdentityDecimal": {
+          "st_dev": "16777234",
+          "st_ino": "91897955",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "37",
+          "st_mtime_ns": "1791267295958179565",
+          "st_ctime_ns": "1791267295958179565"
+        }
+      },
+      {
+        "path": "target.json",
+        "bytes": 635,
+        "sha256": "9fad85b22f2a385c452a6f396b31b4cf35e346de60718f2e089b9b55cf206f46",
+        "sourceIdentityDecimal": {
+          "st_dev": "16777234",
+          "st_ino": "91897951",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "635",
+          "st_mtime_ns": "1791267295955144160",
+          "st_ctime_ns": "1791267295955144160"
+        },
+        "destinationIdentityDecimal": {
+          "st_dev": "16777234",
+          "st_ino": "91897956",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "635",
+          "st_mtime_ns": "1791267295958704577",
+          "st_ctime_ns": "1791267295958704577"
+        }
+      },
+      {
+        "path": "deploy.env",
+        "bytes": 144,
+        "sha256": "a4a0baaa282ed00089fc51ad2720066f7cec4dee7e272aed6fb0a5a609b33631",
+        "sourceIdentityDecimal": {
+          "st_dev": "16777234",
+          "st_ino": "91897952",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "144",
+          "st_mtime_ns": "1791267295955214953",
+          "st_ctime_ns": "1791267295955214953"
+        },
+        "destinationIdentityDecimal": {
+          "st_dev": "16777234",
+          "st_ino": "91897957",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "144",
+          "st_mtime_ns": "1791267295959227464",
+          "st_ctime_ns": "1791267295959227464"
+        }
+      }
+    ],
+    "sourceDescriptorHeld": true,
+    "sourceDirectoryOwnershipRequired": "501:20/0700",
+    "privateContentsPrinted": false,
+    "actualServiceRequests": 0,
+    "qualificationAccepted": false
+  },
+  "hostExportParent": {
+    "uid": 501,
+    "gid": 20,
+    "mode": "0o700"
+  },
+  "actualCredentialReads": 0,
+  "serviceCalls": 0
+}

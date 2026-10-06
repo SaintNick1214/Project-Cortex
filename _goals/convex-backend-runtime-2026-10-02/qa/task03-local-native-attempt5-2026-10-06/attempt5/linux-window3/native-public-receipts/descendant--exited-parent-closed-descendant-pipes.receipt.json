@@ -1,0 +1,121 @@
+{
+  "label": "exited-parent-closed-descendant-pipes",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\nfor fd in (0,1,2):\n try:os.close(fd)\n except OSError:pass\ntime.sleep(15)\nos._exit(0)\n"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:29.624084+00:00",
+  "elapsedSeconds": 0.4637515419999545,
+  "exitCode": 0,
+  "failureClass": "OwnedGroupResidual",
+  "streamByteCounts": {
+    "stdout": 67,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 28,
+      "birthTicks": "140264",
+      "group": 28,
+      "session": 28,
+      "platform": "linux-proc-stat"
+    },
+    "commandPid": 29,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 28,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 28,
+            "state": "S"
+          },
+          {
+            "pid": 30,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 28,
+            "state": "S"
+          },
+          {
+            "pid": 30,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 28,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 28,
+          "state": "R"
+        },
+        {
+          "pid": 30,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 30,
+          "identity": {
+            "pid": 30,
+            "birthTicks": "140293",
+            "group": 28,
+            "session": 28,
+            "platform": "linux-proc-stat"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 28,
+          "state": "R"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 327,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "de088b37ca2da2d3404d3471c5f950543344efe19068a549eb9b5230464a6810",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

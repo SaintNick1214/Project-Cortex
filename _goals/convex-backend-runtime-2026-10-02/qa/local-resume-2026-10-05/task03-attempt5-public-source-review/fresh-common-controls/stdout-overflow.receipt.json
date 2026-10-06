@@ -1,0 +1,94 @@
+{
+  "label": "stdout-overflow",
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import os; os.write(1,b\"A\"*262145)"
+  ],
+  "observedAtUtc": "2026-10-06T09:09:11.042690+00:00",
+  "elapsedSeconds": 0.1981551249991753,
+  "exitCode": 0,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 262145,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 46435,
+      "birthSeconds": "1791277751",
+      "birthMicroseconds": "42872",
+      "group": 46435,
+      "session": 46435,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 46439,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 46435,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 46435,
+            "state": "Ss"
+          },
+          {
+            "pid": 46439,
+            "state": "R"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 46435,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 46435,
+          "state": "Ss"
+        }
+      ],
+      "signals": [],
+      "final": [
+        {
+          "pid": 46435,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 189,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

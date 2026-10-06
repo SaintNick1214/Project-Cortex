@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "scope": "PUBLIC_HOST_OR_LINUX_OWNED_CHILD_GROUP_ONLY",
+  "actualExitedParentVariants": 2,
+  "injectedUnknownOwnershipControls": 1,
+  "results": [
+    {
+      "name": "exited-parent-closed-descendant-pipes",
+      "closedPipes": true,
+      "status": "PASS",
+      "functionReceipt": "exited-parent-closed-descendant-pipes.receipt.json",
+      "ownedIds": {
+        "parentPid": 40093,
+        "descendantPid": 40102,
+        "group": 40080,
+        "session": 40080
+      },
+      "originalFailureRemainsSticky": true,
+      "exactOwnedDescendantKilled": true,
+      "descendantAbsent": true,
+      "groupAbsent": true
+    },
+    {
+      "name": "exited-parent-open-descendant-pipes",
+      "closedPipes": false,
+      "status": "PASS",
+      "functionReceipt": "exited-parent-open-descendant-pipes.receipt.json",
+      "ownedIds": {
+        "parentPid": 40126,
+        "descendantPid": 40127,
+        "group": 40122,
+        "session": 40122
+      },
+      "originalFailureRemainsSticky": true,
+      "exactOwnedDescendantKilled": true,
+      "descendantAbsent": true,
+      "groupAbsent": true
+    },
+    {
+      "name": "unknown-anchor-identity",
+      "status": "PASS",
+      "instrumented": true,
+      "terminalReceiptRejected": true,
+      "activeGroupSignals": 0,
+      "actualResourceAbsenceAfterControllerEOF": true,
+      "dispatchAccepted": false
+    }
+  ],
+  "sourceSha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+  "DockerCalls": 0,
+  "credentialReads": 0,
+  "serviceCalls": 0,
+  "privateCoordinatorExecuted": false
+}

@@ -1,0 +1,75 @@
+{
+  "label": "framed-input-transfer",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "-B",
+    "-c",
+    "import sys; b=sys.stdin.buffer.read(); print(len(b))"
+  ],
+  "observedAtUtc": "2026-10-06T08:40:47.543847+00:00",
+  "elapsedSeconds": 0.29482324999999987,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 6,
+    "stderr": 0
+  },
+  "stdinBytes": 20000,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 38913,
+      "birthSeconds": "1791276047",
+      "birthMicroseconds": "543985",
+      "group": 38913,
+      "session": 38913,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 38915,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 38913,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 38913,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 38913,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "0be508172e87a2af98f344d18610bbaaa0e6bbfcef0c7804b24457f839e129c9",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

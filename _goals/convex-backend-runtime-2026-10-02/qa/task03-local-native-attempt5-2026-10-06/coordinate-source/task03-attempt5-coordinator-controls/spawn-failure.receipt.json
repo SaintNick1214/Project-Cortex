@@ -1,0 +1,87 @@
+{
+  "label": "spawn-failure",
+  "argv": [
+    "/nonexistent-public-owned-test-command"
+  ],
+  "observedAtUtc": "2026-10-06T08:45:46.742160+00:00",
+  "elapsedSeconds": 0.18098754199999867,
+  "exitCode": null,
+  "failureClass": "FileNotFoundError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": false,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 40207,
+      "birthSeconds": "1791276346",
+      "birthMicroseconds": "742295",
+      "group": 40207,
+      "session": 40207,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": null,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 40207,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 40207,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 40207,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 40207,
+          "state": "Ss"
+        }
+      ],
+      "signals": [],
+      "final": [
+        {
+          "pid": 40207,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 172,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

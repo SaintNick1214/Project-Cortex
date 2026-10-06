@@ -1,0 +1,90 @@
+{
+  "scope": "PUBLIC_HOST_CHILD_GROUP_ONLY",
+  "status": "CONFIRMED_COORDINATOR_DEFECT",
+  "observations": [
+    {
+      "directChildReceipt": {
+        "label": "exited-parent-closed-descendant-pipes",
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-B",
+          "-c",
+          "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\nfor fd in (0,1,2):\n try:os.close(fd)\n except OSError:pass\ntime.sleep(15)\nos._exit(0)\n"
+        ],
+        "observedAtUtc": "2026-10-06T08:21:47.587965+00:00",
+        "elapsedSeconds": 0.042890208000000006,
+        "exitCode": 0,
+        "failureClass": null,
+        "streamByteCounts": {
+          "stdout": 79,
+          "stderr": 0
+        },
+        "stdinBytes": 0,
+        "pipeLimits": 262144,
+        "stdinLimit": 327692,
+        "stdinDeadlineSeconds": 12,
+        "terminal": true,
+        "closeErrors": [],
+        "privateContentsPrinted": false,
+        "stdoutSha256": "9c7973cf2155802dea1e37e86b70eb949ad0215c9f4396a2b19f0c886ff5e43e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ownedIds": {
+        "parentPid": 35320,
+        "descendantPid": 35321,
+        "group": 35320,
+        "session": 35320
+      },
+      "descendantAliveAfterRunReturned": true,
+      "liveDescendantStat": "S",
+      "closedPipes": true,
+      "reviewerExactOwnedGroupCleanup": "SIGKILL",
+      "descendantAbsentAfterCleanup": true,
+      "ownedGroupAbsentAfterCleanup": true
+    },
+    {
+      "directChildReceipt": {
+        "label": "exited-parent-open-descendant-pipes",
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-B",
+          "-c",
+          "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\ntime.sleep(15)\nos._exit(0)\n"
+        ],
+        "observedAtUtc": "2026-10-06T08:21:47.635425+00:00",
+        "elapsedSeconds": 0.400213459,
+        "exitCode": 0,
+        "failureClass": "TimeoutError",
+        "streamByteCounts": {
+          "stdout": 79,
+          "stderr": 0
+        },
+        "stdinBytes": 0,
+        "pipeLimits": 262144,
+        "stdinLimit": 327692,
+        "stdinDeadlineSeconds": 12,
+        "terminal": true,
+        "closeErrors": [],
+        "privateContentsPrinted": false,
+        "stdoutSha256": "7fab6fdf3aab0f106e7c59a45fd04860b12b85dbd4c41d6e9c64a200dd9aa722",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ownedIds": {
+        "parentPid": 35324,
+        "descendantPid": 35325,
+        "group": 35324,
+        "session": 35324
+      },
+      "descendantAliveAfterRunReturned": true,
+      "liveDescendantStat": "S",
+      "closedPipes": false,
+      "reviewerExactOwnedGroupCleanup": "SIGKILL",
+      "descendantAbsentAfterCleanup": true,
+      "ownedGroupAbsentAfterCleanup": true
+    }
+  ],
+  "DockerCalls": 0,
+  "credentialReads": 0,
+  "serviceCalls": 0,
+  "nativeDispatches": 0
+}

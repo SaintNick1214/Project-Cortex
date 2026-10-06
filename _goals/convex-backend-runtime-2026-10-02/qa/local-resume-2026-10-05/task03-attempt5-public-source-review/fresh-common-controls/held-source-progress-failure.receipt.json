@@ -1,0 +1,112 @@
+{
+  "label": "held-source-progress-failure",
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import time; time.sleep(10)"
+  ],
+  "observedAtUtc": "2026-10-06T09:09:24.712989+00:00",
+  "elapsedSeconds": 0.18214904200431192,
+  "exitCode": -9,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 46562,
+      "birthSeconds": "1791277764",
+      "birthMicroseconds": "713136",
+      "group": 46562,
+      "session": 46562,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 46564,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 46562,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 46562,
+            "state": "Ss"
+          },
+          {
+            "pid": 46564,
+            "state": "R"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 46562,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 46562,
+          "state": "Ss"
+        },
+        {
+          "pid": 46564,
+          "state": "R"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 46564,
+          "identity": {
+            "pid": 46564,
+            "birthSeconds": "1791277764",
+            "birthMicroseconds": "757225",
+            "group": 46562,
+            "session": 46562,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 46562,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 411,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

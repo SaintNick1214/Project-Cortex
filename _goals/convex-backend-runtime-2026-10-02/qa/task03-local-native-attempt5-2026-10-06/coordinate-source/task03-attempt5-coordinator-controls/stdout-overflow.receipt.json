@@ -1,0 +1,94 @@
+{
+  "label": "stdout-overflow",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "-B",
+    "-c",
+    "import os; os.write(1,b\"A\"*262145)"
+  ],
+  "observedAtUtc": "2026-10-06T08:45:32.745932+00:00",
+  "elapsedSeconds": 0.20503645800000003,
+  "exitCode": 0,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 262145,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 40044,
+      "birthSeconds": "1791276332",
+      "birthMicroseconds": "746088",
+      "group": 40044,
+      "session": 40044,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 40046,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 40044,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 40044,
+            "state": "Ss"
+          },
+          {
+            "pid": 40046,
+            "state": "Z"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 40044,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 40044,
+          "state": "Ss"
+        }
+      ],
+      "signals": [],
+      "final": [
+        {
+          "pid": 40044,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 189,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

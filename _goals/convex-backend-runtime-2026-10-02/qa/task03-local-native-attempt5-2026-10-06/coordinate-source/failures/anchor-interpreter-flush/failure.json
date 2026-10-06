@@ -1,0 +1,6 @@
+{
+  "status": "FAIL_RETAINED",
+  "observation": "exact-pipe-boundary command exit0, anchor release failed after closed stdio interpreter flush",
+  "actualGroupAbsentAfterFailure": true,
+  "repair": "anchor os._exit(0) after explicit release; no outcome assertions changed"
+}

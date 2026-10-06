@@ -1,0 +1,108 @@
+{
+  "label": "exited-parent-open-descendant-pipes",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\ntime.sleep(15)\nos._exit(0)\n"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:30.097239+00:00",
+  "elapsedSeconds": 0.6576116670000829,
+  "exitCode": 0,
+  "failureClass": "TimeoutError",
+  "streamByteCounts": {
+    "stdout": 67,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 31,
+      "birthTicks": "140311",
+      "group": 31,
+      "session": 31,
+      "platform": "linux-proc-stat"
+    },
+    "commandPid": 32,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 31,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 31,
+            "state": "S"
+          },
+          {
+            "pid": 33,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 31,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 31,
+          "state": "R"
+        },
+        {
+          "pid": 33,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 33,
+          "identity": {
+            "pid": 33,
+            "birthTicks": "140341",
+            "group": 31,
+            "session": 31,
+            "platform": "linux-proc-stat"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 31,
+          "state": "R"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 327,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "c6cb4cb0b57389712d2a1864cf187e9ab5a7f3502f82501d4e77bc8a9c8daa7f",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

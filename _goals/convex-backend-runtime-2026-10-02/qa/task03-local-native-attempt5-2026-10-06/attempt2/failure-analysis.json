@@ -1,0 +1,41 @@
+{
+  "scope": "FAILED_FIRST_NATIVE_ATTEMPT_TO_FRESH_PREPARATION_ONLY",
+  "firstAttempt": {
+    "operation": "3b3d1dc7-5c2b-4fb5-b13a-82460fcd3652",
+    "projectId": 3155546,
+    "deployment": "quaint-jellyfish-819",
+    "nativeCasesExecuted": 0,
+    "CLITypecheck": "FAILED_BEFORE_NATIVE_QUALIFICATION",
+    "actualCompilerDiagnostic": "No `tsc` binary found",
+    "custodyReceipt": "attempt2/task03-attempt1-native-failure-custody.json",
+    "retirementReceipt": "attempt2/task03-target-retirement.json",
+    "retirement": "POST200 / GET404 at 2026-10-06T04:44:09.458Z",
+    "originalPrivateVolume": "cortex-task03-current-fixture-20261005-98d651af; read-only/no writes by attempt2 executor",
+    "firstCreatedEnv": "PRIVATE exact original bytes preserved by parent; remains untouched",
+    "firstCreatedGitignore": "PRIVATE exact original 12 bytes preserved by parent; remains untouched"
+  },
+  "supersededHypothesis": {
+    "hypothesis": "Missing repo/node_modules/.bin in child PATH caused compiler lookup failure and prefix alone would repair it",
+    "status": "SUPERSEDED_INSUFFICIENT_PRIMARY_SOURCE_CORRECTION",
+    "validObservation": "Default child PATH omitted dependency .bin",
+    "disprovedImplication": "Actual Convex1.46 compiler lookup never searches PATH"
+  },
+  "actualRootCause": {
+    "installedSource": "node_modules/convex/src/cli/lib/typecheck.ts:193",
+    "compiledSource": "node_modules/convex/dist/cli.bundle.cjs:118191",
+    "lookup": "Only cwd-relative node_modules/@typescript/native/bin/tsc or node_modules/typescript/bin/tsc",
+    "fixtureCompilerAbsentAtBaseline": true,
+    "freshExactCompilerProjectionRequired": true
+  },
+  "prospectiveRepair": {
+    "childPATH": "Canonical actual repo/node_modules/.bin prefix plus explicit actual Node24.15/npm12.2 runtime PATH",
+    "fixtureCompiler": "114 exact installed TS6.0.3 executable/compiler/declaration assets, no install/wrapper/link; prospective immutable source pins",
+    "fixtureGitignore": "Literal .env.local included before freeze",
+    "incidentalEnvironment": "Baseline absent; exact private durable capture/custody before removal of only newly-created owned no-link file",
+    "typecheck": "enable remains mandatory",
+    "codegenMutableOnly": "Original exact five generated paths unchanged",
+    "acceptedCleanup": "Cycle2 cleanup/driver result, terminality, no-effect and empty registry guards retained"
+  },
+  "fullTask03FunctionalAcceptance": "OPEN; safe foundation does not complete transcript/text/assets/final requirements",
+  "provisioning": "NOT_RUN_PENDING_FRESH_INDEPENDENT_PREPARATION_AND_MANAGEMENT_REVIEW"
+}

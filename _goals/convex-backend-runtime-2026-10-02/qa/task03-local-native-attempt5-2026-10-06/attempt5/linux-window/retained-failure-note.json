@@ -1,0 +1,9 @@
+{
+  "status": "FAIL_RETAINED",
+  "stage": "controls-initial-inspect-before-start",
+  "exactObservedCodeBindPrefix": "/host_mnt/Users",
+  "predicate": "expected native Source equal Darwin CODE instead of Docker VM translated exact CODE",
+  "actualControlExecution": false,
+  "ownedContainerAndVolumeAbsenceVerified": true,
+  "repair": "new distinct dummy2 uses exact observed /host_mnt+CODE binding; all isolation and control assertions unchanged"
+}

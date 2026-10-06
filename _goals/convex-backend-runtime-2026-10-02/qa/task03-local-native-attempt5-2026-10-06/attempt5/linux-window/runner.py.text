@@ -1,0 +1,119 @@
+"""Granted finite public-only dummy window; no candidate/private/target transfer."""
+import importlib.util,json,os,sys,time
+from pathlib import Path
+Q=Path(__file__).resolve().parents[1]
+R=Q.parents[3]
+P=Q/'coordinate-source'
+spec=importlib.util.spec_from_file_location('common',P/'task03-attempt5-coordinate-common.py')
+C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
+OP=json.loads((Q/'project-request.json').read_bytes())['operation']
+IMAGE='sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3'
+VOLUME='cortex-task03-attempt5-public-dummy-'+OP[:8]
+NAMES={'init':VOLUME+'-init','controls':VOLUME+'-controls'}
+OUT=Q/'attempt5/linux-window';OUT.mkdir(mode=0o700)
+COPIES=OUT/'native-public-receipts';COPIES.mkdir(mode=0o700)
+CODE=Q/'attempt5/linux-code'
+DOCKER='/usr/local/bin/docker'
+ENV={'PATH':'/usr/local/bin:/usr/bin:/bin','HOME':os.environ['HOME'],'CORTEX_COORDINATOR_CWD':str(R)}
+start=time.monotonic();end=start+180
+records=[];created=False;success=False;cleanup=[];failure=None
+
+def command(label,argv,timeout=30,required=True):
+ remaining=end-time.monotonic()
+ assert remaining>0
+ row,out,err=C.run(label,argv,OUT,min(timeout,remaining),ENV,required=required)
+ records.append(row)
+ assert row['terminal'] and not row['closeErrors'],'owned host group unknown'
+ return row,out,err
+
+def inspect(name,label):
+ _,raw,_=command(label,[DOCKER,'inspect',name])
+ obj=json.loads(raw)[0]
+ assert obj['Config']['Labels']['cortex.operation']==OP and obj['Image']==IMAGE
+ assert obj['HostConfig']['NetworkMode']=='none' and obj['HostConfig']['ReadonlyRootfs']
+ assert obj['HostConfig']['Memory']==obj['HostConfig']['MemorySwap']==536870912
+ return obj
+
+def create(label,user,mounts,script):
+ name=NAMES[label]
+ command(label+'-create',[DOCKER,'create','--name',name,'--label','cortex.operation='+OP,'--label','cortex.scope=attempt5-public-dummy-only','--platform','linux/amd64','--network','none','--memory','512m','--memory-swap','512m','--cpus','2','--pids-limit','64','--read-only','--user',user,*mounts,IMAGE,'/usr/local/bin/python3.12','-B','-c',script])
+ obj=inspect(name,label+'-initial-inspect')
+ assert obj['Config']['User']==user and len(obj['Mounts'])==(1 if label=='init' else 2)
+ assert any(m['Type']=='volume' and m['Name']==VOLUME and m['Destination']=='/owned' and m['RW'] for m in obj['Mounts'])
+ if label=='controls':assert any(m['Type']=='bind' and m['Source']==str(CODE) and m['Destination']=='/code' and not m['RW'] for m in obj['Mounts'])
+ row,out,_=command(label+'-run',[DOCKER,'start','--attach',name],timeout=45,required=False)
+ obj=inspect(name,label+'-terminal-inspect')
+ assert obj['State']['Running'] is False and obj['State']['OOMKilled'] is False
+ assert row['exitCode']==obj['State']['ExitCode']==0 and row['failureClass'] is None
+ return out
+
+try:
+ _,raw,_=command('daemon-memory',[DOCKER,'info','--format','{{json .MemTotal}}'])
+ assert int(raw)>=2147483648
+ _,raw,_=command('resource-preflight',[DOCKER,'stats','--no-stream','--format','{{json .}}'])
+ # Foreign task04 resource statistics only; no foreign file/volume inspection or mutation.
+ C.durable_json(OUT/'resource-admission.json',{'daemonMemoryBytes':int(json.loads((OUT/'daemon-memory.stdout').read_bytes())),'ownedNewLimitBytes':536870912,'singleOwnedContainerAtATime':True,'foreignContainerAltered':False,'grantedByParent':True})
+ _,raw,_=command('immutable-image',[DOCKER,'image','inspect',IMAGE]);image=json.loads(raw)[0]
+ assert image['Id']==IMAGE and image['Architecture']=='amd64' and image['Os']=='linux'
+ row,_,err=command('volume-before-absence',[DOCKER,'volume','inspect',VOLUME],required=False)
+ assert row['exitCode']==1 and b'no such volume' in err.lower()
+ _,raw,_=command('volume-create',[DOCKER,'volume','create','--label','cortex.operation='+OP,'--label','cortex.scope=attempt5-public-dummy-only',VOLUME]);assert raw.strip().decode()==VOLUME
+ created=True
+ volume=['--mount','type=volume,source='+VOLUME+',target=/owned,volume-nocopy']
+ init="import os,json;from pathlib import Path;p=Path('/owned');assert os.getuid()==os.getgid()==0 and not list(p.iterdir());assert Path('/sys/fs/cgroup/memory.max').read_text().strip()=='536870912';assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip()=='0';os.chown(p,501,20);p.chmod(0o700);print(json.dumps({'status':'PASS','sourceBinds':0,'privateReads':0}))"
+ create('init','0:0',volume,init)
+ command('init-remove',[DOCKER,'rm',NAMES['init']])
+ script="""import os,subprocess,json
+from pathlib import Path
+assert os.getuid()==501 and os.getgid()==20
+assert Path('/sys/fs/cgroup/memory.max').read_text().strip()=='536870912'
+assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip()=='0'
+p=Path('/owned');(p/'tmp').mkdir(mode=0o700)
+env={'PATH':'/usr/local/bin:/usr/bin:/bin','CORTEX_PUBLIC_DUMMY_TMP':'/owned/tmp','PYTHONDONTWRITEBYTECODE':'1'}
+for label,path,out in [('source','/code/attempt5/source-controls.py',None),('common','/code/coordinate-source/task03-attempt5-run-common-controls.py','/owned/common'),('descendant','/code/coordinate-source/owned-descendant-controls.py','/owned/descendant')]:
+ e=dict(env)
+ if out:e['CORTEX_COORDINATOR_TEST_OUT']=out
+ r=subprocess.run(['/usr/local/bin/python3.12','-B',path],env=e,capture_output=True,timeout=30)
+ for suffix,data in [('stdout',r.stdout),('stderr',r.stderr)]:
+  fd=os.open(p/(label+'.'+suffix),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600);os.write(fd,data);os.fsync(fd);os.close(fd)
+ print(json.dumps({'label':label,'exitCode':r.returncode,'result':json.loads(r.stdout) if r.returncode==0 else None}),flush=True)
+ assert r.returncode==0,label
+print(json.dumps({'status':'PASS','publicAcquisition':46,'conservedCoordinator':9,'invalidBounds':4,'actualDescendantVariants':2,'unknownOwnership':1,'realCredentialReads':0,'services':0}))
+"""
+ raw=create('controls','501:20',[*volume,'--mount','type=bind,source='+str(CODE)+',target=/code,readonly'],script)
+ results=[json.loads(line) for line in raw.splitlines()]
+ assert results[-1]['status']=='PASS' and results[-1]['publicAcquisition']==46
+ paths=['source.stdout','source.stderr','common.stdout','common.stderr','descendant.stdout','descendant.stderr','common/controls.json','descendant/controls.json']
+ common_labels=['exact-pipe-boundary','stdout-overflow','stderr-overflow','partial-output-deadline','nonzero-terminal','framed-input-transfer','blocked-stdin-deadline','held-source-progress-failure','spawn-failure']
+ descendant_labels=['exited-parent-closed-descendant-pipes','exited-parent-open-descendant-pipes','unknown-anchor-identity']
+ paths += [root+'/'+label+'.'+suffix for root,labels in [('common',common_labels),('descendant',descendant_labels)] for label in labels for suffix in ['stdout','stderr','receipt.json']]
+ paths += ['descendant/'+label+'.descendant-after.json' for label in descendant_labels[:2]]
+ for index,path in enumerate(paths):
+  command('public-receipt-copy-'+str(index),[DOCKER,'cp',NAMES['controls']+':/owned/'+path,str(COPIES/path.replace('/','--'))])
+ command('controls-remove',[DOCKER,'rm',NAMES['controls']])
+ success=True
+except BaseException as error:
+ failure=type(error).__name__
+finally:
+ for label,name in NAMES.items():
+  try:
+   row,raw,err=command('cleanup-inspect-'+label,[DOCKER,'inspect',name],required=False)
+   if row['exitCode']==0 and row['failureClass'] is None:
+    obj=json.loads(raw)[0];assert obj['Config']['Labels']['cortex.operation']==OP and obj['Image']==IMAGE
+    if obj['State']['Running']:command('cleanup-kill-'+label,[DOCKER,'kill',name])
+    _,raw,_=command('cleanup-terminal-'+label,[DOCKER,'inspect',name]);assert json.loads(raw)[0]['State']['Running'] is False
+    command('cleanup-remove-'+label,[DOCKER,'rm',name])
+   else:assert row['exitCode']==1 and b'no such object' in err.lower() and row['failureClass'] is None
+  except BaseException as error:cleanup.append({'stage':label,'failureClass':type(error).__name__})
+ try:
+  if created:
+   _,raw,_=command('owned-volume-inspect',[DOCKER,'volume','inspect',VOLUME]);assert json.loads(raw)[0]['Labels']['cortex.operation']==OP
+   command('owned-volume-remove',[DOCKER,'volume','rm',VOLUME])
+  _,raw,_=command('owned-final-container-absence',[DOCKER,'ps','-aq','--filter','label=cortex.operation='+OP]);assert raw.strip()==b''
+  row,_,err=command('owned-final-volume-absence',[DOCKER,'volume','inspect',VOLUME],required=False);assert row['exitCode']==1 and b'no such volume' in err.lower()
+  until=C.datetime.datetime.now(C.datetime.timezone.utc).isoformat()
+  command('owned-events',[DOCKER,'events','--since',records[0]['observedAtUtc'],'--until',until,'--filter','label=cortex.operation='+OP,'--format','{{json .}}'])
+ except BaseException as error:cleanup.append({'stage':'final-resources','failureClass':type(error).__name__})
+ C.durable_json(OUT/'result.json',{'status':'PASS' if success and not cleanup else 'FAIL','scope':'ACTUAL_LINUX_PUBLIC_DUMMY_CONTROLS_ONLY','operation':OP,'volume':VOLUME,'image':IMAGE,'commands':records,'failureClass':failure,'cleanupErrors':cleanup,'realCredentialReads':0,'services':0,'actualCandidateTransfer':False,'privateBytes':False,'foreignMutations':0,'officialCLI':False,'nativeFoundationAccepted':False})
+print(json.dumps({'status':'PASS' if success and not cleanup else 'FAIL','scope':'PUBLIC_DUMMY_ONLY','cleanupErrors':cleanup,'elapsedSeconds':time.monotonic()-start}))
+if not success or cleanup:raise SystemExit(1)

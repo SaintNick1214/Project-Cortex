@@ -1,0 +1,19 @@
+--- conserved-Q4-source-controls
++++ current-Q5-source-controls
+@@ -210,7 +210,15 @@
+         except ValueError:
+             pass
+     RESULTS.append({'name': 'total-stream-overflow', 'status': 'PASS', 'instrumented': True})
+-    assert len(RESULTS) == 39
++    # Exact protocol integer version: malformed types fail before native or destination creation.
++    for name, invalid_version in [('boolean-true-version', True), ('boolean-false-version', False),
++                                  ('string-version', '1'), ('null-version', None),
++                                  ('integral-float-version', 1.0), ('noninteger-version', 1.5),
++                                  ('wrong-integer-version', 2)]:
++        run_case(name, mutate=lambda p, v=invalid_version: header_change(p, lambda h: h.update(version=v)))
++        assert RESULTS[-1]['observedReceiveSuccess'] is False and RESULTS[-1]['destinationEntries'] == 0
++    assert len(RESULTS) == 46
++    assert [r['name'] for r in RESULTS[:39]] == [r['name'] for r in json.loads((Q / 'attempt4/check2/source-39-host-controls.stdout').read_bytes())['controls']]
+     if sys.platform == 'linux':
+         assert os.getuid() == 501 and os.getgid() == 20
+         assert Path('/sys/fs/cgroup/memory.max').read_text().strip() == '536870912'

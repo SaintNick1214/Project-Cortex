@@ -1,0 +1,54 @@
+"""Current exact-source in-memory management controls; never dispatches management."""
+import hashlib, json, os, stat, subprocess
+from pathlib import Path
+R=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+P=R/'_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05'
+Q=P.parent/'task03-local-native-attempt5-2026-10-06'
+O=Path(__file__).resolve().parent
+F=('st_dev','st_ino','st_mode','st_nlink','st_uid','st_gid','st_size','st_mtime_ns','st_ctime_ns')
+identity=lambda s:{k:str(getattr(s,k)) for k in F}
+source_files=[P/'task03-attempt5-target-management.mjs',P/'task03-attempt4-target-management.mjs',P/'task03-attempt4-management-review/offline-vm-harness.mjs',Q/'scripts/guard.mjs',Q/'project-request.json',Q/'fresh-identity-public.json',Q/'candidate-freeze-attempt4.json']
+held=[]
+def save(n,o):
+ with (O/n).open('x') as f:json.dump(o,f,indent=2);f.write('\n');f.flush();os.fsync(f.fileno())
+try:
+ for p in source_files:
+  s=p.lstat();assert p.resolve(strict=True)==p and stat.S_ISREG(s.st_mode) and s.st_nlink==1
+  fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW);assert identity(s)==identity(os.fstat(fd))
+  raw=os.pread(fd,s.st_size,0);assert len(raw)==s.st_size and not os.pread(fd,1,s.st_size)
+  assert identity(s)==identity(os.fstat(fd))==identity(p.lstat())
+  held.append({'path':str(p),'fd':fd,'raw':raw,'identityDecimal':identity(s),'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+ current,prior,harness,guard,request,fresh,freeze=held
+ assert current['sha256']=='3b52d3f99eb66294a0ffc1ed11c43cabe7062400da53b978db8878b6389a6216' and current['bytes']==11721
+ assert prior['sha256']=='e9ceb4cb1697fd3c10cb719b3d2897c4c7b6982a8d299c280e4adc52fa525b97'
+ inverse=current['raw'].decode().replace('../task03-local-native-attempt5-2026-10-06/scripts/guard.mjs','../task03-local-native-attempt4-2026-10-06/scripts/guard.mjs')
+ for tail in ['management-review','target-provision','target-retirement']:inverse=inverse.replace('task03-attempt5-'+tail+'.json','task03-attempt4-'+tail+'.json')
+ assert inverse.encode()==prior['raw']
+ assert guard['sha256']=='76b26a738773ba66e16914a0f6ac11de4b68cc6364ea337d893a677fd8c5b42b'
+ parsed=json.loads(request['raw'])
+ # Node JSON.stringify digest is verified again by the exact VM harness.
+ assert hashlib.sha256(json.dumps(parsed,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()=='e07e02423f39aeed8e9ec17a7b0b5e7d54af1f6534eeb3b6010743707732d785'
+ adapted=harness['raw'].decode().replace('task03-local-native-attempt4-2026-10-06','task03-local-native-attempt5-2026-10-06').replace('task03-attempt4','task03-attempt5').replace('task03-attempt5-private-20261006','task03-attempt5-private-20261006')
+ (O/'offline-vm-harness.mjs').write_text(adapted)
+ save('harness-adaptation.json',{'namespaceOnly':True,'priorHarnessSha256':harness['sha256'],'adaptedHarnessSha256':hashlib.sha256(adapted.encode()).hexdigest(),'allPrior176CaseNamesAndAssertionsRequired':True})
+ node='/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node'
+ commands=[('offline-vm',[node,'--experimental-vm-modules',str(O/'offline-vm-harness.mjs')]),('helper-syntax',[node,'--check',str(source_files[0])]),('guard-syntax',[node,'--check',str(source_files[3])]),('lint',[node,str(R/'node_modules/eslint/bin/eslint.js'),'--config',str(Q/'attempt2/eslint.config.mjs'),'--no-ignore','--max-warnings','0',str(source_files[0]),str(source_files[3])])]
+ receipts=[]
+ for name,argv in commands:
+  result=subprocess.run(argv,cwd=R,env={'PATH':str(Path(node).parent)+':/usr/bin:/bin'},capture_output=True,timeout=45)
+  for kind,data in [('stdout',result.stdout),('stderr',result.stderr)]:
+   with (O/(name+'.'+kind)).open('xb') as f:f.write(data);f.flush();os.fsync(f.fileno())
+  receipts.append({'name':name,'argv':argv,'exitCode':result.returncode,'stdout':name+'.stdout','stderr':name+'.stderr'})
+  assert result.returncode==0,(name,result.returncode)
+ results=json.loads((O/'offline-vm.stdout').read_bytes()); assert results['caseCount']==176
+ old=json.loads((P/'task03-attempt4-management-review/offline-vm.stdout').read_bytes())
+ assert [r['name'] for r in results['results']]==[r['name'] for r in old['results']]
+ for row in held:
+  p=Path(row['path']);assert row['identityDecimal']==identity(os.fstat(row['fd']))==identity(p.lstat())
+  assert os.pread(row['fd'],row['bytes'],0)==row['raw'] and p.read_bytes()==row['raw']
+ save('source-bindings.json',{'files':[{k:v for k,v in r.items() if k not in ('fd','raw')} for r in held],'allNineHeldThroughControlsAndDurableRaw':True,'namespaceOnlyHelperInverseComparison':True,'actualCredentialReads':0,'actualManagementRequests':0,'DockerCalls':0})
+ save('comparison-prior-176.json',{'status':'PASS','namesOrderEqual':True,'count':176,'allAssertionsConservedNamespaceOnly':True})
+ save('command-receipts.json',{'commands':receipts,'nativeHeaders':True,'nativeParseEnv':True,'actualCredentials':0,'actualRequests':0})
+ print(json.dumps({'status':'PASS','managementControls':176,'namesOrderEqual':True,'namespaceOnlyHelper':True,'heldAllNineAndFullContents':'PASS','actualManagementRequests':0}))
+finally:
+ for r in held:os.close(r['fd'])

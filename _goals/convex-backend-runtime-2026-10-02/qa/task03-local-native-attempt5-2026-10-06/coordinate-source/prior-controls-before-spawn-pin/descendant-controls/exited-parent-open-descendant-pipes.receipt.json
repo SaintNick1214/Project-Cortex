@@ -1,0 +1,112 @@
+{
+  "label": "exited-parent-open-descendant-pipes",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "-B",
+    "-c",
+    "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\ntime.sleep(15)\nos._exit(0)\n"
+  ],
+  "observedAtUtc": "2026-10-06T08:42:46.248643+00:00",
+  "elapsedSeconds": 0.765345625,
+  "exitCode": 0,
+  "failureClass": "TimeoutError",
+  "streamByteCounts": {
+    "stdout": 79,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 39383,
+      "birthSeconds": "1791276166",
+      "birthMicroseconds": "248795",
+      "group": 39383,
+      "session": 39383,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 39385,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 39383,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 39383,
+            "state": "Ss"
+          },
+          {
+            "pid": 39386,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 39383,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 39383,
+          "state": "Ss"
+        },
+        {
+          "pid": 39386,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 39386,
+          "identity": {
+            "pid": 39386,
+            "birthSeconds": "1791276166",
+            "birthMicroseconds": "379628",
+            "group": 39383,
+            "session": 39383,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 39383,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 410,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "33b0a8546dfdbdba0cbe8878232204cb4dd9f6dd3849127ae276aa94518ac33f",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

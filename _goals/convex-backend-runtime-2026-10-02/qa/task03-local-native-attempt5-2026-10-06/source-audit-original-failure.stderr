@@ -1,0 +1,169 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   {
++     from: 'convex-dev/runtimeRegistryAuth.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeWorkerAuth.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeMemoryRepository.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/agents.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeArtifactAuth.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/attachments.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/contexts.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeDataAuth.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/facts.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/governance.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/immutable.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeMetadataAuth.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/memories.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/memorySpaces.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/mutable.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeGateway.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/runtimeModelPolicy.ts',
++     specifier: './_generated/dataModel'
++   },
++   {
++     from: 'convex-dev/sessions.ts',
++     specifier: './_generated/dataModel'
++   }
++ ]
+- []
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/source-audit.mjs:23:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    {
+      from: 'convex-dev/runtimeRegistryAuth.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeWorkerAuth.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeMemoryRepository.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/agents.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeArtifactAuth.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/attachments.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/contexts.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeDataAuth.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/facts.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/governance.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/immutable.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeMetadataAuth.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/memories.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/memorySpaces.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/mutable.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeGateway.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/runtimeModelPolicy.ts',
+      specifier: './_generated/dataModel'
+    },
+    {
+      from: 'convex-dev/sessions.ts',
+      specifier: './_generated/dataModel'
+    }
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

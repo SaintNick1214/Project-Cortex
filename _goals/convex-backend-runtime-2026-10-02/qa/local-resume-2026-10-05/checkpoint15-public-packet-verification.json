@@ -1,0 +1,57 @@
+{
+  "scope": "PUBLIC_GIT_SOURCE_AND_RECEIPTS_ONLY_NOT_SOURCE_ENABLEMENT_OR_FUNCTIONAL_ACCEPTANCE",
+  "packets": [
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/candidate-freeze-attempt5.json",
+      "sha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+      "members": 1905
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/source-receipt-manifest.json",
+      "sha256": "5905b7f6083d255acc1ceb9f86835b37921df89e007c192215e4cad47542b125",
+      "members": 131
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair1/source-receipt-manifest.json",
+      "sha256": "ac534048aabb9920cac771e89f9ad61091f03b58bcc999c2957258298c2086ca",
+      "members": 17
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-preparation-review/evidence-manifest.json",
+      "sha256": "ad1aeeb3512f7964c2ba3875448edcaf73a29b9bb8eccc1ab3cd09cd30054065",
+      "members": 19
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-management-review/evidence-manifest.json",
+      "sha256": "7f7914d11fe7a5279a7591443de99bd4445dbbe04b21e7ad4ccce59d3351ddc9",
+      "members": 24
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-public-source-review/evidence-manifest.json",
+      "sha256": "f686aa9ae9f4c3ac4c131fb302236d1ac3334c7250222c952fa81d9b422a31fb",
+      "members": 57
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-public-repair1-review/evidence-manifest.json",
+      "sha256": "d3a2803a4091528f8aad2e503aa824a284170e365ff5f3d3ab02256086c8a030",
+      "members": 6
+    },
+    {
+      "manifest": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair3-review/evidence-manifest.json",
+      "sha256": "10ec0376b48cd334c9702580edd43f3a78c9b65c801ffa145b5f1012bfcd0840",
+      "members": 99
+    }
+  ],
+  "privatePatternsChecked": 13,
+  "privateByteMatches": 0,
+  "selectedBeforeBookkeeping": 2358,
+  "Task03Prep": "PASS4.4",
+  "Task03Management": "SOURCEPASS4.4",
+  "Task03OriginalPublic": "REJECT3.6",
+  "Task03PublicRepair1": "SCOPEDSOURCEPASS4.4_workerCpending_noenabler",
+  "Task04OriginalRepair3": "REJECT3.4_twoUNKNOWNctime_drift",
+  "prospectiveNewBaseline": "NEW_CURRENT_OBSERVATION_PENDING_FRESH_REVIEW_NOT_HISTORICAL_CUSTODY_REPAIR",
+  "sourceAndNativeAcceptance": "NO_NEWFUNCTIONAL_ACCEPTANCE",
+  "productChanged": false,
+  "fullGoalComplete": false
+}

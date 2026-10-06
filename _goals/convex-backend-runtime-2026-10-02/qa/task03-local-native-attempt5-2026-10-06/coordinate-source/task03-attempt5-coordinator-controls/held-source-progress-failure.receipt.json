@@ -1,0 +1,112 @@
+{
+  "label": "held-source-progress-failure",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "-B",
+    "-c",
+    "import time; time.sleep(10)"
+  ],
+  "observedAtUtc": "2026-10-06T08:45:46.516423+00:00",
+  "elapsedSeconds": 0.22522258400000084,
+  "exitCode": -9,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 40196,
+      "birthSeconds": "1791276346",
+      "birthMicroseconds": "516570",
+      "group": 40196,
+      "session": 40196,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 40198,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 40196,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 40196,
+            "state": "Ss"
+          },
+          {
+            "pid": 40198,
+            "state": "R"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 40196,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 40196,
+          "state": "Ss"
+        },
+        {
+          "pid": 40198,
+          "state": "R"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 40198,
+          "identity": {
+            "pid": 40198,
+            "birthSeconds": "1791276346",
+            "birthMicroseconds": "604378",
+            "group": 40196,
+            "session": 40196,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 40196,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 411,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
