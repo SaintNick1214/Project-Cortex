@@ -1,0 +1,79 @@
+{
+  "scope": "FINAL_IMPLEMENTER_REPAIR2_HOST_SOURCE_CHECKS_NOT_INDEPENDENT_ACCEPTANCE",
+  "AST": [
+    {
+      "path": "bootstrap-npm.py",
+      "bytes": 2316,
+      "sha256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d",
+      "AST": "PASS"
+    },
+    {
+      "path": "bounded_process.py",
+      "bytes": 13849,
+      "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3",
+      "AST": "PASS"
+    },
+    {
+      "path": "ci-run.py",
+      "bytes": 13612,
+      "sha256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1",
+      "AST": "PASS"
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "bytes": 15424,
+      "sha256": "f03b5083ee3e6caca6426a9dca98db61d24c632c86d4f6ef851b1318da310a3f",
+      "AST": "PASS"
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "bytes": 26131,
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+      "AST": "PASS"
+    },
+    {
+      "path": "native-capability.py",
+      "bytes": 18861,
+      "sha256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c",
+      "AST": "PASS"
+    },
+    {
+      "path": "native-owner.py",
+      "bytes": 613,
+      "sha256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215",
+      "AST": "PASS"
+    },
+    {
+      "path": "repair-controls.py",
+      "bytes": 27920,
+      "sha256": "422ae6a065d7e8172b047cbe4459c2ff03cb6986df9a99750e19897b26a9ba91",
+      "AST": "PASS"
+    },
+    {
+      "path": "seal-repair-packet.py",
+      "bytes": 7436,
+      "sha256": "f3f26aa02ec6959727d0a808b2f692acfae36dc44fbb23a1d12a806322005deb",
+      "AST": "PASS"
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "bytes": 5270,
+      "sha256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937",
+      "AST": "PASS"
+    }
+  ],
+  "controlReceiptSHA256": "08a5b2c2a4be62adb81a79b512c99107fb3252d334ecc2b376a584f173c149d2",
+  "sourceOutcomeChecks": 29,
+  "allControlledPythonHashesEqualFinalCurrentSources": true,
+  "prior27ProducerAnd19IndependentOutcomeControls": "Preserved in repair2-conservation-inputs.json; original frozen receipts unchanged",
+  "literalInitializerOutputCount": 13,
+  "literalInitializerMissingOutputs": [],
+  "exactOldWrongDeclarationRejected": true,
+  "parentSetsAndRoundedAllocationsEqual": true,
+  "futureTransferMappingExplicit": true,
+  "futureTransferReleased": false,
+  "actualWorkflowAbsent": true,
+  "DockerCalls": false,
+  "subjects": false,
+  "ROOT": "ABSENT"
+}

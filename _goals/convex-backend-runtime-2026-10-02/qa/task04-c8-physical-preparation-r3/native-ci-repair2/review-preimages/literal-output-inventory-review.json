@@ -1,0 +1,96 @@
+{
+  "scope": "EXACT_RETAINED_INITIALIZER_LITERAL_OUTPUT_SOURCE_COMPARISON_NOT_EXECUTION",
+  "outcome": "FAIL_COMPLETE_LITERAL_INVENTORY_ASSERTION",
+  "initializerSource": {
+    "path": "work/resume/task04-c8-physical-preparation-r3/initialize-phase.py",
+    "bytes": 3504,
+    "sha256": "ac07766a7b733d81a0ee3b5eb26efd7554e869f900aa8232f3ca80ae78cb3552",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "16777234",
+        "ino": "91729406",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "3504",
+        "mtime_ns": "1791264766000495041",
+        "ctime_ns": "1791264914273776770"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "16777234",
+        "ino": "91729406",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "3504",
+        "mtime_ns": "1791264766000495041",
+        "ctime_ns": "1791264914273776770"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "16777234",
+        "ino": "91729406",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "3504",
+        "mtime_ns": "1791264766000495041",
+        "ctime_ns": "1791264914273776770"
+      }
+    },
+    "EOF": true,
+    "heldFinalRereadEqual": true,
+    "reviewerRawExactCopy": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair1-review/raw-evidence/ac07766a7b733d81a0ee3b5eb26efd7554e869f900aa8232f3ca80ae78cb3552"
+  },
+  "initializerFILES": [
+    "acquire_lib.py",
+    "capture-binding.py",
+    "held_runtime.py",
+    "materialize-cohort.py",
+    "phase-holder.py",
+    "phase_resource.py",
+    "initialize-phase.py",
+    "plan.json"
+  ],
+  "initializerProducedToolPaths": [
+    "tools/acquire_lib.py",
+    "tools/capture-binding.py",
+    "tools/held_runtime.py",
+    "tools/initialize-phase.py",
+    "tools/materialize-cohort.py",
+    "tools/phase-holder.py",
+    "tools/phase_resource.py",
+    "tools/plan.json"
+  ],
+  "declaredFixedToolPaths": [
+    "tools/acquire_lib.py",
+    "tools/capture-binding.py",
+    "tools/capture-effective-environment.json",
+    "tools/held_runtime.py",
+    "tools/initialize-phase.py",
+    "tools/materialize-cohort-proposed.py",
+    "tools/phase-holder.py",
+    "tools/phase_resource.py",
+    "tools/plan.json",
+    "tools/source-phase-entry.py"
+  ],
+  "missingCurrentLiteralOutputs": [
+    "tools/materialize-cohort.py"
+  ],
+  "differentProspectiveLiteral": "tools/materialize-cohort-proposed.py",
+  "explicitRenameOrTransferMapping": "NOT_FOUND_OR_APPROVED",
+  "sameParentDirectory": "tools",
+  "conservative64SlotsStillFit": true,
+  "byteInodeArithmeticInvalidatedByThisFinding": false,
+  "bulkEffectsReleased": false,
+  "necessaryRepair": "Reconcile each actual initializer literal output with an explicit finite declaration or reviewed transfer mapping; preserve both current literal names and source bindings, then new packet and fresh source review"
+}

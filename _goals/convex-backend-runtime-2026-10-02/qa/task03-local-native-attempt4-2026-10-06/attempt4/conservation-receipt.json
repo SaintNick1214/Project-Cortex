@@ -1,0 +1,131 @@
+{
+  "scope": "NEW_ATTEMPT4_SOURCE_PREPARATION_ONLY",
+  "status": "PASS",
+  "actualHead": "c51277e841e0830e284c40707d1b2dc2b9da7070",
+  "previousFreezeSha256": "2fb8d11a7e6c0bcaf92b2fe8d7ff228a6e554f9241c07c22079e6be8bcc870ef",
+  "previousMembers": 965,
+  "currentExactMembers": 955,
+  "explicitDeltas": [
+    {
+      "path": "attempt2/affected-controls.mjs",
+      "oldSha256": "3a8fe3e96bc2a195499ffa34bcc1fd614752f88db7b1f43389b06a1c7001b5c1",
+      "newSha256": "e92760cdabaa0b61ab8dcecd61dce2d468697598bb72653a8179fde55d46b80b",
+      "exactPreimage": "attempt4/preimages/attempt2/affected-controls.mjs"
+    },
+    {
+      "path": "attempt2-repair1/real-owned-custody-controls.mjs",
+      "oldSha256": "7593fdb51d18d85b08b537fa0a470da096ca1add48aaa017deeec4e82a5fefb0",
+      "newSha256": "c9c6a941b395451498deaed499a6b1f9b902075d54fa1f8382431dabc63b55d1",
+      "exactPreimage": "attempt4/preimages/attempt2-repair1/real-owned-custody-controls.mjs"
+    },
+    {
+      "path": "fresh-identity-public.json",
+      "oldSha256": "0f985f2511ea59214771c2e400b66001d78e8dbe74ccb59448325ce6bf24d840",
+      "newSha256": "bba13602bba95bd826273df746830c08032b3a7212cc206fdbe531e69a6da1e8",
+      "exactPreimage": "attempt4/preimages/fresh-identity-public.json"
+    },
+    {
+      "path": "fresh-identity.mjs",
+      "oldSha256": "15195cfb02fdb5cad4927648898c3897120883598063d008a798064566787b58",
+      "newSha256": "39239f1e6c1b227305288cf31857bd8fd84899c3853a6ac6ca03611fa914b753",
+      "exactPreimage": "attempt4/preimages/fresh-identity.mjs"
+    },
+    {
+      "path": "managed-fixture/fixture/convex/auth.config.ts",
+      "oldSha256": "3291f9dc05e871c46025edb7118a4377b0e34a71f0fcccfe773aee4b9c482d53",
+      "newSha256": "4c8c5fc14e204a40ebea46e6657d1eef9ca6347584542811b8ccd49052d3e9e7",
+      "exactPreimage": "attempt4/preimages/managed-fixture/fixture/convex/auth.config.ts"
+    },
+    {
+      "path": "project-request.json",
+      "oldSha256": "2d8855f67c6b7ce857b848442ee257e99bebc7ba880c9361f56c62ce438c9110",
+      "newSha256": "d035510a7d462771094d96911c3741b3a42499cdacbbfbd6929f04a62c0be6c1",
+      "exactPreimage": "attempt4/preimages/project-request.json"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "oldSha256": "92d65df6faf9cba42d063dc6baa3f0d66e87518bda590acc9e229f97b7bec36f",
+      "newSha256": "e81bbda16be73ca8cbe5ba926b106d26e56942625066ea563e2267bd016b2468",
+      "exactPreimage": "attempt4/preimages/scripts/guard.mjs"
+    },
+    {
+      "path": "scripts/incidental-custody.mjs",
+      "oldSha256": "9a2a580d9107833fe363d65029df896becf43beeabae171cd06bc5d92ad39017",
+      "newSha256": "1e4d01fa89a98bb63021168c39ed97fa3ced8dc324b1a37f604b05a972abfc06",
+      "exactPreimage": "attempt4/preimages/scripts/incidental-custody.mjs"
+    },
+    {
+      "path": "scripts/offline-guard-check.mjs",
+      "oldSha256": "698aef7e71e531c89a9e772ce96c0f35b06882bf475b62cfeb1ccbc933a78ea4",
+      "newSha256": "cd88f48a708a55c4effefc3b7a7a2d884e5f07835de2078da5538212561d615f",
+      "exactPreimage": "attempt4/preimages/scripts/offline-guard-check.mjs"
+    },
+    {
+      "path": "transport-prep/transport-binding.json",
+      "oldSha256": "6059b5a893e35c83dc60a8964e3a7f1a49b071b77713ee980346ee38aac75c8a",
+      "newSha256": "d5ec5e5c2e278b97e897c3599f609847864f6bb8b4a52ad525de13aca155250c",
+      "exactPreimage": "attempt4/preimages/transport-prep/transport-binding.json"
+    }
+  ],
+  "allPreviousBytesRecoverable": true,
+  "sourcePins": 161,
+  "testSourcePins": 155,
+  "managedCopies": 138,
+  "compilerProjection": 114,
+  "historicalReferences": 23,
+  "privateHelperUnchangedSha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+  "allOriginal47NamesAndAssertionsRetained": true,
+  "current275Public200Internal75": true,
+  "requiredConservedCounts": {
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "requiredRuntimeBounds": "120s CLI/codegen/typecheck-enable;21min driver/20min native/12s-call/10000RPC/320rows/16subjects/2storage64bytes/2cleanup/all5empty policy tables/ProcessOwner reaping; paid calls0",
+  "reused1005Tests": "REUSED_EXACT_SOURCE_DISCOVERY_SKIP_DEPENDENCY_PINS_NOT_RERUN",
+  "reusedReadinessAndTyping": "EXACT_COMPILER114_AND_PRIOR_2GiB_LINUX_HOME0700_RECEIPTS_NOT_RERUN",
+  "newPrivateMetadata": {
+    "directoryIdentity": {
+      "st_dev": "16777234",
+      "st_ino": "91956414",
+      "st_mode": "16832",
+      "st_nlink": "6",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "192",
+      "st_mtime_ns": "1791272952525947393",
+      "st_ctime_ns": "1791272952525947393"
+    },
+    "keyIdentity": {
+      "st_dev": "16777234",
+      "st_ino": "91956415",
+      "st_mode": "33152",
+      "st_nlink": "1",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "1704",
+      "st_mtime_ns": "1791272370630045607",
+      "st_ctime_ns": "1791272370630045607"
+    },
+    "targetEnvOwnershipProvisionAbsent": true,
+    "keyBytesRead": false
+  },
+  "productWrites": 0,
+  "oldNamespaceWrites": 0,
+  "actualCredentialReads": 0,
+  "actualServiceCalls": 0,
+  "officialCLI": "NOT_RUN",
+  "nativeCases": "NOT_RUN",
+  "fullTask03": "OPEN",
+  "initialInspectionHead": "cf926f81b664ba02c77cb057f0495321c02d4e4b",
+  "parentCheckpointObserved": "Parent checkpointed prior QA evidence; Q4/protected source bytes unaffected"
+}

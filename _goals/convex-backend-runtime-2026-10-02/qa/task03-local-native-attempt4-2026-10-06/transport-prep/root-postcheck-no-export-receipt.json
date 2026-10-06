@@ -1,0 +1,33 @@
+{
+  "scope": "NARROWER_ROOT_POSTCHECK_WITH_NO_EXPORT_MOUNT",
+  "argv": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--platform",
+    "linux/amd64",
+    "--memory",
+    "512m",
+    "--memory-swap",
+    "512m",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/transport-prep,target=/prep,readonly",
+    "--mount",
+    "type=volume,source=cortex-task03-attempt3-dummy-r3-20261005-d98bad88,target=/owned,volume-nocopy",
+    "--entrypoint",
+    "/usr/local/bin/python3.12",
+    "--user",
+    "0:0",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "-B",
+    "/prep/postcheck-linux-dummy.py"
+  ],
+  "startedAt": "2026-10-06T06:19:16.008413+00:00",
+  "endedAt": "2026-10-06T06:19:16.294861+00:00",
+  "exitCode": 0,
+  "supersededPostcheck": "prior probe3 postcheck mounted but did not access export; preserved exact in probe3-command-receipts.json",
+  "privateCredentialReads": 0,
+  "services": 0
+}

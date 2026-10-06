@@ -1,0 +1,81 @@
+{
+  "scope": "ANALYTICAL_EXACT_LITERAL_PATH_PARENT_AND_ALLOCATION_DIFF_FROM_SEALED_PRIOR_METADATA_NOT_NEW_NATIVE_AUDIT",
+  "sourceControl": {
+    "removedPaths": [
+      "tools/materialize-cohort-proposed.py"
+    ],
+    "addedPaths": [
+      "tools/materialize-cohort.py"
+    ],
+    "parentsEqual": true,
+    "fixedPathCount": 52,
+    "allFixedDirectoryRoundedAllocationEqual": true,
+    "changedParents": [
+      {
+        "path": "tools",
+        "oldChildren": [
+          "acquire_lib.py",
+          "capture-binding.py",
+          "capture-effective-environment.json",
+          "held_runtime.py",
+          "initialize-phase.py",
+          "materialize-cohort-proposed.py",
+          "phase-holder.py",
+          "phase_resource.py",
+          "plan.json",
+          "source-phase-entry.py"
+        ],
+        "newChildren": [
+          "acquire_lib.py",
+          "capture-binding.py",
+          "capture-effective-environment.json",
+          "held_runtime.py",
+          "initialize-phase.py",
+          "materialize-cohort.py",
+          "phase-holder.py",
+          "phase_resource.py",
+          "plan.json",
+          "source-phase-entry.py"
+        ],
+        "oldRoundedAllocation": 8192,
+        "newRoundedAllocation": 8192
+      }
+    ],
+    "globalCeilings": "SEALED_PRIOR_METADATA_UNCHANGED; no full cohort/archive/R2 audit rerun",
+    "Docker": false
+  },
+  "oldToolsDirentBytes": 292,
+  "newToolsDirentBytes": 284,
+  "oldToolsRoundedAllocation": 8192,
+  "newToolsRoundedAllocation": 8192,
+  "fullFixedPathRemoved": [
+    "tools/materialize-cohort-proposed.py"
+  ],
+  "fullFixedPathAdded": [
+    "tools/materialize-cohort.py"
+  ],
+  "fullFixedPathCountsEqual": true,
+  "allParentSetsEqual": true,
+  "allFixedRoundedDirectoryAllocationsEqual": true,
+  "priorCompleteCohortMembershipHashesUnchanged": {
+    "full8": "49e7a163163de670b1c00bf10b71c0b656986c0dd8bbedcaea04701f1297df92",
+    "history": "4e8edb87ff51829fb8b7ad9847969b05663a36e8f0b89f7b2fd798dbde595d16",
+    "original": "ed754aa54f44c1cc9b661164e455c4d7ca5a57420ad1e1ba58fc4b8e9aea3562",
+    "comparison": "750073939910214d9e06fa0ccfdec3e207678ec7f1237befbe0ff13f502c896c",
+    "packages": "3d79a4ab8dbcb5c0cb40d17075603eb87de0682f876e3cded4893dfa4ecac4af",
+    "source-aids": "f761284d9454aa1bca2d6d2c8de70bc7dff7e491aa27a55d7d9252046fbabf85"
+  },
+  "physicalDirectoryMembershipSHA256": "b7176c70ab92db0f426ba3c94236cd99116148cc2d8de8b3749d319117523eda",
+  "allPreparationDirectoryMembershipSHA256": "61e31194315ebf7baff0d4c68a66f04d5623b86a521048ab48005e71523d6969",
+  "allPreparationDirectoryCount": 70387,
+  "physicalRows": 223587,
+  "distinctRawObjects": 23951,
+  "additionalHelperSlots": 64,
+  "additionalInodes": 317989,
+  "totalAdditionalBytes": 48565877696,
+  "priorKnownPhysicalAndSameRAW": 12452908282,
+  "metadataInputCeilings": 34149780480,
+  "allChangesOutsideOneLiteral": "NONE_IN_DEMAND_OR_BOUND_OR_COHORT",
+  "newLinuxOrArchiveEffects": false,
+  "sevenInputs": "HELD"
+}

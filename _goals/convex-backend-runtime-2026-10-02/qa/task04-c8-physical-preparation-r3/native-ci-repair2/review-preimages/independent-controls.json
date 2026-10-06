@@ -1,0 +1,615 @@
+{
+  "scope": "FRESH_INDEPENDENT_ACTUAL_SOURCE_HOST_CONTROLS_WITH_EXPLICIT_SUBSTITUTIONS",
+  "checks": [
+    {
+      "name": "exact_each_pipe_limit_acceptance",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os;os.write(1,b\"a\"*127);os.write(2,b\"b\"*193)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 127,
+        "stderrLimit": 193,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "hex": "61616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161",
+          "bytes": 127,
+          "sha256": "c57e9278af78fa3cab38667bef4ce29d783787a2f731d4e12200270f0c32320a"
+        },
+        "stderr": {
+          "hex": "62626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262",
+          "bytes": 193,
+          "sha256": "19b8f0cbf3835c34f8f73f90500074dc5aafb41aa67ac6239ba08001c4ed2b9a"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25452,
+        "exit": 0,
+        "elapsedSeconds": 0.018121917004464194
+      }
+    },
+    {
+      "name": "stdout_128_rejects_at_127_retained_bytes",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"c\"*128);time.sleep(20)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 127,
+        "stderrLimit": 193,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "hex": "63636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363",
+          "bytes": 127,
+          "sha256": "206a328766b880d7580945a9ec921264bea21b2c5bd83e3237c4eff2a1bb4307"
+        },
+        "stderr": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25453,
+        "failure": "COMMAND_STDOUT_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.01708020800288068
+      }
+    },
+    {
+      "name": "stderr_194_rejects_at_193_retained_bytes",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(2,b\"d\"*194);time.sleep(20)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 127,
+        "stderrLimit": 193,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "hex": "64646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464",
+          "bytes": 193,
+          "sha256": "269866d85ff8efb02cd73f4243a8991506117dc34b7848c2b621ada3a9ca9fc6"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25454,
+        "failure": "COMMAND_STDERR_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.01724720800120849
+      }
+    },
+    {
+      "name": "short_deadline_keeps_two_prefixes_and_owned_terminal",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"prefix\");os.write(2,b\"diagnostic\");time.sleep(20)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 127,
+        "stderrLimit": 193,
+        "timeoutSeconds": 0.15,
+        "stdout": {
+          "hex": "707265666978",
+          "bytes": 6,
+          "sha256": "e7a2e8b216e5aec3facf743962d3997f2e7d70088ef257de472d6a258049832e"
+        },
+        "stderr": {
+          "hex": "646961676e6f73746963",
+          "bytes": 10,
+          "sha256": "5a695eea5b00a31f8aef7dbb89c8f798fab371246ac1549afe84b16420707b99"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25455,
+        "failure": "COMMAND_DEADLINE_EXCEEDED",
+        "exit": -15,
+        "elapsedSeconds": 0.15371116700407583
+      }
+    },
+    {
+      "name": "read_failure_records_fault_and_joins_owned_child",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"read\");time.sleep(20)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 127,
+        "stderrLimit": 193,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25456,
+        "readError": "OSError('INDEPENDENT_READ_FAULT')",
+        "failure": "COMMAND_PIPE_READ_FAILURE",
+        "exit": -15,
+        "elapsedSeconds": 0.028623375001188833
+      }
+    },
+    {
+      "name": "failed_spawn_does_not_invent_child_terminal",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair1-review/absent-executable"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 1048576,
+        "stderrLimit": 1048576,
+        "timeoutSeconds": 0.15,
+        "stdout": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [],
+        "terminal": false,
+        "closeErrors": [],
+        "spawnError": "FileNotFoundError(2, 'No such file or directory')",
+        "failure": "COMMAND_SPAWN_FAILURE",
+        "elapsedSeconds": 0.0012024579991702922
+      }
+    },
+    {
+      "name": "nonzero_is_terminal_with_full_bounded_outputs",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,sys;os.write(1,b\"before\");os.write(2,b\"error\");sys.exit(7)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 127,
+        "stderrLimit": 193,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "hex": "6265666f7265",
+          "bytes": 6,
+          "sha256": "6db7d803e74f1ffa7d8f5adc0bf95b3e15bf4c8373fffadf546227cc6c6742cb"
+        },
+        "stderr": {
+          "hex": "6572726f72",
+          "bytes": 5,
+          "sha256": "ca00fccfb408989eddc401062c4d1219a6aceb6b9b55412357f1790862e8f178"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25458,
+        "exit": 7,
+        "elapsedSeconds": 0.02212337499804562
+      }
+    },
+    {
+      "name": "native_pidfd_unavailable_has_no_bootstrap_fallback",
+      "outcome": "PASS",
+      "scope": "SUBSTITUTED_NATIVE_SYSCALL_GUARD_NOT_LINUX_RUNTIME",
+      "rawObservation": {
+        "ENOSYSRejectedBeforeSpawn": true,
+        "created": [],
+        "nativeActualSyscall": "UNEXECUTED"
+      }
+    },
+    {
+      "name": "actual_dispatcher_call_persists_failed_output_metadata",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"q\"*60);time.sleep(20)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 59,
+        "stderrLimit": 1048576,
+        "timeoutSeconds": 2,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 25459,
+        "failure": "COMMAND_STDOUT_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.01866341699496843,
+        "stdout": {
+          "path": "command-00000.stdout",
+          "bytes": 59,
+          "sha256": "09a4de5e71081c74ec26794b06dce8595d1606a36c3b704a84cb09e82fce723d",
+          "contentCopyNotRuntimeAuthority": true
+        },
+        "stderr": {
+          "path": "command-00000.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "contentCopyNotRuntimeAuthority": true
+        }
+      }
+    },
+    {
+      "name": "actual_dispatcher_nonzero_saved_before_raise",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "raised": "INFRASTRUCTURE_COMMAND_FAILED:{\"argv\": [\"/opt/homebrew/opt/python@3.14/bin/python3.14\", \"-c\", \"import sys;print(\\\"final-prefix\\\");sys.exit(19)\"], \"exit\": 19, \"stderr\": \"\"}",
+        "saved": {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "-c",
+            "import sys;print(\"final-prefix\");sys.exit(19)"
+          ],
+          "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+          "stdoutLimit": 127,
+          "stderrLimit": 1048576,
+          "timeoutSeconds": 2,
+          "signals": [],
+          "terminal": true,
+          "closeErrors": [],
+          "createdChildPID": 25460,
+          "exit": 19,
+          "elapsedSeconds": 0.017836457998782862,
+          "stdout": {
+            "path": "command-00001.stdout",
+            "bytes": 13,
+            "sha256": "6af6892cacc3383dbf4e14230058e43f5eea5cf759a3dd81ddaa53d7d7fb51bd",
+            "contentCopyNotRuntimeAuthority": true
+          },
+          "stderr": {
+            "path": "command-00001.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "contentCopyNotRuntimeAuthority": true
+          }
+        }
+      }
+    },
+    {
+      "name": "stream_stdout_limit_is_measured_during_read",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "failure": "STREAM_STDOUT_OVERFLOW",
+        "partial": {
+          "stdoutPrefix": {
+            "hex": "73737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373",
+            "bytes": 127,
+            "sha256": "384f17fa36c21ac595c6240e7130a2e25c0436a8d886508259f7d4dbf595a89b"
+          },
+          "stdoutBytes": 127,
+          "stderr": {
+            "hex": "",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutLimit": 127,
+          "stderrLimit": 193
+        },
+        "consumed": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "ownedFinalExit": -15,
+        "closeErrors": []
+      }
+    },
+    {
+      "name": "stream_stderr_limit_is_measured_during_read",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "failure": "STREAM_STDERR_OVERFLOW",
+        "partial": {
+          "stdoutPrefix": {
+            "hex": "",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutBytes": 0,
+          "stderr": {
+            "hex": "74747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474747474",
+            "bytes": 193,
+            "sha256": "75f1b719d211b7a0a65cdc419ed62db68c45c54025b122103236f61defa49e6a"
+          },
+          "stdoutLimit": 127,
+          "stderrLimit": 193
+        },
+        "consumed": {
+          "hex": "",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "ownedFinalExit": -15,
+        "closeErrors": []
+      }
+    },
+    {
+      "name": "stream_deadline_retains_partial_and_terminal",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "failure": "STREAM_DEADLINE_EXCEEDED",
+        "partial": {
+          "stdoutPrefix": {
+            "hex": "7061727469616c",
+            "bytes": 7,
+            "sha256": "9834a14ab9bcaa0f6a8da71073617eac8f004e596a3fa11d807b84631b825d9d"
+          },
+          "stdoutBytes": 7,
+          "stderr": {
+            "hex": "",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutLimit": 127,
+          "stderrLimit": 193
+        },
+        "consumed": {
+          "hex": "7061727469616c",
+          "bytes": 7,
+          "sha256": "9834a14ab9bcaa0f6a8da71073617eac8f004e596a3fa11d807b84631b825d9d"
+        },
+        "ownedFinalExit": -15,
+        "closeErrors": []
+      }
+    },
+    {
+      "name": "real_tarfile_consumer_uses_repaired_stream_to_eof",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_POPEN_BOOTSTRAP_NOT_NATIVE_TASK04",
+      "rawObservation": {
+        "member": [
+          [
+            "source-backings/pending-8",
+            {
+              "hex": "6f776e656420696e646570656e64656e7420746172207061796c6f6164",
+              "bytes": 29,
+              "sha256": "c103a806aaec1d1e206293d89e95417a4d05f948ccc52784379c5af8b6ce3eed"
+            }
+          ]
+        ],
+        "transport": {
+          "stdoutPrefix": {
+            "hex": "736f757263652d6261636b696e67732f70656e64696e672d38000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000303030303634340030303030303030003030303030303000303030303030303030333500303030303030303030303000303132353336002030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007573746172003030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006f776e656420696e646570656e64656e7420746172207061796c6f6164000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 4096,
+            "sha256": "0b78da2d27f764d4b7bbcc405c32a70d2d5a69c919f5d0e138477f2d42172985"
+          },
+          "stdoutBytes": 10240,
+          "stderr": {
+            "hex": "",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutLimit": 10240,
+          "stderrLimit": 127,
+          "exit": 0,
+          "terminal": true
+        }
+      }
+    },
+    {
+      "name": "actual_alias_target_separates_held_directory_and_file_set",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_FILE_ALL9_WITH_SUBSTITUTED_LINUX_ALIAS_ADVICE_RESERVE",
+      "rawObservation": {
+        "directoryExcludedFromFileSet": true,
+        "literalAlias": [
+          {
+            "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt4/source-fixture/python-bin",
+            "literalTarget": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt4/source-fixture/bin",
+            "LinuxOPathSubstituted": true
+          }
+        ],
+        "heldDirectoryMembers": [
+          "new-foreign-member",
+          "python3.12"
+        ],
+        "actualFile": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair1-review/owned-dummy/regular",
+          "bytes": 20,
+          "sha256": "188a7b52d538406bce4be410957e9123e5b93b796f09391724aa2e0a963acd23",
+          "PRE": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91953673",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "20",
+              "mtime_ns": "1791272101396004470",
+              "ctime_ns": "1791272101396040553"
+            }
+          },
+          "POST": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91953673",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "20",
+              "mtime_ns": "1791272101396004470",
+              "ctime_ns": "1791272101396040553"
+            }
+          },
+          "pathPOST": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91953673",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "20",
+              "mtime_ns": "1791272101396004470",
+              "ctime_ns": "1791272101396040553"
+            }
+          },
+          "EOF": true,
+          "rawExactBacking": "backings/pending-0",
+          "rawBackingIdentity": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91953674",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "20",
+              "mtime_ns": "1791272101396261261",
+              "ctime_ns": "1791272101396261261"
+            }
+          },
+          "actualOwnedBackingAdviceReturn": null
+        }
+      }
+    },
+    {
+      "name": "strict_regular_and_one_link_assertions_unchanged",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_FILE_TYPES_SUBSTITUTED_LINUX_ADVICE_RESERVE",
+      "rawObservation": {
+        "rejected": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair1-review/owned-dummy",
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt4/source-fixture/hard-link"
+        ]
+      }
+    },
+    {
+      "name": "held_directory_membership_mutation_rejected",
+      "outcome": "PASS",
+      "scope": "ACTUAL_HOST_OWNED_DIRECTORY_ALL9_NOT_NATIVE_RUNTIME",
+      "rawObservation": {
+        "rejected": "FINAL_DIRECTORY_MEMBERSHIP_NINE"
+      }
+    },
+    {
+      "name": "exact_export_source_rejects_traversal_extra_and_duplicate",
+      "outcome": "PASS",
+      "scope": "SUBSTITUTED_TAR_MEMBER_GUARD_NOT_DOCKER",
+      "rawObservation": {
+        "accepted": 2,
+        "rejected": [
+          "../private",
+          "/native-capability.json",
+          "source-backings/pending-0/extra",
+          "unapproved.json",
+          "duplicate"
+        ]
+      }
+    },
+    {
+      "name": "exact_owner_terminal_guard_requires_terminal",
+      "outcome": "PASS",
+      "scope": "SUBSTITUTED_DOCKER_INSPECT_GUARD_NOT_RUNTIME",
+      "rawObservation": {
+        "nonterminalOwnerRejected": true
+      }
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "bounded_process.py",
+      "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3",
+      "bytes": 13849
+    },
+    {
+      "path": "ci-run.py",
+      "sha256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1",
+      "bytes": 13612
+    },
+    {
+      "path": "native-capability.py",
+      "sha256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c",
+      "bytes": 18861
+    }
+  ],
+  "nativePidfdMapsArgvCgroup": "HELD_UNEXECUTED",
+  "DockerCalls": false,
+  "Task04Subjects": false,
+  "workflowWrites": false,
+  "ROOT": "ABSENT"
+}

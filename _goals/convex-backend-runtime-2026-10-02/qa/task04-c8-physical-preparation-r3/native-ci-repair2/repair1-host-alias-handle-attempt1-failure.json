@@ -1,0 +1,13 @@
+{
+  "scope": "ACTUAL_HOST_CONTROL_ALIAS_SETUP_FAILURE_NOT_NATIVE_RUNTIME_NOT_SUBJECT",
+  "invocation": "os.open(ownedDummyAlias, os.O_RDONLY | os.O_SYMLINK | os.O_NOFOLLOW)",
+  "observedFailure": {
+    "type": "OSError",
+    "errno": 62,
+    "message": "Too many levels of symbolic links"
+  },
+  "sourceRevision": "prior sealer helper used this exact rejected flag combination",
+  "sourceAssertionsChanged": false,
+  "correction": "O_SYMLINK alone opens the literal Darwin inode; mandatory fstat S_ISLNK/path all9/literal target checks retained",
+  "nativeQualification": "HELD"
+}

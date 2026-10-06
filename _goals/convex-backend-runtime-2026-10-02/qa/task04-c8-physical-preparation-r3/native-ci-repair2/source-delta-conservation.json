@@ -1,0 +1,116 @@
+{
+  "scope": "EXACT_REPAIR2_SOURCE_DELTAS_TO_SEALED_REPAIR1",
+  "files": [
+    {
+      "path": "Dockerfile",
+      "oldSHA256": "5cfc061dee0822c180f76fb6825003457dfa4866a83e05c146fdbc04a1293506",
+      "newSHA256": "5cfc061dee0822c180f76fb6825003457dfa4866a83e05c146fdbc04a1293506",
+      "equalBytes": true,
+      "newBytes": 592
+    },
+    {
+      "path": "README.md",
+      "oldSHA256": "9fee835ac3ac54aa8c7853d9a511efb008231aebc4da68f9882a185dd10aa913",
+      "newSHA256": "cd6bbdb00f2e534be18b8ce3a2d3fffdd968034125dd6610c4eb9b17c9ac487c",
+      "equalBytes": false,
+      "newBytes": 10842
+    },
+    {
+      "path": "bootstrap-npm.py",
+      "oldSHA256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d",
+      "newSHA256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d",
+      "equalBytes": true,
+      "newBytes": 2316
+    },
+    {
+      "path": "bounded_process.py",
+      "oldSHA256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3",
+      "newSHA256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3",
+      "equalBytes": true,
+      "newBytes": 13849
+    },
+    {
+      "path": "ci-run.py",
+      "oldSHA256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1",
+      "newSHA256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1",
+      "equalBytes": true,
+      "newBytes": 13612
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "oldSHA256": "1a605012c309d0e6596952f87d3248d3a4561ce4fd45715838f812d6d9e7c47b",
+      "newSHA256": "f03b5083ee3e6caca6426a9dca98db61d24c632c86d4f6ef851b1318da310a3f",
+      "equalBytes": false,
+      "newBytes": 15424
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "oldSHA256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+      "newSHA256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+      "equalBytes": true,
+      "newBytes": 26131
+    },
+    {
+      "path": "native-capability.py",
+      "oldSHA256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c",
+      "newSHA256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c",
+      "equalBytes": true,
+      "newBytes": 18861
+    },
+    {
+      "path": "native-owner.py",
+      "oldSHA256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215",
+      "newSHA256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215",
+      "equalBytes": true,
+      "newBytes": 613
+    },
+    {
+      "path": "repair-controls.py",
+      "oldSHA256": "21abf45c2e4f4e08baa700ccd22e85847ac2e8ad020681b1ff5aeba30f49da32",
+      "newSHA256": "422ae6a065d7e8172b047cbe4459c2ff03cb6986df9a99750e19897b26a9ba91",
+      "equalBytes": false,
+      "newBytes": 27920
+    },
+    {
+      "path": "seal-repair-packet.py",
+      "oldSHA256": "ffaba60d4c249b9faca4770b99183497c495792c3b239ca89dc92e1bb24c75e5",
+      "newSHA256": "f3f26aa02ec6959727d0a808b2f692acfae36dc44fbb23a1d12a806322005deb",
+      "equalBytes": false,
+      "newBytes": 7436
+    },
+    {
+      "path": "task04-c8-native-infrastructure.yml.proposed",
+      "oldSHA256": "438f42dafa483431ded305e0a894cc553a2ec1e51817441b9217c7653495233b",
+      "newSHA256": "7bfe0fc1344ae4fd5d7782a25cb1d99ae688f50728c2aab8bb1b65b97aabd2f5",
+      "equalBytes": false,
+      "newBytes": 3516
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "oldSHA256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937",
+      "newSHA256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937",
+      "equalBytes": true,
+      "newBytes": 5270
+    }
+  ],
+  "unchangedProtectedImplementations": [
+    "native-capability.py",
+    "bounded_process.py",
+    "ci-run.py",
+    "materialize-cohort-proposed.py",
+    "Dockerfile",
+    "bootstrap-npm.py",
+    "native-owner.py",
+    "verify-git-route-inputs.py"
+  ],
+  "runtimeGuardsAndCollectorByteChanges": false,
+  "onlyDemandCodeChange": "One tuple entry materialize-cohort-proposed.py -> materialize-cohort.py; no current resource/limit/formula/cohort assertion changes",
+  "controlsDelta": "Adds exact actual initializer output/parent test and same old rejected declaration negative outcome; exact pathset/parentset/rounding proof",
+  "workflowDelta": "Only source directory and entrypoint repair1 -> repair2",
+  "sealerDelta": "Only own new W/Q roots repair1 -> repair2; typed dummy artifacts unchanged",
+  "README": "Adds rejection/mapping/analytical proof scope and handoff",
+  "prospectiveInitializerOrSourceMirrorExecuted": false,
+  "actualWorkflowAbsent": true,
+  "DockerCalls": false,
+  "ROOT": "ABSENT"
+}

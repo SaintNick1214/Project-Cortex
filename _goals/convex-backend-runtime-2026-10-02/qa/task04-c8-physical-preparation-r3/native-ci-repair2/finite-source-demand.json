@@ -1,0 +1,495 @@
+{
+  "scope": "REPAIR2_PROSPECTIVE_LITERAL_DECLARATION_FROM_SEALED_PRIOR_FINITE_METADATA_NOT_NEW_NATIVE_MEASUREMENT",
+  "cohorts": {
+    "full8": {
+      "rows": 148325,
+      "regularRows": 148295,
+      "literalLinks": 30,
+      "regularBytes": 3110990905,
+      "literalTargetBytes": 4474,
+      "maxComponents": 13,
+      "maxPathBytes": 310,
+      "declaredJSONBytes": 46747188,
+      "blockRoundedRegularBytes": 3627982848,
+      "orderedMembershipSHA256": "49e7a163163de670b1c00bf10b71c0b656986c0dd8bbedcaea04701f1297df92"
+    },
+    "history": {
+      "rows": 70020,
+      "regularRows": 70020,
+      "literalLinks": 0,
+      "regularBytes": 3001521619,
+      "literalTargetBytes": 0,
+      "maxComponents": 16,
+      "maxPathBytes": 300,
+      "declaredJSONBytes": 20698340,
+      "blockRoundedRegularBytes": 3158851584,
+      "orderedMembershipSHA256": "4e8edb87ff51829fb8b7ad9847969b05663a36e8f0b89f7b2fd798dbde595d16"
+    },
+    "original": {
+      "rows": 823,
+      "regularRows": 823,
+      "literalLinks": 0,
+      "regularBytes": 18836975,
+      "literalTargetBytes": 0,
+      "maxComponents": 9,
+      "maxPathBytes": 155,
+      "declaredJSONBytes": 205266,
+      "blockRoundedRegularBytes": 20594688,
+      "orderedMembershipSHA256": "ed754aa54f44c1cc9b661164e455c4d7ca5a57420ad1e1ba58fc4b8e9aea3562"
+    },
+    "comparison": {
+      "rows": 823,
+      "regularRows": 823,
+      "literalLinks": 0,
+      "regularBytes": 19047356,
+      "literalTargetBytes": 0,
+      "maxComponents": 9,
+      "maxPathBytes": 155,
+      "declaredJSONBytes": 205266,
+      "blockRoundedRegularBytes": 20803584,
+      "orderedMembershipSHA256": "750073939910214d9e06fa0ccfdec3e207678ec7f1237befbe0ff13f502c896c"
+    },
+    "packages": {
+      "rows": 3458,
+      "regularRows": 3458,
+      "literalLinks": 0,
+      "regularBytes": 76057286,
+      "literalTargetBytes": 0,
+      "maxComponents": 9,
+      "maxPathBytes": 92,
+      "declaredJSONBytes": 585196,
+      "blockRoundedRegularBytes": 85086208,
+      "orderedMembershipSHA256": "3d79a4ab8dbcb5c0cb40d17075603eb87de0682f876e3cded4893dfa4ecac4af"
+    },
+    "source-aids": {
+      "rows": 138,
+      "regularRows": 138,
+      "literalLinks": 0,
+      "regularBytes": 2131210,
+      "literalTargetBytes": 0,
+      "maxComponents": 5,
+      "maxPathBytes": 109,
+      "declaredJSONBytes": 24422,
+      "blockRoundedRegularBytes": 2420736,
+      "orderedMembershipSHA256": "f761284d9454aa1bca2d6d2c8de70bc7dff7e491aa27a55d7d9252046fbabf85"
+    }
+  },
+  "physicalDirectoryCount": 70360,
+  "allFinitePreparationDirectoryCount": 70387,
+  "exactInitializerDirectoryLiterals": [
+    "tools",
+    "bin",
+    "bindings",
+    "home",
+    "infra",
+    "physical-receipts"
+  ],
+  "exactInitializerBinEntries": [
+    "bin/node",
+    "bin/python3.12",
+    "bin/npm",
+    "bin/npx"
+  ],
+  "exactInitializerReceipt": "bindings/initialization.json",
+  "exactOtherCaptureFailureAndEffectiveEnvironmentOutputs": [
+    "bindings/capture-failure.json",
+    "tools/capture-effective-environment.json",
+    "physical-receipts/failure.json"
+  ],
+  "finiteNoncohortFixedOutputs": [
+    "bin/node",
+    "bin/npm",
+    "bin/npx",
+    "bin/python3.12",
+    "bindings/capture-failure.json",
+    "bindings/initialization.json",
+    "bindings/raw-positive-index-comparison.json",
+    "bindings/raw-positive-index-full8.json",
+    "bindings/raw-positive-index-history.json",
+    "bindings/raw-positive-index-original.json",
+    "bindings/raw-positive-index-packages.json",
+    "bindings/runtime-binding.json",
+    "bindings/source-release.json",
+    "generated-inputs/candidate/finite-producer-rules.json",
+    "generated-inputs/candidate/mirror-source-transform-map.json",
+    "generated-inputs/candidate/prepared-source-inputs.json",
+    "generated-inputs/historical-plan-index.json",
+    "generated-inputs/original-read-map.json",
+    "generated-inputs/package-aliases.json",
+    "generated-inputs/package-graph.json",
+    "home/.owned-marker",
+    "physical-receipts/comparison/owned-fd-advice.jsonl",
+    "physical-receipts/comparison/receipt.json",
+    "physical-receipts/comparison/source-eligibility.jsonl",
+    "physical-receipts/comparison/source-rows.jsonl",
+    "physical-receipts/failure.json",
+    "physical-receipts/full8/owned-fd-advice.jsonl",
+    "physical-receipts/full8/receipt.json",
+    "physical-receipts/full8/source-eligibility.jsonl",
+    "physical-receipts/full8/source-rows.jsonl",
+    "physical-receipts/history/owned-fd-advice.jsonl",
+    "physical-receipts/history/receipt.json",
+    "physical-receipts/history/source-eligibility.jsonl",
+    "physical-receipts/history/source-rows.jsonl",
+    "physical-receipts/original/owned-fd-advice.jsonl",
+    "physical-receipts/original/receipt.json",
+    "physical-receipts/original/source-eligibility.jsonl",
+    "physical-receipts/original/source-rows.jsonl",
+    "physical-receipts/packages/owned-fd-advice.jsonl",
+    "physical-receipts/packages/receipt.json",
+    "physical-receipts/packages/source-eligibility.jsonl",
+    "physical-receipts/packages/source-rows.jsonl",
+    "tools/acquire_lib.py",
+    "tools/capture-binding.py",
+    "tools/capture-effective-environment.json",
+    "tools/held_runtime.py",
+    "tools/initialize-phase.py",
+    "tools/materialize-cohort.py",
+    "tools/phase-holder.py",
+    "tools/phase_resource.py",
+    "tools/plan.json",
+    "tools/source-phase-entry.py"
+  ],
+  "additionalInodeAdmissionEnforcedMax": 317989,
+  "physicalDirectoryMembershipSHA256": "b7176c70ab92db0f426ba3c94236cd99116148cc2d8de8b3749d319117523eda",
+  "additionalMetadataHelperFileCountEnforcedMax": 64,
+  "additionalMetadataHelperFileBlockPaddingMaxBytes": 262080,
+  "directoryMembershipSHA256": "61e31194315ebf7baff0d4c68a66f04d5623b86a521048ab48005e71523d6969",
+  "actualMaximumChildren": 23951,
+  "exactPathRows": 223587,
+  "distinctRawObjects": 23951,
+  "distinctRawExactBytesDiagnosticOnly": 1592009642,
+  "distinctRawBlockRoundedBytesDiagnosticOnly": 1668124672,
+  "knownPhysicalAndSameRAWWithoutDedupBytes": 12452908282,
+  "sourceAidsPhysicalAndRAW": 4262420,
+  "literalTargetsPhysicalAndRAW": 8948,
+  "knownRegularBlockRoundingNoDedupMaxBytes": 1374807486,
+  "finiteLiteralDirectoryAllocationMaxBytes": 583061504,
+  "unchangedMetadataInputAllocationCeilingsBytes": 34149780480,
+  "preservedOldBroadAdmissionCeilingBytes": 107945366382,
+  "preservedRejectedAdmissionCeilingBytes": 48565865408,
+  "proposedFinitePhysicalPreparationAdmissionBytes": 48565877696,
+  "publishedGitSixRouteEncodedBytes": 1872365422,
+  "sameFilesystemCheckoutRuntimeBackingExtras": "MEASURE_MEASURED_ALLOCATED_BYTES_AND_RESERVE_SEPARATELY; NO14GB_OR_FREE_SPACE_ASSUMPTION",
+  "futureGeneratedCanonicalClosure": "HELD_UNTIL_FIELD_COMPLETE_SEVEN_INPUTS; compilerRaw=32*(admittedGraphBytes+snapshotBytes)+8192*inputClosureRows+16384; compilerEncoded=raw+ceil(raw/65536)*64+1024; rootRaw=32*closureBytes+16384; eachRootReceiptQuota=1GiB; processOwnerRaw=256000",
+  "actualResourcePRE": {
+    "max": "1073741824",
+    "current": "29540352",
+    "swapMax": "0",
+    "reserveBytes": 1044201472,
+    "memoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+    "memoryStat": "anon 10637312\nfile 16674816\nkernel 1015808\nkernel_stack 16384\npagetables 94208\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 9080832\nfile_dirty 0\nfile_writeback 0\nswapcached 0\nanon_thp 0\nfile_thp 0\nshmem_thp 0\ninactive_anon 0\nactive_anon 10534912\ninactive_file 2211840\nactive_file 14254080\nunevictable 0\nslab_reclaimable 487384\nslab_unreclaimable 366344\nslab 853728\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 4088\npgmajfault 19\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 2\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+  },
+  "actualResourcePOST": {
+    "max": "1073741824",
+    "current": "411856896",
+    "swapMax": "0",
+    "reserveBytes": 661884928,
+    "memoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+    "memoryStat": "anon 251805696\nfile 157061120\nkernel 1785856\nkernel_stack 16384\npagetables 577536\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 9342976\nfile_dirty 0\nfile_writeback 0\nswapcached 0\nanon_thp 33554432\nfile_thp 123731968\nshmem_thp 0\ninactive_anon 0\nactive_anon 251609088\ninactive_file 142618624\nactive_file 14254080\nunevictable 0\nslab_reclaimable 771600\nslab_unreclaimable 363744\nslab 1135344\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 60399\npgmajfault 19\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 82\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+  },
+  "metadataReadProofs": [
+    {
+      "path": "/r2/final-linux-packet-manifest.json",
+      "bytes": 1031477,
+      "sha256": "2e55621b73fed30c608559d76f215b1f5ccf8cda72857d5122acb4ea9d7f79c6",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "986832",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1031477",
+          "mtime_ns": "1791261597440055006",
+          "ctime_ns": "1791261597440055006"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "986832",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1031477",
+          "mtime_ns": "1791261597440055006",
+          "ctime_ns": "1791261597440055006"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "986832",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1031477",
+          "mtime_ns": "1791261597440055006",
+          "ctime_ns": "1791261597440055006"
+        }
+      },
+      "EOF": true
+    },
+    {
+      "path": "/source-repo/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/mapParts/part-00000.gzpart",
+      "bytes": 3027090,
+      "sha256": "bdcd96a750ba26fdc85e6f259ee6457a7f8525c00f6cb0dac185f71ccbfa7c6f",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "45",
+          "ino": "1640",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791256011381828917",
+          "ctime_ns": "1791257622896234438"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "45",
+          "ino": "1640",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791256011381828917",
+          "ctime_ns": "1791257622896234438"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "45",
+          "ino": "1640",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791256011381828917",
+          "ctime_ns": "1791257622896234438"
+        }
+      },
+      "EOF": true
+    },
+    {
+      "path": "/r2/attempt2/report/seven-package-source-inventory.json",
+      "bytes": 906629,
+      "sha256": "ed091a2699be802f14daaf3c41cf08eebcacc127f8afb043f2531effb8be366c",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "985725",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "906629",
+          "mtime_ns": "1791260504819290838",
+          "ctime_ns": "1791260504819290838"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "985725",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "906629",
+          "mtime_ns": "1791260504819290838",
+          "ctime_ns": "1791260504819290838"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "985725",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "906629",
+          "mtime_ns": "1791260504819290838",
+          "ctime_ns": "1791260504819290838"
+        }
+      },
+      "EOF": true
+    },
+    {
+      "path": "/r2/input-metadata/work/resume/task04-c7-exact-identity-repair/candidate/mirror-source-transform-map.json",
+      "bytes": 2894403,
+      "sha256": "e616b7eb6ecf6c80660890100fc2d89a15485ebebb02db44fc7d231027cd694d",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951396",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791260089265276841",
+          "ctime_ns": "1791260089265276841"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951396",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791260089265276841",
+          "ctime_ns": "1791260089265276841"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951396",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791260089265276841",
+          "ctime_ns": "1791260089265276841"
+        }
+      },
+      "EOF": true
+    },
+    {
+      "path": "/r2/attempt2/report/acquisition-contract.json",
+      "bytes": 3113305,
+      "sha256": "2f038755204181377cf280cd56ac4b934b0487cbc8c088d8c6fd1951a6f7c504",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "982846",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3113305",
+          "mtime_ns": "1791260456085251052",
+          "ctime_ns": "1791260456085251052"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "982846",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3113305",
+          "mtime_ns": "1791260456085251052",
+          "ctime_ns": "1791260456085251052"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "982846",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3113305",
+          "mtime_ns": "1791260456085251052",
+          "ctime_ns": "1791260456085251052"
+        }
+      },
+      "EOF": true
+    },
+    {
+      "path": "/r2/attempt2/report/historical70020-coverage.json",
+      "bytes": 128914214,
+      "sha256": "79cc8478099508030f0293f159b0ce66421578d065aecc950d9d8184edbed9dc",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "985714",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "128914214",
+          "mtime_ns": "1791260501016340295",
+          "ctime_ns": "1791260501016340295"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "985714",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "128914214",
+          "mtime_ns": "1791260501016340295",
+          "ctime_ns": "1791260501016340295"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "985714",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "128914214",
+          "mtime_ns": "1791260501016340295",
+          "ctime_ns": "1791260501016340295"
+        }
+      },
+      "EOF": true
+    }
+  ],
+  "subjectExecuted": false,
+  "physicalCohortMaterialized": false,
+  "elapsedSeconds": 3.5631523350000407,
+  "analyticalLiteralCorrection": {
+    "removed": "tools/materialize-cohort-proposed.py",
+    "added": "tools/materialize-cohort.py",
+    "originalBaseSHA256": "f6dfe7df1da2d72fc49285e5c8b13c78dfd78a03dc81195a167429fbc13dacca",
+    "originalBasePacketSHA256": "0cb67f65cddab4a1146e386c1c1a77c8eb13dfa3daf68bc48c3138942d580ff5",
+    "method": "EXACT_ACTUAL_PURE_fixed_path_STATEMENTS_PLUS_SEALED_COMPLETE_COHORT_METADATA; one child name changes, parentset/count/rounded allocations unchanged",
+    "nativeAuditRerun": false,
+    "archiveRereadOrRegeneration": false,
+    "actualResourcePRE_POST_AndReadProofs": "PRIOR_ARM_SOURCE_METADATA_AUDIT_ONLY; inherited unchanged, never current memory/native-x64 observations",
+    "allOriginalBounds": "UNCHANGED_HELD"
+  }
+}

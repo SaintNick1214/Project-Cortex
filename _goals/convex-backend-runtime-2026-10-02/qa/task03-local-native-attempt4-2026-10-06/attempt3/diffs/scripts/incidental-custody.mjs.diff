@@ -1,0 +1,11 @@
+--- accepted-attempt2/scripts/incidental-custody.mjs
++++ fresh-attempt3/scripts/incidental-custody.mjs
+@@ -17,7 +17,7 @@
+ export function captureIncidental(){
+  const policy=JSON.parse(readFileSync(canonical(resolve(preparation,'attempt2/incidental-file-policy.json'),preparation)));
+  const relative='managed-fixture/fixture/.env.local',path=resolve(fixture,'fixture/.env.local');
+- const freeze=JSON.parse(readFileSync(canonical(resolve(preparation,'candidate-freeze-attempt2-repair1.json'),preparation)));
++ const freeze=JSON.parse(readFileSync(canonical(resolve(preparation,'candidate-freeze-attempt3.json'),preparation)));
+  if(policy.path!==relative||policy.baselineAbsent!==true||policy.removalRequiresPrivateExactCustody!==true||freeze.files.some(row=>row.path===relative))fail();
+  const before=lstatSync(path,{throwIfNoEntry:false,bigint:true});if(!before)return {created:false,captured:false,removed:false};
+  canonical(path,preparation);const original=owned(before);if(typeof constants.O_NOFOLLOW!=='number')fail();

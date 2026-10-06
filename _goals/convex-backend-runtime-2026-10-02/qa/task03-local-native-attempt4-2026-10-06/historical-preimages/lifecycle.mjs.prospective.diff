@@ -1,0 +1,11 @@
+--- historical-c11/lifecycle.mjs
++++ prospective-current/lifecycle.mjs
+@@ -1,7 +1,7 @@
+ import assert from 'node:assert/strict';
+ import { makeFunctionReference } from 'convex/server';
+ // Current root-built output, with its own new byte inventory. No old packed SDK substitution.
+-import { Cortex, createAuthContext } from '../../../../../dist/index.js';
++import { Cortex, createAuthContext } from '../sdk-dist/index.js';
+ import { configureReactiveTransport } from './reactive-transport.mjs';
+ import { authDenial } from './native-engine.mjs';
+ const pause=ms=>new Promise(done=>setTimeout(done,ms));
