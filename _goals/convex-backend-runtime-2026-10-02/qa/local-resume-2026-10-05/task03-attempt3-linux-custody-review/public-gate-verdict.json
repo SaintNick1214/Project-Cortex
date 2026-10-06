@@ -1,0 +1,53 @@
+{
+  "verdict": "PASS",
+  "independent": true,
+  "scope": "ATTEMPT3_ACTUAL_PUBLIC_LINUX_CUSTODY_AND_CURRENT_SOURCE_BINDINGS_ONLY",
+  "publicBindingVerdict": "PASS",
+  "preprovisionReadinessVerdict": "PASS",
+  "candidateSha256": "2fb8d11a7e6c0bcaf92b2fe8d7ff228a6e554f9241c07c22079e6be8bcc870ef",
+  "receiptManifestSha256": "75ec4e5fbb3afbb9c9a779f4a6a01b28ec2a67b67cdd6b7f641ce9ff9bd913c8",
+  "publicTransferReceiptSha256": "1ace0522f1d2d87526ceda15e3ec8e5f2e62dce221c45878c3ae1228fa706969",
+  "publicFiles": 972,
+  "publicBytes": 25212514,
+  "allCurrentDestinationIdentities": "PASS_ALL9",
+  "currentSourceDestinationFullContent": "PASS",
+  "currentSourceHeldPathContinuity": "PASS_DURING_REVIEW",
+  "continuousHistoricalSourceIdentity": "NOT_ESTABLISHED",
+  "historicalSourceTupleComparison": {
+    "status": "FAIL",
+    "rows": 972,
+    "fields": [
+      "st_dev",
+      "st_ino"
+    ],
+    "cause": "UNKNOWN"
+  },
+  "historicalGitCustodyRestored": false,
+  "scores": {
+    "RequirementFulfillment": 5,
+    "CodeQuality": 4,
+    "TestQuality": 4,
+    "PatternAdherence": 5,
+    "Completeness": 4
+  },
+  "average": 4.4,
+  "publicBindingReport": "public-binding-report.md",
+  "publicBindingReportSha256": "c2802cddbb3c6f51b10bba247f33e5fbdd099dc0e63cdc490030f0baacf074db",
+  "preprovisionReadinessReport": "preprovision-readiness-report.md",
+  "preprovisionReadinessReportSha256": "3b88a869d6bab3904f361e36bbba508887982f294d6d2527d55e7d1e51540f93",
+  "phase2PrivateReview": "HELD_AWAITING_EXPLICIT_PARENT_RELEASE",
+  "provisioningAuthorizedByThisVerdict": false,
+  "enablingAttestationWritten": false,
+  "actualCredentialReads": 0,
+  "actualServiceRequests": 0,
+  "actualDeployments": 0,
+  "actualCompilerExecutions": 0,
+  "actualNativeImports": 0,
+  "actualCliDispatches": 0,
+  "paidCalls": 0,
+  "officialCodegen": "NOT_RUN",
+  "nativeFoundationAcceptance": false,
+  "fullOriginalTask03FunctionalAcceptance": "OPEN",
+  "downstreamGoal": "OPEN",
+  "observedAtUtc": "2026-10-06T06:56:12.700516+00:00"
+}
