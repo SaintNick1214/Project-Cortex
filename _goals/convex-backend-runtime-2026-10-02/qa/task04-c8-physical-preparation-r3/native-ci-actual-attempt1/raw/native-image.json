@@ -1,0 +1,72 @@
+{
+  "Id": "sha256:ac83b52bdea78533467d59ba90d43c2a9dac9f8dbc2664f21cab680a42c98f3d",
+  "RepoTags": [
+    "cortex-task04-c8-native:37435368652-1"
+  ],
+  "RepoDigests": [],
+  "Parent": "",
+  "Comment": "buildkit.dockerfile.v0",
+  "Created": "2026-10-06T08:19:55.857370143Z",
+  "DockerVersion": "",
+  "Author": "",
+  "Config": {
+    "Hostname": "",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/bin:/usr/bin:/bin",
+      "LANG=C.UTF-8",
+      "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+      "PYTHON_VERSION=3.12.15",
+      "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "HOME=/phase/home",
+      "TMPDIR=/tmp"
+    ],
+    "Cmd": [
+      "/usr/local/bin/python3.12",
+      "--version"
+    ],
+    "ArgsEscaped": true,
+    "Image": "",
+    "Volumes": null,
+    "WorkingDir": "/phase",
+    "Entrypoint": null,
+    "OnBuild": null,
+    "Labels": null
+  },
+  "Architecture": "amd64",
+  "Os": "linux",
+  "Size": 268015884,
+  "GraphDriver": {
+    "Data": {
+      "LowerDir": "/var/lib/docker/overlay2/p783pqxxqzy0snxe9b0xg9qbc/diff:/var/lib/docker/overlay2/bdd4c9f9eabznm7czvbc73bx1/diff:/var/lib/docker/overlay2/mphnj8mrl2ack8njxpmzek3q8/diff:/var/lib/docker/overlay2/6c6da627dcbc3b2fecd9e132aecdb85597f52f8e887d8897e3b59b485093b1c3/diff:/var/lib/docker/overlay2/7d930c27bfb846ca0b652a8a7d62591a54a736e369c9952814cd4739d58dcfb6/diff:/var/lib/docker/overlay2/f6c0f5a5bdad9d558d0e42234e5c381d5d5c2066f5520cadc40fdb5742cd9851/diff:/var/lib/docker/overlay2/59b52e278396cafff2d4cef51e813edced601444031514dade7feb4631857f7b/diff",
+      "MergedDir": "/var/lib/docker/overlay2/ko78dcmesrdknahyuvdsm7v8z/merged",
+      "UpperDir": "/var/lib/docker/overlay2/ko78dcmesrdknahyuvdsm7v8z/diff",
+      "WorkDir": "/var/lib/docker/overlay2/ko78dcmesrdknahyuvdsm7v8z/work"
+    },
+    "Name": "overlay2"
+  },
+  "RootFS": {
+    "Type": "layers",
+    "Layers": [
+      "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+      "sha256:916eda96356f5280ba200349e111e70c46d7ec98a4a3dd2c38e88f7b133c17ba",
+      "sha256:694fd645f7c3f2166f87f2929facc4eccb7e1cfda9bfb5d1373f77e6c9c57ea6",
+      "sha256:742affd58633b3e2b85ef86583f2775486468b1317f7214d12e193d948421098",
+      "sha256:8c0a5cb3182aa5905265d22831ec1247a8a96465aaaddb02e28780391802f5aa",
+      "sha256:ec7849fc255f1c5c19420792f2dc4bcb06a7bf3b3783ea0bb1d79c3c98d9b080",
+      "sha256:20308c2fe4a33d72c7b45957701c8d4e75ff64237539ff421869c15341bfde77",
+      "sha256:b525803c0cf74ee64d1383a0157dfd783f1559fba1080a7c55b381938fb3b17c"
+    ]
+  },
+  "Metadata": {
+    "LastTagTime": "2026-10-06T08:19:56.534696772Z"
+  }
+}

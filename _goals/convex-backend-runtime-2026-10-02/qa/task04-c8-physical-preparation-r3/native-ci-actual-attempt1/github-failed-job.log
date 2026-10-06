@@ -1,0 +1,16 @@
+native-capability	Native infrastructure capability and source capture only	﻿2026-10-06T08:19:49.6647701Z ##[group]Run python3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/ci-run.py
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:19:49.6648660Z ^[[36;1mpython3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/ci-run.py^[[0m
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:19:49.6948506Z shell: /usr/bin/bash -e {0}
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:19:49.6949037Z ##[endgroup]
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9929831Z Traceback (most recent call last):
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9930954Z   File "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/ci-run.py", line 184, in <module>
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9933934Z     if __name__=='__main__': main()
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9934464Z                              ^^^^^^
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9935688Z   File "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/ci-run.py", line 129, in main
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9936551Z     transport=export_stream.finish()
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9936866Z               ^^^^^^^^^^^^^^^^^^^^^^
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9937884Z   File "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/bounded_process.py", line 151, in finish
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9938966Z     if self.read(1): raise CollectionFailure('STREAM_TRAILING_STDOUT', self.partial())
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9939512Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:03.9940029Z bounded_process.CollectionFailure: STREAM_TRAILING_STDOUT
+native-capability	Native infrastructure capability and source capture only	2026-10-06T08:20:04.0175832Z ##[error]Process completed with exit code 1.
