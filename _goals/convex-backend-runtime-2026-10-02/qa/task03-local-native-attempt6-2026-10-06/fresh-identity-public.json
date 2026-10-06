@@ -1,0 +1,39 @@
+{
+  "state": "PROSPECTIVE_REUSE_OF_PREVIOUSLY_ACTUALLY_QUALIFIED_PUBLIC_IDENTITY",
+  "generatedAt": "2026-10-06T08:34:05.422Z",
+  "algorithm": "RS256",
+  "modulusLength": 2048,
+  "kid": "current-foundation-c89ad163-7f7a-4849-8d92-8fc26d52eb17",
+  "publicJwkSha256": "18400f02ccdcbcca8944ab564ecaab46a4c0138ae634f3aefd7c89fee9cb4dd7",
+  "publicJwks": {
+    "keys": [
+      {
+        "kty": "RSA",
+        "n": "2VWL5UsudOOt_3tD-8lYPfhdCZOo8thxoqPekSLVsp99XxNjGoN8HUSAjczcYXlZy1-jHC1opMY3E16oOJvhY00BvpNv9nwlvxQ3frexHcg0HwmsZ8AzP0Gq6wPTjPnI8A0f27JaH7FPnz2bsawlK1uNwmbU_SdMvnobs5LM8j8ID_dRvcpObrZp2UErhS4Da_2sEchgGXlaCGXoVx3NK4rpu9vHRr9jO-CmYDGm8BwsNMqd4xFJoYTWAN6Xz18FAMKbsiWfdQnxGin5xSwyj_IXu0Htg8-tZZb4pjjC8iZJxVtlqDiDp1rKNGV7O0fb3CDlZTHUEyxLCe-8C5JEjQ",
+        "e": "AQAB",
+        "kid": "current-foundation-c89ad163-7f7a-4849-8d92-8fc26d52eb17",
+        "alg": "RS256",
+        "use": "sig"
+      }
+    ]
+  },
+  "issuer": "https://cortex-qualification.invalid",
+  "audience": "cortex-task01",
+  "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt6-private-20261006",
+  "privateDirectoryMode": "0700",
+  "privateKeyPath": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt6-private-20261006/jwt-private.pem",
+  "privateKeyMode": "0600",
+  "privateBytesOutput": false,
+  "jwtTokensCreated": 0,
+  "historicalAuthSha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+  "freshAuthSha256": "88b425f3c9d506f083e8d96b7d314d3ff75494682f67e5ce1685c801d6e791a7",
+  "authDelta": "PUBLIC_JWKS_ONLY; issuer, audience, algorithm, provider shape conserved",
+  "reuseProvenance": {
+    "originalGenerationTimeRetained": true,
+    "originalOperation": "ba2253a8-26a7-4db5-b503-9bca6710471c",
+    "priorActualCryptoReview": "../local-resume-2026-10-05/task03-attempt5-actual-private-custody-crypto-review1/final",
+    "privateMaterialAccessThisPreparation": 0,
+    "freshPhysicalCustodyRequired": true,
+    "keyReuseNotHistoricalCustodyRestoration": true
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "schema": "INDEPENDENT_R1_FINITE_SOURCE_MOCK_REVIEW3",
+  "results": [
+    {
+      "name": "serialized_two_owner_120_480_order",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "exactSequence": [
+          "create:native20",
+          "run:native20:120",
+          "export:native20",
+          "retire",
+          "create:public48",
+          "run:public48:480",
+          "export:public48"
+        ],
+        "twoOwners": true
+      }
+    },
+    {
+      "name": "phase2_blocked_after_native-exit",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "failure": "NATIVE20_FAILED_STICKY_PUBLIC48_NOT_STARTED",
+        "publicCreateCount": 0,
+        "events": [
+          "mkdir",
+          "phase:setup-acquisition:180",
+          "verify",
+          "phase:public-image-build:720",
+          "build",
+          "create:native20",
+          "run:native20:120",
+          "export:native20"
+        ]
+      }
+    },
+    {
+      "name": "phase2_blocked_after_export:native20",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "failure": "INJECT_export:native20",
+        "publicCreateCount": 0,
+        "events": [
+          "mkdir",
+          "phase:setup-acquisition:180",
+          "verify",
+          "phase:public-image-build:720",
+          "build",
+          "create:native20",
+          "run:native20:120",
+          "export:native20"
+        ]
+      }
+    },
+    {
+      "name": "phase2_blocked_after_retire",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "failure": "INJECT_retire",
+        "publicCreateCount": 0,
+        "events": [
+          "mkdir",
+          "phase:setup-acquisition:180",
+          "verify",
+          "phase:public-image-build:720",
+          "build",
+          "create:native20",
+          "run:native20:120",
+          "export:native20",
+          "retire"
+        ]
+      }
+    },
+    {
+      "name": "public_failure_exports_raw_but_never_success",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "PUBLIC48_FAILED_STICKY"
+      }
+    },
+    {
+      "name": "call20_healthy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "IN_WINDOW",
+        "elapsed": 19,
+        "closeCalls": [
+          "selector",
+          "stdout",
+          "stderr"
+        ]
+      }
+    },
+    {
+      "name": "call20_late-wait",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 20,
+        "closeCalls": [
+          "selector",
+          "stdout",
+          "stderr"
+        ]
+      }
+    },
+    {
+      "name": "call20_late-close",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 20,
+        "closeCalls": [
+          "selector",
+          "stdout",
+          "stderr"
+        ]
+      }
+    },
+    {
+      "name": "call30_healthy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "IN_WINDOW",
+        "elapsed": 29,
+        "closeCalls": [
+          "selector",
+          "stdout",
+          "stderr"
+        ]
+      }
+    },
+    {
+      "name": "call30_late-wait",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 30,
+        "closeCalls": [
+          "selector",
+          "stdout",
+          "stderr"
+        ]
+      }
+    },
+    {
+      "name": "call30_late-close",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 30,
+        "closeCalls": [
+          "selector",
+          "stdout",
+          "stderr"
+        ]
+      }
+    },
+    {
+      "name": "full_private_prestart_literal_bindings",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "fullLiteralVectorAccepted": true
+      }
+    },
+    {
+      "name": "prestart_pid-alias_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "STRICT_ACTUAL_STATE_TYPES",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_readonly-alias_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "EXACT_REQUIRED_ReadonlyRootfs:LITERAL_TYPE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_memory-alias_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "EXACT_REQUIRED_Memory:LITERAL_TYPE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_cmd-alias_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "EXACT_CONFIG_Cmd:LITERAL_TYPE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_pidmode-host_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "EXACT_REQUIRED_PidMode:VALUE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_pidmode-omitted_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "'PidMode'",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_source-alias_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "EXACT_ACTUAL_MOUNT_Source:VALUE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_driver-alias_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "EXACT_VOLUME_DRIVER:VALUE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_cid-short_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "LITERAL_IMMUTABLE_ID_IMAGE",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "prestart_uuid-invalid_zero_target_actions",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denial": "badly formed hexadecimal UUID string",
+        "targetActions": 0
+      }
+    },
+    {
+      "name": "finite23_failure_export_positive",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "failureManifestComplete23": true
+      }
+    },
+    {
+      "name": "public23_partial_denied_before_copy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "PUBLIC_EXACT_MEMBERSHIP_SUM",
+        "memberCopies": 0
+      }
+    },
+    {
+      "name": "public23_extra_denied_before_copy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "PUBLIC_EXACT_MEMBERSHIP_SUM",
+        "memberCopies": 0
+      }
+    },
+    {
+      "name": "public23_duplicate_denied_before_copy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "EXACT_PUBLIC_ROW",
+        "memberCopies": 0
+      }
+    },
+    {
+      "name": "public23_foreign_denied_before_copy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "EXACT_PUBLIC_ROW",
+        "memberCopies": 0
+      }
+    },
+    {
+      "name": "public23_count-alias_denied_before_copy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "STRICT_PUBLIC_INTEGER",
+        "memberCopies": 0
+      }
+    },
+    {
+      "name": "public23_native-alias_denied_before_copy",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "reason": "STRICT_PUBLIC_SCOPE_TERMINAL",
+        "memberCopies": 0
+      }
+    },
+    {
+      "name": "public23_primary_failure_bool_alias_denied",
+      "status": "FAIL",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "error": "AssertionError('denial required')"
+    }
+  ],
+  "PASS": 29,
+  "FAIL": 1,
+  "actualNative20Public48": false,
+  "originalFullGates": "HELD",
+  "runtimeAuthority": false
+}

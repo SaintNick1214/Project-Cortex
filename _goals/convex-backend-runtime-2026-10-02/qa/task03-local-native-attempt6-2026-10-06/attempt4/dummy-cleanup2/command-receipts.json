@@ -1,0 +1,604 @@
+{
+  "commands": [
+    {
+      "name": "remaining-own-container-names",
+      "argv": [
+        "/usr/local/bin/docker",
+        "ps",
+        "-a",
+        "--filter",
+        "label=cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--format",
+        "{{.Names}}"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 69,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "remaining-own-container-names.stdout",
+      "stderr": "remaining-own-container-names.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "failed-controls-terminal-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-controls-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8791,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "failed-controls-terminal-inspect.stdout",
+      "stderr": "failed-controls-terminal-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "failed-controls-owned-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "rm",
+        "cortex-task03-attempt4-controls-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 69,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "failed-controls-owned-remove.stdout",
+      "stderr": "failed-controls-owned-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy1-volume-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt4-public-dummy-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 516,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "dummy1-volume-inspect.stdout",
+      "stderr": "dummy1-volume-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-1-create",
+      "argv": [
+        "/usr/local/bin/docker",
+        "create",
+        "--name",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-1-3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--label",
+        "cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--label",
+        "cortex.scope=public-dummy-source-only",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--pids-limit",
+        "64",
+        "--read-only",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=bind,src=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt4/dummy4/linux-code,target=/prep,readonly",
+        "--mount",
+        "type=volume,src=cortex-task03-attempt4-public-dummy-3c9cf727-c43a-499a-80f9-3b5ae8cf4130,target=/owned,volume-nocopy",
+        "--env",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "python3",
+        "/prep/attempt4/linux-postcheck.py"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 65,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-1-create.stdout",
+      "stderr": "cleanup-postcheck-1-create.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-1-initial-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-1-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8200,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-1-initial-inspect.stdout",
+      "stderr": "cleanup-postcheck-1-initial-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-1-run",
+      "argv": [
+        "/usr/local/bin/docker",
+        "start",
+        "--attach",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-1-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 2632,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-1-run.stdout",
+      "stderr": "cleanup-postcheck-1-run.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-1-terminal-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-1-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8747,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-1-terminal-inspect.stdout",
+      "stderr": "cleanup-postcheck-1-terminal-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-1-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "rm",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-1-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 87,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-1-remove.stdout",
+      "stderr": "cleanup-postcheck-1-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy1-volume-owned-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "rm",
+        "cortex-task03-attempt4-public-dummy-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 73,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "dummy1-volume-owned-remove.stdout",
+      "stderr": "dummy1-volume-owned-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy1-volume-after-absence",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt4-public-dummy-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 1,
+      "failureClass": null,
+      "stdoutBytes": 3,
+      "stderrBytes": 121,
+      "stdinBytes": 0,
+      "stdout": "dummy1-volume-after-absence.stdout",
+      "stderr": "dummy1-volume-after-absence.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy2-volume-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt4-public-dummy2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 518,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "dummy2-volume-inspect.stdout",
+      "stderr": "dummy2-volume-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-2-create",
+      "argv": [
+        "/usr/local/bin/docker",
+        "create",
+        "--name",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--label",
+        "cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--label",
+        "cortex.scope=public-dummy-source-only",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--pids-limit",
+        "64",
+        "--read-only",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=bind,src=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt4/dummy4/linux-code,target=/prep,readonly",
+        "--mount",
+        "type=volume,src=cortex-task03-attempt4-public-dummy2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130,target=/owned,volume-nocopy",
+        "--env",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "python3",
+        "/prep/attempt4/linux-postcheck.py"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 65,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-2-create.stdout",
+      "stderr": "cleanup-postcheck-2-create.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-2-initial-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8203,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-2-initial-inspect.stdout",
+      "stderr": "cleanup-postcheck-2-initial-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-2-run",
+      "argv": [
+        "/usr/local/bin/docker",
+        "start",
+        "--attach",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 2632,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-2-run.stdout",
+      "stderr": "cleanup-postcheck-2-run.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-2-terminal-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8749,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-2-terminal-inspect.stdout",
+      "stderr": "cleanup-postcheck-2-terminal-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-2-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "rm",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 87,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-2-remove.stdout",
+      "stderr": "cleanup-postcheck-2-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy2-volume-owned-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "rm",
+        "cortex-task03-attempt4-public-dummy2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 74,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "dummy2-volume-owned-remove.stdout",
+      "stderr": "dummy2-volume-owned-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy2-volume-after-absence",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt4-public-dummy2-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 1,
+      "failureClass": null,
+      "stdoutBytes": 3,
+      "stderrBytes": 122,
+      "stdinBytes": 0,
+      "stdout": "dummy2-volume-after-absence.stdout",
+      "stderr": "dummy2-volume-after-absence.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy3-volume-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt4-public-dummy3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 518,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "dummy3-volume-inspect.stdout",
+      "stderr": "dummy3-volume-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-3-create",
+      "argv": [
+        "/usr/local/bin/docker",
+        "create",
+        "--name",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--label",
+        "cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--label",
+        "cortex.scope=public-dummy-source-only",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--pids-limit",
+        "64",
+        "--read-only",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=bind,src=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt4/dummy4/linux-code,target=/prep,readonly",
+        "--mount",
+        "type=volume,src=cortex-task03-attempt4-public-dummy3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130,target=/owned,volume-nocopy",
+        "--env",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "python3",
+        "/prep/attempt4/linux-postcheck.py"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 65,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-3-create.stdout",
+      "stderr": "cleanup-postcheck-3-create.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-3-initial-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8203,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-3-initial-inspect.stdout",
+      "stderr": "cleanup-postcheck-3-initial-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-3-run",
+      "argv": [
+        "/usr/local/bin/docker",
+        "start",
+        "--attach",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 2632,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-3-run.stdout",
+      "stderr": "cleanup-postcheck-3-run.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-3-terminal-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8749,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-3-terminal-inspect.stdout",
+      "stderr": "cleanup-postcheck-3-terminal-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "cleanup-postcheck-3-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "rm",
+        "cortex-task03-attempt4-dummy4-cleanup-postcheck-3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 87,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "cleanup-postcheck-3-remove.stdout",
+      "stderr": "cleanup-postcheck-3-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy3-volume-owned-remove",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "rm",
+        "cortex-task03-attempt4-public-dummy3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 74,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "dummy3-volume-owned-remove.stdout",
+      "stderr": "dummy3-volume-owned-remove.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "dummy3-volume-after-absence",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt4-public-dummy3-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 1,
+      "failureClass": null,
+      "stdoutBytes": 3,
+      "stderrBytes": 122,
+      "stdinBytes": 0,
+      "stdout": "dummy3-volume-after-absence.stdout",
+      "stderr": "dummy3-volume-after-absence.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "remaining-own-container-names-final",
+      "argv": [
+        "/usr/local/bin/docker",
+        "ps",
+        "-a",
+        "--filter",
+        "label=cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--format",
+        "{{.Names}}"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "remaining-own-container-names-final.stdout",
+      "stderr": "remaining-own-container-names-final.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "remaining-own-volume-names-final",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "remaining-own-volume-names-final.stdout",
+      "stderr": "remaining-own-volume-names-final.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    }
+  ],
+  "privateReads": 0,
+  "services": 0
+}

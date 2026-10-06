@@ -1,0 +1,41 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/integrated/coordinate-common.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py
+@@ -110,6 +110,11 @@
+         raise OwnedGroupUnknown('bounded_anchor_control_required')
+     control.sendall(raw)
+ 
++def control_readable(control, wait):
++    with selectors.DefaultSelector() as readiness:
++        readiness.register(control, selectors.EVENT_READ)
++        return bool(readiness.select(wait))
++
+ def anchor_main(fd, argv):
+     control = socket.socket(fileno=fd)
+     own = os.getpid()
+@@ -132,7 +137,7 @@
+             exit_sent = True
+     while time.monotonic() < until:
+         report_exit()
+-        if not select.select([control],[],[],0.02)[0]:
++        if not control_readable(control,0.02):
+             continue
+         raw = control.recv(CONTROL_LIMIT+1)
+         if not raw:
+@@ -226,7 +231,7 @@
+     reconciled = None
+     def events(wait):
+         nonlocal buffer,control_bytes,command_pid,command_exit,command_exited,reconciled
+-        if not select.select([control],[],[],wait)[0]:
++        if not control_readable(control,wait):
+             return
+         raw = control.recv(CONTROL_LIMIT+1)
+         if not raw:
+@@ -292,7 +297,7 @@
+         ready = bytearray()
+         ready_deadline = min(deadline,start+2)
+         while not ready.endswith(b'\n'):
+-            if len(ready) >= CONTROL_LIMIT or time.monotonic() >= ready_deadline or not select.select([control],[],[],max(0,ready_deadline-time.monotonic()))[0]:
++            if len(ready) >= CONTROL_LIMIT or time.monotonic() >= ready_deadline or not control_readable(control,max(0,ready_deadline-time.monotonic())):
+                 raise OwnedGroupUnknown('owned_anchor_ready_deadline_or_overflow')
+             raw = control.recv(1)
+             if not raw:

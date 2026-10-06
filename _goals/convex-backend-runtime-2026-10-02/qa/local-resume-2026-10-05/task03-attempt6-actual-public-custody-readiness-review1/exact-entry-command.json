@@ -1,0 +1,43 @@
+{
+  "scope": "ROOT_REVIEWED_EXACT_FINITE_PUBLIC_REVIEW_ENTRY_ONLY",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "argvTemplate": [
+    "python3",
+    "-B",
+    "-c",
+    "import hashlib,json,os,stat,sys,time\nfrom pathlib import Path\np=Path(sys.argv[1]);expected=json.loads(sys.argv[2]);handoff=sys.argv[3]\nfields=('dev','ino','mode','nlink','uid','gid','size','mtime_ns','ctime_ns')\nnine=lambda s:{k:str(getattr(s,'st_'+k))for k in fields}\nassert sys.dont_write_bytecode and p.is_absolute() and p.resolve()==p\npre=p.lstat();assert stat.S_ISREG(pre.st_mode) and pre.st_nlink==1 and pre.st_uid==501 and pre.st_gid==20\nassert max(pre.st_mtime_ns,pre.st_ctime_ns)+60000000000<=time.time_ns()\nfd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)\ntry:\n assert nine(pre)==nine(os.fstat(fd))==expected['PRE9']\n raw=bytearray()\n while block:=os.read(fd,65536):\n  raw.extend(block);assert len(raw)<=expected['bytes']<=16777216\n assert len(raw)==expected['bytes'] and hashlib.sha256(raw).hexdigest()==expected['sha256']\n assert nine(os.fstat(fd))==nine(p.lstat())==expected['PRE9']\n sys.argv=[str(p),handoff]\n scope={'__name__':'__main__','__file__':str(p),'__package__':None}\n exec(compile(raw,str(p),'exec',dont_inherit=True),scope)\nfinally:\n assert nine(os.fstat(fd))==nine(p.lstat())==expected['PRE9']\n os.close(fd)\n",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/run-actual-review.py",
+    "<Root independently captured mature source row JSON with sha256,bytes,PRE9>",
+    "<Root explicit actual handoff absolute path>"
+  ],
+  "sourceOnlyPreparation": true,
+  "requiresRootReviewOfNewSources": true,
+  "reviewerOperation": "1995dabd-3c70-462e-b189-5862b6db182f",
+  "expectedNames": {
+    "collect": "cortex-task03-attempt6-review-collect-1995dabd",
+    "custody": "cortex-task03-attempt6-review-custody-1995dabd",
+    "dependencies": "cortex-task03-attempt6-review-dependencies-1995dabd",
+    "readiness": "cortex-task03-attempt6-review-readiness-1995dabd"
+  },
+  "bytecodeTrust": "none; entry and Common compiled from held verified full bytes; Python subprocess scripts execute source directly under-B; no importlib cache loader",
+  "handoffScope": "TASK03_ATTEMPT6_ACTUAL_PUBLIC_REVIEW_HANDOFF",
+  "handoffRequiredFields": [
+    "scope",
+    "explicitActualPublicReviewAuthorized=true",
+    "operation=c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+    "reviewerOperation=1995dabd-3c70-462e-b189-5862b6db182f",
+    "volume=cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+    "immutableImage",
+    "candidateSha256",
+    "sourceManifestSha256",
+    "allNewWritersStopped=true",
+    "remainingWrites=[]",
+    "inputs: sourceApproval/preparationDecision/managementDecision/sourceManifest/publicRecipeBinding/publicSourceManifest/acquisitionCommands each exact absolutepath/hash/size and Root independent PRE9",
+    "reviewSources: EXACT three absolutepath keys run-actual-review.py/linux-public-observer.py/linux-dependency-observer.mjs each sha256,bytes,PRE9",
+    "acquisitionDirectory: exact F/runtime-public-acquisition",
+    "publicVolumeInspect: current complete volume object",
+    "dependencyVolumeInspect: current complete volume object"
+  ],
+  "noImplicitActualAuthorization": true,
+  "maxPaidCalls": 0
+}

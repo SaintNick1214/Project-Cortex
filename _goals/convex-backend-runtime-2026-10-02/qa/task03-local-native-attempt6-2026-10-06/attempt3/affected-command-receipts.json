@@ -1,0 +1,139 @@
+{
+  "scope": "NEW_ATTEMPT3_AFFECTED_PREPARATION_CHECKS_ONLY",
+  "commands": [
+    {
+      "name": "source-47-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/attempt2/affected-controls.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:22.715176+00:00",
+      "endedAt": "2026-10-06T06:20:22.866825+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "source-47-controls.stdout",
+      "stderr": "source-47-controls.stderr"
+    },
+    {
+      "name": "filesystem-3-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/attempt2-repair1/real-owned-custody-controls.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:22.866967+00:00",
+      "endedAt": "2026-10-06T06:20:22.953773+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "filesystem-3-controls.stdout",
+      "stderr": "filesystem-3-controls.stderr"
+    },
+    {
+      "name": "cleanup-driver-28-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/repair-cycle2/offline-repair-check.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:22.953914+00:00",
+      "endedAt": "2026-10-06T06:20:22.994138+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "cleanup-driver-28-controls.stdout",
+      "stderr": "cleanup-driver-28-controls.stderr"
+    },
+    {
+      "name": "scoped-mjs-lint",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/attempt2/eslint.config.mjs",
+        "--no-ignore",
+        "--max-warnings",
+        "0",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/scripts/guard.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/scripts/incidental-custody.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/scripts/offline-guard-check.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/fresh-identity.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/attempt2/affected-controls.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/attempt2-repair1/real-owned-custody-controls.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:22.994275+00:00",
+      "endedAt": "2026-10-06T06:20:23.317688+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "scoped-mjs-lint.stdout",
+      "stderr": "scoped-mjs-lint.stderr"
+    },
+    {
+      "name": "syntax-guard",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/scripts/guard.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:23.317906+00:00",
+      "endedAt": "2026-10-06T06:20:23.348891+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-guard.stdout",
+      "stderr": "syntax-guard.stderr"
+    },
+    {
+      "name": "syntax-incidental-custody",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/scripts/incidental-custody.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:23.349076+00:00",
+      "endedAt": "2026-10-06T06:20:23.374218+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-incidental-custody.stdout",
+      "stderr": "syntax-incidental-custody.stderr"
+    },
+    {
+      "name": "syntax-offline-guard-check",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/scripts/offline-guard-check.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:23.374404+00:00",
+      "endedAt": "2026-10-06T06:20:23.399692+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-offline-guard-check.stdout",
+      "stderr": "syntax-offline-guard-check.stderr"
+    },
+    {
+      "name": "syntax-fresh-identity",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/fresh-identity.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T06:20:23.399865+00:00",
+      "endedAt": "2026-10-06T06:20:23.425692+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-fresh-identity.stdout",
+      "stderr": "syntax-fresh-identity.stderr"
+    }
+  ],
+  "privateCredentialReads": 0,
+  "services": 0,
+  "typing": "REUSED exact source/compiler/HOME/readiness pins; no product/type changes",
+  "1005Tests": "REUSED source/discovery/skips exact; not rerun"
+}

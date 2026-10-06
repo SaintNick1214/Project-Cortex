@@ -1,0 +1,225 @@
+[
+    {
+        "Id": "42315f3441a190e694b3cba329222423774640e009463b6c8bc35d9a049ed60b",
+        "Created": "2026-10-06T20:08:29.055195167Z",
+        "Path": "/usr/local/bin/python3.12",
+        "Args": [
+            "-B",
+            "-c",
+            "import os,json; from pathlib import Path; p=Path('/owned'); assert os.getuid()==0 and os.getgid()==0; assert p.is_dir() and not p.is_symlink() and not list(p.iterdir()); assert Path('/sys/fs/cgroup/memory.max').read_text().strip()=='536870912'; assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip()=='0'; os.chown(p,501,20); p.chmod(0o700); print(json.dumps({'status':'PASS','sourceMounts':0,'privateReads':0}))"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-06T20:08:29.690975542Z",
+            "FinishedAt": "2026-10-06T20:08:30.076900043Z"
+        },
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "ResolvConfPath": "/var/lib/docker/containers/42315f3441a190e694b3cba329222423774640e009463b6c8bc35d9a049ed60b/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/42315f3441a190e694b3cba329222423774640e009463b6c8bc35d9a049ed60b/hostname",
+        "HostsPath": "/var/lib/docker/containers/42315f3441a190e694b3cba329222423774640e009463b6c8bc35d9a049ed60b/hosts",
+        "LogPath": "/var/lib/docker/containers/42315f3441a190e694b3cba329222423774640e009463b6c8bc35d9a049ed60b/42315f3441a190e694b3cba329222423774640e009463b6c8bc35d9a049ed60b-json.log",
+        "Name": "/cortex-task03-attempt6-public-init-c9fbaa34",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 536870912,
+            "NanoCpus": 2000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 536870912,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 64,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+                    "Target": "/owned",
+                    "VolumeOptions": {
+                        "NoCopy": true
+                    }
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+                "Source": "/var/lib/docker/volumes/cortex-task03-attempt6-fixture-20261006-c9fbaa34/_data",
+                "Destination": "/owned",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "42315f3441a1",
+            "Domainname": "",
+            "User": "0:0",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.15",
+                "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+            ],
+            "Cmd": [
+                "/usr/local/bin/python3.12",
+                "-B",
+                "-c",
+                "import os,json; from pathlib import Path; p=Path('/owned'); assert os.getuid()==0 and os.getgid()==0; assert p.is_dir() and not p.is_symlink() and not list(p.iterdir()); assert Path('/sys/fs/cgroup/memory.max').read_text().strip()=='536870912'; assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip()=='0'; os.chown(p,501,20); p.chmod(0o700); print(json.dumps({'status':'PASS','sourceMounts':0,'privateReads':0}))"
+            ],
+            "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "Volumes": null,
+            "WorkingDir": "/var/tmp/cortex-native-c8-prospective-preparation",
+            "Entrypoint": null,
+            "Labels": {
+                "cortex.operation": "c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+                "cortex.scope": "public-candidate-only"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "b733585e485730f9916de8721023571e3fca92ffaeb46a533052e68b83db76d7",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "MacAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:67e2cf4f915add39556c76425936bc1ec02e63a74455930014fd1d65d32b08b1",
+            "size": 1815,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

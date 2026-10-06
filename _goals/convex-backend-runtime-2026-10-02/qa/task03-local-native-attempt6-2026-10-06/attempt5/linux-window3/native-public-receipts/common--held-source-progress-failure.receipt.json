@@ -1,0 +1,104 @@
+{
+  "label": "held-source-progress-failure",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import time; time.sleep(10)"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:29.012613+00:00",
+  "elapsedSeconds": 0.23189016700007414,
+  "exitCode": -9,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 23,
+      "birthTicks": "140203",
+      "group": 23,
+      "session": 23,
+      "platform": "linux-proc-stat"
+    },
+    "commandPid": 24,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 23,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 23,
+            "state": "R"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 23,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 23,
+          "state": "R"
+        },
+        {
+          "pid": 24,
+          "state": "R"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 24,
+          "identity": {
+            "pid": 24,
+            "birthTicks": "140223",
+            "group": 23,
+            "session": 23,
+            "platform": "linux-proc-stat"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 23,
+          "state": "R"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 328,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

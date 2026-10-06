@@ -1,0 +1,97 @@
+{
+  "scope": "FRESH_INDEPENDENT_MOCK_STATIC_SOURCE_OUTCOMES_ONLY",
+  "allProcessFileClockEffectsSubstituted": true,
+  "realChildCreated": false,
+  "DockerExecuted": false,
+  "nativeExecuted": false,
+  "testsVerifyDefectsAsWellAsNominalGuards": true,
+  "results": [
+    {
+      "name": "unchanged48-and20-body-and111-source-membership",
+      "status": "PASS",
+      "detail": {
+        "unchanged48Body": true,
+        "unchanged20Body": true,
+        "finite111Membership": true,
+        "runtimeExecuted": false
+      }
+    },
+    {
+      "name": "nominal-in-window-terminal-accepted-substituted",
+      "status": "PASS",
+      "detail": {
+        "nominalAccepted": true,
+        "realChildCreated": false
+      }
+    },
+    {
+      "name": "OWN20-late-terminal-accepted-defect-witness",
+      "status": "PASS",
+      "detail": {
+        "defectObserved": true,
+        "requestedSeconds": 20,
+        "acceptedElapsedSeconds": 20.125,
+        "terminalAccepted": true,
+        "realChildCreated": false,
+        "sourceLines": "bounded_process.py:65-75,216-223,264-269"
+      }
+    },
+    {
+      "name": "metadata30-late-terminal-accepted-defect-witness",
+      "status": "PASS",
+      "detail": {
+        "defectObserved": true,
+        "requestedSeconds": 30,
+        "acceptedElapsedSeconds": 30.125,
+        "realChildCreated": false
+      }
+    },
+    {
+      "name": "stream60-late-terminal-accepted-defect-witness",
+      "status": "PASS",
+      "detail": {
+        "defectObserved": true,
+        "requestedSeconds": 60,
+        "acceptedElapsedSeconds": 60.125,
+        "sourceLines": "bounded_process.py:150-158",
+        "realChildCreated": false
+      }
+    },
+    {
+      "name": "pre-expired-stream-denied-substituted",
+      "status": "PASS",
+      "detail": {
+        "preExpiredDenied": true,
+        "realChildCreated": false
+      }
+    },
+    {
+      "name": "unchanged-bootstrap-nested-PID-rejected-defect-witness",
+      "status": "PASS",
+      "detail": {
+        "defectObserved": true,
+        "bootstrapPID": 2,
+        "requiredPID": 1,
+        "originalGuardOutcome": "EXCLUSIVE_OWNED_PID_NAMESPACE_REQUIRED",
+        "newChildren": 0,
+        "sourceLines": "native-controller.py:139,190;bootstrap.py:169-170"
+      }
+    },
+    {
+      "name": "typed-boolean-and-private-PID-binding-defect-witness",
+      "status": "PASS",
+      "detail": {
+        "defectObserved": true,
+        "numericBooleanAliasesAccepted": true,
+        "hostPIDModeAccepted": true,
+        "sourceLines": "host_contract.py:13-20",
+        "DockerExecuted": false
+      }
+    }
+  ],
+  "PASS": 8,
+  "FAIL": 0,
+  "task04FunctionalAccepted": false,
+  "original122Accepted": false,
+  "ROOT": "ABSENT"
+}

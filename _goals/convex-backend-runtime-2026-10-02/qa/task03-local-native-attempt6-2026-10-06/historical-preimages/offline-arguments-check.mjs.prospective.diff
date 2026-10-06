@@ -1,0 +1,22 @@
+--- historical-c11/offline-arguments-check.mjs
++++ prospective-current/offline-arguments-check.mjs
+@@ -6,9 +6,10 @@
+ import { admitBatchRow, batchTarget, qualifyBatchTargets } from './batch-bindings.mjs';
+ import { argumentsFor } from './argument-candidates.mjs';
+ const ledger=JSON.parse(readFileSync(resolve(preparation,'path-ledger.json')));
+-const native=JSON.parse(readFileSync(resolve(preparation,'native-registration-schemas.json')));
++const native=JSON.parse(readFileSync(resolve(preparation,'native-registration-schemas.json')));for(const row of native.rows)row.args=row.validatorSchema;
+ const run='foundation-'+'a'.repeat(32), fake=table=>'OFFLINE_SHAPE_ONLY_'+table;
+ const ctx={run,issuer:'https://cortex-qualification.invalid',scopes:{tenantId:run+':tenantA',memorySpaceId:run+':spaceA'},users:{reader:run+':reader'},principals:{reader:fake('runtimeAuthPrincipals')},identities:{reader:run+':subject'},references:{reader:{membershipId:fake('runtimeAuthMemberships')}},grants:{reader:fake('runtimeAuthGrants')},refs:['runtimeAuthPrincipals','governancePolicies','graphSyncQueue','runtimeAuthGrants','runtimeAuthMemberships','runtimeMemoryVectors','memories','facts'].map(table=>({table,id:fake(table)})),files:[{id:fake('_storage')}]};
++ctx.policyWitnesses=Object.fromEntries(['runtimeBudgetAccounts','runtimeModelOperations','runtimeModelAttempts'].map(table=>[table,fake(table)]));
+ // Derive resource rows from the actual unchanged family seed author, not mirrored fixtures.
+ Object.assign(ctx.scopes,{writerMemorySpaceId:run+':spaceWriter',foreignTenantId:run+':tenantB',foreignMemorySpaceId:run+':spaceB'});
+ for(const key of ['writer','foreign','revoked','deleted'])ctx.principals[key]=fake('principal-'+key);
+@@ -59,6 +60,6 @@
+  else{assert.equal(entry.path,'memories:finalizePartialMemory');assert.ok('memoryId' in fields);assert.ok('embedding' in fields);}
+ }
+ for(const row of ledger.cases)validate(native.rows.find(r=>r.path===row.path).args,argumentsFor(row,ctx));
+-console.log(JSON.stringify({scope:'OFFLINE_NATIVE_VALIDATOR_SHAPES',status:'PASS',registered:259,arrayBearingPublicPaths:audit.arrayBearingPublicPaths,nonemptyBatchPaths:2,partialMutationBindingPaths:partialRows.length,partialBindingNegatives,healthyMockGetters:healthy.length,bindingNegatives,seedRowsFromActualFamily:seedRows.length,realIdEncoding:'NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS',dispatches:0,signatures:0}));
++console.log(JSON.stringify({scope:'OFFLINE_NATIVE_VALIDATOR_SHAPES',status:'PASS',registered:275,arrayBearingPublicPaths:audit.arrayBearingPublicPaths,nonemptyBatchPaths:2,partialMutationBindingPaths:partialRows.length,partialBindingNegatives,healthyMockGetters:healthy.length,bindingNegatives,seedRowsFromActualFamily:seedRows.length,realIdEncoding:'NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS',dispatches:0,signatures:0}));
+ 
+ export {ctx as offlineCandidateContext};

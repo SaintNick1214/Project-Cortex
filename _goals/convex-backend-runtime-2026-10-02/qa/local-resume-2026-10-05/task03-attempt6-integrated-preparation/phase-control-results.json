@@ -1,0 +1,48 @@
+{
+  "scope": "EXACT_PHASE_EXECUTION_EFFECT_SUBSTITUTED_ONLY",
+  "status": "PASS",
+  "count": 6,
+  "rows": [
+    {
+      "name": "deploy-success-complete-phase",
+      "status": "PASS",
+      "observedAcceptance": true,
+      "effectSubstitution": true,
+      "realEffects": 0
+    },
+    {
+      "name": "native-success-complete-phase",
+      "status": "PASS",
+      "observedAcceptance": true,
+      "effectSubstitution": true,
+      "realEffects": 0
+    },
+    {
+      "name": "late-terminal1261-denied-before-logs",
+      "status": "PASS",
+      "observedAcceptance": false,
+      "effectSubstitution": true,
+      "realEffects": 0
+    },
+    {
+      "name": "foreign-pre-start-denied-without-start",
+      "status": "PASS",
+      "observedAcceptance": false,
+      "effectSubstitution": true,
+      "realEffects": 0
+    },
+    {
+      "name": "deploy-whole-window-shortfall-no-effect",
+      "status": "PASS",
+      "realEffects": 0
+    },
+    {
+      "name": "driver-whole-window-shortfall-no-effect",
+      "status": "PASS",
+      "realEffects": 0
+    }
+  ],
+  "privateReads": 0,
+  "DockerCalls": 0,
+  "actualNativeAccepted": false
+}

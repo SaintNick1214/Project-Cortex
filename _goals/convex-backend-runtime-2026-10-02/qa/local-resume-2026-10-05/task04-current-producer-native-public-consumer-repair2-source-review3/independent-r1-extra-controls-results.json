@@ -1,0 +1,275 @@
+{
+  "schema": "INDEPENDENT_R1_EXTRA_SOURCE_MOCK_REVIEW3",
+  "results": [
+    {
+      "name": "owner_native20_None",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "IN_WINDOW",
+        "reason": null,
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_native20_ownerless",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "PHASE_TERMINAL_WITHOUT_OBSERVED_CURRENT_OWNER_HOLD",
+        "closes": [],
+        "ownerObserved": false
+      }
+    },
+    {
+      "name": "owner_native20_replaced",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "CURRENT_PHASE_OWNER_REPLACED",
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_native20_late-terminal",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "EXPIRED",
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_native20_late-close",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "EXPIRED",
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_public48_None",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "IN_WINDOW",
+        "reason": null,
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_public48_ownerless",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "PHASE_TERMINAL_WITHOUT_OBSERVED_CURRENT_OWNER_HOLD",
+        "closes": [],
+        "ownerObserved": false
+      }
+    },
+    {
+      "name": "owner_public48_replaced",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "CURRENT_PHASE_OWNER_REPLACED",
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_public48_late-terminal",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "EXPIRED",
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "owner_public48_late-close",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "reason": "EXPIRED",
+        "closes": [
+          777
+        ],
+        "ownerObserved": true
+      }
+    },
+    {
+      "name": "copy60_None",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "IN_WINDOW",
+        "elapsed": 59,
+        "closes": [
+          100,
+          "stream",
+          101
+        ]
+      }
+    },
+    {
+      "name": "copy60_late-wait",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 60,
+        "closes": [
+          100,
+          "stream",
+          101
+        ]
+      }
+    },
+    {
+      "name": "copy60_late-stream-close",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 60,
+        "closes": [
+          100,
+          "stream",
+          101
+        ]
+      }
+    },
+    {
+      "name": "copy60_late-pidfd-close",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 60,
+        "closes": [
+          100,
+          "stream",
+          101
+        ]
+      }
+    },
+    {
+      "name": "copy60_hash",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "outcome": "FAILED",
+        "elapsed": 59,
+        "closes": [
+          100,
+          "stream",
+          101
+        ]
+      }
+    },
+    {
+      "name": "original_reserve_floors_and_2700_envelope",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "host": {
+          "maintainedAvailableBytesRequired": 8589934592,
+          "maintainedAvailableInodesRequired": 32768,
+          "writeAllocationCeilingBytes": 4708704458,
+          "writeInodeCeiling": 98570,
+          "initialAvailableBytesRequired": 13298642944,
+          "initialAvailableInodesRequired": 131338,
+          "buildFootprintBytesMax": 2147483648,
+          "buildFootprintInodesMax": 69632,
+          "artifactBytesMaxIncludingManifest": 671088640,
+          "blockBytes": 4096,
+          "singleHostDockerFilesystemRequired": true,
+          "actualCapacityRelease": "ABSENT"
+        },
+        "container": {
+          "writeCeilingBytes": 1477339188,
+          "perPathRoundingBytes": 50843520,
+          "directoryBlocksBytes": 2097152,
+          "allocationCeilingBytes": 1530279860,
+          "initialAvailableBytesRequired": 2604023808,
+          "initialAvailableInodesRequired": 21120,
+          "maintainedAvailableBytesRequired": 1073741824,
+          "maintainedAvailableInodesRequired": 8192,
+          "blockBytes": 4096,
+          "historical48GBPhysicalAdmission": "HELD_NOT_REPLACED"
+        },
+        "proposalJob": 2700,
+        "runtimeAuthority": false
+      }
+    },
+    {
+      "name": "literal_python_memory_reserve_onebyte_boundary",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "oneByteBelowReserveDenied": true,
+        "required": 134217728
+      }
+    },
+    {
+      "name": "literal_node_memory_reserve_onebyte_boundary",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "oneByteBelowReserveDenied": true,
+        "required": 536870912
+      }
+    },
+    {
+      "name": "R1_strict_finite_{\"x\":1e309}",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denied": true
+      }
+    },
+    {
+      "name": "R1_strict_finite_{\"x\":1,\"x\":2}",
+      "status": "PASS",
+      "kind": "INDEPENDENT_SOURCE_MOCK",
+      "detail": {
+        "denied": true
+      }
+    }
+  ],
+  "PASS": 20,
+  "FAIL": 0,
+  "actualNative20Public48": false,
+  "originalFullGates": "HELD",
+  "runtimeAuthority": false
+}

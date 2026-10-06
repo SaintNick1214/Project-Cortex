@@ -1,0 +1,32 @@
+from pathlib import Path
+import shutil
+N=Path(__file__).resolve().parents[1];S=N/'source';E=N/'evidence/preimages';E.mkdir()
+for name in ('bounded_process.py','copy_file.py','host_contract.py','native-controller.py','ci-run.py'):
+ shutil.copyfile(S/name,E/name)
+p=S/'bounded_process.py';t=p.read_text()
+t=t.replace('                return self.partial()','                if time.monotonic() >= self.deadline:\n                    raise CollectionFailure(\'COMMAND_DEADLINE_EXCEEDED\', self.partial())\n                return self.partial()',1)
+t=t.replace("        row = self.partial(); row['exit'] = self.process.returncode; row['terminal'] = True", "        if time.monotonic() >= self.deadline:\n            raise CollectionFailure('STREAM_DEADLINE_EXCEEDED', self.partial())\n        row = self.partial(); row['exit'] = self.process.returncode; row['terminal'] = True",1)
+t=t.replace("        receipt['exit'] = process.returncode\n        receipt['terminal'] = True", "        receipt['exit'] = process.returncode\n        receipt['terminal'] = True\n        if time.monotonic() >= began + timeout:\n            raise CollectionFailure('COMMAND_DEADLINE_EXCEEDED', receipt)",1)
+t=t.replace("    if primary is not None:\n        raise CollectionFailure", "    # Cleanup time is recorded separately and never clears an expired call.\n    receipt['absoluteDeadline'] = began + timeout\n    receipt['acceptanceCheckedAfterFDCloses'] = True\n    if receipt['elapsedSeconds'] >= timeout and primary is None:\n        primary = CollectionFailure('COMMAND_DEADLINE_EXCEEDED', receipt)\n        receipt['failure'] = 'COMMAND_DEADLINE_EXCEEDED'\n    receipt['outcome'] = 'FAILED' if primary is not None or receipt['closeErrors'] or not receipt['terminal'] else 'IN_WINDOW'\n    if primary is not None:\n        raise CollectionFailure",1)
+p.write_text(t)
+p=S/'copy_file.py';t=p.read_text().replace('import subprocess','import subprocess\nimport time',1)
+t=t.replace("    argv=['docker'", "    began=time.monotonic();deadline=began+timeout\n    argv=['docker'",1)
+t=t.replace('timeout=timeout)',"timeout=max(0,deadline-time.monotonic()))",1)
+t=t.replace("        return row\n    except BaseException", "        if time.monotonic()>=deadline:raise ValueError('COPY_ABSOLUTE60_DEADLINE_EXCEEDED')\n    except BaseException",1)
+# Preserve primary failure while allowing all close observations to complete.
+t=t.replace("        raise CopyFailure(row)from error", "        row['outcome']='FAILED'",1)
+t=t.replace("        if row['closeErrors']:raise CopyFailure({**row,'failure':'ACTUAL_NATIVE_CLOSE_FAILURE'})", "        row['elapsedSeconds']=time.monotonic()-began\n        row['absoluteDeadline']=deadline\n        row['acceptanceCheckedAfterFDCloses']=True\n        if row['elapsedSeconds']>=timeout:\n            row.setdefault('failure','COPY_ABSOLUTE60_DEADLINE_EXCEEDED')\n        if row['closeErrors']:\n            row.setdefault('failure','ACTUAL_NATIVE_CLOSE_FAILURE')\n    if row.get('failure'):\n        row['outcome']='FAILED'\n        raise CopyFailure(row)\n    row['outcome']='IN_WINDOW'\n    return row",1)
+p.write_text(t)
+p=S/'native-controller.py';t=p.read_text()
+start=t.index('        SOURCE_DEADLINE=None\n        command(\'producer48\'');end=t.index('        final_maps=',start)
+t=t[:start]+"        # Public bootstrap is a separate PID1 container, never this owner's child.\n        owner_fence(owner,pidfd)\n"+t[end:]
+t=t.replace("'originalPublicCount':48,", "'originalPublicCount':0,'public48Phase':'SEPARATE_PID1_OWNER_NOT_EXECUTED_HERE',")
+t=t.replace("        imports=sorted({str(Path(module.__file__))for module in tuple(sys.modules.values())if getattr(module,'__file__',None)and not module.__file__.startswith('<')})", "        origins=import_origins()\n        imports=sorted({r['file'] for r in origins if r['file']})\n        caches=sorted({r['cached'] for r in origins if r['cached'] and r['cachedExists']})")
+t=t.replace('set(mapped+imports+', 'set(mapped+imports+caches+')
+t=t.replace("'actualImportedOrigins':imports,", "'actualImportedOrigins':origins,'trustedStartup':'ENTRY_IMAGE_STDLIB_AND_EARLY_HELPER_IMPORTS_PRECEDE_CAPTURE','bytecodeFlagMeaning':'-B blocks writes; does not prove no cache reads','beforeConsumerBoundary':'Captured source bytes constrain later reviewed consumers; startup first-use closure not claimed',")
+t=t.replace("        final_imports=sorted({str(Path(module.__file__))for module in tuple(sys.modules.values())if getattr(module,'__file__',None)and not module.__file__.startswith('<')})", "        final_origins=import_origins()\n        final_imports=sorted({r['file'] for r in final_origins if r['file']})")
+t=t.replace('or final_imports!=imports:', 'or final_imports!=imports or final_origins!=origins:')
+t=t.replace("\ndef main():", "\ndef import_origins():\n    rows=[]\n    for name,module in tuple(sys.modules.items()):\n        file=getattr(module,'__file__',None);cached=getattr(module,'__cached__',None)\n        if file and not file.startswith('<'):\n            rows.append({'module':name,'file':str(Path(file)),\n                'cached':str(Path(cached)) if cached else None,\n                'cachedExists':bool(cached and Path(cached).is_file())})\n    return sorted(rows,key=lambda r:r['module'])\n\n\ndef main():",1)
+t=t.replace("        if CREATED:\n            write('native-resource-raw.json'", "        if SOURCE_DEADLINE is not None and time.monotonic()>=SOURCE_DEADLINE:\n            error=error or 'NATIVE120_EXPIRED_AFTER_TERMINAL_SOURCE_FD_CLOSES'\n        if CREATED:\n            write('native-resource-raw.json'",1)
+t=t.replace("        if error:sys.exit(1)", "        if SOURCE_DEADLINE is not None and time.monotonic()>=SOURCE_DEADLINE:\n            error=error or 'NATIVE120_EXPIRED_AFTER_FINAL_EXPORT'\n        if error:sys.exit(1)",1)
+p.write_text(t)

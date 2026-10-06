@@ -1,0 +1,108 @@
+{
+  "label": "blocked-stdin-deadline",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import time; time.sleep(20)"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:16.913765+00:00",
+  "elapsedSeconds": 12.09422242300002,
+  "exitCode": -9,
+  "failureClass": "TimeoutError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 65536,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 21,
+      "birthTicks": "138993",
+      "group": 21,
+      "session": 21,
+      "platform": "linux-proc-stat"
+    },
+    "commandPid": 22,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 21,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 21,
+            "state": "S"
+          },
+          {
+            "pid": 22,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 21,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 21,
+          "state": "R"
+        },
+        {
+          "pid": 22,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 22,
+          "identity": {
+            "pid": 22,
+            "birthTicks": "139017",
+            "group": 21,
+            "session": 21,
+            "platform": "linux-proc-stat"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 21,
+          "state": "R"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 328,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

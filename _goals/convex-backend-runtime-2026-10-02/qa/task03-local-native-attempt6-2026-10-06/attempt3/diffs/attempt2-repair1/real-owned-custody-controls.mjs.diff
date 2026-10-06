@@ -1,0 +1,11 @@
+--- accepted-attempt2/attempt2-repair1/real-owned-custody-controls.mjs
++++ fresh-attempt3/attempt2-repair1/real-owned-custody-controls.mjs
+@@ -12,7 +12,7 @@
+  try{
+   fs.mkdirSync(resolve(fixture,'fixture'),{recursive:true});fs.mkdirSync(scratch,{mode:0o700});fs.mkdirSync(resolve(root,'attempt2'));fs.writeFileSync(path,'DUMMY_QA_INPUT_NO_CREDENTIALS\n',{flag:'wx',mode:0o600});
+   const initial=fs.lstatSync(path,{bigint:true});
+-  fs.writeFileSync(resolve(root,'attempt2/incidental-file-policy.json'),JSON.stringify({path:'managed-fixture/fixture/.env.local',baselineAbsent:true,removalRequiresPrivateExactCustody:true}));fs.writeFileSync(resolve(root,'candidate-freeze-attempt2-repair1.json'),JSON.stringify({files:[]}));
++  fs.writeFileSync(resolve(root,'attempt2/incidental-file-policy.json'),JSON.stringify({path:'managed-fixture/fixture/.env.local',baselineAbsent:true,removalRequiresPrivateExactCustody:true}));fs.writeFileSync(resolve(root,'candidate-freeze-attempt3.json'),JSON.stringify({files:[]}));
+   const boundary={...fs,openSync:(p,flags)=>{const fd=fs.openSync(p,flags);if(p===path)held.add(fd);return fd;},closeSync:fd=>{fs.closeSync(fd);held.delete(fd);},
+    fsyncSync:fd=>{fs.fsyncSync(fd);
+     // Exact trigger uses the tracked durable receipt descriptor, without pathname guesses.

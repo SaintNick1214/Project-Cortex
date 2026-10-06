@@ -1,0 +1,27 @@
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import assert from "node:assert/strict";
+import ts from "typescript";
+const repo=process.cwd(),out=path.dirname(new URL(import.meta.url).pathname),base=path.resolve(repo,"_goals/convex-backend-runtime-2026-10-02/qa");
+const read=f=>JSON.parse(fs.readFileSync(f,"utf8")); const sha=f=>crypto.createHash("sha256").update(fs.readFileSync(f)).digest("hex"); const rel=f=>path.relative(repo,f);
+const inventory=read(path.join(out,"current-inventory/public-path-inventory.json"));
+const historical=read(path.join(base,"task03-foundation-live-preparation-c11/path-ledger.json"));
+const kind=k=>k.replace(/^internal/,"").toLowerCase(); const tuple=row=>JSON.stringify([row.path,kind(row.kind),row.visibility]);
+const old=new Map(historical.cases.map(row=>[row.path,row])),current=new Map(inventory.endpoints.map(row=>[row.path,row]));
+const removed=[...old].filter(([name])=>!current.has(name)).map(([name])=>name); const altered=[...old].filter(([name,row])=>current.has(name)&&tuple(row)!==tuple(current.get(name))).map(([name])=>name); const added=inventory.endpoints.filter(row=>!old.has(row.path));
+assert.equal(old.size,259);assert.deepEqual(removed,[]);assert.deepEqual(altered,[]);assert.equal(current.size,275);assert.equal(added.length,16);assert(added.every(row=>row.file==="convex-dev/runtimeModelPolicy.ts"&&row.visibility==="internal"));assert.deepEqual(inventory.completeness.unresolved,[]);
+fs.writeFileSync(path.join(out,"registration-conservation.json"),JSON.stringify({utc:new Date().toISOString(),counts:inventory.completeness.counts,originalRows:old.size,originalConserved:259,removed,altered,added:added.map(row=>({path:row.path,kind:kind(row.kind),visibility:row.visibility,line:row.line,requiredCapability:row.requiredCapability})),conservationIncludesVisibility:true},null,2)+"\n");
+const prior=read(path.join(base,"task03-foundation-live-c11-aggregate-review/source-hash-reconciliation.json")); const sourceComparison=prior.rows.map(row=>({source:row.source,historicalSha256:row.sha256,currentSha256:sha(path.join(repo,row.source)),equal:sha(path.join(repo,row.source))===row.sha256}));
+fs.writeFileSync(path.join(out,"c11-source-comparison.json"),JSON.stringify({utc:new Date().toISOString(),historicalCandidate:"e2b015f14d57692544cf73242e1a5bd784b342b43a0d3c1e6d0ecdb5b0c2fbc6",rows:sourceComparison,matched:sourceComparison.filter(r=>r.equal).length,changed:sourceComparison.filter(r=>!r.equal)},null,2)+"\n");
+const visited=new Map(),edges=[],external=[],unresolved=[];
+function local(from,spec){const raw=path.resolve(path.dirname(from),spec);const stem=raw.replace(/\.(?:[cm]?js|jsx)$/,""), choices=[raw,stem+".ts",stem+".d.ts",stem+".tsx",stem+".mts",stem+".cts",stem+".js",path.join(raw,"index.ts")];return choices.find(f=>fs.existsSync(f)&&fs.statSync(f).isFile());}
+function visit(file){file=path.resolve(file);if(visited.has(file))return;const bytes=fs.readFileSync(file);visited.set(file,{path:rel(file),sha256:sha(file),bytes:bytes.length});if(!/\.[cm]?[jt]sx?$/.test(file))return;const ast=ts.createSourceFile(file,bytes.toString(),ts.ScriptTarget.Latest,true);for(const node of ast.statements){let spec;
+ if((ts.isImportDeclaration(node)||ts.isExportDeclaration(node))&&node.moduleSpecifier&&ts.isStringLiteral(node.moduleSpecifier))spec=node.moduleSpecifier.text;
+ if(!spec)continue;if(!spec.startsWith(".")){external.push({from:rel(file),specifier:spec});continue;}const target=local(file,spec);if(!target){unresolved.push({from:rel(file),specifier:spec});continue;}assert(!rel(target).startsWith(".."),"Local dependency outside repository");edges.push({from:rel(file),specifier:spec,to:rel(target),kind:ts.isExportDeclaration(node)?"reexport":"import"});visit(target);}}
+for(const row of inventory.completeness.sourceHashes)visit(path.resolve(repo,row.file));for(const row of prior.rows)visit(path.resolve(repo,row.source));visit(path.resolve(repo,"src/domain/index.ts"));
+assert.deepEqual(unresolved,[]);const rows=[...visited.values()].sort((a,b)=>a.path.localeCompare(b.path));fs.writeFileSync(path.join(out,"current-source-closure.json"),JSON.stringify({scope:"Current backend/auth/policy/domain import and reexport closure; source only, no installed-library execution claim",utc:new Date().toISOString(),files:rows,edges,externalDependencies:external,unresolved},null,2)+"\n");
+const api=fs.readFileSync(path.join(repo,"convex-dev/_generated/api.d.ts"),"utf8"),typedModules=new Set([...api.matchAll(/import type \* as [^ ]+ from "\.\.\/([^"]+)\.js"/g)].map(m=>m[1]));
+const registeredModules=new Set(inventory.endpoints.map(row=>row.path.split(":")[0]));const missing=[...registeredModules].filter(name=>!typedModules.has(name)).sort();
+fs.writeFileSync(path.join(out,"generated-binding-source-check.json"),JSON.stringify({scope:"Read-only versioned root bindings; actual codegen NOT_RUN",rootApiSha256:sha(path.join(repo,"convex-dev/_generated/api.d.ts")),typedModules:[...typedModules].sort(),registeredModules:[...registeredModules].sort(),missingTypedModules:missing,componentsEmpty:/export declare const components: \{\}/.test(api),officialCodegen:"NOT_RUN",productionCodegenFixRequiredBeforeModernTypedAPIClaim:missing.length>0},null,2)+"\n");
+console.log(JSON.stringify({registered:current.size,originalConserved:old.size,additions:added.length,sourceClosure:rows.length,unresolved:unresolved.length,historicalEqual:sourceComparison.filter(r=>r.equal).length,missingTypedModules:missing}));

@@ -1,0 +1,62 @@
+{
+  "scope": "INDEPENDENT_PUBLIC_SOURCE_ONLY_UNCHANGED_T_BINDING_TARGET_CONTROL",
+  "status": "BLOCKED_CURRENT_PRIVATE_PIPELINE_BEFORE_PROVISION",
+  "sourceSha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+  "sourceOriginalNine": {
+    "dev": "16777234",
+    "ino": "92445873",
+    "mode": "33152",
+    "uid": "501",
+    "gid": "20",
+    "nlink": "1",
+    "size": "9220",
+    "mtime_ns": "1791309625368219487",
+    "ctime_ns": "1791309684906237761"
+  },
+  "canonicalRequestSha256": "9cc20b8a5e00cd65985cfed8c4049273e6c0bc689b29a5b5aa521702fc949200",
+  "differences": {
+    "projectSlug": {
+      "transportBinding": "cortex-foundation-delta-8f8e03b9818d",
+      "canonicalRequest": "cortex-foundation-delta-312f13a61cc6"
+    },
+    "projectName": {
+      "transportBinding": "cortex-foundation-delta-8f8e03b9818d",
+      "canonicalRequest": "cortex-foundation-delta-312f13a61cc6"
+    }
+  },
+  "actualCanonicalPublicDummyDenial": "ValueError",
+  "pureInMemoryConsistentBindingPositive": "PASS_NOT_OPERATIVE_REPAIR",
+  "negativeControls": [
+    {
+      "field": "operation",
+      "result": "DENIED"
+    },
+    {
+      "field": "requestSha256",
+      "result": "DENIED"
+    },
+    {
+      "field": "projectSlug",
+      "result": "DENIED"
+    },
+    {
+      "field": "projectName",
+      "result": "DENIED"
+    },
+    {
+      "field": "teamId",
+      "result": "DENIED"
+    },
+    {
+      "field": "privateEnvironmentFile",
+      "result": "DENIED"
+    }
+  ],
+  "parentWitnessSha256": "afd45a3e199999a247844291ee5080b0ec3fdff1653483efadc744405d0074e5",
+  "privateReads": 0,
+  "DockerCalls": 0,
+  "serviceCalls": 0,
+  "actualFunctionality": false,
+  "source2HistoricalPassPreserved": true,
+  "requiredRepair": "new declared current binding input/pointer, unchanged T and all original assertions, complete independently accepted source closure before provision"
+}

@@ -1,0 +1,149 @@
+{
+  "scope": "ROOT_NAMED_HIGHFD_ADAPTATION_SOURCE_AND_HOST_RECEIPT_INSPECTION_ONLY",
+  "status": "PASS_INSPECTION_ONLY",
+  "exactReferenceDelta": "one new selectors.DefaultSelector helper plus exactly three select readiness replacements; original assertions/constants/deadlines/ownership unchanged",
+  "originalFailurePreserved": true,
+  "controls": [
+    {
+      "label": "original-lowfd-success",
+      "exitCode": 0,
+      "failureClass": null,
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 6,
+        "stderr": 7
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.23488287499640137
+    },
+    {
+      "label": "highfd2400-success",
+      "exitCode": 0,
+      "failureClass": null,
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 7,
+        "stderr": 8
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.24042883299989626
+    },
+    {
+      "label": "highfd2400-nonzero",
+      "exitCode": 7,
+      "failureClass": null,
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 7,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.23421154198877048
+    },
+    {
+      "label": "highfd2400-stdin-max",
+      "exitCode": 0,
+      "failureClass": null,
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 72,
+        "stderr": 0
+      },
+      "stdinBytes": 327692,
+      "elapsedSeconds": 0.23562091701023746
+    },
+    {
+      "label": "highfd2400-pipes-max",
+      "exitCode": 0,
+      "failureClass": null,
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 262144,
+        "stderr": 262144
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.2365347919985652
+    },
+    {
+      "label": "highfd2400-stdout-overflow",
+      "exitCode": -9,
+      "failureClass": "ValueError",
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 262145,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.1905809159943601
+    },
+    {
+      "label": "highfd2400-stderr-overflow",
+      "exitCode": -9,
+      "failureClass": "ValueError",
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 262145
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.19274070899700746
+    },
+    {
+      "label": "highfd2400-deadline",
+      "exitCode": -9,
+      "failureClass": "TimeoutError",
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.5096652920037741
+    },
+    {
+      "label": "highfd2400-residual",
+      "exitCode": 0,
+      "failureClass": "OwnedGroupResidual",
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.3281791250046808
+    },
+    {
+      "label": "highfd2400-missing",
+      "exitCode": null,
+      "failureClass": "FileNotFoundError",
+      "terminal": false,
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.14737124998646323
+    },
+    {
+      "label": "highfd4000-success",
+      "exitCode": 0,
+      "failureClass": null,
+      "terminal": true,
+      "streamByteCounts": {
+        "stdout": 16,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "elapsedSeconds": 0.2395097089902265
+    }
+  ],
+  "sourceControlBytesAllRawHashesVerified": true,
+  "41InputOriginalNineFullEofHashSizeHeldFinal": true,
+  "highestHeldDescriptor": 4000,
+  "sourceGateComplete": false,
+  "freshIndependentWholeEpochReviewRequired": true,
+  "actualPublicCustodyAccepted": false,
+  "actualPrivateNativeAccepted": false,
+  "fullGoal": false,
+  "atNs": "1791319757087016000"
+}

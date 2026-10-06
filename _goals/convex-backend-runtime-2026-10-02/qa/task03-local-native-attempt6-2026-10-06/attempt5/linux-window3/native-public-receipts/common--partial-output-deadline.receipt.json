@@ -1,0 +1,108 @@
+{
+  "label": "partial-output-deadline",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import os,time; os.write(1,b\"PUBLIC OUT\"); os.write(2,b\"PUBLIC ERR\"); time.sleep(4)"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:15.464038+00:00",
+  "elapsedSeconds": 0.4357640419998461,
+  "exitCode": -9,
+  "failureClass": "TimeoutError",
+  "streamByteCounts": {
+    "stdout": 10,
+    "stderr": 10
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 15,
+      "birthTicks": "138848",
+      "group": 15,
+      "session": 15,
+      "platform": "linux-proc-stat"
+    },
+    "commandPid": 16,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 15,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 15,
+            "state": "S"
+          },
+          {
+            "pid": 16,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 15,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 15,
+          "state": "R"
+        },
+        {
+          "pid": 16,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 16,
+          "identity": {
+            "pid": 16,
+            "birthTicks": "138874",
+            "group": 15,
+            "session": 15,
+            "platform": "linux-proc-stat"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 15,
+          "state": "R"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 328,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "93bdd1a41d1b8144a2148ec2b1849859d1cb5f4b9bb91637ff372c19f6e2baca",
+  "stderrSha256": "3a2804ee15f278b9621bd8d36333ca8c066d860b4ea892bf83bd7b5fea8fae97"
+}

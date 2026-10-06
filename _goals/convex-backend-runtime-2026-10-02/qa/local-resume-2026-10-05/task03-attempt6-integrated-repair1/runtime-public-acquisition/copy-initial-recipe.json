@@ -1,0 +1,58 @@
+{
+  "containerId": "006edeb9f352e95ca592287d51e36f88a3038c68791ebe776587339bdd493333",
+  "selectedDaemonSourceMapping": "docker-desktop-host_mnt",
+  "requestedLiteralSources": {
+    "/input": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06",
+    "/helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1"
+  },
+  "HostConfigMounts": [
+    {
+      "Type": "volume",
+      "Source": "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+      "Target": "/owned",
+      "VolumeOptions": {
+        "NoCopy": true
+      }
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06",
+      "Target": "/input",
+      "ReadOnly": true
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1",
+      "Target": "/helper",
+      "ReadOnly": true
+    }
+  ],
+  "actualMounts": [
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1",
+      "Destination": "/helper",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06",
+      "Destination": "/input",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "volume",
+      "Name": "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+      "Source": "/var/lib/docker/volumes/cortex-task03-attempt6-fixture-20261006-c9fbaa34/_data",
+      "Destination": "/owned",
+      "Driver": "local",
+      "Mode": "z",
+      "RW": true,
+      "Propagation": ""
+    }
+  ]
+}

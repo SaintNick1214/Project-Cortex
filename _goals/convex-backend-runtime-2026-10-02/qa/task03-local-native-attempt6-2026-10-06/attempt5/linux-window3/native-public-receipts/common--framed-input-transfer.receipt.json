@@ -1,0 +1,73 @@
+{
+  "label": "framed-input-transfer",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import sys; b=sys.stdin.buffer.read(); print(len(b))"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:16.430016+00:00",
+  "elapsedSeconds": 0.4802609169998959,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 6,
+    "stderr": 0
+  },
+  "stdinBytes": 20000,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 19,
+      "birthTicks": "138944",
+      "group": 19,
+      "session": 19,
+      "platform": "linux-proc-stat"
+    },
+    "commandPid": 20,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 19,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 19,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 19,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 75,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "0be508172e87a2af98f344d18610bbaaa0e6bbfcef0c7804b24457f839e129c9",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

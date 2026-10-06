@@ -1,0 +1,133 @@
+{
+  "utc": "2026-10-06T03:19:59.768Z",
+  "counts": {
+    "modules": 38,
+    "registered": 275,
+    "public": 200,
+    "internal": 75,
+    "httpRoutes": 0,
+    "registeredBuilderCalls": 275,
+    "resolvedExports": 275,
+    "guard": 200,
+    "internalize": 0
+  },
+  "originalRows": 259,
+  "originalConserved": 259,
+  "removed": [],
+  "altered": [],
+  "added": [
+    {
+      "path": "runtimeModelPolicy:ensureBudget",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 335,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:installDeploymentPolicy",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 337,
+      "requiredCapability": "trusted deployment operator internal invocation"
+    },
+    {
+      "path": "runtimeModelPolicy:provisionTenantPolicy",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 372,
+      "requiredCapability": "current admin grant"
+    },
+    {
+      "path": "runtimeModelPolicy:resolve",
+      "kind": "query",
+      "visibility": "internal",
+      "line": 417,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:admit",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 449,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:checkpoint",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 554,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:markVisible",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 588,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:captureTerminalEvidence",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 823,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:attachTerminalResult",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 866,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 900,
+      "requiredCapability": "trusted deployment operator internal invocation"
+    },
+    {
+      "path": "runtimeModelPolicy:settle",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 904,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:recover",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 906,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:releaseNotDispatched",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 921,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:cancelBudget",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 932,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:admitFallback",
+      "kind": "mutation",
+      "visibility": "internal",
+      "line": 947,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    },
+    {
+      "path": "runtimeModelPolicy:checkFallback",
+      "kind": "query",
+      "visibility": "internal",
+      "line": 982,
+      "requiredCapability": "operation-purpose capability and exact admitted reference; charge-only capture cannot grant delivery"
+    }
+  ],
+  "conservationIncludesVisibility": true
+}

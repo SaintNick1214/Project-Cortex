@@ -1,0 +1,15 @@
+--- accepted-attempt1/scripts/driver.mjs
++++ fresh-attempt2/scripts/driver.mjs
+@@ -4,9 +4,10 @@
+ import { randomUUID } from 'node:crypto';
+ import { livePreflight, repo, scratch, preparation, appendRedactedReceipt, verifyCodegen, safeProcessFailure } from './guard.mjs';
+ import { ProcessOwner } from './process-owner.mjs';
+-const {values,target}=livePreflight();const codegen=verifyCodegen(target);
++import { childToolchain } from './child-toolchain.mjs';
++const {values,target}=livePreflight();const toolchain=childToolchain();const codegen=verifyCodegen(target);
+ const runtime={};for(const name of ['HTTPS_PROXY','HTTP_PROXY','NO_PROXY','https_proxy','http_proxy','no_proxy','NODE_EXTRA_CA_CERTS'])if(process.env[name])runtime[name]=process.env[name];
+-const env={PATH:process.env.PATH,LANG:'C.UTF-8',CI:'1',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime,...values,CORTEX_FOUNDATION_TARGET_RECEIPT:resolve(scratch,'target.json'),CORTEX_FOUNDATION_DEPLOY_ENV:resolve(scratch,'deploy.env'),CORTEX_FOUNDATION_CODEGEN_RECEIPT:codegen};
++const env={PATH:toolchain.path,HOME:toolchain.home,LANG:'C.UTF-8',CI:'1',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime,...values,CORTEX_FOUNDATION_TARGET_RECEIPT:resolve(scratch,'target.json'),CORTEX_FOUNDATION_DEPLOY_ENV:resolve(scratch,'deploy.env'),CORTEX_FOUNDATION_CODEGEN_RECEIPT:codegen};
+ // Transport/process success cannot certify contradictory or malformed child outcomes.
+ function certifiedSuccess(result,owner){
+  if(result.code!==0||(result.signal!==undefined&&result.signal!==null)||result.timedOut||result.overflow||owner.records.size!==0||owner.verifiedGroups!==owner.spawned)return false;

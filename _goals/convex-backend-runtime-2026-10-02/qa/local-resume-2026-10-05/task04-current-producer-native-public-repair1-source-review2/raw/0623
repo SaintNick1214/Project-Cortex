@@ -1,0 +1,52 @@
+{
+  "schema": "INDEPENDENT_TASK_SOURCE_REVIEW_V1",
+  "scope": "TASK04_NATIVE_PUBLIC_PREPARATION_SOURCE_ONLY",
+  "independent": true,
+  "verdict": "REJECT",
+  "score": 2.6,
+  "dimensions": {
+    "requirementFulfillment": 2,
+    "codeQuality": 2,
+    "testQuality": 3,
+    "patternAdherence": 4,
+    "completeness": 2
+  },
+  "sourceManifestSHA256": "95c15859ebcbc2135c13f727e9b14894ca9f93cfd6bede99bc20a9e2da00364b",
+  "source2ClosureSHA256": "6555b2871fa239aab507c61531932b6419b170ccad712a43f60a93540abd4840",
+  "sourceFilesExcludingManifest": 111,
+  "sourceBytesExcludingManifest": 2118876,
+  "source2CurrentIndividualFileFence": "PASS_112_FILES_ONLY",
+  "copiedOriginalCurrentByteConservation": "PASS_100_FILES_ONLY",
+  "closedMetadataPins": "PASS_12_FILES_ONLY",
+  "individualPublicEvidenceCurrentFileFence": "PASS_120_FILES_ONLY",
+  "enclosingHostPhysicalSeals": "FAILED_NOT_ADOPTED",
+  "freshIndependentControls": {
+    "scope": "MOCK_STATIC_ALL_SOURCE_EFFECTS_SUBSTITUTED",
+    "assertionsPASS": 8,
+    "assertionsFAIL": 0,
+    "meaning": "Includes reproduced defects; not source eligibility or runtime success"
+  },
+  "materialBlockers": [
+    "Unchanged public bootstrap requires PID1, but the proposed controller launches it as a child",
+    "OWN20, metadata30 and copy60 collectors accept post-deadline terminals",
+    "Exact Docker binding guard accepts numeric boolean aliases and omits private PID mode"
+  ],
+  "startupCacheCoverage": "Precise static limitation only; no reachable pipeline bypass established",
+  "workflowActivation": false,
+  "runtimeAuthority": false,
+  "DockerExecuted": false,
+  "realChildCreated": false,
+  "privateAccess": false,
+  "GitMutated": false,
+  "nativeQualification": false,
+  "original122": "HELD",
+  "eightCompiler20": "HELD",
+  "whole120": "HELD",
+  "FULL_RPC": "HELD",
+  "ROOT": "ABSENT",
+  "sixFunctionalTask04Outcomes": "OPEN",
+  "fullGoalAccepted": false,
+  "priorFailuresPreserved": true,
+  "historicalCustodyRepaired": false,
+  "permittedNextStep": "Separate bounded source repair and fresh independent review only"
+}

@@ -1,0 +1,55 @@
+{
+  "label": "daemon-memory",
+  "argv": [
+    "/usr/local/bin/docker",
+    "info",
+    "--format",
+    "{{json .MemTotal}}"
+  ],
+  "observedAtUtc": "2026-10-06T20:38:14.686032+00:00",
+  "elapsedSeconds": 0.019376833995920606,
+  "exitCode": null,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": false,
+  "closeErrors": [
+    "ValueError"
+  ],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 63351,
+      "birthSeconds": "1791319094",
+      "birthMicroseconds": "686421",
+      "group": 63351,
+      "session": 63351,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": null,
+    "observations": [
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 63351,
+            "state": "Ss"
+          }
+        ]
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": false,
+    "controlByteCount": 0,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

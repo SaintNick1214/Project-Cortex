@@ -1,0 +1,189 @@
+{
+  "DockerExecuted": false,
+  "FAIL": 2,
+  "PASS": 6,
+  "candidateEffects": "NONE",
+  "nativeExecuted": false,
+  "privateAccess": false,
+  "reasonForStopping": "Concrete first prospective literal closed packet metadata blocker reproduced; no blind rerun or failed pin refresh",
+  "results": [
+    {
+      "evidence": {
+        "count": 113,
+        "expectedCount": 113,
+        "failures": []
+      },
+      "name": "prospective-source-113-complete-literal-pin-and-held-final",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "count": 336,
+        "expectedCount": 336,
+        "failures": []
+      },
+      "name": "old-external-336-complete-literal-pin-and-held-final",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "cause": "UNKNOWN",
+        "distinctFailedFiles": 119,
+        "packetFiles": 286
+      },
+      "name": "closed-packet-all-nine-literal-fence",
+      "status": "FAIL"
+    },
+    {
+      "evidence": {
+        "allFailedMetadataRowsStillHaveUnchangedFullHashAndSize": true,
+        "byteMismatches": 0
+      },
+      "name": "closed-packet-complete-current-byte-pins",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "checkedFiniteFiles": 634,
+        "noFollow": true
+      },
+      "name": "no-follow-regular-single-link-no-inode-alias",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "closes": 634,
+        "files": 634
+      },
+      "name": "complete-FD-close-observed",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "cause": "UNKNOWN",
+        "failedPINRefreshed": false,
+        "ownFailures": [
+          {
+            "actual": {
+              "EOF": true,
+              "bytes": 7370,
+              "heldBEFORE": {
+                "ctime_ns": "1791314948318045225",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "heldFINAL": {
+                "ctime_ns": "1791314948318045225",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair1-source-review2/hold-review.py",
+              "pathFINAL": {
+                "ctime_ns": "1791314948318045225",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "sha256": "f0c82a4eda71c5e1f5fa39cc92ef404970519ae2ec7718887642d9f53563071f"
+            },
+            "error": "held-or-path-or-byte-pin-mismatch",
+            "expected": {
+              "EOF": true,
+              "OPEN": {
+                "ctime_ns": "1791314920477259667",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "POST": {
+                "ctime_ns": "1791314920477259667",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "PRE": {
+                "ctime_ns": "1791314920477259667",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "bytes": 7370,
+              "kind": "mature-own-setup-first-observation",
+              "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair1-source-review2/hold-review.py",
+              "pathFINAL": {
+                "ctime_ns": "1791314920477259667",
+                "dev": "16777234",
+                "gid": "20",
+                "ino": "92478157",
+                "mode": "33188",
+                "mtime_ns": "1791314920477259667",
+                "nlink": "1",
+                "size": "7370",
+                "uid": "501"
+              },
+              "sha256": "f0c82a4eda71c5e1f5fa39cc92ef404970519ae2ec7718887642d9f53563071f"
+            },
+            "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair1-source-review2/hold-review.py",
+            "stage": "FINAL"
+          }
+        ]
+      },
+      "name": "own-first-PRE-final-literal-fence",
+      "status": "FAIL"
+    },
+    {
+      "evidence": {
+        "activationPermitted": false,
+        "failedPINRefreshed": false,
+        "finalErrors": 239,
+        "normalization": false,
+        "preservedFirstErrors": 238,
+        "sourceEligibility": false,
+        "tolerance": false
+      },
+      "name": "sticky-failed-first-fence-conservative-admission",
+      "status": "PASS"
+    }
+  ],
+  "scope": "INDEPENDENT_FINITE_CURRENT_SOURCE_PACKET_FENCE_CONTROLS_ONLY",
+  "unexecutedBehavioralControls": [
+    "integrated-two-PID1-composition",
+    "post-wait-poll-FD-close-per-call-deadlines",
+    "Docker-full-vector-and-mount-exactness",
+    "strict-public-export",
+    "ownership-retirement-failure-cleanup",
+    "runtime-races"
+  ]
+}

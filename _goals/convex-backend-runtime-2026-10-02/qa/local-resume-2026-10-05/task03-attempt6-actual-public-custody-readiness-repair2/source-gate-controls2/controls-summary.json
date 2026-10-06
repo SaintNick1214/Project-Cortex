@@ -1,0 +1,141 @@
+{
+  "scope": "SOURCE_ONLY_LEDGER_AND_SYNTAX_CONTROLS",
+  "status": "PASS",
+  "controls": [
+    {
+      "control": "separate-control-data-input-no-reset",
+      "status": "PASS_DENIED",
+      "reason": "source_graph_aggregate_byte_ceiling"
+    },
+    {
+      "control": "perfile-ceiling",
+      "status": "PASS_DENIED",
+      "reason": "source_graph_file_ceiling"
+    },
+    {
+      "control": "duplicate-held-path-size-drift",
+      "status": "PASS_DENIED",
+      "reason": "source_graph_duplicate_path_size_drift"
+    },
+    {
+      "control": "4096-descriptor-boundary",
+      "status": "PASS_DENIED"
+    },
+    {
+      "control": "obsolete2352-source-plus-unique-controls",
+      "status": "PASS_DENIED_BY_ARITHMETIC",
+      "bytes": 70736907,
+      "duplicateExistingSourcePathsNotDoubleCounted": [
+        "publicRecipeBinding",
+        "publicSourceManifest"
+      ],
+      "limit": 67108864,
+      "additionalNewInputsWouldOnlyIncrease": true
+    }
+  ],
+  "allFourSourceDescriptorsCapturedBeforeContent": true,
+  "heldSources": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py",
+      "name": "run-actual-review.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492702",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "29033",
+        "mtime_ns": "1791319645084185093",
+        "ctime_ns": "1791319658422606262"
+      },
+      "capturedNs": "1791320065602161000",
+      "sha256": "015ec6b15448db9963f182dd086ca301e8680ee19a3ab9262d2875f68f829e42",
+      "bytes": 29033,
+      "fullEOF": true,
+      "finalPathDescriptorNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py",
+      "name": "coordinate-common-highfd.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491846",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21476",
+        "mtime_ns": "1791319352151070330",
+        "ctime_ns": "1791319381191853536"
+      },
+      "capturedNs": "1791320065602211000",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "fullEOF": true,
+      "finalPathDescriptorNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-public-observer.py",
+      "name": "linux-public-observer.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492435",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "9465",
+        "mtime_ns": "1791319534167134458",
+        "ctime_ns": "1791319569977804919"
+      },
+      "capturedNs": "1791320065602345000",
+      "sha256": "67ec0fd3169bad4cd001c73f4835f965c1f73dfe14e8ede9d8acd59b1de42eb7",
+      "bytes": 9465,
+      "fullEOF": true,
+      "finalPathDescriptorNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs",
+      "name": "linux-dependency-observer.mjs",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492436",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "10263",
+        "mtime_ns": "1791319534167276292",
+        "ctime_ns": "1791319567969380417"
+      },
+      "capturedNs": "1791320065602377000",
+      "sha256": "55341dc2614d90505ba25a26a6d37348e7af04c8d61f0e35ef7ba6fa02282f08",
+      "bytes": 10263,
+      "fullEOF": true,
+      "finalPathDescriptorNineEqual": true
+    }
+  ],
+  "pythonASTSources": 3,
+  "javascriptSyntax": {
+    "argv": [
+      "/opt/homebrew/bin/node",
+      "--check",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "",
+    "sourceExecuted": false
+  },
+  "noRuntimeSubgraphBudgetReset": true,
+  "LinuxCustodyPhysicalPairAggregateCapped": false,
+  "actualDockerCalls": 0,
+  "privateReads": 0,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "publicEntryExecuted": false,
+  "fullTask03": false,
+  "fullGoal": false,
+  "nativePrivate": false
+}

@@ -1,0 +1,43 @@
+import { batchTarget } from './batch-bindings.mjs';
+/** Validator-valid shapes. Every v.id resolves an actually seeded ID, never an encoded guess.
+ * Semantic fixture bindings remain per-path reviewer obligations. */
+export function candidate(schema,ctx,key='argument') {
+ const p=ctx.run+':arg-'+key;
+ if(schema.type==='optional')return ['tenantId','memorySpaceId'].includes(key)?candidate(schema.parameters[0],ctx,key):undefined;
+ if(schema.type==='object'){const result={};for(const [name,child]of Object.entries(schema.fields)){const value=candidate(child,ctx,name);if(value!==undefined)result[name]=value;}return result;}
+ if(schema.type==='string'){
+  const fixed={tenantId:ctx.scopes.tenantId,memorySpaceId:ctx.scopes.memorySpaceId,userId:ctx.users.reader,principalId:ctx.principals.reader,membershipId:ctx.references.reader.membershipId,grantId:ctx.grants.reader,ownerPrincipalId:ctx.principals.reader,agentId:ctx.run+':agents-owned',artifactId:ctx.run+':artifacts-owned',issuer:ctx.issuer,subject:ctx.identities.reader};return fixed[key]??p;
+ }
+ if(['number','float64'].includes(schema.type))return key.toLowerCase().includes('timestamp')?Date.now():1;
+ if(schema.type==='boolean')return false;
+ if(schema.type==='null')return null;
+ if(schema.type==='any')return {};
+ if(schema.type==='literal')return schema.parameters[0].value;
+ if(schema.type==='literalValue')return schema.value;
+ if(schema.type==='union')return candidate(schema.parameters[0],ctx,key);
+ if(schema.type==='array')return [];
+ if(schema.type==='record')return {};
+ if(schema.type==='bytes')return new ArrayBuffer(0);
+ if(schema.type==='int64')return 1n;
+ if(schema.type==='id'){
+  const table=schema.parameters[0].value;
+  const id=table==='_storage'?ctx.files[0]?.id:ctx.refs.find(ref=>ref.table===table)?.id??ctx.policyWitnesses?.[table];
+  if(!id)throw new Error('BLOCKED_REAL_ID_REQUIRED:'+table);return id;
+ }
+ if(schema.type==='objectValidator')return candidate(schema.parameters[0],ctx,key);
+ // v.object() uses an object parameter; same descriptor name is disambiguated above.
+ throw new Error('BLOCKED_UNSUPPORTED_VALIDATOR:'+schema.type);
+}
+/** Installed Convex exportArgs JSON has value/fieldType/tableName descriptors; the
+ * conserved C11 AST descriptors use fields/parameters. Never silently interchange them. */
+function nativeCandidate(schema,ctx,key='argument') {
+ if(schema.type==='object'){const result={};for(const [name,field] of Object.entries(schema.value)){if(field.optional&&!['tenantId','memorySpaceId'].includes(name))continue;result[name]=nativeCandidate(field.fieldType,ctx,name);}return result;}
+ if(schema.type==='union')return nativeCandidate(schema.value[0],ctx,key);
+ if(schema.type==='literal')return schema.value;
+ if(schema.type==='array')return [];
+ if(schema.type==='record')return {};
+ if(schema.type==='id'){const table=schema.tableName,id=table==='_storage'?ctx.files[0]?.id:ctx.refs.find(ref=>ref.table===table)?.id??ctx.policyWitnesses?.[table];if(!id)throw new Error('BLOCKED_REAL_ID_REQUIRED:'+table);return id;}
+ if(schema.type==='bigint')return 1n;
+ return candidate(schema,ctx,key);
+}
+export function argumentsFor(row,ctx){const args=row.argumentSchemaFormat==='NATIVE_EXPORT_ARGS_JSON_V1'?nativeCandidate(row.validatorSchema,ctx):candidate(row.validatorSchema,ctx);if(row.path==='facts:deleteByIds')args.factIds=[batchTarget(ctx,'facts')];if(row.path==='memories:deleteByIds')args.memoryIds=[batchTarget(ctx,'memories')];if(['memories:updatePartialMemory','memories:finalizePartialMemory'].includes(row.path))args.memoryId=batchTarget(ctx,'memories');if(row.path==='governance:setPolicy')args.policy.conversations.retention.deleteAfter='30d';return args;}

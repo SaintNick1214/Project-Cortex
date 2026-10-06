@@ -1,0 +1,81 @@
+name: Task04 repaired two-owner native public source qualification
+
+on:
+  push:
+    branches: [feat/convex-backend-runtime-completion]
+    paths: [.github/workflows/task04-current-producer-native-public.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: task04-current-producer-native-public
+  cancel-in-progress: false
+
+jobs:
+  public-native-source:
+    if: github.repository == 'SaintNick1214/Project-Cortex' && github.ref == 'refs/heads/feat/convex-backend-runtime-completion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        timeout-minutes: 3
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair1/source/
+            /.github/workflows/task04-current-producer-native-public.yml
+      - name: Native kernel and unchanged public source controls only
+        timeout-minutes: 37
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -B _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair1/source/ci-run.py
+      - name: Exact bounded public receipts and source backings
+        timeout-minutes: 4
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: task04-current-producer-native-public-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/task04-native-public-current/public-artifact-manifest.json
+            ${{ runner.temp }}/task04-native-public-current/operation.json
+            ${{ runner.temp }}/task04-native-public-current/host-preflight.json
+            ${{ runner.temp }}/task04-native-public-current/host-source-before.json
+            ${{ runner.temp }}/task04-native-public-current/trusted-startup.json
+            ${{ runner.temp }}/task04-native-public-current/daemon.json
+            ${{ runner.temp }}/task04-native-public-current/parser-acquisition.json
+            ${{ runner.temp }}/task04-native-public-current/input-manifest.json
+            ${{ runner.temp }}/task04-native-public-current/image.json
+            ${{ runner.temp }}/task04-native-public-current/run-result.json
+            ${{ runner.temp }}/task04-native-public-current/host-failure.json
+            ${{ runner.temp }}/task04-native-public-current/cleanup-terminal.json
+            ${{ runner.temp }}/task04-native-public-current/cleanup-failure.json
+            ${{ runner.temp }}/task04-native-public-current/writer-stop.json
+            ${{ runner.temp }}/task04-native-public-current/native20-retirement.json
+            ${{ runner.temp }}/task04-native-public-current/native20-expected-bindings.json
+            ${{ runner.temp }}/task04-native-public-current/native20-source-before.json
+            ${{ runner.temp }}/task04-native-public-current/native20-create-inspect.json
+            ${{ runner.temp }}/task04-native-public-current/native20-terminal.json
+            ${{ runner.temp }}/task04-native-public-current/native20-polls.json
+            ${{ runner.temp }}/task04-native-public-current/native20-export-copy.json
+            ${{ runner.temp }}/task04-native-public-current/public48-expected-bindings.json
+            ${{ runner.temp }}/task04-native-public-current/public48-source-before.json
+            ${{ runner.temp }}/task04-native-public-current/public48-create-inspect.json
+            ${{ runner.temp }}/task04-native-public-current/public48-terminal.json
+            ${{ runner.temp }}/task04-native-public-current/public48-polls.json
+            ${{ runner.temp }}/task04-native-public-current/public48-export-copy.json
+            ${{ runner.temp }}/task04-native-public-current/command-*.json
+            ${{ runner.temp }}/task04-native-public-current/command-*.stdout
+            ${{ runner.temp }}/task04-native-public-current/command-*.stderr
+            ${{ runner.temp }}/task04-native-public-current/copy-native20-file-*.json
+            ${{ runner.temp }}/task04-native-public-current/copy-public48-file-*.json
+            ${{ runner.temp }}/task04-native-public-current/copy-native20-native-export-manifest.json.json
+            ${{ runner.temp }}/task04-native-public-current/copy-public48-public-export-manifest.json.json
+            ${{ runner.temp }}/task04-native-public-current/export/native20/file-*
+            ${{ runner.temp }}/task04-native-public-current/export/native20/native-export-manifest.json
+            ${{ runner.temp }}/task04-native-public-current/export/public48/file-*
+            ${{ runner.temp }}/task04-native-public-current/export/public48/public-export-manifest.json
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+          include-hidden-files: false

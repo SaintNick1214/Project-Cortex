@@ -1,0 +1,73 @@
+{
+  "scope": "READONLY_PUBLIC_SOURCE_TOOLCHAIN_AND_SYNTAX_ONLY",
+  "status": "PASS",
+  "commands": [
+    {
+      "name": "node-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "c642a0de246dcdc6c51318fe449646fc5067b981a8d09e9ccdb8141a5756339a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS",
+      "privateReads": 0
+    },
+    {
+      "name": "npm-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS",
+      "privateReads": 0
+    },
+    {
+      "name": "source-preflight",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--input-type=module",
+        "-e",
+        "import{sourcePreflight}from'./_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/scripts/guard.mjs';const r=sourcePreflight();console.log(JSON.stringify({scope:'PUBLIC_SOURCE_ONLY',source:r.source.files.length,fixture:r.copies.files.length,frozen:r.frozen.files.length,privateReads:0}));"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "6e8e4718d997ca387c54f3d9424f7b516c79481c6ef2fd0362dfec0d65399a6d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS",
+      "privateReads": 0
+    },
+    {
+      "name": "crypto-syntax",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/integrated/linux-private-custody-crypto-observer.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS",
+      "privateReads": 0
+    },
+    {
+      "name": "management-syntax",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-preparation/target-management.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS",
+      "privateReads": 0
+    }
+  ],
+  "observedAt": "2026-10-06T18:19:35.278228+00:00",
+  "privateAccess": 0,
+  "effects": 0
+}

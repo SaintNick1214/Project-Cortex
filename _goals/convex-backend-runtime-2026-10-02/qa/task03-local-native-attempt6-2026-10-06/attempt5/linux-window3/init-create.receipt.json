@@ -1,0 +1,101 @@
+{
+  "label": "init-create",
+  "argv": [
+    "/usr/local/bin/docker",
+    "create",
+    "--name",
+    "cortex-task03-attempt5-public-dummy3-ba2253a8-init",
+    "--label",
+    "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+    "--label",
+    "cortex.scope=attempt5-public-dummy-only",
+    "--platform",
+    "linux/amd64",
+    "--network",
+    "none",
+    "--memory",
+    "512m",
+    "--memory-swap",
+    "512m",
+    "--cpus",
+    "2",
+    "--pids-limit",
+    "64",
+    "--read-only",
+    "--user",
+    "0:0",
+    "--mount",
+    "type=volume,source=cortex-task03-attempt5-public-dummy3-ba2253a8,target=/owned,volume-nocopy",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "/usr/local/bin/python3.12",
+    "-B",
+    "-c",
+    "import os,json;from pathlib import Path;p=Path('/owned');assert os.getuid()==os.getgid()==0 and not list(p.iterdir());assert Path('/sys/fs/cgroup/memory.max').read_text().strip()=='536870912';assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip()=='0';os.chown(p,501,20);p.chmod(0o700);print(json.dumps({'status':'PASS','sourceBinds':0,'privateReads':0}))"
+  ],
+  "observedAtUtc": "2026-10-06T08:50:10.775286+00:00",
+  "elapsedSeconds": 0.2577204590000002,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 65,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 41948,
+      "birthSeconds": "1791276610",
+      "birthMicroseconds": "775438",
+      "group": 41948,
+      "session": 41948,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 41950,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 41948,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 41948,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 41948,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "7f9cef73cc740d7c7877ebdf04487697e068d6a45f1ecbbcfb09b0651cfbc747",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
