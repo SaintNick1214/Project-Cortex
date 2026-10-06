@@ -1,0 +1,27 @@
+{
+  "fullWhitespaceVerdict": "FAIL",
+  "fullWhitespaceExit": 2,
+  "preservedFrozenReviewerAndRawPaths": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/checkpoint7-full-whitespace.stdout",
+      "sha256": "8ce7d1bb80214409cb749a2f091c01e53ec58a37cb1a3034c8e8030ec39ea127",
+      "reason": "Exact raw checkpoint7 Git whitespace failure output"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-management-review/offline-vm-harness.mjs",
+      "sha256": "72fe048d594c4cde827fe503d6f0d7cc582d02adc5d9ba83f54c221c22aaf4f1",
+      "reason": "Exact sealed independent management reviewer source or preimage"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-management-review/source-preimages/prior-offline-vm-harness.mjs",
+      "sha256": "3e4c5a35bb41cf0f898a3126ffef9c34dd155d1447a428675426324f991c97c1",
+      "reason": "Exact sealed independent management reviewer source or preimage"
+    }
+  ],
+  "scopedWhitespaceVerdict": "PASS",
+  "scopedPathCount": 180,
+  "privateByteMatches": 0,
+  "productSourceChanged": false,
+  "actualWorkflowAbsent": true,
+  "fullGoalComplete": false
+}
