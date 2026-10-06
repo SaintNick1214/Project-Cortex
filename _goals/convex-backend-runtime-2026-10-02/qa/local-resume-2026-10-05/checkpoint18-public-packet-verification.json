@@ -1,0 +1,45 @@
+{
+  "scope": "PUBLIC_GIT_BYTES_AND_REJECTED_SOURCE_HISTORY_ONLY",
+  "packets": [
+    {
+      "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1",
+      "receiptMembers": 313,
+      "fixtureRegularFiles": 11335,
+      "literalFixtureAliases": 2,
+      "historicalSeal": "REJECT_INITIAL3_FINAL215_UNKNOWN_CTIME_DELTAS_NO_REFRESH",
+      "contentOnly": true
+    },
+    {
+      "review": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-public-repair2-review",
+      "verdict": "REJECT",
+      "scope": "TASK03_PUBLIC_REPAIR2_RECIPE_SOURCE_ONLY",
+      "average": 3.4,
+      "evidenceManifest": "evidence-manifest.json",
+      "manifestMembers": 19
+    },
+    {
+      "review": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-repair1-source-review",
+      "verdict": "REJECT",
+      "scope": "TASK03_PRIVATE_FIRST_USE_REPAIR1_SOURCE_ONLY",
+      "average": 2.8,
+      "evidenceManifest": "final-evidence-manifest.json",
+      "manifestMembers": 745
+    },
+    {
+      "review": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-actual-attempt2-review",
+      "verdict": "PASS",
+      "scope": "TASK04_ACTUAL_INITIAL_NATIVE_INFRASTRUCTURE_CAPABILITY_AND_COMPLETE_SOURCE_CONTENT_ONLY",
+      "average": 4.2,
+      "evidenceManifest": "evidence-manifest.json",
+      "manifestMembers": 16
+    }
+  ],
+  "selectedBeforeBookkeeping": 12438,
+  "privatePatternsChecked": 3,
+  "privateByteMatches": 0,
+  "historicalIdentityRestored": false,
+  "sourceEnablingAttestation": false,
+  "Task03Accepted": false,
+  "Task04Accepted": false,
+  "fullGoalComplete": false
+}

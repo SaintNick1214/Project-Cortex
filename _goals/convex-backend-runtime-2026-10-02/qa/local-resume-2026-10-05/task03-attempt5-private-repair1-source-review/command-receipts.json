@@ -1,0 +1,36 @@
+{
+  "commands": [
+    {
+      "command": "python3 -B task03-attempt5-private-repair1-source-review/verify.py",
+      "observedExit": 1,
+      "classification": "ACTUAL_SEALED_CTIME_FAILURE_PRESERVED"
+    },
+    {
+      "command": "python3 -B task03-attempt5-private-repair1-source-review/verify.py",
+      "observedExit": 1,
+      "classification": "REVIEWER_INTENTIONAL_HARDLINK_NEGATIVE_SETUP_PRESERVED"
+    },
+    {
+      "command": "python3 -B task03-attempt5-private-repair1-source-review/verify.py",
+      "observedExit": 0,
+      "stdout": "{\"reviewVerification\": \"COMPLETE\", \"blockingGuardFailures\": 4, \"sourceFirstUseApproved\": false, \"freshMainFlowControls\": 10}",
+      "stderr": "",
+      "interpretation": "Reviewer command completed; candidate guard failures and sealed UNKNOWN deltas remain REJECT."
+    },
+    {
+      "command": "python3 -B task03-attempt5-public-repair2-review/finalize-all.py strict first pass",
+      "observedExit": 1,
+      "classification": "CURRENT_CTIME_CONTINUITY_FAILURE_PRESERVED_NO_PIN_REFRESH"
+    },
+    {
+      "command": "python3 -B task03-attempt5-public-repair2-review/finalize-all.py final enumeration preserving failed continuity",
+      "observedExit": 0,
+      "classification": "REVIEWER_ENUMERATION_COMPLETED_CANDIDATE_FAILURES_NOT_WAIVED",
+      "candidateVerdict": "REJECT"
+    }
+  ],
+  "scope": "OBSERVED_TOOL_COMMAND_OUTCOMES_TRANSCRIBED_WITH_RAW_CASE_EVIDENCE_SEPARATELY",
+  "DockerCalls": 0,
+  "credentialReads": 0,
+  "APICalls": 0
+}

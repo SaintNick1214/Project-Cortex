@@ -1,0 +1,257 @@
+{
+  "name": "present-multiple-eof-reads",
+  "status": "PASS",
+  "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY",
+  "expectedHelperOutcome": "PASS",
+  "observedHelperOutcome": "PASS",
+  "error": null,
+  "guardAssertsNoMutation": true,
+  "pre": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077157",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218136000438",
+      "ctime_ns": "1791280218136000438"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077158",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "10585",
+          "mtime_ns": "1791280218135955563",
+          "ctime_ns": "1791280218135975813"
+        },
+        "bytesSha256": "7d7742db3d578b41352ce7fb15238ea828f7cfcd639f8b70be580e811ee18b72"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077159",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218136030271",
+          "ctime_ns": "1791280218136048063"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "post": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077157",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "5",
+      "size": "160",
+      "mtime_ns": "1791280218138575481",
+      "ctime_ns": "1791280218138575481"
+    },
+    "members": {
+      "target-before-physical-retirement.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077160",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "10585",
+          "mtime_ns": "1791280218138387648",
+          "ctime_ns": "1791280218138387648"
+        },
+        "bytesSha256": "7d7742db3d578b41352ce7fb15238ea828f7cfcd639f8b70be580e811ee18b72"
+      },
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077161",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "10723",
+          "mtime_ns": "1791280218138477940",
+          "ctime_ns": "1791280218138575481"
+        },
+        "bytesSha256": "e6122dd0e47ffa0d2ce286124dc4da101af4dbc85f77cda426ad26f14282eb5c"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077159",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218136030271",
+          "ctime_ns": "1791280218136048063"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "helperResult": {
+    "status": "PASS",
+    "targetAbsent": false,
+    "retiredSelectorInvalidated": true,
+    "originalTargetPRE": {
+      "dev": "16777234",
+      "ino": "92077158",
+      "mode": "33152",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "10585",
+      "mtime_ns": "1791280218135955563",
+      "ctime_ns": "1791280218135975813"
+    },
+    "retiredTargetPRE": {
+      "dev": "16777234",
+      "ino": "92077161",
+      "mode": "33152",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "10723",
+      "mtime_ns": "1791280218138477940",
+      "ctime_ns": "1791280218138575481"
+    },
+    "retiredTargetPOST": {
+      "dev": "16777234",
+      "ino": "92077161",
+      "mode": "33152",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "10723",
+      "mtime_ns": "1791280218138477940",
+      "ctime_ns": "1791280218138575481"
+    },
+    "rootPRE": {
+      "dev": "16777234",
+      "ino": "92077157",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218136000438",
+      "ctime_ns": "1791280218136000438"
+    },
+    "rootPOST": {
+      "dev": "16777234",
+      "ino": "92077157",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "5",
+      "size": "160",
+      "mtime_ns": "1791280218138575481",
+      "ctime_ns": "1791280218138575481"
+    },
+    "originalTargetSHA256": "7d7742db3d578b41352ce7fb15238ea828f7cfcd639f8b70be580e811ee18b72",
+    "retiredTargetSHA256": "e6122dd0e47ffa0d2ce286124dc4da101af4dbc85f77cda426ad26f14282eb5c",
+    "trackedMutation": "TWO_EXCLUSIVE_FILES_AND_ATOMIC_OWNED_SELECTOR_REPLACEMENT",
+    "historicalCustodyRepaired": false
+  },
+  "audit": [
+    {
+      "effect": "actual-open",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/selector-present-multiple-eof-reads",
+      "flags": 1048832,
+      "dirFd": null
+    },
+    {
+      "effect": "actual-open",
+      "path": "target.json",
+      "flags": 256,
+      "dirFd": 3
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 4096
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 4096
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 2393
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 0
+    },
+    {
+      "effect": "actual-open",
+      "path": "target-before-physical-retirement.json",
+      "flags": 2817,
+      "dirFd": 3
+    },
+    {
+      "effect": "actual-write",
+      "bytes": 10585
+    },
+    {
+      "effect": "actual-open",
+      "path": "target-retired-replacement.json",
+      "flags": 2817,
+      "dirFd": 3
+    },
+    {
+      "effect": "actual-write",
+      "bytes": 10723
+    },
+    {
+      "effect": "actual-open",
+      "path": "target.json",
+      "flags": 256,
+      "dirFd": 3
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 4096
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 4096
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 2531
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 0
+    }
+  ],
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "actualPrivateReads": 0,
+  "nativeQualification": false
+}

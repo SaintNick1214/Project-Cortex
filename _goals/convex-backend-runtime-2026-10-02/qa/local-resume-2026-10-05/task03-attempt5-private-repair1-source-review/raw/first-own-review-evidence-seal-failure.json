@@ -1,0 +1,75 @@
+{
+  "status": "FAIL_FIRST_OWN_REVIEW_EVIDENCE_SEAL_CONTINUITY",
+  "command": "python3 -B task03-attempt5-public-repair2-review/seal-reviews.py",
+  "observedExit": 1,
+  "failedManifest": "evidence-manifest.json",
+  "failedManifestSha256": "85b7bf2876472dc2bc255f3a7ec49bf2dbfaa1c09b8610dde91914e52ee0d290",
+  "failedManifestBytes": 821759,
+  "firstFailurePath": "finalization-status.json",
+  "firstFailureSealedCtime": "1791282242118802024",
+  "firstFailureCurrentCtime": "1791282242203688624",
+  "completeCurrentOwnEvidenceDeltaEnumeration": [
+    {
+      "path": "finalization-status.json",
+      "earlierManifestIdentity": {
+        "dev": "16777234",
+        "ino": "92137467",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "692",
+        "mtime_ns": "1791282242118802024",
+        "ctime_ns": "1791282242118802024"
+      },
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92137467",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "692",
+        "mtime_ns": "1791282242118802024",
+        "ctime_ns": "1791282242203688624"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92137467",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "692",
+        "mtime_ns": "1791282242118802024",
+        "ctime_ns": "1791282242203688624"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92137467",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "692",
+        "mtime_ns": "1791282242118802024",
+        "ctime_ns": "1791282242203688624"
+      },
+      "identityDeltas": {
+        "ctime_ns": {
+          "sealed": "1791282242118802024",
+          "current": "1791282242203688624",
+          "status": "UNKNOWN"
+        }
+      },
+      "fullBytesMatch": true,
+      "fullEOF": true
+    }
+  ],
+  "firstManifestBytesPreserved": true,
+  "fullBytesMatch": true,
+  "candidateSourcePinsRefreshed": false,
+  "causeEstablished": false,
+  "candidateVerdict": "REJECT",
+  "enablingAttestation": false
+}

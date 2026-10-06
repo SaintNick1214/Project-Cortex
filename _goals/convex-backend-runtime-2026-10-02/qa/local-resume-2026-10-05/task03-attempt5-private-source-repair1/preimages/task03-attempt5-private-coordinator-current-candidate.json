@@ -1,0 +1,27 @@
+{
+  "scope": "UNREVIEWED_PRIVATE_COORDINATOR_CURRENT_SOURCE_CANDIDATE",
+  "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-coordinate.py",
+  "sourceSha256": "8065f022a5574d2ff7281d5e6a5ffacace38a006d3a37df8f208504aad65c5af",
+  "sourceBytes": 14112,
+  "preparationFreeze": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+  "publicSourceRepair1": "ac534048aabb9920cac771e89f9ad61091f03b58bcc999c2957258298c2086ca",
+  "sharedCommon": "coordinate-source/repair1/task03-attempt5-coordinate-common.py",
+  "privateCustodyHelperUnchanged": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+  "selectorHelperSha256": "6ed06bdfb8a5499bdc2fabeda7ef2e3f4aa23a881011172ed810dd969818550a",
+  "selectorHost": {
+    "actualFilesystem": 9,
+    "inputGuards": 2,
+    "newFullEOFloopRecheck": true,
+    "firstAPFSnlinkFailurePreserved": true
+  },
+  "selectorLinuxPublic": "9filesystem/2inputs actualassertionsPASS; terminal0/OOMfalse/ownedcontainerremoved; percaseinnerreceiptsnotexported, summaryandouterrawretained, notprivate/nativefunctionalacceptance",
+  "approvalDependencies": "12 exact current source/review bindings, no attestation written",
+  "nativePrivateCryptoGate": "HELD_REQUIRED_BEFORE_ANY_OFFICIAL_CLI_OR_NATIVE_CASE",
+  "managementAPICalls": 0,
+  "sourceApproved": false,
+  "knownOpen": [
+    "Fresh independent first-use source review with effect-blocked concrete recipe tests",
+    "Actual public candidate transfer/custody approval then actual private crypto/liveness approval"
+  ],
+  "fullGoalComplete": false
+}

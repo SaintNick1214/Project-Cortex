@@ -1,0 +1,508 @@
+{
+  "status": "PASS",
+  "checks": 10,
+  "cases": [
+    {
+      "name": "literal",
+      "expectedRejected": false,
+      "observedRejected": false,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-run",
+          "argv": [
+            "/usr/local/bin/docker",
+            "start",
+            "--attach",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-terminal-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-remove",
+          "argv": [
+            "/usr/local/bin/docker",
+            "rm",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "old-candidate-prefix",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "old-helper-prefix",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "parent-alias",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "candidate-other",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "writable-helper",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "writable-candidate",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "mount-count",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        },
+        {
+          "label": "copy-initial-inspect",
+          "argv": [
+            "/usr/local/bin/docker",
+            "inspect",
+            "cortex-task03-attempt5-public-copy-ba2253a8"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "unknown-terminal",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    },
+    {
+      "name": "close-error",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "calls": [
+        {
+          "label": "copy-create",
+          "argv": [
+            "/usr/local/bin/docker",
+            "create",
+            "--name",
+            "cortex-task03-attempt5-public-copy-ba2253a8",
+            "--label",
+            "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+            "--label",
+            "cortex.scope=public-candidate-only",
+            "--platform",
+            "linux/amd64",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "--memory-swap",
+            "512m",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "64",
+            "--read-only",
+            "--user",
+            "501:20",
+            "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "CONTROLLED_PUBLIC_SOURCE"
+          ],
+          "effectsBlocked": true
+        }
+      ]
+    }
+  ],
+  "DockerCalls": 0,
+  "actualCustody": false
+}

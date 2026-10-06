@@ -1,0 +1,40 @@
+{
+  "scope": "AFFECTED_QA_PYTHON_PRIMITIVES_ONLY",
+  "status": "PASS",
+  "python": "3.14.8",
+  "syntaxCompile": [
+    {
+      "file": "task03-attempt5-private-coordinate.py",
+      "status": "PASS",
+      "sha256": "55d427ca84fed1d957edc40940c558e0659fd6b132e606f2e538fe8a8d3345f9",
+      "bytes": 21376
+    },
+    {
+      "file": "task03-attempt5-retire-selector.py",
+      "status": "PASS",
+      "sha256": "6ed06bdfb8a5499bdc2fabeda7ef2e3f4aa23a881011172ed810dd969818550a",
+      "bytes": 7590
+    },
+    {
+      "file": "mocked-coordinator-controls.py",
+      "status": "PASS",
+      "sha256": "8da9eb2c9638e5420810ea29e206ba45f43e1430f4c39ad7248694a465f08a0f",
+      "bytes": 27409
+    },
+    {
+      "file": "selector-filesystem-controls.py",
+      "status": "PASS",
+      "sha256": "95e075cc4341f8c7eb24f3697718126fb284c1931c7c610ec5f769d17bd596cf",
+      "bytes": 9072
+    }
+  ],
+  "finalMockedCoordinatorRun": "run3",
+  "mockedCoordinatorControls": 86,
+  "actualPublicSelectorFilesystem": 24,
+  "actualPublicSelectorParser": 4,
+  "actualDocker": 0,
+  "actualManagementAPI": 0,
+  "actualPrivateReads": 0,
+  "coreNpmChecks": "NOT_SELECTED_NO_APPLICATION_SOURCE_CHANGE",
+  "nativePythonQualification": false
+}

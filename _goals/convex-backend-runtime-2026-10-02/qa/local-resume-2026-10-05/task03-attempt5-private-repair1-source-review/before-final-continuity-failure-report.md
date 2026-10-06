@@ -1,0 +1,39 @@
+# Task Judgment: Task03 attempt5 private first-use source repair1
+
+## Verdict: REJECT — 2.8/5
+
+The exact current repair1 coordinator cannot receive first-use source approval. Independent actual-source controls accept four invalid numeric aliases in boolean mount fields. Three receipt members also differ from their sealed ctime values; those differences remain UNKNOWN and historical all-nine continuity is not accepted. The absent actual public-custody dependency and private source operational approval remain held.
+
+## Requirements Review
+
+| Requirement | Result | Independent evidence |
+|---|---|---|
+| Exact coordinator/selector/manifest/freeze and complete current byte verification | Content PASS; sealed all-nine FAIL | coordinatorSHA55d427ca,21376 bytes; unchanged selectorSHA6ed06bdf; manifestSHAd27c0a0d,162161 bytes/313 members; freezeSHA367b5d0d. `raw/source-and-receipt-recheck.json`: all current reads stable/all-nine/fullEOF/content equal. Exactly three sealed ctime deltas detailed separately; no pin refresh or cause attribution. |
+| Approval, exact12dependencies, scopes/recipe/public custody before private scratch/import/effect | PASS as held source contract | Actual preflight lines76–118 checks scope/verdict/independence/self hash/exact dependency keys+hashes/freeze/public namespace/literal mounts/current target binding and actual custody fields. Eleven public dependencies present; real twelfth actual custody approval absent. Original source approval absent. No synthetic operational approval produced. |
+| Every exact recipe field and strict boolean aliases | **FAIL — blocks PASS** | `assert_recipe()` lines181/185 compares dictionaries using equality. Actual current imported source accepts `HostConfig.Mounts[0].VolumeOptions.NoCopy=1`, readonly candidate `HostConfig.Mounts[1].ReadOnly=1`, `/prep` destination `RW=0`, and `/owned` destination `RW=1`. These are JSON numbers, not exact booleans. `raw/independent-exact-recipe-and-false-alias-controls.json` has20 direct source cases, four concrete failing negatives. Running0 and ReadonlyRootfs1 reject correctly. |
+| Supervised command terminality/cleanup/no foreign signals | PASS within source/mocked flow | Lines144–156 retain common rows with `required=False`, reject non-True terminal/close errors/failure classes. Lines198–216 require owned name/operation/image and strict bool Running, exact absence responses, terminal cleanup and reinspection; foreign operation/image remains untouched. Fresh ten selected actual-main effect-blocked cases plus retained86 raw run3 outcomes. |
+| Receiver before provision, original/staged source held through terminal and durable receipt; all known FDs close once before2400s window | PASS within source/mocked flow | Lines281–293 verify resource+receiver recipe before provision. Lines295–321 hold/verify sources through terminal/durable receipt;321–324 final verify/close/failure fence before status/window. Fresh happy-flow and both close-failure cases assert all nine known modeled FDs close exactly once after final verify and before window; no retry on reused FD and retirement attempted. Retained run2 draft/preimages preserve the earlier dropped ordering. |
+| Sticky UNKNOWN/cleanup errors, management retirement always attempted after uncertain provision and exclusive owned receipt | PASS within source/mocked flow | Lines345–372 separately attempt all four named cleanup paths, retain errors, invoke unchanged reviewed management retire after every provision attempt; matching operation/request, retired/deleted,200 deletion/404 verification and zero production mutations required. Missing ownership models reject before retirement API; no guessed project deletion. |
+| Selector invalidation/no stale reuse and primitive evidence | PASS, host dummy only | Unchanged selector rechecks fullEOF/all-nine/0600 single-link/0700 canonical root, exact immutable fields and preimage hash, exclusive two files/atomic replacement/fsync. Inspected24 actual host filesystem+4 parser receipts;11335 public dummy regular files,2754 dirs and two literal aliases independently observed, with intentional hardlink-negative records separately typed. No Linux/native qualification claimed. |
+| Parent preimages/setup failures/deadlines/original gates | PASS | All three original parent draft/source/candidate preimages byte exact. No originals/source/workflow edited.190s management/60s receiver+selector/30s metadata+cleanup/12s stdin/327692 input/262144 pipe/2400s completion and original CLI/native limits preserved. Task03 full functionality and accepted c2 dependency contracts unchanged. |
+
+## Critical Findings
+
+1. **Exact bool fields are not enforced at private coordinator lines181/185.** Dictionary equality considers `0 == False` and `1 == True`. Repair both volume mount `VolumeOptions.NoCopy` fields, candidate host mount `ReadOnly`, and both inspected destination `RW` fields with exact boolean types/identities before comparing full recipe data. Preserve Running/root/OOM/terminal/selector strict checks. Add regression negatives for each equivalent alias, including owned and readonly destinations, receiver and selector recipes. Do not change expected values to make the accepted aliases pass.
+2. **Exactly three sealed current identity deltas are UNKNOWN.** `ancestry.json` ctime1791280654473310327→1791280654590920782; `candidate.json` ctime1791280654473886702→1791280654591960408; `fixture-inventory.json` ctime1791280654465101946→1791280654587864822. All other observed fields and complete content remain equal. `raw/sealed-identity-deltas.json`. No cause is established, and neither fresh observations nor unchanged bytes restore the rejected seal. Preserve this manifest/freeze and establish any later repaired source as a distinct prospective baseline.
+
+## Dimension Scores
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Requirement Fulfillment | 2/5 | Exact recipe/strict numeric alias rejection and sealed all-nine requirements unmet. |
+| Code Quality | 3/5 | Finite cleanup/retirement/source ordering is explicit; bool-sensitive dictionary equality fails closed-contract validation. |
+| Test Quality | 3/5 |86 actual mocked flow and24+4 host/parser controls have outcome assertions, but omit these four alias negatives. Fresh20 guards expose the gap; ten focused main cases verify other repaired ordering. |
+| Pattern Adherence | 4/5 | Distinct source, exact preimages, explicit substitutions, no effects/self approval; failed identity seal retained without attribution. |
+| Completeness | 2/5 | First-use source gate remains blocked; no review-cycle count can promote rejection. |
+
+**Average:2.8/5.** This is a source-only rejection, not a result for actual provisioning, private cryptography, native transfer or Task03 functionality. Reviewer setup failures (intentional hardlink-negative fixture handling and first strict seal mismatch) are preserved; neither affected candidate code or original assertions.
+
+## Recommendation
+
+Create a distinct private source repair2 with exact boolean guards and meaningful actual-source regression cases, preserve all repair1 originals/seal/UNKNOWN deltas, and obtain a fresh independent source review over a newly frozen current baseline. Actual first-use remains forbidden until that review passes and actual current public custody independently passes; parent inspection may then bind the exact real twelfth dependency in a later operational wrapper. Never substitute a mocked custody approval. No real key/JWKS/environment/target/private/API/native/full03/goal acceptance is provided by this judgment.

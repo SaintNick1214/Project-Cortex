@@ -1,0 +1,153 @@
+{
+  "status": "PASS",
+  "controls": 28,
+  "actualHostFilesystem": 24,
+  "actualInputGuards": 4,
+  "actualPrivateReads": 0,
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "nativeQualification": false,
+  "unchangedSelectorHelper": true,
+  "cases": [
+    {
+      "name": "present",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "present-multiple-eof-reads",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "absent",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "root-mode",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "root-owner",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-mode",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-hardlink",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-symlink",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-preimage-full-content",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-preimage-hash",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "immutable-field",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "before-active-type",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "after-retired-type",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "wrong-keys",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "non-object-before",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "empty-operation",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "exclusive-preimage",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "exclusive-replacement",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-byte-limit",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "root-symlink-alias",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "target-all-nine-drift",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "untracked-directory-drift",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "replacement-all-nine-drift",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "absent-directory-drift",
+      "status": "PASS",
+      "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY"
+    },
+    {
+      "name": "duplicate-json",
+      "status": "PASS",
+      "scope": "ACTUAL_PARSER_PUBLIC_DUMMY_INPUT_ONLY"
+    },
+    {
+      "name": "oversize-input",
+      "status": "PASS",
+      "scope": "ACTUAL_PARSER_PUBLIC_DUMMY_INPUT_ONLY"
+    },
+    {
+      "name": "empty-input",
+      "status": "PASS",
+      "scope": "ACTUAL_PARSER_PUBLIC_DUMMY_INPUT_ONLY"
+    },
+    {
+      "name": "trailing-non-eof",
+      "status": "PASS",
+      "scope": "ACTUAL_PARSER_PUBLIC_DUMMY_INPUT_ONLY"
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "name": "absent-directory-drift",
+  "status": "PASS",
+  "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY",
+  "expectedHelperOutcome": "FAIL",
+  "observedHelperOutcome": "FAIL",
+  "error": {
+    "class": "ValueError",
+    "message": "ABSENT_SELECTOR_ROOT_ALL_NINE_DRIFT"
+  },
+  "guardAssertsNoMutation": false,
+  "pre": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077326",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "3",
+      "size": "96",
+      "mtime_ns": "1791280218260067564",
+      "ctime_ns": "1791280218260067564"
+    },
+    "members": {
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077327",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218260099606",
+          "ctime_ns": "1791280218260120981"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "post": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077326",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218261645482",
+      "ctime_ns": "1791280218261645482"
+    },
+    "members": {
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077327",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218260099606",
+          "ctime_ns": "1791280218260120981"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      },
+      "PUBLIC-DUMMY-UNTRACKED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077328",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "23",
+          "mtime_ns": "1791280218261673773",
+          "ctime_ns": "1791280218261691398"
+        },
+        "bytesSha256": "c86da025a13f1f4ad2be9ce91964920a8526402f600ceb87f153a0e4d599cd90"
+      }
+    }
+  },
+  "helperResult": null,
+  "audit": [
+    {
+      "effect": "actual-open",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/selector-absent-directory-drift",
+      "flags": 1048832,
+      "dirFd": null
+    },
+    {
+      "effect": "actual-open",
+      "path": "target.json",
+      "flags": 256,
+      "dirFd": 3
+    }
+  ],
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "actualPrivateReads": 0,
+  "nativeQualification": false
+}

@@ -1,0 +1,262 @@
+{
+  "history": [
+    {
+      "review": "task03-attempt5-public-source-review",
+      "verdict": {
+        "verdict": "REJECT",
+        "independent": true,
+        "scope": "TASK03_PUBLIC_RECIPE_SOURCE_ONLY",
+        "scores": {
+          "Requirement Fulfillment": 2,
+          "Code Quality": 4,
+          "Test Quality": 4,
+          "Pattern Adherence": 5,
+          "Completeness": 3
+        },
+        "average": 3.6,
+        "enablingAttestation": false,
+        "actualCredentialBytesRead": 0,
+        "actualManagementRequests": 0,
+        "reviewerDockerCalls": 0,
+        "services": 0,
+        "officialCLI": false,
+        "nativeFoundationAccepted": false,
+        "Task03Accepted": false,
+        "goalComplete": false,
+        "sourceManifestSha256": "5905b7f6083d255acc1ceb9f86835b37921df89e007c192215e4cad47542b125",
+        "sourceManifestMembers": 131,
+        "reason": "Incorrect ownedSourceMounts metadata: /host_mnt concatenated with relative namespace",
+        "supervisorBoundedControlsPass": true
+      }
+    },
+    {
+      "review": "task03-attempt5-public-repair1-review",
+      "verdict": {
+        "verdict": "PASS",
+        "independent": true,
+        "scope": "TASK03_ATTEMPT5_PUBLIC_BINDING_REPAIR1_SOURCE_ONLY",
+        "average": 4.4,
+        "dimensions": {
+          "Requirement Fulfillment": 5,
+          "Code Quality": 4,
+          "Test Quality": 4,
+          "Pattern Adherence": 5,
+          "Completeness": 4
+        },
+        "sourceManifestSha256": "ac534048aabb9920cac771e89f9ad61091f03b58bcc999c2957258298c2086ca",
+        "sourceManifestBytes": 18164,
+        "sourceMembers": 17,
+        "preparationFreezeSha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+        "sources": {
+          "task03-attempt5-coordinate-common.py": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+          "task03-attempt5-linux-public-transfer.py": "8faad381879d628e7c2c67cbab25b64b3135e09eb004e903e5b4b42c50dcc13f",
+          "task03-attempt5-public-coordinate.py": "169b597a56d4757e801a27363240baafc0e4f5dd0d21fcffc8129e3771a5b036",
+          "task03-attempt5-run-common-controls.py": "2cc75fbd3bcff85bcab2df05b5709fcb651e3ca5f338b0cdf5aeb9b1dbe9fe3f",
+          "owned-descendant-controls.py": "0d3260380658d26785ac3ab701d5ed36d969439f18155cdbae155dce6b8c70f7"
+        },
+        "Task03Accepted": false,
+        "custodyAccepted": false,
+        "nativeAccepted": false,
+        "privateAccepted": false,
+        "goalAccepted": false,
+        "enablingAttestationWritten": false,
+        "DockerCalls": 0,
+        "serviceCalls": 0
+      }
+    },
+    {
+      "review": "task03-attempt5-preparation-review",
+      "verdict": {
+        "verdict": "PASS",
+        "independent": true,
+        "scope": "BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION",
+        "scores": {
+          "Requirement Fulfillment": 5,
+          "Code Quality": 4,
+          "Test Quality": 4,
+          "Pattern Adherence": 5,
+          "Completeness": 4
+        },
+        "average": 4.4,
+        "enablingAttestation": false,
+        "actualCredentialBytesRead": 0,
+        "actualManagementRequests": 0,
+        "reviewerDockerCalls": 0,
+        "services": 0,
+        "officialCLI": false,
+        "nativeFoundationAccepted": false,
+        "Task03Accepted": false,
+        "goalComplete": false,
+        "candidateSha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+        "candidateMembers": 1905,
+        "receiptManifestSha256": "ad6f298314e52e2f4e178ba132c87061f04488e68a8a3330ed378410dea8e098",
+        "manifestMembers": 1904
+      }
+    },
+    {
+      "review": "task03-attempt5-management-review",
+      "verdict": {
+        "verdict": "PASS",
+        "independent": true,
+        "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_SOURCE_ONLY",
+        "scores": {
+          "Requirement Fulfillment": 5,
+          "Code Quality": 4,
+          "Test Quality": 4,
+          "Pattern Adherence": 5,
+          "Completeness": 4
+        },
+        "average": 4.4,
+        "enablingAttestation": false,
+        "actualCredentialBytesRead": 0,
+        "actualManagementRequests": 0,
+        "reviewerDockerCalls": 0,
+        "services": 0,
+        "officialCLI": false,
+        "nativeFoundationAccepted": false,
+        "Task03Accepted": false,
+        "goalComplete": false,
+        "managementSourceSha256": "3b52d3f99eb66294a0ffc1ed11c43cabe7062400da53b978db8878b6389a6216",
+        "requestSha256": "e07e02423f39aeed8e9ec17a7b0b5e7d54af1f6534eeb3b6010743707732d785",
+        "controls": 176
+      }
+    }
+  ],
+  "preparationWrapper": {
+    "verdict": "PASS",
+    "independent": true,
+    "scope": "BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION",
+    "scores": {
+      "Requirement Fulfillment": 5,
+      "Code Quality": 4,
+      "Test Quality": 4,
+      "Pattern Adherence": 5,
+      "Completeness": 4
+    },
+    "average": 4.4,
+    "enablingAttestation": true,
+    "actualCredentialBytesRead": 0,
+    "actualManagementRequests": 0,
+    "reviewerDockerCalls": 0,
+    "services": 0,
+    "officialCLI": false,
+    "nativeFoundationAccepted": false,
+    "Task03Accepted": false,
+    "goalComplete": false,
+    "candidateSha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+    "candidateMembers": 1905,
+    "receiptManifestSha256": "ad6f298314e52e2f4e178ba132c87061f04488e68a8a3330ed378410dea8e098",
+    "manifestMembers": 1904,
+    "operationalAttestationWriter": "parent_after_inspection_of_final_independent_source_review",
+    "independentSourceReview": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-preparation-review/verdict.json",
+    "independentSourceEvidenceManifestSha256": "ad1aeeb3512f7964c2ba3875448edcaf73a29b9bb8eccc1ab3cd09cd30054065",
+    "actualRuntimeAcceptance": false
+  },
+  "managementWrapper": {
+    "verdict": "PASS",
+    "independent": true,
+    "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+    "scores": {
+      "Requirement Fulfillment": 5,
+      "Code Quality": 4,
+      "Test Quality": 4,
+      "Pattern Adherence": 5,
+      "Completeness": 4
+    },
+    "average": 4.4,
+    "enablingAttestation": true,
+    "actualCredentialBytesRead": 0,
+    "actualManagementRequests": 0,
+    "reviewerDockerCalls": 0,
+    "services": 0,
+    "officialCLI": false,
+    "nativeFoundationAccepted": false,
+    "Task03Accepted": false,
+    "goalComplete": false,
+    "managementSourceSha256": "3b52d3f99eb66294a0ffc1ed11c43cabe7062400da53b978db8878b6389a6216",
+    "requestSha256": "e07e02423f39aeed8e9ec17a7b0b5e7d54af1f6534eeb3b6010743707732d785",
+    "controls": 176,
+    "candidateSha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+    "operationalAttestationWriter": "parent_after_inspection_of_final_independent_source_review",
+    "independentSourceReview": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-management-review/verdict.json",
+    "independentSourceReviewScope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_SOURCE_ONLY",
+    "independentSourceEvidenceManifestSha256": "7f7914d11fe7a5279a7591443de99bd4445dbbe04b21e7ad4ccce59d3351ddc9",
+    "actualRuntimeAcceptance": false,
+    "managementDispatchRequiresActualPublicCustodyAndIndependentPrivateCoordinatorSourceApproval": true
+  },
+  "access1": {
+    "status": "FAIL",
+    "error": "AssertionError()",
+    "operation": "047347fb-ab33-48c6-9e84-1410702f9adf",
+    "noAcceptance": true
+  },
+  "access2": {
+    "scope": "ACTUAL_PUBLIC_READONLY_BIND_ACCESS_ONLY",
+    "operation": "95f96927-0f58-4380-b9f3-dc7362ef9005",
+    "result": {
+      "status": "PASS",
+      "uid": 501,
+      "gid": 20,
+      "rows": [
+        {
+          "path": "/input",
+          "uid": 0,
+          "gid": 0,
+          "mode": 16832,
+          "bytes": 5600,
+          "traversable": true,
+          "members": 173
+        },
+        {
+          "path": "/helper",
+          "uid": 0,
+          "gid": 0,
+          "mode": 16832,
+          "bytes": 448,
+          "traversable": true,
+          "members": 12
+        },
+        {
+          "path": "/helper/task03-attempt5-linux-public-transfer.py",
+          "uid": 501,
+          "gid": 20,
+          "mode": 33188,
+          "bytes": 5402,
+          "readable": true,
+          "EOF": true,
+          "sha256": "8faad381879d628e7c2c67cbab25b64b3135e09eb004e903e5b4b42c50dcc13f",
+          "readBytes": 5402
+        },
+        {
+          "path": "/input/candidate-freeze-attempt5.json",
+          "uid": 501,
+          "gid": 20,
+          "mode": 33152,
+          "bytes": 352564,
+          "readable": true,
+          "EOF": true,
+          "sha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+          "readBytes": 352564
+        },
+        {
+          "path": "/input/managed-fixture-copy-manifest.json",
+          "uid": 501,
+          "gid": 20,
+          "mode": 33152,
+          "bytes": 37471,
+          "readable": true,
+          "EOF": true,
+          "sha256": "0b8f64143acb7f2d9b7ebb29fd9c2649dab5bb3ca5a6f698dea1b1473c9596c4",
+          "readBytes": 37471
+        }
+      ],
+      "privateBytes": false,
+      "candidateCopy": false,
+      "services": false
+    },
+    "exit": 0,
+    "nativeAccepted": false
+  },
+  "independentSourceInspection": true,
+  "access2HelperNamespace": "repair1 actual diagnostic; exact unchanged helper bytes/current repair2 prospective recipe"
+}

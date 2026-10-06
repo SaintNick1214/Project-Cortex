@@ -1,0 +1,155 @@
+{
+  "name": "exclusive-replacement",
+  "status": "PASS",
+  "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY",
+  "expectedHelperOutcome": "FAIL",
+  "observedHelperOutcome": "FAIL",
+  "error": {
+    "class": "ValueError",
+    "message": "EXCLUSIVE_SELECTOR_RETIREMENT_OUTPUT_EXISTS"
+  },
+  "guardAssertsNoMutation": true,
+  "pre": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077280",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "5",
+      "size": "160",
+      "mtime_ns": "1791280218223188372",
+      "ctime_ns": "1791280218223188372"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077281",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "162",
+          "mtime_ns": "1791280218223055414",
+          "ctime_ns": "1791280218223073581"
+        },
+        "bytesSha256": "57892037b3ace52295a00dc5434491471a021d246c20c6e94415b99042f66496"
+      },
+      "target-retired-replacement.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077283",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "15",
+          "mtime_ns": "1791280218223215747",
+          "ctime_ns": "1791280218223230081"
+        },
+        "bytesSha256": "616750539ebe45e8c8be4683c6f634402788739ece85ede00443dfeac11f4919"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077282",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218223143456",
+          "ctime_ns": "1791280218223161497"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "post": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077280",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "5",
+      "size": "160",
+      "mtime_ns": "1791280218223188372",
+      "ctime_ns": "1791280218223188372"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077281",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "162",
+          "mtime_ns": "1791280218223055414",
+          "ctime_ns": "1791280218223073581"
+        },
+        "bytesSha256": "57892037b3ace52295a00dc5434491471a021d246c20c6e94415b99042f66496"
+      },
+      "target-retired-replacement.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077283",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "15",
+          "mtime_ns": "1791280218223215747",
+          "ctime_ns": "1791280218223230081"
+        },
+        "bytesSha256": "616750539ebe45e8c8be4683c6f634402788739ece85ede00443dfeac11f4919"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077282",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218223143456",
+          "ctime_ns": "1791280218223161497"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "helperResult": null,
+  "audit": [
+    {
+      "effect": "actual-open",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/selector-exclusive-replacement",
+      "flags": 1048832,
+      "dirFd": null
+    },
+    {
+      "effect": "actual-open",
+      "path": "target.json",
+      "flags": 256,
+      "dirFd": 3
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 162
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 0
+    }
+  ],
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "actualPrivateReads": 0,
+  "nativeQualification": false
+}
