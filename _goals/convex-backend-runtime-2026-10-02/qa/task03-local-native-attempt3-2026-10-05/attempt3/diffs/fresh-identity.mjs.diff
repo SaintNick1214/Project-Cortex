@@ -1,0 +1,11 @@
+--- accepted-attempt2/fresh-identity.mjs
++++ fresh-attempt3/fresh-identity.mjs
+@@ -4,7 +4,7 @@
+ import { mkdirSync, lstatSync, writeFileSync, readFileSync, realpathSync } from 'node:fs';
+ import { resolve, dirname } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+-const q=dirname(fileURLToPath(import.meta.url));const privateDirectory='/Users/SaintNick/.codex/tmp/cortex-runtime-task03-private-20261005';
++const q=dirname(fileURLToPath(import.meta.url));const privateDirectory='/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt3-private-20261005';
+ mkdirSync(privateDirectory,{mode:0o700});const stat=lstatSync(privateDirectory);assert.ok(stat.isDirectory()&&!stat.isSymbolicLink());assert.equal(realpathSync(privateDirectory),privateDirectory);assert.equal(stat.uid,process.getuid());assert.equal(stat.mode&0o777,0o700);
+ const {privateKey,publicKey}=generateKeyPairSync('rsa',{modulusLength:2048});
+ const keyPath=resolve(privateDirectory,'jwt-private.pem');writeFileSync(keyPath,privateKey.export({format:'pem',type:'pkcs8'}),{flag:'wx',mode:0o600});const keyStat=lstatSync(keyPath);assert.equal(keyStat.mode&0o777,0o600);assert.equal(keyStat.nlink,1);

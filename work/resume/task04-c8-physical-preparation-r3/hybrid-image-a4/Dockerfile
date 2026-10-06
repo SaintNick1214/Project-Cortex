@@ -1,0 +1,13 @@
+FROM --platform=linux/amd64 cortex-runtime-c8@sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3 AS x64
+FROM --platform=linux/arm64 python:3.12.15-slim-bookworm@sha256:739ba32ae445e8d58f3d90feb85f83bebc8346f8dd280fa1eb5848f4ff1ed163
+COPY --from=x64 /usr/local/bin/node /usr/local/bin/node
+COPY --from=x64 /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm
+COPY --from=x64 /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
+COPY --from=x64 /usr/lib64/ /usr/lib64/
+RUN ln -s usr/lib64 /lib64 \
+ && ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+ && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+ && mkdir -p /opt/cortex-c8/python /var/tmp/cortex-task04-c8-native-a4 \
+ && ln -s /usr/local/bin /opt/cortex-c8/python/bin
+ENV PYTHONDONTWRITEBYTECODE=1
+CMD ["/usr/local/bin/python3.12", "--version"]

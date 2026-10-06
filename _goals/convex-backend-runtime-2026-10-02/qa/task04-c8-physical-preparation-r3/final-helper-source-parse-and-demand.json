@@ -1,0 +1,467 @@
+{
+  "scope": "AST_SOURCE_CHECK_ONLY_NO_HELPER_SUBJECT_IMPORT_OR_EVALUATION",
+  "helpers": [
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/acquire_lib.py",
+      "bytes": 10556,
+      "sha256": "68926790e25af4325681feeab84d2985c2d700c4483a9ddc25c87c5fd0c535ec",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "argparse"
+          ]
+        },
+        {
+          "names": [
+            "gzip"
+          ]
+        },
+        {
+          "names": [
+            "hashlib"
+          ]
+        },
+        {
+          "names": [
+            "io"
+          ]
+        },
+        {
+          "names": [
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ]
+        },
+        {
+          "names": [
+            "re"
+          ]
+        },
+        {
+          "names": [
+            "stat"
+          ]
+        },
+        {
+          "names": [
+            "struct"
+          ]
+        },
+        {
+          "names": [
+            "sys"
+          ]
+        },
+        {
+          "names": [
+            "tarfile"
+          ]
+        },
+        {
+          "names": [
+            "time"
+          ]
+        },
+        {
+          "names": [
+            "zlib"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": []
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/capture-binding.py",
+      "bytes": 12124,
+      "sha256": "6e5bf29d6cbabab2a6b572d71cee9a1d8d7b94a3d6bb66befc14f5d5152332f0",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "gzip"
+          ]
+        },
+        {
+          "names": [
+            "hashlib"
+          ]
+        },
+        {
+          "names": [
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ]
+        },
+        {
+          "names": [
+            "platform"
+          ]
+        },
+        {
+          "names": [
+            "re"
+          ]
+        },
+        {
+          "names": [
+            "resource"
+          ]
+        },
+        {
+          "names": [
+            "select"
+          ]
+        },
+        {
+          "names": [
+            "traceback"
+          ]
+        },
+        {
+          "names": [
+            "sqlite3"
+          ]
+        },
+        {
+          "names": [
+            "ssl"
+          ]
+        },
+        {
+          "names": [
+            "stat"
+          ]
+        },
+        {
+          "names": [
+            "subprocess"
+          ]
+        },
+        {
+          "names": [
+            "sys"
+          ]
+        },
+        {
+          "names": [
+            "tarfile"
+          ]
+        },
+        {
+          "names": [
+            "time"
+          ]
+        },
+        {
+          "names": [
+            "urllib.request"
+          ]
+        },
+        {
+          "names": [
+            "zlib"
+          ]
+        },
+        {
+          "module": "acquire_lib",
+          "names": [
+            "held",
+            "identity",
+            "read_json"
+          ]
+        },
+        {
+          "module": "phase_resource",
+          "names": [
+            "admission"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": [
+        "subprocess.run"
+      ]
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/held_runtime.py",
+      "bytes": 3427,
+      "sha256": "9d2628ed6379f8bb7cd218f44c5af2f2e64df58533383b531b42020604ca0078",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "hashlib"
+          ]
+        },
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ]
+        },
+        {
+          "names": [
+            "select"
+          ]
+        },
+        {
+          "module": "acquire_lib",
+          "names": [
+            "identity"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": []
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/initialize-phase.py",
+      "bytes": 3504,
+      "sha256": "ac07766a7b733d81a0ee3b5eb26efd7554e869f900aa8232f3ca80ae78cb3552",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "hashlib"
+          ]
+        },
+        {
+          "names": [
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ]
+        },
+        {
+          "names": [
+            "stat"
+          ]
+        },
+        {
+          "names": [
+            "sys"
+          ]
+        },
+        {
+          "module": "acquire_lib",
+          "names": [
+            "held",
+            "identity",
+            "read_json"
+          ]
+        },
+        {
+          "module": "phase_resource",
+          "names": [
+            "admission"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": []
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/materialize-cohort.py",
+      "bytes": 26123,
+      "sha256": "495c4325390eec2a6a306018b0847317e47886f54f7e6d2d2bd3bbd7e23b63b1",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "gzip"
+          ]
+        },
+        {
+          "names": [
+            "hashlib"
+          ]
+        },
+        {
+          "names": [
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ]
+        },
+        {
+          "names": [
+            "stat"
+          ]
+        },
+        {
+          "names": [
+            "sys"
+          ]
+        },
+        {
+          "names": [
+            "tarfile"
+          ]
+        },
+        {
+          "names": [
+            "time"
+          ]
+        },
+        {
+          "names": [
+            "traceback"
+          ]
+        },
+        {
+          "module": "acquire_lib",
+          "names": [
+            "acquire_archive",
+            "Decoded",
+            "encoded_chunks",
+            "held",
+            "identity",
+            "read_json"
+          ]
+        },
+        {
+          "module": "phase_resource",
+          "names": [
+            "admission"
+          ]
+        },
+        {
+          "module": "held_runtime",
+          "names": [
+            "HeldRuntime"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": []
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/phase-holder.py",
+      "bytes": 304,
+      "sha256": "f887c0b5da10fe4c2c743f9b648244ffb746584cd47134f98038c4e6b385aaa4",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "names": [
+            "signal"
+          ]
+        },
+        {
+          "names": [
+            "time"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": []
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/phase_resource.py",
+      "bytes": 2252,
+      "sha256": "08a6cb409e21afa27ffc9861c3c6aa5402a8982f5a8f24d2c685f1739375d377",
+      "mode": "0o600",
+      "executedOrImported": false,
+      "AST": "PASS",
+      "literalImports": [
+        {
+          "names": [
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "os"
+          ]
+        },
+        {
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ]
+        },
+        {
+          "names": [
+            "sys"
+          ]
+        }
+      ],
+      "callsPotentiallyDispatching": []
+    },
+    {
+      "path": "work/resume/task04-c8-physical-preparation-r3/plan.json",
+      "bytes": 6586,
+      "sha256": "e206ad5d8bb105645a8900e1da6c3e770bc96bef8de4ef4f3d75793c485559e9",
+      "mode": "0o600",
+      "executedOrImported": false
+    }
+  ],
+  "physicalAdmissionMaxBytes": 107945366382,
+  "physicalAdmissionComponents": {
+    "physicalAndRAWKnown": 12452908282,
+    "sourceAidPhysicalAndRAW": 4262420,
+    "literalTargetPhysicalAndRAW": 8948,
+    "completeMetadataEnforcedMax": 34149780480,
+    "actualHelpersAndPlan": 64876,
+    "finiteWrappersEnforcedMax": 8192,
+    "payloadBlockRoundingEnforcedMax": 1830494208,
+    "literalDirectoryAllocationEnforcedMax": 59507838976
+  },
+  "originalAssertions": "HELD_UNCHANGED",
+  "namespace": "NEW_R3_ONLY"
+}

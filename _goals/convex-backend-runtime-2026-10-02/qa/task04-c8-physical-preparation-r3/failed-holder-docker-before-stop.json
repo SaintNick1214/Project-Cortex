@@ -1,0 +1,256 @@
+[
+    {
+        "Id": "99f0f5a104d923c7b1268a5d4b438a36b6a30c920a9c8651d5ed86662324a500",
+        "Created": "2026-10-06T05:36:47.263731632Z",
+        "Path": "/usr/local/bin/python3.12",
+        "Args": [
+            "-B",
+            "/var/tmp/cortex-task04-c8-r3-phase/tools/phase-holder.py"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 806,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-06T05:36:47.305972965Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "ResolvConfPath": "/var/lib/docker/containers/99f0f5a104d923c7b1268a5d4b438a36b6a30c920a9c8651d5ed86662324a500/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/99f0f5a104d923c7b1268a5d4b438a36b6a30c920a9c8651d5ed86662324a500/hostname",
+        "HostsPath": "/var/lib/docker/containers/99f0f5a104d923c7b1268a5d4b438a36b6a30c920a9c8651d5ed86662324a500/hosts",
+        "LogPath": "/var/lib/docker/containers/99f0f5a104d923c7b1268a5d4b438a36b6a30c920a9c8651d5ed86662324a500/99f0f5a104d923c7b1268a5d4b438a36b6a30c920a9c8651d5ed86662324a500-json.log",
+        "Name": "/cortex-runtime-c8-r3-phase-20261005-01",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 6442450944,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 6442450944,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "cortex-runtime-c8-r3-physical-20261005-01",
+                    "Target": "/var/tmp/cortex-task04-c8-r3-phase",
+                    "VolumeOptions": {
+                        "NoCopy": true
+                    }
+                },
+                {
+                    "Type": "volume",
+                    "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+                    "Target": "/r2",
+                    "ReadOnly": true,
+                    "VolumeOptions": {
+                        "NoCopy": true
+                    }
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+                    "Target": "/source-repo",
+                    "ReadOnly": true
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "cortex-runtime-c8-r2-acquisition-20261005-01",
+                "Source": "/var/lib/docker/volumes/cortex-runtime-c8-r2-acquisition-20261005-01/_data",
+                "Destination": "/r2",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": false,
+                "Propagation": ""
+            },
+            {
+                "Type": "bind",
+                "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+                "Destination": "/source-repo",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "cortex-runtime-c8-r3-physical-20261005-01",
+                "Source": "/var/lib/docker/volumes/cortex-runtime-c8-r3-physical-20261005-01/_data",
+                "Destination": "/var/tmp/cortex-task04-c8-r3-phase",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "99f0f5a104d9",
+            "Domainname": "",
+            "User": "0:0",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PYTHONDONTWRITEBYTECODE=1",
+                "HOME=/var/tmp/cortex-task04-c8-r3-phase/home",
+                "PATH=/var/tmp/cortex-task04-c8-r3-phase/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.15",
+                "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+            ],
+            "Cmd": [
+                "-B",
+                "/var/tmp/cortex-task04-c8-r3-phase/tools/phase-holder.py"
+            ],
+            "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+            "Volumes": null,
+            "WorkingDir": "/var/tmp/cortex-task04-c8-r3-phase",
+            "Entrypoint": [
+                "/usr/local/bin/python3.12"
+            ],
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "SandboxID": "2d8d5c18c926163595a2d9a6ac479797727edf037d4ea99022e477fd5a95fabd",
+            "SandboxKey": "/var/run/docker/netns/2d8d5c18c926",
+            "Ports": {},
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "b733585e485730f9916de8721023571e3fca92ffaeb46a533052e68b83db76d7",
+                    "EndpointID": "424c604d626528f1385e494229caacde9cb832376cba443ff71996d80a5e0db8",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "MacAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:67e2cf4f915add39556c76425936bc1ec02e63a74455930014fd1d65d32b08b1",
+            "size": 1815,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

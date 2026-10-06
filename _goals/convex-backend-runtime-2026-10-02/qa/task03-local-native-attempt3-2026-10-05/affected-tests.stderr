@@ -1,0 +1,27 @@
+(node:56929) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/auth/credentials.test.ts (5.487 s)
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+PASS tests/unit/runtimeAuth/authority.test.ts
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+PASS tests/unit/domain/profile.test.ts
+
+Test Suites: 17 passed, 17 total
+Tests:       1005 passed, 1005 total
+Snapshots:   0 total
+Time:        18.291 s
+Ran all test suites within paths "tests/unit/domain/outcomes.test.ts", "tests/unit/domain/profile.test.ts", "tests/unit/domain/sources.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtimeAuth/authority.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/runtimeAuth/inventory.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/auth/credentials.test.ts", "tests/unit/runtimeWorkerAuth/governance.test.ts", "tests/unit/runtimeWorkerAuth/graph.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/jest-result.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

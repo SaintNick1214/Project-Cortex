@@ -1,0 +1,204 @@
+{
+  "scope": "FAILED_TASK03_NATIVE_ATTEMPT1_CUSTODY_AND_RETIRED_SELECTOR_INVALIDATION_ONLY",
+  "projectId": 3155546,
+  "operation": "3b3d1dc7-5c2b-4fb5-b13a-82460fcd3652",
+  "observedAtEpochNs": "1791262389902641803",
+  "baselineFiles": 565,
+  "unchangedContentFiles": 564,
+  "changedFiles": [
+    {
+      "path": "managed-fixture/fixture/convex/_generated/api.d.ts",
+      "sha256": "35de2ca372dbecbb93ccc73faba4ca004c081a77c000a0a23d15d951433d07e9",
+      "bytes": 4872,
+      "identity": {
+        "st_dev": "65025",
+        "st_ino": "986537",
+        "st_mode": "33188",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "4872",
+        "st_mtime_ns": "1791261768436297001",
+        "st_ctime_ns": "1791261768436297001"
+      },
+      "baselineSha256": "ef17837015baea01a4c2035dd7efd94f9641d5d6024362c0b65426591082e682",
+      "baselineBytes": 2448,
+      "privateCustody": {
+        "name": "changed-0.bin",
+        "sha256": "35de2ca372dbecbb93ccc73faba4ca004c081a77c000a0a23d15d951433d07e9",
+        "bytes": 4872,
+        "identity": {
+          "st_dev": "65025",
+          "st_ino": "928332",
+          "st_mode": "33152",
+          "st_nlink": "1",
+          "st_uid": "501",
+          "st_gid": "20",
+          "st_size": "4872",
+          "st_mtime_ns": "1791262389894359636",
+          "st_ctime_ns": "1791262389894359636"
+        }
+      }
+    }
+  ],
+  "createdIncidental": {
+    "path": "managed-fixture/fixture/.env.local",
+    "sha256": "02a50571d9f21849509eb2e769da86d5ed1ce6cb4c658336f7aea87aec44c898",
+    "bytes": 261,
+    "identity": {
+      "st_dev": "65025",
+      "st_ino": "989715",
+      "st_mode": "33188",
+      "st_nlink": "1",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "261",
+      "st_mtime_ns": "1791261766069297000",
+      "st_ctime_ns": "1791261766069297000"
+    },
+    "privateCustody": {
+      "name": "cli-created.env.local",
+      "sha256": "02a50571d9f21849509eb2e769da86d5ed1ce6cb4c658336f7aea87aec44c898",
+      "bytes": 261,
+      "identity": {
+        "st_dev": "65025",
+        "st_ino": "928333",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "261",
+        "st_mtime_ns": "1791262389897862637",
+        "st_ctime_ns": "1791262389897862637"
+      }
+    },
+    "removed": false
+  },
+  "privateDiagnostics": [
+    {
+      "name": "private-cli-diagnostics-2055bd4d-a705-4f61-8b61-47bf3a5c00cf.json",
+      "sha256": "cffe28bfcc86bc913cafc3ebd27ddfd31b4d0df4f933b2d13ae2d50e64cf3d86",
+      "bytes": 1687,
+      "identity": {
+        "st_dev": "65025",
+        "st_ino": "989731",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "1687",
+        "st_mtime_ns": "1791261768482297001",
+        "st_ctime_ns": "1791261768482297001"
+      }
+    }
+  ],
+  "deployReceipts": [
+    {
+      "name": "deploy-b46c91b6-dea4-4522-ba08-df51e0c130a3.json",
+      "sha256": "da147363372155365ccfdc508ae9ce7cdf948338be4e73b1f428592b550900cf",
+      "bytes": 665,
+      "identity": {
+        "st_dev": "65025",
+        "st_ino": "989732",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "665",
+        "st_mtime_ns": "1791261768485297001",
+        "st_ctime_ns": "1791261768485297001"
+      },
+      "publicReceipt": {
+        "phase": "deploy",
+        "startedAt": "2026-10-06T04:42:44.646Z",
+        "observedAt": "2026-10-06T04:42:48.485Z",
+        "argv": [
+          "/usr/local/bin/node",
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/bin/main.js",
+          "dev",
+          "--once",
+          "--codegen",
+          "enable",
+          "--typecheck",
+          "enable",
+          "--tail-logs",
+          "disable",
+          "--env-file",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-private-20261005/deploy.env"
+        ],
+        "exitCode": 1,
+        "failureClass": "cli_typecheck",
+        "status": "FAIL",
+        "counts": {
+          "ownedGroupsRemaining": 0,
+          "verifiedTerminalGroups": 1
+        },
+        "elapsedMs": 3840
+      }
+    }
+  ],
+  "targetPreimage": {
+    "name": "target-active-preimage.json",
+    "sha256": "abf8cabfce2dd628dcc8b2b1aa29b4fba0ee4fe8db2d5a0c8f41b6eeb7c98b6d",
+    "bytes": 851,
+    "identity": {
+      "st_dev": "65025",
+      "st_ino": "928324",
+      "st_mode": "33152",
+      "st_nlink": "1",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "851",
+      "st_mtime_ns": "1791262389846661011",
+      "st_ctime_ns": "1791262389846661011"
+    }
+  },
+  "oldSelectorIdentity": {
+    "st_dev": "65025",
+    "st_ino": "989773",
+    "st_mode": "33152",
+    "st_nlink": "1",
+    "st_uid": "501",
+    "st_gid": "20",
+    "st_size": "851",
+    "st_mtime_ns": "1791261702809837805",
+    "st_ctime_ns": "1791261702811501013"
+  },
+  "newSelector": {
+    "sha256": "fc10f367d55e762ea1639ffbbe4df8cf56449508628589981f269b80e6f7572c",
+    "bytes": 993,
+    "identity": {
+      "st_dev": "65025",
+      "st_ino": "928334",
+      "st_mode": "33152",
+      "st_nlink": "1",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "993",
+      "st_mtime_ns": "1791262389900679262",
+      "st_ctime_ns": "1791262389900679262"
+    },
+    "active": false,
+    "retired": true,
+    "deleted": true
+  },
+  "actualNativeCases": 0,
+  "qualificationAccepted": false,
+  "productWrites": 0,
+  "networkRequests": 0,
+  "imageId": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "volume": "cortex-task03-current-fixture-20261005-98d651af",
+  "retirementReceipt": {
+    "operation": "3b3d1dc7-5c2b-4fb5-b13a-82460fcd3652",
+    "requestSha256": "e22be908a45fbdfb54d57efae992c137769b5f54aad1844a40a4cf11ef0f8255",
+    "projectId": 3155546,
+    "deploymentName": "quaint-jellyfish-819",
+    "retiredAt": "2026-10-06T04:44:09.458Z",
+    "deletionHttpStatus": 200,
+    "verificationHttpStatus": 404,
+    "retired": true,
+    "deleted": true,
+    "managementCalls": 5,
+    "productionMutations": 0
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "scope": "SOURCE_ONLY_PHYSICAL_PREPARATION_AFTER_DISTINCT_BINDING_REVIEW",
+  "phaseRoot": "/var/tmp/cortex-task04-c8-r3-phase",
+  "volume": "cortex-runtime-c8-r3-physical-20261005-01",
+  "retainedContainer": "cortex-runtime-c8-r3-phase-20261005-01",
+  "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "platform": "linux/amd64",
+  "uid": 0,
+  "gid": 0,
+  "cgroupMaxBytes": 6442450944,
+  "pythonReserveBytes": 134217728,
+  "nodeReserveBytes": 536870912,
+  "knownCohorts": {
+    "FULL8": {
+      "rows": 148325,
+      "regular": 148295,
+      "literalLinks": 30,
+      "regularBytes": 3110990905
+    },
+    "HIST70020": {
+      "rows": 70020,
+      "regularBytes": 3001521619
+    },
+    "original823": {
+      "rows": 823,
+      "regularBytes": 18836975
+    },
+    "C6comparison823": {
+      "rows": 823,
+      "regularBytes": 19047356
+    },
+    "sevenPackages": {
+      "regularRows": 3458,
+      "regularBytes": 76057286
+    }
+  },
+  "knownPhysicalRegularBytes": 6226454141,
+  "knownRawExactPreimageBytes": 6226454141,
+  "knownCombinedBytes": 12452908282,
+  "sourceAidPaths": 138,
+  "sourceAidBytes": 2131210,
+  "physicalRowsIncludingLiteralLinks": 223449,
+  "metadataRecordMaxEncodedBytes": 16384,
+  "physicalLedgerMaxBytes": 3660993536,
+  "generatedInputFiles": [
+    "package-graph.json",
+    "original-read-map.json",
+    "historical-plan-index.json",
+    "package-aliases.json",
+    "candidate/mirror-source-transform-map.json",
+    "candidate/finite-producer-rules.json",
+    "candidate/prepared-source-inputs.json"
+  ],
+  "eachGeneratedInputMaxBytes": 536870912,
+  "generatedInputAndRawPreimageMaxBytes": 7516192768,
+  "bindingMetadataMaxBytes": 67108864,
+  "phaseReceiptsMaxBytes": 67108864,
+  "metadataCeilingsMeaning": "ENFORCED_ALLOCATION_CEILINGS_NOT_PROOF_THAT_EXPECTED_COMPLETE_OUTPUT_FITS; OVERFLOW_HOLD_FAILURE_NO_ASSERTION_OMISSION",
+  "sourceArchiveStorage": "READONLY_EXISTING_REPO_NO_BROAD_COPY",
+  "rawPreimages": "SELECTIVE_HASH_STORE; PHYSICAL_AND_RAW_DEMAND_COUNTED_WITHOUT_DEDUP_OR_COMPRESSION_ASSUMPTION",
+  "r2Seal": "2e55621b73fed30c608559d76f215b1f5ccf8cda72857d5122acb4ea9d7f79c6",
+  "subjectEffects": "HELD",
+  "runtimeBindingReview": "REQUIRED_BEFORE_PHYSICAL_EFFECTS",
+  "unseenHelpers": "HELD_UNTIL_DISTINCT_SOURCE_BINDING_AND_REVIEW",
+  "original122": 122,
+  "nativeRecipes": 8,
+  "nativeMinimumSeconds": 20,
+  "wholeAbsoluteSeconds": 120,
+  "sourceTiers": "FULL_RPC_UNCHANGED",
+  "semanticIDs": 501,
+  "semanticResiduals": 301,
+  "historicalGaps": "C7_4224_UNBACKED_AND11_FORENSIC_REFS_UNCHANGED",
+  "ROOT": "ABSENT",
+  "ownershipDecision": "NEW_SOURCE_ONLY_UID0_GID0_PROSPECTIVE; INITIAL501PROPOSAL_PRESERVED; NOT_ORIGINAL_ROOT_APPROVAL",
+  "daemonConfiguredMemoryBytes": 8319504384,
+  "nominalDaemonRemainderBytes": 1877053440,
+  "serializedAgainstTask03LargePhases": true,
+  "literalSymlinkTargetPhysicalAndRawBytes": 8948,
+  "ownedFDAdviceLedgerMaxBytes": 18304967680,
+  "ownedFDAdviceRowMax": 1117245,
+  "schemaGenerationHelperRelease": "UNSEEN_SEPARATELY_HELD_UNTIL_FIELD_MEMBERSHIP_SOURCE_BINDING_REVIEW",
+  "r2SealPin": {
+    "path": "/repair/final-linux-packet-manifest.json",
+    "bytes": 1031477,
+    "sha256": "2e55621b73fed30c608559d76f215b1f5ccf8cda72857d5122acb4ea9d7f79c6",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "65025",
+        "ino": "986832",
+        "mode": "33152",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "1031477",
+        "mtime_ns": "1791261597440055006",
+        "ctime_ns": "1791261597440055006"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "65025",
+        "ino": "986832",
+        "mode": "33152",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "1031477",
+        "mtime_ns": "1791261597440055006",
+        "ctime_ns": "1791261597440055006"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "65025",
+        "ino": "986832",
+        "mode": "33152",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "1031477",
+        "mtime_ns": "1791261597440055006",
+        "ctime_ns": "1791261597440055006"
+      }
+    }
+  },
+  "r2MetadataPaths": [
+    "attempt2/report/acquisition-contract.json",
+    "attempt2/report/selected-object-baselines.json",
+    "attempt2/report/historical70020-coverage.json",
+    "attempt2/report/seven-package-source-inventory.json",
+    "input-metadata/work/resume/task04-c7-exact-identity-repair/candidate/mirror-source-transform-map.json",
+    "attempt2/report/original-gate-conservation.json",
+    "attempt2/report/original-package-obligation-comparison.json"
+  ],
+  "literalPathByteMax": 4096,
+  "literalPathComponentMax": 64,
+  "ownedPhysicalRegularMode": 384,
+  "sourceEligibilityLedgerMaxBytes": 3660993536,
+  "filesystemBlockMaxBytes": 4096,
+  "filesystemPayloadBlockRoundingMaxBytes": 1830494208,
+  "filesystemDirectoryAllocationMaxBytes": 59507838976,
+  "subjectCanonicalClosureDemand": "HELD_PENDING_SEVEN_FIELD_COMPLETE_INPUTS_AND_DISTINCT_SCHEMA_HELPER_RELEASE; NO_UNKNOWN_TAPE_LEDGER_RECEIPT_BYTES_GUESSED",
+  "physicalReleaseCohorts": [
+    "FULL8",
+    "HIST70020",
+    "original823",
+    "C6comparison823",
+    "sevenPackages"
+  ],
+  "c4MetadataPaths": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/index.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/mapParts/part-00000.gzpart"
+  ],
+  "c4MapEncodedSHA256": "bdcd96a750ba26fdc85e6f259ee6457a7f8525c00f6cb0dac185f71ccbfa7c6f",
+  "c4MapDecodedSHA256": "719842f56e3595c163b7d89db9f91bbb9b85397d26a78c4ac8d65f23e2b42d40",
+  "metadataAllocationMaxBytes": 34149780480,
+  "filesystemAdditionalInodeMax": 14751730,
+  "planAndHelperByteBoundMeaning": "ACTUAL_FINAL_EIGHT_SOURCE_FILE_BYTES_PLUS_AT_MOST8192_FINITE_WRAPPER_BYTES; EXACT_HELPER_HASHES_IN_CAPTURE",
+  "largeSourcePhaseRequiresRootSerializationRelease": true,
+  "phaseOnlySubjects": false,
+  "actualHelperAndPlanBytes": 64876,
+  "finiteWrappersMaxBytes": 8192,
+  "physicalAdmissionComponents": {
+    "physicalAndRAWKnown": 12452908282,
+    "sourceAidPhysicalAndRAW": 4262420,
+    "literalTargetPhysicalAndRAW": 8948,
+    "completeMetadataEnforcedMax": 34149780480,
+    "actualHelpersAndPlan": 64876,
+    "finiteWrappersEnforcedMax": 8192,
+    "payloadBlockRoundingEnforcedMax": 1830494208,
+    "literalDirectoryAllocationEnforcedMax": 59507838976
+  },
+  "physicalAdmissionMaxBytes": 107945366382
+}

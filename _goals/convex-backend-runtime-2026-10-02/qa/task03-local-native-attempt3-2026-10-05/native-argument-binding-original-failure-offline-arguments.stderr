@@ -1,0 +1,11 @@
+file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/argument-candidates.mjs:7
+ if(schema.type==='object'){const result={};for(const [name,child]of Object.entries(schema.fields)){const value=candidate(child,ctx,name);if(value!==undefined)result[name]=value;}return result;}
+                                                                            ^
+
+TypeError: Cannot convert undefined or null to object
+    at Object.entries (<anonymous>)
+    at candidate (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/argument-candidates.mjs:7:77)
+    at argumentsFor (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/argument-candidates.mjs:31:50)
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/offline-arguments-check.mjs:62:84
+
+Node.js v24.15.0

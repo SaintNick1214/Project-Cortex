@@ -1,0 +1,74 @@
+{
+  "scope": "SOURCE_ONLY_PHYSICAL_PREPARATION_AFTER_DISTINCT_BINDING_REVIEW",
+  "phaseRoot": "/var/tmp/cortex-task04-c8-r3-phase",
+  "volume": "cortex-runtime-c8-r3-physical-20261005-01",
+  "retainedContainer": "cortex-runtime-c8-r3-phase-20261005-01",
+  "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "platform": "linux/amd64",
+  "uid": 501,
+  "gid": 20,
+  "cgroupMaxBytes": 4294967296,
+  "pythonReserveBytes": 134217728,
+  "nodeReserveBytes": 536870912,
+  "knownCohorts": {
+    "FULL8": {
+      "rows": 148325,
+      "regular": 148295,
+      "literalLinks": 30,
+      "regularBytes": 3110990905
+    },
+    "HIST70020": {
+      "rows": 70020,
+      "regularBytes": 3001521619
+    },
+    "original823": {
+      "rows": 823,
+      "regularBytes": 18836975
+    },
+    "C6comparison823": {
+      "rows": 823,
+      "regularBytes": 19047356
+    },
+    "sevenPackages": {
+      "regularRows": 3458,
+      "regularBytes": 76057286
+    }
+  },
+  "knownPhysicalRegularBytes": 6226454141,
+  "knownRawExactPreimageBytes": 6226454141,
+  "knownCombinedBytes": 12452908282,
+  "sourceAidPaths": 138,
+  "sourceAidBytes": 2131210,
+  "physicalRowsIncludingLiteralLinks": 223449,
+  "metadataRecordMaxEncodedBytes": 16384,
+  "physicalLedgerMaxBytes": 3660989440,
+  "generatedInputFiles": [
+    "package-graph.json",
+    "original-read-map.json",
+    "historical-plan-index.json",
+    "package-aliases.json",
+    "candidate/mirror-source-transform-map.json",
+    "candidate/finite-producer-rules.json",
+    "candidate/prepared-source-inputs.json"
+  ],
+  "eachGeneratedInputMaxBytes": 536870912,
+  "generatedInputAndRawPreimageMaxBytes": 7516192768,
+  "bindingMetadataMaxBytes": 67108864,
+  "phaseReceiptsMaxBytes": 67108864,
+  "metadataCeilingsMeaning": "ENFORCED_ALLOCATION_CEILINGS_NOT_PROOF_THAT_EXPECTED_COMPLETE_OUTPUT_FITS; OVERFLOW_HOLD_FAILURE_NO_ASSERTION_OMISSION",
+  "sourceArchiveStorage": "READONLY_EXISTING_REPO_NO_BROAD_COPY",
+  "rawPreimages": "SELECTIVE_HASH_STORE; PHYSICAL_AND_RAW_DEMAND_COUNTED_WITHOUT_DEDUP_OR_COMPRESSION_ASSUMPTION",
+  "r2Seal": "2e55621b73fed30c608559d76f215b1f5ccf8cda72857d5122acb4ea9d7f79c6",
+  "subjectEffects": "HELD",
+  "runtimeBindingReview": "REQUIRED_BEFORE_PHYSICAL_EFFECTS",
+  "unseenHelpers": "HELD_UNTIL_DISTINCT_SOURCE_BINDING_AND_REVIEW",
+  "original122": 122,
+  "nativeRecipes": 8,
+  "nativeMinimumSeconds": 20,
+  "wholeAbsoluteSeconds": 120,
+  "sourceTiers": "FULL_RPC_UNCHANGED",
+  "semanticIDs": 501,
+  "semanticResiduals": 301,
+  "historicalGaps": "C7_4224_UNBACKED_AND11_FORENSIC_REFS_UNCHANGED",
+  "ROOT": "ABSENT"
+}

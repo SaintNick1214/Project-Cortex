@@ -1,0 +1,28 @@
+{
+  "name": "affected-qa-js-scoped-lint",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/repair-cycle2/eslint.config.mjs",
+    "--no-ignore",
+    "--max-warnings",
+    "0",
+    "--report-unused-disable-directives",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/cleanup.mjs",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/driver.mjs",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/guard.mjs",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/repair-cycle2/offline-injection-harness.mjs",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/repair-cycle2/offline-repair-check.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startedAtUtc": "2026-10-06T04:20:29.401013+00:00",
+  "endedAtUtc": "2026-10-06T04:20:29.547799+00:00",
+  "exitCode": 0,
+  "status": "PASS",
+  "stdout": "scoped-lint.stdout",
+  "stderr": "scoped-lint.stderr",
+  "profileCorrection": "Root eslint.config.js explicitly ignores _goals/**/qa; apply the same recommended JS rules via owned standalone config to3 changed operational scripts and2 actual-source injection test files. No root configuration edits.",
+  "selectedFiles": 5,
+  "serviceCalls": 0
+}
