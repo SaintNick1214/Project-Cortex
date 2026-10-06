@@ -1,0 +1,17 @@
+{
+  "scope": "SOURCE_WORKFLOW_EFFECT_REVIEW_NOT_DISPATCH",
+  "YAMLParser": "Ruby Psych; observed successful parse and meaningful effect assertions in workflow-yaml-parse.json",
+  "workflow": null,
+  "eventEffects": "push branch and exact workflow path only",
+  "actualWorkflowExists": false,
+  "noDispatchOrSecretsOrServices": true,
+  "boundedArtifactEffect": "12 literal allowlist paths; raw source CAP536870912 + receipt CAP16777216; host output checks are post-buffer, see finding",
+  "publicActionsPins": {
+    "checkout": "d23441a48e516b6c34aea4fa41551a30e30af803",
+    "upload-artifact": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+  },
+  "subjectAndBulkImports": "none in ci-run/native-capability/native-owner entrypoints; held helper source bytes are captured only",
+  "nativeRuntimeChecks": "source present; never called by reviewer",
+  "completion": "NO_TASK04_PASS_NO_RUNTIME_PASS_NO_ROOT",
+  "literalTerminalExpirySource": "ci-run.py:104-111 + native-capability.py:184,189"
+}

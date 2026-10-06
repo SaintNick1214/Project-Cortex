@@ -1,0 +1,171 @@
+--- old-preserved/native-capability.py
++++ repair1/native-capability.py
+@@ -14,11 +14,18 @@
+ import time
+ import traceback
+ 
++from bounded_process import BoundedStreams, CollectionFailure, bounded_command
++
+ ROOT=Path('/phase'); OUT=ROOT/'export'; BACK=OUT/'source-backings'
+ FIELDS=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+ CAP=536870912; RECEIPT_CAP=16777216
+-retained=[]; aliases=[]; directories=[]; byte_total=0; snapshots=[]; reserve_min=None; check_count=0
++retained=[]; aliases=[]; directories=[]; byte_total=0; snapshots=[]; reserve_min=None; check_count=0; monitored_stream=None
+ def identity(s): return {'schema':'FS_IDENTITY_DECIMAL_V1','fields':{k:str(getattr(s,'st_'+k)) for k in FIELDS}}
++def receipt_value(value):
++    if isinstance(value,bytes): return {'bytes':len(value),'hex':value.hex(),'sha256':hashlib.sha256(value).hexdigest()}
++    if isinstance(value,dict): return {k:receipt_value(v) for k,v in value.items()}
++    if isinstance(value,(list,tuple)): return [receipt_value(v) for v in value]
++    return value
+ def measure(required=134217728,save=False):
+     global reserve_min,check_count
+     maxraw=Path('/sys/fs/cgroup/memory.max').read_text().strip(); current=Path('/sys/fs/cgroup/memory.current').read_text().strip()
+@@ -39,6 +46,7 @@
+         temp=[l for l in value['mountinfo'].splitlines() if l.split()[4]=='/tmp']
+         if len(line)!=1 or len(temp)!=1 or any(l.split(' - ')[1].split()[0] in ('tmpfs','ramfs') for l in line+temp): raise ValueError('EXPLICIT_DISK_BACKED_PHASE_AND_TEMP_MOUNTS')
+         snapshots.append(value)
++    if monitored_stream is not None: monitored_stream.pump(0)
+     return value
+ 
+ def write_new(path,raw):
+@@ -96,9 +104,29 @@
+         if fd is not None: os.close(fd)
+ 
+ def members(path):
+-    path=Path(path); before=identity(os.lstat(path)); names=sorted(os.listdir(path)); after=identity(os.lstat(path))
+-    if before!=after: raise ValueError('FINITE_DIRECTORY_SOURCE_MEMBERSHIP_DRIFT')
+-    directories.append({'path':str(path),'PRE':before,'POST':after,'names':names})
++    path=Path(path).resolve(strict=True)
++    prior=next((r for r in directories if r['path']==str(path)),None)
++    if prior is not None: return prior
++    fd=os.open(path,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
++    try:
++        before=identity(os.fstat(fd)); names=sorted(os.listdir(fd)); after=identity(os.fstat(fd)); post=identity(os.lstat(path))
++        if not stat.S_ISDIR(os.fstat(fd).st_mode) or before!=after or after!=post: raise ValueError('FINITE_DIRECTORY_SOURCE_MEMBERSHIP_DRIFT')
++        row={'path':str(path),'PRE':before,'POST':after,'pathPOST':post,'names':names,'fd':fd}
++        directories.append(row); fd=None
++        return row
++    finally:
++        if fd is not None: os.close(fd)
++
++
++def alias_target(path,sources):
++    path=Path(path)
++    if path.is_symlink(): alias(path)
++    resolved=path.resolve(strict=True)
++    kind=os.lstat(resolved).st_mode
++    if stat.S_ISDIR(kind): members(resolved)
++    elif stat.S_ISREG(kind): sources.add(str(resolved))
++    else: raise ValueError('RUNTIME_ALIAS_TARGET_MUST_BE_DECLARED_FILE_OR_DIRECTORY')
++
+ 
+ def mapped(pid):
+     result=set()
+@@ -119,7 +147,7 @@
+     for row in aliases:
+         if identity(os.fstat(row['fd']))!=row['PRE'] or identity(os.lstat(row['path']))!=row['PRE'] or os.fsencode(os.readlink('',dir_fd=row['fd'])).hex()!=row['targetHex']: raise ValueError('FINAL_LITERAL_ALIAS_NINE')
+     for row in directories:
+-        if identity(os.lstat(row['path']))!=row['PRE'] or sorted(os.listdir(row['path']))!=row['names']: raise ValueError('FINAL_DIRECTORY_MEMBERSHIP_NINE')
++        if identity(os.fstat(row['fd']))!=row['PRE'] or identity(os.lstat(row['path']))!=row['PRE'] or sorted(os.listdir(row['fd']))!=row['names']: raise ValueError('FINAL_DIRECTORY_MEMBERSHIP_NINE')
+ 
+ def main():
+     os.umask(0o077); OUT.mkdir(mode=0o700); BACK.mkdir(mode=0o700)
+@@ -130,29 +158,37 @@
+         resource.setrlimit(resource.RLIMIT_NOFILE,(8192,hard))
+     began=time.monotonic(); measure(536870912,True)
+     oldowner=owner(1); ownerfd=os.pidfd_open(1,0); ownerpoll=select.poll(); ownerpoll.register(ownerfd,select.POLLIN)
+-    node=None; nodefd=None; failure=None; closeerrors=[]; result={}
++    global monitored_stream
++    node=None; nodefd=None; node_streams=None; failure=None; closeerrors=[]; result={}; version_records=[]
+     try:
+         owner_signal0=signal.pidfd_send_signal(ownerfd,0); actualownerpoll=ownerpoll.poll(0)
+         if actualownerpoll: raise ValueError('NATIVE_OWNER_ALREADY_TERMINAL')
+         env=dict(os.environ)
+         for args,expected in [(['/usr/local/bin/node','--version'],b'v24.15.0\n'),(['/usr/local/bin/node','-p','process.platform+" "+process.arch'],b'linux x64\n'),(['/usr/local/bin/node','/usr/local/lib/node_modules/npm/bin/npm-cli.js','--version'],b'12.2.0\n')]:
+-            measure(536870912); got=subprocess.run(args,capture_output=True,env=env,timeout=30,check=True)
+-            if got.stdout!=expected or got.stderr: raise ValueError('EXACT_ACTUAL_VERSION_PROBE')
++            measure(536870912); got=bounded_command(args,stdout_limit=65536,stderr_limit=65536,env=env,timeout=30,native_pidfd=True,progress=lambda:measure(536870912))
++            version_records.append({k:(v.hex() if isinstance(v,bytes) else v) for k,v in got.items()})
++            if got['exit']!=0 or got['stdout']!=expected or got['stderr']: raise ValueError('EXACT_ACTUAL_VERSION_PROBE')
+         args=['/usr/local/bin/node','--inspect-brk=127.0.0.1:0','-e','']
+         measure(536870912); node=subprocess.Popen(args,env=env,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+         nodefd=os.pidfd_open(node.pid,0); poll=select.poll(); poll.register(nodefd,select.POLLIN)
+-        wait=selectors.DefaultSelector(); wait.register(node.stderr,selectors.EVENT_READ)
+-        try:
+-            if not wait.select(timeout=15): raise ValueError('INFRASTRUCTURE_NODE_INSPECTOR_READINESS_HOLD')
+-            inspector=os.read(node.stderr.fileno(),65537)
+-            if len(inspector)>65536 or b'Debugger listening on ws://127.0.0.1:' not in inspector: raise ValueError('OWNED_PAUSED_EMPTY_NODE_READINESS')
+-        finally: wait.close()
++        node_streams=BoundedStreams(node,65536,65536,time.monotonic()+180)
++        ready_deadline=time.monotonic()+15
++        while b'Debugger listening on ws://127.0.0.1:' not in node_streams.buffers['stderr']:
++            if time.monotonic()>=ready_deadline: raise ValueError('INFRASTRUCTURE_NODE_INSPECTOR_READINESS_HOLD')
++            node_streams.pump(0.05); measure(536870912)
++        inspector=bytes(node_streams.buffers['stderr'])
++        monitored_stream=node_streams
+         nodeowner=owner(node.pid)
+         if bytes.fromhex(nodeowner['rawArgvHex'])!=b'\0'.join(os.fsencode(a) for a in args)+b'\0': raise ValueError('UNMODIFIED_NATIVE_KERNEL_ARGV_REQUIRED')
+         node_signal0=signal.pidfd_send_signal(nodefd,0)
+         if poll.poll(0): raise ValueError('OWNED_NODE_ALREADY_TERMINAL')
+         maps=[mapped(os.getpid()),mapped(1),mapped(node.pid)]
+-        sources={sys.executable,'/usr/local/bin/node','/source/native-owner.py','/source/native-capability.py','/source/Dockerfile','/source/bootstrap-npm.py','/source/ci-run.py','/source/ci-source-manifest.json','/source/task04-c8-native-infrastructure.yml.proposed','/source/derive-finite-demand-attempt3.py','/source/materialize-cohort-proposed.py'}
++        sources={sys.executable,'/usr/local/bin/node','/source/native-owner.py','/source/native-capability.py','/source/Dockerfile','/source/bootstrap-npm.py','/source/ci-run.py','/source/ci-source-manifest.json','/source/task04-c8-native-infrastructure.yml.proposed','/source/derive-finite-demand.py','/source/materialize-cohort-proposed.py'}
++        declared=json.loads(Path('/source/ci-source-manifest.json').read_text())
++        for row in declared['files']:
++            literal=row['path']; path=Path('/source')/literal
++            if Path(literal).is_absolute() or '..' in Path(literal).parts or path.resolve(strict=True)!=path: raise ValueError('DECLARED_SOURCE_LITERAL_REGULAR_PATH_REQUIRED')
++            sources.add(str(path))
+         for item in maps: sources.update(item['paths'])
+         imports=[]
+         for name,module in sorted(sys.modules.items()):
+@@ -171,32 +207,41 @@
+             if Path(path).is_symlink(): alias(path)
+             members(Path(path).resolve(strict=True))
+         for path in ('/usr/local/bin/npm','/usr/local/bin/npx','/usr/local/bin/python','/usr/local/bin/python3','/opt/cortex-c8/python/bin'):
+-            if Path(path).is_symlink(): alias(path)
+-            sources.add(str(Path(path).resolve(strict=True)))
++            alias_target(path,sources)
+         for path in sorted(sources): capture(path)
++        for row in declared['files']:
++            actual=next(h['record'] for h in retained if h['record']['path']=='/source/'+row['path'])
++            if actual['bytes']!=row['bytes'] or actual['sha256']!=row['sha256']: raise ValueError('ACTUAL_REVIEWED_DECLARED_SOURCE_FULL_BYTES')
+         final_verify()
+         if owner(1)!=oldowner or owner(node.pid)!=nodeowner or poll.poll(0) or ownerpoll.poll(0): raise ValueError('RETAINED_NATIVE_PROCESS_LIFECYCLE_DRIFT')
+         measure(536870912,True)
+         node_sigterm=signal.pidfd_send_signal(nodefd,signal.SIGTERM)
+-        stdout,stderr=node.communicate(timeout=15)
++        monitored_stream=None
++        node_streams.deadline=time.monotonic()+15
++        actual_outputs=node_streams.collect(progress=lambda:measure(536870912))
++        stdout=actual_outputs['stdout']; stderr=actual_outputs['stderr'][len(inspector):]
+         terminal=poll.poll(0)
+         if node.returncode!=-signal.SIGTERM or not terminal or stdout or len(stderr)>65536: raise ValueError('OWNED_NATIVE_PIDFD_TERMINAL_DISPOSITION')
+-        result={'status':'NATIVE_INFRASTRUCTURE_CAPABILITY_AND_SOURCE_CAPTURE_COMPLETE_NOT_SUBJECT_QUALIFICATION','nodeVersion':'v24.15.0','npmVersion':'12.2.0','pythonVersion':sys.version,'architecture':platform.machine(),'environment':env,'ownerPRE':oldowner,'ownerPOST':owner(1),'actualOwnerPidfdOpen':True,'actualOwnerSignal0Return':None,'actualOwnerLivePoll':actualownerpoll,'nodeRequestedArgv':args,'nodeKernelBinding':nodeowner,'actualNodePidfdOpen':True,'actualNodeSignal0Return':None,'actualNodeTerminationSignal':'SIGTERM_VIA_PIDFD','actualNodeExit':node.returncode,'actualNodeTerminalPoll':terminal,'rawNodeInspector':inspector.decode(),'maps':maps,'PythonImportOriginsAndCaches':imports,'files':[r['record'] for r in retained],'aliases':[{k:v for k,v in a.items() if k!='fd'} for a in aliases],'directories':directories,'resourceSnapshots':snapshots,'literalReserveMinimum':reserve_min,'literalResourceCheckCount':check_count,'rawSourceBackingBytes':byte_total,'elapsedSeconds':time.monotonic()-began,'subjectImports':False,'cohortsMaterialized':False,'originalGates':'122_EIGHT20_WHOLE120_FULLRPC_501_301_UNCHANGED','futureBinding':'EXPIRED_WHEN_THIS_OWNER_JOB_ENDS; NEW_PHASE_ALL9_CAPTURE_AND_INDEPENDENT_RELEASE_REQUIRED','ROOT':'ABSENT'}
++        result={'status':'NATIVE_INFRASTRUCTURE_CAPABILITY_AND_SOURCE_CAPTURE_COMPLETE_NOT_SUBJECT_QUALIFICATION','nodeVersion':'v24.15.0','npmVersion':'12.2.0','pythonVersion':sys.version,'architecture':platform.machine(),'environment':env,'ownerPRE':oldowner,'ownerPOST':owner(1),'actualOwnerPidfdOpen':True,'actualOwnerSignal0Return':None,'actualOwnerLivePoll':actualownerpoll,'nodeRequestedArgv':args,'nodeKernelBinding':nodeowner,'actualNodePidfdOpen':True,'actualNodeSignal0Return':None,'actualNodeTerminationSignal':'SIGTERM_VIA_PIDFD','actualNodeExit':node.returncode,'actualNodeTerminalPoll':terminal,'rawNodeInspector':inspector.decode(),'maps':maps,'PythonImportOriginsAndCaches':imports,'files':[r['record'] for r in retained],'aliases':[{k:v for k,v in a.items() if k!='fd'} for a in aliases],'directories':[{k:v for k,v in r.items() if k!='fd'} for r in directories],'resourceSnapshots':snapshots,'literalReserveMinimum':reserve_min,'literalResourceCheckCount':check_count,'rawSourceBackingBytes':byte_total,'elapsedSeconds':time.monotonic()-began,'subjectImports':False,'cohortsMaterialized':False,'originalGates':'122_EIGHT20_WHOLE120_FULLRPC_501_301_UNCHANGED','futureBinding':'EXPIRED_WHEN_THIS_OWNER_JOB_ENDS; NEW_PHASE_ALL9_CAPTURE_AND_INDEPENDENT_RELEASE_REQUIRED','ROOT':'ABSENT'}
++        result['actualVersionCommands']=version_records
+         result['actualOwnerSignal0Return']=owner_signal0
+         result['actualNodeSignal0Return']=node_signal0
+         result['actualNodeTerminationSignalReturn']=node_sigterm
+         disk=os.statvfs(ROOT)
+-        result['futureFiniteSourcePreparationAdmissionDiagnostic']={'requiredBytes':48565865408,'requiredAdditionalInodes':317987,'actualAvailableBytes':disk.f_bavail*disk.f_frsize,'actualAvailableInodes':disk.f_favail,'bytesFitAtThisObservation':disk.f_bavail*disk.f_frsize>=48565865408,'inodesFitAtThisObservation':disk.f_favail>=317987,'release':'HELD_REGARDLESS; this job performs capability only and ends this runtime binding','sameFilesystemExistingGitImagesInputs':'already reduce measured available space; future new inputs and updated helper bytes require their own exact admission','canonicalSubjectClosureDemand':'UNKNOWN_UNTIL_SEVEN_COMPLETE_INPUTS; HELD'}
++        result['futureFiniteSourcePreparationAdmissionDiagnostic']={'requiredBytes':48565877696,'requiredAdditionalInodes':317989,'actualAvailableBytes':disk.f_bavail*disk.f_frsize,'actualAvailableInodes':disk.f_favail,'bytesFitAtThisObservation':disk.f_bavail*disk.f_frsize>=48565877696,'inodesFitAtThisObservation':disk.f_favail>=317989,'release':'HELD_REGARDLESS; this job performs capability only and ends this runtime binding','sameFilesystemExistingGitImagesInputs':'already reduce measured available space; future new inputs and updated helper bytes require their own exact admission','canonicalSubjectClosureDemand':'UNKNOWN_UNTIL_SEVEN_COMPLETE_INPUTS; HELD'}
+     except BaseException as error:
+         failure=error
+-        result={'status':'FAILED_INFRASTRUCTURE_CAPTURE_PRESERVED','type':type(error).__name__,'message':str(error),'traceback':traceback.format_exc(),'ownerPRE':oldowner,'filesCapturedBeforeFailure':[r['record'] for r in retained],'rawSourceBackingBytes':byte_total,'subjectImports':False,'cohortsMaterialized':False,'ROOT':'ABSENT'}
+-    finally:
++        result={'partialNodeOutputs':({k:v.hex() for k,v in node_streams.partial().items()} if node_streams is not None else None),'actualVersionCommands':version_records,'status':'FAILED_INFRASTRUCTURE_CAPTURE_PRESERVED','type':type(error).__name__,'message':str(error),'traceback':traceback.format_exc(),'ownerPRE':oldowner,'filesCapturedBeforeFailure':[r['record'] for r in retained],'rawSourceBackingBytes':byte_total,'subjectImports':False,'cohortsMaterialized':False,'ROOT':'ABSENT'}
++        if isinstance(error,CollectionFailure): result['failedBoundedCommand']=receipt_value(error.receipt)
++    finally:
++        monitored_stream=None
+         if node and node.poll() is None:
+             try:
+                 if nodefd is None: raise ValueError('NO_PIDFD_AUTHORITY_FOR_INFRASTRUCTURE_CHILD_CLEANUP')
+-                signal.pidfd_send_signal(nodefd,signal.SIGKILL); node.communicate(timeout=15)
++                signal.pidfd_send_signal(nodefd,signal.SIGKILL); node.wait(timeout=15)
+             except BaseException as error: closeerrors.append({'operation':'OWNED_CHILD_CLEANUP','error':str(error)})
+-        for fd in [r['fd'] for r in retained]+[a['fd'] for a in aliases]+[ownerfd]+([nodefd] if nodefd is not None else []):
++        if node_streams is not None: closeerrors.extend(node_streams.close())
++        for fd in [r['fd'] for r in retained]+[a['fd'] for a in aliases]+[d['fd'] for d in directories]+[ownerfd]+([nodefd] if nodefd is not None else []):
+             try: os.close(fd)
+             except OSError as error: closeerrors.append({'operation':'ACTUAL_FD_CLOSE','fd':fd,'error':str(error)})
+         result['actualLifecycleCloseErrors']=closeerrors

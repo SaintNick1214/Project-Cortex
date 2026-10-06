@@ -1,0 +1,672 @@
+{
+  "scope": "IMPLEMENTER_REPAIR_CONTROLS_NOT_INDEPENDENT_JUDGMENT_NOT_NATIVE_RUNTIME_ACCEPTANCE",
+  "sourceHashes": [
+    {
+      "path": "bootstrap-npm.py",
+      "bytes": 2316,
+      "sha256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d"
+    },
+    {
+      "path": "bounded_process.py",
+      "bytes": 13849,
+      "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3"
+    },
+    {
+      "path": "ci-run.py",
+      "bytes": 13035,
+      "sha256": "ba22f47668b8846ea257978ed9e26b9af5cafa479273189caea21d2d345618a2"
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "bytes": 15433,
+      "sha256": "1a605012c309d0e6596952f87d3248d3a4561ce4fd45715838f812d6d9e7c47b"
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "bytes": 26131,
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737"
+    },
+    {
+      "path": "native-capability.py",
+      "bytes": 17730,
+      "sha256": "466da3d78da12d664548f2f12102c8847e963d23d4aef942a6a90d56665b1699"
+    },
+    {
+      "path": "native-owner.py",
+      "bytes": 613,
+      "sha256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215"
+    },
+    {
+      "path": "repair-controls.py",
+      "bytes": 14340,
+      "sha256": "ce87429d2d9a4a605882602005e2051c97f548c1b77d9a972d5ca06edee314ee"
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "bytes": 5270,
+      "sha256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937"
+    }
+  ],
+  "checks": [
+    {
+      "name": "actual_source_healthy_two_pipe_collection",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-c",
+          "import os;os.write(1,b\"healthy-out\");os.write(2,b\"healthy-err\")"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 256,
+        "stderrLimit": 256,
+        "timeoutSeconds": 3,
+        "stdout": {
+          "bytes": 11,
+          "hex": "6865616c7468792d6f7574",
+          "sha256": "0bcdfb8a92b6279ccec495058fb8c680ae505d61a27bdb670a5408b78b022e05"
+        },
+        "stderr": {
+          "bytes": 11,
+          "hex": "6865616c7468792d657272",
+          "sha256": "35f56623bc17373f73debac03ec648ae5a1146108dcfda6b3fa0e52e1b858ce0"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 20369,
+        "exit": 0,
+        "elapsedSeconds": 0.011858124999999997
+      },
+      "elapsedSeconds": 0.011902958000000005
+    },
+    {
+      "name": "actual_source_stdout_overflow_preserves_bounded_prefix_and_terminal",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "failure": "COMMAND_STDOUT_OVERFLOW",
+        "receipt": {
+          "argv": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "-c",
+            "import os,time;os.write(1,b\"x\"*4096);time.sleep(10)"
+          ],
+          "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+          "stdoutLimit": 256,
+          "stderrLimit": 256,
+          "timeoutSeconds": 3,
+          "stdout": {
+            "bytes": 256,
+            "hex": "78787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+            "sha256": "85e62acd750c4eb56b7b6a1d66dca5bfaac5f062608a1a893410d0288936c09a"
+          },
+          "stderr": {
+            "bytes": 0,
+            "hex": "",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "signals": [
+            {
+              "signal": "SIGTERM",
+              "authority": "createdPopenHandle",
+              "return": null
+            }
+          ],
+          "terminal": true,
+          "closeErrors": [],
+          "createdChildPID": 20370,
+          "failure": "COMMAND_STDOUT_OVERFLOW",
+          "exit": -15,
+          "elapsedSeconds": 0.011652916999999999
+        }
+      },
+      "elapsedSeconds": 0.011689958
+    },
+    {
+      "name": "actual_source_stderr_overflow_preserves_bounded_prefix_and_terminal",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "failure": "COMMAND_STDERR_OVERFLOW",
+        "receipt": {
+          "argv": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "-c",
+            "import os,time;os.write(2,b\"e\"*4096);time.sleep(10)"
+          ],
+          "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+          "stdoutLimit": 256,
+          "stderrLimit": 256,
+          "timeoutSeconds": 3,
+          "stdout": {
+            "bytes": 0,
+            "hex": "",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "bytes": 256,
+            "hex": "65656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565656565",
+            "sha256": "e1635e58048b522e638f365669e21e22a4d053b1dcee4c515fe4c33013080e0d"
+          },
+          "signals": [
+            {
+              "signal": "SIGTERM",
+              "authority": "createdPopenHandle",
+              "return": null
+            }
+          ],
+          "terminal": true,
+          "closeErrors": [],
+          "createdChildPID": 20371,
+          "failure": "COMMAND_STDERR_OVERFLOW",
+          "exit": -15,
+          "elapsedSeconds": 0.011323709000000001
+        }
+      },
+      "elapsedSeconds": 0.011357208000000008
+    },
+    {
+      "name": "actual_source_timeout_preserves_prefix_and_owned_terminal",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-c",
+          "import os,time;os.write(1,b\"waiting\");time.sleep(10)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 256,
+        "stderrLimit": 256,
+        "timeoutSeconds": 1,
+        "stdout": {
+          "bytes": 7,
+          "hex": "77616974696e67",
+          "sha256": "80cfa3e7f28dde4df64436b652230aff28d7779116d1369c21ef2bbf37261d71"
+        },
+        "stderr": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 20372,
+        "failure": "COMMAND_DEADLINE_EXCEEDED",
+        "exit": -15,
+        "elapsedSeconds": 1.0022932500000001
+      },
+      "elapsedSeconds": 1.002443916
+    },
+    {
+      "name": "actual_source_failed_spawn_has_no_child_or_invented_terminal",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt2/no-such-executable"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 256,
+        "stderrLimit": 256,
+        "timeoutSeconds": 1,
+        "stdout": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [],
+        "terminal": false,
+        "closeErrors": [],
+        "spawnError": "FileNotFoundError(2, 'No such file or directory')",
+        "failure": "COMMAND_SPAWN_FAILURE",
+        "elapsedSeconds": 0.003397666999999993
+      },
+      "elapsedSeconds": 0.0036193749999999802
+    },
+    {
+      "name": "actual_source_read_failure_preserves_partial_and_terminal",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_WITH_DECLARED_READ_SEAM_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "failure": "COMMAND_PIPE_READ_FAILURE",
+        "receipt": {
+          "argv": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "-c",
+            "import os,time;os.write(1,b\"first\");time.sleep(.1);os.write(1,b\"second\");time.sleep(10)"
+          ],
+          "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+          "stdoutLimit": 256,
+          "stderrLimit": 256,
+          "timeoutSeconds": 3,
+          "stdout": {
+            "bytes": 5,
+            "hex": "6669727374",
+            "sha256": "a7937b64b8caa58f03721bb6bacf5c78cb235febe0e70b1b84cd99541461a08e"
+          },
+          "stderr": {
+            "bytes": 0,
+            "hex": "",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "signals": [
+            {
+              "signal": "SIGTERM",
+              "authority": "createdPopenHandle",
+              "return": null
+            }
+          ],
+          "terminal": true,
+          "closeErrors": [],
+          "createdChildPID": 20378,
+          "readError": "OSError('OWNED_TEST_READ_FAILURE')",
+          "failure": "COMMAND_PIPE_READ_FAILURE",
+          "exit": -15,
+          "elapsedSeconds": 0.13407891699999985
+        }
+      },
+      "elapsedSeconds": 0.13427504099999998
+    },
+    {
+      "name": "actual_source_nonzero_exit_retains_output_and_terminal",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-c",
+          "import os,sys;os.write(1,b\"before-failure\");os.write(2,b\"error\");sys.exit(7)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 256,
+        "stderrLimit": 256,
+        "timeoutSeconds": 3,
+        "stdout": {
+          "bytes": 14,
+          "hex": "6265666f72652d6661696c757265",
+          "sha256": "c78d9b33d4cc65436c6d1a25d59c5b40f361704ebc0ef7d7e07d7c7c3188ef72"
+        },
+        "stderr": {
+          "bytes": 5,
+          "hex": "6572726f72",
+          "sha256": "ca00fccfb408989eddc401062c4d1219a6aceb6b9b55412357f1790862e8f178"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 20379,
+        "exit": 7,
+        "elapsedSeconds": 0.03139279100000003
+      },
+      "elapsedSeconds": 0.03150583299999998
+    },
+    {
+      "name": "actual_source_zero_byte_limits_accept_only_empty_output",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-c",
+          "pass"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 0,
+        "stderrLimit": 0,
+        "timeoutSeconds": 3,
+        "stdout": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 20380,
+        "exit": 0,
+        "elapsedSeconds": 0.017896874999999923
+      },
+      "elapsedSeconds": 0.017948333000000094
+    },
+    {
+      "name": "actual_streamed_export_reader_healthy_dual_pipe",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "stdoutPrefix": {
+          "bytes": 11,
+          "hex": "73747265616d65642d6f6b",
+          "sha256": "ce0e941eb33713c855670851562c5775e25173bd3bf1b4ab641d97d9b52ed1ae"
+        },
+        "stdoutBytes": 11,
+        "stderr": {
+          "bytes": 14,
+          "hex": "626f756e6465642d737464657272",
+          "sha256": "bee8cb119e3c9dac5d825023815608676d02f06b5501a8f6a3eb5d63dbfd60a7"
+        },
+        "stdoutLimit": 256,
+        "stderrLimit": 256,
+        "exit": 0,
+        "terminal": true,
+        "consumedStdout": {
+          "bytes": 11,
+          "hex": "73747265616d65642d6f6b",
+          "sha256": "ce0e941eb33713c855670851562c5775e25173bd3bf1b4ab641d97d9b52ed1ae"
+        }
+      },
+      "elapsedSeconds": 0.013959124999999961
+    },
+    {
+      "name": "actual_streamed_export_reader_stdout_overflow",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "failure": "STREAM_STDOUT_OVERFLOW",
+        "partial": {
+          "stdoutPrefix": {
+            "bytes": 256,
+            "hex": "73737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373",
+            "sha256": "5dbb9529738ae602f76a348645d43c4ad1489c11b54f14ab8b983b735c101b23"
+          },
+          "stdoutBytes": 256,
+          "stderr": {
+            "bytes": 0,
+            "hex": "",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutLimit": 256,
+          "stderrLimit": 256
+        },
+        "consumedStdout": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "elapsedSeconds": 0.013556459000000132
+    },
+    {
+      "name": "actual_streamed_export_reader_stderr_overflow",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "failure": "STREAM_STDERR_OVERFLOW",
+        "partial": {
+          "stdoutPrefix": {
+            "bytes": 0,
+            "hex": "",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutBytes": 0,
+          "stderr": {
+            "bytes": 256,
+            "hex": "73737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373",
+            "sha256": "5dbb9529738ae602f76a348645d43c4ad1489c11b54f14ab8b983b735c101b23"
+          },
+          "stdoutLimit": 256,
+          "stderrLimit": 256
+        },
+        "consumedStdout": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "elapsedSeconds": 0.012896750000000123
+    },
+    {
+      "name": "actual_streamed_export_reader_deadline",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "failure": "STREAM_DEADLINE_EXCEEDED",
+        "partial": {
+          "stdoutPrefix": {
+            "bytes": 7,
+            "hex": "7061727469616c",
+            "sha256": "9834a14ab9bcaa0f6a8da71073617eac8f004e596a3fa11d807b84631b825d9d"
+          },
+          "stdoutBytes": 7,
+          "stderr": {
+            "bytes": 0,
+            "hex": "",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdoutLimit": 256,
+          "stderrLimit": 256
+        },
+        "consumedStdout": {
+          "bytes": 7,
+          "hex": "7061727469616c",
+          "sha256": "9834a14ab9bcaa0f6a8da71073617eac8f004e596a3fa11d807b84631b825d9d"
+        }
+      },
+      "elapsedSeconds": 1.003918375
+    },
+    {
+      "name": "actual_ci_call_records_healthy_partial_files",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-c",
+          "print(\"bootstrap-ok\")"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 256,
+        "stderrLimit": 1048576,
+        "timeoutSeconds": 3,
+        "stdout": {
+          "bytes": 13,
+          "hex": "626f6f7473747261702d6f6b0a",
+          "sha256": "35528e14f39f9529f5e34b76a465c94bb77c93b00f19724a46c6974ddf00648f"
+        },
+        "stderr": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 20385,
+        "exit": 0,
+        "elapsedSeconds": 0.03144133399999971
+      },
+      "elapsedSeconds": 0.032664000000000026
+    },
+    {
+      "name": "actual_ci_call_overflow_records_bounded_failed_outputs",
+      "scope": "ACTUAL_HOST_PUBLIC_DUMMY_BOOTSTRAP_NOT_LINUX_PIDFD",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-c",
+          "import os,time;os.write(1,b\"p\"*4096);time.sleep(10)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 256,
+        "stderrLimit": 1048576,
+        "timeoutSeconds": 3,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 20386,
+        "failure": "COMMAND_STDOUT_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.020957749999999997,
+        "stdout": {
+          "path": "command-00001.stdout",
+          "bytes": 256,
+          "sha256": "4e4693b284c3f26ec98cc529f68d3f29d03f344cc82d460149c857e92a7d600e",
+          "contentCopyNotRuntimeAuthority": true
+        },
+        "stderr": {
+          "path": "command-00001.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "contentCopyNotRuntimeAuthority": true
+        }
+      },
+      "elapsedSeconds": 0.021798374999999925
+    },
+    {
+      "name": "native_pidfd_ENOSYS_seam_rejects_before_spawn_without_fallback",
+      "scope": "DECLARED_NATIVE_SYSCALL_SOURCE_SEAM_NOT_RUNTIME",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "actualBodyRejectedBeforeSpawn": true,
+        "created": [],
+        "nativeRuntime": "HELD; syscall failure was substituted, not native PASS"
+      },
+      "elapsedSeconds": 2.8208000000251587e-05
+    },
+    {
+      "name": "actual_repaired_alias_target_separates_directory_and_file_closures",
+      "scope": "ACTUAL_HOST_OWNED_FILES_PLUS_DECLARED_LINUX_ALIAS_ADVICE_SEAMS_NOT_RUNTIME",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "resolvedDirectoryExcludedFromFileSet": true,
+        "fileSources": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt2/source-fixture/bin/python3.12"
+        ],
+        "directoryMembers": [
+          "python3.12"
+        ],
+        "literalAlias": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt2/source-fixture/python-bin",
+          "literalTarget": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt2/source-fixture/bin",
+          "scope": "HOST_LITERAL_OBSERVATION_NOT_LINUX_OPATH"
+        },
+        "file": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair1/controls-attempt2/source-fixture/bin/python3.12",
+          "bytes": 21,
+          "sha256": "14061320d15720c79c3f2d8cb6a3ac19555066bbb084a17dd378bf99c4ab51c7",
+          "PRE": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91932543",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "21",
+              "mtime_ns": "1791270529360697210",
+              "ctime_ns": "1791270529360729877"
+            }
+          },
+          "POST": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91932543",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "21",
+              "mtime_ns": "1791270529360697210",
+              "ctime_ns": "1791270529360729877"
+            }
+          },
+          "pathPOST": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91932543",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "21",
+              "mtime_ns": "1791270529360697210",
+              "ctime_ns": "1791270529360729877"
+            }
+          },
+          "EOF": true,
+          "rawExactBacking": "backings/pending-0",
+          "rawBackingIdentity": {
+            "schema": "FS_IDENTITY_DECIMAL_V1",
+            "fields": {
+              "dev": "16777234",
+              "ino": "91932545",
+              "mode": "33152",
+              "uid": "501",
+              "gid": "20",
+              "nlink": "1",
+              "size": "21",
+              "mtime_ns": "1791270529361552808",
+              "ctime_ns": "1791270529361552808"
+            }
+          },
+          "actualOwnedBackingAdviceReturn": null
+        }
+      },
+      "elapsedSeconds": 0.0012460830000002865
+    },
+    {
+      "name": "strict_regular_and_single_link_assertions_remain",
+      "scope": "ACTUAL_HOST_OWNED_FILES_NOT_LINUX_RUNTIME",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "directoryRejected": true,
+        "hardlinkRejected": true,
+        "originalAssertions": "unchanged"
+      },
+      "elapsedSeconds": 0.0006999999999997009
+    },
+    {
+      "name": "held_directory_membership_and_all9_mutation_rejects",
+      "scope": "ACTUAL_HOST_OWNED_FILES_NOT_LINUX_RUNTIME",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "directoryMutationRejected": "FINAL_DIRECTORY_MEMBERSHIP_NINE"
+      },
+      "elapsedSeconds": 0.0001256659999997467
+    },
+    {
+      "name": "exact_raw_kernel_argv_source_guard_retained",
+      "scope": "DECLARED_ARGV_SOURCE_SEAM_NOT_NATIVE_RUNTIME",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "literalAccepted": true,
+        "wrapperRejected": "UNMODIFIED_NATIVE_KERNEL_ARGV_REQUIRED",
+        "nativeRuntime": "HELD"
+      },
+      "elapsedSeconds": 0.00010262500000024488
+    }
+  ],
+  "nativePidfdAndMaps": "REQUIRE_ACTUAL_NATIVE_LINUX_CI; NOT_PASSED_HERE",
+  "DockerCalls": false,
+  "Task04Subjects": false,
+  "ROOT": "ABSENT"
+}

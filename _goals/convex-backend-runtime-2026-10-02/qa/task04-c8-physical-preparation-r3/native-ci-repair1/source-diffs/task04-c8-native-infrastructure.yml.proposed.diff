@@ -1,0 +1,27 @@
+--- old-preserved/task04-c8-native-infrastructure.yml.proposed
++++ repair1/task04-c8-native-infrastructure.yml.proposed
+@@ -24,10 +24,10 @@
+           fetch-depth: 1
+           sparse-checkout-cone-mode: false
+           sparse-checkout: |
+-            /work/resume/task04-c8-physical-preparation-r3/native-ci-a5/
++            /work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair1/
+             /.github/workflows/task04-c8-native-infrastructure.yml
+       - name: Native infrastructure capability and source capture only
+-        run: python3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5/ci-run.py
++        run: python3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair1/ci-run.py
+       - name: Export bounded allowlisted infrastructure receipts and source bytes
+         if: always()
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+@@ -44,6 +44,11 @@
+             ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/host-failure.json
+             ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/image-build.stdout
+             ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/image-build.stderr
++            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/command-receipts/command-*.json
++            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/command-receipts/command-*.stdout
++            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/command-receipts/command-*.stderr
++            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export-transport.json
++            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export-transport-failure.json
+             ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export/native-capability.json
+             ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export/source-backings/pending-*
+           if-no-files-found: error

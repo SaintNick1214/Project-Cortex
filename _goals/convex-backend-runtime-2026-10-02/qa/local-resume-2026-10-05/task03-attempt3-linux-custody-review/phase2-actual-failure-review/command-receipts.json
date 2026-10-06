@@ -1,0 +1,191 @@
+{
+  "scope": "RETIRED_ATTEMPT3_READONLY_METADATA_ONLY",
+  "commands": [
+    {
+      "label": "docker-memory",
+      "argv": [
+        "docker",
+        "info",
+        "--format",
+        "{{json .MemTotal}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:48.158349+00:00",
+      "elapsedSeconds": 0.49618583299888996,
+      "exitCode": 0,
+      "stdoutSha256": "4445c7d58313ef7aec98995b6cf5f06c20e366403ebf17b74f46b212739d0b77",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "running-container-ids",
+      "argv": [
+        "docker",
+        "ps",
+        "-q"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:48.654755+00:00",
+      "elapsedSeconds": 0.015045166997879278,
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "retired-private-container-absence",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-private-d98bad88",
+        "--format",
+        "{{json .State}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:48.670166+00:00",
+      "elapsedSeconds": 0.018423041998175904,
+      "exitCode": 1,
+      "stdoutSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderrSha256": "6a73a4ddb52d5955ced4fbe9b1906f81430cf114e1c7012accb32144bcf7ff6f",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "retired-deploy-container-absence",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-deploy-d98bad88",
+        "--format",
+        "{{json .State}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:48.688847+00:00",
+      "elapsedSeconds": 0.027370958996471018,
+      "exitCode": 1,
+      "stdoutSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderrSha256": "3137ef1b38b58ef7ee18e1495bed4b8e5210b1fcdc38c84a71d82f79e315504c",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "retired-driver-container-absence",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-driver-d98bad88",
+        "--format",
+        "{{json .State}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:48.716569+00:00",
+      "elapsedSeconds": 0.017295666999416426,
+      "exitCode": 1,
+      "stdoutSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderrSha256": "2b45c81d0687433b297ed2025c69db2c192ef342c587923f9432ab45fbd084a5",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "metadata-create",
+      "argv": [
+        "docker",
+        "create",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--cpus",
+        "2",
+        "--user",
+        "501:20",
+        "--read-only",
+        "--name",
+        "cortex-task03-attempt3-actual-failure-metadata-review-d98bad88",
+        "--label",
+        "cortex.operation=d98bad88-5157-4816-b458-4160e7945361",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review/phase2-actual-failure-review/metadata-probe.py,target=/probe.py,readonly",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review/r3-public-custody.stdout,target=/public-baseline.json,readonly",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/tmp/actual-private-export-d98bad88-5157-4816-b458-4160e7945361,target=/export,readonly",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt3-fixture-20261005-d98bad88,target=/owned,readonly,volume-nocopy",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "/usr/local/bin/python3.12",
+        "-B",
+        "/probe.py"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:48.734185+00:00",
+      "elapsedSeconds": 1.5786030410017702,
+      "exitCode": 0,
+      "stdoutSha256": "14bce2f7ebcd0e2d47ecfe68502df702820f1329ef286e2905b4054432b19323",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "metadata-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-actual-failure-metadata-review-d98bad88",
+        "--format",
+        "{\"image\":{{json .Image}},\"memory\":{{json .HostConfig.Memory}},\"memorySwap\":{{json .HostConfig.MemorySwap}},\"network\":{{json .HostConfig.NetworkMode}},\"user\":{{json .Config.User}},\"mounts\":{{json .Mounts}}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:50.313454+00:00",
+      "elapsedSeconds": 0.03157008299604058,
+      "exitCode": 0,
+      "stdoutSha256": "98c326e97c398ad944f8ac381136a9b4fe6c026c0c25809c9d33fcac175b692a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "actual-metadata-probe",
+      "argv": [
+        "docker",
+        "start",
+        "--attach",
+        "cortex-task03-attempt3-actual-failure-metadata-review-d98bad88"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:50.345567+00:00",
+      "elapsedSeconds": 0.6171676669982844,
+      "exitCode": 0,
+      "stdoutSha256": "2959bbcb197b59c908a696905b89e9ce7c58b8bbbd92039ea9156a8039398aac",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    },
+    {
+      "label": "metadata-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "cortex-task03-attempt3-actual-failure-metadata-review-d98bad88"
+      ],
+      "startedAtUtc": "2026-10-06T07:30:50.963762+00:00",
+      "elapsedSeconds": 0.06545008299872279,
+      "exitCode": 0,
+      "stdoutSha256": "71d9cca295fe00976768eaf3aeee4c45eeefedb520acb5f4f21c93fee4cf9565",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "credentialFileOpens": 0,
+      "readonlyMetadataOnly": true
+    }
+  ],
+  "credentialByteReads": 0,
+  "receiverReplay": false,
+  "serviceRequests": 0,
+  "cliDispatches": 0
+}

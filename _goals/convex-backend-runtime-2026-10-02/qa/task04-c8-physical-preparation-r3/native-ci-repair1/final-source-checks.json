@@ -1,0 +1,115 @@
+{
+  "scope": "FINAL_HOST_SOURCE_REPAIR_CHECKS_NOT_INDEPENDENT_REVIEW_OR_NATIVE_ACCEPTANCE",
+  "AST": [
+    {
+      "path": "bootstrap-npm.py",
+      "bytes": 2316,
+      "sha256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d",
+      "AST": "PASS"
+    },
+    {
+      "path": "bounded_process.py",
+      "bytes": 13849,
+      "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3",
+      "AST": "PASS"
+    },
+    {
+      "path": "ci-run.py",
+      "bytes": 13612,
+      "sha256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1",
+      "AST": "PASS"
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "bytes": 15433,
+      "sha256": "1a605012c309d0e6596952f87d3248d3a4561ce4fd45715838f812d6d9e7c47b",
+      "AST": "PASS"
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "bytes": 26131,
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+      "AST": "PASS"
+    },
+    {
+      "path": "native-capability.py",
+      "bytes": 18861,
+      "sha256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c",
+      "AST": "PASS"
+    },
+    {
+      "path": "native-owner.py",
+      "bytes": 613,
+      "sha256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215",
+      "AST": "PASS"
+    },
+    {
+      "path": "repair-controls.py",
+      "bytes": 20668,
+      "sha256": "21abf45c2e4f4e08baa700ccd22e85847ac2e8ad020681b1ff5aeba30f49da32",
+      "AST": "PASS"
+    },
+    {
+      "path": "seal-repair-packet.py",
+      "bytes": 7436,
+      "sha256": "ffaba60d4c249b9faca4770b99183497c495792c3b239ca89dc92e1bb24c75e5",
+      "AST": "PASS"
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "bytes": 5270,
+      "sha256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937",
+      "AST": "PASS"
+    }
+  ],
+  "actualSourceControls": {
+    "path": "controls-attempt4/controls.json",
+    "sha256": "fced04741997adc78ec0f5a496dec9a5f8e7989c2b1084a3bb95a3dd900dfe41",
+    "checks": 27,
+    "boundedCollectorAndCiCallAndNativeAliasHelpersMatchFinalSource": true,
+    "sealerOnlyLaterChange": "Darwin dummy-artifact O_SYMLINK flag correction; exact failed source and successful actual held-symlink descriptor probe preserved separately"
+  },
+  "YAMLParse": {
+    "result": "PASS",
+    "engine": "Ruby Psych.safe_load",
+    "branch": "feat/convex-backend-runtime-completion",
+    "triggerPath": ".github/workflows/task04-c8-native-infrastructure.yml",
+    "permissions": {
+      "contents": "read"
+    },
+    "persistCredentials": false,
+    "actionPins": [
+      "d23441a48e516b6c34aea4fa41551a30e30af803",
+      "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    ],
+    "sourceFolder": "native-ci-a5-repair1",
+    "exact17ExportEntries": [
+      "host-preflight.json",
+      "native-image.json",
+      "owner-before.json",
+      "capture-command.json",
+      "owner-after-capture.json",
+      "export-content-copy.json",
+      "owner-terminal.json",
+      "host-failure.json",
+      "image-build.stdout",
+      "image-build.stderr",
+      "command-receipts/command-*.json",
+      "command-receipts/command-*.stdout",
+      "command-receipts/command-*.stderr",
+      "export-transport.json",
+      "export-transport-failure.json",
+      "export/native-capability.json",
+      "export/source-backings/pending-*"
+    ],
+    "timeoutMinutes": 20
+  },
+  "noSubprocessRunOrCommunicateInRepairedDispatchCaptureCollector": true,
+  "sixGiBMemoryAndMatchedSwapSourceConditions": true,
+  "nativePidfdAndMapsAndRuntimeResourceStatus": "HELD_NOT_EXECUTED_OR_MOCKED_PASS",
+  "workflowActualTargetPresent": false,
+  "workflowActivated": false,
+  "noFurtherDockerAfterOneGrantedMetadataWindow": true,
+  "Task04Subjects": false,
+  "ROOT": "ABSENT"
+}

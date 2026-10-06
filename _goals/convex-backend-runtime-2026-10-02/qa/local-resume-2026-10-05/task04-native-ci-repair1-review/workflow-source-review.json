@@ -1,0 +1,43 @@
+{
+  "scope": "FRESH_SOURCE_YAML_EFFECT_ASSERTIONS_NOT_EXECUTION",
+  "parse": "PASS",
+  "trigger": {
+    "push": {
+      "branches": [
+        "feat/convex-backend-runtime-completion"
+      ],
+      "paths": [
+        ".github/workflows/task04-c8-native-infrastructure.yml"
+      ]
+    }
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "runner": "ubuntu-24.04",
+  "timeoutMinutes": 20,
+  "actionPins": [
+    "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+    "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+  ],
+  "exact17ExportEntries": [
+    "host-preflight.json",
+    "native-image.json",
+    "owner-before.json",
+    "capture-command.json",
+    "owner-after-capture.json",
+    "export-content-copy.json",
+    "owner-terminal.json",
+    "host-failure.json",
+    "image-build.stdout",
+    "image-build.stderr",
+    "command-receipts/command-*.json",
+    "command-receipts/command-*.stdout",
+    "command-receipts/command-*.stderr",
+    "export-transport.json",
+    "export-transport-failure.json",
+    "export/native-capability.json",
+    "export/source-backings/pending-*"
+  ],
+  "workflowWrites": false
+}

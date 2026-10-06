@@ -1,0 +1,49 @@
+{
+  "subject": "Task04 native CI infrastructure proposal",
+  "scope": "INFRASTRUCTURE_PROPOSAL_ONLY",
+  "verdict": "REJECT",
+  "scores": {
+    "RequirementFulfillment": 2,
+    "CodeQuality": 2,
+    "TestQuality": 3,
+    "PatternAdherence": 4,
+    "Completeness": 2
+  },
+  "average": 2.6,
+  "packetSHA256": "598ac93dcf4593ff16bfaca3c228e5226f6e002336c6e80759cd0c7bc35f9bfb",
+  "sourceManifestSHA256": "73800802fb9d40e5024ae11c79278d49f2b9231763d7c7bff2b8233b97989f1b",
+  "workflowProposalSHA256": "2e4346321c9efa93730dc397cc2dc522dbeeee8509da25a5e0befaebfea69731",
+  "nativeCapabilitySHA256": "92e53ec7df321d36b0d18cb74d3d7ae7adb758a1382d6b3433a4b33bab13e541",
+  "reportSHA256": "19c6bf729abbf7eff38cc43f64428a90cdfc7a26bcef8a58138d8da9402fc8f6",
+  "sourcePrePostIdentical": true,
+  "critical": [
+    "native-capability.py:173-176 adds /usr/local/bin directory to regular-only source capture; exact source seam rejects it at lines59-62"
+  ],
+  "important": [
+    "command output bounds are checked only after buffering",
+    "finite directory derivation omits initializer bin/infra and must reconcile its output membership"
+  ],
+  "directSourceControls": 19,
+  "currentGitPartsFullRead": 361,
+  "currentGitRoutes": 6,
+  "currentGitEncodedBytes": 1872365422,
+  "currentGitPinnedCommit": "11002ce3db6b2fd26c2dacf45234ff22cc81edcd",
+  "workflowActualTargetPresent": false,
+  "effectsReleased": [],
+  "conditionalRelease": "NONE_AT_THIS_HASH; distinct repair, reseal and fresh independent source PASS required before exact workflow copy/push activation",
+  "futureFirstJob": "capability/source capture only; actual runtime requires fresh review; terminal owner expires binding; bulk held regardless fit",
+  "physicalPreparationReleased": false,
+  "Task04Complete": false,
+  "goalComplete": false,
+  "historicalCustodyRestored": false,
+  "nativeSubjectsExecuted": false,
+  "DockerCalls": false,
+  "originalVolumesAccessed": false,
+  "externalSiblingContainerAccessed": false,
+  "assertionsWeakened": false,
+  "reviewerHarnessFailuresPreserved": [
+    "reviewer-controls-attempt1-failure.json",
+    "reviewer-controls-attempt2-failure.json"
+  ],
+  "initialReviewerArtifactDriftPreserved": "reviewer-seal-initial-ctime-drift.json; only own verdict ctime, no producer source drift"
+}

@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-c",
+    "import os,time;os.write(1,b\"q\"*60);time.sleep(20)"
+  ],
+  "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+  "stdoutLimit": 59,
+  "stderrLimit": 1048576,
+  "timeoutSeconds": 2,
+  "signals": [
+    {
+      "signal": "SIGTERM",
+      "authority": "createdPopenHandle",
+      "return": null
+    }
+  ],
+  "terminal": true,
+  "closeErrors": [],
+  "createdChildPID": 25459,
+  "failure": "COMMAND_STDOUT_OVERFLOW",
+  "exit": -15,
+  "elapsedSeconds": 0.01866341699496843,
+  "stdout": {
+    "path": "command-00000.stdout",
+    "bytes": 59,
+    "sha256": "09a4de5e71081c74ec26794b06dce8595d1606a36c3b704a84cb09e82fce723d",
+    "contentCopyNotRuntimeAuthority": true
+  },
+  "stderr": {
+    "path": "command-00000.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentCopyNotRuntimeAuthority": true
+  }
+}
