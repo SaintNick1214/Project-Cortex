@@ -1,0 +1,316 @@
+{
+  "parsed10": [
+    {
+      "path": "bootstrap-npm.py",
+      "bytes": 2316,
+      "sha256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d"
+    },
+    {
+      "path": "bounded_process.py",
+      "bytes": 13849,
+      "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3"
+    },
+    {
+      "path": "ci-run.py",
+      "bytes": 13612,
+      "sha256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1"
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "bytes": 15424,
+      "sha256": "f03b5083ee3e6caca6426a9dca98db61d24c632c86d4f6ef851b1318da310a3f"
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "bytes": 26131,
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737"
+    },
+    {
+      "path": "native-capability.py",
+      "bytes": 18861,
+      "sha256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c"
+    },
+    {
+      "path": "native-owner.py",
+      "bytes": 613,
+      "sha256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215"
+    },
+    {
+      "path": "repair-controls.py",
+      "bytes": 27920,
+      "sha256": "422ae6a065d7e8172b047cbe4459c2ff03cb6986df9a99750e19897b26a9ba91"
+    },
+    {
+      "path": "seal-repair-packet.py",
+      "bytes": 7436,
+      "sha256": "f3f26aa02ec6959727d0a808b2f692acfae36dc44fbb23a1d12a806322005deb"
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "bytes": 5270,
+      "sha256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937"
+    }
+  ],
+  "protectedByteEqual8": [
+    "native-capability.py",
+    "bounded_process.py",
+    "ci-run.py",
+    "materialize-cohort-proposed.py",
+    "Dockerfile",
+    "bootstrap-npm.py",
+    "native-owner.py",
+    "verify-git-route-inputs.py"
+  ],
+  "literalDeltaOnly": true,
+  "actual13Outputs": [
+    "bin/node",
+    "bin/npm",
+    "bin/npx",
+    "bin/python3.12",
+    "bindings/initialization.json",
+    "tools/acquire_lib.py",
+    "tools/capture-binding.py",
+    "tools/held_runtime.py",
+    "tools/initialize-phase.py",
+    "tools/materialize-cohort.py",
+    "tools/phase-holder.py",
+    "tools/phase_resource.py",
+    "tools/plan.json"
+  ],
+  "actual6Directories": [
+    "bin",
+    "bindings",
+    "home",
+    "infra",
+    "physical-receipts",
+    "tools"
+  ],
+  "fixed52Outputs": [
+    "bin/node",
+    "bin/npm",
+    "bin/npx",
+    "bin/python3.12",
+    "bindings/capture-failure.json",
+    "bindings/initialization.json",
+    "bindings/raw-positive-index-comparison.json",
+    "bindings/raw-positive-index-full8.json",
+    "bindings/raw-positive-index-history.json",
+    "bindings/raw-positive-index-original.json",
+    "bindings/raw-positive-index-packages.json",
+    "bindings/runtime-binding.json",
+    "bindings/source-release.json",
+    "generated-inputs/candidate/finite-producer-rules.json",
+    "generated-inputs/candidate/mirror-source-transform-map.json",
+    "generated-inputs/candidate/prepared-source-inputs.json",
+    "generated-inputs/historical-plan-index.json",
+    "generated-inputs/original-read-map.json",
+    "generated-inputs/package-aliases.json",
+    "generated-inputs/package-graph.json",
+    "home/.owned-marker",
+    "physical-receipts/comparison/owned-fd-advice.jsonl",
+    "physical-receipts/comparison/receipt.json",
+    "physical-receipts/comparison/source-eligibility.jsonl",
+    "physical-receipts/comparison/source-rows.jsonl",
+    "physical-receipts/failure.json",
+    "physical-receipts/full8/owned-fd-advice.jsonl",
+    "physical-receipts/full8/receipt.json",
+    "physical-receipts/full8/source-eligibility.jsonl",
+    "physical-receipts/full8/source-rows.jsonl",
+    "physical-receipts/history/owned-fd-advice.jsonl",
+    "physical-receipts/history/receipt.json",
+    "physical-receipts/history/source-eligibility.jsonl",
+    "physical-receipts/history/source-rows.jsonl",
+    "physical-receipts/original/owned-fd-advice.jsonl",
+    "physical-receipts/original/receipt.json",
+    "physical-receipts/original/source-eligibility.jsonl",
+    "physical-receipts/original/source-rows.jsonl",
+    "physical-receipts/packages/owned-fd-advice.jsonl",
+    "physical-receipts/packages/receipt.json",
+    "physical-receipts/packages/source-eligibility.jsonl",
+    "physical-receipts/packages/source-rows.jsonl",
+    "tools/acquire_lib.py",
+    "tools/capture-binding.py",
+    "tools/capture-effective-environment.json",
+    "tools/held_runtime.py",
+    "tools/initialize-phase.py",
+    "tools/materialize-cohort.py",
+    "tools/phase-holder.py",
+    "tools/phase_resource.py",
+    "tools/plan.json",
+    "tools/source-phase-entry.py"
+  ],
+  "all13MissingOutputControls": [
+    {
+      "removed": "bin/node",
+      "missing": [
+        "bin/node"
+      ]
+    },
+    {
+      "removed": "bin/npm",
+      "missing": [
+        "bin/npm"
+      ]
+    },
+    {
+      "removed": "bin/npx",
+      "missing": [
+        "bin/npx"
+      ]
+    },
+    {
+      "removed": "bin/python3.12",
+      "missing": [
+        "bin/python3.12"
+      ]
+    },
+    {
+      "removed": "bindings/initialization.json",
+      "missing": [
+        "bindings/initialization.json"
+      ]
+    },
+    {
+      "removed": "tools/acquire_lib.py",
+      "missing": [
+        "tools/acquire_lib.py"
+      ]
+    },
+    {
+      "removed": "tools/capture-binding.py",
+      "missing": [
+        "tools/capture-binding.py"
+      ]
+    },
+    {
+      "removed": "tools/held_runtime.py",
+      "missing": [
+        "tools/held_runtime.py"
+      ]
+    },
+    {
+      "removed": "tools/initialize-phase.py",
+      "missing": [
+        "tools/initialize-phase.py"
+      ]
+    },
+    {
+      "removed": "tools/materialize-cohort.py",
+      "missing": [
+        "tools/materialize-cohort.py"
+      ]
+    },
+    {
+      "removed": "tools/phase-holder.py",
+      "missing": [
+        "tools/phase-holder.py"
+      ]
+    },
+    {
+      "removed": "tools/phase_resource.py",
+      "missing": [
+        "tools/phase_resource.py"
+      ]
+    },
+    {
+      "removed": "tools/plan.json",
+      "missing": [
+        "tools/plan.json"
+      ]
+    }
+  ],
+  "oldExactRejectedMissing": [
+    "tools/materialize-cohort.py"
+  ],
+  "changedParentOnly": [
+    "tools"
+  ],
+  "parentKeysAndRoundedAllocationsEqual": true,
+  "toolsDirentBytes": [
+    292,
+    284
+  ],
+  "toolsRoundedBytes": [
+    8192,
+    8192
+  ],
+  "stablePriorDemandKeys": [
+    "cohorts",
+    "physicalDirectoryCount",
+    "allFinitePreparationDirectoryCount",
+    "exactInitializerDirectoryLiterals",
+    "exactInitializerBinEntries",
+    "exactInitializerReceipt",
+    "exactOtherCaptureFailureAndEffectiveEnvironmentOutputs",
+    "additionalInodeAdmissionEnforcedMax",
+    "physicalDirectoryMembershipSHA256",
+    "additionalMetadataHelperFileCountEnforcedMax",
+    "additionalMetadataHelperFileBlockPaddingMaxBytes",
+    "directoryMembershipSHA256",
+    "actualMaximumChildren",
+    "exactPathRows",
+    "distinctRawObjects",
+    "distinctRawExactBytesDiagnosticOnly",
+    "distinctRawBlockRoundedBytesDiagnosticOnly",
+    "knownPhysicalAndSameRAWWithoutDedupBytes",
+    "sourceAidsPhysicalAndRAW",
+    "literalTargetsPhysicalAndRAW",
+    "knownRegularBlockRoundingNoDedupMaxBytes",
+    "finiteLiteralDirectoryAllocationMaxBytes",
+    "unchangedMetadataInputAllocationCeilingsBytes",
+    "preservedOldBroadAdmissionCeilingBytes",
+    "preservedRejectedAdmissionCeilingBytes",
+    "proposedFinitePhysicalPreparationAdmissionBytes",
+    "publishedGitSixRouteEncodedBytes",
+    "sameFilesystemCheckoutRuntimeBackingExtras",
+    "futureGeneratedCanonicalClosure",
+    "actualResourcePRE",
+    "actualResourcePOST",
+    "metadataReadProofs",
+    "subjectExecuted",
+    "physicalCohortMaterialized",
+    "elapsedSeconds"
+  ],
+  "byteCeiling": 48565877696,
+  "inodeCeiling": 317989,
+  "directoryHashSemantics": "sorted directory path keys only; tools child names explicitly differ",
+  "mapping": {
+    "scope": "EXPLICIT_PROSPECTIVE_SOURCE_HASH_TO_ACTUAL_INITIALIZER_BASENAME_PROPOSAL_NOT_TRANSFER_RELEASE",
+    "source": {
+      "repoPath": "work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/materialize-cohort-proposed.py",
+      "basename": "materialize-cohort-proposed.py",
+      "bytes": 26131,
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737"
+    },
+    "freshPreparedInitializerInput": "/tool-source/materialize-cohort.py",
+    "retainedInitializer": {
+      "repoPath": "work/resume/task04-c8-physical-preparation-r3/initialize-phase.py",
+      "bytes": 3504,
+      "sha256": "ac07766a7b733d81a0ee3b5eb26efd7554e869f900aa8232f3ca80ae78cb3552",
+      "FILESMember": "materialize-cohort.py",
+      "transferExpression": "ROOT / 'tools' / name"
+    },
+    "actualFiniteOutput": "tools/materialize-cohort.py",
+    "actualRetainedRootOutput": "/var/tmp/cortex-task04-c8-r3-phase/tools/materialize-cohort.py",
+    "wrongRejectedOutputLiteral": "tools/materialize-cohort-proposed.py",
+    "originalMaterializerSourceUnchanged": "work/resume/task04-c8-physical-preparation-r3/materialize-cohort.py",
+    "nameRelationship": "Corrected proposed source bytes staged under the literal original input basename in a distinct fresh owned mirror; unchanged initializer then creates its exact FILES basename. No historical source, basename or assertion normalized.",
+    "requiredBeforeAnyTransfer": [
+      "Fresh independent source judgment for this mapping and exact source bytes",
+      "New owned /tool-source mirror, regular-single-link contents, full raw/EOF/hash/size and held all9 PRE/POST/canonical path capture",
+      "Measured exact filesystem/inode/literal cgroup reserve and actual native same-owner runtime/helper/source binding review",
+      "New prospective input and actual tools destination complete before-byte/held-FD/all9 custody receipts",
+      "Exact membership and source hash comparison through unchanged initializer; canonical closure and separately held helper mappings complete",
+      "Root phase release, original122/eight20/whole120/FULLRPC/501/301 and all other held gates remain required"
+    ],
+    "firstNativeCapabilityJob": "NO_MAPPING_TRANSFER_OR_INITIALIZER_OR_COHORT_EVALUATION",
+    "transferExecuted": false,
+    "initializerExecuted": false,
+    "oldSourceEdited": false,
+    "ROOT": "ABSENT",
+    "release": "HELD"
+  },
+  "producer29AssertionsVerified": true,
+  "initializerExecuted": false,
+  "archiveOrCohortRead": false
+}

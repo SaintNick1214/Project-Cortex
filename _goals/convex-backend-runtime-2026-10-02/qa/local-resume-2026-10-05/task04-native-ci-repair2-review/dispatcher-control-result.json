@@ -1,0 +1,41 @@
+{
+  "name": "actual_dispatcher_failed_bound_preserves_raw_output_and_terminal",
+  "scope": "ACTUAL_HOST_CI_CALL_SOURCE_PUBLIC_DUMMY_NOT_DOCKER_OR_NATIVE_LINUX",
+  "outcome": "ASSERTIONS_PASSED",
+  "observation": {
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-c",
+      "import os,time;os.write(1,b\"abcdefghijklmnop\");time.sleep(8)"
+    ],
+    "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+    "stdoutLimit": 13,
+    "stderrLimit": 1048576,
+    "timeoutSeconds": 1,
+    "signals": [
+      {
+        "signal": "SIGTERM",
+        "authority": "createdPopenHandle",
+        "return": null
+      }
+    ],
+    "terminal": true,
+    "closeErrors": [],
+    "createdChildPID": 33572,
+    "failure": "COMMAND_STDOUT_OVERFLOW",
+    "exit": -15,
+    "elapsedSeconds": 0.017907333000039216,
+    "stdout": {
+      "path": "command-00000.stdout",
+      "bytes": 13,
+      "sha256": "ff10304f1af23606ede1e2d8abcdc94c229047a61458d809d8bbd53ede1f6598",
+      "contentCopyNotRuntimeAuthority": true
+    },
+    "stderr": {
+      "path": "command-00000.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentCopyNotRuntimeAuthority": true
+    }
+  }
+}

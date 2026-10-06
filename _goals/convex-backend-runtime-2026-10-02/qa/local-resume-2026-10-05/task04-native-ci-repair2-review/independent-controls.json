@@ -1,0 +1,321 @@
+{
+  "checks": [
+    {
+      "name": "exact_independent_two_pipe_boundary",
+      "scope": "ACTUAL_HOST_SOURCE_PUBLIC_DUMMY_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os;os.write(1,b\"1234567\");os.write(2,b\"abcdefghi\")"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 7,
+        "stderrLimit": 9,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "bytes": 7,
+          "hex": "31323334353637",
+          "sha256": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+        },
+        "stderr": {
+          "bytes": 9,
+          "hex": "616263646566676869",
+          "sha256": "19cc02f26df43cc571bc9ed7b0c4d29224a3ec229529221725ef76d021c8326f"
+        },
+        "signals": [],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 32499,
+        "exit": 0,
+        "elapsedSeconds": 0.01754441600496648
+      }
+    },
+    {
+      "name": "owned_pipe_1_overflow_bound_and_terminal",
+      "scope": "ACTUAL_HOST_SOURCE_PUBLIC_DUMMY_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"1234567890\");time.sleep(8)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 7,
+        "stderrLimit": 9,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "bytes": 7,
+          "hex": "31323334353637",
+          "sha256": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+        },
+        "stderr": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 32500,
+        "failure": "COMMAND_STDOUT_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.01690720899932785
+      }
+    },
+    {
+      "name": "owned_pipe_2_overflow_bound_and_terminal",
+      "scope": "ACTUAL_HOST_SOURCE_PUBLIC_DUMMY_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(2,b\"1234567890\");time.sleep(8)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 7,
+        "stderrLimit": 9,
+        "timeoutSeconds": 2,
+        "stdout": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 9,
+          "hex": "313233343536373839",
+          "sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 32501,
+        "failure": "COMMAND_STDERR_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.016488875000504777
+      }
+    },
+    {
+      "name": "finite_deadline_retains_both_partial_outputs",
+      "scope": "ACTUAL_HOST_SOURCE_PUBLIC_DUMMY_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"part\");os.write(2,b\"err\");time.sleep(8)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 7,
+        "stderrLimit": 9,
+        "timeoutSeconds": 0.3,
+        "stdout": {
+          "bytes": 4,
+          "hex": "70617274",
+          "sha256": "37a680133bd09342f934afb8dd2c7d9e1b624da5f35e3a38adb103e37c055ed1"
+        },
+        "stderr": {
+          "bytes": 3,
+          "hex": "657272",
+          "sha256": "d9eb253e06987fa74a5d3189f73d9f7a8104cca786fafbb52bc9555972f5477f"
+        },
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 32502,
+        "failure": "COMMAND_DEADLINE_EXCEEDED",
+        "exit": -15,
+        "elapsedSeconds": 0.30390766599884955
+      }
+    },
+    {
+      "name": "missing_executable_has_no_child_authority",
+      "scope": "ACTUAL_HOST_SOURCE_PUBLIC_DUMMY_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair2-review/absent-executable"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 1,
+        "stderrLimit": 1,
+        "timeoutSeconds": 1,
+        "stdout": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "hex": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "signals": [],
+        "terminal": false,
+        "closeErrors": [],
+        "spawnError": "FileNotFoundError(2, 'No such file or directory')",
+        "failure": "COMMAND_SPAWN_FAILURE",
+        "elapsedSeconds": 0.0030546670022886246
+      }
+    },
+    {
+      "name": "actual_stream_consumer_exact_eof_and_terminal",
+      "scope": "ACTUAL_HOST_SOURCE_PUBLIC_DUMMY_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "stdoutPrefix": {
+          "bytes": 10,
+          "hex": "31323334353637383930",
+          "sha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+        },
+        "stdoutBytes": 10,
+        "stderr": {
+          "bytes": 6,
+          "hex": "737464657272",
+          "sha256": "7e6b710b765404cccbad9eedcff7615fc37b269d6db12cd81a58be541d93083c"
+        },
+        "stdoutLimit": 10,
+        "stderrLimit": 6,
+        "exit": 0,
+        "terminal": true
+      }
+    },
+    {
+      "name": "directory_target_not_added_to_strict_files",
+      "scope": "ACTUAL_HOST_DIRECTORY_AND_ALL9; ALIAS_OPEN_EFFECT_SUBSTITUTED_NOT_LINUX_OPATH",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-repair2-review/host-fixture/bin",
+        "PRE": {
+          "schema": "FS_IDENTITY_DECIMAL_V1",
+          "fields": {
+            "dev": "16777234",
+            "ino": "91983826",
+            "mode": "16877",
+            "uid": "501",
+            "gid": "20",
+            "nlink": "3",
+            "size": "96",
+            "mtime_ns": "1791274077810204421",
+            "ctime_ns": "1791274077810204421"
+          }
+        },
+        "POST": {
+          "schema": "FS_IDENTITY_DECIMAL_V1",
+          "fields": {
+            "dev": "16777234",
+            "ino": "91983826",
+            "mode": "16877",
+            "uid": "501",
+            "gid": "20",
+            "nlink": "3",
+            "size": "96",
+            "mtime_ns": "1791274077810204421",
+            "ctime_ns": "1791274077810204421"
+          }
+        },
+        "pathPOST": {
+          "schema": "FS_IDENTITY_DECIMAL_V1",
+          "fields": {
+            "dev": "16777234",
+            "ino": "91983826",
+            "mode": "16877",
+            "uid": "501",
+            "gid": "20",
+            "nlink": "3",
+            "size": "96",
+            "mtime_ns": "1791274077810204421",
+            "ctime_ns": "1791274077810204421"
+          }
+        },
+        "names": [
+          "member"
+        ]
+      }
+    },
+    {
+      "name": "held_directory_mutation_rejected",
+      "scope": "ACTUAL_HOST_DIRECTORY_DRIFT_NOT_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "rejected": "FINAL_DIRECTORY_MEMBERSHIP_NINE"
+      }
+    },
+    {
+      "name": "actual_strict_runtime_hardlink_rejection",
+      "scope": "ACTUAL_HOST_FILE_TYPE_NLINK; RESOURCE_READ_EFFECT_SUBSTITUTED",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "rejected": "RUNTIME_REGULAR_SINGLE_LINK_SOURCE",
+        "nlink": 2
+      }
+    },
+    {
+      "name": "actual_dispatcher_failed_bound_preserves_raw_output_and_terminal",
+      "scope": "ACTUAL_HOST_CI_CALL_SOURCE_PUBLIC_DUMMY_NOT_DOCKER_OR_NATIVE_LINUX",
+      "outcome": "ASSERTIONS_PASSED",
+      "observation": {
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-c",
+          "import os,time;os.write(1,b\"abcdefghijklmnop\");time.sleep(8)"
+        ],
+        "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+        "stdoutLimit": 13,
+        "stderrLimit": 1048576,
+        "timeoutSeconds": 1,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "authority": "createdPopenHandle",
+            "return": null
+          }
+        ],
+        "terminal": true,
+        "closeErrors": [],
+        "createdChildPID": 33572,
+        "failure": "COMMAND_STDOUT_OVERFLOW",
+        "exit": -15,
+        "elapsedSeconds": 0.017907333000039216,
+        "stdout": {
+          "path": "command-00000.stdout",
+          "bytes": 13,
+          "sha256": "ff10304f1af23606ede1e2d8abcdc94c229047a61458d809d8bbd53ede1f6598",
+          "contentCopyNotRuntimeAuthority": true
+        },
+        "stderr": {
+          "path": "command-00000.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "contentCopyNotRuntimeAuthority": true
+        }
+      }
+    }
+  ],
+  "count": 10,
+  "actualNativeRuntime": "HELD",
+  "Docker": false,
+  "subjects": false,
+  "ROOT": "ABSENT"
+}
