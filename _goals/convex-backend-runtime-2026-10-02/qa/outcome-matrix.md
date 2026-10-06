@@ -44,3 +44,10 @@ physically deleted200/404. Fresh attempt2 preparation retains required typecheck
 Task04 r2 source/content preparation PASS4.2 releases separately reviewed source-only
 physical preparation, while original/runtime/native/whole/ROOT/functional policy gates
 remain held. None of these observations certify a complete product success criterion.
+
+Fresh attempt2 compiler readiness passed, but independent preparation NEEDS REVISION3.2
+found nonterminal-group restoration and post-custody foreign-path deletion defects.
+Original35 green controls did not test those safe outcomes. Witnesses are effect-blocked
+source injections, not real service/file incidents. Repair/new freeze/review are held
+before provisioning. Separate management PASS4.4/176 controls remains exact-source
+management scope only; any new guard pin requires fresh matching review.

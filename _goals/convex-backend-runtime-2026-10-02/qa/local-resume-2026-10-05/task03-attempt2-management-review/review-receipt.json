@@ -1,0 +1,73 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "verdict": "PASS",
+  "independent": true,
+  "managementSourceSha256": "213739458a90078a164cb4b87a583364109d43c2e2ee6687b8a2c97a0600a457",
+  "requestSha256": "e085a6822de67476645f04d89f5ca6b8951ab845ae1b0663382abfbef95a13c2",
+  "guardSourceSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+  "candidateSha256": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+  "candidateFileCount": 774,
+  "requestOperation": "511363b3-8cec-4e98-95d8-ecd4865457a8",
+  "requestProjectSlug": "cortex-foundation-delta-cd358019d808",
+  "reviewedAt": "2026-10-06T05:17:29.504Z",
+  "runtime": "v24.15.0",
+  "npm": "12.2.0",
+  "cases": 176,
+  "originalCases": 162,
+  "additionalCases": 14,
+  "failedCases": 0,
+  "assertionsConserved": true,
+  "realServiceRequests": 0,
+  "actualPrivateConfigReads": 0,
+  "actualNativeCases": 0,
+  "helperPrivateMutations": 0,
+  "enablingAttestationWritten": false,
+  "sourceUnchanged": true,
+  "lint": {
+    "files": 1,
+    "errors": 0,
+    "fatals": 0,
+    "warnings": 0,
+    "suppressed": 0
+  },
+  "priorHistory": [
+    {
+      "cycle": 1,
+      "verdict": "NEEDSREVISION",
+      "rawCases": 49,
+      "sourceSha256": "1eddca2bf811de11622705492c67da01c269a20fa52bd9efdb84143f62fafad9",
+      "rawResultsSha256": "cb2c7edc2172802eb3515804203b27ef646dc0074302e79a5c7077c9bba03134",
+      "reportSha256": "fa13bae66f45cc6d127f8e4601e90ac6c88d76ad77c981621e5729995bf12d39",
+      "unsafeReproductionLabelMeaning": "Two PASS labels reproduce malformed JSON private reflection and accepted fourth environment entry"
+    },
+    {
+      "cycle": 2,
+      "verdict": "NEEDSREVISION",
+      "rawCases": 112,
+      "sourceSha256": "d27838fbf4a0c9a4d4dedbcfb94ad453f1a0d3e5e5d00b32b4229abeb3303aba",
+      "rawResultsSha256": "22057c0ac9550a21232b57234155692ff1ed559eb242bec655648aac5164d924",
+      "reportSha256": "920639c0665949ac573a3e39e0dbb4d376745dc98fb0a5d9ec4efc0061e59ea5",
+      "unsafeReproductionLabelMeaning": "Separate three PASS labels reproduce native Headers account-token reflection"
+    },
+    {
+      "cycle": 3,
+      "verdict": "PASS",
+      "rawCases": 162,
+      "sourceSha256": "31b06108a5e3dc55693b9963d6c662032c3b3ecfea6cc06cdf790a9168101fe4",
+      "rawResultsSha256": "d5a6771e511b40e6c5d9dbb085507a65c20542da0ad049a1151ace0e350e4ede",
+      "reportSha256": "22f947fddca8a40ed2c5afbefb9146276f036127504d1ce1dfbbdc85c172f9e1",
+      "unsafeReproductionLabelMeaning": "All162 controls verify expected safe outcomes"
+    }
+  ],
+  "failedNativeCustodySha256": "f6f2b9a10c38aabed1567f39e3382c0908d21017ce9fadf4125d75d2de4740ba",
+  "failedIncidentalCustodySha256": "4d5c02f92807054404bf7ea462ab451a4045f58f249193f1f60fed2e26801ac7",
+  "firstAttemptRetirementSha256": "fc8e9c62d33b915df6fe825ddb1ac44faaab8d3be7bf83eef096997d3e825e82",
+  "dimensions": {
+    "requirementFulfillment": 5,
+    "codeQuality": 4,
+    "testQuality": 5,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.4
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "TASK03_ATTEMPT2_REVIEW_COORDINATION_ONLY",
+  "preparationVerdict": "NEEDS_REVISION",
+  "preparationAverage": 3.2,
+  "candidateSha256": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+  "preparationReviewArtifactsVerified": {
+    "report.md": "a47ab8b51bb8ae39a2edfcff6e501424aa984d7133b16aa933566eba7eb27e37",
+    "verdict.json": "132ba60642beff4fe012f760967102c84a4de9259f2403e29d5cbb5bf7e2ff81",
+    "evidence-manifest.json": "7bcb18daea402b523c87e4973bb1523f70e452e5f96500bd385a5dce87b98735"
+  },
+  "blockingFindings": [
+    "nonterminal owned groups still trigger incidental capture/removal",
+    "post-custody different-inode foreign-owner source replacement is unlinked"
+  ],
+  "managementVerdict": "PASS_MANAGEMENT_ONLY",
+  "managementAverage": 4.4,
+  "managementCases": 176,
+  "managementHelperSha256": "213739458a90078a164cb4b87a583364109d43c2e2ee6687b8a2c97a0600a457",
+  "managementRequestSha256": "e085a6822de67476645f04d89f5ca6b8951ab845ae1b0663382abfbef95a13c2",
+  "managementGuardSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+  "managementArtifactsVerified": 12,
+  "provisioningReleased": false,
+  "enablingAttestationsWritten": false,
+  "fullTask03Accepted": false,
+  "fullGoalAccepted": false,
+  "nextStep": "Bounded custody-fence repair, exact failed candidate preservation, affected controls, new freeze and independent review."
+}

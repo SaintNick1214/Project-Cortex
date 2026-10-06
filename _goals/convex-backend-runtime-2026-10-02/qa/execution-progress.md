@@ -1365,3 +1365,21 @@ missing. Known physical plus raw demand12,452,908,282B; canonical dispatch capac
 still held. This releases separate source-only physical preparation subject to fresh
 runtime binding/resource review, not subjects/native/whole122/ROOT/Task04 acceptance.
 Historical C7 transport/custody and scoped rejections remain unchanged. Full goal open.
+
+## 2026-10-06 UTC — attempt2 preparation review rejects removal fences
+
+Attempt2 exact freeze7d633bd5/774files and773 receipt hashes,161current pins and114
+exact compiler assets independently matched. Actual readonly Linux2GiB compiler/CLI
+readiness passed after separately retained HOME and V8-heap failures; the vanished
+earlier child/cgroup observation remains explicitly unavailable. Reused1005 evidence
+is not a new run. Independent preparation NEEDS REVISION3.2 found two exact-source
+effect-blocked custody violations: capture/removal despite a nonterminal owned group,
+and unlink of a different-inode/foreign-UID replacement after durable custody. The
+green35 producer controls missed these outcomes; they remain historical green checks,
+not acceptance. No actual filesystem incident or native case is inferred.
+
+Fresh176-control management review PASS4.4 is bounded to exacthelper21373945/requeste085a682/
+guard754be31a and cannot release the failed preparation. Bounded repair preserves the
+failed freeze, source/control preimages and independent witnesses, gates restoration
+on terminality and final owned-file custody, then requires new freeze/independent
+review. New guard bytes require corresponding fresh management acceptance.

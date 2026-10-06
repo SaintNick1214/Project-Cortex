@@ -1,0 +1,44 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "priorHarnessSha256": "252b6aa582d66f3b9750b851a799875adef44039f819ded4646ae1cb77f9e972",
+  "adaptedHarnessSha256": "3e4c5a35bb41cf0f898a3126ffef9c34dd155d1447a428675426324f991c97c1",
+  "changes": [
+    [
+      "// Fresh cycle3 exact-source management review.",
+      "// Fresh attempt2 exact-source management review."
+    ],
+    [
+      "local-resume-2026-10-05/task03-target-management.mjs",
+      "local-resume-2026-10-05/task03-attempt2-target-management.mjs"
+    ],
+    [
+      "task03-local-current-delta-2026-10-05",
+      "task03-local-native-attempt2-2026-10-05"
+    ],
+    [
+      "cortex-runtime-task03-private-20261005",
+      "cortex-runtime-task03-attempt2-private-20261005"
+    ],
+    [
+      "now=Date.parse('2026-10-06T01:00:00Z')",
+      "now=Date.parse(freshIdentity.generatedAt)+3600000"
+    ],
+    [
+      "task03-management-review.json",
+      "task03-attempt2-management-review.json"
+    ],
+    [
+      "task03-target-retirement.json",
+      "task03-attempt2-target-retirement.json"
+    ],
+    [
+      "{generatedAt:'2026-10-05T00:00:00Z'}",
+      "{generatedAt:freshIdentity.generatedAt}"
+    ]
+  ],
+  "additionalControls": 14,
+  "originalAssertionsRemoved": false,
+  "newGuardValidationExecuted": true,
+  "freshTimestampMock": "Actual public freshIdentity.generatedAt + 3600000; boundary generatedAt - 1 tested",
+  "networkSubstituted": true
+}

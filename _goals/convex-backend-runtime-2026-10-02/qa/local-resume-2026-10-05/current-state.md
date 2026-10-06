@@ -68,3 +68,21 @@ residuals, actual ROOT and functional policy qualification remain held.
 Continuation commitsde055f93/e2b4e948 are pushed. Draft PR135 against dev remains
 explicitly incomplete. Production qualifications remain empty; full02/03 and04–17,
 all real product service/UI outcomes and final independent audit remain open.
+
+Task03 attempt2 preparation freeze7d633bd5 was independently NEEDS REVISION3.2
+(scores3/3/3/4/3), despite actual Linux compiler readiness and affected checks.
+Two effect-blocked exact-source witnesses found incidental removal despite a
+nonterminal owned group, and unlink of a different-inode/foreign-owner replacement
+after the custody receipt. No real file incident/service request is inferred.
+Both failed witnesses and all774 source/773 receipt hashes are preserved. A bounded
+terminal/custody-fence repair and new independent freeze/review are in progress.
+The separate attempt2 management helper passed176 controls/PASS4.4 at helper21373945,
+requeste085a682 and guard754be31a; it cannot release provisioning after the failed
+preparation. A changed guard requires matching fresh management review.
+
+Task04 next prospective source phase will use UID0 solely in the separate disposable
+Linux container, matching r2's owned read-only input access. The initial UID501 plan
+is retained as a superseded proposal. Task03's private UID501 guards are unchanged.
+No permission/ownership/idmap change to sealed r2 or host/private source is allowed.
+Fresh6GiB resource admission/runtime/helper review and serialized source-only physical
+preparation remain required; native/subject/ROOT/paid/production effects are held.
