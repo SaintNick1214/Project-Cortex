@@ -1,5 +1,6 @@
 {
-  "scope": "EXACT_FROZEN_REVIEWER_SOURCE_WHITESPACE_CLASSIFICATION_ONLY",
+  "scope": "POSTCOMMIT_BEFORE_PUSH_EXACT_FROZEN_REVIEW_WHITESPACE_CLASSIFICATION",
+  "checkpointCommit": "335ac43d",
   "fullWhitespace": "FAIL_preserved",
   "exactFailedPaths": [
     {
@@ -12,5 +13,7 @@
   ],
   "remainingSelectedPaths": 158,
   "remainingWhitespace": "PASS",
-  "functionalAcceptance": "NOT_GRANTED"
+  "functionalAcceptance": "NOT_GRANTED",
+  "priorClassificationCommand": "FAIL AssertionError before writing classification; original shell continued to authorized commit; no push before corrected check",
+  "priorAssertionCause": "UNKNOWN; actual committed filtered check nowPASS; no retrospective correction of failed command"
 }
