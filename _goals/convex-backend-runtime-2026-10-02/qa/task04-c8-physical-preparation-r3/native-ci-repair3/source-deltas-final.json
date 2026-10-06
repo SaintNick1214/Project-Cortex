@@ -1,0 +1,88 @@
+{
+  "scope": "EXACT_SOURCE_DELTAS_NOT_RUNTIME",
+  "original13BodiesPreserved": true,
+  "changedExistingSources": [
+    {
+      "path": "README.md",
+      "old": {
+        "bytes": 10842,
+        "sha256": "cd6bbdb00f2e534be18b8ce3a2d3fffdd968034125dd6610c4eb9b17c9ac487c"
+      },
+      "new": {
+        "bytes": 5138,
+        "sha256": "83fdec8a046f83eecd4509ab18ad0e1c8b2d073387edcdaec205c13537177499"
+      },
+      "diff": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair3/source-diffs/README.md.final.diff"
+    },
+    {
+      "path": "ci-run.py",
+      "old": {
+        "bytes": 13612,
+        "sha256": "dadd04b04e8ad460354fcf703e64bf94bf4167f1562a79d7da884654e1b365e1"
+      },
+      "new": {
+        "bytes": 13921,
+        "sha256": "7b264a410d7f263743479e0dd0e8f4a1e50812de1f098a3c877223b4febe98aa"
+      },
+      "diff": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair3/source-diffs/ci-run.py.final.diff"
+    },
+    {
+      "path": "repair-controls.py",
+      "old": {
+        "bytes": 27920,
+        "sha256": "422ae6a065d7e8172b047cbe4459c2ff03cb6986df9a99750e19897b26a9ba91"
+      },
+      "new": {
+        "bytes": 27936,
+        "sha256": "7745be8bab449fe240df88206354ae128dcf864a8f01e6e06b2b4c71b57b1a1f"
+      },
+      "diff": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair3/source-diffs/repair-controls.py.final.diff"
+    },
+    {
+      "path": "seal-repair-packet.py",
+      "old": {
+        "bytes": 7436,
+        "sha256": "f3f26aa02ec6959727d0a808b2f692acfae36dc44fbb23a1d12a806322005deb"
+      },
+      "new": {
+        "bytes": 7682,
+        "sha256": "dc2852e3babc149e5432d6a9a82aa14193909af1076058bcb2465bb4c4ea6046"
+      },
+      "diff": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair3/source-diffs/seal-repair-packet.py.final.diff"
+    },
+    {
+      "path": "task04-c8-native-infrastructure.yml.proposed",
+      "old": {
+        "bytes": 3516,
+        "sha256": "7bfe0fc1344ae4fd5d7782a25cb1d99ae688f50728c2aab8bb1b65b97aabd2f5"
+      },
+      "new": {
+        "bytes": 3516,
+        "sha256": "7d60e79cdb3cb89b4744cd433aadc7c3354bd4fa1ec4231e7e430042109b56ac"
+      },
+      "diff": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair3/source-diffs/task04-c8-native-infrastructure.yml.proposed.final.diff"
+    }
+  ],
+  "newSourceFiles": [
+    {
+      "path": "tar_export.py",
+      "bytes": 2297,
+      "sha256": "db066c87b1c946f27f90d4bf2aff8977bf0b42213a60bedddbc1a638c37d94b7"
+    },
+    {
+      "path": "tar-controls.py",
+      "bytes": 4941,
+      "sha256": "e995e972ba411902a269f0749786f84bb2f26a20cbd51b558a1f036f7729c23a"
+    },
+    {
+      "path": "export-integration-controls.py",
+      "bytes": 5764,
+      "sha256": "24e1e970b332d4b7e265366c80f0dd4694a711d5e2e2cab1c653f035657b9cb6"
+    }
+  ],
+  "unchangedBoundedCollector": {
+    "bytes": 13849,
+    "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3"
+  },
+  "unchangedOriginalSubjects": true
+}

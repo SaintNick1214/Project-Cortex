@@ -1,0 +1,22 @@
+--- repair2/seal-repair-packet.py
++++ repair3/seal-repair-packet.py
+@@ -7,8 +7,8 @@
+ import stat
+ 
+ REPO=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+-W=REPO/'work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2'
+-Q=REPO/'_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair2'
++W=REPO/'work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3'
++Q=REPO/'_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair3'
+ TARGET=Q/'repair-packet-manifest.json'
+ FIELDS=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+ def identity(s): return {'schema':'FS_IDENTITY_DECIMAL_V1','fields':{k:str(getattr(s,'st_'+k)) for k in FIELDS}}
+@@ -66,7 +66,7 @@
+                     os.lseek(fd,0,0); digest=hashlib.sha256(); size=0
+                     while block:=os.read(fd,1048576): digest.update(block); size+=len(block)
+                     if size!=row['bytes'] or digest.hexdigest()!=row['sha256'] or identity(os.fstat(fd))!=row['PRE']: raise ValueError('FINAL_PROPOSAL_FULL_BYTES_EOF')
+-            result={'scope':'NEW_HOST_SOURCE_PROPOSAL_TRANSPORT_OBSERVATIONS_NOT_LINUX_RUNTIME_BINDING_NOT_HISTORICAL_CUSTODY','status':'READY_FOR_FRESH_INDEPENDENT_SOURCE_REVIEW','files':files,'directories':dirs,'ownedControlAliases':aliases,'hardlinkControlGroups':[[str(p.relative_to(REPO)) for p in group] for group in hardgroups.values()],'testArtifactTypeException':'EXACT_DECLARED_HOST_FIXTURES_ONLY; source/runtime regular-single-link assertions unchanged','selfExcluded':str(TARGET.relative_to(REPO)),'originalFrozenPackets':'OLD REGULAR BYTES PRESERVED; two shared R3 ancestor memberships intentionally extended by new child scopes; old directory pins remain history without refresh','workflowActualTarget':'.github/workflows/task04-c8-native-infrastructure.yml','workflowActivated':False,'subjectsExecuted':False,'cohortsMaterialized':False,'ROOT':'ABSENT','futureEffects':'ONLY AFTER INDEPENDENT SOURCE REVIEW AND ROOT RELEASE','failedReceipts':'PRESERVED_WITHOUT_REFRESH'}
++            result={'scope':'NEW_HOST_SOURCE_PROPOSAL_TRANSPORT_OBSERVATIONS_NOT_LINUX_RUNTIME_BINDING_NOT_HISTORICAL_CUSTODY','status':'READY_FOR_FRESH_INDEPENDENT_SOURCE_REVIEW','files':files,'directories':dirs,'ownedControlAliases':aliases,'hardlinkControlGroups':[[str(p.relative_to(REPO)) for p in group] for group in hardgroups.values()],'testArtifactTypeException':'EXACT_DECLARED_HOST_FIXTURES_ONLY; source/runtime regular-single-link assertions unchanged','selfExcluded':str(TARGET.relative_to(REPO)),'originalFrozenPackets':'OLD REGULAR BYTES PRESERVED; two shared R3 ancestor memberships intentionally extended by new child scopes; old directory pins remain history without refresh','workflowActualTarget':'.github/workflows/task04-c8-native-infrastructure.yml','repair3ProposalActivated':False,'actualWorkflowState':'REPAIR2_ACTIVATED_AT_5928aa83; initial native CI run37435368652 FAILED; this repair3 source proposal is not activated','actualWorkflowRepair2SHA256':'7bfe0fc1344ae4fd5d7782a25cb1d99ae688f50728c2aab8bb1b65b97aabd2f5','subjectsExecuted':False,'cohortsMaterialized':False,'ROOT':'ABSENT','futureEffects':'ONLY AFTER INDEPENDENT SOURCE REVIEW AND ROOT RELEASE','failedReceipts':'PRESERVED_WITHOUT_REFRESH'}
+         finally:
+             errors=[]
+             for kind,fd,row in held:

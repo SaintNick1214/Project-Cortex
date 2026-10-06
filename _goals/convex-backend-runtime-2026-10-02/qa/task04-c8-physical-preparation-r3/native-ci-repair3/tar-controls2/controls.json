@@ -1,0 +1,167 @@
+{
+  "scope": "ACTUAL_HOST_PUBLIC_TAR_AND_PIPE_OUTCOMES_ONLY",
+  "status": "PASS",
+  "controls": 11,
+  "rows": [
+    {
+      "label": "original-exporter-small-valid-record",
+      "expected": "PASS",
+      "actual": "PASS",
+      "terminal": true,
+      "exit": 0,
+      "closeErrors": [],
+      "fixtureBytes": 10240,
+      "fixtureSha256": "b5f4444935deb6c8b22997789bd34f26657643c9a0f74ced5dfc50f425216416",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "original-exporter-ignores-buffered-nonzero-padding",
+      "expected": "PASS",
+      "actual": "PASS",
+      "terminal": true,
+      "exit": 0,
+      "closeErrors": [],
+      "fixtureBytes": 10240,
+      "fixtureSha256": "d641011db162a81e0a538c92a661c4c8d1a49daacd2a228715752dc5e1f68e97",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "exact-record-success",
+      "expected": "PASS",
+      "actual": "PASS",
+      "terminal": true,
+      "exit": 0,
+      "closeErrors": [],
+      "fixtureBytes": 10240,
+      "fixtureSha256": "b5f4444935deb6c8b22997789bd34f26657643c9a0f74ced5dfc50f425216416",
+      "tarRecordTermination": {
+        "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+        "lastMemberEnd": 3072,
+        "firstZeroBlockBytes": 512,
+        "remainingZeroPaddingBytes": 6656,
+        "recordBytes": 10240,
+        "streamBytes": 10240,
+        "exactPhysicalEOF": true,
+        "arbitraryTrailingBytesAccepted": false
+      },
+      "nativeRuntime": false
+    },
+    {
+      "label": "next-record-second-zero-success",
+      "expected": "PASS",
+      "actual": "PASS",
+      "terminal": true,
+      "exit": 0,
+      "closeErrors": [],
+      "fixtureBytes": 20480,
+      "fixtureSha256": "07fe0bc483b2487079a60bd12b31b3836a314690ac8e86dcde8b6cc2db9c373f",
+      "tarRecordTermination": {
+        "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+        "lastMemberEnd": 9728,
+        "firstZeroBlockBytes": 512,
+        "remainingZeroPaddingBytes": 10240,
+        "recordBytes": 10240,
+        "streamBytes": 20480,
+        "exactPhysicalEOF": true,
+        "arbitraryTrailingBytesAccepted": false
+      },
+      "nativeRuntime": false
+    },
+    {
+      "label": "invalid-nonzero-first-terminator",
+      "expected": "EXACT_FIRST_ZERO",
+      "actual": "EXACT_FIRST_ZERO_TAR_TERMINATOR_REQUIRED",
+      "terminal": true,
+      "exit": -15,
+      "closeErrors": [],
+      "fixtureBytes": 10240,
+      "fixtureSha256": "ca601ad394857c5645a93416b2f276652d4a92c7760247204f9599e5629c4b23",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "nonzero-second-terminator",
+      "expected": "EXACT_SECOND_ZERO",
+      "actual": "EXACT_SECOND_ZERO_AND_RECORD_PADDING_REQUIRED",
+      "terminal": true,
+      "exit": -15,
+      "closeErrors": [],
+      "fixtureBytes": 10240,
+      "fixtureSha256": "ee72b89e274a6f10bbff8064558bcfb04762c36e49ae32f7ac361592bb4ddb8b",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "truncated-terminator-record",
+      "expected": "EXACT_SECOND_ZERO",
+      "actual": "EXACT_SECOND_ZERO_AND_RECORD_PADDING_REQUIRED",
+      "terminal": true,
+      "exit": 0,
+      "closeErrors": [],
+      "fixtureBytes": 4095,
+      "fixtureSha256": "49f2d80709584245f9e5648a69aa62fa6fcecf0b6f7a8c47f229c8ef34871d26",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "extra-zero-record",
+      "expected": "TRAILING_BYTES_AFTER",
+      "actual": "TRAILING_BYTES_AFTER_EXACT_TAR_RECORD",
+      "terminal": true,
+      "exit": -15,
+      "closeErrors": [],
+      "fixtureBytes": 20480,
+      "fixtureSha256": "b223a8a6d5413db2c3ff5b2a1b3aa1432b8cf88d918ff03af5f8a1330810ae74",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "extra-nonzero-byte",
+      "expected": "TRAILING_BYTES_AFTER",
+      "actual": "TRAILING_BYTES_AFTER_EXACT_TAR_RECORD",
+      "terminal": true,
+      "exit": -15,
+      "closeErrors": [],
+      "fixtureBytes": 10241,
+      "fixtureSha256": "d184824c17b777e0e67fd6f07d9f7263f48ec1da0872d54f421019a90da76ddd",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "concatenated-extra-archive",
+      "expected": "TRAILING_BYTES_AFTER",
+      "actual": "TRAILING_BYTES_AFTER_EXACT_TAR_RECORD",
+      "terminal": true,
+      "exit": -15,
+      "closeErrors": [],
+      "fixtureBytes": 20480,
+      "fixtureSha256": "74b8909970298f41199fd073faa990a7e69448494c366ab1e2973a54276dc127",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    },
+    {
+      "label": "physical-eof-deadline",
+      "expected": "STREAM_DEADLINE_EXCEEDED",
+      "actual": "STREAM_DEADLINE_EXCEEDED",
+      "terminal": true,
+      "exit": -15,
+      "closeErrors": [],
+      "fixtureBytes": 10240,
+      "fixtureSha256": "b5f4444935deb6c8b22997789bd34f26657643c9a0f74ced5dfc50f425216416",
+      "tarRecordTermination": null,
+      "nativeRuntime": false
+    }
+  ],
+  "sources": {
+    "tar-controls.py": "e995e972ba411902a269f0749786f84bb2f26a20cbd51b558a1f036f7729c23a",
+    "tar_export.py": "db066c87b1c946f27f90d4bf2aff8977bf0b42213a60bedddbc1a638c37d94b7",
+    "bounded_process.py": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3"
+  },
+  "originalNativeFailureTailBytes": "UNAVAILABLE_NOT_RECONSTRUCTED",
+  "Docker": false,
+  "nativeQualified": false,
+  "originalQuotaAssertionsUnchanged": true,
+  "arbitraryTrailingBytesAccepted": false
+}

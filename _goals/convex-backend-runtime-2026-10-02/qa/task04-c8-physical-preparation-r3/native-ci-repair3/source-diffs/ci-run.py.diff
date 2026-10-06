@@ -1,0 +1,34 @@
+--- repair2/ci-run.py
++++ repair3/ci-run.py
+@@ -12,6 +12,7 @@
+ from types import SimpleNamespace
+ 
+ from bounded_process import BoundedFileStream, CollectionFailure, bounded_command
++from tar_export import TrackedTarReader, finish_tar_record
+ 
+ CALL_DIR=None
+ CALL_COUNT=0
+@@ -109,9 +110,11 @@
+         try:
+             export_timeout=min(60,JOB_DEADLINE-time.monotonic()-45)
+             if export_timeout<=0: raise ValueError('EXPORT_DEADLINE_CLEANUP_RESERVE_HOLD')
+-            producer=subprocess.Popen(['docker','exec',name,'tar','-C','/phase/export','-cf','-','.'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
++            producer=subprocess.Popen(['docker','exec',name,'tar','--blocking-factor=20','-C','/phase/export','-cf','-','.'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+             export_stream=BoundedFileStream(producer,stdout_limit=564133888,stderr_limit=1048576,timeout=export_timeout)
+             with tarfile.open(fileobj=export_stream,mode='r|') as archive:
++                tracked=TrackedTarReader(archive.fileobj)
++                archive.fileobj=tracked
+                 for member in archive:
+                     literal=member.name.removeprefix('./'); parts=PurePosixPath(literal).parts
+                     if literal in ('','.') and member.isdir(): continue
+@@ -126,8 +129,10 @@
+                         while block:=stream.read(1048576): out.write(block); copied+=len(block)
+                         if copied!=member.size: raise ValueError('EXPORT_FULL_MEMBER_EOF')
+                         out.flush(); os.fsync(out.fileno())
++                tar_termination=finish_tar_record(archive,tracked)
+             transport=export_stream.finish()
+             if transport['exit'] or transport['stderr']: raise ValueError('EXPORT_PRODUCER_TERMINAL_FAILURE')
++            transport['tarRecordTermination']=tar_termination
+             new_receipt(output/'export-transport.json',{k:(v.hex() if isinstance(v,bytes) else v) for k,v in transport.items()})
+         except BaseException as error:
+             export_primary=error

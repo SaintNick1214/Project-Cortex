@@ -1,0 +1,67 @@
+{
+  "scope": "EMULATED_LINUX_PUBLIC_GNU_PY312_PRIMITIVE_NOT_NATIVE_PIDFD_OR_SUBJECT_ACCEPTANCE",
+  "status": "PASS",
+  "operation": "ca698c06-99e1-4c96-a918-3a6ffa54ce41",
+  "data": {
+    "scope": "ACTUAL_GNU_TAR_AND_PYTHON3_12_PRIMITIVE_ONLY",
+    "status": "PASS",
+    "Python": "3.12.15 (main, Oct  1 2026, 21:50:06) [GCC 12.2.0]",
+    "architecture": "x86_64",
+    "GNUtar": "tar (GNU tar) 1.34\nCopyright (C) 2021 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by John Gilmore and Jay Fenlason.\n",
+    "rows": [
+      {
+        "payloadBytes": 2049,
+        "termination": {
+          "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+          "lastMemberEnd": 3584,
+          "firstZeroBlockBytes": 512,
+          "remainingZeroPaddingBytes": 6144,
+          "recordBytes": 10240,
+          "streamBytes": 10240,
+          "exactPhysicalEOF": true,
+          "arbitraryTrailingBytesAccepted": false
+        },
+        "exit": 0,
+        "terminal": true
+      },
+      {
+        "payloadBytes": 9216,
+        "termination": {
+          "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+          "lastMemberEnd": 10240,
+          "firstZeroBlockBytes": 512,
+          "remainingZeroPaddingBytes": 9728,
+          "recordBytes": 10240,
+          "streamBytes": 20480,
+          "exactPhysicalEOF": true,
+          "arbitraryTrailingBytesAccepted": false
+        },
+        "exit": 0,
+        "terminal": true
+      },
+      {
+        "payloadBytes": 1048577,
+        "termination": {
+          "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+          "lastMemberEnd": 1050112,
+          "firstZeroBlockBytes": 512,
+          "remainingZeroPaddingBytes": 4096,
+          "recordBytes": 10240,
+          "streamBytes": 1054720,
+          "exactPhysicalEOF": true,
+          "arbitraryTrailingBytesAccepted": false
+        },
+        "exit": 0,
+        "terminal": true
+      }
+    ],
+    "UID": 501,
+    "GID": 20,
+    "pidfdQualification": false,
+    "subjects": false,
+    "nativeTask04Acceptance": false
+  },
+  "daemonMemoryBytes": 8319504384,
+  "privateBytes": false,
+  "subjects": false
+}
