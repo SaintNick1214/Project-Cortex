@@ -1,0 +1,9 @@
+# Linux prospective source qualification plan
+
+Prepare a fresh, disposable, network-disabled Linux file-source fixture from the known image, with2GiB memory and swap disabled. Copy only the declared135 public source bodies and finite reviewed helpers/docs. Preserve the original Mac130/113 byte hashes and historical nine-field anchors as lineage, and record distinct Linux lstat/fstat nine fields after completed owned staging, genuine writer cessation and actual60-second maturity. No old failed Mac custody is repaired or projected onto Linux.
+
+The Linux qualifier acquires all source descriptors before member body reads, checks full EOF/hash/size/all9 through final fences, enforces one4096-path/FD,64MiB,16MiB-file ledger including transport/control/data, and attempts every detached close once with sticky failures. Exact CID/image/labels/argv/entrypoint/security/mount/source/driver/RO/nocopy ownership must pass before every later effect. Foreign or unknown resources are never signaled or removed.
+
+This is a source-only plan. Original U4 entry/runner/observers/Common bytes stay exact. Original97 controls, portable28 entry cases, wiring16 and highFD9 remain independently required under exact Mac3.9 and supported3.14; Linux3.12 cannot substitute. The actual Mac G/B3/driver source-owner contract and source ledger stay intact. Linux receipt/transport documents can become a separate current artifact authority only through explicit reviewed wiring.
+
+Concrete exact135 transport rows, finite chunk schedule, effect/cleanup commands and consumer seams must be completed and independently reviewed before Root releases any Docker action. Preserve190/48 deadlines,262144 streams and applicable12s/327692 stdin, no heap flags or paid calls. No Docker/CI/service/credentials/private/Git/target/inference effect has occurred. Original Task04 native facilities and all Task03/goal acceptance gates remain unchanged and open.

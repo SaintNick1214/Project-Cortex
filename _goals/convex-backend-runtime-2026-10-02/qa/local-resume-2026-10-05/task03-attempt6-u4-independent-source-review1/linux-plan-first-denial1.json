@@ -1,0 +1,34 @@
+{
+  "scope": "FIRST_LINUX_PLAN_CAPTURE_DENIED_BEFORE_PLAN_BODY",
+  "sourceEligibility": false,
+  "session": 17527,
+  "started_ns": 1791406023104654000,
+  "ended_ns": 1791406035715793000,
+  "recordKind": "structured preservation of tool-returned unsealed receipt; original tool transcript remains evidence; no claim of byte-identical raw stdout",
+  "primary": {
+    "type": "ValueError",
+    "message": "IMMATURE before qualifying capture: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification1/source-plan1.md: 40564184532"
+  },
+  "events": [
+    {"event": "bootstrap-owned-fd-transfer", "owned_paths": 3, "bytes": 17774, "at_ns": 1791406023104654000},
+    {"event": "cohort-all-open-before-body", "new": 1, "owned_paths": 4, "bytes": 34472, "at_ns": 1791406035360284000}
+  ],
+  "rows": [
+    {"path": "review-bootstrap1.py", "original9": {"dev": 16777234,"ino": 92923656,"mode":33188,"nlink":1,"uid":501,"gid":20,"size":4242,"mtime_ns":1791402405403753012,"ctime_ns":1791402549857751965},"sha256":"2fb312dc4be311850d159fa36617a99c912390dbbda2d08d9d4e30fbdf2cd890","eof":true,"bytes_read":4242,"age_before_capture_ns":3473239798035,"close_attempted":true,"closed":true},
+    {"path": "held-review-loader1.py", "original9": {"dev":16777234,"ino":92921555,"mode":33188,"nlink":1,"uid":501,"gid":20,"size":13116,"mtime_ns":1791402405403484849,"ctime_ns":1791402549819695140},"sha256":"3f816f53dd174b185bd31aebe8ef53a16e56ba9af4e123bea3ec9a0a0ad9fa40","eof":true,"bytes_read":13116,"age_before_capture_ns":3473277865860,"close_attempted":true,"closed":true},
+    {"path":"reader-source-writer-stop1.json","original9":{"dev":16777234,"ino":92923658,"mode":33188,"nlink":1,"uid":501,"gid":20,"size":416,"mtime_ns":1791402405466669476,"ctime_ns":1791402550180770192},"sha256":"ee87dee5cbcf020171b58d93f2e1527495c9740ef93b038ed6b494a1884ef1c5","eof":true,"bytes_read":416,"age_before_capture_ns":3472916803808,"close_attempted":true,"closed":true},
+    {"path":"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification1/source-plan1.json","original9":{"dev":16777234,"ino":93016648,"mode":33188,"nlink":1,"uid":501,"gid":20,"size":16698,"mtime_ns":1791405577749534721,"ctime_ns":1791405937594516381},"expected_sha256":"7bb34ba8bc9f0e49fd9743f7d6eaf13d044607125e57eef93de5f6f29b94f361","expected_size":16698,"age_before_capture_ns":97765648619,"fdOpened":true,"bodyRead":false,"eof":false,"close_attempted":true,"closed":true}
+  ],
+  "source_plan_md": {"metadataAge_ns":40564184532,"fdOpened":false,"bodyRead":false},
+  "source_plan_stop": {"captureAttempted":false,"fdOpened":false,"bodyRead":false},
+  "source_limits":[4096,67108864,16777216],
+  "ownedPaths":4,
+  "chargedOwnedBytes":34472,
+  "close_attempts":4,
+  "successful_closes":4,
+  "close_errors":[],
+  "planBodyReads":0,
+  "finalWholeIntervalQualified":false,
+  "historicalRepair":false,
+  "extraOrchestrationFailure":{"type":"UnknownProcess","message":"The loop attempted STOP on already-closed session17527; no extra FD/body acquisition occurred."}
+}
