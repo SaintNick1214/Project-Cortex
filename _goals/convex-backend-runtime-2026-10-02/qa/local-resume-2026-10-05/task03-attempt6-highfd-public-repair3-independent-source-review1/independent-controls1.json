@@ -1,0 +1,1963 @@
+{
+  "scope": "INDEPENDENT_U3_SOURCE_ONLY_FINAL_CONTROL_AGGREGATE",
+  "sourceEligibility": false,
+  "independent": true,
+  "observedControls": 137,
+  "observedPASS": 136,
+  "observedFAIL": 1,
+  "qualifiedCurrentControls": 69,
+  "qualifiedCurrentPASS": 68,
+  "qualifiedCurrentFAIL": 1,
+  "earlierUnqualifiedControls": 68,
+  "controls": [
+    {
+      "name": "runner:complete-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:empty-owned-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:early-before-open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "setup-before-open"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:first-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:middle-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "open:1"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:last-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "open:2"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:first-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:119",
+          "fstat:119"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:middle-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "fstat:120",
+          "fstat:120"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:last-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "fstat:121",
+          "fstat:121"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:content-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert",
+          "content-hash-assert",
+          "content-hash-assert",
+          "content-hash-assert"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:primary-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:report-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "report-write",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:first-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:middle-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:120"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:last-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:121"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:allclose-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119",
+          "close:120",
+          "close:121"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:primary-report-firstclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "report-write",
+          "close:119",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:primary-report-allclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "report-write",
+          "close:119",
+          "close:120",
+          "close:121",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:complete-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:empty-owned-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:early-before-open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "setup-before-open"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:first-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:middle-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "open:1"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:last-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "open:2"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:first-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:119"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:middle-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "fstat:120"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:last-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "fstat:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:content-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:primary-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:report-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "report-write"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:first-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:middle-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:120"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:last-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:allclose-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119",
+          "close:120",
+          "close:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:primary-report-firstclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "close:119"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:primary-report-allclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "close:119",
+          "close:120",
+          "close:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:positive",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": true,
+        "errors": []
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:early-argv",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:fstat",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:119",
+          "fstat:119"
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:close",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "0",
+          "close:119"
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:content",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert"
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:wrong-hash",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:wrong-nine",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "entry:maturity",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "runner:original-assertions",
+      "status": "PASS",
+      "details": {
+        "originalAssertions": 125,
+        "noneRemoved": true,
+        "unaffectedFunctionsByteSemanticEqual": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "python:original-assertions",
+      "status": "PASS",
+      "details": {
+        "originalAssertions": 50,
+        "noneRemoved": true,
+        "unaffectedFunctionsByteSemanticEqual": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "ledger:FD4096",
+      "status": "PASS",
+      "details": {
+        "4096accepted": true,
+        "4097denied": true,
+        "nonReset": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "ledger:byte-boundaries",
+      "status": "PASS",
+      "details": {
+        "64MiBaccepted": true,
+        "aggregatePerFileBoolNegativeDuplicateDriftDenied": true,
+        "nonReset": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "strict:overflow-reachability",
+      "status": "PASS",
+      "details": {
+        "specialConstantsAndDuplicatesDenied": true,
+        "overflowParsedAsInfinity": true,
+        "controllingDecodedSizeRequiresExactInt": true,
+        "noClaimOfUniversalFiniteJSON": true
+      },
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "Common:full-original-byte-conservation",
+      "status": "PASS",
+      "details": {
+        "originalBytes": 21309,
+        "currentBytes": 21476,
+        "exactThreeWaitSubstitutions": true,
+        "noOriginalAssertionOrBodyChanges": true,
+        "originalSha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2"
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL",
+      "retainedMissingComparandAttempt": "independent-contract-controls3-result.json"
+    },
+    {
+      "name": "History:original11-and-rejections-preserved",
+      "status": "PASS",
+      "details": {
+        "original11RawFullyHashed": [
+          {
+            "name": "highfd2400-deadline",
+            "exit": -9,
+            "failure": "TimeoutError",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-missing",
+            "exit": null,
+            "failure": "FileNotFoundError",
+            "terminal": false
+          },
+          {
+            "name": "highfd2400-nonzero",
+            "exit": 7,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-pipes-max",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-residual",
+            "exit": 0,
+            "failure": "OwnedGroupResidual",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-stderr-overflow",
+            "exit": -9,
+            "failure": "ValueError",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-stdin-max",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-stdout-overflow",
+            "exit": -9,
+            "failure": "ValueError",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-success",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd4000-success",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "original-lowfd-success",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          }
+        ],
+        "author97Only": true,
+        "priorTwoAuthorFailuresRetained": true,
+        "U2REJECTRetained": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:positive190",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": false,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:source-incomplete",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:48commands",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:timeout0",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 0
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:timeout191",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 191
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:nonterminal",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:closeerror",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:failure",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:false-exit",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:string-exit",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Command:nonzero",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:complete-positive",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": false,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:Memory:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:Memory:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:Memory:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:MemorySwap:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:MemorySwap:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:MemorySwap:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:PidsLimit:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:PidsLimit:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:PidsLimit:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:NanoCpus:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:NanoCpus:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:NanoCpus:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:network",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:readOnly",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:privileged",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:ports",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:fullCID",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:foreignCID",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:image",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:user",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:entrypoint",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:heap-env",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:mount-writable",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:OOM",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Recipe:false-exit",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "Export:positive-and-reachable-size-negatives",
+      "status": "PASS",
+      "details": {
+        "validFiniteValuesPreserved": true,
+        "overflowAndNegativeOverflowControllingSizeDenied": true,
+        "boolStringHashPipeNegativeDenied": true
+      },
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:complete",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": true,
+      "errors": [],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:early-setup",
+      "status": "PASS",
+      "opened": 0,
+      "closeAttempts": 0,
+      "accepted": false,
+      "errors": [
+        "early-setup"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:open-0",
+      "status": "PASS",
+      "opened": 0,
+      "closeAttempts": 0,
+      "accepted": false,
+      "errors": [
+        "open:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:open-1",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "open:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:open-2",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "open:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:fstat-0",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "fstat:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:fstat-1",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "fstat:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:fstat-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "fstat:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:maturity-0",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:maturity-1",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:maturity-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:read-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:read-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:read-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:parse-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:parse-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:parse-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:report-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:report-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:report-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:close-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:close-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:close-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:primary-all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "primary-work",
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:report-all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:0",
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "js:original-assertions-conserved",
+      "status": "PASS",
+      "originalCount": 59,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "original-select-highfd-denied",
+      "status": "PASS",
+      "fd": 2401,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "selector-empty",
+      "status": "PASS",
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "selector-timeout",
+      "status": "PASS",
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "selector-ready",
+      "status": "PASS",
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "selector-EOF",
+      "status": "PASS",
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:success",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:nonzero",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:stdout-overflow",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:stderr-overflow",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:deadline",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:residual",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:stdin-max",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:pipes-max",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "host:missing",
+      "status": "PASS",
+      "actualLocalCommand": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "timeout0",
+      "status": "PASS",
+      "preSpawnDenied": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "timeout191",
+      "status": "PASS",
+      "preSpawnDenied": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "stdin0",
+      "status": "PASS",
+      "preSpawnDenied": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "stdin327693",
+      "status": "PASS",
+      "preSpawnDenied": true,
+      "qualification": "OBSERVED_UNQUALIFIED_FAILED_REVIEWER_CUSTODY_INTERVAL"
+    },
+    {
+      "name": "declared-entry-interpreter:positive",
+      "status": "PASS",
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    },
+    {
+      "name": "declared-entry-interpreter:sticky-close-error",
+      "status": "FAIL",
+      "priority": "P1",
+      "actualDeclaredInterpreter": true,
+      "qualification": "CURRENT_DISTINCT_SOURCE_INTERVAL"
+    }
+  ],
+  "actualOriginalHostCommandsObserved": 9,
+  "currentRawResultInputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-fault-controls2-result.json",
+      "bytes": 24312,
+      "sha256": "8308a89954339226746411f964057e79b60febe348f363add4eed3e720ee19f8",
+      "scope": "INDEPENDENT_U3_SOURCE_MOCK_LIFETIME_CONTROLS"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-contract-controls3-result.json",
+      "bytes": 17208,
+      "sha256": "8a19bd16183b93a43dd9fe295a1aae1683e71341c921685b3cf758535e875a18",
+      "scope": "INDEPENDENT_U3_CONTRACT_AND_CORRECTED_JS_SOURCE_MOCK"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host-controls1-result.json",
+      "bytes": 24771,
+      "sha256": "908bfcece99ab0355e2522ec081534ac62c1fa7d2d55cc63736d47015bcd31e8",
+      "scope": "INDEPENDENT_U3_EXACT_COMMON_LOCAL_HOST_ONLY"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-interpreter-controls2-result.json",
+      "bytes": 1473,
+      "sha256": "f6ffc993b3952d2fa853e848906c271dc44cee215e284fe265ea1c20eb7edacc",
+      "scope": "INDEPENDENT_U3_EXACT_DECLARED_INTERPRETER_SOURCE_MOCK"
+    }
+  ],
+  "actualReviewProgramDependencies": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/fd_fault_oracle.py",
+      "bytes": 4511,
+      "sha256": "145aafd5d64852a78c40feb0cf77cc21a6e0d6b13c01c09465338644ece2a570"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/highfd-host-matrix.json",
+      "bytes": 2650,
+      "sha256": "750c6c50185cdeeb41f99cc09a5af280fc555491d4957d2685518d9149dde9af"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_prospective_bootstrap3.py",
+      "bytes": 8075,
+      "sha256": "56296bcfacaf67b0e1ce45ee31824c0574c1510dc33c3e17d03a833f1f20b8ae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/held_ledger2.py",
+      "bytes": 6641,
+      "sha256": "a9156092d65320e21c09a025fa7d06606dc449e088eb3065bb099442ab2b6ea1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_prospective_reader2.py",
+      "bytes": 9810,
+      "sha256": "40651387669257d6f4a39a553c2b81fca0df8a64a72dcaede4648baa699dc72e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-fault-controls2.py",
+      "bytes": 12854,
+      "sha256": "2aa3d2821727c511d449a32139218bf831d9c4d7e2e4bdd19c558c91fee0c603"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-js-controls2.mjs",
+      "bytes": 4259,
+      "sha256": "f654010ab4a68362d869a6ae3f1b78c7a29e0aeab5759e528fa567bfa06939db"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-contract-controls3.py",
+      "bytes": 9468,
+      "sha256": "9528ade92a549656c9b23179cf8d30a0836bb42aa94f3d12593e288f18751a35"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-interpreter-controls2.py",
+      "bytes": 3598,
+      "sha256": "224e158afdedb013896031aa9b4f08c6ac2b76d354f85a4f21fab239b8a1085c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host-controls1.py",
+      "bytes": 4468,
+      "sha256": "ba43293b91f727fb77378affa2ccc8a1fafb4b243daed8162518bfc6d90452f2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/common-host-fixture1.py",
+      "bytes": 21476,
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/aggregate-controls4.py",
+      "bytes": 3666,
+      "sha256": "00261b8c754be7e464b30cd48f411a2786452a305a9cc2f43d084abb80d6c3d4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/review-packet-close1.py",
+      "bytes": 6482,
+      "sha256": "106925eb61e64d785c65937c1364760283a68d717a2eb0385d1aed3e16389afc"
+    }
+  ],
+  "rawDependencies": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-deadline.receipt.json",
+      "bytes": 2436,
+      "sha256": "c98ff00eebe36c247c775041b2fe61cd7be7a25f807ab9f360f50d28aa960d54"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-deadline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-deadline.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-missing.receipt.json",
+      "bytes": 1884,
+      "sha256": "48eb6fe398f8729e86b42e95eedef51cef72e855be5b6fad3c4b429ec95b516a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-missing.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-missing.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-nonzero.receipt.json",
+      "bytes": 1682,
+      "sha256": "7df97ee0b1e8686d9587be1328921f6e93a42ee9233540e1bb83dec730ba9d01"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-nonzero.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-nonzero.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-pipes-max.receipt.json",
+      "bytes": 1808,
+      "sha256": "a7430a114d3f8ae5e3bf55af18ac2204ec5b4a8f09fc7f689efce3cd68a6b671"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-pipes-max.stderr",
+      "bytes": 262144,
+      "sha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-pipes-max.stdout",
+      "bytes": 262144,
+      "sha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-residual.receipt.json",
+      "bytes": 2834,
+      "sha256": "0c9482b1db678aa5fa112083df04bdb036458db7d983d82f76b64a4ef541b590"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-residual.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-residual.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stderr-overflow.receipt.json",
+      "bytes": 2514,
+      "sha256": "4ef07420a7c525b4f12206c72963c60c31a20481fe89c450df93757c10a58a5e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stderr-overflow.stderr",
+      "bytes": 262144,
+      "sha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stderr-overflow.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stdin-max.receipt.json",
+      "bytes": 1723,
+      "sha256": "f7a9ff145c54a4f8c82a83560a4bdc222533271136e1b4c33b53d982d292822b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stdin-max.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stdin-max.stdout",
+      "bytes": 7,
+      "sha256": "f5ff69c7236a18ac30910a98ad6926474de7b66ff0661b4ec99016d21df38768"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stdout-overflow.receipt.json",
+      "bytes": 2515,
+      "sha256": "4a7877baebfd9c711b7ca00885ea22d6524f57a8f84b83fd303d7d0362f5d316"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stdout-overflow.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-stdout-overflow.stdout",
+      "bytes": 262144,
+      "sha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-success.receipt.json",
+      "bytes": 1708,
+      "sha256": "e62b9c22b71947927a665ddb6d8dc9c07e3f343f577dd3e979993b80188e8683"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-success.stderr",
+      "bytes": 3,
+      "sha256": "d9eb253e06987fa74a5d3189f73d9f7a8104cca786fafbb52bc9555972f5477f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-host1/j3-success.stdout",
+      "bytes": 4,
+      "sha256": "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-js-controls3.stdout",
+      "bytes": 5128,
+      "sha256": "d44c1d4ff5c6442d3bfa354d85a1438478819f7c7881125c45fc00b0fc6c8abc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-js-controls3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-interpreter-controls2.stdout",
+      "bytes": 578,
+      "sha256": "e8f9b564ba249ef3be0922a61f03c0ca7af4d0b1402fef48da8227ce61c66977"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-interpreter-controls2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "readerHeldInputs": 198,
+  "failedOwnThreeNinePinsNeverRefreshed": true,
+  "noCustodyThroughGap": true,
+  "oldHostAndPythonControlsNotRetrospectivelyQualified": true,
+  "author97NotIndependent": true,
+  "originalU2REJECTPreserved": true,
+  "fullTask03": false,
+  "fullGoal": false,
+  "productAcceptance": false,
+  "actualEffects": {
+    "Docker": 0,
+    "network": 0,
+    "credentials": 0,
+    "private": 0,
+    "service": 0,
+    "actualRunner": 0
+  }
+}

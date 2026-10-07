@@ -1,0 +1,28 @@
+{
+  "scope": "PREPARED_ONLY_ORIGINAL_NINE_LOCAL_HOST_CONTROLS_NOT_EXECUTED",
+  "minimumHeldDescriptor": 2400,
+  "sourceInputsHeldUntilFinal": true,
+  "ownershipLedgerMaximum": 4096,
+  "transientDescriptorReservation": 32,
+  "pipeMaximum": 262144,
+  "stdinMaximum": 327692,
+  "controlMaximum": 8192,
+  "cases": [
+    {"name":"success","code":"import os;os.write(1,b'pass');os.write(2,b'err')","timeout":8,"exit":0,"failure":null,"stdout":"pass","stderr":"err","terminal":true},
+    {"name":"nonzero","code":"import sys;sys.exit(7)","timeout":8,"exit":7,"failure":null,"terminal":true},
+    {"name":"stdout-overflow","code":"import sys,time;sys.stdout.buffer.write(b'A'*262145);sys.stdout.buffer.flush();time.sleep(.1)","timeout":8,"failure":"ValueError","stdoutRetained":262144,"stdoutObserved":262145,"terminal":true},
+    {"name":"stderr-overflow","code":"import sys,time;sys.stderr.buffer.write(b'B'*262145);sys.stderr.buffer.flush();time.sleep(.1)","timeout":8,"failure":"ValueError","stderrRetained":262144,"stderrObserved":262145,"terminal":true},
+    {"name":"deadline","code":"import time;time.sleep(5)","timeout":0.35,"failure":"TimeoutError","elapsedLessThan":4,"reconciliationRequired":true,"terminal":true},
+    {"name":"residual","code":"import subprocess,sys;subprocess.Popen([sys.executable,'-B','-c','import time;time.sleep(4)'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)","timeout":8,"exit":0,"failure":"OwnedGroupResidual","knownOwnedReconciliationSignalsRequired":true,"terminal":true},
+    {"name":"stdin-max","code":"import sys;data=sys.stdin.buffer.read();print(len(data))","timeout":8,"stdinBytes":327692,"exit":0,"failure":null,"stdout":"327692\n","terminal":true},
+    {"name":"pipes-max","code":"import sys;sys.stdout.buffer.write(b'A'*262144);sys.stdout.buffer.flush();sys.stderr.buffer.write(b'B'*262144);sys.stderr.buffer.flush()","timeout":8,"exit":0,"failure":null,"stdoutRetained":262144,"stderrRetained":262144,"terminal":true},
+    {"name":"missing","argv":["/nonexistent-independent-U3-host-control"],"timeout":8,"failure":"FileNotFoundError","terminal":false}
+  ],
+  "allCasesRequire": {"closeErrors":[],"absenceObserved":true,"unknownOwnershipNeverSignaled":true},
+  "additionalReadinessControls":["original-select-highFD-negative","selector-empty","selector-finite-timeout","selector-ready-data","selector-EOF"],
+  "additionalInputNegativeControls":["timeout0","timeout191","stdin0","stdin327693"],
+  "actualEffects": {"hostCommands":0,"Docker":0,"network":0,"credentials":0,"services":0,"nativePrivate":0},
+  "U3Qualification":false,
+  "fullTask03":false,
+  "fullGoal":false
+}

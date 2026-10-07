@@ -1,0 +1,758 @@
+{
+  "scope": "INDEPENDENT_U3_CONTRACT_AND_CORRECTED_JS_SOURCE_MOCK",
+  "sourceEligibility": false,
+  "controls": [
+    {
+      "name": "Common:full-original-byte-conservation",
+      "status": "FAIL",
+      "class": "KeyError",
+      "reason": "'/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/integrated/coordinate-common.py'"
+    },
+    {
+      "name": "History:original11-and-rejections-preserved",
+      "status": "PASS",
+      "details": {
+        "original11RawFullyHashed": [
+          {
+            "name": "highfd2400-deadline",
+            "exit": -9,
+            "failure": "TimeoutError",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-missing",
+            "exit": null,
+            "failure": "FileNotFoundError",
+            "terminal": false
+          },
+          {
+            "name": "highfd2400-nonzero",
+            "exit": 7,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-pipes-max",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-residual",
+            "exit": 0,
+            "failure": "OwnedGroupResidual",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-stderr-overflow",
+            "exit": -9,
+            "failure": "ValueError",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-stdin-max",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-stdout-overflow",
+            "exit": -9,
+            "failure": "ValueError",
+            "terminal": true
+          },
+          {
+            "name": "highfd2400-success",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "highfd4000-success",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          },
+          {
+            "name": "original-lowfd-success",
+            "exit": 0,
+            "failure": null,
+            "terminal": true
+          }
+        ],
+        "author97Only": true,
+        "priorTwoAuthorFailuresRetained": true,
+        "U2REJECTRetained": true
+      }
+    },
+    {
+      "name": "Command:positive190",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": false,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:source-incomplete",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:48commands",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:timeout0",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 0
+      }
+    },
+    {
+      "name": "Command:timeout191",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 0,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 191
+      }
+    },
+    {
+      "name": "Command:nonterminal",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:closeerror",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:failure",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:false-exit",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:string-exit",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Command:nonzero",
+      "status": "PASS",
+      "details": {
+        "mockCalls": 1,
+        "negativeDenied": true,
+        "recordBudget": 48,
+        "seconds": 190
+      }
+    },
+    {
+      "name": "Recipe:complete-positive",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": false,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:Memory:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:Memory:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:Memory:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:MemorySwap:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:MemorySwap:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:MemorySwap:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:PidsLimit:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:PidsLimit:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:PidsLimit:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:NanoCpus:False",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:NanoCpus:'2147483648'",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:NanoCpus:0",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:network",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:readOnly",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:privileged",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:ports",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:fullCID",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:foreignCID",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:image",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:user",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:entrypoint",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:heap-env",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:mount-writable",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:OOM",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Recipe:false-exit",
+      "status": "PASS",
+      "details": {
+        "negativeDenied": true,
+        "noDockerCalls": true
+      }
+    },
+    {
+      "name": "Export:positive-and-reachable-size-negatives",
+      "status": "PASS",
+      "details": {
+        "validFiniteValuesPreserved": true,
+        "overflowAndNegativeOverflowControllingSizeDenied": true,
+        "boolStringHashPipeNegativeDenied": true
+      }
+    },
+    {
+      "name": "js:complete",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": true,
+      "errors": [],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:early-setup",
+      "status": "PASS",
+      "opened": 0,
+      "closeAttempts": 0,
+      "accepted": false,
+      "errors": [
+        "early-setup"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:open-0",
+      "status": "PASS",
+      "opened": 0,
+      "closeAttempts": 0,
+      "accepted": false,
+      "errors": [
+        "open:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:open-1",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "open:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:open-2",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "open:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:fstat-0",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "fstat:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:fstat-1",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "fstat:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:fstat-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "fstat:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:maturity-0",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:maturity-1",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:maturity-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:read-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:read-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:read-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:parse-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:parse-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:parse-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:close-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:close-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:close-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:primary-all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "primary-work",
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:0",
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:original-assertions-conserved",
+      "status": "PASS",
+      "originalCount": 59
+    }
+  ],
+  "PASS": 66,
+  "FAIL": 1,
+  "failures": [
+    {
+      "name": "Common:full-original-byte-conservation",
+      "class": "KeyError",
+      "reason": "'/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/integrated/coordinate-common.py'"
+    }
+  ],
+  "candidateSourceInputsHeld": 187,
+  "actualEffects": {
+    "Docker": 0,
+    "network": 0,
+    "credentials": 0,
+    "private": 0,
+    "service": 0
+  },
+  "fullTask03": false,
+  "fullGoal": false
+}

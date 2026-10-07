@@ -1,0 +1,709 @@
+{
+  "scope": "INDEPENDENT_U3_SOURCE_MOCK_LIFETIME_CONTROLS",
+  "sourceEligibility": false,
+  "controls": [
+    {
+      "name": "runner:complete-positive",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "runner:empty-owned-positive",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "runner:early-before-open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "setup-before-open",
+          "name 'DOCKER' is not defined"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:first-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0",
+          "name 'DOCKER' is not defined"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:middle-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "open:1",
+          "name 'DOCKER' is not defined"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:last-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "open:2",
+          "name 'DOCKER' is not defined"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:first-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:111",
+          "name 'DOCKER' is not defined",
+          "fstat:111"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:middle-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "fstat:112",
+          "name 'DOCKER' is not defined",
+          "fstat:112"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:last-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "fstat:113",
+          "name 'DOCKER' is not defined",
+          "fstat:113"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:content-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert",
+          "name 'DOCKER' is not defined",
+          "content-hash-assert",
+          "content-hash-assert",
+          "content-hash-assert"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:primary-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "name 'DOCKER' is not defined"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:report-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "name 'DOCKER' is not defined",
+          "report-write",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:first-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "name 'DOCKER' is not defined",
+          "close:111"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:middle-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "name 'DOCKER' is not defined",
+          "close:112"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:last-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "name 'DOCKER' is not defined",
+          "close:113"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:allclose-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "name 'DOCKER' is not defined",
+          "close:111",
+          "close:112",
+          "close:113"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:primary-report-firstclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "name 'DOCKER' is not defined",
+          "report-write",
+          "close:111",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:primary-report-allclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "name 'DOCKER' is not defined",
+          "report-write",
+          "close:111",
+          "close:112",
+          "close:113",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:complete-positive",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:empty-owned-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:early-before-open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "setup-before-open"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:first-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:middle-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:last-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:first-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:middle-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:last-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:content-rejected",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "('content-hash-assert', [\"'os.stat_result' object has no attribute 'dev'\"])"
+    },
+    {
+      "name": "python:primary-rejected",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "('primary-work', [\"'os.stat_result' object has no attribute 'dev'\"])"
+    },
+    {
+      "name": "python:report-rejected",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "('report-write', [\"'os.stat_result' object has no attribute 'dev'\"])"
+    },
+    {
+      "name": "python:first-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'",
+          "close:111"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:middle-close-rejected",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:last-close-rejected",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:allclose-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "'os.stat_result' object has no attribute 'dev'",
+          "close:111"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:primary-report-firstclose",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "('primary-work', [\"'os.stat_result' object has no attribute 'dev'\", 'close:111'])"
+    },
+    {
+      "name": "python:primary-report-allclose",
+      "status": "FAIL",
+      "class": "AssertionError",
+      "reason": "('primary-work', [\"'os.stat_result' object has no attribute 'dev'\", 'close:111'])"
+    },
+    {
+      "name": "entry:positive",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "entry:early-argv",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "entry:open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ]
+      }
+    },
+    {
+      "name": "entry:fstat",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:111",
+          "fstat:111"
+        ]
+      }
+    },
+    {
+      "name": "entry:close",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "0",
+          "close:111"
+        ]
+      }
+    },
+    {
+      "name": "entry:content",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert"
+        ]
+      }
+    },
+    {
+      "name": "entry:wrong-hash",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "entry:wrong-nine",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "entry:maturity",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "runner:original-assertions",
+      "status": "PASS",
+      "details": {
+        "originalAssertions": 125,
+        "noneRemoved": true,
+        "unaffectedFunctionsByteSemanticEqual": true
+      }
+    },
+    {
+      "name": "python:original-assertions",
+      "status": "PASS",
+      "details": {
+        "originalAssertions": 50,
+        "noneRemoved": true,
+        "unaffectedFunctionsByteSemanticEqual": true
+      }
+    },
+    {
+      "name": "ledger:FD4096",
+      "status": "PASS",
+      "details": {
+        "4096accepted": true,
+        "4097denied": true,
+        "nonReset": true
+      }
+    },
+    {
+      "name": "ledger:byte-boundaries",
+      "status": "PASS",
+      "details": {
+        "64MiBaccepted": true,
+        "aggregatePerFileBoolNegativeDuplicateDriftDenied": true,
+        "nonReset": true
+      }
+    },
+    {
+      "name": "strict:overflow-reachability",
+      "status": "FAIL",
+      "class": "StopIteration",
+      "reason": ""
+    }
+  ],
+  "PASS": 39,
+  "FAIL": 11,
+  "failures": [
+    {
+      "name": "runner:complete-positive",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "runner:empty-owned-positive",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:complete-positive",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:content-rejected",
+      "class": "AssertionError",
+      "reason": "('content-hash-assert', [\"'os.stat_result' object has no attribute 'dev'\"])"
+    },
+    {
+      "name": "python:primary-rejected",
+      "class": "AssertionError",
+      "reason": "('primary-work', [\"'os.stat_result' object has no attribute 'dev'\"])"
+    },
+    {
+      "name": "python:report-rejected",
+      "class": "AssertionError",
+      "reason": "('report-write', [\"'os.stat_result' object has no attribute 'dev'\"])"
+    },
+    {
+      "name": "python:middle-close-rejected",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:last-close-rejected",
+      "class": "AssertionError",
+      "reason": "complete baseline denied"
+    },
+    {
+      "name": "python:primary-report-firstclose",
+      "class": "AssertionError",
+      "reason": "('primary-work', [\"'os.stat_result' object has no attribute 'dev'\", 'close:111'])"
+    },
+    {
+      "name": "python:primary-report-allclose",
+      "class": "AssertionError",
+      "reason": "('primary-work', [\"'os.stat_result' object has no attribute 'dev'\", 'close:111'])"
+    },
+    {
+      "name": "strict:overflow-reachability",
+      "class": "StopIteration",
+      "reason": ""
+    }
+  ],
+  "commonFixture": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/common-host-fixture1.py",
+  "candidateSourceInputsHeld": 108,
+  "actualEffects": {
+    "Docker": 0,
+    "network": 0,
+    "credentials": 0,
+    "private": 0,
+    "service": 0
+  },
+  "fullTask03": false,
+  "fullGoal": false
+}

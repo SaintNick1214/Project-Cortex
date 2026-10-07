@@ -1,0 +1,72 @@
+{
+  "scope": "U3_INDEPENDENT_REVIEW_READER_AND_PUBLISHERS_STOPPED",
+  "stoppedNs": "1791397607716294000",
+  "remainingWrites": [],
+  "published": false,
+  "readerFailures": [
+    {
+      "operation": "read",
+      "request": {
+        "op": "read",
+        "paths": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/exact-entry-command.json"
+        ]
+      },
+      "class": "AssertionError",
+      "reason": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_review_reader.py\", line 81, in <module>\n    assert path in DATA\n           ^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "operation": "controls",
+      "request": {
+        "op": "controls",
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-interpreter-controls1.py",
+        "output": "independent-interpreter-controls1-result.json"
+      },
+      "class": "AssertionError",
+      "reason": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_review_reader.py\", line 126, in <module>\n    ledger.final_qualify_all()\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"<held-verified-ledger2>\", line 135, in final_qualify_all\n  File \"<held-verified-ledger2>\", line 112, in read\nAssertionError\n"
+    },
+    {
+      "operation": "controls",
+      "request": {
+        "op": "controls",
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/diagnose-held-nine1.py",
+        "output": "diagnose-held-nine1-result.json"
+      },
+      "class": "AssertionError",
+      "reason": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_review_reader.py\", line 126, in <module>\n    ledger.final_qualify_all()\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"<held-verified-ledger2>\", line 135, in final_qualify_all\n  File \"<held-verified-ledger2>\", line 112, in read\nAssertionError\n"
+    },
+    {
+      "operation": "controls",
+      "request": {
+        "op": "controls",
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/prospective-materializer1.py",
+        "output": "prospective-materializer1-result.json"
+      },
+      "class": "AssertionError",
+      "reason": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_review_reader.py\", line 126, in <module>\n    ledger.final_qualify_all()\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"<held-verified-ledger2>\", line 135, in final_qualify_all\n  File \"<held-verified-ledger2>\", line 112, in read\nAssertionError\n"
+    },
+    {
+      "operation": "reader-lifetime",
+      "class": "KeyboardInterrupt",
+      "reason": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_review_reader.py\", line 75, in <module>\n    for line in sys.stdin:\n                ^^^^^^^^^\nKeyboardInterrupt\n"
+    }
+  ],
+  "finalQualificationFailures": [
+    {
+      "class": "AssertionError",
+      "reason": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3_review_reader.py\", line 155, in <module>\n    ledger.final_qualify_all()\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"<held-verified-ledger2>\", line 135, in final_qualify_all\n  File \"<held-verified-ledger2>\", line 112, in read\nAssertionError\n"
+    }
+  ],
+  "closeErrors": [],
+  "explicitCloseAttempts": 130,
+  "laterDistinctActual60MatureOutputReadbackRequired": true,
+  "sourceEligibility": false,
+  "fullTask03": false,
+  "fullGoal": false
+}

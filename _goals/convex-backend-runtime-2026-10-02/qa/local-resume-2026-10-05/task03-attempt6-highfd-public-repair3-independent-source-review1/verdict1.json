@@ -1,0 +1,97 @@
+{
+  "scope": "INDEPENDENT_TASK03_U3_SOURCE_ONLY",
+  "independent": true,
+  "verdict": "REJECT",
+  "score": 2.8,
+  "dimensions": {
+    "Requirement Fulfillment": 2,
+    "Code Quality": 2,
+    "Test Quality": 4,
+    "Pattern Adherence": 4,
+    "Completeness": 2
+  },
+  "sourceEligibility": false,
+  "observedControls": 137,
+  "observedPASS": 136,
+  "observedFAIL": 1,
+  "qualifiedCurrentControls": 69,
+  "qualifiedCurrentPASS": 68,
+  "qualifiedCurrentFAIL": 1,
+  "earlierUnqualifiedControls": 68,
+  "actualHostCommandsObserved": 9,
+  "findings": [
+    {
+      "id": "U3-F1",
+      "priority": "P1",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/actual-entry.py",
+      "line": 38,
+      "trigger": "exact declared /usr/bin/python3 Python3.9.6 owned-close error",
+      "observed": "NameError BaseExceptionGroup unavailable; required-close-error absent; one owned close attempted once",
+      "required": "compatible complete sticky chain or new explicitly qualified supported interpreter contract"
+    }
+  ],
+  "candidateManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/closed-source-manifest.json",
+    "bytes": 73411,
+    "sha256": "16e009fb9bee0eea993ce02c4cd32ed47e4ffd807cdb3837ca720d9b295daca6"
+  },
+  "rawAggregate": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/independent-controls1.json",
+    "bytes": 63485,
+    "sha256": "918433e78cef5568c2981d93d11f1c55b5b9588f5f5e8dfd3489e49d33fa34a2"
+  },
+  "currentFDclosure": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/u3-prospective-held-through-verdict-FDclosure2.json",
+  "laterFiniteManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/packet-final-readback1.json",
+  "laterWriterStop": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/final-review-writer-stop.json",
+  "finalClosureProgram": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/review-packet-close2.py",
+    "bytes": 6499,
+    "sha256": "36c64c2bbecb9c6680f0167d8a56361eb311e9c4a24b4b8c1f84fc53b143f6f0"
+  },
+  "oldFailedInterval": {
+    "files": 130,
+    "closeAttempts": 130,
+    "closeErrors": [],
+    "published": false,
+    "finalQualification": "FAIL",
+    "failedOwnPins": [
+      "independent-contract-controls1.py",
+      "independent-contract-controls1-writer-stop.json",
+      "independent-interpreter-controls1.py"
+    ],
+    "noRefresh": true,
+    "noCustodyThroughGap": true
+  },
+  "currentInterval": {
+    "inputs": 198,
+    "bytes": 3608722,
+    "all88U3OriginalPins": true,
+    "originalRootPinsPreserved": true,
+    "allFDsBeforeTargetContent": true,
+    "fullEOFHashSizeNineFinalRequired": true
+  },
+  "author97NotIndependent": true,
+  "U2RejectPreserved": true,
+  "currentAgentReuse": true,
+  "authoredCandidate": false,
+  "fullTask03": false,
+  "fullGoal": false,
+  "productAccepted": false,
+  "originalTask03Functional": "0/3",
+  "originalGoal": "1/17 bounded Task01 only",
+  "originalProduct": "0/12",
+  "actualEffects": {
+    "Docker": 0,
+    "network": 0,
+    "credentials": 0,
+    "private": 0,
+    "service": 0,
+    "actualRunner": 0
+  },
+  "futureReleaseRequires": [
+    "distinct repaired source review",
+    "complete F2/B3/A2/source graph review",
+    "live prerequisite graph",
+    "new explicit Root actual handoff"
+  ]
+}
