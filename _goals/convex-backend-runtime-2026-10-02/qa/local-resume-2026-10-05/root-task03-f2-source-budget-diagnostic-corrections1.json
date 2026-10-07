@@ -1,0 +1,51 @@
+{
+  "schema": "cortex.source-census-diagnostic.v1",
+  "timestamp_utc": "2026-10-07T22:39:29.840471+00:00",
+  "scope": "ORDINARY_READ_ONLY_RESOURCE_DIAGNOSTIC; NO_SOURCE_GATE_ACCEPTANCE",
+  "current_complete_source_census": "UNKNOWN",
+  "source_caps": {
+    "unique_paths_and_simultaneous_fds": 4096,
+    "cumulative_bytes": 67108864,
+    "per_file_bytes": 16777216,
+    "enabling_data_aggregate_bytes": 2097152
+  },
+  "located_preliminary": {
+    "rows": 2572,
+    "member_bytes": 58854796,
+    "plan_bytes": 907729,
+    "reserved_manifest_bytes": 4194304,
+    "reserved_approval_bytes": 1048576,
+    "reserved_data_bytes": 2097152,
+    "total_bytes": 67102557,
+    "headroom_bytes": 6307,
+    "current_inputs_complete": false
+  },
+  "compact_model2": {
+    "member_bytes": 60853795,
+    "separate_plan_bytes": 879606,
+    "manifest_bytes": 2895153,
+    "approval_bytes": 1048576,
+    "data_bytes": 2097152,
+    "corrected_total_bytes": 67774282,
+    "over_cap_bytes": 665418,
+    "scope_qualified": false
+  },
+  "missing_from_preliminary": {
+    "active_program_paths": 7,
+    "stale_hashes": 4,
+    "j6_additional_paths": 140,
+    "j6_additional_bytes": 3275584,
+    "j6_own4_bytes": 156583,
+    "linux_physical135_bytes": 2628874,
+    "linux_adapter_final_graph": "PENDING"
+  },
+  "corrections": [
+    "900309 was compact PLAN size; no actual MF savings established",
+    "Cached2591-row observation is not a located closed current census",
+    "Whole original97 exactPython3.9 is not required; original97 supportedPython3.14 and entry/wiring/RUN required on both interpreters",
+    "Conditional exact188 exclusions grant no headroom when the actual enabling assembler reads or hashes those bodies"
+  ],
+  "assembly_requirement": "Every actual enabling read/hash/history/ledger/parser/control/raw/document counts; remove unnecessary reads prospectively or admit them. No resource reset, silent omission, or cap enlargement.",
+  "effects": 0,
+  "functional_acceptance": false
+}
