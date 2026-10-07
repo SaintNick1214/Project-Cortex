@@ -1,0 +1,50 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-public-observer.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-public-observer.py
+@@ -45,8 +45,9 @@
+     assert 0 <= pre.st_size <= 16 * 1024 * 1024
+     assert max(pre.st_mtime_ns,pre.st_ctime_ns) + AGE <= now, 'immature_before_first_capture:' + str(path)
+     fd = os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
+-    pin = {'path':str(path),'kind':kind,'PRE9':nine(pre),'capturedUnixNs':str(now),'fd':fd}
+-    held.append(pin)
++    pin = {'path':str(path),'fd':fd,'closeAttempted':False}
++    held.append(pin) # immediate owner registration before pin construction/fstat
++    pin.update(kind=kind,PRE9=nine(pre),capturedUnixNs=str(now))
+     assert nine(os.fstat(fd)) == pin['PRE9']
+     if original is not None: assert pin['PRE9'] == original, 'original_transfer_nine_changed:' + str(path)
+     return pin
+@@ -74,11 +75,19 @@
+     output_bytes += len(out); assert output_bytes <= 262144, 'finite_export_ceiling'
+     os.write(1,out)
+ 
+-assert sys.dont_write_bytecode and os.getuid() == 501 and os.getgid() == 20 and sys.platform == 'linux'
+-assert Path('/sys/fs/cgroup/memory.max').read_text().strip() == '2147483648'
+-assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip() == '0'
+-assert sys.argv[1] in ('collect','custody')
++primary_error=None;close_errors=[]
++def close_owned_inputs():
++    for pin in held:
++        if pin.get('closeAttempted')is True:continue
++        pin['closeAttempted']=True
++        try:os.close(pin['fd'])
++        except BaseException as error:close_errors.append(error)
++
+ try:
++    assert sys.dont_write_bytecode and os.getuid() == 501 and os.getgid() == 20 and sys.platform == 'linux'
++    assert Path('/sys/fs/cgroup/memory.max').read_text().strip() == '2147483648'
++    assert Path('/sys/fs/cgroup/memory.swap.max').read_text().strip() == '0'
++    assert sys.argv[1] in ('collect','custody')
+     receipt_pin = capture(Path('/owned/public-transfer-receipt.json'),Path('/owned'),'transfer-receipt',layout=True)
+     receipt_meta,receipt_raw = qualify(receipt_pin,True)
+     receipt = strict(receipt_raw)
+@@ -145,5 +154,10 @@
+             final,_ = qualify(pin)
+             assert final['PRE9'] == pin['PRE9']
+         emit({'scope':'TASK03_ACTUAL_PUBLIC_LINUX_CUSTODY_ONLY','status':'PASS','receiptMetadata':receipt_meta,'publicMembers':1914,'directoryCount':directories,'observed':observed,'allCurrentDestinationIdentities':'PASS_ALL9','currentSourceDestinationFullContent':'PASS','transferSourceOriginalNine':'PASS_ALL9','heldThroughFinalFullEOFAndPathDescriptorNine':True,'privateReads':0,'volumeWrites':0,'serviceCalls':0,'nativeFoundationAccepted':False,'fullTask03':False})
++except BaseException as error:
++    primary_error=error
+ finally:
+-    for pin in held: os.close(pin['fd'])
++    close_owned_inputs()
++if primary_error is not None or close_errors:
++    chain=([primary_error]if primary_error is not None else[])+close_errors
++    raise BaseExceptionGroup('public observer sticky primary and owned-close failure chain',chain)

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<stdin>", line 23, in <module>
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls.py", line 233, in main
+    entry_cases(bypath[str(N/'actual-entry.py')],N/'fixtures/owned-entry-3.py')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls.py", line 212, in entry_cases
+    if stage=='positive':require(primary is None and status==0,'entry_positive')
+                         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls.py", line 10, in require
+    if not v:raise AssertionError(msg)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: entry_positive

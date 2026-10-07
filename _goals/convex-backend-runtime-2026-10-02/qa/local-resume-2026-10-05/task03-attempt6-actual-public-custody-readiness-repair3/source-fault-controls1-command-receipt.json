@@ -1,0 +1,54 @@
+{
+  "scope": "U3_SOURCE_ONLY_HELD_ISOLATED_CONTROL_COMMAND",
+  "status": "FAIL",
+  "startUnixNs": "1791392994269203000",
+  "endUnixNs": "1791392994269507000",
+  "primary": {
+    "class": "AssertionError",
+    "reason": "source_immature:/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/author-source-writers-stopped.json"
+  },
+  "closeErrors": [],
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutBytes": 0,
+  "stderrSha256": "77029ef165f3c0ec3d2809c990bdce1f626b628a7a7ee17e78696b789c4a5cb4",
+  "stderrBytes": 336,
+  "pipeLimits": 262144,
+  "sourceGraph": {
+    "files": 21,
+    "bytes": 2345,
+    "limits": {
+      "files": 4096,
+      "bytes": 67108864,
+      "perFileBytes": 16777216
+    },
+    "oneNonresettingLedger": true,
+    "nestedHarnessInputsAreExplicitSubset": true
+  },
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/actual-entry.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92758024",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2345",
+        "mtime_ns": "1791392036933462618",
+        "ctime_ns": "1791392040473666658"
+      },
+      "closeAttempted": true
+    }
+  ],
+  "allFDsCapturedBeforeFirstSourceBody": true,
+  "allSourceFDsHeldThroughControlEnd": false,
+  "allOwnedSourceCloseAttempts": 1,
+  "unknownCloseRetry": false,
+  "Docker": false,
+  "privateReads": 0,
+  "serviceCalls": 0,
+  "nativePrivate": false,
+  "fullTask03": false,
+  "fullGoal": false
+}

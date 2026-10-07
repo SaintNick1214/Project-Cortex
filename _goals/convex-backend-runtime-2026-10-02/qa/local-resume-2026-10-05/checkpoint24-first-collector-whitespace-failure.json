@@ -1,0 +1,38 @@
+{
+  "scope": "PRESERVED_CHECKPOINT_COLLECTOR_WHITESPACE_ASSERTION_FAILURE_ONLY",
+  "timestampUtc": "2026-10-07T17:47:14.792155+00:00",
+  "collectorExit": 1,
+  "failedAt": "Assertion requiring all frozen evidence patch contexts to pass whitespace",
+  "fullWhitespaceExit": 2,
+  "fullWhitespaceStdout": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-public-observer.py.adaptation.patch:18: trailing whitespace.\n+ \n_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/run-actual-review.py.adaptation.patch:45: trailing whitespace.\n+ \n_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls3.py.adaptation.patch:14: trailing whitespace.\n+ \n",
+  "threeFrozenContextLines": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-public-observer.py.adaptation.patch",
+      "sha256": "c5ae81e662c8b0811862a06a46ea4f25ab471aea820eb1bda390c2f92c097def",
+      "kind": "Literal blank unchanged context line in preserved unified adaptation patch",
+      "lines": [
+        18
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/run-actual-review.py.adaptation.patch",
+      "sha256": "33b9757a171f261ccb94f1c6c130225835d1cc219a59ef79706d4397a1935cb4",
+      "kind": "Literal blank unchanged context line in preserved unified adaptation patch",
+      "lines": [
+        45
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls3.py.adaptation.patch",
+      "sha256": "9f09fbc0842311e448f7b10693c99cd8fb36a0afefd7cfff3de156908da510a5",
+      "kind": "Literal blank unchanged context line in preserved unified adaptation patch",
+      "lines": [
+        14
+      ]
+    }
+  ],
+  "frozenBytesUnchanged": true,
+  "didNotCommitAfterFailure": true,
+  "productSourceChanged": false,
+  "fullGoalComplete": false
+}

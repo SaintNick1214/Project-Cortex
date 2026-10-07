@@ -1,0 +1,47 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-dependency-observer.mjs
+@@ -23,8 +23,9 @@
+  // Capture and hold each actual descriptor before its first identity/content qualification.
+  const before=lstatSync(path,{bigint:true});
+  const fd=openSync(path,constants.O_RDONLY|constants.O_NOFOLLOW);
++ const pin={path,kind,fd,closeAttempted:false};pins.push(pin); // immediate ownership before maturity/fstat/assertion
+  assert.ok(BigInt(Date.now())*1000000n>=before.mtimeNs+60000000000n&&BigInt(Date.now())*1000000n>=before.ctimeNs+60000000000n,'immature_before_first_capture');
+- const pin={path,kind,identityDecimal:id(before),fd};pins.push(pin);assert.deepEqual(id(fstatSync(fd,{bigint:true})),pin.identityDecimal);return pin;
++ pin.identityDecimal=id(before);assert.deepEqual(id(fstatSync(fd,{bigint:true})),pin.identityDecimal);return pin;
+ }
+ function qualify(pin,collect=false){
+  const {fd,path,identityDecimal:baseline}=pin;
+@@ -40,6 +41,15 @@
+  return {path,sha256:hash.digest('hex'),bytes:size,identityDecimal:baseline,fullEOF:true,allNinePreOpenPostFinal:true,...(collect?{body:Buffer.concat(chunks)}:{})};
+ }
+ function sameOriginal(actual,original){assert.equal(actual.sha256,original.sha256);assert.equal(actual.bytes,original.bytes);assert.deepEqual(actual.identityDecimal,original.identityDecimal);}
++let primaryError=null;const closeErrors=[];
++function closeOwnedInputs(){
++ for(const pin of pins){
++  if(pin.closeAttempted)continue;
++  pin.closeAttempted=true;
++  try{closeSync(pin.fd);}catch(error){closeErrors.push(error);}
++ }
++}
++try{
+ assert.equal(process.version,'v24.15.0');assert.equal(process.platform,'linux');assert.equal(process.arch,'x64');assert.equal(process.getuid(),501);assert.equal(process.getgid(),20);
+ assert.equal(process.env.HOME,'/tmp');assert.equal(Number(lstatSync('/tmp').mode)&0o777,0o700);assert.equal(Object.keys(process.env).some(k=>k.startsWith('CONVEX')),false);assert.equal(process.env.NODE_OPTIONS,undefined);
+ assert.equal(readFileSync('/sys/fs/cgroup/memory.max','utf8').trim(),'2147483648');assert.equal(readFileSync('/sys/fs/cgroup/memory.swap.max','utf8').trim(),'0');
+@@ -58,9 +68,8 @@
+  return {row,root:capture(join(R,row.source),'current-root-compiler'),projected:capture(join(Q,row.copy),'current-projected-compiler')};
+ });
+ // This complete all9 baseline is emitted before any captured file's first qualification.
+-const captured=pins.map(({fd,...pin})=>pin);
++const captured=pins.map(({fd,closeAttempted,...pin})=>pin);
+ emit({scope:'PROSPECTIVE_CURRENT_BIND_SESSION_ALL9_CAPTURE_BEFORE_FIRST_QUALIFICATION',sourceRoots:4,compilerProjectionMembers:114,heldDescriptors:captured.length,files:captured,historicalSourcePinsAdopted:false});
+-try{
+  const rootMetadata=[],historicalSourceIdentityDifferences=[];
+  for(const {row,source,volume} of roots){
+   const currentSource=qualify(source),currentVolume=qualify(volume);sameOriginal(currentVolume,row.volume);
+@@ -85,4 +94,5 @@
+  const finalHeld=[];
+  for(const pin of pins){const current=qualify(pin);assert.deepEqual(current.identityDecimal,pin.identityDecimal);finalHeld.push({path:pin.path,kind:pin.kind,...current});}
+  emit({scope:'ACTUAL_ATTEMPT6_PROSPECTIVE_CURRENT_PUBLIC_DEPENDENCY_READINESS_ONLY',status:'PASS',node:process.version,npm:toolchain.npmVersion,platform:process.platform,arch:process.arch,uid:process.getuid(),gid:process.getgid(),rootMetadata,versions,fixtureExactPackagePins:9,ancillaryExactPackagePins:3,compilerProjectionMembers:114,compilerRows,sourcePreflightCounts:[161,138,1907],compilerVersion:toolchain.compilerVersion,projectedCompilerVersion:toolchain.projectedCompilerVersion,nativeEsbuildTransform:transform,currentSourceAll9BeforeFirstQualificationThroughHeldFinal:'PASS',retainedOriginalVolumePackageAll9:'PASS',historicalSourceIdentity:'UNKNOWN_NOT_ADOPTED',historicalSourceIdentityDifferences,finalHeld,historicalFailedBodyEqualityPreserved:true,externalRequests:0,serviceDeployments:0,packageInstalls:0,volumeWrites:0,privateScratchReads:0,nativeFoundationAccepted:false});
+-}finally{for(const pin of pins)closeSync(pin.fd);}
++}catch(error){primaryError=error;}finally{closeOwnedInputs();}
++if(primaryError!==null||closeErrors.length)throw new AggregateError([...(primaryError!==null?[primaryError]:[]),...closeErrors],'dependency observer sticky primary and owned-close failure chain');
