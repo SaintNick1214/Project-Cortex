@@ -1,0 +1,62 @@
+--- U3/run-actual-review.py
++++ U4/run-actual-review.py
+@@ -6,7 +6,8 @@
+ QA = R / '_goals/convex-backend-runtime-2026-10-02/qa'
+ Q = QA / 'task03-local-native-attempt6-2026-10-06'
+ F = QA / 'local-resume-2026-10-05/task03-attempt6-integrated-repair1'
+-O = QA / 'local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3'
++O = QA / 'local-resume-2026-10-05/task03-attempt6-actual-public-entry-compatibility-repair4'
++OBSERVERS = QA / 'local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3'
+ OLD = QA / 'local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2'
+ CURRENT = QA / 'local-resume-2026-10-05/task03-attempt6-current-binding-repair2'
+ OUT = O / 'actual-observation1'
+@@ -19,8 +20,8 @@
+ HISTORICAL_MF_SHA = 'd9e5929e79d682ae2f4e3dfaad4e2fce01e81f09746a8e3f38b094ebaaf330fc'
+ MF_SHA = None
+ OP = 'c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f'
+-REVIEW_OP = '7cd9aa43-6f70-49a2-a280-f43777386366'
+-NAMES = {k:'cortex-task03-attempt6-repair3-review-'+k+'-7cd9aa43' for k in ('collect','custody','dependencies','readiness')}
++REVIEW_OP = 'bd0980b8-7a63-459b-8b13-ef852041999c'
++NAMES = {k:'cortex-task03-attempt6-repair4-review-'+k+'-bd0980b8' for k in ('collect','custody','dependencies','readiness')}
+ LABELS = {'cortex.operation':REVIEW_OP,'cortex.scope':'independent-public-custody-readiness-only'}
+ DOCKER = '/usr/local/bin/docker'
+ FIELDS = ('dev','ino','mode','nlink','uid','gid','size','mtime_ns','ctime_ns')
+@@ -227,7 +228,7 @@
+     assert resource.getrlimit(resource.RLIMIT_NOFILE)[0]>=4096
+     handoff_pin=capture(Path(sys.argv[1]),'explicit-Root-actual-handoff')
+     handoff_meta,hraw=qualify(handoff_pin,collect=True);H=strict(hraw)
+-    assert H['scope']=='TASK03_ATTEMPT6_REPAIR3_ACTUAL_PUBLIC_REVIEW_HANDOFF' and H['explicitActualPublicReviewAuthorized'] is True
++    assert H['scope']=='TASK03_ATTEMPT6_REPAIR4_ACTUAL_PUBLIC_REVIEW_HANDOFF' and H['explicitActualPublicReviewAuthorized'] is True
+     assert H['operation']==OP and H['reviewerOperation']==REVIEW_OP and H['volume']==VOLUME and H['immutableImage']==IMAGE and H['candidateSha256']==FREEZE
+     assert H['allNewWritersStopped'] is True and H['remainingWrites']==[]
+     MF_SHA=H['sourceManifestSha256']
+@@ -254,9 +255,9 @@
+     assert prep['scope']=='BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION' and prep['independent'] is True and prep['verdict']=='PASS' and prep['candidateSha256']==FREEZE and prep['candidateMembers']==1907
+     assert management['scope']=='TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY' and management['independent'] is True and management['verdict']=='PASS'
+     binding=control_docs['publicRecipeBinding'];assert binding['operation']==OP and binding['volume']==VOLUME and binding['immutableImage']==IMAGE and binding['publicCopiedFiles']==1914
+-    required_sources={str(O/n) for n in ('actual-entry.py','run-actual-review.py','linux-public-observer.py','linux-dependency-observer.mjs')}|{str(COMMON)}
++    required_sources={str(O/n) for n in ('actual-entry.py','run-actual-review.py')}|{str(OBSERVERS/n) for n in ('linux-public-observer.py','linux-dependency-observer.mjs')}|{str(COMMON)}
+     named_acceptance=control_docs['reviewSourceAcceptance']
+-    assert named_acceptance['scope']=='TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR3_NAMED_SOURCE_ACCEPTANCE' and named_acceptance['independent']is True and named_acceptance['verdict']=='PASS'
++    assert named_acceptance['scope']=='TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR4_NAMED_SOURCE_ACCEPTANCE' and named_acceptance['independent']is True and named_acceptance['verdict']=='PASS'
+     assert named_acceptance['reviewerOperation']==REVIEW_OP and named_acceptance['sourceEpochManifestSha256']==MF_SHA
+     assert named_acceptance['sourceHashes']=={p:r['sha256']for p,r in H['reviewSources'].items()}
+     assert set(H['reviewSources'])==required_sources
+@@ -294,7 +295,7 @@
+     source={'Type':'bind','Source':str(R),'Target':str(R),'ReadOnly':True}
+     public={'Type':'volume','Source':VOLUME,'Target':'/owned','ReadOnly':True,'VolumeOptions':{'NoCopy':True}}
+     selected=['/usr/bin/env','-i','PATH='+str(R/'node_modules/.bin')+':/usr/local/bin:/usr/bin:/bin','HOME=/tmp','LANG=C.UTF-8','NO_COLOR=1','CI=1','TMPDIR=/tmp']
+-    linux=str(O/'linux-public-observer.py')
++    linux=str(OBSERVERS/'linux-public-observer.py')
+     collection=compressed(execute('collect',[*selected,'/usr/local/bin/python3.12','-B',linux,'collect'],[source,public]))
+     receipt_raw=collection.pop('receiptBody').encode();receipt_metadata=collection['receiptMetadata']
+     assert sha(receipt_raw)==receipt_metadata['sha256'] and len(receipt_raw)==receipt_metadata['bytes'] and collection['publicMembers']==1914
+@@ -309,7 +310,7 @@
+     depsroot={'Type':'volume','Source':DEPS,'Target':'/deps','ReadOnly':True,'VolumeOptions':{'NoCopy':True}}
+     deps={'Type':'volume','Source':DEPS,'Target':str(R/'node_modules'),'ReadOnly':True,'VolumeOptions':{'NoCopy':True,'Subpath':'node_modules'}}
+     candidate={'Type':'volume','Source':VOLUME,'Target':str(Q),'ReadOnly':True,'VolumeOptions':{'NoCopy':True,'Subpath':'candidate'}}
+-    raw=execute('dependencies',[*selected,'/usr/local/bin/node',str(O/'linux-dependency-observer.mjs')],[source,depsroot,deps,candidate])
++    raw=execute('dependencies',[*selected,'/usr/local/bin/node',str(OBSERVERS/'linux-dependency-observer.mjs')],[source,depsroot,deps,candidate])
+     lines=raw.splitlines();assert len(lines)==2;pre,deps_result=[compressed(line)for line in lines]
+     assert pre['sourceRoots']==4 and pre['compilerProjectionMembers']==114 and deps_result['compilerProjectionMembers']==114 and deps_result['sourcePreflightCounts']==[161,138,1907]
+     assert deps_result['fixtureExactPackagePins']==9 and deps_result['ancillaryExactPackagePins']==3 and len(deps_result['versions'])==12
