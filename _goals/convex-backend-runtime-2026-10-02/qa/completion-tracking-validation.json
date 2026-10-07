@@ -1,13 +1,15 @@
 {
-  "scope": "COMPLETION_TRACKING_DATA_VALIDATION_ONLY_NO_PRODUCT_ACCEPTANCE",
-  "timestamp_utc": "2026-10-07T20:31:02.028097+00:00",
-  "milestone_rows_validated": 32,
-  "task_snapshot_rows": 17,
-  "original_task_criteria_mapped": 61,
-  "original_goal_success_criteria_mapped": 12,
-  "fixed_denominator_and_percentage_arithmetic": "PASS",
-  "unique_milestones": "PASS",
-  "original_task_file_sha256_conserved": "PASS",
-  "preparation_and_control_rates_separate_from_functional_acceptance": true,
+  "schema": "cortex.completion-tracking-validation.v1",
+  "timestamp_utc": "2026-10-07T20:48:56.208628+00:00",
+  "status": "PASS",
+  "milestone_count": 33,
+  "task_count": 17,
+  "criteria_count": 61,
+  "accepted_criteria_count": 3,
+  "checks": [
+    "17 original task byte hashes and fixed criteria arithmetic",
+    "33 unique append-only milestone IDs",
+    "Task01 bounded scope only; accepted gates1/17=5.9%; product0/12=0%"
+  ],
   "full_goal_complete": false
 }
