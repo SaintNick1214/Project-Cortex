@@ -1,0 +1,141 @@
+{
+  "scope": "FRESH_256KiB_FIXED38_FIELD_SOURCE_MOCK_CONTROLS_ONLY",
+  "status": "PASS",
+  "count": 31,
+  "controls": [
+    {
+      "name": "all_original11_plus_binding_and_original_windows_fixed38_fields",
+      "status": "PASS"
+    },
+    {
+      "name": "maximum256KiB_encoded_input_full_schema",
+      "status": "PASS"
+    },
+    {
+      "name": "maximum_plus_one_denied_before_decode",
+      "status": "DENIED"
+    },
+    {
+      "name": "raw_evidence_nested_payload_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "additional_evidence_field_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "oversized_publisher_string_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_max_paid_bool_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_nativeSourceOriginalNineFullEOFHashSize_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_destinationOriginalNineFullEOFHashSize_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_hostOriginalStageOriginalNineFullEOFHashSize_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_rsa2048_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_privateKeyMatchesFrozenSingleJWK_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_RS256SignVerify_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_changedMessageNegativeControl_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_environmentMatchesOwnedDevTarget_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_requestAndProvisionOwnership_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_freshIsolatedCloudDevelopmentTarget_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "original_assertion_originalSourceClosureAllNineFullEOFHashSize_must_pass",
+      "status": "DENIED"
+    },
+    {
+      "name": "currentTransportBindingSha256_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "currentTransportBindingSixFieldsCanonical_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "currentTransportBindingOriginalNineFullEOFHashSize_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "currentTransportBindingSeparatePublicInput_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "currentBindingPublicDecisionSha256_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "independentObservationHeldSeconds_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "historicalCustodyRepaired_denied",
+      "status": "DENIED"
+    },
+    {
+      "name": "required_field_missing_rsa2048",
+      "status": "DENIED"
+    },
+    {
+      "name": "required_field_missing_currentBindingPublicDecisionSha256",
+      "status": "DENIED"
+    },
+    {
+      "name": "cleanup_foreign_key_denied_before_source_or_private_access",
+      "status": "DENIED"
+    },
+    {
+      "name": "cleanup_third_attempt_denied_before_source_or_private_access",
+      "status": "DENIED"
+    },
+    {
+      "name": "cleanup_duplicate_key_denied_before_source_or_private_access",
+      "status": "DENIED"
+    },
+    {
+      "name": "held_first_use_launcher_wrong_plan_denied",
+      "status": "DENIED"
+    }
+  ],
+  "shallowCanonicalPayloadBytes": 2127,
+  "maxInputBytes": 262144,
+  "maxPlusOneDenied": true,
+  "allOriginal11AndCurrentBindingFieldsPreserved": true,
+  "allOriginalActualCustodyFunctionsASTExact": true,
+  "allOriginalActualCustodyCapsUnchanged": true,
+  "privateReads": 0,
+  "DockerCalls": 0,
+  "networkCalls": 0,
+  "actualAcceptance": false
+}

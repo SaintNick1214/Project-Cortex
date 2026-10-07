@@ -1,0 +1,47 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/audit-reader.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/bounded1/audit-reader.py
+@@ -8,7 +8,7 @@
+ 
+ R=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+ P=R/'_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05'
+-F=P/'task03-attempt6-current-binding-repair2';A=P/'task03-attempt6-actual-private-native-review-repair2'/'epoch2'
++F=P/'task03-attempt6-current-binding-repair2';A=P/'task03-attempt6-actual-private-native-review-repair2'/'bounded1'
+ OLD_A=P/'task03-attempt6-actual-private-native-review1'
+ EXPECTED_CASE_DATA=OLD_A/'expected-native-cases.json'
+ EXPECTED_CASE_SHA='e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323'
+@@ -51,9 +51,34 @@
+  v={ST_FIELDS.get(k,k):x for k,x in value.items()}
+  assert set(v)==set(FIELDS)and all(type(x)is str and x.isdecimal() for x in v.values())
+  return v
++CRYPTO_DECISION_MAX_BYTES=262144
++CRYPTO_DECISION_FIELDS=frozenset(['RS256SignVerify', 'actualNativeOutcomeAccepted', 'actualObserverSha256', 'actualPrivateCustodyCryptoEnvTargetAccepted', 'candidateSha256', 'changedMessageNegativeControl', 'currentBindingPublicDecisionSha256', 'currentTransportBindingOriginalNineFullEOFHashSize', 'currentTransportBindingSeparatePublicInput', 'currentTransportBindingSha256', 'currentTransportBindingSixFieldsCanonical', 'destinationOriginalNineFullEOFHashSize', 'environmentMatchesOwnedDevTarget', 'evaluatedAtUtc', 'firstTransferStatusSha256', 'freshIsolatedCloudDevelopmentTarget', 'fullTask03', 'goalAccepted', 'historicalCustodyRepaired', 'hostOriginalStageOriginalNineFullEOFHashSize', 'immutableImage', 'independent', 'independentObservationHeldSeconds', 'latestRootReleaseUtc', 'maximumPaidCalls', 'nativeSourceOriginalNineFullEOFHashSize', 'operation', 'originalDeadlineUtc', 'originalSourceClosureAllNineFullEOFHashSize', 'privateKeyMatchesFrozenSingleJWK', 'privateSourceApprovalSha256', 'productionSharedOrLocalTarget', 'requestAndProvisionOwnership', 'rsa2048', 'scope', 'sourceManifestSha256', 'verdict', 'volume'])
++def encode_crypto_decision(value):
++ assert type(value)is dict and set(value)==CRYPTO_DECISION_FIELDS,'fixed_shallow_crypto_decision_schema'
++ for key,v in value.items():
++  assert type(v)in (str,bool,int),'no_raw_evidence_or_nested_crypto_decision_payload'
++  if type(v)is str:assert len(v)<=256
++ for key in PASS_FIELDS:assert value[key]=='PASS'
++ assert value['verdict']=='PASS'and value['independent']is True and value['scope']=='ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY'
++ assert value['operation']==OP and value['volume']==V and value['immutableImage']==IMAGE and value['candidateSha256']==FREEZE
++ for key in ('actualPrivateCustodyCryptoEnvTargetAccepted','currentTransportBindingSeparatePublicInput'):assert value[key]is True
++ for key in ('productionSharedOrLocalTarget','actualNativeOutcomeAccepted','fullTask03','goalAccepted','historicalCustodyRepaired'):assert value[key]is False
++ assert type(value['maximumPaidCalls'])is int and value['maximumPaidCalls']==0
++ assert type(value['independentObservationHeldSeconds'])is int and value['independentObservationHeldSeconds']==20
++ assert value['currentTransportBindingSha256']==CURRENT_BINDING_SHA and value['currentTransportBindingSixFieldsCanonical']=='PASS'and value['currentTransportBindingOriginalNineFullEOFHashSize']=='PASS'
++ for key in ('sourceManifestSha256','privateSourceApprovalSha256','actualObserverSha256','firstTransferStatusSha256','currentBindingPublicDecisionSha256'):
++  assert type(value[key])is str and len(value[key])==64 and all(x in '0123456789abcdef'for x in value[key])
++ for key in ('originalDeadlineUtc','latestRootReleaseUtc','evaluatedAtUtc'):assert len(value[key])<=64 and stamp(value[key]).tzinfo is not None
++ raw=(json.dumps(value,indent=2,ensure_ascii=False,allow_nan=False)+'\n').encode()
++ assert len(raw)<=CRYPTO_DECISION_MAX_BYTES,'crypto_enabling_decision_publication_256KiB_bound'
++ return raw
++def decode_crypto_decision(raw):
++ assert type(raw)is bytes and len(raw)<=CRYPTO_DECISION_MAX_BYTES,'crypto_enabling_decision_input_256KiB_bound'
++ value=strict(raw);encode_crypto_decision(value);return value
++
+ def durable(path,value):
+  assert path.is_relative_to(A)and path.resolve()==path
+- raw=(json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode()
++ raw=encode_crypto_decision(value)if path==A/'private/decision.json'else(json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode()
+  fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+  try:
+   with os.fdopen(fd,'wb')as f:f.write(raw);f.flush();os.fsync(f.fileno())

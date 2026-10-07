@@ -1,0 +1,66 @@
+{
+  "scope": "OBSERVER_PURE_SOURCE_MOCK_CONTROLS_ONLY",
+  "status": "PASS",
+  "controls": [
+    {
+      "name": "new_six_canonical_pinned_public_input",
+      "result": "PASS",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "changed_operation_denied_before_private",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "changed_requestSha256_denied_before_private",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "changed_projectSlug_denied_before_private",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "changed_projectName_denied_before_private",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "changed_teamId_denied_before_private",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "changed_privateEnvironmentFile_denied_before_private",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "native_public_pin_changed_denied",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "public_binding_hash_changed_denied",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "public_gate_precedes_every_private_path_operation",
+      "result": "PASS",
+      "scope": "SOURCE_ORDER_AND_PURE_NEGATIVE_CONTROLS"
+    },
+    {
+      "name": "all_four_native_and_three_destination_descriptors_before_original_content_and_20_second_hold",
+      "result": "PASS",
+      "scope": "SOURCE_ORDER_ONLY_NOT_ACTUAL_HOLD"
+    }
+  ],
+  "count": 11,
+  "privateAccesses": 0,
+  "DockerCalls": 0,
+  "actualObservationSeconds": 0,
+  "noActualCryptoOrNativeAcceptance": true
+}

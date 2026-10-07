@@ -1,0 +1,255 @@
+{
+  "scope": "A2_DISTINCT_EPOCH2_IMPLEMENTATION_PREPARATION_ONLY_NOT_INDEPENDENT_REVIEW",
+  "status": "CLOSED_SOURCE_MOCK_PASS_REQUIRES_FRESH_ROOT_SOURCE_REVIEW",
+  "actualPrivateAccepted": false,
+  "actualNativeAccepted": false,
+  "fullTask03": false,
+  "goalAccepted": false,
+  "historicalEpoch1": "FAILED_UNKNOWN_POST_STOP_CTIME_NOT_REPAIRED",
+  "historicalEpoch1Evidence": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/preparation-failure.json",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/first-source-capture-failure-cause.json",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/source-writers-stopped.json"
+  ],
+  "newEpochPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2",
+  "authorSourceStop": {
+    "scope": "A2_EPOCH2_AUTHOR_SOURCE_WRITERS_STOPPED_BEFORE_OBSERVED_METADATA_SETTLING",
+    "authorSourceWriters": "STOPPED",
+    "remainingAuthorSourceWrites": [],
+    "authorStoppedUnixNs": "1791325456342071000",
+    "metadataWriter": "UNKNOWN_NO_WRITER_IDENTIFIED",
+    "sourceInputPlanPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/source-inputs-plan.json",
+    "memberCount": 34,
+    "memberBytes": 1364257,
+    "laterObservedStopRequired": true,
+    "actualPrivateAccepted": false,
+    "actualNativeAccepted": false
+  },
+  "observedSourceStop": {
+    "scope": "A2_EPOCH2_DISTINCT_OBSERVED_SOURCE_STOP_AFTER_METADATA_SETTLING",
+    "sourceWriters": "STOPPED",
+    "remainingSourceWrites": [],
+    "stoppedUnixNs": "1791325564564793000",
+    "authorStopReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/author-writers-stopped.json",
+    "metadataObservation": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/metadata-settling-observation.json",
+    "metadataWriter": "UNKNOWN_NO_WRITER_IDENTIFIED",
+    "requiresActualMaxMtimeCtimeMaturitySeconds": 60,
+    "sourceInputPlanPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/source-inputs-plan.json",
+    "memberCount": 34,
+    "memberBytes": 1364257,
+    "historicalEpoch1": "FAILED_UNKNOWN_NOT_REPAIRED",
+    "remainingOutputPublishers": [
+      "qualify-preparation.py exclusive SOURCE_MOCK output publisher",
+      "source-only final report and finite output manifest publisher"
+    ],
+    "actualPrivateAccepted": false,
+    "actualNativeAccepted": false,
+    "fullTask03": false,
+    "goalAccepted": false
+  },
+  "metadataSettlingObservation": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/metadata-settling-observation.json",
+  "preparedSourceManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/prepared-source-manifest.json",
+    "sha256": "b3640107402d6a2bcbecb931e24e8642a8cae94c2834b7facff24c1c61ca0056",
+    "bytes": 54304
+  },
+  "controls": {
+    "reader": 79,
+    "collector": 11,
+    "observer": 11,
+    "SOURCE_MOCK_Total": 101,
+    "syntaxPythonAST": 4,
+    "syntaxNode": 4,
+    "nodeVersion": "v24.15.0",
+    "nodeOrigin": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "npmCalls": 0,
+    "privateReads": 0,
+    "DockerCalls": 0,
+    "CLICommands": 0,
+    "networkCalls": 0,
+    "actualObservationSeconds": 0
+  },
+  "adaptations": {
+    "nativeComparatorASTExact": true,
+    "nativeCollectorByteExact": true,
+    "expectedNativeCaseDataFullBytesByReference": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review1/expected-native-cases.json",
+    "expectedNativeCaseSHA256": "e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323",
+    "highFDCommonByHeldByteReference": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+    "currentPublicBindingBeforePrivateStat": true,
+    "currentBindingSixCanonicalAndActualTarget": true,
+    "nativeNineMustEqualSeparateIndependentPublicProbe": true,
+    "verifiedHeldInlineNodeSourceBeforeFirstUse": true,
+    "pycCacheTrusted": false,
+    "ownedReadonlyObserversPreparedBeforeProvisioningFutureOnly": true,
+    "originalFinal20SecondHoldPreserved": true,
+    "additionalPreContent20SecondHold": true,
+    "exactEightFieldRootReleasePreserved": true,
+    "bindingAdditionalFieldsOnlyInsideAuthenticatedDecision": true
+  },
+  "phaseBudgets": {
+    "sourceAcquisition": {
+      "singleLedger": true,
+      "maxDescriptors": 4096,
+      "maxAggregateBytes": 67108864,
+      "maxPerFileBytes": 16777216,
+      "futureReleaseDataTotalReserveBytes": 2097152,
+      "MFAndApprovalAndEverySourceControlDataCharged": true,
+      "noSubgraphReset": true,
+      "sourceOnlyHeldCount": 46,
+      "sourceOnlyHeldBytes": 1473261,
+      "sourcePlusReservedFutureDataBytes": 3570413,
+      "futureA2Handoffs": {
+        "directory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/handoffs",
+        "exactFilenames": [
+          "PREPARE_OBSERVERS.json",
+          "PRIVATE.json",
+          "NATIVE.json",
+          "RETIREMENT.json"
+        ],
+        "eachMaxBytes": 65536,
+        "allFourMaxBytes": 262144
+      },
+      "namedSourceAcceptance": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/integrated-source-review.json",
+      "namedSourceAcceptanceMaxBytes": 1048576,
+      "sourceApprovalChargedSeparatelyNotInsideReserve": true
+    },
+    "originalActualCustodyEvidence": {
+      "separateFromSourceAcquisitionBudget": true,
+      "noNew2MiBAggregate": true,
+      "allOriginalPinsFDsFullEOFHashesDeadlinesPreserved": true,
+      "actualControlInputs": [
+        {
+          "path": "S6/coordination/host-source-custody.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "S6/coordination/host-stage-custody.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "S6/created-project.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "S6/provision-attempt.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "S6/coordination/crypto-prepared-recipe.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "S6/target-pre-retirement.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "S6/target.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/task03-attempt6-target-provision.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/task03-attempt6-target-retirement.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/runtime/coordinator-status.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/runtime/actual-private-crypto-observation.json",
+          "maxBytes": 262144
+        },
+        {
+          "path": "S6/coordination/official-execution-terminal.json",
+          "maxBytes": 1048576
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/prepare/prepared-observers.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/private/original-window.json",
+          "maxBytes": 65536
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/private/held-closure.json",
+          "maxBytes": 16777216
+        },
+        {
+          "path": "S6/coordination/<exact original raw label>.receipt.json",
+          "maxBytes": 262144
+        },
+        {
+          "path": "S6/coordination/<exact original raw label>.stdout",
+          "maxBytes": 262144
+        },
+        {
+          "path": "S6/coordination/<exact original raw label>.stderr",
+          "maxBytes": 262144
+        }
+      ],
+      "hostPrivateFilesAndStageAllBeforeContent": {
+        "originalFiles": 3,
+        "stageFiles": 4,
+        "eachMaxBytes": 65536
+      },
+      "linuxObserver": {
+        "nativeSources": 4,
+        "destinations": 3,
+        "eachMaxBytes": 65536,
+        "ownedMode600": true,
+        "nlink1": true
+      },
+      "nativeCollector": {
+        "selectedFiles": 15,
+        "decodedEnvelopeMaxBytes": 25165824,
+        "originalControls": [
+          "1400negatives",
+          "200noeffect",
+          "150visibility",
+          "130functional",
+          "262closure67paths",
+          "10domain",
+          "16policy2healthy1revoked",
+          "8authority",
+          "6SDK",
+          "275production+12fixture=287typecheckassertions"
+        ]
+      },
+      "unconditionalRetirementProofRequired": true
+    },
+    "originalWindows": {
+      "total2400": true,
+      "cryptoAndRootDataBy350": true,
+      "remainingOfficial2050": true,
+      "independent270": true,
+      "rootFinal30": true,
+      "CLI120": true,
+      "Common190": true,
+      "native1200": true,
+      "driver1260": true,
+      "perPipe262144": true,
+      "input327692And12seconds": true,
+      "RPC10000msAnd12seconds": true,
+      "maximumPaidCalls0": true,
+      "cleanupAttemptCap2": true,
+      "noReset": true
+    }
+  },
+  "remainingFutureDependencies": {
+    "requiresFreshIndependentF2MFApproval": true,
+    "requiresActualOriginal1914BasePublicReview": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/base-public-custody-review.json",
+    "requiresSeparateCurrentBindingPublicReview": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/current-binding-public-custody-review.json",
+    "requiresExactExplicitRootStageHandoff": true,
+    "privateCryptoIndependentDecision": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/actual-private-crypto-independent-review.json",
+    "officialRootExactEightRelease": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/actual-private-crypto-execution-release.json",
+    "allSourceAndControlInputsMatureBeforeFirstUse": true,
+    "noEnablingConsumerPublished": true
+  },
+  "outputsOfThisPublisherSelfExcludedUntilLaterMatureRootConsumer": true,
+  "sourceAndControlWritersStoppedBeforeThisCapture": true,
+  "allSourcesAndOutputsActual60SecondMaxMtimeCtimeMaturityBeforeFirstQualification": true
+}
