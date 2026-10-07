@@ -1,0 +1,34 @@
+{
+  "schema": "cortex.root-audit-ledger-consistency.v1",
+  "scope": "ORDINARY_FINITE_AUDIT_CONSERVATION_ONLY",
+  "ledger_names": [
+    "actual-audit-body-read-ledger1.json",
+    "continued-audit-body-read-ledger2.json",
+    "publication-hash-read-ledger3.json",
+    "supplemental-publication-read-ledger4.json"
+  ],
+  "read_occurrence_counts": [
+    50,
+    10,
+    12,
+    4
+  ],
+  "read_occurrence_bytes": [
+    14798382,
+    136481,
+    9573833,
+    141461
+  ],
+  "total_occurrences": 76,
+  "total_bytes": 24650157,
+  "lost_digest_occurrences": 1,
+  "lost_digest_bytes": 7078,
+  "lost_digest_original_null_preserved": true,
+  "publisher_physical_qualification_is_not_historical_read_qualification": true,
+  "old_report_pins_and_STOP1_content_preserved": true,
+  "root_current_fd_once_closes": 20,
+  "source_eligibility": false,
+  "partition_adopted": false,
+  "functional_acceptance": false,
+  "effects": 0
+}
