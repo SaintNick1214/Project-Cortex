@@ -1,0 +1,75 @@
+{
+  "label": "wiring-supported314",
+  "argv": [
+    "/opt/homebrew/bin/python3",
+    "-B",
+    "-c",
+    "\"\"\"SOURCE/MOCK reachable successor gates, exact sets and semantic conservation.\"\"\"\nimport ast,collections,json,sys\nfrom pathlib import Path\nP=json.loads(sys.stdin.buffer.read());new=ast.parse(P['runner']);old=ast.parse(P['oldRunner'])\nreceipts=[]\ndef record(name,**kw):receipts.append({'name':name,'status':'PASS','scope':'ISOLATED_ACTUAL_SUCCESSOR_GATE_SOURCE_MOCK',**kw})\nfor n in ast.walk(old):\n if isinstance(n,ast.Constant)and isinstance(n.value,str):n.value=n.value.replace('TASK03_ATTEMPT6_REPAIR3_ACTUAL_PUBLIC_REVIEW_HANDOFF','TASK03_ATTEMPT6_REPAIR4_ACTUAL_PUBLIC_REVIEW_HANDOFF').replace('TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR3_NAMED_SOURCE_ACCEPTANCE','TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR4_NAMED_SOURCE_ACCEPTANCE')\nassert[ast.dump(n,include_attributes=False)for n in ast.walk(old)if isinstance(n,ast.Assert)]==[ast.dump(n,include_attributes=False)for n in ast.walk(new)if isinstance(n,ast.Assert)]\nassert{n.name:ast.dump(n,include_attributes=False)for n in old.body if isinstance(n,ast.FunctionDef)}=={n.name:ast.dump(n,include_attributes=False)for n in new.body if isinstance(n,ast.FunctionDef)}\nrecord('runner:all-original-assertions-and-functions-conserved',assertions=sum(isinstance(n,ast.Assert)for n in ast.walk(old)))\noe=ast.parse(P['oldEntry']);ne=ast.parse(P['entry'])\nassert[ast.dump(n,include_attributes=False)for n in ast.walk(oe)if isinstance(n,ast.Assert)]==[ast.dump(n,include_attributes=False)for n in ast.walk(ne)if isinstance(n,ast.Assert)]\nrecord('entry:all-original-assertions-conserved')\nnames={'R','QA','O','OBSERVERS','OLD','COMMON','REVIEW_OP','OP','VOLUME','IMAGE','FREEZE'}\nconstants=[n for n in new.body if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id in names for t in n.targets)]\nouter=next(n for n in new.body if isinstance(n,ast.Try))\ngate=[];take=False\nfor n in outer.body:\n if isinstance(n,ast.Assert)and any(isinstance(c,ast.Constant)and c.value=='TASK03_ATTEMPT6_REPAIR4_ACTUAL_PUBLIC_REVIEW_HANDOFF'for c in ast.walk(n)):gate.append(n)\n elif isinstance(n,ast.Assert)and getattr(n,'lineno',0)in(232,233):gate.append(n)\n if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id=='required_sources'for t in n.targets):take=True\n if take:\n  if isinstance(n,ast.For):break\n  gate.append(n)\nassert len(gate)>=7\nconstant_code=compile(ast.fix_missing_locations(ast.Module(body=constants,type_ignores=[])),'<held-successor-constants>','exec')\ngate_code=compile(ast.fix_missing_locations(ast.Module(body=gate,type_ignores=[])),'<held-successor-reachable-gates>','exec')\nbase={'Path':Path};exec(constant_code,base)\nrequired={str(base['O']/n)for n in('actual-entry.py','run-actual-review.py')}|{str(base['OBSERVERS']/n)for n in('linux-public-observer.py','linux-dependency-observer.mjs')}|{str(base['COMMON'])}\nassert len(required)==5 and str(base['OBSERVERS']/'actual-entry.py')not in required\ndef execute(kind):\n H={'scope':'TASK03_ATTEMPT6_REPAIR4_ACTUAL_PUBLIC_REVIEW_HANDOFF','explicitActualPublicReviewAuthorized':True,'operation':base['OP'],'reviewerOperation':base['REVIEW_OP'],'volume':base['VOLUME'],'immutableImage':base['IMAGE'],'candidateSha256':base['FREEZE'],'allNewWritersStopped':True,'remainingWrites':[],'reviewSources':{p:{'sha256':'a'*64}for p in required}}\n A={'scope':'TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR4_NAMED_SOURCE_ACCEPTANCE','independent':True,'verdict':'PASS','reviewerOperation':base['REVIEW_OP'],'sourceEpochManifestSha256':'b'*64,'sourceHashes':{p:'a'*64 for p in required}}\n if kind=='stale-U3-handoff':H['scope']='TASK03_ATTEMPT6_REPAIR3_ACTUAL_PUBLIC_REVIEW_HANDOFF'\n if kind=='stale-U3-PASS-claim':A['scope']='TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR3_NAMED_SOURCE_ACCEPTANCE'\n if kind=='wrong-active-entry':\n  row=H['reviewSources'].pop(str(base['O']/'actual-entry.py'));H['reviewSources'][str(base['OBSERVERS']/'actual-entry.py')]=row;A['sourceHashes']={p:r['sha256']for p,r in H['reviewSources'].items()}\n if kind=='extra-source-key':\n  H['reviewSources']['/owned-extra']={'sha256':'a'*64};A['sourceHashes']['/owned-extra']='a'*64\n if kind=='missing-source-key':\n  H['reviewSources'].pop(str(base['COMMON']));A['sourceHashes'].pop(str(base['COMMON']))\n if kind=='wrong-source-hash':A['sourceHashes'][str(base['O']/'actual-entry.py')]='c'*64\n if kind=='old-reviewer-operation':A['reviewerOperation']='7cd9aa43-6f70-49a2-a280-f43777386366'\n if kind=='non-independent-bool-alias':A['independent']=1\n if kind=='wrong-verdict':A['verdict']='REVISION'\n if kind=='source-epoch-mismatch':A['sourceEpochManifestSha256']='c'*64\n if kind=='unauthorized-actual-bool-alias':H['explicitActualPublicReviewAuthorized']=1\n if kind=='writers-not-stopped':H['allNewWritersStopped']=False\n if kind=='remaining-writes':H['remainingWrites']=['owned-future-write']\n ns={**base,'H':H,'control_docs':{'reviewSourceAcceptance':A},'MF_SHA':'b'*64}\n denied=False\n try:exec(gate_code,ns)\n except AssertionError:denied=True\n assert denied is(kind!='positive-exact-five')\n record('successor:'+kind,denied=denied,sourceEffects=0)\nfor kind in('positive-exact-five','stale-U3-handoff','stale-U3-PASS-claim','wrong-active-entry','extra-source-key','missing-source-key','wrong-source-hash','old-reviewer-operation','non-independent-bool-alias','wrong-verdict','source-epoch-mismatch','unauthorized-actual-bool-alias','writers-not-stopped','remaining-writes'):execute(kind)\nprint(json.dumps({'scope':'U4_AUTHOR_SUCCESSOR_GATE_AND_CONSERVATION_SOURCE_MOCK','status':'PASS','controls':receipts,'count':len(receipts),'pythonExecutable':sys.executable,'pythonVersion':sys.version,'actualRunnerExecuted':False,'nativePrivate':False,'fullTask03':False},separators=(',',':')))\n"
+  ],
+  "observedAtUtc": "2026-10-07T21:55:28.926345+00:00",
+  "elapsedSeconds": 0.25526104200980626,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 2597,
+    "stderr": 0
+  },
+  "stdinBytes": 68764,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 74536,
+      "birthSeconds": "1791410128",
+      "birthMicroseconds": "926504",
+      "group": 74536,
+      "session": 74536,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 74538,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 74536,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 74536,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 74536,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "dadb2ce096c5c92dc2bd3bb5f6cea7b48d8549424d382e0c415dbb97f1573a5e",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

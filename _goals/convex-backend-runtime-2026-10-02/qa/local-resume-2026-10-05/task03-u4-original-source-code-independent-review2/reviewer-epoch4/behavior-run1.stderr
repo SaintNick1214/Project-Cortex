@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<string>", line 9, in <module>
+    p=J/name;s=p.lstat();assert stat.S_ISREG(s.st_mode)and s.st_nlink==1 and s.st_uid==501 and s.st_gid==20 and time.time_ns()-max(s.st_mtime_ns,s.st_ctime_ns)>=240000000000
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

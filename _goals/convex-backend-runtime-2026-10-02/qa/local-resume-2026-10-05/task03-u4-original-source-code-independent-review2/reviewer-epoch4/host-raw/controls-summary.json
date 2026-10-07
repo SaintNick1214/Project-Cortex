@@ -1,0 +1,1067 @@
+{
+  "scope": "HOST_ONLY_SEPARATE_HIGHFD_COMMON_REGRESSION_CONTROLS",
+  "status": "PASS",
+  "actualDockerCalls": 0,
+  "privateReads": 0,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "sourceMutation": false,
+  "exactThreeReadinessSiteTransform": true,
+  "originalSelectHighFdNegative": {
+    "class": "ValueError",
+    "reason": "filedescriptor out of range in select()",
+    "descriptor": 2401
+  },
+  "selectorEmptyTimeoutReadyEof": {
+    "timeoutSeconds": 0.0356415830028709,
+    "readyDataAndEofObserved": true
+  },
+  "custodyDummyDescriptorsHeld": 3996,
+  "highestCustodyDescriptor": 4000,
+  "custodyHeldUntilEveryControlFinal": true,
+  "commands": [
+    {
+      "label": "original-lowfd-success",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import os;os.write(1,b'low-ok');os.write(2,b'low-err')"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:19.012851+00:00",
+      "elapsedSeconds": 0.24014912500570063,
+      "exitCode": 0,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 6,
+        "stderr": 7
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83061,
+          "birthSeconds": "1791411799",
+          "birthMicroseconds": "13110",
+          "group": 83061,
+          "session": 83061,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83063,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83061,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83061,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83061,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": null,
+        "absenceObserved": true,
+        "controlByteCount": 78,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "70db35d114b72d7c29bb07e72950b16426bd2054b10f9079f9b152672e194ff7",
+      "stderrSha256": "50fe3fcf64860a65abe481424c47c04aca659a04d33c1b0d49471f27582dcf94"
+    },
+    {
+      "label": "highfd2400-success",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import os;os.write(1,b'high-ok');os.write(2,b'high-err')"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:19.307362+00:00",
+      "elapsedSeconds": 0.24584966599650215,
+      "exitCode": 0,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 7,
+        "stderr": 8
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83068,
+          "birthSeconds": "1791411799",
+          "birthMicroseconds": "307759",
+          "group": 83068,
+          "session": 83068,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83070,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83068,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83068,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83068,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": null,
+        "absenceObserved": true,
+        "controlByteCount": 78,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "481795812efdb6fa61173cd7830552a076d123ffd69da66323d94b47ba49fc15",
+      "stderrSha256": "9bc38d95dae34b6ff42906e5cc495c662ab2cd9ad0a43cb2f2ecdb4f51c414f7"
+    },
+    {
+      "label": "highfd2400-nonzero",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import os,sys;os.write(1,b'nonzero');sys.exit(7)"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:19.553823+00:00",
+      "elapsedSeconds": 0.2492973339976743,
+      "exitCode": 7,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 7,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83075,
+          "birthSeconds": "1791411799",
+          "birthMicroseconds": "554147",
+          "group": 83075,
+          "session": 83075,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83077,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83075,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83075,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83075,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": null,
+        "absenceObserved": true,
+        "controlByteCount": 78,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "a294469efce3e2bf005427a1180ae291eb19d65b7c3c745b4d185df23eae6235",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "highfd2400-stdin-max",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import sys,hashlib;data=sys.stdin.buffer.read();print(str(len(data))+':'+hashlib.sha256(data).hexdigest())"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:19.803756+00:00",
+      "elapsedSeconds": 0.24994774999504443,
+      "exitCode": 0,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 72,
+        "stderr": 0
+      },
+      "stdinBytes": 327692,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83082,
+          "birthSeconds": "1791411799",
+          "birthMicroseconds": "803998",
+          "group": 83082,
+          "session": 83082,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83084,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83082,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83082,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83082,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": null,
+        "absenceObserved": true,
+        "controlByteCount": 78,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "7c8c2188dacec6acb1b3994c4a65cb90d53f816f334bdcbf0e552afd9583f0fd",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "highfd2400-pipes-max",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import sys;sys.stdout.buffer.write(b'A'*262144);sys.stdout.buffer.flush();sys.stderr.buffer.write(b'B'*262144);sys.stderr.buffer.flush()"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:20.054674+00:00",
+      "elapsedSeconds": 0.3096957499947166,
+      "exitCode": 0,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 262144,
+        "stderr": 262144
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83089,
+          "birthSeconds": "1791411800",
+          "birthMicroseconds": "55136",
+          "group": 83089,
+          "session": 83089,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83095,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83089,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83089,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83089,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": null,
+        "absenceObserved": true,
+        "controlByteCount": 78,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+      "stderrSha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e"
+    },
+    {
+      "label": "highfd2400-stdout-overflow",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import sys,time;sys.stdout.buffer.write(b'A'*262145);sys.stdout.buffer.flush();time.sleep(0.15)"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:20.365355+00:00",
+      "elapsedSeconds": 0.21737991699774284,
+      "exitCode": -9,
+      "failureClass": "ValueError",
+      "streamByteCounts": {
+        "stdout": 262145,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83102,
+          "birthSeconds": "1791411800",
+          "birthMicroseconds": "365595",
+          "group": 83102,
+          "session": 83102,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83104,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83102,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "failure-before-reconcile",
+            "members": [
+              {
+                "pid": 83102,
+                "state": "Ss"
+              },
+              {
+                "pid": 83104,
+                "state": "S"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83102,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": {
+          "event": "reconciled",
+          "before": [
+            {
+              "pid": 83102,
+              "state": "Ss"
+            },
+            {
+              "pid": 83104,
+              "state": "S"
+            }
+          ],
+          "signals": [
+            {
+              "pid": 83104,
+              "identity": {
+                "pid": 83104,
+                "birthSeconds": "1791411800",
+                "birthMicroseconds": "418441",
+                "group": 83102,
+                "session": 83102,
+                "uid": 501,
+                "platform": "darwin-proc-pidinfo-bsdinfo"
+              },
+              "signal": "SIGKILL"
+            }
+          ],
+          "final": [
+            {
+              "pid": 83102,
+              "state": "Ss"
+            }
+          ]
+        },
+        "absenceObserved": true,
+        "controlByteCount": 411,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "highfd2400-stderr-overflow",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import sys,time;sys.stderr.buffer.write(b'B'*262145);sys.stderr.buffer.flush();time.sleep(0.15)"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:20.583484+00:00",
+      "elapsedSeconds": 0.21540245799405966,
+      "exitCode": -9,
+      "failureClass": "ValueError",
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 262145
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83113,
+          "birthSeconds": "1791411800",
+          "birthMicroseconds": "583711",
+          "group": 83113,
+          "session": 83113,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83115,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83113,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "failure-before-reconcile",
+            "members": [
+              {
+                "pid": 83113,
+                "state": "Ss"
+              },
+              {
+                "pid": 83115,
+                "state": "S"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83113,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": {
+          "event": "reconciled",
+          "before": [
+            {
+              "pid": 83113,
+              "state": "Ss"
+            },
+            {
+              "pid": 83115,
+              "state": "S"
+            }
+          ],
+          "signals": [
+            {
+              "pid": 83115,
+              "identity": {
+                "pid": 83115,
+                "birthSeconds": "1791411800",
+                "birthMicroseconds": "634365",
+                "group": 83113,
+                "session": 83113,
+                "uid": 501,
+                "platform": "darwin-proc-pidinfo-bsdinfo"
+              },
+              "signal": "SIGKILL"
+            }
+          ],
+          "final": [
+            {
+              "pid": 83113,
+              "state": "Ss"
+            }
+          ]
+        },
+        "absenceObserved": true,
+        "controlByteCount": 411,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e"
+    },
+    {
+      "label": "highfd2400-deadline",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import time;time.sleep(5)"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:20.799692+00:00",
+      "elapsedSeconds": 0.5205330830067396,
+      "exitCode": -9,
+      "failureClass": "TimeoutError",
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83124,
+          "birthSeconds": "1791411800",
+          "birthMicroseconds": "799929",
+          "group": 83124,
+          "session": 83124,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83126,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83124,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "failure-before-reconcile",
+            "members": [
+              {
+                "pid": 83124,
+                "state": "Ss"
+              },
+              {
+                "pid": 83126,
+                "state": "S"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83124,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": {
+          "event": "reconciled",
+          "before": [
+            {
+              "pid": 83124,
+              "state": "Ss"
+            },
+            {
+              "pid": 83126,
+              "state": "S"
+            }
+          ],
+          "signals": [
+            {
+              "pid": 83126,
+              "identity": {
+                "pid": 83126,
+                "birthSeconds": "1791411800",
+                "birthMicroseconds": "848659",
+                "group": 83124,
+                "session": 83124,
+                "uid": 501,
+                "platform": "darwin-proc-pidinfo-bsdinfo"
+              },
+              "signal": "SIGKILL"
+            }
+          ],
+          "final": [
+            {
+              "pid": 83124,
+              "state": "Ss"
+            }
+          ]
+        },
+        "absenceObserved": true,
+        "controlByteCount": 411,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "highfd2400-residual",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "import subprocess,sys;subprocess.Popen([sys.executable,'-B','-c','import time;time.sleep(4)'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:21.320772+00:00",
+      "elapsedSeconds": 0.3449705829989398,
+      "exitCode": 0,
+      "failureClass": "OwnedGroupResidual",
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83135,
+          "birthSeconds": "1791411801",
+          "birthMicroseconds": "321057",
+          "group": 83135,
+          "session": 83135,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83137,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83135,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83135,
+                "state": "Ss"
+              },
+              {
+                "pid": 83138,
+                "state": "S"
+              }
+            ]
+          },
+          {
+            "phase": "failure-before-reconcile",
+            "members": [
+              {
+                "pid": 83135,
+                "state": "Ss"
+              },
+              {
+                "pid": 83138,
+                "state": "S"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83135,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": {
+          "event": "reconciled",
+          "before": [
+            {
+              "pid": 83135,
+              "state": "Ss"
+            },
+            {
+              "pid": 83138,
+              "state": "S"
+            }
+          ],
+          "signals": [
+            {
+              "pid": 83138,
+              "identity": {
+                "pid": 83138,
+                "birthSeconds": "1791411801",
+                "birthMicroseconds": "394798",
+                "group": 83135,
+                "session": 83135,
+                "uid": 501,
+                "platform": "darwin-proc-pidinfo-bsdinfo"
+              },
+              "signal": "SIGKILL"
+            }
+          ],
+          "final": [
+            {
+              "pid": 83135,
+              "state": "Ss"
+            }
+          ]
+        },
+        "absenceObserved": true,
+        "controlByteCount": 410,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "highfd2400-missing",
+      "argv": [
+        "/nonexistent-task03-host-control"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:21.666237+00:00",
+      "elapsedSeconds": 0.1524221250001574,
+      "exitCode": null,
+      "failureClass": "FileNotFoundError",
+      "streamByteCounts": {
+        "stdout": 0,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": false,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83150,
+          "birthSeconds": "1791411801",
+          "birthMicroseconds": "666474",
+          "group": 83150,
+          "session": 83150,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": null,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83150,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "failure-before-reconcile",
+            "members": [
+              {
+                "pid": 83150,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83150,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": {
+          "event": "reconciled",
+          "before": [
+            {
+              "pid": 83150,
+              "state": "Ss"
+            }
+          ],
+          "signals": [],
+          "final": [
+            {
+              "pid": 83150,
+              "state": "Ss"
+            }
+          ]
+        },
+        "absenceObserved": true,
+        "controlByteCount": 172,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "highfd4000-success",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "print('near-ceiling-ok')"
+      ],
+      "observedAtUtc": "2026-10-07T22:23:21.832174+00:00",
+      "elapsedSeconds": 0.2485422909958288,
+      "exitCode": 0,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 16,
+        "stderr": 0
+      },
+      "stdinBytes": 0,
+      "pipeLimits": 262144,
+      "stdinLimit": 327692,
+      "stdinDeadlineSeconds": 12,
+      "terminal": true,
+      "closeErrors": [],
+      "privateContentsPrinted": false,
+      "ownedGroup": {
+        "anchorIdentity": {
+          "pid": 83160,
+          "birthSeconds": "1791411801",
+          "birthMicroseconds": "832449",
+          "group": 83160,
+          "session": 83160,
+          "uid": 501,
+          "platform": "darwin-proc-pidinfo-bsdinfo"
+        },
+        "commandPid": 83162,
+        "observations": [
+          {
+            "phase": "gated-spawn",
+            "members": [
+              {
+                "pid": 83160,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "command-exited-pipes-closed",
+            "members": [
+              {
+                "pid": 83160,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "before-release",
+            "members": [
+              {
+                "pid": 83160,
+                "state": "Ss"
+              }
+            ]
+          },
+          {
+            "phase": "after-release",
+            "members": []
+          }
+        ],
+        "reconciliation": null,
+        "absenceObserved": true,
+        "controlByteCount": 78,
+        "unknownOwnershipNeverSignaled": true
+      },
+      "stdoutSha256": "1b11510bdbcd7d5a7b30b62236d5f84ddc2db72da0131d3656b6a121585ce487",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/integrated/coordinate-common.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92454891",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21309",
+        "mtime_ns": "1791309847608286823",
+        "ctime_ns": "1791311819590490673"
+      },
+      "firstCapturedNs": "1791411799003253000",
+      "sha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+      "bytes": 21309,
+      "fullEOF": true,
+      "finalPathAndDescriptorNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491846",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21476",
+        "mtime_ns": "1791319352151070330",
+        "ctime_ns": "1791319381191853536"
+      },
+      "firstCapturedNs": "1791411799003316000",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "fullEOF": true,
+      "finalPathAndDescriptorNineEqual": true
+    }
+  ],
+  "invalidTimeoutsAndStdinLimitsDenied": true,
+  "originalAssertionsLimitsDeadlinesOwnershipCodeBytePreserved": true,
+  "fullTask03": false,
+  "fullGoal": false,
+  "nativePrivate": false
+}

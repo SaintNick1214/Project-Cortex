@@ -1,0 +1,75 @@
+{
+  "label": "entry-supported314",
+  "argv": [
+    "/opt/homebrew/bin/python3",
+    "-B",
+    "-c",
+    "\"\"\"Owned SOURCE/MOCK entry tests, exact /usr/bin/python3 and supported interpreter.\"\"\"\nimport ast,hashlib,json,os,stat,sys,time,types\nfrom pathlib import Path\nP=json.loads(sys.stdin.buffer.read());raw=P['entry'].encode();fixture=Path(P['fixture']);expected=P['fixturePin']\nREAL_OS=os\nFIELDS=('dev','ino','mode','nlink','uid','gid','size','mtime_ns','ctime_ns')\ndef nine(s):return{k:str(getattr(s,'st_'+k))for k in FIELDS}\ndef check(v,label):\n if not v:raise AssertionError(label)\nclass OwnedFinal(OSError):pass\nclass OwnedClose(OSError):pass\nclass OwnedPrimary(BaseException):pass\nclass FaultOS:\n def __init__(self,final,close):self.fds=[];self.closes=[];self.fstatCalls=0;self.final=final;self.close_error=close\n def __getattr__(self,name):return getattr(REAL_OS,name)\n def open(self,path,flags):\n  check(Path(path)==fixture,'only_owned_fixture');fd=REAL_OS.open(path,flags);self.fds.append(fd);return fd\n def fstat(self,fd):\n  check(fd in self.fds,'owned_fstat');self.fstatCalls+=1\n  if self.fstatCalls==3 and self.final is not None:raise self.final\n  return REAL_OS.fstat(fd)\n def close(self,fd):\n  check(fd in self.fds and fd not in self.closes,'owned_close_once');self.closes.append(fd);REAL_OS.close(fd)\n  if self.close_error is not None:raise self.close_error\ndef run(label,primary,final,close,positive_exit=None):\n tree=ast.parse(raw)\n tree.body=[n for n in tree.body if not(isinstance(n,ast.If)and isinstance(n.test,ast.Compare)and isinstance(n.test.left,ast.Name)and n.test.left.id=='__name__')]\n ns={'__name__':'isolated_held_entry','__file__':P['entryPath']}\n exec(compile(ast.fix_missing_locations(tree),P['entryPath'],'exec'),ns)\n fos=FaultOS(final,close)\n ns.update(os=fos,sys=types.SimpleNamespace(dont_write_bytecode=True,argv=['held-entry',str(fixture),json.dumps(expected),'/owned-source-only-unused-handoff']))\n real_compile=compile;real_exec=exec\n def owned_compile(source,path,mode,**kwargs):\n  check(bytes(source)==b'raise SystemExit(0)\\n','complete_original_fixture_bytes')\n  return real_compile('raise _owned_primary'if primary is not None else('raise SystemExit('+repr(positive_exit)+')'if positive_exit is not None else'pass'),path,mode)\n def owned_exec(code,scope):\n  scope['_owned_primary']=primary\n  real_exec(code,scope)\n ns.update(compile=owned_compile,exec=owned_exec)\n outcome=None;returned=None\n try:returned=ns['main']()\n except BaseException as error:outcome=error\n check(fos.closes==fos.fds and len(fos.closes)==1,'explicit_all_owned_close_exactly_once')\n children=([primary]if primary is not None else[])+([final]if final is not None else[])+([close]if close is not None else[])\n successful_zero=isinstance(primary,SystemExit)and primary.code in(None,0)and final is None and close is None\n if children and not successful_zero:\n  check(outcome is not None and not isinstance(outcome,NameError),'complete_sticky_failure_no_NameError')\n  check(isinstance(outcome.exceptions,tuple)and len(outcome.exceptions)==len(children),'complete_child_count')\n  check(all(a is b for a,b in zip(outcome.exceptions,children)),'exact_error_objects_and_order')\n  check(outcome.__cause__ is children[0],'original_cause_identity')\n  check(all(e.__traceback__ is not None for e in children),'original_tracebacks_retained')\n  check(isinstance(outcome,Exception)==all(isinstance(e,Exception)for e in children),'BaseException_semantics_preserved')\n else:check(outcome is None and returned==0,'positive_exact_zero_success')\n return{'name':label,'status':'PASS','closeAttempts':1,'closeRetries':0,'originalErrorIdentitiesRetained':True,'childCount':len(children),'scope':'OWNED_ISOLATED_HELD_ENTRY_SOURCE_MOCK'}\nrows=[]\nrows.append(run('positive-complete-baseline',None,None,None,positive_exit=0))\nfor name,make in [('Exception',lambda:RuntimeError('original-primary')),('BaseException',lambda:OwnedPrimary('original-base-primary')),('SystemExit0',lambda:SystemExit(0)),('SystemExit7',lambda:SystemExit(7)),('SystemExitNone',lambda:SystemExit(None)),('KeyboardInterrupt',lambda:KeyboardInterrupt('original-interrupt'))]:\n for final_on,close_on in[(False,False),(True,False),(False,True),(True,True)]:\n  rows.append(run(name+':final='+str(final_on)+':close='+str(close_on),make(),OwnedFinal('original-final-nine')if final_on else None,OwnedClose('original-owned-close')if close_on else None))\nfor name,f,c in [('close-alone',None,OwnedClose('close-only')),('final-nine-alone',OwnedFinal('final-only'),None),('final-plus-close',OwnedFinal('final-combined'),OwnedClose('close-combined'))]:rows.append(run(name,None,f,c))\ncheck(nine(fixture.lstat())==expected['PRE9'],'immutable_fixture_original_nine')\nprint(json.dumps({'scope':'U4_AUTHOR_EXACT_INTERPRETER_ENTRY_SOURCE_MOCK','status':'PASS','controls':rows,'count':len(rows),'pythonVersion':sys.version,'pythonExecutable':sys.executable,'entrySha256':hashlib.sha256(raw).hexdigest(),'entryBytes':len(raw),'actualRunnerExecuted':False,'dockerCommands':0,'privateReads':0,'serviceCalls':0,'nativePrivate':False,'fullTask03':False},separators=(',',':')))\n"
+  ],
+  "observedAtUtc": "2026-10-07T21:55:28.663446+00:00",
+  "elapsedSeconds": 0.2619073750101961,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 6017,
+    "stderr": 0
+  },
+  "stdinBytes": 3367,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 74529,
+      "birthSeconds": "1791410128",
+      "birthMicroseconds": "663621",
+      "group": 74529,
+      "session": 74529,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 74531,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 74529,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 74529,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 74529,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "73ee06e57895ceba8c442764f2eba6a2e639604435970344a8ca145dd4ffbbf7",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

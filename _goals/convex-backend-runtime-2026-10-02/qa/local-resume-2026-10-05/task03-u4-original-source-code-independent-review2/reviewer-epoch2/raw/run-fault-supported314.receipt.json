@@ -1,0 +1,75 @@
+{
+  "label": "run-fault-supported314",
+  "argv": [
+    "/opt/homebrew/bin/python3",
+    "-B",
+    "-c",
+    "\nimport ast,base64,hashlib,json,os,re,resource,stat,sys,time,types,zlib\nfrom pathlib import Path\nP=json.loads(sys.stdin.buffer.read());tree=ast.parse(P['runner']);nodes=[]\nfor node in tree.body:\n if isinstance(node,ast.Try):break\n nodes.append(node)\ncode=compile(ast.fix_missing_locations(ast.Module(body=nodes,type_ignores=[])),P['path'],'exec',dont_inherit=True)\nfinal=next(n for n in tree.body if isinstance(n,ast.Try)).finalbody\nfinalcode=compile(ast.fix_missing_locations(ast.Module(body=final,type_ignores=[])),P['path'],'exec',dont_inherit=True)\nclass Fault(BaseException):pass\nclass Close(OSError):pass\nclass Report(OSError):pass\nclass FakePath:\n def __init__(self,n):self.n=n\n def is_dir(self):return True\n def __truediv__(self,n):return FakePath(self.n+'/'+n)\n def __str__(self):return self.n\nrows=[]\nfor primarykind in ('none','Exception','BaseException','SystemExit0','SystemExit7','KeyboardInterrupt'):\n for close_index in (None,0,1,2,'all'):\n  ns={'__name__':'held_actual_runner','__file__':P['path']};exec(code,ns)\n  primary={'none':None,'Exception':RuntimeError('primary'),'BaseException':Fault('base'),'SystemExit0':SystemExit(0),'SystemExit7':SystemExit(7),'KeyboardInterrupt':KeyboardInterrupt('interrupt')}[primarykind]\n  attempts=[];children=[]\n  class OS:\n   def close(self,fd):\n    assert fd not in attempts;attempts.append(fd)\n    if close_index=='all'or fd==close_index:\n     e=Close('close-'+str(fd));children.append(e);raise e\n  ns.update(os=OS(),all_pins=[{'fd':i,'path':'owned-'+str(i),'closeAttempted':False}for i in range(3)],C=None,OUT=FakePath('/owned'),RAW=FakePath('/owned/raw'))\n  if primary is not None:ns['retain_error']('primary',primary,True)\n  exec(finalcode,ns)\n  assert attempts==[0,1,2]and all(p['closeAttempted']for p in ns['all_pins'])\n  ns['close_owned_inputs']();assert attempts==[0,1,2]\n  assert len(ns['cleanup_errors'])==len(children)\n  if primary is not None:assert ns['failure']=={'class':type(primary).__name__,'reason':str(primary)}\n  assert [r['reason']for r in ns['failure_chain']if r['stage']=='input-close']==[str(e)for e in children]\n  rows.append({'name':'actual-final:'+primarykind+':'+str(close_index),'status':'PASS','allOwnedCloses':3,'noRetry':True,'retainedChildren':len(children)+(primary is not None)})\nfor reportpoint in (0,1):\n ns={'__name__':'held_actual_runner','__file__':P['path']};exec(code,ns);attempts=[];written=[]\n primary=RuntimeError('original-primary')\n class OS:\n  def close(self,fd):assert fd not in attempts;attempts.append(fd);raise Close('owned-close-'+str(fd))\n class C:\n  def durable_json(self,p,v):\n   i=len(written);written.append(str(p))\n   if i==reportpoint:raise Report('report-'+str(i))\n ns.update(os=OS(),C=C(),OUT=FakePath('/owned'),RAW=FakePath('/owned/raw'),NAMES={},all_pins=[{'fd':i,'path':'owned-'+str(i),'closeAttempted':False}for i in range(3)])\n ns['retain_error']('primary',primary,True)\n ns['command']=lambda *a,**k:({'exitCode':0},b'',b'')\n ns['qualify']=lambda p:None\n exec(finalcode,ns)\n assert attempts==[0,1,2]and ns['failure']['reason']=='original-primary'\n assert len([r for r in ns['failure_chain']if r['stage']=='input-close'])==3\n assert any(r['stage']in('final-reconciliation-or-report','input-close-report')for r in ns['failure_chain'])\n rows.append({'name':'actual-final-report:'+str(reportpoint),'status':'PASS','allOwnedCloses':3,'allReportCloseChildrenRetained':True})\nfor fault in (RuntimeError('run'),Fault('run-base'),SystemExit(0),SystemExit(7)):\n ns={'__name__':'held_actual_runner','__file__':P['path']};exec(code,ns)\n class C:\n  def run(self,*a,**k):raise fault\n ns.update(C=C(),source_graph_complete=True)\n try:ns['command']('fake-external-boundary',['/never-docker'],30)\n except BaseException as error:assert error is fault;ns['retain_error']('primary',error,True)\n else:raise AssertionError('reachable_command_fault_not_denied')\n assert ns['failure']=={'class':type(fault).__name__,'reason':str(fault)}\n rows.append({'name':'actual-command:'+type(fault).__name__+':'+str(fault),'status':'PASS','originalErrorRetainedAtBoundary':True,'externalEffects':0})\nprint(json.dumps({'scope':'ACTUAL_UNMODIFIED_RUNNER_FUNCTIONS_AND_FINALBODY_SOURCE_MOCK','status':'PASS','count':len(rows),'controls':rows,'pythonVersion':sys.version,'pythonExecutable':sys.executable,'actualDocker':0}))\n"
+  ],
+  "observedAtUtc": "2026-10-07T21:55:29.466054+00:00",
+  "elapsedSeconds": 0.24168154200015124,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 4615,
+    "stderr": 0
+  },
+  "stdinBytes": 32177,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 74565,
+      "birthSeconds": "1791410129",
+      "birthMicroseconds": "466202",
+      "group": 74565,
+      "session": 74565,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 74567,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 74565,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 74565,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 74565,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "3fb4473dccdb2c89b8b73513837a799a200d7b45d17fe5426aac150efca11017",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

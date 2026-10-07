@@ -1,0 +1,125 @@
+{
+  "label": "highfd2400-residual",
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import subprocess,sys;subprocess.Popen([sys.executable,'-B','-c','import time;time.sleep(4)'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)"
+  ],
+  "observedAtUtc": "2026-10-07T22:23:21.320772+00:00",
+  "elapsedSeconds": 0.3449705829989398,
+  "exitCode": 0,
+  "failureClass": "OwnedGroupResidual",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 83135,
+      "birthSeconds": "1791411801",
+      "birthMicroseconds": "321057",
+      "group": 83135,
+      "session": 83135,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 83137,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 83135,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 83135,
+            "state": "Ss"
+          },
+          {
+            "pid": 83138,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 83135,
+            "state": "Ss"
+          },
+          {
+            "pid": 83138,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 83135,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 83135,
+          "state": "Ss"
+        },
+        {
+          "pid": 83138,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 83138,
+          "identity": {
+            "pid": 83138,
+            "birthSeconds": "1791411801",
+            "birthMicroseconds": "394798",
+            "group": 83135,
+            "session": 83135,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 83135,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 410,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
