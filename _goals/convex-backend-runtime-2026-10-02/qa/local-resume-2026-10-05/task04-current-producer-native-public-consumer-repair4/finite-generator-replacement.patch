@@ -1,0 +1,378 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair3/infrastructure/prepare.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/infrastructure/prepare.py
+@@ -1,231 +1,151 @@
+-"""Finite preparation from held mature source bytes; no subject dispatch."""
+-import ast,hashlib,json,math,os,stat,time
++"""Finite repaired candidate generation. Importing this recipe causes no writes.
++
++The two changed producer programs come from R4; the other 110 come from exact
++R3 references. This replaces the old C5 generator's finite candidate-generation
++stage without reacquiring/copying its unrelated historical evidence graph.
++The reviewed caller must compile this recipe from held verified source bytes.
++"""
++import hashlib,json,math,os,stat,sys,time
+ from pathlib import Path
+-N=Path(__file__).resolve().parents[1];P=N.parent;R=P.parents[3]
+-OLD=P/'task04-current-producer-native-public-repair1'
+-C4=P/'task04-current-producer-native-public-consumer-repair2'
+-J=P/'task04-current-producer-native-public-consumer-repair2-source-review3'
+-NEW=P/'task04-current-producer-native-public-repair3'
++
++N=Path(__file__).resolve().parents[1];R=N.parent.parents[3]
+ FIELDS=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+-def ident(s):return {k:str(getattr(s,'st_'+k))for k in FIELDS}
+-def put(path,raw):
+-    if not isinstance(raw,bytes):raw=(json.dumps(raw,sort_keys=True,separators=(',',':'))+'\n').encode()
+-    assert len(raw)<=16777216
+-    path.parent.mkdir(parents=True,exist_ok=True)
+-    fd=os.open(path,os.O_RDWR|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
++MAX_FILES=4096;MAX_BYTES=67108864;MAX_FILE=16777216
++
++def ident(value):return {key:str(getattr(value,'st_'+key))for key in FIELDS}
++
++def strict(raw):
++    def pairs(values):
++        result={}
++        for key,value in values:
++            if key in result:raise ValueError('DUPLICATE_PREPARATION_KEY')
++            result[key]=value
++        return result
++    def nonfinite(_):raise ValueError('NONFINITE_PREPARATION_VALUE')
++    def floating(token):
++        value=float(token)
++        if not math.isfinite(value):raise ValueError('NONFINITE_PREPARATION_VALUE')
++        return value
++    return json.loads(raw,object_pairs_hook=pairs,parse_float=floating,parse_constant=nonfinite)
++
++def render_candidate(plan,source_bytes):
++    """The actual generated source map is also the source-control input map."""
++    if plan['scope']!='TASK04_REPAIR4_FINITE_GENERATED_CANDIDATE_INPUT_DESIGN_ONLY' or plan['sourceOnly']is not True or plan['runtimeAuthority']is not False or plan['sourceEligibility']is not False:raise ValueError('NO_PREPARATION_AUTHORITY_ALIAS')
++    if plan['fileCount']!=112 or len(plan['files'])!=112:raise ValueError('ORIGINAL112_CANDIDATE_COUNT')
++    old=plan['originalManifest'];old_by={row['path']:row for row in old['files']}
++    if len(old_by)!=112 or {row['path']for row in plan['files']}!=set(old_by):raise ValueError('ORIGINAL112_EXACT_NAMES')
++    result={};changed=[];mf=[]
++    for row in plan['files']:
++        name=row['path'];path=Path(name)
++        if path.is_absolute()or '..'in path.parts or str(path)!=name:raise ValueError('EXACT_CANDIDATE_RELATIVE_PATH')
++        raw=source_bytes[row['sourcePath']]
++        if type(raw)is not bytes or len(raw)!=row['bytes']or hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('EXACT_SOURCE_REFERENCE_BYTES')
++        if (len(raw),row['sha256'])!=(old_by[name]['bytes'],old_by[name]['sha256']):changed.append(name)
++        result[name]=raw;mf.append({'path':name,'bytes':len(raw),'sha256':row['sha256']})
++    if changed!=['ci-run.py','native_export.py'] or plan['unchangedFromR3']!=110 or plan['unchangedFromOriginalR1']!=109:raise ValueError('EXACT_TWO_NEW_REPAIRS_THREE_ORIGINAL_DELTAS')
++    manifest={**old,'files':mf,'sourceBytes':sum(row['bytes']for row in mf)}
++    result['source-manifest.json']=(json.dumps(manifest,sort_keys=True,separators=(',',':'))+'\n').encode()
++    return result
++
++def close_owned(rows):
++    primary=sys.exc_info()[1];failures=[]
++    for row in rows:
++        fd=row.pop('fd',None)
++        if fd is None:continue
++        try:os.close(fd)
++        except BaseException as error:failures.append((row['path'],fd,error))
++    if failures:
++        error=RuntimeError('PREPARATION_SOURCE_CLOSE_FAILED_STICKY')
++        error.primaryFailure=primary;error.closeFailures=failures
++        raise error from primary
++
++def acquire_sources(plan,control_bytes=0,control_paths=0):
++    # One cumulative unique-path ledger including plan data, never per subgroup.
++    refs={str(R/row['repositoryRelativeSourcePath']):{'bytes':row['bytes'],'sha256':row['sha256'],'logicalPath':row['sourcePath']}for row in plan['files']}
++    for ref in (plan['sourceManifestTemplate'],plan['original100ConservationReference'],plan['oldGeneratorReference']):refs[str(R/ref['repositoryRelativePath'])]={**ref,'logicalPath':ref['path']}
++    if type(control_bytes)is not int or type(control_paths)is not int or control_bytes<0 or control_paths<0 or len(refs)+control_paths>MAX_FILES:raise ValueError('ONE_SOURCE_PATH_CEILING')
++    owned=[];total=control_bytes
+     try:
+-        view=memoryview(raw)
+-        while view:
+-            count=os.write(fd,view);assert count>0;view=view[count:]
+-        os.fsync(fd);pin=ident(os.fstat(fd));os.lseek(fd,0,0);parts=[]
+-        while block:=os.read(fd,65536):parts.append(block)
+-        assert b''.join(parts)==raw and ident(os.fstat(fd))==pin and ident(path.lstat())==pin
+-    finally:os.close(fd)
+-    return {'path':str(path),'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'writeReadbackNotInputAuthority':True,'selfExcludedUpstream':True}
+-paths=sorted(set([p for p in (OLD/'source').rglob('*')if p.is_file()]+[p for p in (OLD/'evidence/preimages').rglob('*')if p.is_file()]+[p for p in C4.rglob('*')if p.is_file()]+[p for p in J.rglob('*')if p.is_file()]+[OLD/'task04-current-producer-native-public.yml.proposed',OLD/'admission-proposal.json',OLD/'qualification-map.json',OLD/'evidence/original-conservation-proof1.json',P/'root-task04-native-consumer-repair2-source-review3-mature-readback1.json']))
+-held=[];data={};rows=[];total=0;closes=[]
+-try:
+-    # All descriptors in this finite preparation phase precede every content read.
+-    for p in paths:
+-        before=ident(p.lstat());age=time.time_ns()-max(int(before['mtime_ns']),int(before['ctime_ns']))
+-        assert age>=60000000000 and before['nlink']=='1'and stat.S_ISREG(int(before['mode']))
+-        total+=int(before['size']);assert total<=67108864 and int(before['size'])<=16777216 and len(held)<4096
+-        fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW);held.append((p,fd,before,age));assert ident(os.fstat(fd))==before
+-    for p,fd,before,age in held:
+-        parts=[]
+-        while b:=os.read(fd,65536):parts.append(b)
+-        raw=b''.join(parts);assert len(raw)==int(before['size'])and ident(os.fstat(fd))==before and ident(p.lstat())==before
+-        data[str(p)]=raw;rows.append({'path':str(p),'PRE':before,'OPEN':before,'POST':before,'heldFD':fd,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'EOF':True,'ageNsAtFirstOpen':age})
+-    mf=json.loads(data[str(OLD/'source/source-manifest.json')]);assert len(mf['files'])==112 and mf['sourceBytes']==2136695
+-    for row in mf['files']:
+-        raw=data[str(OLD/'source'/row['path'])];assert (len(raw),hashlib.sha256(raw).hexdigest())==(row['bytes'],row['sha256'])
+-    pub=data[str(OLD/'source/public_export_contract.py')].decode()
+-    pub=pub.replace("    for key in ('fileCount'", "    if data['primaryFailure'] is not None and type(data['primaryFailure']) is not str:\n        raise ValueError('STRICT_PUBLIC_PRIMARY_FAILURE_NONE_OR_STRING')\n    for key in ('fileCount'",1)
+-    pub+='''
++        for path in sorted(refs):
++            p=Path(path)
++            if not p.is_absolute()or p.resolve()!=p:raise ValueError('EXACT_NO_ALIAS_SOURCE_PATH')
++            pin=ident(p.lstat());size=int(pin['size']);total+=size
++            if not stat.S_ISREG(int(pin['mode']))or pin['nlink']!='1' or not 0<=size<=MAX_FILE or total>MAX_BYTES:raise ValueError('ONE_SOURCE_GRAPH_CAP')
++            if time.time_ns()-max(int(pin['mtime_ns']),int(pin['ctime_ns']))<60000000000:raise ValueError('SOURCE_MUST_BE_MATURE60')
++            row={'path':path,'pin':pin,'fd':None};fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)
++            try:row['fd']=fd;owned.append(row)
++            except BaseException as primary:
++                row.pop('fd',None)
++                try:os.close(fd)
++                except BaseException as cleanup:raise RuntimeError('PREPARATION_UNREGISTERED_CLOSE_FAILED')from primary
++                raise
++        # Every descriptor precedes the first body read.
++        bodies={};observations=[]
++        for row in owned:
++            p=Path(row['path']);fd=row['fd'];pin=row['pin'];parts=[]
++            if ident(os.fstat(fd))!=pin or ident(p.lstat())!=pin:raise ValueError('OPEN_SOURCE_NINE_DRIFT')
++            size=0;digest=hashlib.sha256()
++            while block:=os.read(fd,65536):
++                size+=len(block)
++                if size>int(pin['size'])or size>MAX_FILE:raise ValueError('SOURCE_READ_CAP')
++                digest.update(block);parts.append(block)
++            expected=refs[row['path']]
++            if size!=int(pin['size'])or (size,digest.hexdigest())!=(expected['bytes'],expected['sha256']):raise ValueError('FULL_SOURCE_EOF_HASH_SIZE')
++            if ident(os.fstat(fd))!=pin or ident(p.lstat())!=pin:raise ValueError('FINAL_SOURCE_NINE_DRIFT')
++            bodies[expected['logicalPath']]=b''.join(parts);observations.append({'path':row['path'],'PRE':pin,'OPEN':pin,'POST':pin,'pathFINAL':pin,'bytes':size,'sha256':digest.hexdigest(),'EOF':True})
++        rendered=render_candidate(plan,bodies)
++        template=plan['sourceManifestTemplate'];old=strict(bodies[template['path']])
++        if old!=plan['originalManifest']:raise ValueError('EXACT_ORIGINAL_MANIFEST_REFERENCE')
++        for row in owned:
++            if ident(os.fstat(row['fd']))!=row['pin']or ident(Path(row['path']).lstat())!=row['pin']:raise ValueError('HELD_THROUGH_GENERATION_NINE_DRIFT')
++        return rendered,observations
++    finally:close_owned(owned)
+ 
+-def validate_public_outcome(data,process_exit,result=None):
+-    """Transported failures remain data; only consistent exact success is accepted."""
+-    validate_public(data)
+-    if type(process_exit) is not int or not 0<=process_exit<=255:
+-        raise ValueError('STRICT_PUBLIC_PROCESS_EXIT')
+-    if process_exit!=0:raise ValueError('PUBLIC48_FAILED_STICKY')
+-    if data['primaryFailure'] is not None:raise ValueError('PUBLIC48_MANIFEST_FAILURE_STICKY')
+-    required={'scope','controls','count','nativeClaims','original122','ROOT','whole120'}
+-    if type(result) is not dict or not required<=set(result):raise ValueError('EXACT_UNCHANGED48_PUBLIC_OUTCOMES')
+-    if result['scope']!='PUBLIC_SYNTHETIC_SOURCE_CONTROLS_ONLY' or result['nativeClaims'] is not False or result['original122']!='HELD' or result['ROOT']!='ABSENT' or result['whole120']!='HELD':
+-        raise ValueError('EXACT_UNCHANGED48_PUBLIC_SCOPE')
+-    if type(result['count']) is not int or result['count']!=48 or type(result['controls']) is not list or len(result['controls'])!=48:
+-        raise ValueError('EXACT_UNCHANGED48_PUBLIC_OUTCOMES')
+-    names=[]
+-    for row in result['controls']:
+-        if type(row) is not dict or type(row.get('name')) is not str or not row['name'] or type(row.get('status')) is not str or row['status']!='PASS':
+-            raise ValueError('EXACT_UNCHANGED48_PUBLIC_OUTCOMES')
+-        names.append(row['name'])
+-    if len(set(names))!=48:raise ValueError('EXACT_UNCHANGED48_PUBLIC_UNIQUE_NAMES')
+-    return {'processExit':0,'primaryFailure':None,'count':48,'scope':'PUBLIC_SOURCE_MOCK_OUTCOME_ONLY','nativeAuthority':False}
+-'''
+-    ci=data[str(OLD/'source/ci-run.py')].decode()
+-    ci=ci.replace('from public_export_contract import validate_public','from public_export_contract import validate_public,validate_public_outcome')
+-    ci=ci.replace('def export_phase(mode):','def export_phase(mode,process_exit=None):')
+-    ci=ci.replace("    export_copy(remote,target,16777216 if mode=='native20'else 65536)","    public_terminal=None\n    if mode=='public48':public_terminal=public_terminal_fence(process_exit)\n    export_copy(remote,target,16777216 if mode=='native20'else 65536)")
+-    ci=ci.replace('    copied=[];remote_targets={}\n','    copied=[];remote_targets={};remote_pins={}\n')
+-    ci=ci.replace('        remote_targets[path]=target\n','        remote_targets[path]=target;remote_pins[path]=row[\'current\']\n')
+-    begin=ci.index("    if mode=='public48'and data['primaryFailure'] is None:")
+-    end=ci.index('    remaining();COMBINED_EXPORT_BYTES',begin)
+-    ci=ci[:begin]+'''    if mode=='public48':
+-        result=None
+-        if type(process_exit) is int and process_exit==0 and data['primaryFailure'] is None:
+-            path='/var/tmp/task04-c8-current-canonical-input-producers/controls/linux-public-repair2/results.json'
+-            if path not in remote_targets:raise ValueError('EXACT_UNCHANGED48_PUBLIC_RESULT_REQUIRED')
+-            # This independently held read retains the transport byte/hash pin and
+-            # fences full bytes and all nine fields before and after strict parse.
+-            h=Held(str(remote_targets[path]),1048576,remote_pins[path])
+-            try:
+-                os.lseek(h.fd,0,os.SEEK_SET);raw=os.read(h.fd,1048577)
+-                if len(raw)!=h.size:raise ValueError('PUBLIC_RESULT_FULL_EOF')
+-                h.fence(full=True);result=strict(raw);h.fence(full=True)
+-            finally:h.close()
+-        remaining()
+-        if public_terminal_fence(process_exit)!=public_terminal:raise ValueError('PUBLIC_TERMINAL_EXPORT_RACE')
+-        validate_public_outcome(data,process_exit,result)
+-'''+ci[end:]
+-    ci=ci.replace("    export_phase('public48')","    export_phase('public48',process_exit=public_exit)")
+-    marker='\ndef export_phase(mode,process_exit=None):'
+-    ci=ci.replace(marker,'''
+-def public_terminal_fence(process_exit):
+-    if type(process_exit) is not int or not 0<=process_exit<=255:raise ValueError('STRICT_PUBLIC_PROCESS_EXIT')
+-    row=inspect();validate(row,EXPECTED,started=True)
+-    state=row['State']
+-    if state['Running'] is not False or type(state['Pid']) is not int or state['Pid']!=0 or state['Status']!='exited' or type(state['ExitCode']) is not int or state['ExitCode']!=process_exit:
+-        raise ValueError('PUBLIC_PROCESS_TERMINAL_EXPORT_INCONSISTENCY')
+-    remaining();return row
+-'''+marker)
+-    deltas=[];newmf=[]
+-    for row in mf['files']:
+-        raw=data[str(OLD/'source'/row['path'])]
+-        if row['path']=='public_export_contract.py':raw=pub.encode()
+-        if row['path']=='ci-run.py':raw=ci.encode()
+-        pin=put(NEW/'source'/row['path'],raw);newmf.append({k:pin[k]for k in ('bytes','sha256')}|{'path':row['path']})
+-        if pin['sha256']!=row['sha256']:deltas.append({'path':row['path'],'old':row,'new':newmf[-1]})
+-    assert [r['path']for r in deltas]==['ci-run.py','public_export_contract.py']
+-    put(NEW/'source/source-manifest.json',{**mf,'files':newmf,'sourceBytes':sum(r['bytes']for r in newmf)})
+-    workflow=data[str(OLD/'task04-current-producer-native-public.yml.proposed')].decode().replace(OLD.name,NEW.name)
+-    put(NEW/'task04-current-producer-native-public.yml.proposed',workflow.encode())
+-    put(NEW/'admission-proposal.json',data[str(OLD/'admission-proposal.json')])
+-    put(NEW/'qualification-map.json',data[str(OLD/'qualification-map.json')])
+-    put(NEW/'semantic-delta.json',{'schema':'R1_SEPARATELY_OWNED_REPAIR3_SEMANTIC_DELTA','changedExecutableFiles':deltas,'sourceFileCount':112,'unchangedFiles':110,'original100Conserved':True,'bootstrapPublic48OWN20Unchanged':True,'oldPinsRefreshed':False,'deadlinesResourcesAssertionsChanged':False,'runtimeAuthority':False,'sourceEligibility':False,'workflow':'TOP_LEVEL_PROPOSED_ONLY'})
+-    proof=json.loads(data[str(OLD/'evidence/original-conservation-proof1.json')])
+-    for row in proof['rows']:
+-        raw=data[str(OLD/row['newExactConservationBacking'])]
+-        assert (len(raw),hashlib.sha256(raw).hexdigest())==(row['bytes'],row['sha256'])
+-        assert row['newExactConservationBacking'] not in ('source/ci-run.py','source/public_export_contract.py')
+-    put(NEW/'original100-conservation-reference.json',{'originalCount':100,'originalProof':{'path':str(OLD/'evidence/original-conservation-proof1.json'),'bytes':len(data[str(OLD/'evidence/original-conservation-proof1.json')]),'sha256':hashlib.sha256(data[str(OLD/'evidence/original-conservation-proof1.json')]).hexdigest()},'rows':proof['rows'],'copyScope':'ONLY_FINITE112_EXECUTABLE_PROPOSAL','oldLiteralPinsUntouched':True,'historicalCustodyRepaired':False})
+-    for rel in ('independent-r1-controls.py','independent-r1-extra-controls.py'):
+-        raw=data[str(J/rel)].decode().replace('INDEPENDENT_SOURCE_MOCK','EXECUTOR_SOURCE_MOCK_REPLAY').replace('INDEPENDENT_R1','EXECUTOR_R1')
+-        if rel=='independent-r1-controls.py':raw=raw.replace('lambda m:event("export:"+m)','lambda m,**k:event("export:"+m)')
+-        put(NEW/'controls'/rel,raw.encode())
+-    text=data[str(C4/'programs/consumer.py')].decode()
+-    # Retain literal legacy scope functions for inspection; entry points below use
+-    # a distinct current plan with the old pins represented as immutable data.
+-    text=text.replace('import hashlib,json,os,re,stat,time','import hashlib,json,math,os,re,stat,sys,time').replace('MAX_INPUTS=2048','MAX_INPUTS=4096')
+-    text=text.replace("    return json.loads(raw,object_pairs_hook=pairs,parse_constant=nonfinite)","    def floating(token):\n        value=float(token);require(math.isfinite(value),'NONFINITE_JSON_FORBIDDEN');return value\n    return json.loads(raw,object_pairs_hook=pairs,parse_float=floating,parse_constant=nonfinite)")
+-    text=text.replace("    except BaseException:\n        for row in pending:os.close(row['heldFD'])\n        raise","    except BaseException as primary:\n        try:close_inputs(pending)\n        except BaseException as cleanup:raise cleanup from primary\n        raise",1)
+-    start=text.index('def close_inputs(rows):');end=text.index('\ndef output(',start)
+-    text=text[:start]+'''def close_inputs(rows):
+-    """Attempt each owned FD exactly once. A failed close is sticky and never retried."""
+-    closed=[];failures=[]
+-    for row in rows:
+-        fd=row.pop('heldFD',None)
+-        if fd is None:continue
++def materialize(plan,control_bytes=0,control_paths=0):
++    """Explicit future reviewed source-generation step; no service/native effects."""
++    destination=N/'runtime-stage/generated-candidate'
++    if R/plan['destinationRelative']!=destination or destination.exists():raise ValueError('NEW_EXACT_OWNED_SOURCE_DESTINATION_ONLY')
++    rendered,observations=acquire_sources(plan,control_bytes,control_paths)
++    # Generation follows completed source qualification and all attempted closes.
++    destination.mkdir(parents=True,exist_ok=False)
++    for name,raw in rendered.items():
++        path=destination/'source'/name;path.parent.mkdir(parents=True,exist_ok=True)
++        fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+         try:
+-            returned=os.close(fd);closed.append({'path':row['path'],'fd':fd,'closeReturn':returned})
+-        except BaseException as error:
+-            failures.append({'path':row['path'],'fd':fd,'failure':repr(error),'retryForbidden':True})
+-        finally:
+-            if 'LEDGER' in globals():LEDGER.active=max(0,LEDGER.active-1)
+-    if failures:
+-        error=BoundaryFailure('OWNED_FD_CLOSE_FAILED_STICKY');error.closeFailures=failures;error.closeAttempts=closed+failures;raise error
+-    return closed
++            view=memoryview(raw)
++            while view:
++                written=os.write(fd,view)
++                if written<=0:raise ValueError('FULL_SOURCE_WRITE')
++                view=view[written:]
++            os.fsync(fd)
++        finally:os.close(fd)
++    return {'scope':'GENERATED_SOURCE_CANDIDATE_ONLY_NOT_NATIVE_ACCEPTANCE','fileCount':112,'manifestCompanion':1,'sourceInputs':observations,'runtimeAuthority':False,'sourceEligibility':False,'original100Copied':False}
+ 
+-def close_scope(rows):
+-    primary=sys.exc_info()[1]
+-    try:return close_inputs(rows)
+-    except BaseException as cleanup:
+-        if primary is not None:
+-            cleanup.primaryFailure=repr(primary)
+-            cleanup.closeFailures=getattr(primary,'closeFailures',[])+getattr(cleanup,'closeFailures',[])
+-            raise cleanup from primary
+-        raise
+-'''+text[end:]
+-    start=text.index('def consume_baseline(')
+-    text=text[:start]+'''class InputLedger:
+-    """One aggregate graph reservation, never reset by an anchor or consumer phase."""
+-    def __init__(self):self.paths={};self.total=0;self.active=0;self.peak=0
+-    def reserve(self,path,pin):
+-        size=int(pin['size']);require(0<=size<=READ_MAX,'FINITE_PER_FILE_METADATA_CAP')
+-        prior=self.paths.get(str(path))
+-        if prior is not None:require(prior==pin,'SAME_GRAPH_REOPEN_NINE_DRIFT')
+-        else:
+-            require(len(self.paths)<MAX_INPUTS and self.total+size<=TOTAL_MAX,'FINITE_AGGREGATE_GRAPH_CAP')
+-            self.paths[str(path)]=dict(pin);self.total+=size
+-        require(self.active<MAX_INPUTS,'FINITE_OWNED_FD_CAP_BEFORE_OPEN')
+-    def opened(self):self.active+=1;self.peak=max(self.peak,self.active)
+-LEDGER=InputLedger()
++def prepare():
++    """Finite plan header stays held and charged through the complete source stage."""
++    path=N/'candidate-source-plan.json';pin=ident(path.lstat());owned=[]
++    if int(pin['size'])>MAX_FILE or not stat.S_ISREG(int(pin['mode']))or pin['nlink']!='1':raise ValueError('FINITE_ORDINARY_PLAN_HEADER')
++    if time.time_ns()-max(int(pin['mtime_ns']),int(pin['ctime_ns']))<60000000000:raise ValueError('PLAN_HEADER_MATURE60')
++    row={'path':str(path),'fd':None};fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
++    try:
++        try:row['fd']=fd;owned.append(row)
++        except BaseException as primary:
++            row.pop('fd',None)
++            try:os.close(fd)
++            except BaseException as cleanup:raise RuntimeError('PLAN_UNREGISTERED_CLOSE_FAILED')from primary
++            raise
++        if ident(os.fstat(fd))!=pin:raise ValueError('PLAN_OPEN_NINE_DRIFT')
++        parts=[];size=0
++        while block:=os.read(fd,65536):
++            size+=len(block)
++            if size>int(pin['size'])or size>MAX_FILE:raise ValueError('PLAN_FULL_READ_CAP')
++            parts.append(block)
++        if size!=int(pin['size'])or ident(os.fstat(fd))!=pin or ident(path.lstat())!=pin:raise ValueError('PLAN_FULL_EOF_FINAL_NINE')
++        result=materialize(strict(b''.join(parts)),control_bytes=size,control_paths=1)
++        if ident(os.fstat(fd))!=pin or ident(path.lstat())!=pin:raise ValueError('PLAN_HELD_THROUGH_SOURCE_GENERATION')
++        return result
++    finally:close_owned(owned)
+ 
+-def capture_plan(plan,bootstrap_rows=()):
+-    require(type(plan)is dict and plan['schema']=='FINITE_REPAIR3_REFERENCE_PLAN','EXACT_REPAIR3_PLAN')
+-    require(plan['sourceEligibility']is False and plan['runtimeAuthority']is False,'NO_PLAN_AUTHORITY')
+-    expected={r['path']:r for r in plan['files']}
+-    require(len(expected)==len(plan['files'])and len(expected)<=MAX_INPUTS,'FINITE_UNIQUE_PLAN')
+-    pending=open_inputs([Path(p)for p in sorted(expected)]);observed=[];total=0
+-    try:
+-        for held in pending:
+-            pin=expected[held['path']];row,_=read_held(held,pin)
+-            if pin.get('stableLiteral')is not None:require(row['PRE']==literal_identity(pin['stableLiteral']),'ORIGINAL_STABLE_LITERAL_CONSERVED')
+-            observed.append({**row,'roles':pin['roles'],'stableLiteral':pin.get('stableLiteral'),'oldPacketLiteral':pin.get('oldPacketLiteral')});total+=row['bytes']
+-        failed=[r for r in observed if r['oldPacketLiteral']is not None and r['PRE']!=r['oldPacketLiteral']]
+-        require(len(failed)==119 and all([f for f in FIELDS if r['PRE'][f]!=r['oldPacketLiteral'][f]]==['ctime_ns']for r in failed),'OLD119_LITERAL_FAILURES_RETAINED')
+-        require(sum('STABLE_OPERATIVE113'in r['roles']for r in observed)==113 and sum('STABLE_ORIGINAL336'in r['roles']for r in observed)==336,'UNCHANGED_ORIGINAL_STABLE_COHORTS')
+-        for row in observed:final_fence(row)
+-        for row in bootstrap_rows:final_fence(row)
+-        result={'schema':'DISTINCT_FIRST_CURRENT_MATURE_BASELINE_V2','scope':'REPAIR3_CURRENT_PLAN_ONLY','files':observed,'count':len(observed),'bytes':total,'oldPacketScope':'FAILED','oldFailedCount':119,'runtimeAuthority':False,'sourceEligibility':False,'historicalCustodyRepaired':False,'aggregateLedger':{'paths':len(LEDGER.paths),'bytes':LEDGER.total,'peakFDs':LEDGER.peak},'newOutputsSelfExcludedUpstream':True}
+-    finally:closes=close_inputs(pending)
+-    result['FDCloses']=closes
+-    return output('evidence/first-current-mature-baseline1.json',result)
+-
+-def consume_baseline(baseline_byte_pin):
+-    baseline_path=N/'evidence/first-current-mature-baseline1.json'
+-    baseline_held=open_inputs([baseline_path])
+-    try:
+-        baseline_row,raw=read_held(baseline_held[0],baseline_byte_pin,collect=True);data=strict(raw)
+-        require(data['schema']=='DISTINCT_FIRST_CURRENT_MATURE_BASELINE_V2'and data['oldPacketScope']=='FAILED'and data['oldFailedCount']==119,'EXACT_NEW_BASELINE_OLD_FAILURE_SCOPE')
+-        require(data['runtimeAuthority']is False and data['sourceEligibility']is False,'NO_BASELINE_AUTHORITY_ALIAS')
+-        require(type(data['files'])is list and len(data['files'])<=MAX_INPUTS,'FINITE_BASELINE_MEMBERSHIP')
+-        pending=open_inputs([Path(row['path'])for row in data['files']]);observed=[]
+-        try:
+-            for held,expected in zip(pending,data['files']):
+-                row,_=read_held(held,expected)
+-                check_row(row,{'identity':expected['PRE'],'bytes':expected['bytes'],'sha256':expected['sha256']});observed.append(row)
+-            for row in observed:final_fence(row)
+-            final_fence(baseline_held[0])
+-        finally:closes=close_scope(pending)
+-    finally:baseline_closes=close_scope(baseline_held)
+-    result={'schema':'DISTINCT_MATURE_BASELINE_CURRENT_CONSUMER_REPAIR3','scope':'CURRENT_REFERENCE_MATCH_ONLY','status':'CURRENT_REFERENCE_MATCH','baselineFirstMatureConsumerObservation':baseline_row,'files':observed,'count':len(observed),'FDCloses':closes,'baselineFDCloses':baseline_closes,'old119Scope':'FAILED_IMMUTABLE','historicalCustodyRepaired':False,'sourceEligibility':False,'runtimeAuthority':False,'allOriginalSixTask04Criteria':'OPEN','Task03':'OPEN','full17Goal':'OPEN','aggregateLedger':{'paths':len(LEDGER.paths),'bytes':LEDGER.total,'peakFDs':LEDGER.peak},'newReportOutputsSelfExcludedUpstream':True}
+-    return output('evidence/current-consumer1.json',result)
+-'''
+-    text=text.replace("            fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)\n            entry={'path':str(path),'PRE':before,'OPEN':identity(os.fstat(fd)),'heldFD':fd,'ageNsAtFirstOpen':age}\n            pending.append(entry);require(entry['OPEN']==before,'FIRST_OPEN_NINE_DRIFT')", "            if 'LEDGER'in globals():LEDGER.reserve(path,before)\n            fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)\n            if 'LEDGER'in globals():LEDGER.opened()\n            entry={'path':str(path),'PRE':before,'heldFD':fd,'ageNsAtFirstOpen':age};pending.append(entry)\n            entry['OPEN']=identity(os.fstat(fd));require(entry['OPEN']==before,'FIRST_OPEN_NINE_DRIFT')")
+-    put(N/'programs/consumer.py',text.encode())
+-    put(N/'data/legacy-reference-contract.json',data[str(C4/'data/reference-contract.json')])
+-    put(N/'data/semantic-delta.json',{'consumerRepairs':['outerBaselineLifetime','separatePendingLifetime','allCloseAttemptsOnceStickyFailure','finiteParseFloat','oneAggregateGraphLedger'],'oldC4ProgramSHA256':'cf30a4b10274e16acfbeae8492a8887caee39fa66ffc5db917fb3f49b77ee7a0','operativeRepairNamespace':NEW.name,'originalAssertionsDeadlinesResourcesChanged':False,'oldLiteralPinsRefreshed':False,'sourceEligibility':False,'runtimeAuthority':False})
+-    put(NEW/'source-writer-stop.json',{'writersStopped':True,'scope':'SOURCE112_MF_WORKFLOW_AND_DECLARED_DELTA','stopTimeNs':time.time_ns(),'nativeActions':False,'newOutputsRequireDistinctMatureConsumer':True})
+-    put(N/'evidence/preparation-first-source-readback.json',{'schema':'FINITE_PREPARATION_FIRST_MATURE_SOURCE_READBACK','files':rows,'allFDsBeforeContents':True,'sourceOnly':True,'sourceEligibility':False,'runtimeAuthority':False,'totalBytes':total})
+-    for p,fd,before,age in held:
+-        os.lseek(fd,0,0);h=hashlib.sha256();size=0
+-        while b:=os.read(fd,65536):h.update(b);size+=len(b)
+-        assert (size,h.hexdigest())==(len(data[str(p)]),hashlib.sha256(data[str(p)]).hexdigest())and ident(os.fstat(fd))==before and ident(p.lstat())==before
+-finally:
+-    for p,fd,before,age in held:
+-        try:ret=os.close(fd);closes.append({'path':str(p),'fd':fd,'closeReturn':ret})
+-        except BaseException as error:closes.append({'path':str(p),'fd':fd,'closeError':repr(error)})
+-put(N/'evidence/preparation-final-source-FDclosure.json',{'files':rows,'FDCloses':closes,'allExplicitCloseReturnsObserved':all('closeReturn'in r for r in closes),'outputsNotInputAuthority':True})
+-print(json.dumps({'prepared':True,'sourceCount':112,'semanticDeltaFiles':2,'sourceInputFiles':len(held),'bytes':total,'runtimeAuthority':False}))
++if __name__=='__main__':
++    if sys.argv[1:]!=['--prepare-source-only']:raise ValueError('EXPLICIT_FINITE_SOURCE_PREPARATION_COMMAND_REQUIRED')
++    print(json.dumps(prepare(),separators=(',',':')))

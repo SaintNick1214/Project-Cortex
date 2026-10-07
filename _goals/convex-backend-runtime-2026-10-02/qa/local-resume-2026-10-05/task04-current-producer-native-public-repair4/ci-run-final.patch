@@ -1,0 +1,117 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair3/source/ci-run.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source/ci-run.py
+@@ -102,10 +102,23 @@
+         raise ValueError('EXACT_ABSENCE_NOT_ESTABLISHED')
+ 
+ 
++def register_source(h):
++    """A returned Held descriptor gets a guaranteed registration or one fallback close."""
++    try:SOURCE_HELD.append(h)
++    except BaseException as primary:
++        if SOURCE_HELD and SOURCE_HELD[-1]is h:SOURCE_HELD.pop()
++        try:h.close()
++        except BaseException as cleanup:
++            error=RuntimeError('UNREGISTERED_SOURCE_CLOSE_FAILED_STICKY')
++            error.primaryFailure=primary;error.closeFailures=[cleanup]
++            raise error from primary
++        raise
++
++
+ def verify_source():
+     proof,manifest_held,directories=open_manifest(S)
+-    SOURCE_HELD.append(manifest_held);SOURCE_DIRS.extend(directories)
+-    for row in proof['files']:SOURCE_HELD.append(Held(str(S/row['path']),16777216,row))
++    register_source(manifest_held);SOURCE_DIRS.extend(directories)
++    for row in proof['files']:register_source(Held(str(S/row['path']),16777216,row))
+     fence_directories(SOURCE_DIRS)
+     save('host-source-before.json',{'scope':'FRESH_GIT_CONTENT_CURRENT_FS_BASELINE_ONLY','rows':[h.row()for h in SOURCE_HELD],'directories':SOURCE_DIRS,'historicalCustody':'NOT_ADOPTED'})
+ 
+@@ -422,33 +435,59 @@
+     save('public-artifact-manifest.json',{'scope':'FINITE_PUBLIC_CONTENT_EXPORT_NOT_RELEASE','files':rows,'bytes':total,'maxBytes':671088640,'runtimeBindingsExpireAtJobEnd':True,'ROOT':'ABSENT','original122':'HELD'})
+ 
+ 
++class EntryFailure(RuntimeError):
++    """Every owned cleanup failure stays visible after all close attempts."""
++    def __init__(self,primary,failures):
++        super().__init__('SOURCE_RUN_FAILED_STICKY')
++        self.primaryFailure=primary
++        self.failures=failures
++
++
++def entry():
++    global WHOLE_END,SOURCE_HELD
++    primary=None;failures=[]
++    def record(stage,error):
++        nonlocal primary
++        if primary is None:primary=error
++        failures.append((stage,error))
++    def attempt(stage,fn):
++        try:return fn()
++        except BaseException as error:record(stage,error)
++    try:
++        try:main()
++        except BaseException as error:
++            record('main',error)
++            if RUN is not None:
++                attempt('host-failure-report',lambda:save('host-failure.json',{'scope':'FAILED_NATIVE_PUBLIC_SOURCE_ONLY','error':repr(error),'original122':'HELD','ROOT':'ABSENT'}))
++    finally:
++        # Report, clock or container-cleanup failures cannot skip the owned source lifetime.
++        try:
++            if RUN is not None:
++                def cleanup_window():
++                    global WHOLE_END
++                    WHOLE_END=time.monotonic()+60;phase('owned-cleanup-and-final-custody',60)
++                attempt('cleanup-window',cleanup_window)
++                try:cleanup()
++                except BaseException as error:
++                    record('owned-cleanup',error)
++                    attempt('cleanup-failure-report',lambda:save('cleanup-failure.json',{'error':repr(error),'authority':'UNKNOWN_DISPATCH_HOLD_NO_FOREIGN_ACTION'}))
++        finally:
++            owned=SOURCE_HELD;SOURCE_HELD=[]
++            for h in owned:
++                attempt('source-fence',lambda h=h:h.fence(full=True))
++                attempt('source-close',h.close)
++            attempt('source-directory-fence',lambda:fence_directories(SOURCE_DIRS))
++        if RUN is not None:
++            attempt('remaining-before-stop',remaining)
++            attempt('writer-stop-report',lambda:save('writer-stop.json',{'scope':'SOURCE_ONLY_NO_RELEASE','sourceWritersClosed':not any(stage=='source-close'for stage,error in failures),'primary':repr(primary)if primary is not None else None,'failures':[{'stage':stage,'error':repr(error)}for stage,error in failures],'runtimeBindingsExpireAtJobEnd':True,'original122':'HELD','ROOT':'ABSENT'}))
++            attempt('artifact-manifest',artifact_manifest)
++            attempt('remaining-after-artifact',remaining)
++    if primary is not None:raise EntryFailure(primary,failures)from primary
++    return 0
++
++
+ if __name__=='__main__':
+-    primary=None
+-    try:main()
+-    except BaseException as error:
+-        primary=repr(error)
+-        if RUN is not None:save('host-failure.json',{'scope':'FAILED_NATIVE_PUBLIC_SOURCE_ONLY','error':primary,'original122':'HELD','ROOT':'ABSENT'})
+-    finally:
+-        if RUN is not None:
+-            # Separate cleanup allowance: it cannot turn a failed/late body into PASS.
+-            WHOLE_END=time.monotonic()+60;phase('owned-cleanup-and-final-custody',60)
+-            try:cleanup()
+-            except BaseException as error:
+-                primary=primary or repr(error)
+-                save('cleanup-failure.json',{'error':repr(error),'authority':'UNKNOWN_DISPATCH_HOLD_NO_FOREIGN_ACTION'})
+-            for h in SOURCE_HELD:
+-                try:h.fence(full=True)
+-                except BaseException as error:primary=primary or repr(error)
+-                h.close()
+-            try:fence_directories(SOURCE_DIRS)
+-            except BaseException as error:primary=primary or repr(error)
+-            try:remaining()
+-            except BaseException as error:primary=primary or repr(error)
+-            save('writer-stop.json',{'scope':'SOURCE_ONLY_NO_RELEASE','sourceWritersClosed':True,'primary':primary,'runtimeBindingsExpireAtJobEnd':True,'original122':'HELD','ROOT':'ABSENT'})
+-            try:artifact_manifest()
+-            except BaseException as error:
+-                primary=primary or repr(error)
+-                print('FINITE_ARTIFACT_MANIFEST_FAILURE:'+repr(error),file=sys.stderr)
+-            try:remaining()
+-            except BaseException as error:primary=primary or repr(error)
+-    if primary:sys.exit(1)
++    try:entry()
++    except EntryFailure as error:
++        print(str(error),file=sys.stderr)
++        sys.exit(1)

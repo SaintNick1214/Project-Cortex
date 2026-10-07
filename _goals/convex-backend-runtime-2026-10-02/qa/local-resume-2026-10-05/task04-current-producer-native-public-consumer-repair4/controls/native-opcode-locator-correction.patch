@@ -1,0 +1,13 @@
+--- _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/controls/repair4_extra_controls.py
++++ _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/controls/repair4_extra_controls2.py
+@@ -137,7 +137,9 @@
+     exec(extract(SOURCES['native_export.py'],{'manifest'}),g)
+     code=g['manifest'].__code__;line=next(i for i,text in enumerate(SOURCES['native_export.py'].splitlines(),1)if 'try:held.append(h)'in text);current=0;offset=None
+     for instruction in dis.get_instructions(code):
+-        if instruction.starts_line is not None:current=instruction.starts_line
++        positions=getattr(instruction,'positions',None)
++        if positions is not None and positions.lineno is not None:current=positions.lineno
++        elif type(instruction.starts_line)is int:current=instruction.starts_line
+         if current==line and instruction.argval=='append':offset=instruction.offset
+     assert offset is not None;fired=False
+     def trace(frame,event,arg):
