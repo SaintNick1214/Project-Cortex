@@ -1,0 +1,2689 @@
+{
+  "scope": "ROOT_DISTINCT_LATER_MATURE_U2_REJECT_PACKET_CONSUMPTION_ONLY",
+  "timestampUtc": "2026-10-07T17:01:28.946813+00:00",
+  "failure": null,
+  "closeErrors": [],
+  "files": 140,
+  "bytes": 3555259,
+  "explicitCloses": 140,
+  "allFDsBeforeMemberContent": true,
+  "bootstrapManifestAndPriorReceiptFirstAndHeld": true,
+  "originalPinsNeverRefreshed": true,
+  "checks": {
+    "reviewVerdict": "REJECT",
+    "reviewScore": 2.6,
+    "checksPassed": 71,
+    "checksFailed": 4,
+    "actualHostCommands": 9,
+    "allFourP1Findings": true,
+    "sourceEligibility": false,
+    "previous136PinsConserved": true,
+    "fullReportAndAddendumRead": true,
+    "fullRawControlsRead": true
+  },
+  "inputRows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/closed-review-reference-manifest.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92757872",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "56064",
+        "mtime_ns": "1791392007305964911",
+        "ctime_ns": "1791392026329462922"
+      },
+      "maturityAgeNs": "462593826078",
+      "sha256": "5718aa7ca44a18f9d93874c5556a775d0a48ae3d0d2467b012b7da5afd413b69",
+      "bytes": 56064,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/packet-final-readback1.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92757873",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "144139",
+        "mtime_ns": "1791392007311275789",
+        "ctime_ns": "1791392026341596344"
+      },
+      "maturityAgeNs": "462581789656",
+      "sha256": "53b9b547786c1a51ee56c245990b5222d6297910db4f599f1fdfdd57603dbfe7",
+      "bytes": 144139,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/root-task03-attempt6-highfd-public-repair2-closed-mature-readback1.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92495724",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "47005",
+        "mtime_ns": "1791320453978818953",
+        "ctime_ns": "1791320457549556017"
+      },
+      "maturityAgeNs": "72031374455983",
+      "sha256": "0df4f88dc6e5e7de755d2dc6a0969e8626e0eb5178e8301fa60b15d1354ed31f",
+      "bytes": 47005,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/common-adaptation-writer-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491848",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1110",
+        "mtime_ns": "1791319352151767292",
+        "ctime_ns": "1791319383390155845"
+      },
+      "maturityAgeNs": "73105533888155",
+      "sha256": "c7c610a03127270ce4fc82c1c5ebfe42e45bda62b91eaf2c824a5f65498e79d7",
+      "bytes": 1110,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/common-adaptation.patch",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491847",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2071",
+        "mtime_ns": "1791319352151668334",
+        "ctime_ns": "1791319383388166750"
+      },
+      "maturityAgeNs": "73105535903250",
+      "sha256": "0154b73e255839dfd42f5c18034dfb974136818d0ea9ff30e510338f5d98858a",
+      "bytes": 2071,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491846",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21476",
+        "mtime_ns": "1791319352151070330",
+        "ctime_ns": "1791319381191853536"
+      },
+      "maturityAgeNs": "73107732242464",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/exact-entry-command.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492996",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "5725",
+        "mtime_ns": "1791319758687579749",
+        "ctime_ns": "1791319762254115540"
+      },
+      "maturityAgeNs": "72726670008460",
+      "sha256": "60273e9db02ab27698b95f018123bd286f2cff268c735290e876d340bcc0c406",
+      "bytes": 5725,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/executable-preparation-report.md",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92494328",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "4775",
+        "mtime_ns": "1791320134389539651",
+        "ctime_ns": "1791320145595596838"
+      },
+      "maturityAgeNs": "72343328554162",
+      "sha256": "497626b80b8b1f305af7b4a0a54b32c27be48d2743a6d54cc5be2cdebf8b8c40",
+      "bytes": 4775,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/executable-review-source-manifest.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92494781",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "80129",
+        "mtime_ns": "1791320311814617400",
+        "ctime_ns": "1791320327229590158"
+      },
+      "maturityAgeNs": "72161694587842",
+      "sha256": "320f9281e8680652390d18fc6b6dc0dd52dac5ab8e08685b3f53a36d4b85dccc",
+      "bytes": 80129,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/executable-review-writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92494782",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1441",
+        "mtime_ns": "1791320311814786734",
+        "ctime_ns": "1791320324936940034"
+      },
+      "maturityAgeNs": "72163987261966",
+      "sha256": "8dd868b2f75c0cd45a5a0f27ecd9f3764ab2357e0f93bcaa7abc8064f455f7f2",
+      "bytes": 1441,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/finite-actual-review-plan.md",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493790",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "3487",
+        "mtime_ns": "1791320027016288722",
+        "ctime_ns": "1791320032498193746"
+      },
+      "maturityAgeNs": "72456426034254",
+      "sha256": "78dbe9ac8d9c934150b8d29ba38369b68da49b057e118592d0ac03f851d40c4f",
+      "bytes": 3487,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/finite-actual-review-recipe.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492997",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "16219",
+        "mtime_ns": "1791319800996432510",
+        "ctime_ns": "1791319804901020763"
+      },
+      "maturityAgeNs": "72684023232237",
+      "sha256": "da708d635f04a01119569b41d21783bff67b16e3503e6a9ed9c84b6aef4d71b5",
+      "bytes": 16219,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-control-source-writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492082",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "582",
+        "mtime_ns": "1791319474323961155",
+        "ctime_ns": "1791319478572027151"
+      },
+      "maturityAgeNs": "73010352251849",
+      "sha256": "d063fe319fb0182326aaf6049fdcc478b8ca00870cf75949487ade7562bf9c74",
+      "bytes": 582,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls-entry-receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492324",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "815",
+        "mtime_ns": "1791319496085086826",
+        "ctime_ns": "1791319503236814677"
+      },
+      "maturityAgeNs": "72985687491323",
+      "sha256": "61793ef30cd120ba0885fa837188c80727a0496ac8e10e6ffd61d64d92cd3323",
+      "bytes": 815,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls-first-mature-readback1.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493198",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "28199",
+        "mtime_ns": "1791319861623934299",
+        "ctime_ns": "1791319866135245426"
+      },
+      "maturityAgeNs": "72622789085574",
+      "sha256": "edceeae4965968180a9905d1ff7b3b39dc83fd61bf88545357c63995a2b49770",
+      "bytes": 28199,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492005",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "9085",
+        "mtime_ns": "1791319419471327977",
+        "ctime_ns": "1791319422897219902"
+      },
+      "maturityAgeNs": "73066027136098",
+      "sha256": "842bda1360af72b924d2a317cafce3aad2f17e19d942975c49994cc6199a3efd",
+      "bytes": 9085,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/controls-summary.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492322",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "29127",
+        "mtime_ns": "1791319496083373941",
+        "ctime_ns": "1791319501290615147"
+      },
+      "maturityAgeNs": "72987633769853",
+      "sha256": "617744397f2f255dc9978b0dd8b64dffb7b847c7bb0588c3ed1818a7e2140522",
+      "bytes": 29127,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-deadline.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492264",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2459",
+        "mtime_ns": "1791319495358804037",
+        "ctime_ns": "1791319501308659247"
+      },
+      "maturityAgeNs": "72987615752753",
+      "sha256": "4a69c124a080ee8cbf6e3e7df9aa89a097eb371d4255ec7ee5eeba96eba513d1",
+      "bytes": 2459,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-deadline.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492263",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319495358654244",
+        "ctime_ns": "1791319501420359451"
+      },
+      "maturityAgeNs": "72987504077549",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-deadline.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492262",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319495358546827",
+        "ctime_ns": "1791319501296177886"
+      },
+      "maturityAgeNs": "72987628284114",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-missing.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492297",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1892",
+        "mtime_ns": "1791319495835476979",
+        "ctime_ns": "1791319501306249817"
+      },
+      "maturityAgeNs": "72987618238183",
+      "sha256": "d4f52233eefe9657b65e9bcdb412d1b3485d8a0ff132832c4fb4d42209c19abc",
+      "bytes": 1892,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-missing.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492296",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319495835346729",
+        "ctime_ns": "1791319501319684642"
+      },
+      "maturityAgeNs": "72987604828358",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-missing.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492295",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319495835247978",
+        "ctime_ns": "1791319501335512271"
+      },
+      "maturityAgeNs": "72987589026729",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-nonzero.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492165",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1723",
+        "mtime_ns": "1791319493988714085",
+        "ctime_ns": "1791319501310855259"
+      },
+      "maturityAgeNs": "72987613711741",
+      "sha256": "ca7cce090b5efb2d29468d9929f553ee23581ef913d34215992f0dd39d482710",
+      "bytes": 1723,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-nonzero.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492164",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319493988345833",
+        "ctime_ns": "1791319501417576727"
+      },
+      "maturityAgeNs": "72987507016273",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-nonzero.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492163",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7",
+        "mtime_ns": "1791319493987995831",
+        "ctime_ns": "1791319501322055988"
+      },
+      "maturityAgeNs": "72987602563012",
+      "sha256": "a294469efce3e2bf005427a1180ae291eb19d65b7c3c745b4d185df23eae6235",
+      "bytes": 7,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-pipes-max.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492198",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1822",
+        "mtime_ns": "1791319494462670512",
+        "ctime_ns": "1791319501304250098"
+      },
+      "maturityAgeNs": "72987620395902",
+      "sha256": "db26a56480ec2c3db005da8397d86eee1abc2f70e391d540bc1a04addd5e5202",
+      "bytes": 1822,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-pipes-max.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492197",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791319494462362260",
+        "ctime_ns": "1791319501330384910"
+      },
+      "maturityAgeNs": "72987594288090",
+      "sha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-pipes-max.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492196",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791319494462008967",
+        "ctime_ns": "1791319501315346784"
+      },
+      "maturityAgeNs": "72987609352216",
+      "sha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-residual.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492290",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2858",
+        "mtime_ns": "1791319495687407447",
+        "ctime_ns": "1791319501264806086"
+      },
+      "maturityAgeNs": "72987659919914",
+      "sha256": "72e16ba3d0e063c09cbfdc1c5cbb0f5ec55f5e503bee8cc2769f40412c770f4f",
+      "bytes": 2858,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-residual.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492289",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319495687251613",
+        "ctime_ns": "1791319501278357287"
+      },
+      "maturityAgeNs": "72987646393713",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-residual.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492288",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319495687146363",
+        "ctime_ns": "1791319501312863937"
+      },
+      "maturityAgeNs": "72987611912063",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stderr-overflow.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492229",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2540",
+        "mtime_ns": "1791319494847447485",
+        "ctime_ns": "1791319501272565963"
+      },
+      "maturityAgeNs": "72987652238037",
+      "sha256": "04f855cac77ebab078519fbd3a9281bbadb4f00e56f248f73e0a43c58a5b8764",
+      "bytes": 2540,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stderr-overflow.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492228",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791319494847111275",
+        "ctime_ns": "1791319501294264000"
+      },
+      "maturityAgeNs": "72987630567000",
+      "sha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stderr-overflow.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492226",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319494846925233",
+        "ctime_ns": "1791319501280349215"
+      },
+      "maturityAgeNs": "72987644507785",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stdin-max.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492188",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1789",
+        "mtime_ns": "1791319494225096275",
+        "ctime_ns": "1791319501298036771"
+      },
+      "maturityAgeNs": "72987626848229",
+      "sha256": "36fa3b214f2a8c61f798a0538468b7a73c8d57917d45f8a32d9a7c73c0f96d74",
+      "bytes": 1789,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stdin-max.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492187",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319494224962274",
+        "ctime_ns": "1791319501288585010"
+      },
+      "maturityAgeNs": "72987636324990",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stdin-max.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492186",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "72",
+        "mtime_ns": "1791319494224616064",
+        "ctime_ns": "1791319501325995177"
+      },
+      "maturityAgeNs": "72987598942823",
+      "sha256": "7c8c2188dacec6acb1b3994c4a65cb90d53f816f334bdcbf0e552afd9583f0fd",
+      "bytes": 72,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stdout-overflow.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492207",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2539",
+        "mtime_ns": "1791319494654037160",
+        "ctime_ns": "1791319501412832617"
+      },
+      "maturityAgeNs": "72987512132383",
+      "sha256": "f227f54af8361d6d75327fd73257f5019bf7b148f5c9a93274714f79b83f774e",
+      "bytes": 2539,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stdout-overflow.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492206",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319494653901117",
+        "ctime_ns": "1791319501270843703"
+      },
+      "maturityAgeNs": "72987654148297",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-stdout-overflow.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492205",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791319494653521574",
+        "ctime_ns": "1791319501292166239"
+      },
+      "maturityAgeNs": "72987632854761",
+      "sha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-success.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492150",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1731",
+        "mtime_ns": "1791319493753547694",
+        "ctime_ns": "1791319501274636474"
+      },
+      "maturityAgeNs": "72987650412526",
+      "sha256": "4c77b0f72ea886b9a11df38aaa58865dbe9a433864b8458e64119cf83e1bfdb7",
+      "bytes": 1731,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-success.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492149",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "8",
+        "mtime_ns": "1791319493753415110",
+        "ctime_ns": "1791319501282166183"
+      },
+      "maturityAgeNs": "72987642910817",
+      "sha256": "9bc38d95dae34b6ff42906e5cc495c662ab2cd9ad0a43cb2f2ecdb4f51c414f7",
+      "bytes": 8,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd2400-success.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492148",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7",
+        "mtime_ns": "1791319493753250568",
+        "ctime_ns": "1791319501276573610"
+      },
+      "maturityAgeNs": "72987648531390",
+      "sha256": "481795812efdb6fa61173cd7830552a076d123ffd69da66323d94b47ba49fc15",
+      "bytes": 7,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd4000-success.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492321",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1699",
+        "mtime_ns": "1791319496083002148",
+        "ctime_ns": "1791319501268717775"
+      },
+      "maturityAgeNs": "72987656414225",
+      "sha256": "1f0f84b50790d673d5572b0afb3991c6930617432ad152c01383f462a852b9e4",
+      "bytes": 1699,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd4000-success.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492320",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791319496082875480",
+        "ctime_ns": "1791319501299914282"
+      },
+      "maturityAgeNs": "72987625243718",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/highfd4000-success.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492319",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "16",
+        "mtime_ns": "1791319496082735646",
+        "ctime_ns": "1791319501324164917"
+      },
+      "maturityAgeNs": "72987601020083",
+      "sha256": "1b11510bdbcd7d5a7b30b62236d5f84ddc2db72da0131d3656b6a121585ce487",
+      "bytes": 16,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/original-lowfd-success.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492135",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1733",
+        "mtime_ns": "1791319493463691291",
+        "ctime_ns": "1791319501266940598"
+      },
+      "maturityAgeNs": "72987658273402",
+      "sha256": "339e223815b1ebc2f2005f48141bcee14640ed6305d6e009fd1f70bada14e073",
+      "bytes": 1733,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/original-lowfd-success.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492134",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7",
+        "mtime_ns": "1791319493463539623",
+        "ctime_ns": "1791319497899998001"
+      },
+      "maturityAgeNs": "72991025243999",
+      "sha256": "50fe3fcf64860a65abe481424c47c04aca659a04d33c1b0d49471f27582dcf94",
+      "bytes": 7,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/original-lowfd-success.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492133",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6",
+        "mtime_ns": "1791319493463173204",
+        "ctime_ns": "1791319497896784650"
+      },
+      "maturityAgeNs": "72991028484350",
+      "sha256": "70db35d114b72d7c29bb07e72950b16426bd2054b10f9079f9b152672e194ff7",
+      "bytes": 6,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492323",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "213",
+        "mtime_ns": "1791319496083479525",
+        "ctime_ns": "1791319503240230862"
+      },
+      "maturityAgeNs": "72985685067138",
+      "sha256": "006f93669adeae7c2bf513596466b42e7eaf968f4664d59bcfe840b9c83cbb66",
+      "bytes": 213,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/host-node-provenance1/host-syntax-node-version.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493883",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1647",
+        "mtime_ns": "1791320055155013856",
+        "ctime_ns": "1791320063279033613"
+      },
+      "maturityAgeNs": "72425646294387",
+      "sha256": "683e5531f55bf94fb46792e015a0e1648f3cbe780f2441234a7f15285617c9d4",
+      "bytes": 1647,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/host-node-provenance1/host-syntax-node-version.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493882",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791320055154845647",
+        "ctime_ns": "1791320063282772551"
+      },
+      "maturityAgeNs": "72425642583449",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/host-node-provenance1/host-syntax-node-version.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493881",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "9",
+        "mtime_ns": "1791320055154305810",
+        "ctime_ns": "1791320063276513308"
+      },
+      "maturityAgeNs": "72425648871692",
+      "sha256": "510734775b8bc8f762a1e5bdb144a2bbc76c4c981a4a50b1bcd9d594c292b18c",
+      "bytes": 9,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/host-node-provenance1/provenance.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493884",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "521",
+        "mtime_ns": "1791320055155204899",
+        "ctime_ns": "1791320063272497077"
+      },
+      "maturityAgeNs": "72425652916923",
+      "sha256": "0e8d3083b5aadded6ebe698c01875717c90cf9b7942677289b9cf598906d46db",
+      "bytes": 521,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/host-node-provenance1/writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493885",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "181",
+        "mtime_ns": "1791320055155332816",
+        "ctime_ns": "1791320063267875218"
+      },
+      "maturityAgeNs": "72425657566782",
+      "sha256": "0c43b02e9de41d599ce576eaf6970aa38dea7268eb1ad411c3503b9b9d852ab2",
+      "bytes": 181,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492436",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "10263",
+        "mtime_ns": "1791319534167276292",
+        "ctime_ns": "1791319567969380417"
+      },
+      "maturityAgeNs": "72920956091583",
+      "sha256": "55341dc2614d90505ba25a26a6d37348e7af04c8d61f0e35ef7ba6fa02282f08",
+      "bytes": 10263,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-observer-codecopy-map.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492437",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2172",
+        "mtime_ns": "1791319534167386876",
+        "ctime_ns": "1791319569971285966"
+      },
+      "maturityAgeNs": "72918954214034",
+      "sha256": "0fa384db35af635d40f6ffac7633147005d194eeb96e7a4b65224ce570269e12",
+      "bytes": 2172,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-public-observer.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492435",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "9465",
+        "mtime_ns": "1791319534167134458",
+        "ctime_ns": "1791319569977804919"
+      },
+      "maturityAgeNs": "72918947724081",
+      "sha256": "67ec0fd3169bad4cd001c73f4835f965c1f73dfe14e8ede9d8acd59b1de42eb7",
+      "bytes": 9465,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/named-executable-writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493791",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1041",
+        "mtime_ns": "1791320027016446973",
+        "ctime_ns": "1791320030389127685"
+      },
+      "maturityAgeNs": "72458536429315",
+      "sha256": "3be3ffa3b13ca9f54aad3beefb076f075d174cb681c89a722087603b235717b8",
+      "bytes": 1041,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/preparation-report.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92494327",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7644",
+        "mtime_ns": "1791320134389389151",
+        "ctime_ns": "1791320145609070872"
+      },
+      "maturityAgeNs": "72343316514128",
+      "sha256": "70c0ef94f50f8a6fc7121bc5d734b2ab6bb1946efb6df9157ba8c698da1aaf38",
+      "bytes": 7644,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/public-entry-adaptation.patch",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492703",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "16951",
+        "mtime_ns": "1791319645084296552",
+        "ctime_ns": "1791319660466903254"
+      },
+      "maturityAgeNs": "72828458710746",
+      "sha256": "184b57ca3944b743f1f974946238b3d1b419c9e35b9789e466c2cbfda75589e3",
+      "bytes": 16951,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/publication-input-writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92494436",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1098",
+        "mtime_ns": "1791320175808475589",
+        "ctime_ns": "1791320179402382364"
+      },
+      "maturityAgeNs": "72309523259636",
+      "sha256": "0772740d9dbaeabc711fa2046ca01aaa63cc03b41fa763e0583cb042c696d45a",
+      "bytes": 1098,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/reference-contracts.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493317",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6396",
+        "mtime_ns": "1791319907318082009",
+        "ctime_ns": "1791319934490907729"
+      },
+      "maturityAgeNs": "72554434763271",
+      "sha256": "0044fef853992e7140089727d8d5103ae3b9d28e0fb6ee614683265dd2ac4789",
+      "bytes": 6396,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492702",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "29033",
+        "mtime_ns": "1791319645084185093",
+        "ctime_ns": "1791319658422606262"
+      },
+      "maturityAgeNs": "72830503093738",
+      "sha256": "015ec6b15448db9963f182dd086ca301e8680ee19a3ab9262d2875f68f829e42",
+      "bytes": 29033,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492910",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6151",
+        "mtime_ns": "1791319834337065653",
+        "ctime_ns": "1791319841529681188"
+      },
+      "maturityAgeNs": "72647396047812",
+      "sha256": "e8a67bba09272304169da5aba6380844c2fa12c6646eaad852ed1838212f7221",
+      "bytes": 6151,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls1-failure.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493434",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1113",
+        "mtime_ns": "1791319971250114298",
+        "ctime_ns": "1791319975774841666"
+      },
+      "maturityAgeNs": "72513150917334",
+      "sha256": "594b94dba6d5a044ae43d3335fe7e69ea48ca2a11753d681d6400b71d68366f0",
+      "bytes": 1113,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls2/controls-summary.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493980",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "4912",
+        "mtime_ns": "1791320065699735615",
+        "ctime_ns": "1791320073487675920"
+      },
+      "maturityAgeNs": "72415438112080",
+      "sha256": "34220e4cc9443cf1b2fa197b447826cf145a1b24f8d64320eeb19aa9bfe23498",
+      "bytes": 4912,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls2/writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493981",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "186",
+        "mtime_ns": "1791320065699828657",
+        "ctime_ns": "1791320073494617417"
+      },
+      "maturityAgeNs": "72415431200583",
+      "sha256": "0446e8b3ac243c4801f49e9a0d704621e1b5f25ccf0df07bfa96965b02bfb932",
+      "bytes": 186,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls2-entry-receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493982",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "856",
+        "mtime_ns": "1791320065700008450",
+        "ctime_ns": "1791320073502605836"
+      },
+      "maturityAgeNs": "72415423240164",
+      "sha256": "6fc3095199e46397ecd7f6a878d483b7aca6759a462ac2fb162a4e15c75c1a5a",
+      "bytes": 856,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls2.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92493433",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6154",
+        "mtime_ns": "1791319971249558129",
+        "ctime_ns": "1791319978257678306"
+      },
+      "maturityAgeNs": "72510668196694",
+      "sha256": "bcf0c05d5ee60694b179faba7f86f43d131b8b45471f08b12f7199f6601827cb",
+      "bytes": 6154,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt6-2026-10-06/integrated/coordinate-common.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92454891",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21309",
+        "mtime_ns": "1791309847608286823",
+        "ctime_ns": "1791311819590490673"
+      },
+      "maturityAgeNs": "80669335414327",
+      "sha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+      "bytes": 21309,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/run-actual-review.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92487479",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "25485",
+        "mtime_ns": "1791316899766270118",
+        "ctime_ns": "1791316902796192316"
+      },
+      "maturityAgeNs": "75586129895684",
+      "sha256": "7c8f43713c349c68aa855499fdebe9bdb7f7c6ea75c86f5c442876b18ecd69a3",
+      "bytes": 25485,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/linux-public-observer.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92487046",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "9465",
+        "mtime_ns": "1791316654931787784",
+        "ctime_ns": "1791316696653773076"
+      },
+      "maturityAgeNs": "75792272344924",
+      "sha256": "67ec0fd3169bad4cd001c73f4835f965c1f73dfe14e8ede9d8acd59b1de42eb7",
+      "bytes": 9465,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/linux-dependency-observer.mjs",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92487133",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "10263",
+        "mtime_ns": "1791316698357516146",
+        "ctime_ns": "1791316702321238840"
+      },
+      "maturityAgeNs": "75786604909160",
+      "sha256": "55341dc2614d90505ba25a26a6d37348e7af04c8d61f0e35ef7ba6fa02282f08",
+      "bytes": 10263,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/root-task03-attempt6-public-review-actual-failure-readback1.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491410",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "15580",
+        "mtime_ns": "1791319193104081250",
+        "ctime_ns": "1791319196684589703"
+      },
+      "maturityAgeNs": "73292241588297",
+      "sha256": "d7eabf55ab9efb538259252fd4267b7c2b0fa4b674596a810c89ae6938b2fb46",
+      "bytes": 15580,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/root-task03-attempt6-public-review-high-descriptor-cause1.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491516",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "702",
+        "mtime_ns": "1791319213583209799",
+        "ctime_ns": "1791319217186745090"
+      },
+      "maturityAgeNs": "73271739461910",
+      "sha256": "6af1b39d0529402e77238f72fa2870c753fc1eb44bb1cd0ef87f89ba4f327e8d",
+      "bytes": 702,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/first-root68-source-readback.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92520563",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "88633",
+        "mtime_ns": "1791331619589978443",
+        "ctime_ns": "1791332894317354737"
+      },
+      "maturityAgeNs": "59594608882263",
+      "sha256": "8878777248fb4c311bc9b682dac331972661f33035e7ca7a89ab482fdf5739b3",
+      "bytes": 88633,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-deadline.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755087",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2467",
+        "mtime_ns": "1791391766841654921",
+        "ctime_ns": "1791391826945406088"
+      },
+      "maturityAgeNs": "661980862912",
+      "sha256": "157b5b1a611aca3833dcf429363c172cd2c538c800cfeaf9f17e0bd060716448",
+      "bytes": 2467,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-deadline.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755086",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391766841489453",
+        "ctime_ns": "1791391826702449988"
+      },
+      "maturityAgeNs": "662223848012",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-deadline.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755085",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391766841352702",
+        "ctime_ns": "1791391827370559502"
+      },
+      "maturityAgeNs": "661555767498",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-missing.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755117",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1907",
+        "mtime_ns": "1791391767815914581",
+        "ctime_ns": "1791391827381506286"
+      },
+      "maturityAgeNs": "661544851714",
+      "sha256": "d7263c1206eb463d0f4eab566d786b79551833a71878904d65f937025bb590d9",
+      "bytes": 1907,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-missing.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755116",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391767815612908",
+        "ctime_ns": "1791391827064379790"
+      },
+      "maturityAgeNs": "661862007210",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-missing.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755115",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391767815472742",
+        "ctime_ns": "1791391827364369959"
+      },
+      "maturityAgeNs": "661562046041",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-nonzero.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755074",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1704",
+        "mtime_ns": "1791391765886494304",
+        "ctime_ns": "1791391827016265914"
+      },
+      "maturityAgeNs": "661910182086",
+      "sha256": "65ea972a574e6f6228c11cd88822affb0f537cd0c71badad98ece121b618f612",
+      "bytes": 1704,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-nonzero.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755073",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391765886329874",
+        "ctime_ns": "1791391827445287313"
+      },
+      "maturityAgeNs": "661481191687",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-nonzero.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755072",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391765886208959",
+        "ctime_ns": "1791391827215339256"
+      },
+      "maturityAgeNs": "661711168744",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-pipes-max.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755114",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1831",
+        "mtime_ns": "1791391767662389008",
+        "ctime_ns": "1791391827261275284"
+      },
+      "maturityAgeNs": "661665263716",
+      "sha256": "b124d886397ce045e629ea6aa5cb059933e59b974e9a21d4caf853dc420c433f",
+      "bytes": 1831,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-pipes-max.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755113",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791391767661948495",
+        "ctime_ns": "1791391827266968115"
+      },
+      "maturityAgeNs": "661659601885",
+      "sha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-pipes-max.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755112",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791391767661603470",
+        "ctime_ns": "1791391827375779247"
+      },
+      "maturityAgeNs": "661550821753",
+      "sha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-residual.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755104",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2866",
+        "mtime_ns": "1791391767184254457",
+        "ctime_ns": "1791391826523406832"
+      },
+      "maturityAgeNs": "662403234168",
+      "sha256": "f5181addef0575e7f8f6fa32b6add56fb7e44631be4b5ba74d1d2425c1e469f7",
+      "bytes": 2866,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-residual.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755103",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391767184100116",
+        "ctime_ns": "1791391826833791438"
+      },
+      "maturityAgeNs": "662092879562",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-residual.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755102",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391767183977953",
+        "ctime_ns": "1791391827373839691"
+      },
+      "maturityAgeNs": "661552861309",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stderr-overflow.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755080",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2545",
+        "mtime_ns": "1791391766296736111",
+        "ctime_ns": "1791391827284536321"
+      },
+      "maturityAgeNs": "661642196679",
+      "sha256": "e0e63ac341bd6e07b5844015d4da0030e9e45b102404754b94bf3f6fceddd63c",
+      "bytes": 2545,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stderr-overflow.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755079",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791391766296349190",
+        "ctime_ns": "1791391827310747253"
+      },
+      "maturityAgeNs": "661616017747",
+      "sha256": "4b0d375a615c0382b4f958b48e43e7f356b4fcac76e20423294adc07b8d4976e",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stderr-overflow.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755078",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391766296041837",
+        "ctime_ns": "1791391826877711785"
+      },
+      "maturityAgeNs": "662049083215",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stdin-max.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755109",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1746",
+        "mtime_ns": "1791391767420057707",
+        "ctime_ns": "1791391827150141512"
+      },
+      "maturityAgeNs": "661776685488",
+      "sha256": "dff800243444527c32b0296a70f28b9951fcfbd1e2250a1b8e9d833773c3b6b2",
+      "bytes": 1746,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stdin-max.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755108",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391767419927167",
+        "ctime_ns": "1791391827232789419"
+      },
+      "maturityAgeNs": "661694068581",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stdin-max.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755107",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7",
+        "mtime_ns": "1791391767419811755",
+        "ctime_ns": "1791391827313712357"
+      },
+      "maturityAgeNs": "661613181643",
+      "sha256": "f5ff69c7236a18ac30910a98ad6926474de7b66ff0661b4ec99016d21df38768",
+      "bytes": 7,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stdout-overflow.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755077",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2546",
+        "mtime_ns": "1791391766089688604",
+        "ctime_ns": "1791391827341475633"
+      },
+      "maturityAgeNs": "661585451367",
+      "sha256": "1296563ac95e819ecf358f912b61a131546229366b37e97e6523e8be0ed1b012",
+      "bytes": 2546,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stdout-overflow.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755076",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "0",
+        "mtime_ns": "1791391766089540930",
+        "ctime_ns": "1791391827315882080"
+      },
+      "maturityAgeNs": "661611074920",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-stdout-overflow.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755075",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "262144",
+        "mtime_ns": "1791391766089013128",
+        "ctime_ns": "1791391827290667405"
+      },
+      "maturityAgeNs": "661636320595",
+      "sha256": "97a2fc5541dcc9c06b99b2a84c34961fa0c3af20dba3968df2f96a56c6bc00c9",
+      "bytes": 262144,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-success.receipt.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755071",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1731",
+        "mtime_ns": "1791391765652143537",
+        "ctime_ns": "1791391827326444654"
+      },
+      "maturityAgeNs": "661600576346",
+      "sha256": "1a8576a897363e2c7168babc3c6ad98d2f86e2f5a3d63acc3c8addc7621df2b0",
+      "bytes": 1731,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-success.stderr",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755070",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "3",
+        "mtime_ns": "1791391765652010865",
+        "ctime_ns": "1791391827264921226"
+      },
+      "maturityAgeNs": "661662134774",
+      "sha256": "d9eb253e06987fa74a5d3189f73d9f7a8104cca786fafbb52bc9555972f5477f",
+      "bytes": 3,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/host-controls5/independent-highfd-success.stdout",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755069",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "4",
+        "mtime_ns": "1791391765651851641",
+        "ctime_ns": "1791391826752872861"
+      },
+      "maturityAgeNs": "662174216139",
+      "sha256": "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1",
+      "bytes": 4,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/independent-controls5.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755118",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "38511",
+        "mtime_ns": "1791391767817061585",
+        "ctime_ns": "1791391826641494246"
+      },
+      "maturityAgeNs": "662285626754",
+      "sha256": "563e97cfd3a1046036bd08a5848b6b0313e9a3f045e10e5d59f1e848cc393788",
+      "bytes": 38511,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/independent-source-controls.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738051",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7869",
+        "mtime_ns": "1791335992030972539",
+        "ctime_ns": "1791335997521208332"
+      },
+      "maturityAgeNs": "56491405947668",
+      "sha256": "c391a7ce9af79b419555f43581870a8bc58858ff38ea6ba7d67121838447c789",
+      "bytes": 7869,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/inspect-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92733678",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "105",
+        "mtime_ns": "1791335718732697468",
+        "ctime_ns": "1791335822600033593"
+      },
+      "maturityAgeNs": "56666327153407",
+      "sha256": "114988bf99adfd4b2682e6113aa395d49ba3321b28269dd4b5a683ad27b337dc",
+      "bytes": 105,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/inspect-u2.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92733520",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "647",
+        "mtime_ns": "1791335718656552396",
+        "ctime_ns": "1791335822609360151"
+      },
+      "maturityAgeNs": "56666317859849",
+      "sha256": "a9c841dd536b12b0d0687a320ca498ad190f6a1f7a4cc20c8dbd30bfd8651310",
+      "bytes": 647,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/manifest-shape.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92737883",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "5515",
+        "mtime_ns": "1791335901503442246",
+        "ctime_ns": "1791335928614358335"
+      },
+      "maturityAgeNs": "56560312892665",
+      "sha256": "bba4ad3e191833a3a0809c12ced18723395bad6c5ea596b16b38c14c845fd844",
+      "bytes": 5515,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader-loader-final-FDclosure.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738125",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "608",
+        "mtime_ns": "1791336023463962177",
+        "ctime_ns": "1791336028540032205"
+      },
+      "maturityAgeNs": "56460387251795",
+      "sha256": "ab248f755e9a94abd0949406c740f452ae904cd56d13e8536210e1147f744ddf",
+      "bytes": 608,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92519707",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "280",
+        "mtime_ns": "1791327094945809234",
+        "ctime_ns": "1791327100282070894"
+      },
+      "maturityAgeNs": "65388645245106",
+      "sha256": "37ee55963739666822ebf4910285820a46be80670e799f474bfeece01190e7d4",
+      "bytes": 280,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader2-held-through-verdict-FDclosure.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92740460",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "89016",
+        "mtime_ns": "1791337310908801251",
+        "ctime_ns": "1791337315016999059"
+      },
+      "maturityAgeNs": "55173910348941",
+      "sha256": "0bebe712cb5d5ae8cd24447092e5552c9b07e7e4ee22744fe816d18006bdb9a3",
+      "bytes": 89016,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader2-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92740461",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "290",
+        "mtime_ns": "1791337310908940917",
+        "ctime_ns": "1791337317032422399"
+      },
+      "maturityAgeNs": "55171894956601",
+      "sha256": "ce54a7e84a92db9930a4885be2758e95d00db8d67bbf419530d16bcd84c5eed7",
+      "bytes": 290,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader4-first-original-pins-readback.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92741236",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "71362",
+        "mtime_ns": "1791340294383840028",
+        "ctime_ns": "1791341426348770063"
+      },
+      "maturityAgeNs": "51062578640937",
+      "sha256": "9849240c714cedcbba15f50b6f43a744c431e0fab99636356967d34d65262c0e",
+      "bytes": 71362,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader4-held-through-verdict-FDclosure.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92741555",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "93976",
+        "mtime_ns": "1791341448326205812",
+        "ctime_ns": "1791341453720828305"
+      },
+      "maturityAgeNs": "51035206615695",
+      "sha256": "652602e5c9c7ce7ed831b62413824ed7a0e2341f3ae67f61dd193c405941e566",
+      "bytes": 93976,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader4-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92741556",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "271",
+        "mtime_ns": "1791341448326833043",
+        "ctime_ns": "1791341451746560552"
+      },
+      "maturityAgeNs": "51037180914448",
+      "sha256": "16eaf63c6ed34c6f171ca5aa9fdf6fb2c6e08f02cab366904d6f7b784c77c6f2",
+      "bytes": 271,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader5-first-original-pins-readback.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92754601",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "76700",
+        "mtime_ns": "1791391600825266837",
+        "ctime_ns": "1791391635357661696"
+      },
+      "maturityAgeNs": "853569847304",
+      "sha256": "9e39c4d8956ce20ebf80aa6c35b9799670ae7bcf8ced888470d680b5fdbaa620",
+      "bytes": 76700,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader5-held-through-verdict-FDclosure.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755121",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "103677",
+        "mtime_ns": "1791391767826693462",
+        "ctime_ns": "1791391827378777517"
+      },
+      "maturityAgeNs": "661548764483",
+      "sha256": "2e68af540b4c426b8802bd65ecd66069ac6d132bbcfa919675f89981921c04a0",
+      "bytes": 103677,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reader5-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755122",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "222",
+        "mtime_ns": "1791391767826859178",
+        "ctime_ns": "1791391827320498987"
+      },
+      "maturityAgeNs": "661607075013",
+      "sha256": "77e20876d8af6215a2f4df31f7a9ec37920947e03c5911dab9bb9b7bc775f70f",
+      "bytes": 222,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/report5.md",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755119",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "3409",
+        "mtime_ns": "1791391767817216881",
+        "ctime_ns": "1791391827117609785"
+      },
+      "maturityAgeNs": "661809996215",
+      "sha256": "08de0e578f318d951b808cee157f016b76c5126184ed149179d15cb527c2ad9a",
+      "bytes": 3409,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-reader-error.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738124",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "20715",
+        "mtime_ns": "1791336023462034866",
+        "ctime_ns": "1791336026670362165"
+      },
+      "maturityAgeNs": "56462257275835",
+      "sha256": "38b26b2d529759db03f32ccbe6d49ddd821d7ce4f4dcdb597e1eeeb899306363",
+      "bytes": 20715,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-reader.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92519633",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7014",
+        "mtime_ns": "1791327065955915138",
+        "ctime_ns": "1791327100293344830"
+      },
+      "maturityAgeNs": "65388634327170",
+      "sha256": "44803c3b2ba07073613cd79d7c57235d4c8b085e63c030b60146917355d213f2",
+      "bytes": 7014,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-runner2.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738933",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "27273",
+        "mtime_ns": "1791336192751242417",
+        "ctime_ns": "1791336238287783180"
+      },
+      "maturityAgeNs": "56250639921820",
+      "sha256": "292296fe9e8d2fa336ab4891cb8396275d08b71d50f8c9f384f3fe851caae076",
+      "bytes": 27273,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-runner3.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92739374",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "27415",
+        "mtime_ns": "1791336333140046820",
+        "ctime_ns": "1791336338495386265"
+      },
+      "maturityAgeNs": "56150432352735",
+      "sha256": "9cb39370f7beb93d714170f3a57a08059749b2cdf2252fa8dc180a3f29984364",
+      "bytes": 27415,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-runner4.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92740668",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "27376",
+        "mtime_ns": "1791337596787322689",
+        "ctime_ns": "1791337602988304243"
+      },
+      "maturityAgeNs": "54885939468757",
+      "sha256": "ca3fd9cfd97a5b9bfd3d10465edbc4bf26b3b36291e374418bdb8fb7f70868a2",
+      "bytes": 27376,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-runner5.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92750457",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "27771",
+        "mtime_ns": "1791379664643177918",
+        "ctime_ns": "1791379678220241016"
+      },
+      "maturityAgeNs": "12810707564984",
+      "sha256": "539bf9a0c7b752ffe1b29ed80360119ede3f1fc7a69bdb9c710d2e218fce198a",
+      "bytes": 27771,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review4-exact-common-host.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92741237",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21476",
+        "mtime_ns": "1791340294397920568",
+        "ctime_ns": "1791341428652082560"
+      },
+      "maturityAgeNs": "51060275755440",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review4-host-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92741238",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "216",
+        "mtime_ns": "1791340294398022069",
+        "ctime_ns": "1791341428659156634"
+      },
+      "maturityAgeNs": "51060268713366",
+      "sha256": "a73e57e113bae22d6ed8bc0830844f86e8345aa6be061374114fe6fc8608093e",
+      "bytes": 216,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review5-exact-common-host.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92754602",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21476",
+        "mtime_ns": "1791391600839745478",
+        "ctime_ns": "1791391635325137888"
+      },
+      "maturityAgeNs": "853602771112",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review5-host-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92754603",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "216",
+        "mtime_ns": "1791391600839867811",
+        "ctime_ns": "1791391635328910912"
+      },
+      "maturityAgeNs": "853599030088",
+      "sha256": "74b2e95ccf1d7f183891c89b4f134ec8c1c4570a4608ce1921e6a439f1412694",
+      "bytes": 216,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/reviewer-reader1-failure.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738932",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "761",
+        "mtime_ns": "1791336192724019859",
+        "ctime_ns": "1791336238271001667"
+      },
+      "maturityAgeNs": "56250656975333",
+      "sha256": "a49b8c1d9fa8cafacd04386e8fec2e4d4c32a5a7e6279f70900262d57008b038",
+      "bytes": 761,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/runner2-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738935",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "115",
+        "mtime_ns": "1791336192790836831",
+        "ctime_ns": "1791336238258077442"
+      },
+      "maturityAgeNs": "56250669934558",
+      "sha256": "a5ba9e39b43da89fd644119bf03186ced5def5e57d9561d4d65db1980d8d6f5d",
+      "bytes": 115,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/runner3-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92739375",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2028",
+        "mtime_ns": "1791336333140312942",
+        "ctime_ns": "1791336336398415870"
+      },
+      "maturityAgeNs": "56152529630130",
+      "sha256": "dc66cbfea3411e0c764923bd2262075e338d585a1af6fce93fdbe0decdd2a642",
+      "bytes": 2028,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/runner4-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92740669",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1054",
+        "mtime_ns": "1791337596787450565",
+        "ctime_ns": "1791337600901361350"
+      },
+      "maturityAgeNs": "54888026716650",
+      "sha256": "f0c7694cfd853b2de7b44a90365f6c21aab0a7479271f5f01b01a05261c2d095",
+      "bytes": 1054,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/runner5-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92750458",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "1122",
+        "mtime_ns": "1791379664643315712",
+        "ctime_ns": "1791379676291163889"
+      },
+      "maturityAgeNs": "12812636947111",
+      "sha256": "3ae46dd553de59ff2e7a3fec2db59b170f9bdc03c4fb62d94fc42a2aec8fc4af",
+      "bytes": 1122,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/source-controls-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738052",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "116",
+        "mtime_ns": "1791335992073643876",
+        "ctime_ns": "1791335997517547749"
+      },
+      "maturityAgeNs": "56491410600251",
+      "sha256": "405c33e2af8850c7a35499e8fd224997fef9ef3985f34bdf1b1a6a98df175660",
+      "bytes": 116,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/verdict5.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92755120",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "4478",
+        "mtime_ns": "1791391767817409020",
+        "ctime_ns": "1791391827269956678"
+      },
+      "maturityAgeNs": "661658226322",
+      "sha256": "7ddbda2a6b2c56f5aabf591099db7203263eab5bb2e03ccaf135ff0c94fd8ee6",
+      "bytes": 4478,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/final-review-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92757874",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "447",
+        "mtime_ns": "1791392007311465789",
+        "ctime_ns": "1791392026333471007"
+      },
+      "maturityAgeNs": "462594745993",
+      "sha256": "751ea32e8ce222ae64c8bbc090177d7018584428a42eab2af31155036b7a1da1",
+      "bytes": 447,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/scope-and-requirements-addendum.md",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92757871",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "3423",
+        "mtime_ns": "1791392007305702328",
+        "ctime_ns": "1791392026307701704"
+      },
+      "maturityAgeNs": "462620548296",
+      "sha256": "d87b8fb59c231d40d66491d8298997f9665f76f8b02dd47bf6bb1095c6c50fab",
+      "bytes": 3423,
+      "fullEOF": true,
+      "finalDescriptorAndPathNineEqual": true
+    }
+  ],
+  "runtimeEffects": false,
+  "fullTask03": false,
+  "fullGoal": false
+}
