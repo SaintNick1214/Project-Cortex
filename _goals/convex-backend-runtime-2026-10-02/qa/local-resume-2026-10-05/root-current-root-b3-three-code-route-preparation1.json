@@ -1,0 +1,1272 @@
+{
+  "scope": "CURRENT_ROOT_B3_AST_ROUTE_PREPARATION_PHYSICAL_INPUTS_ONLY",
+  "status": "PASS",
+  "captured": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/automatic-root-driver.py",
+      "bytes": 17763,
+      "sha256": "242d1744157c665f1b86f4c9b8f93a60c8e2df52b54c8eb918e00c4b985dd1e5",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738897",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "17763",
+        "mtime_ns": "1791395186626706707",
+        "ctime_ns": "1791395191097188781"
+      },
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "92738897",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "17763",
+        "mtime_ns": "1791395186626706707",
+        "ctime_ns": "1791395191097188781"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "92738897",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "17763",
+        "mtime_ns": "1791395186626706707",
+        "ctime_ns": "1791395191097188781"
+      },
+      "fullEOF": true,
+      "ageSeconds": 45354.263077219,
+      "definitions": [
+        {
+          "line": 10,
+          "definition": "sha"
+        },
+        {
+          "line": 11,
+          "definition": "strict"
+        },
+        {
+          "line": 17,
+          "definition": "identity"
+        },
+        {
+          "line": 18,
+          "definition": "stamp"
+        },
+        {
+          "line": 20,
+          "definition": "Held"
+        },
+        {
+          "line": 58,
+          "definition": "publish"
+        },
+        {
+          "line": 67,
+          "definition": "mature"
+        },
+        {
+          "line": 73,
+          "definition": "reviewed_bytes"
+        },
+        {
+          "line": 77,
+          "definition": "load_reviewed"
+        },
+        {
+          "line": 80,
+          "definition": "RootRole"
+        },
+        {
+          "line": 181,
+          "definition": "main"
+        },
+        {
+          "line": 12,
+          "definition": "pairs"
+        },
+        {
+          "line": 21,
+          "definition": "__init__"
+        },
+        {
+          "line": 22,
+          "definition": "open"
+        },
+        {
+          "line": 41,
+          "definition": "check"
+        },
+        {
+          "line": 44,
+          "definition": "read"
+        },
+        {
+          "line": 49,
+          "definition": "closecheck"
+        },
+        {
+          "line": 51,
+          "definition": "close"
+        },
+        {
+          "line": 81,
+          "definition": "__init__"
+        },
+        {
+          "line": 83,
+          "definition": "common_handoff"
+        },
+        {
+          "line": 85,
+          "definition": "handoff"
+        },
+        {
+          "line": 87,
+          "definition": "audit"
+        },
+        {
+          "line": 96,
+          "definition": "prepare"
+        },
+        {
+          "line": 103,
+          "definition": "first_transfer"
+        },
+        {
+          "line": 112,
+          "definition": "held_audit_result"
+        },
+        {
+          "line": 126,
+          "definition": "private_release"
+        },
+        {
+          "line": 148,
+          "definition": "native_finish"
+        },
+        {
+          "line": 163,
+          "definition": "finish_after_coordinator"
+        },
+        {
+          "line": 172,
+          "definition": "cleanup"
+        }
+      ],
+      "observedCalls": [
+        {
+          "line": 75,
+          "call": "holder.open",
+          "args": [
+            "path"
+          ],
+          "keywords": [
+            "pin"
+          ]
+        },
+        {
+          "line": 75,
+          "call": "holder.read",
+          "args": [
+            "h"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 76,
+          "call": "holder.check",
+          "args": [
+            "h"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 79,
+          "call": "compile",
+          "args": [
+            "raw",
+            "str(path)",
+            "'exec'"
+          ],
+          "keywords": [
+            "dont_inherit"
+          ]
+        },
+        {
+          "line": 176,
+          "call": "self.AL.load_reader",
+          "args": [
+            "self.h['preparedReaderPlanSha256']"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 185,
+          "call": "holder.read",
+          "args": [
+            "holder.open(hp, 32768)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 188,
+          "call": "holder.read",
+          "args": [
+            "holder.open(F / 'prospective-source-manifest.json', 4194304, pin=h['sourceManifestOriginalNine'])"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 189,
+          "call": "holder.read",
+          "args": [
+            "holder.open(F / 'integrated-source-review.json', 1048576)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 191,
+          "call": "G.qualify_public_release",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 194,
+          "call": "holder.closecheck",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 46,
+          "call": "os.pread",
+          "args": [
+            "row['fd']",
+            "65536",
+            "offset"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 100,
+          "call": "with_read.read",
+          "args": [
+            "with_read.open(B / 'prepare/prepared-observers.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 101,
+          "call": "with_read.closecheck",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 102,
+          "call": "with_read.close",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 109,
+          "call": "tmp.read",
+          "args": [
+            "tmp.open(F / 'runtime/coordinator-status.json', 32768)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 115,
+          "call": "held.read",
+          "args": [
+            "held.open(B / stage / 'decision.json', limit)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 133,
+          "call": "self.AL.load_reader",
+          "args": [
+            "self.h['preparedReaderPlanSha256']"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 155,
+          "call": "{'operation': OP, 'volume': V, 'immutableImage': IMAGE, 'candidateSha256': FREEZE, 'sourceManifestSha256': self.h['sourceManifestSha256'], 'privateSourceApprovalSha256': self.h['sourceApprovalSha256'], 'originalWindowSha256': self.window_sha}.items",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 185,
+          "call": "holder.open",
+          "args": [
+            "hp",
+            "32768"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 188,
+          "call": "holder.open",
+          "args": [
+            "F / 'prospective-source-manifest.json'",
+            "4194304"
+          ],
+          "keywords": [
+            "pin"
+          ]
+        },
+        {
+          "line": 189,
+          "call": "holder.open",
+          "args": [
+            "F / 'integrated-source-review.json'",
+            "1048576"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 200,
+          "call": "holder.closecheck",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 202,
+          "call": "holder.close",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 100,
+          "call": "with_read.open",
+          "args": [
+            "B / 'prepare/prepared-observers.json'",
+            "65536"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 116,
+          "call": "held.read",
+          "args": [
+            "held.open(B / stage / 'final-held-closure.json', 16777216)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 122,
+          "call": "held.read",
+          "args": [
+            "item"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 140,
+          "call": "held.read",
+          "args": [
+            "held.open(B / 'private/original-window.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 140,
+          "call": "held.read",
+          "args": [
+            "held.open(B / 'private/original-window.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 168,
+          "call": "h.read",
+          "args": [
+            "h.open(B / 'retirement/decision.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 170,
+          "call": "h.read",
+          "args": [
+            "h.open(F / 'runtime/coordinator-status.json', 32768)"
+          ],
+          "keywords": []
+        }
+      ],
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "92738897",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "17763",
+        "mtime_ns": "1791395186626706707",
+        "ctime_ns": "1791395191097188781"
+      },
+      "finalEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/new-bounded-private-native-reader3/audit-launcher.py",
+      "bytes": 4510,
+      "sha256": "7ece7d1042bcb0899d9f8e44db773f88bac8d53f18d7cef3622c5c4db69f25bc",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763324",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4510",
+        "mtime_ns": "1791392919319238447",
+        "ctime_ns": "1791392935394730001"
+      },
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "92763324",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4510",
+        "mtime_ns": "1791392919319238447",
+        "ctime_ns": "1791392935394730001"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "92763324",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4510",
+        "mtime_ns": "1791392919319238447",
+        "ctime_ns": "1791392935394730001"
+      },
+      "fullEOF": true,
+      "ageSeconds": 47609.965847999,
+      "definitions": [
+        {
+          "line": 10,
+          "definition": "identity"
+        },
+        {
+          "line": 11,
+          "definition": "read"
+        },
+        {
+          "line": 16,
+          "definition": "hold"
+        },
+        {
+          "line": 27,
+          "definition": "close_rows"
+        },
+        {
+          "line": 33,
+          "definition": "ReaderLease"
+        },
+        {
+          "line": 44,
+          "definition": "load_reader"
+        },
+        {
+          "line": 68,
+          "definition": "main"
+        },
+        {
+          "line": 34,
+          "definition": "__init__"
+        },
+        {
+          "line": 35,
+          "definition": "closecheck"
+        },
+        {
+          "line": 39,
+          "definition": "close"
+        }
+      ],
+      "observedCalls": [
+        {
+          "line": 70,
+          "call": "load_reader",
+          "args": [
+            "plan_sha"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 14,
+          "call": "os.pread",
+          "args": [
+            "fd",
+            "65536",
+            "offset"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 48,
+          "call": "hold",
+          "args": [
+            "A / 'audit-plan.json'",
+            "2097152",
+            "rows"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 48,
+          "call": "hold",
+          "args": [
+            "A / 'source-writers-stopped.json'",
+            "65536",
+            "rows"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 49,
+          "call": "read",
+          "args": [
+            "planrow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 37,
+          "call": "read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 49,
+          "call": "read",
+          "args": [
+            "stoprow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 53,
+          "call": "hold",
+          "args": [
+            "Path(e.get('path', str(A / e['name'])))",
+            "e['limit']",
+            "rows"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 57,
+          "call": "read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 59,
+          "call": "read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 61,
+          "call": "compile",
+          "args": [
+            "bodies['audit-reader.py']",
+            "module.__file__",
+            "'exec'"
+          ],
+          "keywords": [
+            "dont_inherit"
+          ]
+        }
+      ],
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "92763324",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4510",
+        "mtime_ns": "1791392919319238447",
+        "ctime_ns": "1791392935394730001"
+      },
+      "finalEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/new-bounded-private-native-reader3/audit-reader.py",
+      "bytes": 63335,
+      "sha256": "acd2f2c68d440daed875ceedc06c4f49e2d12955c68c6ae94c59466dfc5f8bdb",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763323",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "63335",
+        "mtime_ns": "1791393814452017085",
+        "ctime_ns": "1791393819398973758"
+      },
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "92763323",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "63335",
+        "mtime_ns": "1791393814452017085",
+        "ctime_ns": "1791393819398973758"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "92763323",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "63335",
+        "mtime_ns": "1791393814452017085",
+        "ctime_ns": "1791393819398973758"
+      },
+      "fullEOF": true,
+      "ageSeconds": 46725.961742242,
+      "definitions": [
+        {
+          "line": 37,
+          "definition": "strict"
+        },
+        {
+          "line": 44,
+          "definition": "sha"
+        },
+        {
+          "line": 45,
+          "definition": "utc"
+        },
+        {
+          "line": 46,
+          "definition": "stamp"
+        },
+        {
+          "line": 48,
+          "definition": "identity"
+        },
+        {
+          "line": 49,
+          "definition": "named_nine"
+        },
+        {
+          "line": 56,
+          "definition": "encode_crypto_decision"
+        },
+        {
+          "line": 75,
+          "definition": "decode_crypto_decision"
+        },
+        {
+          "line": 79,
+          "definition": "durable"
+        },
+        {
+          "line": 91,
+          "definition": "Cohort"
+        },
+        {
+          "line": 155,
+          "definition": "compiled"
+        },
+        {
+          "line": 158,
+          "definition": "qualify_source"
+        },
+        {
+          "line": 203,
+          "definition": "source_binding_consistency"
+        },
+        {
+          "line": 215,
+          "definition": "validate_handoff"
+        },
+        {
+          "line": 225,
+          "definition": "observe_window"
+        },
+        {
+          "line": 239,
+          "definition": "prepare_specs"
+        },
+        {
+          "line": 246,
+          "definition": "exact_recipe"
+        },
+        {
+          "line": 279,
+          "definition": "Runner"
+        },
+        {
+          "line": 331,
+          "definition": "read_prepared"
+        },
+        {
+          "line": 339,
+          "definition": "raw_receipts"
+        },
+        {
+          "line": 351,
+          "definition": "one_inspect"
+        },
+        {
+          "line": 353,
+          "definition": "current_target"
+        },
+        {
+          "line": 368,
+          "definition": "validate_crypto_observation"
+        },
+        {
+          "line": 382,
+          "definition": "private_audit"
+        },
+        {
+          "line": 444,
+          "definition": "compressed"
+        },
+        {
+          "line": 449,
+          "definition": "validate_native"
+        },
+        {
+          "line": 512,
+          "definition": "native_audit"
+        },
+        {
+          "line": 543,
+          "definition": "retirement_audit"
+        },
+        {
+          "line": 558,
+          "definition": "cleanup_prepared"
+        },
+        {
+          "line": 587,
+          "definition": "main"
+        },
+        {
+          "line": 38,
+          "definition": "pairs"
+        },
+        {
+          "line": 92,
+          "definition": "__init__"
+        },
+        {
+          "line": 93,
+          "definition": "reserve_source"
+        },
+        {
+          "line": 99,
+          "definition": "open"
+        },
+        {
+          "line": 125,
+          "definition": "read"
+        },
+        {
+          "line": 143,
+          "definition": "closecheck"
+        },
+        {
+          "line": 146,
+          "definition": "close"
+        },
+        {
+          "line": 153,
+          "definition": "clean"
+        },
+        {
+          "line": 187,
+          "definition": "module"
+        },
+        {
+          "line": 280,
+          "definition": "__init__"
+        },
+        {
+          "line": 281,
+          "definition": "run"
+        },
+        {
+          "line": 289,
+          "definition": "inspect"
+        },
+        {
+          "line": 291,
+          "definition": "absent"
+        },
+        {
+          "line": 294,
+          "definition": "create"
+        },
+        {
+          "line": 307,
+          "definition": "execute"
+        },
+        {
+          "line": 313,
+          "definition": "closecheck"
+        },
+        {
+          "line": 316,
+          "definition": "cleanup"
+        },
+        {
+          "line": 475,
+          "definition": "exact_cases"
+        }
+      ],
+      "observedCalls": [
+        {
+          "line": 163,
+          "call": "c.read",
+          "args": [
+            "mrow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 175,
+          "call": "c.read",
+          "args": [
+            "ar"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 191,
+          "call": "G.qualify_public_release",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 234,
+          "call": "c.read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 332,
+          "call": "c.read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 384,
+          "call": "read_prepared",
+          "args": [
+            "c",
+            "h"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 392,
+          "call": "c.read",
+          "args": [
+            "root"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 392,
+          "call": "c.read",
+          "args": [
+            "directory"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 528,
+          "call": "read_prepared",
+          "args": [
+            "c",
+            "h"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 156,
+          "call": "compile",
+          "args": [
+            "raw",
+            "row['path']",
+            "'exec'"
+          ],
+          "keywords": [
+            "dont_inherit"
+          ]
+        },
+        {
+          "line": 171,
+          "call": "c.read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 188,
+          "call": "compiled",
+          "args": [
+            "source_rows[key]",
+            "bodies[key]",
+            "name"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 188,
+          "call": "c.read",
+          "args": [
+            "source_rows[key]"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 190,
+          "call": "c.read",
+          "args": [
+            "c.open(F / name, 131072)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 227,
+          "call": "c.read",
+          "args": [
+            "srow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 343,
+          "call": "c.read",
+          "args": [
+            "out"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 343,
+          "call": "c.read",
+          "args": [
+            "err"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 385,
+          "call": "c.read",
+          "args": [
+            "hostrow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 398,
+          "call": "c.read",
+          "args": [
+            "stage_row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 404,
+          "call": "c.read",
+          "args": [
+            "c.open(S / 'created-project.json', 65536, True)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 404,
+          "call": "c.read",
+          "args": [
+            "c.open(S / 'provision-attempt.json', 65536, True)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 406,
+          "call": "c.read",
+          "args": [
+            "c.open(F / 'task03-attempt6-target-provision.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 418,
+          "call": "c.read",
+          "args": [
+            "c.open(S / 'coordination/crypto-prepared-recipe.json', 65536, True)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 426,
+          "call": "c.read",
+          "args": [
+            "c.open(F / 'runtime/actual-private-crypto-observation.json', 262144)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 514,
+          "call": "c.read",
+          "args": [
+            "c.open(F / 'runtime/coordinator-status.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 516,
+          "call": "c.read",
+          "args": [
+            "terminal_row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 531,
+          "call": "c.read",
+          "args": [
+            "er"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 544,
+          "call": "c.read",
+          "args": [
+            "c.open(F / 'task03-attempt6-target-retirement.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 546,
+          "call": "c.read",
+          "args": [
+            "c.open(S / 'target-pre-retirement.json', 65536, True)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 546,
+          "call": "c.read",
+          "args": [
+            "c.open(S / 'target.json', 65536, True)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 551,
+          "call": "c.read",
+          "args": [
+            "c.open(A / 'private/held-closure.json', 16777216)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 552,
+          "call": "(Q / 'integrated/retire-selector.py').read_text",
+          "args": [],
+          "keywords": []
+        },
+        {
+          "line": 555,
+          "call": "c.read",
+          "args": [
+            "c.open(F / 'runtime/coordinator-status.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 566,
+          "call": "c.read",
+          "args": [
+            "planrow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 570,
+          "call": "qualify_source",
+          "args": [
+            "c",
+            "handoff"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 570,
+          "call": "read_prepared",
+          "args": [
+            "c",
+            "handoff"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 595,
+          "call": "c.read",
+          "args": [
+            "planrow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 601,
+          "call": "qualify_source",
+          "args": [
+            "c",
+            "h"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 136,
+          "call": "os.pread",
+          "args": [
+            "row['fd']",
+            "65536",
+            "offset"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 144,
+          "call": "self.read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 343,
+          "call": "c.read",
+          "args": [
+            "receipt"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 397,
+          "call": "c.read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 532,
+          "call": "c.read",
+          "args": [
+            "c.open(A / 'private/original-window.json', 65536)"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 565,
+          "call": "c.read",
+          "args": [
+            "stoprow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 569,
+          "call": "c.read",
+          "args": [
+            "r"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 592,
+          "call": "c.read",
+          "args": [
+            "row"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 594,
+          "call": "c.read",
+          "args": [
+            "stoprow"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 598,
+          "call": "c.read",
+          "args": [
+            "r"
+          ],
+          "keywords": []
+        },
+        {
+          "line": 244,
+          "call": "OWN_BODIES['independent-private-observer.mjs' if k == 'crypto' else 'native-evidence-collector.mjs'].decode",
+          "args": [],
+          "keywords": []
+        }
+      ],
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "92763323",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "63335",
+        "mtime_ns": "1791393814452017085",
+        "ctime_ns": "1791393819398973758"
+      },
+      "finalEOF": true
+    }
+  ],
+  "all3FDsBeforeBody": true,
+  "onceCloses": 3,
+  "closeErrors": [],
+  "failure": null,
+  "priorWrongLocator": "rg automatic-root-driver2.py exit2 no such file; no guessed new version/adoption",
+  "rootABIStillUnported": true,
+  "SourceEligibility": false,
+  "wholeReadCompileCallbackClosure": false,
+  "functionalAcceptance": false,
+  "effects": [],
+  "bootstrapDebt": "Unqualified current inline AST/read/capture tooling; previous ordinary regex/read debt conserved; no cumulative ledger reset/refund or Source grant"
+}
