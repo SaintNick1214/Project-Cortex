@@ -1,0 +1,105 @@
+{
+  "schema": "independent-g3-review-preparation-v1",
+  "status": "PREPARATION_ONLY_AWAITING_EXACT_FROZEN_HANDOFF",
+  "reviewerNamespace": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review3",
+  "candidateNamespace": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam3",
+  "candidateBodyReads": 0,
+  "candidateExecutions": 0,
+  "candidateAuthorship": false,
+  "interfaceDependentReviewerRuntimeWritten": false,
+  "n3ReviewSeparatelyPending": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters-independent-review3",
+  "knownCandidateAnnouncements": [
+    {
+      "name": "source-gates-borrowed3b.py",
+      "bytes": 26413,
+      "sha256": "b188559d77f89dcbe2a1173e906bffbc29dec22012536652f1e633302f7af71a",
+      "reviewerQualified": false
+    },
+    {
+      "name": "live_link_controls2.py",
+      "bytes": 4172,
+      "sha256": "dd15bdb57f26e44c809eddfee134915de7fb6d81653875abc8d1406c1499df6f",
+      "reviewerQualified": false
+    }
+  ],
+  "scopes": [
+    "CODE_BEHAVIOR",
+    "HOST_SOURCE"
+  ],
+  "originalGoalProgress": {
+    "boundedTask01Only": "1/17=5.9%",
+    "productReadiness": "0%",
+    "originalTask03Task04Functional": "0/3"
+  },
+  "originalAssertionsDeadlinesGatesRetained": true,
+  "numericalReviewCycleLimitsOnlyWaived": true,
+  "priorG2": {
+    "verdict": "REJECT",
+    "average": 2.8,
+    "immutable": true,
+    "candidateFailureCount": 3,
+    "actualOwnedFDReadsAfterMutations": [
+      "borrowed.ledger",
+      "owner.ledger",
+      "borrowed.ownerToken"
+    ],
+    "ownerLedgerFailureWrongDebtCharge": true
+  },
+  "authorClaimNotIndependentAcceptance": {
+    "regressions": 122,
+    "heldInputs": 13,
+    "heldBytes": 201754,
+    "closureErrors": 0
+  },
+  "requirements": [
+    "unchanged_original18_guard_plus71_adapter",
+    "preserve14_sticky_and19_live_link_assertions",
+    "actual_three_G2_current_link_denials_before_IO_and_wrong_debt",
+    "restore_after_failure_all_later_whole_reads_deny",
+    "current_owner_lease_module_caller_row_FD_ledger_authority",
+    "external_callback_before_after_mutation_and_positive_safe_copy",
+    "metadata_body_postcheck_OSerror_SystemExit_first_middle_last",
+    "original_local_DATA_caps_and_cumulative_typed_debt_caps",
+    "borrower_no_rawFD_no_physical_close_no_refund",
+    "Root_all_owned_once_close_UNKNOWN_never_retry",
+    "finite_all_FD_before_member_body_full_EOF_hash_literal9_final",
+    "all_current_source_header_body_import_compile_read_debt_same_ledger"
+  ],
+  "bounds": {
+    "minimumAgeSecondsAfterMaxMtimeCtimeStop": 240,
+    "uniqueInputs": 4096,
+    "simultaneousFDs": 4096,
+    "cumulativeBytes": 67108864,
+    "perFileBytes": 16777216,
+    "manifestReserveBytes": 4194304,
+    "approvalReserveBytes": 1048576,
+    "singleDataReserveBytes": 2097152,
+    "fixedActorCommandsMaximumWhereRequired": 48,
+    "globalSeconds": 190,
+    "metadataSeconds": 30,
+    "bodySeconds": 48,
+    "allOtherOriginalDeadlinesRetained": true
+  },
+  "sourcePreparationReadback": {
+    "file": "requirements-prior-findings-readback1.json",
+    "members": 9,
+    "readBytes": 80858,
+    "currentDebtToCarry": true,
+    "wholeParentLedgerPending": true
+  },
+  "forbidden": [
+    "candidate_implementation_edits",
+    "other_review_namespace_edits",
+    "Root_tracker_edits",
+    "Git_or_product_edits",
+    "Docker_CI_network_services_private_secrets_keys_targets_inference_actualLinux_effects",
+    "Source_eligibility_or_whole_guard_adoption"
+  ],
+  "dependencies": {
+    "N1": "REJECTED_MOCK_ONLY",
+    "R8": "INDEPENDENT_PENDING",
+    "N3": "SEPARATE_PENDING"
+  },
+  "noSourceGrant": true,
+  "reviewerSelfPublisherInventoryIsNotSourceQualification": true
+}
