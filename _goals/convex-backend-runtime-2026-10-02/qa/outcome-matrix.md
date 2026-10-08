@@ -384,3 +384,24 @@ Root fully consumed closed independent review2 packets: Linux28files3,510,430B, 
 
 
 2026-10-08T07:15:55.716079+00:00 USERADOPTEDgoalacceptance-policyv2 fromsuppliedfunctionalbaseline. Scoresrequirement/test/complete>=4/code/pattern>=3(min3.6), nobreakingproductfindingoverriddenbyaverage, nonauthorreviewpercoherentproduct+testbatch/finalindependentaudit. All17tasks/61criteria/12productsame; C2sequence/productpillars/exclusions/auth/budget/tombstone/20M/additiveinstallretained. RecursiveSource/ctime/inode/custody/MF/controller-to-controllercertification/synthetic1914/3828/114/161/138/1907andtheirqualificationclocks retiredasmandatorygates; practicalboundedcleanup/relevanttimeoutregressions/noownedleftoversremain. AlloldFAIL/UNKNOWN/scopedverdictsunchanged. NativeN3historicalREJECT2.8 nowDEFERRED_OPTIONAL_QAHARDENING; built/exportedreferenceinspection no actualproductpathfound, staticonlynotproductsafetycertification. Callerplan3 canceledwithoutexecution/0remainingowned; N4nocandidatecreated/readonly8+1FDclosed0err. C/Jimmutable; performancenewprep stoppedbeforecandidatebody/1headerclosed0err. Newactual03freshlocaldisposableexecutor authorizedverification/PID/loopbackbeforewrites; no oldfixturekeysneeded. Product814tests/11suitesPASS/12.629sNode24.15/npm12.2claimedbyexecutor/unitonly/rawpending. Newconvex-dev/runtimeGatewayBackend.ts implementationdelegatedwith tests, no bootstrapqualpopulationwithoutrealmodeloutcomes. Concreteproductgaps remainruntimeMemoryalwaysunavailable/unconfiguredmodel andemptyqualificationregistry/terminaladapterunwired. Task03 annotationSHAchangedwithold/newaudit, criterianotremoved. Completionnotice:122milestones;Task03/04each0/3=0%;taskgates1/17=5.9%boundedTask01only;product0/12=0%;fullgoalOPEN.
+
+
+## Functional milestone: actual authentication and lifecycle — 2026-10-08
+
+Policy v2 native run2 passed 43 outcomes, 34 persisted no-effect snapshots and six SDK lifecycle cases on a freshly verified disposable local target. Official codegen/typecheck stayed enabled. Owned backend and SDK clients were reaped, loopback closed, and private state/key removed. The first TS2352 startup failure remains preserved. A concrete authorized memories search RPC-shape defect was found independently and repaired in the shared recheck and both hydration boundaries; red regression and affected checks are retained. Focused representative-family live coverage and non-author foundation review remain pending.
+
+Completion notice: 123 internal milestones; Task03 full acceptance 0/3 (0%); task gates 1/17 (5.9%, bounded Task01 only); full product outcomes 0/12 (0%).
+
+
+## Functional milestone: representative endpoint families — 2026-10-08
+
+Native run3 passed 23 focused outcomes, including owned canonical memories search plus foreign/no-JWT/revocation denial; facts, registry, text artifacts and admin governance positives/capability negatives; exact authorized unavailable closures and storage-capability denial. Combined native coverage is 66 conditions and 49 equal persisted no-effect snapshots. All owned subprocesses, backend state and private keys were cleaned. The initial report count mistake is preserved and corrected in report2.md against the raw receipts; no outcomes changed. The coherent repaired product-and-test batch is awaiting its one non-author foundation verdict. The Gateway backend adapter separately has 366 affected unit tests and root/backend types/lint passing; actual cloud Gateway qualification is active on freshly verified sole disposable dev project3170903/fearless-ox-413. Registry remains empty; no full Task04 acceptance.
+
+Completion notice: 124 internal milestones; full task gates 1/17 (5.9%); full outcomes 0/12 (0%).
+
+
+## Independent acceptance: repaired product authorization foundation — 2026-10-08
+
+The coherent Task02 domain architecture and Task03-foundation batch is independently PASS4.0 under acceptance policy v2, with no unresolved breaking finding in scope. Reviewer verified 275 product registrations, 66 actual conditions, 49 no-effect snapshots and 123 independent focused unit/RPC checks. The repaired search defect has red regression, real owned output and foreign/no-JWT/revocation coverage. This clears dependent product implementation. Full Task02 and Task03 remain incomplete; canonical transcript, tools, background memory, private assets/media and graph security still require their allocated original criteria and final aggregation. The reported 814 unit tests/SDK build lack standalone raw files and remain author-reported; current live SDK lifecycle and enabled native typechecking have retained verified receipts.
+
+Completion notice: 125 internal milestones; bounded 03-foundation 100% accepted; full task gates 1/17 (5.9%); full product outcomes 0/12 (0%). New bounded subgate fields are separate from the unchanged full-task denominator.

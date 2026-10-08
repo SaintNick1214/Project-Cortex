@@ -14,7 +14,7 @@ import type { DataDeletionProof } from "./runtimeDataAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import type { CanonicalSourceWitness } from "./runtimeDataAuth";
 import { finalizeDataRead, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
-  listScopedMemories, manualDataSource, recheckDataAuthority,
+  listScopedMemories, manualDataSource, recheckDataAuthority, dataAuthorityReference,
   requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority,
   getScopedMemoryDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedMemories, tombstoneDataRow,
 } from "./runtimeDataAuth";
@@ -402,9 +402,10 @@ export const search = action({
     const limit = args.limit ?? 20;
     if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) dataDenied("INVALID_INPUT", "Limit must be between 1 and 100");
     await recheckActionDataAuthority(ctx, authority, "read");
+    const pinnedAuthority = dataAuthorityReference(authority);
     const reference = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>(
       "memories:keywordSearchMemories") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>;
-    let results = await ctx.runQuery(reference, { reference: authority, memorySpaceId: authority.memorySpaceId, query: args.query, limit });
+    let results = await ctx.runQuery(reference, { reference: pinnedAuthority, memorySpaceId: authority.memorySpaceId, query: args.query, limit });
     if (args.userId) results = results.filter(m => m.sourceUserId === args.userId || m.userId === args.userId);
     if (args.tags?.length) results = results.filter(m => args.tags!.some(tag => m.tags.includes(tag)));
     if (args.sourceType) results = results.filter(m => m.sourceType === args.sourceType);
@@ -412,7 +413,7 @@ export const search = action({
     const hydrate = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>(
       "memories:fetchMemoriesByIds") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>;
     // Final scoped hydration rechecks each source/resource fence after candidate selection.
-    return await ctx.runQuery(hydrate, { reference: authority, ids: results.slice(0, limit).map(row => row._id) });
+    return await ctx.runQuery(hydrate, { reference: pinnedAuthority, ids: results.slice(0, limit).map(row => row._id) });
   },
 });
 

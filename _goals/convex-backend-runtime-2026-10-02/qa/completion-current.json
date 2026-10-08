@@ -1,6 +1,6 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T07:15:55.716079+00:00",
+  "timestamp_utc": "2026-10-08T07:46:19.929302+00:00",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
   "goal_tasks_complete": 1,
   "goal_tasks_total": 17,
@@ -186,8 +186,30 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "current_product_offline814_tests_pass",
+  "latest_milestone_id": "functional_v2_task02_architecture_task03_foundation_independent_pass4",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
-  "assessment_basis_changed_without_denominator_change": true
+  "assessment_basis_changed_without_denominator_change": true,
+  "bounded_foundation_gates": [
+    {
+      "gate": "02-domain-architecture",
+      "accepted": true,
+      "percent_complete": 100,
+      "evidence": "qa/local-resume-2026-10-05/task02-task03-product-foundation-independent-review1/verdict1.json",
+      "full_task_complete": false
+    },
+    {
+      "gate": "03-foundation",
+      "accepted": true,
+      "percent_complete": 100,
+      "evidence": "qa/local-resume-2026-10-05/task02-task03-product-foundation-independent-review1/verdict1.json",
+      "full_task_complete": false
+    },
+    {
+      "gate": "04-model-policy-functional",
+      "accepted": false,
+      "percent_complete": 0,
+      "full_task_complete": false
+    }
+  ]
 }

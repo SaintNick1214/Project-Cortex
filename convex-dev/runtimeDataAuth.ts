@@ -45,6 +45,17 @@ export const dataAuthReferences = {
   authorize: internalQueryRef<{ requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize"),
   recheck: internalQueryRef<{ reference: RuntimeAuthorityReference; requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:recheck"),
 };
+/** Exact RPC shape: authorization metadata stays local; the server reloads it. */
+export function dataAuthorityReference(authority: RuntimeAuthorityReference): RuntimeAuthorityReference {
+  return {
+    principalId: authority.principalId, principalVersion: authority.principalVersion,
+    membershipId: authority.membershipId, membershipVersion: authority.membershipVersion,
+    grantId: authority.grantId, grantVersion: authority.grantVersion,
+    tenantId: authority.tenantId, tenantEpoch: authority.tenantEpoch,
+    ...(authority.memorySpaceId !== undefined ? { memorySpaceId: authority.memorySpaceId } : {}),
+    ...(authority.memorySpaceEpoch !== undefined ? { memorySpaceEpoch: authority.memorySpaceEpoch } : {}),
+  };
+}
 /** runQuery inherits Convex-verified auth. No public reference or JWT argument establishes identity. */
 export async function requireActionDataAuthority(ctx: Pick<ActionCtx, "runQuery">,
   selectors: { tenantId?: string; memorySpaceId?: string }, capability: Capability): Promise<ScopedDataAuthority> {
@@ -53,7 +64,7 @@ export async function requireActionDataAuthority(ctx: Pick<ActionCtx, "runQuery"
 }
 export async function recheckActionDataAuthority(ctx: Pick<ActionCtx, "runQuery">,
   reference: RuntimeAuthorityReference, capability: Capability): Promise<void> {
-  await ctx.runQuery(dataAuthReferences.recheck, { reference, requirement: { capability,
+  await ctx.runQuery(dataAuthReferences.recheck, { reference: dataAuthorityReference(reference), requirement: { capability,
     tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId } });
 }
 /** Actor metadata may narrow/filter requests, but public writes cannot impersonate another actor. */

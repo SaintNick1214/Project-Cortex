@@ -1,0 +1,322 @@
+{
+  "status": "PASS",
+  "records": [
+    {
+      "id": "authenticated-mutable-41",
+      "status": "PASS"
+    },
+    {
+      "id": "authenticated-mutable-42",
+      "status": "PASS"
+    },
+    {
+      "id": "noJWT-read",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "mutable:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "noJWT-write",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "mutable:set",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "forgedJWT-read",
+      "status": "PASS",
+      "identity": "forgedJWT",
+      "endpoint": "mutable:get",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "forgedJWT-write",
+      "status": "PASS",
+      "identity": "forgedJWT",
+      "endpoint": "mutable:set",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "wrongIssuer-read",
+      "status": "PASS",
+      "identity": "wrongIssuer",
+      "endpoint": "mutable:get",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "wrongIssuer-write",
+      "status": "PASS",
+      "identity": "wrongIssuer",
+      "endpoint": "mutable:set",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "wrongAudience-read",
+      "status": "PASS",
+      "identity": "wrongAudience",
+      "endpoint": "mutable:get",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "wrongAudience-write",
+      "status": "PASS",
+      "identity": "wrongAudience",
+      "endpoint": "mutable:set",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "expiredJWT-read",
+      "status": "PASS",
+      "identity": "expiredJWT",
+      "endpoint": "mutable:get",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "expiredJWT-write",
+      "status": "PASS",
+      "identity": "expiredJWT",
+      "endpoint": "mutable:set",
+      "denial": "PLATFORM_INVALID_AUTH",
+      "noEffect": true
+    },
+    {
+      "id": "ungranted-read",
+      "status": "PASS",
+      "identity": "ungranted",
+      "endpoint": "mutable:get",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "ungranted-write",
+      "status": "PASS",
+      "identity": "ungranted",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "foreign-read",
+      "status": "PASS",
+      "identity": "foreign",
+      "endpoint": "mutable:get",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "foreign-write",
+      "status": "PASS",
+      "identity": "foreign",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "claimsOnly-read",
+      "status": "PASS",
+      "identity": "claimsOnly",
+      "endpoint": "mutable:get",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "claimsOnly-write",
+      "status": "PASS",
+      "identity": "claimsOnly",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "revoked-read",
+      "status": "PASS",
+      "identity": "revoked",
+      "endpoint": "mutable:get",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "revoked-write",
+      "status": "PASS",
+      "identity": "revoked",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "deleted-read",
+      "status": "PASS",
+      "identity": "deleted",
+      "endpoint": "mutable:get",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "deleted-write",
+      "status": "PASS",
+      "identity": "deleted",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "mismatched-tenant",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "unauthorized-space",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "mutable:set",
+      "denial": "FORBIDDEN",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-memories:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "memories:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-facts:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "facts:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-conversations:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "conversations:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-memorySpaces:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "memorySpaces:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-artifacts:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "artifacts:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-attachments:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "attachments:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-runtimeMemory:remember",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "runtimeMemory:remember",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "family-noJWT-immutable:get",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "immutable:get",
+      "denial": "UNAUTHENTICATED",
+      "noEffect": true
+    },
+    {
+      "id": "internal-noJWT-runtimeAuth:authorize",
+      "status": "PASS",
+      "internalOnly": true,
+      "noEffect": true
+    },
+    {
+      "id": "internal-reader-runtimeAuth:authorize",
+      "status": "PASS",
+      "internalOnly": true,
+      "noEffect": true
+    },
+    {
+      "id": "internal-noJWT-admin:deleteRecord",
+      "status": "PASS",
+      "internalOnly": true,
+      "noEffect": true
+    },
+    {
+      "id": "internal-reader-admin:deleteRecord",
+      "status": "PASS",
+      "internalOnly": true,
+      "noEffect": true
+    },
+    {
+      "id": "current-sdk-refresh",
+      "status": "PASS",
+      "actualSDK": true
+    },
+    {
+      "id": "cross-tenant-subscription",
+      "status": "PASS",
+      "actualSDK": true
+    },
+    {
+      "id": "logout-real-update-no-delivery",
+      "status": "PASS",
+      "actualSDK": true
+    },
+    {
+      "id": "late-token-session-fence",
+      "status": "PASS",
+      "actualSDK": true
+    },
+    {
+      "id": "sanitized-host-callback",
+      "status": "PASS",
+      "actualSDK": true
+    },
+    {
+      "id": "current-grant-revocation-no-effect",
+      "status": "PASS",
+      "actualSDK": true
+    },
+    {
+      "id": "revoked-original-key-write-no-effect",
+      "status": "PASS"
+    }
+  ],
+  "snapshotCount": 34,
+  "cleanupComplete": true,
+  "stats": {
+    "calls": 290,
+    "jwtSubjects": 7,
+    "subjects": 7,
+    "trackedRows": 28,
+    "storageFiles": 0,
+    "unknownDispatch": false
+  },
+  "coverage": "focused actual03-foundation; Task02 model remains unavailable; fullTask03 criteria open"
+}

@@ -94,7 +94,7 @@ export function harness() {
   const db = new FixtureDb(); let verified: Record<string, unknown> | null = identity;
   let vectorCalls = 0; let authReads = 0;
   let authHook: (() => Promise<void>) | undefined;
-  let internalHook: ((name: string, stage: "before" | "after") => Promise<void>) | undefined;
+  let internalHook: ((name: string, stage: "before" | "after", args: Record<string, unknown>) => Promise<void>) | undefined;
   // Single fixture adapter cast: production contexts stay Convex-owned and strongly typed.
   const ctx = { db, auth: { getUserIdentity: async () => { authReads++; await authHook?.(); return verified; } } } as unknown as MutationCtx;
   const registrations: Record<string, unknown> = { "runtimeAuth:authorize": authorize, "runtimeAuth:recheck": recheck,
@@ -102,10 +102,10 @@ export function harness() {
     "facts:fetchFactsByIds": facts.fetchFactsByIds };
   const actionCtx = { auth: ctx.auth, runQuery: async (reference: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) => {
     const name = getFunctionName(reference);
-    await internalHook?.(name, "before");
+    await internalHook?.(name, "before", args);
     const registration = registrations[name]; if (!registration) throw new Error("Unknown actual internal registration");
     const result = await handler(registration)(ctx, args);
-    await internalHook?.(name, "after");
+    await internalHook?.(name, "after", args);
     return result;
   }, vectorSearch: async () => { vectorCalls++; throw new Error("Unqualified legacy vector dispatch must not occur"); } } as unknown as ActionCtx;
   const invoke = async <T = unknown>(registration: unknown, args: Record<string, unknown> = {}): Promise<T> =>

@@ -1,0 +1,1929 @@
+{
+  "cases": [
+    {
+      "path": "a2a:send",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/a2a.ts",
+      "line": 28
+    },
+    {
+      "path": "a2a:request",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/a2a.ts",
+      "line": 245
+    },
+    {
+      "path": "a2a:broadcast",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/a2a.ts",
+      "line": 383
+    },
+    {
+      "path": "a2a:getConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/a2a.ts",
+      "line": 640
+    },
+    {
+      "path": "admin:listTable",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/admin.ts",
+      "line": 6
+    },
+    {
+      "path": "admin:deleteRecord",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/admin.ts",
+      "line": 13
+    },
+    {
+      "path": "admin:clearTable",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/admin.ts",
+      "line": 17
+    },
+    {
+      "path": "admin:countTable",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/admin.ts",
+      "line": 27
+    },
+    {
+      "path": "admin:getAllCounts",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/admin.ts",
+      "line": 35
+    },
+    {
+      "path": "agents:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 13
+    },
+    {
+      "path": "agents:exists",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 17
+    },
+    {
+      "path": "agents:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 21
+    },
+    {
+      "path": "agents:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 26
+    },
+    {
+      "path": "agents:register",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 30
+    },
+    {
+      "path": "agents:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 47
+    },
+    {
+      "path": "agents:updateMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 53
+    },
+    {
+      "path": "agents:unregister",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 60
+    },
+    {
+      "path": "agents:unregisterMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 68
+    },
+    {
+      "path": "agents:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/agents.ts",
+      "line": 83
+    },
+    {
+      "path": "agents:computeStats",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/agents.ts",
+      "line": 91
+    },
+    {
+      "path": "artifacts:create",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 51
+    },
+    {
+      "path": "artifacts:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 113
+    },
+    {
+      "path": "artifacts:deleteArtifact",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 207
+    },
+    {
+      "path": "artifacts:undo",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 232
+    },
+    {
+      "path": "artifacts:redo",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 282
+    },
+    {
+      "path": "artifacts:setStreamingState",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 334
+    },
+    {
+      "path": "artifacts:setFileRef",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/artifacts.ts",
+      "line": 371
+    },
+    {
+      "path": "artifacts:purgeVersions",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 430
+    },
+    {
+      "path": "artifacts:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/artifacts.ts",
+      "line": 510
+    },
+    {
+      "path": "artifacts:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 553
+    },
+    {
+      "path": "artifacts:getByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 580
+    },
+    {
+      "path": "artifacts:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 601
+    },
+    {
+      "path": "artifacts:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 648
+    },
+    {
+      "path": "artifacts:getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 674
+    },
+    {
+      "path": "artifacts:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 712
+    },
+    {
+      "path": "artifacts:startStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 831
+    },
+    {
+      "path": "artifacts:appendContent",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 900
+    },
+    {
+      "path": "artifacts:pauseStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 974
+    },
+    {
+      "path": "artifacts:resumeStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1033
+    },
+    {
+      "path": "artifacts:cancelStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1091
+    },
+    {
+      "path": "artifacts:finalizeStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1169
+    },
+    {
+      "path": "artifacts:setStreamingError",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1278
+    },
+    {
+      "path": "artifacts:retryFromError",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1339
+    },
+    {
+      "path": "artifacts:generateArtifactUploadUrl",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1413
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1483
+    },
+    {
+      "path": "artifacts:getArtifactFileUrl",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1603
+    },
+    {
+      "path": "artifacts:detachFile",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/artifacts.ts",
+      "line": 1676
+    },
+    {
+      "path": "attachments:generateUploadUrl",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/attachments.ts",
+      "line": 97
+    },
+    {
+      "path": "attachments:attach",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 122
+    },
+    {
+      "path": "attachments:remove",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 200
+    },
+    {
+      "path": "attachments:removeMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 251
+    },
+    {
+      "path": "attachments:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/attachments.ts",
+      "line": 314
+    },
+    {
+      "path": "attachments:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 401
+    },
+    {
+      "path": "attachments:getUrl",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/attachments.ts",
+      "line": 421
+    },
+    {
+      "path": "attachments:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 460
+    },
+    {
+      "path": "attachments:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 593
+    },
+    {
+      "path": "attachments:getByIds",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 651
+    },
+    {
+      "path": "attachments:getByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 681
+    },
+    {
+      "path": "attachments:getByMessage",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/attachments.ts",
+      "line": 726
+    },
+    {
+      "path": "contexts:create",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 74
+    },
+    {
+      "path": "contexts:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 93
+    },
+    {
+      "path": "contexts:addParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 98
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 101
+    },
+    {
+      "path": "contexts:grantAccess",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 102
+    },
+    {
+      "path": "contexts:deleteContext",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 143
+    },
+    {
+      "path": "contexts:updateMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 148
+    },
+    {
+      "path": "contexts:deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 157
+    },
+    {
+      "path": "contexts:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 161
+    },
+    {
+      "path": "contexts:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 168
+    },
+    {
+      "path": "contexts:search",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 171
+    },
+    {
+      "path": "contexts:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 174
+    },
+    {
+      "path": "contexts:getChain",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 177
+    },
+    {
+      "path": "contexts:getRoot",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 180
+    },
+    {
+      "path": "contexts:getChildren",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 183
+    },
+    {
+      "path": "contexts:getByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 187
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 192
+    },
+    {
+      "path": "contexts:getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 201
+    },
+    {
+      "path": "contexts:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 204
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 205
+    },
+    {
+      "path": "contexts:exportContexts",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/contexts.ts",
+      "line": 209
+    },
+    {
+      "path": "contexts:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/contexts.ts",
+      "line": 220
+    },
+    {
+      "path": "conversationShares:create",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 57
+    },
+    {
+      "path": "conversationShares:revoke",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 140
+    },
+    {
+      "path": "conversationShares:incrementViewCount",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 182
+    },
+    {
+      "path": "conversationShares:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 237
+    },
+    {
+      "path": "conversationShares:listByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 270
+    },
+    {
+      "path": "conversationShares:listByGranter",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 309
+    },
+    {
+      "path": "conversationShares:checkAccess",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationShares.ts",
+      "line": 346
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "line": 74
+    },
+    {
+      "path": "conversationSnapshots:deleteSnapshot",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "line": 176
+    },
+    {
+      "path": "conversationSnapshots:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "line": 216
+    },
+    {
+      "path": "conversationSnapshots:listByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "line": 242
+    },
+    {
+      "path": "conversationSnapshots:listByUser",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "line": 271
+    },
+    {
+      "path": "conversations:create",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 114
+    },
+    {
+      "path": "conversations:setVisibility",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 212
+    },
+    {
+      "path": "conversations:setMetadata",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 259
+    },
+    {
+      "path": "conversations:checkAccess",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 307
+    },
+    {
+      "path": "conversations:addMessage",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 387
+    },
+    {
+      "path": "conversations:approveMessage",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 457
+    },
+    {
+      "path": "conversations:rejectMessage",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 522
+    },
+    {
+      "path": "conversations:deleteConversation",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 587
+    },
+    {
+      "path": "conversations:deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 625
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 714
+    },
+    {
+      "path": "conversations:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/conversations.ts",
+      "line": 755
+    },
+    {
+      "path": "conversations:getMessage",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 782
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 813
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 846
+    },
+    {
+      "path": "conversations:findConversation",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 976
+    },
+    {
+      "path": "conversations:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 1042
+    },
+    {
+      "path": "conversations:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 1096
+    },
+    {
+      "path": "conversations:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 1315
+    },
+    {
+      "path": "conversations:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 1359
+    },
+    {
+      "path": "conversations:search",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 1433
+    },
+    {
+      "path": "conversations:exportConversations",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/conversations.ts",
+      "line": 1577
+    },
+    {
+      "path": "factHistory:logEvent",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/factHistory.ts",
+      "line": 19
+    },
+    {
+      "path": "factHistory:deleteByFactId",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/factHistory.ts",
+      "line": 78
+    },
+    {
+      "path": "factHistory:deleteByUserId",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/factHistory.ts",
+      "line": 102
+    },
+    {
+      "path": "factHistory:deleteByMemorySpace",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/factHistory.ts",
+      "line": 126
+    },
+    {
+      "path": "factHistory:purgeOldEvents",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/factHistory.ts",
+      "line": 152
+    },
+    {
+      "path": "factHistory:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/factHistory.ts",
+      "line": 198
+    },
+    {
+      "path": "factHistory:getEvent",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/factHistory.ts",
+      "line": 225
+    },
+    {
+      "path": "factHistory:getChangesByTimeRange",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/factHistory.ts",
+      "line": 247
+    },
+    {
+      "path": "factHistory:countByAction",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/factHistory.ts",
+      "line": 301
+    },
+    {
+      "path": "factHistory:getSupersessionChain",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/factHistory.ts",
+      "line": 348
+    },
+    {
+      "path": "factHistory:getActivitySummary",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/factHistory.ts",
+      "line": 397
+    },
+    {
+      "path": "facts:store",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 26
+    },
+    {
+      "path": "facts:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 147
+    },
+    {
+      "path": "facts:deleteFact",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 263
+    },
+    {
+      "path": "facts:supersede",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 292
+    },
+    {
+      "path": "facts:updateInPlace",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 359
+    },
+    {
+      "path": "facts:deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 436
+    },
+    {
+      "path": "facts:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 485
+    },
+    {
+      "path": "facts:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 517
+    },
+    {
+      "path": "facts:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 690
+    },
+    {
+      "path": "facts:search",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 827
+    },
+    {
+      "path": "facts:fetchFactsByIds",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/facts.ts",
+      "line": 1002
+    },
+    {
+      "path": "facts:semanticSearch",
+      "kind": "action",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1026
+    },
+    {
+      "path": "facts:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1052
+    },
+    {
+      "path": "facts:queryBySubject",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1111
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1275
+    },
+    {
+      "path": "facts:exportFacts",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1436
+    },
+    {
+      "path": "facts:consolidate",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1546
+    },
+    {
+      "path": "facts:findByStructure",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1577
+    },
+    {
+      "path": "facts:deleteByIds",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/facts.ts",
+      "line": 1634
+    },
+    {
+      "path": "facts:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/facts.ts",
+      "line": 1655
+    },
+    {
+      "path": "governance:setPolicy",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 315
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 331
+    },
+    {
+      "path": "governance:getPolicy",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 351
+    },
+    {
+      "path": "governance:getTemplate",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 359
+    },
+    {
+      "path": "governance:simulate",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 367
+    },
+    {
+      "path": "governance:enforce",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/governance.ts",
+      "line": 378
+    },
+    {
+      "path": "governance:getComplianceReport",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 417
+    },
+    {
+      "path": "governance:getEnforcementStats",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/governance.ts",
+      "line": 428
+    },
+    {
+      "path": "governance:purgeAllPolicies",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/governance.ts",
+      "line": 441
+    },
+    {
+      "path": "governance:purgeAllEnforcement",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/governance.ts",
+      "line": 448
+    },
+    {
+      "path": "graphSync:queueForSync",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 39
+    },
+    {
+      "path": "graphSync:markSynced",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 67
+    },
+    {
+      "path": "graphSync:markFailed",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 75
+    },
+    {
+      "path": "graphSync:deleteSyncItem",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 85
+    },
+    {
+      "path": "graphSync:getUnsyncedItems",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 93
+    },
+    {
+      "path": "graphSync:getHighPriorityItems",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 97
+    },
+    {
+      "path": "graphSync:getFailedItems",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 101
+    },
+    {
+      "path": "graphSync:getSyncStats",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 105
+    },
+    {
+      "path": "graphSync:clearSyncedItems",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 119
+    },
+    {
+      "path": "graphSync:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/graphSync.ts",
+      "line": 133
+    },
+    {
+      "path": "immutable:store",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 21
+    },
+    {
+      "path": "immutable:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 45
+    },
+    {
+      "path": "immutable:getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 46
+    },
+    {
+      "path": "immutable:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 50
+    },
+    {
+      "path": "immutable:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 53
+    },
+    {
+      "path": "immutable:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 58
+    },
+    {
+      "path": "immutable:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 64
+    },
+    {
+      "path": "immutable:search",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 65
+    },
+    {
+      "path": "immutable:purge",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 73
+    },
+    {
+      "path": "immutable:purgeMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 80
+    },
+    {
+      "path": "immutable:purgeVersions",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/immutable.ts",
+      "line": 89
+    },
+    {
+      "path": "immutable:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/immutable.ts",
+      "line": 101
+    },
+    {
+      "path": "memories:store",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 30
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 146
+    },
+    {
+      "path": "memories:updatePartialMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 209
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 243
+    },
+    {
+      "path": "memories:deleteMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 286
+    },
+    {
+      "path": "memories:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 318
+    },
+    {
+      "path": "memories:fetchMemoriesByIds",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/memories.ts",
+      "line": 345
+    },
+    {
+      "path": "memories:keywordSearchMemories",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/memories.ts",
+      "line": 363
+    },
+    {
+      "path": "memories:search",
+      "kind": "action",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 378
+    },
+    {
+      "path": "memories:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 423
+    },
+    {
+      "path": "memories:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 459
+    },
+    {
+      "path": "memories:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 498
+    },
+    {
+      "path": "memories:getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 557
+    },
+    {
+      "path": "memories:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 601
+    },
+    {
+      "path": "memories:deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 639
+    },
+    {
+      "path": "memories:deleteByIds",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 689
+    },
+    {
+      "path": "memories:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/memories.ts",
+      "line": 717
+    },
+    {
+      "path": "memories:exportMemories",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 755
+    },
+    {
+      "path": "memories:updateMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 824
+    },
+    {
+      "path": "memories:archive",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 884
+    },
+    {
+      "path": "memories:restoreFromArchive",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 925
+    },
+    {
+      "path": "memories:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memories.ts",
+      "line": 972
+    },
+    {
+      "path": "memorySpaces:register",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 20
+    },
+    {
+      "path": "memorySpaces:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 32
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 35
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 38
+    },
+    {
+      "path": "memorySpaces:archive",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 39
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 43
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 44
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 51
+    },
+    {
+      "path": "memorySpaces:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 69
+    },
+    {
+      "path": "memorySpaces:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 77
+    },
+    {
+      "path": "memorySpaces:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 83
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 86
+    },
+    {
+      "path": "memorySpaces:search",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 89
+    },
+    {
+      "path": "memorySpaces:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 95
+    },
+    {
+      "path": "memorySpaces:getStats",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 106
+    },
+    {
+      "path": "mutable:set",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 23
+    },
+    {
+      "path": "mutable:update",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 34
+    },
+    {
+      "path": "mutable:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 41
+    },
+    {
+      "path": "mutable:exists",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 42
+    },
+    {
+      "path": "mutable:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 43
+    },
+    {
+      "path": "mutable:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 48
+    },
+    {
+      "path": "mutable:deleteKey",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 49
+    },
+    {
+      "path": "mutable:purgeMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 54
+    },
+    {
+      "path": "mutable:purgeNamespace",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 62
+    },
+    {
+      "path": "mutable:transaction",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/mutable.ts",
+      "line": 72
+    },
+    {
+      "path": "mutable:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/mutable.ts",
+      "line": 108
+    },
+    {
+      "path": "runtimeAuth:authorize",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 260
+    },
+    {
+      "path": "runtimeAuth:recheck",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 264
+    },
+    {
+      "path": "runtimeAuth:provision",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 288
+    },
+    {
+      "path": "runtimeAuth:revokeGrant",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 355
+    },
+    {
+      "path": "runtimeAuth:revokeMembership",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 362
+    },
+    {
+      "path": "runtimeAuth:deletePrincipal",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 370
+    },
+    {
+      "path": "runtimeAuth:deleteScope",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 378
+    },
+    {
+      "path": "runtimeAuth:tombstoneResource",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeAuth.ts",
+      "line": 390
+    },
+    {
+      "path": "runtimeMemory:checkAuthority",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 14
+    },
+    {
+      "path": "runtimeMemory:readSource",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 16
+    },
+    {
+      "path": "runtimeMemory:writeSource",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 18
+    },
+    {
+      "path": "runtimeMemory:writeDerived",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 20
+    },
+    {
+      "path": "runtimeMemory:readFacts",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 22
+    },
+    {
+      "path": "runtimeMemory:readVectorMatches",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 26
+    },
+    {
+      "path": "runtimeMemory:remember",
+      "kind": "action",
+      "visibility": "public",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 153
+    },
+    {
+      "path": "runtimeMemory:recall",
+      "kind": "action",
+      "visibility": "public",
+      "source": "convex-dev/runtimeMemory.ts",
+      "line": 158
+    },
+    {
+      "path": "runtimeModelPolicy:ensureBudget",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 335
+    },
+    {
+      "path": "runtimeModelPolicy:installDeploymentPolicy",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 337
+    },
+    {
+      "path": "runtimeModelPolicy:provisionTenantPolicy",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 372
+    },
+    {
+      "path": "runtimeModelPolicy:resolve",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 417
+    },
+    {
+      "path": "runtimeModelPolicy:admit",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 454
+    },
+    {
+      "path": "runtimeModelPolicy:checkpoint",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 559
+    },
+    {
+      "path": "runtimeModelPolicy:markVisible",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 593
+    },
+    {
+      "path": "runtimeModelPolicy:captureTerminalEvidence",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 828
+    },
+    {
+      "path": "runtimeModelPolicy:attachTerminalResult",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 871
+    },
+    {
+      "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 905
+    },
+    {
+      "path": "runtimeModelPolicy:settle",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 909
+    },
+    {
+      "path": "runtimeModelPolicy:recover",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 911
+    },
+    {
+      "path": "runtimeModelPolicy:releaseNotDispatched",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 926
+    },
+    {
+      "path": "runtimeModelPolicy:cancelBudget",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 937
+    },
+    {
+      "path": "runtimeModelPolicy:admitFallback",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 952
+    },
+    {
+      "path": "runtimeModelPolicy:checkFallback",
+      "kind": "query",
+      "visibility": "internal",
+      "source": "convex-dev/runtimeModelPolicy.ts",
+      "line": 987
+    },
+    {
+      "path": "sessions:create",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 21
+    },
+    {
+      "path": "sessions:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 36
+    },
+    {
+      "path": "sessions:touch",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 40
+    },
+    {
+      "path": "sessions:end",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 46
+    },
+    {
+      "path": "sessions:endAll",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 50
+    },
+    {
+      "path": "sessions:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 58
+    },
+    {
+      "path": "sessions:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/sessions.ts",
+      "line": 62
+    },
+    {
+      "path": "sessions:incrementMessageCount",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/sessions.ts",
+      "line": 82
+    },
+    {
+      "path": "sessions:incrementMemoryCount",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/sessions.ts",
+      "line": 89
+    },
+    {
+      "path": "sessions:expireIdle",
+      "kind": "mutation",
+      "visibility": "internal",
+      "source": "convex-dev/sessions.ts",
+      "line": 96
+    },
+    {
+      "path": "users:get",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 7
+    },
+    {
+      "path": "users:list",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 11
+    },
+    {
+      "path": "users:count",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 15
+    },
+    {
+      "path": "users:getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 16
+    },
+    {
+      "path": "users:getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 21
+    },
+    {
+      "path": "users:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 25
+    },
+    {
+      "path": "users:exists",
+      "kind": "query",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 31
+    },
+    {
+      "path": "users:deleteUserProfile",
+      "kind": "mutation",
+      "visibility": "public",
+      "source": "convex-dev/users.ts",
+      "line": 32
+    }
+  ]
+}

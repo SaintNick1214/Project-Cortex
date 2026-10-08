@@ -1,0 +1,5348 @@
+{
+  "scope": "Current product AST registration inventory. Calls/first statements are observations, not proof of authorization.",
+  "at": "2026-10-08T07:25:22.011Z",
+  "registrationCount": 275,
+  "counts": {
+    "mutation": 94,
+    "query": 102,
+    "internalQuery": 20,
+    "internalMutation": 55,
+    "action": 4
+  },
+  "modules": {
+    "convex-dev/a2a.ts": {
+      "public": 4,
+      "internal": 0
+    },
+    "convex-dev/admin.ts": {
+      "public": 0,
+      "internal": 5
+    },
+    "convex-dev/agents.ts": {
+      "public": 10,
+      "internal": 1
+    },
+    "convex-dev/artifacts.ts": {
+      "public": 23,
+      "internal": 4
+    },
+    "convex-dev/attachments.ts": {
+      "public": 9,
+      "internal": 3
+    },
+    "convex-dev/contexts.ts": {
+      "public": 21,
+      "internal": 1
+    },
+    "convex-dev/conversationShares.ts": {
+      "public": 6,
+      "internal": 1
+    },
+    "convex-dev/conversationSnapshots.ts": {
+      "public": 5,
+      "internal": 0
+    },
+    "convex-dev/conversations.ts": {
+      "public": 20,
+      "internal": 1
+    },
+    "convex-dev/factHistory.ts": {
+      "public": 6,
+      "internal": 5
+    },
+    "convex-dev/facts.ts": {
+      "public": 18,
+      "internal": 2
+    },
+    "convex-dev/governance.ts": {
+      "public": 7,
+      "internal": 3
+    },
+    "convex-dev/graphSync.ts": {
+      "public": 0,
+      "internal": 10
+    },
+    "convex-dev/immutable.ts": {
+      "public": 11,
+      "internal": 1
+    },
+    "convex-dev/memories.ts": {
+      "public": 19,
+      "internal": 3
+    },
+    "convex-dev/memorySpaces.ts": {
+      "public": 14,
+      "internal": 1
+    },
+    "convex-dev/mutable.ts": {
+      "public": 10,
+      "internal": 1
+    },
+    "convex-dev/runtimeAuth.ts": {
+      "public": 0,
+      "internal": 8
+    },
+    "convex-dev/runtimeMemory.ts": {
+      "public": 2,
+      "internal": 6
+    },
+    "convex-dev/runtimeModelPolicy.ts": {
+      "public": 0,
+      "internal": 16
+    },
+    "convex-dev/sessions.ts": {
+      "public": 7,
+      "internal": 3
+    },
+    "convex-dev/users.ts": {
+      "public": 8,
+      "internal": 0
+    }
+  },
+  "anomalies": [],
+  "rows": [
+    {
+      "name": "send",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/a2a.ts",
+      "line": 28,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "args.from.trim",
+        "args.to.trim",
+        "args.message.trim",
+        "new TextEncoder().encode",
+        "Math.floor",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "[args.from, args.to].sort",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", convId))\n        .first",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "ctx.db.insert",
+        "ctx.db.get",
+        "ctx.db.patch"
+      ],
+      "endpoint": "a2a:send"
+    },
+    {
+      "name": "request",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/a2a.ts",
+      "line": 245,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "args.from.trim",
+        "args.to.trim",
+        "args.message.trim",
+        "new TextEncoder().encode",
+        "Math.floor",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "ctx.db.insert"
+      ],
+      "endpoint": "a2a:request"
+    },
+    {
+      "name": "broadcast",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/a2a.ts",
+      "line": 383,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "args.from.trim",
+        "args.message.trim",
+        "new TextEncoder().encode",
+        "Math.floor",
+        "args.to.includes",
+        "recipient.trim",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "[args.from, recipient].sort",
+        "ctx.db\n          .query(\"conversations\")\n          .withIndex(\"by_conversationId\", (q) => q.eq(\"conversationId\", convId))\n          .first",
+        "ctx.db\n          .query(\"conversations\")\n          .withIndex",
+        "ctx.db\n          .query",
+        "q.eq",
+        "ctx.db.insert",
+        "ctx.db.get",
+        "ctx.db.patch",
+        "conversationIds.push",
+        "senderMemoryIds.push",
+        "receiverMemoryIds.push"
+      ],
+      "endpoint": "a2a:broadcast"
+    },
+    {
+      "name": "getConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/a2a.ts",
+      "line": 640,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "args.agent1.trim",
+        "args.agent2.trim",
+        "[args.agent1, args.agent2].sort",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db\n      .query(\"memories\")\n      .withIndex(\"by_memorySpace\", (q) => q.eq(\"memorySpaceId\", args.agent1))\n      .collect",
+        "ctx.db\n      .query(\"memories\")\n      .withIndex",
+        "agent1Memories.filter",
+        "args.tags!.some",
+        "m.tags.includes",
+        "agent1Memories.sort",
+        "agent1Memories.slice",
+        "paginatedMemories.map",
+        "m.tags.filter",
+        "[\n            \"a2a\",\n            \"sent\",\n            \"received\",\n            \"broadcast\",\n            \"request\",\n            \"pending\",\n          ].includes",
+        "m.content.replace",
+        "messages.map",
+        "Math.min",
+        "Math.max",
+        "Date.now",
+        "messages.forEach",
+        "m.tags.forEach",
+        "allTags.add",
+        "Array.from"
+      ],
+      "endpoint": "a2a:getConversation"
+    },
+    {
+      "name": "listTable",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/admin.ts",
+      "line": 6,
+      "firstStatement": "assertMaintenanceTable(args.table);",
+      "calls": [
+        "assertMaintenanceTable",
+        "ctx.db.query(args.table).take",
+        "ctx.db.query",
+        "boundedInteger"
+      ],
+      "endpoint": "admin:listTable"
+    },
+    {
+      "name": "deleteRecord",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/admin.ts",
+      "line": 13,
+      "firstStatement": "({ deleted: await deleteMaintenanceRecord(ctx, args.table, args.id) })",
+      "calls": [
+        "deleteMaintenanceRecord"
+      ],
+      "endpoint": "admin:deleteRecord"
+    },
+    {
+      "name": "clearTable",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/admin.ts",
+      "line": 17,
+      "firstStatement": "assertDeletionSupported(args.table);",
+      "calls": [
+        "assertDeletionSupported",
+        "boundedInteger",
+        "ctx.db.query(args.table).take",
+        "ctx.db.query",
+        "deleteMaintenanceRecord"
+      ],
+      "endpoint": "admin:clearTable"
+    },
+    {
+      "name": "countTable",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/admin.ts",
+      "line": 27,
+      "firstStatement": "assertMaintenanceTable(args.table);",
+      "calls": [
+        "assertMaintenanceTable",
+        "ctx.db.query(args.table).take",
+        "ctx.db.query",
+        "Math.min"
+      ],
+      "endpoint": "admin:countTable"
+    },
+    {
+      "name": "getAllCounts",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/admin.ts",
+      "line": 35,
+      "firstStatement": "const tables = [\"agents\", \"artifacts\", \"contexts\", \"conversations\", \"factHistory\", \"facts\", \"governanceEnforcement\",\n      \"governancePolicies\", \"graphSyncQueue\", \"immutable\", \"memories\", \"memorySpaces\", \"mutable\", \"sessions\"] as const;",
+      "calls": [
+        "ctx.db.query(table).take",
+        "ctx.db.query",
+        "Math.min"
+      ],
+      "endpoint": "admin:getAllCounts"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 13,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await agentAt(access, args.agentId, false);\n  if (row) await access.admit(resource(\"agents\", row), \"admin\"); await access.fence(); return",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "access.fence"
+      ],
+      "endpoint": "agents:get"
+    },
+    {
+      "name": "exists",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 17,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await agentAt(access, args.agentId, false);\n  if (row) await access.admit(resource(\"agents\", row), \"admin\"); await access.fence(); return",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "access.fence"
+      ],
+      "endpoint": "agents:exists"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 21,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);\n  const rows = (await all(access)).filter((row) => args.status",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "integer",
+        "(await all(access)).filter((row) => args.status === undefined || row.status === args.status).sort",
+        "(await all(access)).filter",
+        "all",
+        "access.fence",
+        "rows.slice"
+      ],
+      "endpoint": "agents:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 26,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status);\n  await access.fence(); return rows.length",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "(await all(access)).filter",
+        "all",
+        "access.fence"
+      ],
+      "endpoint": "agents:count"
+    },
+    {
+      "name": "register",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 30,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const a = access.authority;\n  const candidate = { agentId: args.agentId, tenantId: a.tenantId, memorySpaceId: a.memorySpaceId, ownerPrincipalId: ",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "access.admit",
+        "resource",
+        "conflict",
+        "access.optionalRead",
+        "agentAt",
+        "json",
+        "Date.now",
+        "insertionShape",
+        "access.fence",
+        "effect",
+        "ctx.db.insert",
+        "access.expect",
+        "inserted",
+        "receipt"
+      ],
+      "endpoint": "agents:register"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 47,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await agentAt(access, args.agentId))!;\n  await access.admit(resource(\"agents\", row), \"admin\"); const readable = await access.optiona",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "access.optionalRead",
+        "changes",
+        "access.fence",
+        "effect",
+        "ctx.db.patch",
+        "access.expect",
+        "receipt"
+      ],
+      "endpoint": "agents:update"
+    },
+    {
+      "name": "updateMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 53,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); distinct(args.agentIds); const rows: Doc<\"agents\">[] = []; const patch = changes(args);\n  for (const id of args.agentIds) { const row = (await ag",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "distinct",
+        "changes",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "rows.push",
+        "access.fence",
+        "effect",
+        "ctx.db.patch",
+        "access.expect",
+        "rows.map"
+      ],
+      "endpoint": "agents:updateMany"
+    },
+    {
+      "name": "unregister",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 60,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await agentAt(access, args.agentId))!;\n  await access.admit(resource(\"agents\", row), \"admin\"); await access.fence();\n  const now = D",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "access.fence",
+        "Date.now",
+        "tombstone",
+        "effect",
+        "ctx.db.patch",
+        "access.expect",
+        "access.retire"
+      ],
+      "endpoint": "agents:unregister"
+    },
+    {
+      "name": "unregisterMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 68,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args);\n  if (args.agentIds) distinct(args.agentIds); if (!args.agentIds && !args.status) deny(\"INVALID_INPUT\");\n  const rows: Doc<\"agents\">[] = args.age",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "distinct",
+        "deny",
+        "(await all(access)).filter",
+        "all",
+        "rows.push",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "access.readAll",
+        "rows.map",
+        "access.fence",
+        "Date.now",
+        "tombstone",
+        "effect",
+        "ctx.db.patch",
+        "access.expect",
+        "access.retire"
+      ],
+      "endpoint": "agents:unregisterMany"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/agents.ts",
+      "line": 83,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const rows = await ctx.db.query(\"agents\").collect();\n  for (const row of rows) if (row.tenantId && row.ownerPrincipalId) await tombstone(ctx, resource(\"agents\", row));\n  for (const row of rows) await effect(",
+      "calls": [
+        "operation",
+        "ctx.db.query(\"agents\").collect",
+        "ctx.db.query",
+        "tombstone",
+        "resource",
+        "effect",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "agents:purgeAll"
+    },
+    {
+      "name": "computeStats",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/agents.ts",
+      "line": 91,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n    const access = await RegistryAccess.open(ctx, \"read\", args);\n    const agent = (await agentAt(access, args.agentId))!;\n    await access.admit(resource(\"agents\", agent), \"admin\");\n    return await statisticsUn",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "agentAt",
+        "access.admit",
+        "resource",
+        "statisticsUnavailable"
+      ],
+      "endpoint": "agents:computeStats"
+    },
+    {
+      "name": "create",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 51,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n    const now = Date.now();\n    const artifactId = args.artifactId ?? `art-${now}-${Math.random().toString(36).substring(2, 11)}`;\n    if (!artifactId",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "artifactDeny",
+        "operation.collision",
+        "operation.insert",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:create"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 113,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Cannot update deleted artifacts\n    if (artifact.isDeleted) {\n      throw new Con",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "Date.now",
+        "nextArtifactVersion",
+        "versionHistory.filter",
+        "versionHistory.push",
+        "operation.patch",
+        "operation.complete",
+        "ctx.db.get"
+      ],
+      "endpoint": "artifacts:update"
+    },
+    {
+      "name": "deleteArtifact",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 207,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n    await operation.tombstone(artifact);\n    return await operation.complete({ deleted: t",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "operation.tombstone",
+        "operation.complete",
+        "Date.now"
+      ],
+      "endpoint": "artifacts:deleteArtifact"
+    },
+    {
+      "name": "undo",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 232,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Find the nearest previous version (handles gaps from purgeVersions)\n    // Sort v",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifact.versionHistory\n      .filter((v) => v.version < artifact.versionPointer)\n      .sort",
+        "artifact.versionHistory\n      .filter",
+        "operation.patch",
+        "Date.now",
+        "operation.complete",
+        "canUndoTo",
+        "canRedoTo"
+      ],
+      "endpoint": "artifacts:undo"
+    },
+    {
+      "name": "redo",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 282,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Find the nearest next version (handles gaps from purgeVersions)\n    // Sort versi",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifact.versionHistory\n      .filter((v) => v.version > artifact.versionPointer)\n      .sort",
+        "artifact.versionHistory\n      .filter",
+        "operation.patch",
+        "Date.now",
+        "operation.complete",
+        "canUndoTo",
+        "canRedoTo"
+      ],
+      "endpoint": "artifacts:redo"
+    },
+    {
+      "name": "setStreamingState",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 334,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (!isValidTransition(artifact.streamingState, args.streamingState)) artifactDeny(\"",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "isValidTransition",
+        "artifactDeny",
+        "Date.now",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:setStreamingState"
+    },
+    {
+      "name": "setFileRef",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/artifacts.ts",
+      "line": 371,
+      "firstStatement": "await internalAssetUnavailable();",
+      "calls": [
+        "internalAssetUnavailable",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq(\"tenantId\", args.tenantId!).eq",
+        "q.eq",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first",
+        "Date.now",
+        "ctx.db.patch",
+        "ctx.db.get"
+      ],
+      "endpoint": "artifacts:setFileRef"
+    },
+    {
+      "name": "purgeVersions",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 430,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    if (safeInteger(args.keepLatest, 1) < 1) {\n      throw new ConvexError(\"KEEP_LATEST_MUST_BE_POSITIVE\");\n    }\n\n    const artifact = await operati",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "safeInteger",
+        "operation.load",
+        "operation.complete",
+        "artifact.versionHistory.slice",
+        "artifact.versionHistory.find",
+        "prunedHistory.some",
+        "prunedHistory.findIndex",
+        "prunedHistory.push",
+        "prunedHistory.splice",
+        "operation.patch"
+      ],
+      "endpoint": "artifacts:purgeVersions"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/artifacts.ts",
+      "line": 510,
+      "firstStatement": "artifactHandler(async () => {\n    // Only authenticated Convex deployment-operator internal tooling may invoke\n    // this registration. URL/environment names and public JWT admin labels are\n    // never operator credentials. This does not remove oth",
+      "calls": [
+        "artifactHandler",
+        "artifactDeny",
+        "ctx.db.query(\"artifacts\").withIndex(\"by_tenant_space\", (q) =>\n      q.eq(\"tenantId\", args.tenantId!).eq(\"memorySpaceId\", args.memorySpaceId!)).collect",
+        "ctx.db.query(\"artifacts\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"tenantId\", args.tenantId!).eq",
+        "q.eq",
+        "row.versionHistory.some",
+        "validateArtifact",
+        "Date.now",
+        "ctx.db.patch",
+        "ctx.db.query(\"runtimeAuthTombstones\").withIndex(\"by_resource\", (q) =>\n        q.eq(\"tenantId\", target.tenantId).eq(\"memorySpaceId\", target.memorySpaceId)\n          .eq(\"resourceType\", target.resourceType).eq(\"resourceId\", target.resourceId)).unique",
+        "ctx.db.query(\"runtimeAuthTombstones\").withIndex",
+        "q.eq(\"tenantId\", target.tenantId).eq(\"memorySpaceId\", target.memorySpaceId)\n          .eq(\"resourceType\", target.resourceType).eq",
+        "q.eq(\"tenantId\", target.tenantId).eq(\"memorySpaceId\", target.memorySpaceId)\n          .eq",
+        "q.eq(\"tenantId\", target.tenantId).eq",
+        "ctx.db.insert"
+      ],
+      "endpoint": "artifacts:purgeAll"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 553,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Optionally exclude version history for smaller response\n    if (args.includeVers",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:get"
+    },
+    {
+      "name": "getByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 580,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    await operation.conversation({ conversationId: args.conversationId });\n    let artifacts = await operation.list();\n    artifacts = artifacts.filt",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.conversation",
+        "operation.list",
+        "artifacts.filter",
+        "operation.complete",
+        "artifacts.map"
+      ],
+      "endpoint": "artifacts:getByConversation"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 601,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    let artifacts = await operation.list();\n    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);\n   ",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.list",
+        "artifacts.filter",
+        "args.tags!.every",
+        "row.tags.includes",
+        "Number.isFinite",
+        "artifactDeny",
+        "Math.min",
+        "safeInteger",
+        "artifacts.sort",
+        "artifacts.slice",
+        "operation.complete",
+        "selected.map"
+      ],
+      "endpoint": "artifacts:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 648,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    let artifacts = await operation.list();\n    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);\n   ",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.list",
+        "artifacts.filter",
+        "Number.isFinite",
+        "artifactDeny",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:count"
+    },
+    {
+      "name": "getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 674,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    safeInteger(args.version, 1);\n    const artifact = await operation.load(args.artifactId);\n\n    // Find version in history\n    const versionEntry",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "safeInteger",
+        "operation.load",
+        "artifact.versionHistory.find",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:getVersion"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 712,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    const artifact = await operation.load(args.artifactId);\n\n    let history = [...artifact.versionHistory];\n\n    // Sort by version (asc = oldest f",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "history.reverse",
+        "safeInteger",
+        "Math.min",
+        "history.slice",
+        "history.map",
+        "operation.complete",
+        "canUndoTo",
+        "canRedoTo"
+      ],
+      "endpoint": "artifacts:getHistory"
+    },
+    {
+      "name": "startStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 831,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifactDeny",
+        "safeInteger",
+        "Date.now",
+        "generateSessionId",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:startStreaming"
+    },
+    {
+      "name": "appendContent",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 900,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifactDeny",
+        "safeInteger",
+        "Date.now",
+        "new TextEncoder().encode",
+        "operation.patch",
+        "Math.min",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:appendContent"
+    },
+    {
+      "name": "pauseStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 974,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "isValidTransition",
+        "artifactDeny",
+        "Date.now",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:pauseStreaming"
+    },
+    {
+      "name": "resumeStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1033,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifactDeny",
+        "Date.now",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:resumeStreaming"
+    },
+    {
+      "name": "cancelStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1091,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifactDeny",
+        "Date.now",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:cancelStreaming"
+    },
+    {
+      "name": "finalizeStreaming",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1169,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "isValidTransition",
+        "artifactDeny",
+        "Date.now",
+        "nextArtifactVersion",
+        "versionHistory.filter",
+        "versionHistory.push",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:finalizeStreaming"
+    },
+    {
+      "name": "setStreamingError",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1278,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "isValidTransition",
+        "artifactDeny",
+        "Date.now",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:setStreamingError"
+    },
+    {
+      "name": "retryFromError",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1339,
+      "firstStatement": "artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n",
+      "calls": [
+        "artifactHandler",
+        "ArtifactOperation.begin",
+        "operation.load",
+        "artifactDeny",
+        "Date.now",
+        "operation.patch",
+        "operation.complete"
+      ],
+      "endpoint": "artifacts:retryFromError"
+    },
+    {
+      "name": "generateArtifactUploadUrl",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1413,
+      "firstStatement": "await internalAssetUnavailable();",
+      "calls": [
+        "internalAssetUnavailable",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq(\"tenantId\", args.tenantId!).eq",
+        "q.eq",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first",
+        "ctx.storage.generateUploadUrl",
+        "Date.now"
+      ],
+      "endpoint": "artifacts:generateArtifactUploadUrl"
+    },
+    {
+      "name": "completeArtifactUpload",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1483,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq(\"tenantId\", args.tenantId!).eq",
+        "q.eq",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first",
+        "Date.now",
+        "versionHistory.filter",
+        "versionHistory.push",
+        "ctx.db.patch"
+      ],
+      "endpoint": "artifacts:completeArtifactUpload"
+    },
+    {
+      "name": "getArtifactFileUrl",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1603,
+      "firstStatement": "await internalAssetUnavailable();",
+      "calls": [
+        "internalAssetUnavailable",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq(\"tenantId\", args.tenantId!).eq",
+        "q.eq",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first",
+        "ctx.storage.getUrl"
+      ],
+      "endpoint": "artifacts:getArtifactFileUrl"
+    },
+    {
+      "name": "detachFile",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/artifacts.ts",
+      "line": 1676,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq(\"tenantId\", args.tenantId!).eq",
+        "q.eq",
+        "ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first",
+        "Date.now",
+        "ctx.storage.delete",
+        "console.warn",
+        "versionHistory.filter",
+        "versionHistory.push",
+        "ctx.db.patch"
+      ],
+      "endpoint": "artifacts:detachFile"
+    },
+    {
+      "name": "generateUploadUrl",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/attachments.ts",
+      "line": 97,
+      "firstStatement": "await internalAssetUnavailable();",
+      "calls": [
+        "internalAssetUnavailable",
+        "ctx.storage.generateUploadUrl"
+      ],
+      "endpoint": "attachments:generateUploadUrl"
+    },
+    {
+      "name": "attach",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 122,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "Date.now",
+        "generateAttachmentId",
+        "ctx.storage.getMetadata",
+        "ctx.db.insert",
+        "ctx.db.get"
+      ],
+      "endpoint": "attachments:attach"
+    },
+    {
+      "name": "remove",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 200,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "lookupAttachment",
+        "ctx.storage.delete",
+        "console.warn",
+        "ctx.db.delete",
+        "Date.now"
+      ],
+      "endpoint": "attachments:remove"
+    },
+    {
+      "name": "removeMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 251,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:write\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "lookupAttachment",
+        "errors.push",
+        "ctx.storage.delete",
+        "console.warn",
+        "ctx.db.delete"
+      ],
+      "endpoint": "attachments:removeMany"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/attachments.ts",
+      "line": 314,
+      "firstStatement": "await internalAssetUnavailable();",
+      "calls": [
+        "internalAssetUnavailable",
+        "siteUrl.includes",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq",
+        "q\n            .eq",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenantId\", (q) => q.eq(\"tenantId\", args.tenantId!))\n        .collect",
+        "q.eq",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db.query(\"attachments\").collect",
+        "ctx.db.query",
+        "ctx.storage.delete",
+        "console.warn",
+        "ctx.db.delete"
+      ],
+      "endpoint": "attachments:purgeAll"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 401,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "lookupAttachment"
+      ],
+      "endpoint": "attachments:get"
+    },
+    {
+      "name": "getUrl",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/attachments.ts",
+      "line": 421,
+      "firstStatement": "await internalAssetUnavailable();",
+      "calls": [
+        "internalAssetUnavailable",
+        "lookupAttachment",
+        "ctx.storage.getUrl"
+      ],
+      "endpoint": "attachments:getUrl"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 460,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "Math.min",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq",
+        "q\n            .eq",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace_type\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId).eq(\"type\", args.type!),\n        )\n        .collect",
+        "q.eq(\"memorySpaceId\", args.memorySpaceId).eq",
+        "q.eq",
+        "attachments.filter",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect",
+        "attachments.sort",
+        "JSON.parse",
+        "Buffer.from(args.cursor, \"base64\").toString",
+        "Buffer.from",
+        "attachments.slice",
+        "Buffer.from(JSON.stringify({ offset: offset + limit })).toString",
+        "JSON.stringify"
+      ],
+      "endpoint": "attachments:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 593,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq",
+        "q\n            .eq",
+        "ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect",
+        "q.eq",
+        "attachments.filter"
+      ],
+      "endpoint": "attachments:count"
+    },
+    {
+      "name": "getByIds",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 651,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "lookupAttachment",
+        "results.push"
+      ],
+      "endpoint": "attachments:getByIds"
+    },
+    {
+      "name": "getByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 681,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "Math.min",
+        "ctx.db\n      .query(\"attachments\")\n      .withIndex(\"by_conversation\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .collect",
+        "ctx.db\n      .query(\"attachments\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "attachments.filter",
+        "attachments.sort",
+        "attachments.slice"
+      ],
+      "endpoint": "attachments:getByConversation"
+    },
+    {
+      "name": "getByMessage",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/attachments.ts",
+      "line": 726,
+      "firstStatement": "await runtimeAssetUnavailable(ctx, \"storage:read\", args);",
+      "calls": [
+        "runtimeAssetUnavailable",
+        "ctx.db\n      .query(\"attachments\")\n      .withIndex(\"by_message\", (q) => q.eq(\"messageId\", args.messageId))\n      .collect",
+        "ctx.db\n      .query(\"attachments\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "attachments.filter",
+        "attachments.sort"
+      ],
+      "endpoint": "attachments:getByMessage"
+    },
+    {
+      "name": "create",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 74,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const a = access.authority; await spaceAt(access, args.memorySpaceId, \"write\");\n  if (args.userId !== undefined && args.userId !== a.userId) deny",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "spaceAt",
+        "deny",
+        "Date.now",
+        "Math.random().toString(36).slice",
+        "Math.random().toString",
+        "Math.random",
+        "access.admit",
+        "resource",
+        "conflict",
+        "access.optionalRead",
+        "contextAt",
+        "graph",
+        "conversationAt",
+        "integer",
+        "revision",
+        "insertionShape",
+        "access.fence",
+        "effect",
+        "ctx.db.insert",
+        "access.expect",
+        "inserted",
+        "ctx.db.patch",
+        "receipt"
+      ],
+      "endpoint": "contexts:create"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 93,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (args.completedAt !== undefined && (!Number.isFinite(args.completedAt) || args.completedAt < row.createdAt || args.completedAt > Date.now())) deny(\"INVALID_INPUT\");\n  retur",
+      "calls": [
+        "operation",
+        "edit",
+        "Number.isFinite",
+        "Date.now",
+        "deny",
+        "mergeValue"
+      ],
+      "endpoint": "contexts:update"
+    },
+    {
+      "name": "addParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 98,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (!args.participantId.trim()) deny(\"INVALID_INPUT\"); return { participants: row.participants.includes(args.participantId) ? row.participants : [...row.participants, args.par",
+      "calls": [
+        "operation",
+        "edit",
+        "args.participantId.trim",
+        "deny",
+        "row.participants.includes"
+      ],
+      "endpoint": "contexts:addParticipant"
+    },
+    {
+      "name": "removeParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 101,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => ({ participants: row.participants.filter((value) => value !== args.participantId) }))))",
+      "calls": [
+        "operation",
+        "edit",
+        "row.participants.filter"
+      ],
+      "endpoint": "contexts:removeParticipant"
+    },
+    {
+      "name": "grantAccess",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 102,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (!args.scope.trim()) deny(\"INVALID_INPUT\"); return { grantedAccess: [...(row.grantedAccess ?? []).filter((grant) => grant.memorySpaceId !== args.targetMemorySpaceId), { mem",
+      "calls": [
+        "operation",
+        "edit",
+        "args.scope.trim",
+        "deny",
+        "(row.grantedAccess ?? []).filter",
+        "Date.now"
+      ],
+      "endpoint": "contexts:grantAccess"
+    },
+    {
+      "name": "deleteContext",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 143,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await contextAt(access, args.contextId))!;\n  const result = await deletion(ctx, access, [row], args.cascadeChildren ?? false, args.o",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "contextAt",
+        "deletion"
+      ],
+      "endpoint": "contexts:deleteContext"
+    },
+    {
+      "name": "updateMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 148,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const rows = await selected(access, args);\n  const data = args.updates.data; json(data);\n  const plans = rows.map((row) => ({ row, patch: revisio",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "selected",
+        "json",
+        "rows.map",
+        "revision",
+        "mergeValue",
+        "access.readAll",
+        "resource",
+        "apply"
+      ],
+      "endpoint": "contexts:updateMany"
+    },
+    {
+      "name": "deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 157,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const rows = await selected(access, args);\n  const result = await deletion(ctx, access, rows, args.cascadeChildren ?? false, false, true); return",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "selected",
+        "deletion"
+      ],
+      "endpoint": "contexts:deleteMany"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 161,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await contextAt(access, args.contextId, false, false);\n  if (!row) { await access.fence(); return null; } const nodes = await graph(acces",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "contextAt",
+        "access.fence",
+        "graph",
+        "conversationAt",
+        "chain"
+      ],
+      "endpoint": "contexts:get"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 168,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "integer",
+        "selected",
+        "access.fence",
+        "rows.slice"
+      ],
+      "endpoint": "contexts:list"
+    },
+    {
+      "name": "search",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 171,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "integer",
+        "selected",
+        "access.fence",
+        "rows.slice"
+      ],
+      "endpoint": "contexts:search"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 174,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = await selected(access, args); await access.fence(); return rows.length;\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "selected",
+        "access.fence"
+      ],
+      "endpoint": "contexts:count"
+    },
+    {
+      "name": "getChain",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 177,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return chain(nodes, row);\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "contextAt",
+        "graph",
+        "access.fence",
+        "chain"
+      ],
+      "endpoint": "contexts:getChain"
+    },
+    {
+      "name": "getRoot",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 180,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return nodes.get(row.rootId!)!;",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "contextAt",
+        "graph",
+        "access.fence",
+        "nodes.get"
+      ],
+      "endpoint": "contexts:getRoot"
+    },
+    {
+      "name": "getChildren",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 183,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row);\n  const children = args.recursive ? descendants(nodes",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "contextAt",
+        "graph",
+        "descendants",
+        "row.childIds.map",
+        "nodes.get",
+        "access.fence",
+        "children.filter"
+      ],
+      "endpoint": "contexts:getChildren"
+    },
+    {
+      "name": "getByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 187,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); if (!access.authority.memorySpaceId) deny();\n  await conversationAt(access, { conversationId: args.conversationId }, access.authority.memorySpaceId);",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "deny",
+        "conversationAt",
+        "(await selected(access, args)).filter",
+        "selected",
+        "access.fence"
+      ],
+      "endpoint": "contexts:getByConversation"
+    },
+    {
+      "name": "findOrphaned",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 192,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); await selected(access, args); await access.fence();\n  // Missing/malformed links deny rather than deliver a partially authorized orphan graph.\n  retu",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "selected",
+        "access.fence"
+      ],
+      "endpoint": "contexts:findOrphaned"
+    },
+    {
+      "name": "getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 201,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  integer(args.version, 1, Number.MAX_SAFE_INTEGER); const versions = await historical(ctx, args); return versions.find((value) => value.version === args.version) ?? null;\n})",
+      "calls": [
+        "operation",
+        "integer",
+        "historical",
+        "versions.find"
+      ],
+      "endpoint": "contexts:getVersion"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 204,
+      "firstStatement": "operation(ctx, \"query\", async () => (await historical(ctx, args)))",
+      "calls": [
+        "operation",
+        "historical"
+      ],
+      "endpoint": "contexts:getHistory"
+    },
+    {
+      "name": "getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 205,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  if (!Number.isFinite(args.timestamp) || args.timestamp < 0) deny(\"INVALID_INPUT\");\n  const versions = await historical(ctx, args); return versions.reverse().find((value) => value.timestamp <= args.timestamp) ??",
+      "calls": [
+        "operation",
+        "Number.isFinite",
+        "deny",
+        "historical",
+        "versions.reverse().find",
+        "versions.reverse"
+      ],
+      "endpoint": "contexts:getAtTimestamp"
+    },
+    {
+      "name": "exportContexts",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/contexts.ts",
+      "line": 209,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = await selected(access, args); const exported: unknown[] = [];\n  for (const row of rows) exported.push({ contextId: row.contextId, memory",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "selected",
+        "exported.push",
+        "chain",
+        "graph",
+        "JSON.stringify",
+        "String",
+        "nativeJson",
+        "[\"contextId,memorySpaceId,purpose,status,depth,parentId,userId,createdAt,updatedAt\",\n    ...rows.map((row) => [row.contextId, row.memorySpaceId, row.purpose, row.status, row.depth, row.parentId, row.userId, row.createdAt, row.updatedAt].map(csv).join(\",\"))].join",
+        "rows.map",
+        "[row.contextId, row.memorySpaceId, row.purpose, row.status, row.depth, row.parentId, row.userId, row.createdAt, row.updatedAt].map(csv).join",
+        "[row.contextId, row.memorySpaceId, row.purpose, row.status, row.depth, row.parentId, row.userId, row.createdAt, row.updatedAt].map",
+        "access.fence",
+        "Date.now"
+      ],
+      "endpoint": "contexts:exportContexts"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/contexts.ts",
+      "line": 220,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const rows = await ctx.db.query(\"contexts\").collect();\n  for (const row of rows) if (row.tenantId && row.ownerPrincipalId) await tombstone(ctx, resource(\"contexts\", row));\n  for (const row of rows) await eff",
+      "calls": [
+        "operation",
+        "ctx.db.query(\"contexts\").collect",
+        "ctx.db.query",
+        "tombstone",
+        "resource",
+        "effect",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "contexts:purgeAll"
+    },
+    {
+      "name": "create",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 57,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "Date.now",
+        "generateShareId",
+        "ctx.db.insert",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversationShares:create"
+    },
+    {
+      "name": "revoke",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 140,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex(\"by_shareId\", (q) => q.eq(\"shareId\", args.shareId))\n      .first",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db.patch",
+        "Date.now",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversationShares:revoke"
+    },
+    {
+      "name": "incrementViewCount",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 182,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex(\"by_shareId\", (q) => q.eq(\"shareId\", args.shareId))\n      .first",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "isShareValid",
+        "ctx.db.patch"
+      ],
+      "endpoint": "conversationShares:incrementViewCount"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 237,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex(\"by_shareId\", (q) => q.eq(\"shareId\", args.shareId))\n      .first",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "isShareValid"
+      ],
+      "endpoint": "conversationShares:get"
+    },
+    {
+      "name": "listByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 270,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex(\"by_conversation\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .collect",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "shares.filter",
+        "shares.map",
+        "isShareValid"
+      ],
+      "endpoint": "conversationShares:listByConversation"
+    },
+    {
+      "name": "listByGranter",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 309,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex(\"by_grantedBy\", (q) => q.eq(\"grantedBy\", args.grantedBy))\n      .collect",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "shares.filter",
+        "shares.map",
+        "isShareValid"
+      ],
+      "endpoint": "conversationShares:listByGranter"
+    },
+    {
+      "name": "checkAccess",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationShares.ts",
+      "line": 346,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex(\"by_conversation\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .collect",
+        "ctx.db\n      .query(\"conversationShares\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "shares.filter",
+        "isShareValid",
+        "activeShares.filter"
+      ],
+      "endpoint": "conversationShares:checkAccess"
+    },
+    {
+      "name": "create",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversationSnapshots.ts",
+      "line": 74,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId)\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "Date.now",
+        "generateSnapshotId",
+        "conversation.messages.map",
+        "messages.filter",
+        "messages.map",
+        "redactPII",
+        "ctx.db.insert",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversationSnapshots:create"
+    },
+    {
+      "name": "deleteSnapshot",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversationSnapshots.ts",
+      "line": 176,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex(\"by_snapshotId\", (q) => q.eq(\"snapshotId\", args.snapshotId))\n      .first",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db.patch"
+      ],
+      "endpoint": "conversationSnapshots:deleteSnapshot"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationSnapshots.ts",
+      "line": 216,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex(\"by_snapshotId\", (q) => q.eq(\"snapshotId\", args.snapshotId))\n      .first",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq"
+      ],
+      "endpoint": "conversationSnapshots:get"
+    },
+    {
+      "name": "listByConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationSnapshots.ts",
+      "line": 242,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex(\"by_conversation\", (q) =>\n        q.eq(\"conversationId\", args.conversationId)\n      )\n      .collect",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "snapshots.filter"
+      ],
+      "endpoint": "conversationSnapshots:listByConversation"
+    },
+    {
+      "name": "listByUser",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversationSnapshots.ts",
+      "line": 271,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex(\"by_createdBy\", (q) => q.eq(\"createdBy\", args.userId))\n      .collect",
+        "ctx.db\n      .query(\"conversationSnapshots\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "snapshots.filter"
+      ],
+      "endpoint": "conversationSnapshots:listByUser"
+    },
+    {
+      "name": "create",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 114,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "Date.now",
+        "ctx.db.insert",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:create"
+    },
+    {
+      "name": "setVisibility",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 212,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "isConversationOwner",
+        "ctx.db.patch",
+        "Date.now",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:setVisibility"
+    },
+    {
+      "name": "setMetadata",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 259,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "isConversationOwner",
+        "ctx.db.patch",
+        "Date.now",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:setMetadata"
+    },
+    {
+      "name": "checkAccess",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 307,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "isConversationOwner",
+        "isConversationParticipant"
+      ],
+      "endpoint": "conversations:checkAccess"
+    },
+    {
+      "name": "addMessage",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 387,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "isConversationOwner",
+        "approvedParticipants.includes",
+        "Date.now",
+        "ctx.db.patch",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:addMessage"
+    },
+    {
+      "name": "approveMessage",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 457,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "getOwnerUserId",
+        "conversation.messages.findIndex",
+        "Date.now",
+        "ctx.db.patch",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:approveMessage"
+    },
+    {
+      "name": "rejectMessage",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 522,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "getOwnerUserId",
+        "conversation.messages.findIndex",
+        "Date.now",
+        "ctx.db.patch",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:rejectMessage"
+    },
+    {
+      "name": "deleteConversation",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 587,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db.delete",
+        "Date.now"
+      ],
+      "endpoint": "conversations:deleteConversation"
+    },
+    {
+      "name": "deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 625,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "ctx.db.query(\"conversations\").collect",
+        "ctx.db.query",
+        "conversations.filter",
+        "conversations.reduce",
+        "ctx.db.delete",
+        "conversations.map"
+      ],
+      "endpoint": "conversations:deleteMany"
+    },
+    {
+      "name": "deleteByIds",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 714,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_conversationId\", (q) =>\n          q.eq(\"conversationId\", conversationId),\n        )\n        .first",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "ctx.db.delete",
+        "deletedIds.push"
+      ],
+      "endpoint": "conversations:deleteByIds"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/conversations.ts",
+      "line": 755,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "ctx.db.query(\"conversations\").collect",
+        "ctx.db.query",
+        "ctx.db.delete"
+      ],
+      "endpoint": "conversations:purgeAll"
+    },
+    {
+      "name": "getMessage",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 782,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "conversation.messages.find"
+      ],
+      "endpoint": "conversations:getMessage"
+    },
+    {
+      "name": "getMessagesByIds",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 813,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "conversation.messages.filter",
+        "args.messageIds.includes"
+      ],
+      "endpoint": "conversations:getMessagesByIds"
+    },
+    {
+      "name": "getOrCreate",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 846,
+      "firstStatement": "await runtimeUnavailable(ctx, \"write\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace_user\", (q) =>\n          q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq(\"participants.userId\", primaryUserId),\n        )\n        .filter((q) =>\n          q.and(\n            q.eq(q.field(\"type\"), \"user-agent\"),\n            q.eq(q.field(\"participants.agentId\"), args.participants.agentId),\n          ),\n        )\n        .first",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace_user\", (q) =>\n          q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq(\"participants.userId\", primaryUserId),\n        )\n        .filter",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq",
+        "q\n            .eq",
+        "q.and",
+        "q.eq",
+        "q.field",
+        "ctx.db\n        .query(\"conversations\")\n        .filter((q) => q.eq(q.field(\"type\"), \"agent-agent\"))\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .filter",
+        "[...args.participants.memorySpaceIds].sort",
+        "conversations.find",
+        "[...c.participants.memorySpaceIds].sort",
+        "sorted.every",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "ctx.db.insert",
+        "ctx.db.get"
+      ],
+      "endpoint": "conversations:getOrCreate"
+    },
+    {
+      "name": "findConversation",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 976,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace_user\", (q) =>\n          q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq(\"participants.userId\", args.userId),\n        )\n        .filter((q) => q.eq(q.field(\"type\"), \"user-agent\"))\n        .first",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace_user\", (q) =>\n          q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq(\"participants.userId\", args.userId),\n        )\n        .filter",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq",
+        "q\n            .eq",
+        "q.eq",
+        "q.field",
+        "ctx.db\n      .query(\"conversations\")\n      .filter((q) => q.eq(q.field(\"type\"), \"agent-agent\"))\n      .collect",
+        "ctx.db\n      .query(\"conversations\")\n      .filter",
+        "ctx.db\n      .query",
+        "[...args.memorySpaceIds].sort",
+        "conversations.find",
+        "[...c.participants.memorySpaceIds].sort",
+        "sorted.every"
+      ],
+      "endpoint": "conversations:findConversation"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 1042,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "conversation.messages.slice"
+      ],
+      "endpoint": "conversations:get"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 1096,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq",
+        "q\n            .eq",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_tenantId\", (q) => q.eq(\"tenantId\", args.tenantId!))\n        .collect",
+        "q.eq",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace_user\", (q) =>\n          q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq(\"participants.userId\", args.userId),\n        )\n        .collect",
+        "q\n            .eq(\"memorySpaceId\", args.memorySpaceId!)\n            .eq",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_user\", (q) => q.eq(\"participants.userId\", args.userId))\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_type\", (q) => q.eq(\"type\", args.type!))\n        .collect",
+        "ctx.db.query(\"conversations\").collect",
+        "ctx.db.query",
+        "conversations.filter",
+        "conversations.sort",
+        "conversations.slice",
+        "paginatedConversations.map"
+      ],
+      "endpoint": "conversations:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 1315,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "ctx.db.query(\"conversations\").collect",
+        "ctx.db.query",
+        "filtered.filter"
+      ],
+      "endpoint": "conversations:count"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 1359,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex(\"by_conversationId\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .first",
+        "ctx.db\n      .query(\"conversations\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "messages.filter",
+        "args.roles!.includes",
+        "messages.reverse",
+        "messages.slice"
+      ],
+      "endpoint": "conversations:getHistory"
+    },
+    {
+      "name": "search",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 1433,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "ctx.db.query(\"conversations\").collect",
+        "ctx.db.query",
+        "args.query.toLowerCase",
+        "text.toLowerCase",
+        "query.split(/\\s+/).filter",
+        "query.split",
+        "words.every",
+        "lowerText.includes",
+        "conversation.messages.filter",
+        "matchText",
+        "JSON.stringify",
+        "matchedMessages.slice(0, 3).map",
+        "matchedMessages.slice",
+        "content.toLowerCase().indexOf",
+        "content.toLowerCase",
+        "content.substring",
+        "Math.max",
+        "Math.min",
+        "results.push",
+        "results.sort",
+        "results.slice"
+      ],
+      "endpoint": "conversations:search"
+    },
+    {
+      "name": "exportConversations",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/conversations.ts",
+      "line": 1577,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect",
+        "ctx.db\n        .query(\"conversations\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "ctx.db.query(\"conversations\").collect",
+        "ctx.db.query",
+        "conversations.filter",
+        "args.conversationIds!.includes",
+        "conversations.map",
+        "JSON.stringify",
+        "Date.now",
+        "headers.push",
+        "c.messageCount.toString",
+        "new Date(c.createdAt).toISOString",
+        "new Date(c.updatedAt).toISOString",
+        "row.push",
+        "row.join",
+        "[headers.join(\",\"), ...rows].join",
+        "headers.join"
+      ],
+      "endpoint": "conversations:exportConversations"
+    },
+    {
+      "name": "logEvent",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/factHistory.ts",
+      "line": 19,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "ctx.db.insert"
+      ],
+      "endpoint": "factHistory:logEvent"
+    },
+    {
+      "name": "deleteByFactId",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/factHistory.ts",
+      "line": 78,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_factId\", (q) => q.eq(\"factId\", args.factId))\n      .collect",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db.delete"
+      ],
+      "endpoint": "factHistory:deleteByFactId"
+    },
+    {
+      "name": "deleteByUserId",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/factHistory.ts",
+      "line": 102,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_userId\", (q) => q.eq(\"userId\", args.userId))\n      .collect",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db.delete"
+      ],
+      "endpoint": "factHistory:deleteByUserId"
+    },
+    {
+      "name": "deleteByMemorySpace",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/factHistory.ts",
+      "line": 126,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_memorySpace\", (q) =>\n        q.eq(\"memorySpaceId\", args.memorySpaceId),\n      )\n      .collect",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "ctx.db.delete"
+      ],
+      "endpoint": "factHistory:deleteByMemorySpace"
+    },
+    {
+      "name": "purgeOldEvents",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/factHistory.ts",
+      "line": 152,
+      "firstStatement": "await internalUnavailable();",
+      "calls": [
+        "internalUnavailable",
+        "ctx.db\n          .query(\"factHistory\")\n          .withIndex(\"by_memorySpace_timestamp\", (q) =>\n            q\n              .eq(\"memorySpaceId\", args.memorySpaceId!)\n              .lt(\"timestamp\", args.olderThan),\n          )\n          .collect",
+        "ctx.db\n          .query(\"factHistory\")\n          .withIndex",
+        "ctx.db\n          .query",
+        "q\n              .eq(\"memorySpaceId\", args.memorySpaceId!)\n              .lt",
+        "q\n              .eq",
+        "ctx.db\n          .query(\"factHistory\")\n          .withIndex(\"by_timestamp\", (q) => q.lt(\"timestamp\", args.olderThan))\n          .collect",
+        "q.lt",
+        "events.slice",
+        "ctx.db.delete"
+      ],
+      "endpoint": "factHistory:purgeOldEvents"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/factHistory.ts",
+      "line": 198,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_factId\", (q) => q.eq(\"factId\", args.factId))\n      .order",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "historyQuery.collect",
+        "events.slice"
+      ],
+      "endpoint": "factHistory:getHistory"
+    },
+    {
+      "name": "getEvent",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/factHistory.ts",
+      "line": 225,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_eventId\", (q) => q.eq(\"eventId\", args.eventId))\n      .first",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq"
+      ],
+      "endpoint": "factHistory:getEvent"
+    },
+    {
+      "name": "getChangesByTimeRange",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/factHistory.ts",
+      "line": 247,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_memorySpace\", (q) =>\n        q.eq(\"memorySpaceId\", args.memorySpaceId),\n      )\n      .order(\"desc\")\n      .collect",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_memorySpace\", (q) =>\n        q.eq(\"memorySpaceId\", args.memorySpaceId),\n      )\n      .order",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "events.filter",
+        "events.slice"
+      ],
+      "endpoint": "factHistory:getChangesByTimeRange"
+    },
+    {
+      "name": "countByAction",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/factHistory.ts",
+      "line": 301,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_memorySpace\", (q) =>\n        q.eq(\"memorySpaceId\", args.memorySpaceId),\n      )\n      .collect",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq",
+        "events.filter"
+      ],
+      "endpoint": "factHistory:countByAction"
+    },
+    {
+      "name": "getSupersessionChain",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/factHistory.ts",
+      "line": 348,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "ctx.db\n        .query(\"factHistory\")\n        .withIndex(\"by_factId\", (q) => q.eq(\"factId\", currentFactId!))\n        .filter((q) => q.eq(q.field(\"action\"), \"SUPERSEDE\"))\n        .first",
+        "ctx.db\n        .query(\"factHistory\")\n        .withIndex(\"by_factId\", (q) => q.eq(\"factId\", currentFactId!))\n        .filter",
+        "ctx.db\n        .query(\"factHistory\")\n        .withIndex",
+        "ctx.db\n        .query",
+        "q.eq",
+        "q.field",
+        "chain.unshift",
+        "chain.push",
+        "Date.now"
+      ],
+      "endpoint": "factHistory:getSupersessionChain"
+    },
+    {
+      "name": "getActivitySummary",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/factHistory.ts",
+      "line": 397,
+      "firstStatement": "await runtimeUnavailable(ctx, \"read\", args);",
+      "calls": [
+        "runtimeUnavailable",
+        "Date.now",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex(\"by_memorySpace_timestamp\", (q) =>\n        q.eq(\"memorySpaceId\", args.memorySpaceId).gte(\"timestamp\", since),\n      )\n      .collect",
+        "ctx.db\n      .query(\"factHistory\")\n      .withIndex",
+        "ctx.db\n      .query",
+        "q.eq(\"memorySpaceId\", args.memorySpaceId).gte",
+        "q.eq",
+        "factsModified.add",
+        "participants.add",
+        "new Date(since).toISOString",
+        "new Date().toISOString"
+      ],
+      "endpoint": "factHistory:getActivitySummary"
+    },
+    {
+      "name": "store",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 26,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "rejectUnqualifiedEmbedding",
+        "bindDataActor",
+        "assertDataLinks",
+        "manualDataSource",
+        "ctx.db.insert",
+        "dataEditor",
+        "factMutationResult"
+      ],
+      "endpoint": "facts:store"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 147,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "rejectUnqualifiedEmbedding",
+        "getScopedFact",
+        "Date.now",
+        "dataDenied",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "reviseDataSource",
+        "ctx.db.insert",
+        "dataEditor",
+        "ctx.db.patch",
+        "factMutationResult"
+      ],
+      "endpoint": "facts:update"
+    },
+    {
+      "name": "deleteFact",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 263,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedFact",
+        "tombstoneDataRow"
+      ],
+      "endpoint": "facts:deleteFact"
+    },
+    {
+      "name": "supersede",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 292,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedFact",
+        "Date.now",
+        "dataDenied",
+        "recheckSourceWitnesses",
+        "ctx.db.patch",
+        "dataEditor",
+        "assertDataRow"
+      ],
+      "endpoint": "facts:supersede"
+    },
+    {
+      "name": "updateInPlace",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 359,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedFact",
+        "Date.now",
+        "dataDenied",
+        "reviseDataSource",
+        "ctx.db.patch",
+        "dataEditor",
+        "factMutationResult"
+      ],
+      "endpoint": "facts:updateInPlace"
+    },
+    {
+      "name": "deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 436,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedFacts",
+        "facts.filter",
+        "prepareMutationRowsWrite",
+        "deletions.push",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead"
+      ],
+      "endpoint": "facts:deleteMany"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 485,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedFact"
+      ],
+      "endpoint": "facts:get"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 517,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedFacts",
+        "facts.filter",
+        "args.tags!.every",
+        "f.tags.includes",
+        "args.tags!.some",
+        "Object.entries(args.metadata as Record<string, any>).every",
+        "Object.entries",
+        "validSortFields.includes",
+        "facts.sort",
+        "facts.slice"
+      ],
+      "endpoint": "facts:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 690,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedFacts",
+        "facts.filter",
+        "args.tags!.every",
+        "f.tags.includes",
+        "args.tags!.some",
+        "Object.entries(args.metadata as Record<string, any>).every",
+        "Object.entries"
+      ],
+      "endpoint": "facts:count"
+    },
+    {
+      "name": "search",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 827,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "searchScopedFacts",
+        "results.filter",
+        "filtered.filter",
+        "args.tags!.every",
+        "f.tags.includes",
+        "args.tags!.some",
+        "Object.entries(args.metadata as Record<string, any>).every",
+        "Object.entries",
+        "validSortFields.includes",
+        "filtered.sort",
+        "filtered.slice"
+      ],
+      "endpoint": "facts:search"
+    },
+    {
+      "name": "fetchFactsByIds",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/facts.ts",
+      "line": 1002,
+      "firstStatement": "const authority = await recheckDataAuthority(ctx, args.reference, \"read\");",
+      "calls": [
+        "recheckDataAuthority",
+        "getScopedFactDocument",
+        "dataDenied",
+        "results.push",
+        "finalizeDataRead"
+      ],
+      "endpoint": "facts:fetchFactsByIds"
+    },
+    {
+      "name": "semanticSearch",
+      "kind": "action",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1026,
+      "firstStatement": "const authority = await requireActionDataAuthority(ctx, args, \"read\");",
+      "calls": [
+        "requireActionDataAuthority",
+        "recheckActionDataAuthority",
+        "rejectUnqualifiedEmbedding"
+      ],
+      "endpoint": "facts:semanticSearch"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1052,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getHistoricalScopedFact",
+        "backward.has",
+        "dataDenied",
+        "backward.add",
+        "history.push",
+        "forward.has",
+        "forward.add",
+        "finalizeDataRead"
+      ],
+      "endpoint": "facts:getHistory"
+    },
+    {
+      "name": "queryBySubject",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1111,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "(await listScopedFacts(ctx, authority, capability)).filter",
+        "listScopedFacts",
+        "facts.filter",
+        "args.tags!.every",
+        "f.tags.includes",
+        "args.tags!.some",
+        "Object.entries(args.metadata as Record<string, any>).every",
+        "Object.entries",
+        "validSortFields.includes",
+        "facts.sort",
+        "facts.slice"
+      ],
+      "endpoint": "facts:queryBySubject"
+    },
+    {
+      "name": "queryByRelationship",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1275,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "(await listScopedFacts(ctx, authority, capability)).filter",
+        "listScopedFacts",
+        "facts.filter",
+        "args.tags!.every",
+        "f.tags.includes",
+        "args.tags!.some",
+        "Object.entries(args.metadata as Record<string, any>).every",
+        "Object.entries",
+        "validSortFields.includes",
+        "facts.sort",
+        "facts.slice"
+      ],
+      "endpoint": "facts:queryByRelationship"
+    },
+    {
+      "name": "exportFacts",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1436,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedFacts",
+        "facts.filter",
+        "Date.now",
+        "JSON.stringify",
+        "facts.map",
+        "new Date(f.createdAt).toISOString",
+        "new Date(f.validFrom).toISOString",
+        "new Date(f.validUntil).toISOString",
+        "f.fact.replace",
+        "f.confidence.toString",
+        "f.tags.join",
+        "[headers.join(\",\"), ...rows.map((r) => r.join(\",\"))].join",
+        "headers.join",
+        "rows.map",
+        "r.join"
+      ],
+      "endpoint": "facts:exportFacts"
+    },
+    {
+      "name": "consolidate",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1546,
+      "firstStatement": "const authority = await requireDataAuthority(ctx, args, \"write\");",
+      "calls": [
+        "requireDataAuthority",
+        "ids.includes",
+        "dataDenied",
+        "getScopedFact",
+        "Date.now",
+        "facts.push",
+        "recheckSourceWitnesses",
+        "facts.find",
+        "assertDataRow",
+        "ctx.db.patch",
+        "dataEditor",
+        "Math.round",
+        "facts.reduce",
+        "witnesses.push"
+      ],
+      "endpoint": "facts:consolidate"
+    },
+    {
+      "name": "findByStructure",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1577,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedFacts",
+        "facts.filter",
+        "facts.slice"
+      ],
+      "endpoint": "facts:findByStructure"
+    },
+    {
+      "name": "deleteByIds",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/facts.ts",
+      "line": 1634,
+      "firstStatement": "const authority = await requireDataAuthority(ctx, {}, \"write\");",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedFact",
+        "dataDenied",
+        "rows.push",
+        "prepareMutationRowsWrite",
+        "deletions.push",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead",
+        "rows.map"
+      ],
+      "endpoint": "facts:deleteByIds"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/facts.ts",
+      "line": 1655,
+      "firstStatement": "const siteUrl = process.env.CONVEX_SITE_URL || \"\";",
+      "calls": [
+        "siteUrl.includes",
+        "ctx.db.query(\"facts\").collect",
+        "ctx.db.query",
+        "ctx.db.delete"
+      ],
+      "endpoint": "facts:purgeAll"
+    },
+    {
+      "name": "setPolicy",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 315,
+      "firstStatement": "validatePolicy(args.policy);",
+      "calls": [
+        "validatePolicy",
+        "publicAdmin",
+        "scopedPolicy",
+        "activePolicy",
+        "Date.now",
+        "recheckAuthority",
+        "authorityReference",
+        "ctx.db.patch",
+        "ctx.db.insert"
+      ],
+      "endpoint": "governance:setPolicy"
+    },
+    {
+      "name": "setAgentOverride",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 331,
+      "firstStatement": "validatePolicy(args.overrides, true);",
+      "calls": [
+        "validatePolicy",
+        "workerDeny",
+        "publicAdmin",
+        "activePolicy",
+        "checkedPolicy",
+        "scopedPolicy",
+        "Date.now",
+        "recheckAuthority",
+        "authorityReference",
+        "ctx.db.patch",
+        "ctx.db.insert"
+      ],
+      "endpoint": "governance:setAgentOverride"
+    },
+    {
+      "name": "getPolicy",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 351,
+      "firstStatement": "const authority = await publicAdmin(ctx, args.scope, args.tenantId);",
+      "calls": [
+        "publicAdmin",
+        "activePolicy",
+        "checkedPolicy",
+        "scopedPolicy"
+      ],
+      "endpoint": "governance:getPolicy"
+    },
+    {
+      "name": "getTemplate",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 359,
+      "firstStatement": "const authority = await publicAdmin(ctx, args.scope, args.tenantId);",
+      "calls": [
+        "publicAdmin",
+        "scopedPolicy"
+      ],
+      "endpoint": "governance:getTemplate"
+    },
+    {
+      "name": "simulate",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 367,
+      "firstStatement": "validatePolicy(args.options, true);",
+      "calls": [
+        "validatePolicy",
+        "publicAdmin",
+        "activePolicy"
+      ],
+      "endpoint": "governance:simulate"
+    },
+    {
+      "name": "enforce",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/governance.ts",
+      "line": 378,
+      "firstStatement": "const row = await ctx.db.get(\"governancePolicies\", args.policyId);",
+      "calls": [
+        "ctx.db.get",
+        "workerDeny",
+        "recheckAuthority",
+        "rowResource",
+        "checkedPolicy",
+        "activePolicy",
+        "Date.now",
+        "ctx.db.insert"
+      ],
+      "endpoint": "governance:enforce"
+    },
+    {
+      "name": "getComplianceReport",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 417,
+      "firstStatement": "const options = args.options ?? { period: { start: 0, end: Date.now() } };",
+      "calls": [
+        "Date.now",
+        "publicAdmin",
+        "scopedLogs"
+      ],
+      "endpoint": "governance:getComplianceReport"
+    },
+    {
+      "name": "getEnforcementStats",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/governance.ts",
+      "line": 428,
+      "firstStatement": "const options = args.options ?? { period: \"30d\" as const };",
+      "calls": [
+        "publicAdmin",
+        "Object.prototype.hasOwnProperty.call",
+        "workerDeny",
+        "Date.now",
+        "scopedLogs"
+      ],
+      "endpoint": "governance:getEnforcementStats"
+    },
+    {
+      "name": "purgeAllPolicies",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/governance.ts",
+      "line": 441,
+      "firstStatement": "const rows = await ctx.db.query(\"governancePolicies\").collect();",
+      "calls": [
+        "ctx.db.query(\"governancePolicies\").collect",
+        "ctx.db.query",
+        "deleteMaintenanceRecord"
+      ],
+      "endpoint": "governance:purgeAllPolicies"
+    },
+    {
+      "name": "purgeAllEnforcement",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/governance.ts",
+      "line": 448,
+      "firstStatement": "const rows = await ctx.db.query(\"governanceEnforcement\").collect();",
+      "calls": [
+        "ctx.db.query(\"governanceEnforcement\").collect",
+        "ctx.db.query",
+        "deleteMaintenanceRecord"
+      ],
+      "endpoint": "governance:purgeAllEnforcement"
+    },
+    {
+      "name": "queueForSync",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 39,
+      "firstStatement": "await workerAuthority(ctx, args.authority, \"tool\");",
+      "calls": [
+        "workerAuthority",
+        "workerDeny",
+        "boundedInteger",
+        "canonicalFact",
+        "ctx.db.query(\"graphSyncQueue\").withIndex(\"by_runtime_worker_entity\", (q) =>\n      q.eq(\"tenantId\", args.authority.tenantId).eq(\"memorySpaceId\", args.authority.memorySpaceId).eq(\"authority.grantId\", args.authority.grantId)\n        .eq(\"table\", \"facts\").eq(\"entityId\", fact.factId))\n      .filter((q) => q.and(q.eq(q.field(\"authority.principalId\"), current.principalId),\n        ...(current.resourceAccess === \"own\" ? [q.eq(q.field(\"ownerPrincipalId\"), current.principalId)] : []))).unique",
+        "ctx.db.query(\"graphSyncQueue\").withIndex(\"by_runtime_worker_entity\", (q) =>\n      q.eq(\"tenantId\", args.authority.tenantId).eq(\"memorySpaceId\", args.authority.memorySpaceId).eq(\"authority.grantId\", args.authority.grantId)\n        .eq(\"table\", \"facts\").eq(\"entityId\", fact.factId))\n      .filter",
+        "ctx.db.query(\"graphSyncQueue\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"tenantId\", args.authority.tenantId).eq(\"memorySpaceId\", args.authority.memorySpaceId).eq(\"authority.grantId\", args.authority.grantId)\n        .eq(\"table\", \"facts\").eq",
+        "q.eq(\"tenantId\", args.authority.tenantId).eq(\"memorySpaceId\", args.authority.memorySpaceId).eq(\"authority.grantId\", args.authority.grantId)\n        .eq",
+        "q.eq(\"tenantId\", args.authority.tenantId).eq(\"memorySpaceId\", args.authority.memorySpaceId).eq",
+        "q.eq(\"tenantId\", args.authority.tenantId).eq",
+        "q.eq",
+        "q.and",
+        "q.field",
+        "canonicalJob",
+        "ctx.db.insert",
+        "factPayload",
+        "Date.now"
+      ],
+      "endpoint": "graphSync:queueForSync"
+    },
+    {
+      "name": "markSynced",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 67,
+      "firstStatement": "const item = await selectedItem(ctx, args.authority, args.id);",
+      "calls": [
+        "selectedItem",
+        "canonicalJob",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "graphSync:markSynced"
+    },
+    {
+      "name": "markFailed",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 75,
+      "firstStatement": "const item = await selectedItem(ctx, args.authority, args.id);",
+      "calls": [
+        "selectedItem",
+        "args.error.trim",
+        "workerDeny",
+        "canonicalJob",
+        "ctx.db.patch"
+      ],
+      "endpoint": "graphSync:markFailed"
+    },
+    {
+      "name": "deleteSyncItem",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 85,
+      "firstStatement": "const item = await selectedItem(ctx, args.authority, args.id);",
+      "calls": [
+        "selectedItem",
+        "canonicalJob",
+        "ctx.db.delete"
+      ],
+      "endpoint": "graphSync:deleteSyncItem"
+    },
+    {
+      "name": "getUnsyncedItems",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 93,
+      "firstStatement": "await selectedItems(ctx, args.authority, { synced: false, limit: args.limit })",
+      "calls": [
+        "selectedItems"
+      ],
+      "endpoint": "graphSync:getUnsyncedItems"
+    },
+    {
+      "name": "getHighPriorityItems",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 97,
+      "firstStatement": "await selectedItems(ctx, args.authority, { synced: false, priority: \"high\", limit: args.limit })",
+      "calls": [
+        "selectedItems"
+      ],
+      "endpoint": "graphSync:getHighPriorityItems"
+    },
+    {
+      "name": "getFailedItems",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 101,
+      "firstStatement": "await selectedItems(ctx, args.authority, { failed: true, limit: args.limit })",
+      "calls": [
+        "selectedItems"
+      ],
+      "endpoint": "graphSync:getFailedItems"
+    },
+    {
+      "name": "getSyncStats",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 105,
+      "firstStatement": "const all = await selectedItems(ctx, args.authority);",
+      "calls": [
+        "selectedItems",
+        "all.filter",
+        "synced.filter",
+        "Math.round",
+        "timed.reduce",
+        "Date.now",
+        "Math.min",
+        "unsynced.map",
+        "all.reduce"
+      ],
+      "endpoint": "graphSync:getSyncStats"
+    },
+    {
+      "name": "clearSyncedItems",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 119,
+      "firstStatement": "const age = boundedInteger(args.olderThanMs ?? 86400000, Number.MAX_SAFE_INTEGER, 0);",
+      "calls": [
+        "boundedInteger",
+        "selectedItems",
+        "Date.now",
+        "canonicalJob",
+        "ctx.db.delete"
+      ],
+      "endpoint": "graphSync:clearSyncedItems"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/graphSync.ts",
+      "line": 133,
+      "firstStatement": "const items = await ctx.db.query(\"graphSyncQueue\").collect();",
+      "calls": [
+        "ctx.db.query(\"graphSyncQueue\").collect",
+        "ctx.db.query",
+        "deleteMaintenanceRecord"
+      ],
+      "endpoint": "graphSync:purgeAll"
+    },
+    {
+      "name": "store",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 21,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "actor",
+        "profile",
+        "immutableRow",
+        "sourceId",
+        "newResource",
+        "readAuthority",
+        "readResourceAuthority",
+        "newTarget",
+        "Number.isSafeInteger",
+        "invalid",
+        "Date.now",
+        "check",
+        "ctx.db.patch",
+        "ctx.db.insert",
+        "canonicalFields",
+        "ctx.db.get",
+        "response"
+      ],
+      "endpoint": "immutable:store"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 45,
+      "firstStatement": "await immutableRow(ctx, await authority(ctx, \"read\", args), args.type, args.id, \"read\")",
+      "calls": [
+        "immutableRow",
+        "authority"
+      ],
+      "endpoint": "immutable:get"
+    },
+    {
+      "name": "getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 46,
+      "firstStatement": "const auth = await authority(ctx, \"read\", args);",
+      "calls": [
+        "authority",
+        "immutableRow",
+        "page",
+        "versions(row).find",
+        "versions"
+      ],
+      "endpoint": "immutable:getVersion"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 50,
+      "firstStatement": "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), args.type, args.id, \"read\");",
+      "calls": [
+        "immutableRow",
+        "authority",
+        "versions"
+      ],
+      "endpoint": "immutable:getHistory"
+    },
+    {
+      "name": "getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 53,
+      "firstStatement": "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), args.type, args.id, \"read\");",
+      "calls": [
+        "immutableRow",
+        "authority",
+        "versions(row).filter",
+        "versions"
+      ],
+      "endpoint": "immutable:getAtTimestamp"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 58,
+      "firstStatement": "const auth = await authority(ctx, \"read\", args);",
+      "calls": [
+        "authority",
+        "filter",
+        "candidates",
+        "rows.sort",
+        "page",
+        "rows.slice"
+      ],
+      "endpoint": "immutable:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 64,
+      "firstStatement": "filter(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\"), args).length",
+      "calls": [
+        "filter",
+        "candidates",
+        "authority"
+      ],
+      "endpoint": "immutable:count"
+    },
+    {
+      "name": "search",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 65,
+      "firstStatement": "const rows = filter(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\"), args);",
+      "calls": [
+        "filter",
+        "candidates",
+        "authority",
+        "args.query.toLowerCase",
+        "rows.filter((row) => JSON.stringify(row.data).toLowerCase().includes(needle)).slice(0, page(args.limit, 10)).map",
+        "rows.filter((row) => JSON.stringify(row.data).toLowerCase().includes(needle)).slice",
+        "rows.filter",
+        "JSON.stringify(row.data).toLowerCase().includes",
+        "JSON.stringify(row.data).toLowerCase",
+        "JSON.stringify",
+        "page",
+        "Object.values(entry.data as Record<string, unknown>).filter((value): value is string => typeof value === \"string\" && value.toLowerCase().includes(needle)).slice(0, 3).map",
+        "Object.values(entry.data as Record<string, unknown>).filter((value): value is string => typeof value === \"string\" && value.toLowerCase().includes(needle)).slice",
+        "Object.values(entry.data as Record<string, unknown>).filter",
+        "Object.values",
+        "value.toLowerCase().includes",
+        "value.toLowerCase",
+        "value.toLowerCase().indexOf",
+        "value.slice",
+        "Math.max"
+      ],
+      "endpoint": "immutable:search"
+    },
+    {
+      "name": "purge",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 73,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "immutableRow",
+        "readAuthority",
+        "check",
+        "tombstone",
+        "finalChecks"
+      ],
+      "endpoint": "immutable:purge"
+    },
+    {
+      "name": "purgeMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 80,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "filter",
+        "candidates",
+        "Promise.all",
+        "rows.map",
+        "readAuthority",
+        "check",
+        "tombstone",
+        "finalChecks",
+        "reads.flatMap",
+        "reads.every",
+        "rows.reduce"
+      ],
+      "endpoint": "immutable:purgeMany"
+    },
+    {
+      "name": "purgeVersions",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/immutable.ts",
+      "line": 89,
+      "firstStatement": "const keep = page(args.keepLatest, 1);",
+      "calls": [
+        "page",
+        "authority",
+        "immutableRow",
+        "readAuthority",
+        "check",
+        "ctx.db.patch",
+        "row.previousVersions.slice",
+        "Math.max",
+        "ctx.db.get",
+        "response",
+        "Math.min"
+      ],
+      "endpoint": "immutable:purgeVersions"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/immutable.ts",
+      "line": 101,
+      "firstStatement": "const rows = await ctx.db.query(\"immutable\").collect();",
+      "calls": [
+        "ctx.db.query(\"immutable\").collect",
+        "ctx.db.query",
+        "tombstone",
+        "ctx.db.patch",
+        "Date.now",
+        "rows.filter"
+      ],
+      "endpoint": "immutable:purgeAll"
+    },
+    {
+      "name": "store",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 30,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "rejectUnqualifiedEmbedding",
+        "bindDataActor",
+        "assertDataLinks",
+        "dataDenied",
+        "manualDataSource",
+        "ctx.db.insert",
+        "dataEditor",
+        "memoryMutationResult"
+      ],
+      "endpoint": "memories:store"
+    },
+    {
+      "name": "storePartialMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 146,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "Date.now",
+        "Math.random().toString(36).substring",
+        "Math.random().toString",
+        "Math.random",
+        "bindDataActor",
+        "assertDataLinks",
+        "manualDataSource",
+        "ctx.db.insert",
+        "dataEditor",
+        "getScopedMemory",
+        "dataDenied"
+      ],
+      "endpoint": "memories:storePartialMemory"
+    },
+    {
+      "name": "updatePartialMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 209,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "dataDenied",
+        "reviseDataSource",
+        "ctx.db.patch",
+        "dataEditor",
+        "Date.now"
+      ],
+      "endpoint": "memories:updatePartialMemory"
+    },
+    {
+      "name": "finalizePartialMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 243,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "rejectUnqualifiedEmbedding",
+        "getScopedMemory",
+        "dataDenied",
+        "memory.tags.filter",
+        "reviseDataSource",
+        "ctx.db.patch",
+        "dataEditor",
+        "Date.now"
+      ],
+      "endpoint": "memories:finalizePartialMemory"
+    },
+    {
+      "name": "deleteMemory",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 286,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "tombstoneDataRow"
+      ],
+      "endpoint": "memories:deleteMemory"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 318,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory"
+      ],
+      "endpoint": "memories:get"
+    },
+    {
+      "name": "fetchMemoriesByIds",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/memories.ts",
+      "line": 345,
+      "firstStatement": "const authority = await recheckDataAuthority(ctx, args.reference, \"read\");",
+      "calls": [
+        "recheckDataAuthority",
+        "getScopedMemoryDocument",
+        "dataDenied",
+        "results.push",
+        "finalizeDataRead"
+      ],
+      "endpoint": "memories:fetchMemoriesByIds"
+    },
+    {
+      "name": "keywordSearchMemories",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/memories.ts",
+      "line": 363,
+      "firstStatement": "const authority = await recheckDataAuthority(ctx, args.reference, \"read\");",
+      "calls": [
+        "recheckDataAuthority",
+        "Number.isSafeInteger",
+        "dataDenied",
+        "(await searchScopedMemories(ctx, authority, args.query)).slice",
+        "searchScopedMemories"
+      ],
+      "endpoint": "memories:keywordSearchMemories"
+    },
+    {
+      "name": "search",
+      "kind": "action",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 378,
+      "firstStatement": "const authority = await requireActionDataAuthority(ctx, args, \"read\");",
+      "calls": [
+        "requireActionDataAuthority",
+        "rejectUnqualifiedEmbedding",
+        "Number.isSafeInteger",
+        "dataDenied",
+        "recheckActionDataAuthority",
+        "makeFunctionReference",
+        "ctx.runQuery",
+        "results.filter",
+        "args.tags!.some",
+        "m.tags.includes",
+        "results.slice(0, limit).map",
+        "results.slice"
+      ],
+      "endpoint": "memories:search"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 422,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "(await listScopedMemories(ctx, authority, capability)).sort((a, b) => b._creationTime - a._creationTime).slice",
+        "(await listScopedMemories(ctx, authority, capability)).sort",
+        "listScopedMemories",
+        "memories.filter"
+      ],
+      "endpoint": "memories:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 458,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedMemories",
+        "memories.filter"
+      ],
+      "endpoint": "memories:count"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 497,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "rejectUnqualifiedEmbedding",
+        "getScopedMemory",
+        "Date.now",
+        "reviseDataSource",
+        "ctx.db.patch",
+        "dataEditor",
+        "memoryMutationResult"
+      ],
+      "endpoint": "memories:update"
+    },
+    {
+      "name": "getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 556,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "memory.previousVersions.find"
+      ],
+      "endpoint": "memories:getVersion"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 600,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "memory.previousVersions.map",
+        "history.sort"
+      ],
+      "endpoint": "memories:getHistory"
+    },
+    {
+      "name": "deleteMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 638,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedMemories",
+        "memories.filter",
+        "canReadMutationRows",
+        "deletions.push",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead",
+        "memories.map"
+      ],
+      "endpoint": "memories:deleteMany"
+    },
+    {
+      "name": "deleteByIds",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 688,
+      "firstStatement": "const authority = await requireDataAuthority(ctx, {}, \"write\");",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "dataDenied",
+        "rows.push",
+        "prepareMutationRowsWrite",
+        "deletions.push",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead",
+        "rows.map"
+      ],
+      "endpoint": "memories:deleteByIds"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/memories.ts",
+      "line": 716,
+      "firstStatement": "const siteUrl = process.env.CONVEX_SITE_URL || \"\";",
+      "calls": [
+        "siteUrl.includes",
+        "ctx.db.query(\"memories\").collect",
+        "ctx.db.query",
+        "ctx.db.delete"
+      ],
+      "endpoint": "memories:purgeAll"
+    },
+    {
+      "name": "exportMemories",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 754,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedMemories",
+        "memories.filter",
+        "memories.map",
+        "JSON.stringify",
+        "Date.now",
+        "m.content.replace",
+        "m.importance.toString",
+        "m.tags.join",
+        "new Date(m.createdAt).toISOString",
+        "[headers.join(\",\"), ...rows.map((r) => r.join(\",\"))].join",
+        "headers.join",
+        "rows.map",
+        "r.join"
+      ],
+      "endpoint": "memories:exportMemories"
+    },
+    {
+      "name": "updateMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 823,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "listScopedMemories",
+        "memories.filter",
+        "canReadMutationRows",
+        "Date.now",
+        "ctx.db.patch",
+        "dataEditor",
+        "finalizeMutationRowsRead",
+        "memories.map"
+      ],
+      "endpoint": "memories:updateMany"
+    },
+    {
+      "name": "archive",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 883,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "memory.tags.includes",
+        "ctx.db.patch",
+        "dataEditor",
+        "Math.min",
+        "Date.now",
+        "dataDenied"
+      ],
+      "endpoint": "memories:archive"
+    },
+    {
+      "name": "restoreFromArchive",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 924,
+      "firstStatement": "const capability = \"write\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory",
+        "memory.tags.includes",
+        "memory.tags.filter",
+        "ctx.db.patch",
+        "dataEditor",
+        "Date.now",
+        "memoryMutationResult"
+      ],
+      "endpoint": "memories:restoreFromArchive"
+    },
+    {
+      "name": "getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memories.ts",
+      "line": 971,
+      "firstStatement": "const capability = \"read\" as const;",
+      "calls": [
+        "requireDataAuthority",
+        "getScopedMemory"
+      ],
+      "endpoint": "memories:getAtTimestamp"
+    },
+    {
+      "name": "register",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 20,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const a = access.authority;\n  const candidate = { memorySpaceId: args.memorySpaceId, tenantId: a.tenantId, ownerPrincipalId: a.principalId };\n  a",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "access.admit",
+        "resource",
+        "conflict",
+        "access.optionalRead",
+        "spaceAt",
+        "participants",
+        "json",
+        "Date.now",
+        "insertionShape",
+        "access.fence",
+        "effect",
+        "ctx.db.insert",
+        "access.expect",
+        "inserted",
+        "receipt"
+      ],
+      "endpoint": "memorySpaces:register"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 32,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, () => ({\n  ...(args.name === undefined ? {} : { name: args.name }), ...(args.metadata === undefined ? {} : { metadata: args.metadata }), ...(args.status === undefined ? {} : { status: args",
+      "calls": [
+        "operation",
+        "edit"
+      ],
+      "endpoint": "memorySpaces:update"
+    },
+    {
+      "name": "addParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 35,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  if (row.participants.some((value) => value.id === args.participant.id)) deny(\"INVALID_INPUT\"); return { participants: [...row.participants, args.participant] };\n})))",
+      "calls": [
+        "operation",
+        "edit",
+        "row.participants.some",
+        "deny"
+      ],
+      "endpoint": "memorySpaces:addParticipant"
+    },
+    {
+      "name": "removeParticipant",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 38,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => ({ participants: row.participants.filter((value) => value.id !== args.participantId) }))))",
+      "calls": [
+        "operation",
+        "edit",
+        "row.participants.filter"
+      ],
+      "endpoint": "memorySpaces:removeParticipant"
+    },
+    {
+      "name": "archive",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 39,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  const metadata = mergeValue(row.metadata, args.metadata);\n  return { status: \"archived\", metadata: record(metadata) ? { ...metadata, archivedAt: Date.now(), ...(args.reason ==",
+      "calls": [
+        "operation",
+        "edit",
+        "mergeValue",
+        "record",
+        "Date.now"
+      ],
+      "endpoint": "memorySpaces:archive"
+    },
+    {
+      "name": "reactivate",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 43,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, () => ({ status: \"active\" }))))",
+      "calls": [
+        "operation",
+        "edit"
+      ],
+      "endpoint": "memorySpaces:reactivate"
+    },
+    {
+      "name": "updateParticipants",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 44,
+      "firstStatement": "operation(ctx, \"mutation\", async () => (await edit(ctx, args, (row) => {\n  participants(args.add ?? []); distinct(args.remove ?? []);\n  if (args.add?.some((value) => args.remove?.includes(value.id))) deny(\"INVALID_INPUT\");\n  const retained = row.part",
+      "calls": [
+        "operation",
+        "edit",
+        "participants",
+        "distinct",
+        "args.add?.some",
+        "args.remove?.includes",
+        "deny",
+        "row.participants.filter",
+        "retained.some"
+      ],
+      "endpoint": "memorySpaces:updateParticipants"
+    },
+    {
+      "name": "deleteSpace",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 51,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const access = await RegistryAccess.open(ctx, \"write\", args); const row = (await spaceAt(access, args.memorySpaceId))!;\n  await access.admit(resource(\"memorySpaces\", row), \"admin\");\n  if (!args.reason.trim()",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "spaceAt",
+        "access.admit",
+        "resource",
+        "args.reason.trim",
+        "deny",
+        "ctx.db.query(\"runtimeAuthScopes\").withIndex(\"by_tenant_space\", (q) => q.eq(\"tenantId\", access.authority.tenantId).eq(\"memorySpaceId\", args.memorySpaceId)).unique",
+        "ctx.db.query(\"runtimeAuthScopes\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"tenantId\", access.authority.tenantId).eq",
+        "q.eq",
+        "nextVersion",
+        "Date.now",
+        "access.fence",
+        "tombstone",
+        "effect",
+        "ctx.db.patch",
+        "access.expect",
+        "access.retainTombstone",
+        "access.fenceRetiredSpace"
+      ],
+      "endpoint": "memorySpaces:deleteSpace"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 69,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const row = await spaceAt(access, args.memorySpaceId, \"read\", false); await access.fence(); return row;\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "spaceAt",
+        "access.fence"
+      ],
+      "endpoint": "memorySpaces:get"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 77,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);\n  const rows = filterRows(await spacesIn(access), args); const",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "integer",
+        "filterRows",
+        "spacesIn",
+        "rows.sort",
+        "access.fence",
+        "rows.slice"
+      ],
+      "endpoint": "memorySpaces:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 83,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = filterRows(await spacesIn(access), args); await access.fence(); return rows.length;\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "filterRows",
+        "spacesIn",
+        "access.fence"
+      ],
+      "endpoint": "memorySpaces:count"
+    },
+    {
+      "name": "findByParticipant",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 86,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const rows = filterRows(await spacesIn(access), { participant: args.participantId }); await access.fence(); return rows;\n})",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "filterRows",
+        "spacesIn",
+        "access.fence"
+      ],
+      "endpoint": "memorySpaces:findByParticipant"
+    },
+    {
+      "name": "search",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 89,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n  const access = await RegistryAccess.open(ctx, \"read\", args); const limit = integer(args.limit ?? 50, 1); const search = args.query.toLowerCase();\n  const rows = filterRows(await spacesIn(access), args).filter((",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "integer",
+        "args.query.toLowerCase",
+        "filterRows(await spacesIn(access), args).filter",
+        "filterRows",
+        "spacesIn",
+        "[row.memorySpaceId, row.name ?? \"\", row.metadata === undefined ? \"\" : JSON.stringify(nativeJson(row.metadata))].some",
+        "JSON.stringify",
+        "nativeJson",
+        "value.toLowerCase().includes",
+        "value.toLowerCase",
+        "access.fence",
+        "rows.slice"
+      ],
+      "endpoint": "memorySpaces:search"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 95,
+      "firstStatement": "operation(ctx, \"mutation\", async () => {\n  const rows = await ctx.db.query(\"memorySpaces\").collect(); const scopes = await ctx.db.query(\"runtimeAuthScopes\").collect();\n  const selected = scopes.filter((scope) => scope.memorySpaceId !== undefined && r",
+      "calls": [
+        "operation",
+        "ctx.db.query(\"memorySpaces\").collect",
+        "ctx.db.query",
+        "ctx.db.query(\"runtimeAuthScopes\").collect",
+        "scopes.filter",
+        "rows.some",
+        "nextVersion",
+        "tombstone",
+        "resource",
+        "effect",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "memorySpaces:purgeAll"
+    },
+    {
+      "name": "getStats",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 106,
+      "firstStatement": "operation(ctx, \"query\", async () => {\n    const access = await RegistryAccess.open(ctx, \"read\", args);\n    await spaceAt(access, args.memorySpaceId, \"read\");\n    return await statisticsUnavailable(access);\n  })",
+      "calls": [
+        "operation",
+        "RegistryAccess.open",
+        "spaceAt",
+        "statisticsUnavailable"
+      ],
+      "endpoint": "memorySpaces:getStats"
+    },
+    {
+      "name": "set",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 23,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "actor",
+        "mutableRow",
+        "sourceId",
+        "newResource",
+        "readAuthority",
+        "readResourceAuthority",
+        "newTarget",
+        "Date.now",
+        "check",
+        "ctx.db.patch",
+        "ctx.db.insert",
+        "canonicalFields",
+        "ctx.db.get",
+        "response"
+      ],
+      "endpoint": "mutable:set"
+    },
+    {
+      "name": "update",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 34,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "mutableRow",
+        "readAuthority",
+        "updateValue",
+        "check",
+        "ctx.db.patch",
+        "Date.now",
+        "ctx.db.get",
+        "response"
+      ],
+      "endpoint": "mutable:update"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 41,
+      "firstStatement": "await mutableRow(ctx, await authority(ctx, \"read\", args), args.namespace, args.key, \"read\")",
+      "calls": [
+        "mutableRow",
+        "authority"
+      ],
+      "endpoint": "mutable:get"
+    },
+    {
+      "name": "exists",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 42,
+      "firstStatement": "(await mutableRow(ctx, await authority(ctx, \"read\", args), args.namespace, args.key, \"read\")) !== null",
+      "calls": [
+        "mutableRow",
+        "authority"
+      ],
+      "endpoint": "mutable:exists"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 43,
+      "firstStatement": "const rows = filter(await candidates(ctx, \"mutable\", await authority(ctx, \"read\", args), \"read\"), args);",
+      "calls": [
+        "filter",
+        "candidates",
+        "authority",
+        "rows.sort",
+        "a.key.localeCompare",
+        "page",
+        "rows.slice"
+      ],
+      "endpoint": "mutable:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 48,
+      "firstStatement": "filter(await candidates(ctx, \"mutable\", await authority(ctx, \"read\", args), \"read\"), args).length",
+      "calls": [
+        "filter",
+        "candidates",
+        "authority"
+      ],
+      "endpoint": "mutable:count"
+    },
+    {
+      "name": "deleteKey",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 49,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "mutableRow",
+        "check",
+        "tombstone",
+        "fresh"
+      ],
+      "endpoint": "mutable:deleteKey"
+    },
+    {
+      "name": "purgeMany",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 54,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "filter",
+        "candidates",
+        "Promise.all",
+        "rows.map",
+        "readAuthority",
+        "check",
+        "tombstone",
+        "finalChecks",
+        "reads.flatMap",
+        "reads.every"
+      ],
+      "endpoint": "mutable:purgeMany"
+    },
+    {
+      "name": "purgeNamespace",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 62,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "filter",
+        "candidates",
+        "Promise.all",
+        "rows.map",
+        "readAuthority",
+        "check",
+        "tombstone",
+        "finalChecks",
+        "reads.flatMap",
+        "resource",
+        "reads.every"
+      ],
+      "endpoint": "mutable:purgeNamespace"
+    },
+    {
+      "name": "transaction",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/mutable.ts",
+      "line": 72,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "sourceId",
+        "state.get",
+        "mutableRow",
+        "newResource",
+        "readAuthority",
+        "readResourceAuthority",
+        "newTarget",
+        "state.set",
+        "invalid",
+        "numeric",
+        "plans.push",
+        "check",
+        "tombstone",
+        "results.push",
+        "Date.now",
+        "ctx.db.patch",
+        "ctx.db.insert",
+        "canonicalFields",
+        "ctx.db.get",
+        "finalChecks",
+        "[...state.values()].flatMap",
+        "state.values",
+        "resource"
+      ],
+      "endpoint": "mutable:transaction"
+    },
+    {
+      "name": "purgeAll",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/mutable.ts",
+      "line": 108,
+      "firstStatement": "const rows = args.tenantId === undefined ? await ctx.db.query(\"mutable\").collect()\n    : await ctx.db.query(\"mutable\").withIndex(\"by_tenantId\", (q) => q.eq(\"tenantId\", args.tenantId)).collect();",
+      "calls": [
+        "ctx.db.query(\"mutable\").collect",
+        "ctx.db.query",
+        "ctx.db.query(\"mutable\").withIndex(\"by_tenantId\", (q) => q.eq(\"tenantId\", args.tenantId)).collect",
+        "ctx.db.query(\"mutable\").withIndex",
+        "q.eq",
+        "tombstone",
+        "ctx.db.patch",
+        "Date.now",
+        "rows.filter"
+      ],
+      "endpoint": "mutable:purgeAll"
+    },
+    {
+      "name": "authorize",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 260,
+      "firstStatement": "await requireAuthority(ctx, args.requirement)",
+      "calls": [
+        "requireAuthority"
+      ],
+      "endpoint": "runtimeAuth:authorize"
+    },
+    {
+      "name": "recheck",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 264,
+      "firstStatement": "await recheckAuthority(ctx, args.reference, args.requirement)",
+      "calls": [
+        "recheckAuthority"
+      ],
+      "endpoint": "runtimeAuth:recheck"
+    },
+    {
+      "name": "provision",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 288,
+      "firstStatement": "[args.issuer, args.subject, args.tenantId].forEach(nonempty);",
+      "calls": [
+        "[args.issuer, args.subject, args.tenantId].forEach",
+        "nonempty",
+        "Number.isFinite",
+        "Date.now",
+        "deny",
+        "createAuthorityReader",
+        "ensureScope",
+        "ctx.db.query(\"runtimeAuthPrincipals\")\n      .withIndex(\"by_issuer_subject\", (q) => q.eq(\"issuer\", args.issuer).eq(\"subject\", args.subject)).unique",
+        "ctx.db.query(\"runtimeAuthPrincipals\")\n      .withIndex",
+        "ctx.db.query",
+        "q.eq(\"issuer\", args.issuer).eq",
+        "q.eq",
+        "active",
+        "ctx.db.insert",
+        "ctx.db.get",
+        "ctx.db.query(\"runtimeAuthMemberships\")\n      .withIndex(\"by_principal_tenant\", (q) => q.eq(\"principalId\", principal._id).eq(\"tenantId\", args.tenantId)).unique",
+        "ctx.db.query(\"runtimeAuthMemberships\")\n      .withIndex",
+        "q.eq(\"principalId\", principal._id).eq",
+        "(await reader.listGrants(membership._id)).filter",
+        "reader.listGrants",
+        "[...new Set(args.capabilities)].sort",
+        "previous.filter",
+        "JSON.stringify",
+        "[...current[0].capabilities].sort",
+        "materialize",
+        "ctx.db.normalizeId",
+        "ctx.db.patch",
+        "Math.max",
+        "previous.map"
+      ],
+      "endpoint": "runtimeAuth:provision"
+    },
+    {
+      "name": "revokeGrant",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 355,
+      "firstStatement": "const grant = await ctx.db.get(\"runtimeAuthGrants\", args.grantId);",
+      "calls": [
+        "ctx.db.get",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "runtimeAuth:revokeGrant"
+    },
+    {
+      "name": "revokeMembership",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 362,
+      "firstStatement": "const membership = await ctx.db.get(\"runtimeAuthMemberships\", args.membershipId);",
+      "calls": [
+        "ctx.db.get",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "runtimeAuth:revokeMembership"
+    },
+    {
+      "name": "deletePrincipal",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 370,
+      "firstStatement": "const principal = await ctx.db.get(\"runtimeAuthPrincipals\", args.principalId);",
+      "calls": [
+        "ctx.db.get",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "runtimeAuth:deletePrincipal"
+    },
+    {
+      "name": "deleteScope",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 378,
+      "firstStatement": "const scope = await ctx.db.query(\"runtimeAuthScopes\")\n      .withIndex(\"by_tenant_space\", (q) => q.eq(\"tenantId\", args.tenantId).eq(\"memorySpaceId\", args.memorySpaceId)).unique();",
+      "calls": [
+        "ctx.db.query(\"runtimeAuthScopes\")\n      .withIndex(\"by_tenant_space\", (q) => q.eq(\"tenantId\", args.tenantId).eq(\"memorySpaceId\", args.memorySpaceId)).unique",
+        "ctx.db.query(\"runtimeAuthScopes\")\n      .withIndex",
+        "ctx.db.query",
+        "q.eq(\"tenantId\", args.tenantId).eq",
+        "q.eq",
+        "ctx.db.patch",
+        "Date.now",
+        "createAuthorityReader(ctx).hasTombstone",
+        "createAuthorityReader",
+        "ctx.db.insert"
+      ],
+      "endpoint": "runtimeAuth:deleteScope"
+    },
+    {
+      "name": "tombstoneResource",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 390,
+      "firstStatement": "nonempty(args.tenantId);",
+      "calls": [
+        "nonempty",
+        "createAuthorityReader(ctx).hasTombstone",
+        "createAuthorityReader",
+        "ctx.db.insert",
+        "Date.now"
+      ],
+      "endpoint": "runtimeAuth:tombstoneResource"
+    },
+    {
+      "name": "checkAuthority",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 14,
+      "firstStatement": "await new ConvexMemoryRepository(ctx, args.reference, args.capability).authority()",
+      "calls": [
+        "new ConvexMemoryRepository(ctx, args.reference, args.capability).authority"
+      ],
+      "endpoint": "runtimeMemory:checkAuthority"
+    },
+    {
+      "name": "readSource",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 16,
+      "firstStatement": "await new ConvexMemoryRepository(ctx, args.reference, args.capability).getSource(args.sourceId)",
+      "calls": [
+        "new ConvexMemoryRepository(ctx, args.reference, args.capability).getSource"
+      ],
+      "endpoint": "runtimeMemory:readSource"
+    },
+    {
+      "name": "writeSource",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 18,
+      "firstStatement": "await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).putSource(args.source)",
+      "calls": [
+        "new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).putSource"
+      ],
+      "endpoint": "runtimeMemory:writeSource"
+    },
+    {
+      "name": "writeDerived",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 20,
+      "firstStatement": "await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).commitDerived(args.input)",
+      "calls": [
+        "new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).commitDerived"
+      ],
+      "endpoint": "runtimeMemory:writeDerived"
+    },
+    {
+      "name": "readFacts",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 22,
+      "firstStatement": "await new ConvexMemoryRepository(ctx, args.reference, args.capability).listFacts(args.query)",
+      "calls": [
+        "new ConvexMemoryRepository(ctx, args.reference, args.capability).listFacts"
+      ],
+      "endpoint": "runtimeMemory:readFacts"
+    },
+    {
+      "name": "readVectorMatches",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 26,
+      "firstStatement": "await new ConvexMemoryRepository(ctx, args.reference, args.capability).hydrateVectors(args.hits)",
+      "calls": [
+        "new ConvexMemoryRepository(ctx, args.reference, args.capability).hydrateVectors"
+      ],
+      "endpoint": "runtimeMemory:readVectorMatches"
+    },
+    {
+      "name": "remember",
+      "kind": "action",
+      "visibility": "public",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 153,
+      "firstStatement": "const { authority, repository } = await memoryForegroundControl(ctx, { capability: \"write\", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });",
+      "calls": [
+        "memoryForegroundControl",
+        "rememberMemory",
+        "unconfiguredMemoryModel",
+        "Date.now",
+        "explicitSourceLineage",
+        "memoryScope"
+      ],
+      "endpoint": "runtimeMemory:remember"
+    },
+    {
+      "name": "recall",
+      "kind": "action",
+      "visibility": "public",
+      "file": "convex-dev/runtimeMemory.ts",
+      "line": 158,
+      "firstStatement": "const { authority } = await memoryForegroundControl(ctx, { capability: \"read\", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });",
+      "calls": [
+        "memoryForegroundControl",
+        "recallMemory",
+        "createActionMemoryRepository",
+        "unconfiguredMemoryModel",
+        "Date.now"
+      ],
+      "endpoint": "runtimeMemory:recall"
+    },
+    {
+      "name": "ensureBudget",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 335,
+      "calls": [],
+      "endpoint": "runtimeModelPolicy:ensureBudget"
+    },
+    {
+      "name": "installDeploymentPolicy",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 337,
+      "firstStatement": "text(args.manifestId);",
+      "calls": [
+        "text",
+        "integer",
+        "lookupDeploymentManifest",
+        "validManifest",
+        "manifest.dispatchEvidence.some",
+        "Date.now",
+        "fail",
+        "provenance",
+        "ctx.db.query(\"runtimeModelPolicies\").withIndex(\"by_scope_active\", (q) => q.eq(\"scope\", \"deployment\").eq(\"tenantId\", undefined).eq(\"active\", true)).take",
+        "ctx.db.query(\"runtimeModelPolicies\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"scope\", \"deployment\").eq(\"tenantId\", undefined).eq",
+        "q.eq(\"scope\", \"deployment\").eq",
+        "q.eq",
+        "canonical",
+        "resolveModelPolicy",
+        "key.startsWith",
+        "manifest.policies.filter",
+        "ctx.db.patch",
+        "single",
+        "ctx.db.query(\"runtimeModelPolicies\").withIndex(\"by_policy_version\", (q) => q.eq(\"policyId\", policy.policyId).eq(\"version\", policy.version)).take",
+        "q.eq(\"policyId\", policy.policyId).eq",
+        "ctx.db.insert",
+        "ctx.db.query(\"runtimeModelQualifications\").withIndex(\"by_receipt\", (q) => q.eq(\"receiptId\", qualification.receiptId).eq(\"version\", root.revision)).take",
+        "ctx.db.query(\"runtimeModelQualifications\").withIndex",
+        "q.eq(\"receiptId\", qualification.receiptId).eq"
+      ],
+      "endpoint": "runtimeModelPolicy:installDeploymentPolicy"
+    },
+    {
+      "name": "provisionTenantPolicy",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 372,
+      "firstStatement": "const authority = await recheckAuthority(ctx, args.reference, { capability: \"admin\", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });",
+      "calls": [
+        "recheckAuthority",
+        "fail",
+        "tenantPolicySchema.safeParse",
+        "decode",
+        "semanticHash",
+        "canonical",
+        "activeRoot",
+        "manifest.policies.find",
+        "rules[key]?.some",
+        "baseline.includes",
+        "hard.rules.allowedModels?.includes",
+        "hard.rules.interfaces?.includes",
+        "Object.entries(rules.pins).some",
+        "Object.entries",
+        "single",
+        "ctx.db.query(\"runtimeModelPolicies\").withIndex(\"by_policy_version\", (q) => q.eq(\"policyId\", policy.policyId).eq(\"version\", policy.version)).take",
+        "ctx.db.query(\"runtimeModelPolicies\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"policyId\", policy.policyId).eq",
+        "q.eq",
+        "sameAuthority",
+        "ctx.db.query(\"runtimeModelPolicies\").withIndex(\"by_scope_active\", (q) => q.eq(\"scope\", \"tenant\").eq(\"tenantId\", args.reference.tenantId).eq(\"active\", true)).take",
+        "q.eq(\"scope\", \"tenant\").eq(\"tenantId\", args.reference.tenantId).eq",
+        "q.eq(\"scope\", \"tenant\").eq",
+        "old.filter",
+        "ctx.db.patch",
+        "ctx.db.insert",
+        "Date.now"
+      ],
+      "endpoint": "runtimeModelPolicy:provisionTenantPolicy"
+    },
+    {
+      "name": "resolve",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 417,
+      "firstStatement": "await currentAuthority(ctx, args.reference, args.operationKey);",
+      "calls": [
+        "currentAuthority",
+        "runAccount",
+        "checkSource",
+        "resolveCurrent",
+        "evidence"
+      ],
+      "endpoint": "runtimeModelPolicy:resolve"
+    },
+    {
+      "name": "admit",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 449,
+      "firstStatement": "await currentAuthority(ctx, args.reference, args.operationKey);",
+      "calls": [
+        "currentAuthority",
+        "integer",
+        "text",
+        "checkSource",
+        "runAccount",
+        "ctx.db.get",
+        "fail",
+        "currentOperation",
+        "single",
+        "ctx.db.query(\"runtimeModelOperations\").withIndex(\"by_identity\", (q) => q.eq(\"tenantId\", args.reference.tenantId)\n    .eq(\"memorySpaceId\", args.reference.memorySpaceId!).eq(\"principalId\", args.reference.principalId).eq(\"semanticId\", args.semanticId).eq(\"operationKey\", args.operationKey)).take",
+        "ctx.db.query(\"runtimeModelOperations\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"tenantId\", args.reference.tenantId)\n    .eq(\"memorySpaceId\", args.reference.memorySpaceId!).eq(\"principalId\", args.reference.principalId).eq(\"semanticId\", args.semanticId).eq",
+        "q.eq(\"tenantId\", args.reference.tenantId)\n    .eq(\"memorySpaceId\", args.reference.memorySpaceId!).eq(\"principalId\", args.reference.principalId).eq",
+        "q.eq(\"tenantId\", args.reference.tenantId)\n    .eq(\"memorySpaceId\", args.reference.memorySpaceId!).eq",
+        "q.eq(\"tenantId\", args.reference.tenantId)\n    .eq",
+        "q.eq",
+        "canonical",
+        "semanticHash",
+        "resolveCurrent",
+        "assertModelRequestIdentity",
+        "trustedRoot",
+        "evidence",
+        "decode",
+        "Array.isArray",
+        "validateModelRequest",
+        "deriveQualifiedInputBound",
+        "ctx.db.query(\"runtimeModelAttempts\").withIndex(\"by_child_attempt\", (q) => q.eq(\"operationDocumentId\", operation!._id).eq(\"childCallId\", childCallId)).take",
+        "ctx.db.query(\"runtimeModelAttempts\").withIndex",
+        "q.eq(\"operationDocumentId\", operation!._id).eq",
+        "attempts.map",
+        "attempts.sort",
+        "capturedAttempt",
+        "attemptSnapshot",
+        "storedObservationViolation",
+        "ctx.db.query(\"runtimeBudgetAccounts\").withIndex(\"by_scope_current\", (q) => q.eq(\"scopeKey\", canonical([\"tenant\", args.reference.tenantId])).eq(\"current\", true)).take",
+        "ctx.db.query(\"runtimeBudgetAccounts\").withIndex",
+        "q.eq(\"scopeKey\", canonical([\"tenant\", args.reference.tenantId])).eq",
+        "capacity",
+        "add",
+        "Math.min",
+        "finalActor",
+        "Date.now",
+        "ctx.db.insert",
+        "ctx.db.patch"
+      ],
+      "endpoint": "runtimeModelPolicy:admit"
+    },
+    {
+      "name": "checkpoint",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 554,
+      "firstStatement": "const { attempt, operation, snapshot, proof, run, tenant } = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "currentOperation",
+        "Date.now",
+        "fail",
+        "checked.current.snapshot.allowedModels.includes",
+        "checked.current.manifest.qualifications.some",
+        "decode",
+        "Array.isArray",
+        "deriveQualifiedInputBound",
+        "validateModelRequest",
+        "canonical",
+        "assertModelRequestIdentity",
+        "semanticHash",
+        "snapshotOf",
+        "add",
+        "Math.min",
+        "heldCapacity",
+        "fallbackAllowed",
+        "finalActor",
+        "ctx.db.patch"
+      ],
+      "endpoint": "runtimeModelPolicy:checkpoint"
+    },
+    {
+      "name": "markVisible",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 588,
+      "firstStatement": "const { attempt, operation } = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "currentOperation",
+        "fail",
+        "ctx.db.patch"
+      ],
+      "endpoint": "runtimeModelPolicy:markVisible"
+    },
+    {
+      "name": "captureTerminalEvidence",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 823,
+      "firstStatement": "const state = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "capturedAttempt",
+        "fail",
+        "receiptSchema.omit({ privateResultCanonical: true }).safeParse",
+        "receiptSchema.omit",
+        "decode",
+        "canonical",
+        "semanticHash",
+        "captureIdentity",
+        "capturedDuplicate",
+        "result",
+        "compatibleRefinement",
+        "assertModelRequestIdentity",
+        "knownCost",
+        "observationViolation",
+        "permittedAttachment",
+        "writeUnknown",
+        "accountKnown",
+        "ctx.db.patch"
+      ],
+      "endpoint": "runtimeModelPolicy:captureTerminalEvidence"
+    },
+    {
+      "name": "attachTerminalResult",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 866,
+      "firstStatement": "const state = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "capturedAttempt",
+        "captureIdentity",
+        "fail",
+        "sameAuthority",
+        "permittedAttachment",
+        "ctx.db.patch",
+        "validatedPrivateResult",
+        "new TextEncoder().encode"
+      ],
+      "endpoint": "runtimeModelPolicy:attachTerminalResult"
+    },
+    {
+      "name": "reconcileDeploymentLiability",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 900,
+      "firstStatement": "const { operation } = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "settleAttempt"
+      ],
+      "endpoint": "runtimeModelPolicy:reconcileDeploymentLiability"
+    },
+    {
+      "name": "settle",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 904,
+      "firstStatement": "await settleAttempt(ctx, args.reference, args.attemptId, args.receiptCanonical, false)",
+      "calls": [
+        "settleAttempt"
+      ],
+      "endpoint": "runtimeModelPolicy:settle"
+    },
+    {
+      "name": "recover",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 906,
+      "firstStatement": "if (args.receiptCanonical !== undefined) return await settleAttempt(ctx, args.reference, args.attemptId, args.receiptCanonical, true);",
+      "calls": [
+        "settleAttempt",
+        "attemptContext",
+        "liabilityAuthority",
+        "ctx.db.patch",
+        "subtract",
+        "add",
+        "canonical",
+        "Date.now",
+        "writeUnknown"
+      ],
+      "endpoint": "runtimeModelPolicy:recover"
+    },
+    {
+      "name": "releaseNotDispatched",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 921,
+      "firstStatement": "const { attempt, operation, tenant, run } = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "currentOperation",
+        "fail",
+        "ctx.db.patch",
+        "subtract",
+        "add"
+      ],
+      "endpoint": "runtimeModelPolicy:releaseNotDispatched"
+    },
+    {
+      "name": "cancelBudget",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 932,
+      "firstStatement": "const run = await runAccount(ctx, args.reference, args.runBudgetId);",
+      "calls": [
+        "runAccount",
+        "recheckAuthority",
+        "ctx.db.patch",
+        "add"
+      ],
+      "endpoint": "runtimeModelPolicy:cancelBudget"
+    },
+    {
+      "name": "admitFallback",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 947,
+      "firstStatement": "const state = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "currentOperation",
+        "fallbackAllowed",
+        "fail",
+        "add",
+        "single",
+        "ctx.db.query(\"runtimeModelAttempts\").withIndex(\"by_child_attempt\", (q) => q.eq(\"operationDocumentId\", operation._id)\n    .eq(\"childCallId\", attempt.childCallId).eq(\"attemptNumber\", nextNumber)).take",
+        "ctx.db.query(\"runtimeModelAttempts\").withIndex",
+        "ctx.db.query",
+        "q.eq(\"operationDocumentId\", operation._id)\n    .eq(\"childCallId\", attempt.childCallId).eq",
+        "q.eq(\"operationDocumentId\", operation._id)\n    .eq",
+        "q.eq",
+        "checked.current.manifest.qualifications.filter",
+        "snapshot.fallbackCandidates.some",
+        "snapshotOf",
+        "evidence",
+        "decode",
+        "Array.isArray",
+        "validateModelRequest",
+        "deriveQualifiedInputBound",
+        "capacity",
+        "Math.min",
+        "finalActor",
+        "ctx.db.insert",
+        "semanticHash",
+        "canonical",
+        "Date.now",
+        "ctx.db.patch"
+      ],
+      "endpoint": "runtimeModelPolicy:admitFallback"
+    },
+    {
+      "name": "checkFallback",
+      "kind": "internalQuery",
+      "visibility": "internal",
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "line": 982,
+      "firstStatement": "const { attempt, operation, snapshot } = await attemptContext(ctx, args.attemptId);",
+      "calls": [
+        "attemptContext",
+        "currentOperation",
+        "fallbackAllowed"
+      ],
+      "endpoint": "runtimeModelPolicy:checkFallback"
+    },
+    {
+      "name": "create",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 21,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "actor",
+        "creationLifetime",
+        "sessionRow",
+        "sourceId",
+        "newResource",
+        "readResourceAuthority",
+        "newTarget",
+        "ctx.db.insert",
+        "canonicalFields",
+        "ctx.db.get",
+        "response",
+        "activeSession"
+      ],
+      "endpoint": "sessions:create"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 36,
+      "firstStatement": "const row = await sessionRow(ctx, await authority(ctx, \"read\", args), args.sessionId, \"read\");",
+      "calls": [
+        "sessionRow",
+        "authority"
+      ],
+      "endpoint": "sessions:get"
+    },
+    {
+      "name": "touch",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 40,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "sessionRow",
+        "activeSession",
+        "check",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "sessions:touch"
+    },
+    {
+      "name": "end",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 46,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "sessionRow",
+        "check",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "sessions:end"
+    },
+    {
+      "name": "endAll",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 50,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "filter(await candidates(ctx, \"sessions\", auth, \"write\"), args).filter",
+        "filter",
+        "candidates",
+        "Promise.all",
+        "rows.map",
+        "readAuthority",
+        "check",
+        "ctx.db.patch",
+        "Date.now",
+        "finalChecks",
+        "reads.flatMap",
+        "resource",
+        "reads.every"
+      ],
+      "endpoint": "sessions:endAll"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 58,
+      "firstStatement": "const rows = filter(await candidates(ctx, \"sessions\", await authority(ctx, \"read\", args), \"read\"), args);",
+      "calls": [
+        "filter",
+        "candidates",
+        "authority",
+        "page",
+        "rows.slice(offset, offset + page(args.limit, 100)).map",
+        "rows.slice"
+      ],
+      "endpoint": "sessions:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/sessions.ts",
+      "line": 62,
+      "firstStatement": "filter(await candidates(ctx, \"sessions\", await authority(ctx, \"read\", args), \"read\"), args).length",
+      "calls": [
+        "filter",
+        "candidates",
+        "authority"
+      ],
+      "endpoint": "sessions:count"
+    },
+    {
+      "name": "incrementMessageCount",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/sessions.ts",
+      "line": 82,
+      "firstStatement": "const row = await backgroundRow(ctx, args.reference, args.sessionId);",
+      "calls": [
+        "backgroundRow",
+        "activeSession",
+        "Number.isSafeInteger",
+        "invalid",
+        "backgroundCheck",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "sessions:incrementMessageCount"
+    },
+    {
+      "name": "incrementMemoryCount",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/sessions.ts",
+      "line": 89,
+      "firstStatement": "const row = await backgroundRow(ctx, args.reference, args.sessionId);",
+      "calls": [
+        "backgroundRow",
+        "activeSession",
+        "Number.isSafeInteger",
+        "invalid",
+        "backgroundCheck",
+        "ctx.db.patch",
+        "Date.now"
+      ],
+      "endpoint": "sessions:incrementMemoryCount"
+    },
+    {
+      "name": "expireIdle",
+      "kind": "internalMutation",
+      "visibility": "internal",
+      "file": "convex-dev/sessions.ts",
+      "line": 96,
+      "firstStatement": "if (!Number.isFinite(args.idleTimeout) || args.idleTimeout < 0) invalid();",
+      "calls": [
+        "Number.isFinite",
+        "invalid",
+        "recheckAuthority",
+        "(await candidates(ctx, \"sessions\", auth, \"write\")).filter",
+        "candidates",
+        "Date.now",
+        "backgroundCheck",
+        "ctx.db.patch",
+        "fresh"
+      ],
+      "endpoint": "sessions:expireIdle"
+    },
+    {
+      "name": "get",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 7,
+      "firstStatement": "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "calls": [
+        "immutableRow",
+        "authority"
+      ],
+      "endpoint": "users:get"
+    },
+    {
+      "name": "list",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 11,
+      "firstStatement": "const rows = (await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\")).filter((row) => row.type === \"user\");",
+      "calls": [
+        "(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\")).filter",
+        "candidates",
+        "authority",
+        "rows.slice(0, page(args.limit, rows.length)).map",
+        "rows.slice",
+        "page"
+      ],
+      "endpoint": "users:list"
+    },
+    {
+      "name": "count",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 15,
+      "firstStatement": "(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\")).filter((row) => row.type === \"user\").length",
+      "calls": [
+        "(await candidates(ctx, \"immutable\", await authority(ctx, \"read\", args), \"read\")).filter",
+        "candidates",
+        "authority"
+      ],
+      "endpoint": "users:count"
+    },
+    {
+      "name": "getVersion",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 16,
+      "firstStatement": "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "calls": [
+        "immutableRow",
+        "authority",
+        "page",
+        "versions(row).find",
+        "versions"
+      ],
+      "endpoint": "users:getVersion"
+    },
+    {
+      "name": "getHistory",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 21,
+      "firstStatement": "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "calls": [
+        "immutableRow",
+        "authority",
+        "versions(row).reverse().map",
+        "versions(row).reverse",
+        "versions"
+      ],
+      "endpoint": "users:getHistory"
+    },
+    {
+      "name": "getAtTimestamp",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 25,
+      "firstStatement": "const row = await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\");",
+      "calls": [
+        "immutableRow",
+        "authority",
+        "versions(row).filter",
+        "versions"
+      ],
+      "endpoint": "users:getAtTimestamp"
+    },
+    {
+      "name": "exists",
+      "kind": "query",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 31,
+      "firstStatement": "(await immutableRow(ctx, await authority(ctx, \"read\", args), \"user\", args.userId, \"read\")) !== null",
+      "calls": [
+        "immutableRow",
+        "authority"
+      ],
+      "endpoint": "users:exists"
+    },
+    {
+      "name": "deleteUserProfile",
+      "kind": "mutation",
+      "visibility": "public",
+      "file": "convex-dev/users.ts",
+      "line": 32,
+      "firstStatement": "const auth = await authority(ctx, \"write\", args);",
+      "calls": [
+        "authority",
+        "immutableRow",
+        "fresh",
+        "check",
+        "tombstone"
+      ],
+      "endpoint": "users:deleteUserProfile"
+    }
+  ]
+}
