@@ -22,7 +22,7 @@ export const sourceContent = v.object({
 });
 export const sourceChunk = v.object({
   ...sourceReference, chunkId: v.string(), tenantId: v.string(), memorySpaceId: v.string(),
-  profileId: v.string(), ordinal: v.number(), start: v.number(), end: v.number(),
+  normalization: v.string(), chunking: v.string(), ordinal: v.number(), start: v.number(), end: v.number(),
   text: v.string(), textHash: v.string(),
 });
 export const derivedVector = v.object({
@@ -51,7 +51,7 @@ export const derivedFact = v.object({
 });
 export const commitDerivedInput = v.object({
   source: v.object(sourceReference), identity: processingIdentity,
-  chunks: v.optional(v.array(sourceChunk)), vectors: v.optional(v.array(derivedVector)),
+  chunks: v.optional(v.array(sourceChunk)), vectors: v.optional(v.array(derivedVector)), embeddingRunBudgetId: v.optional(v.string()),
   facts: v.optional(v.array(derivedFact)), expectedFactVersions: v.optional(v.record(v.string(), v.number())),
 });
 
@@ -61,12 +61,20 @@ export const runtimeMemoryTables = {
     .index("by_scope_event", ["tenantId", "memorySpaceId", "lineage.sourceEventId"]),
   runtimeMemoryChunks: defineTable(sourceChunk.fields)
     .index("by_scope_chunk", ["tenantId", "memorySpaceId", "chunkId"]),
-  runtimeMemoryVectors: defineTable({ ...derivedVector.fields, profileId: v.string(), scopeProfileKey: v.string(),
+  runtimeMemoryVectors: defineTable({ ...derivedVector.fields, embedding: v.optional(v.array(v.float64())),
+    embeddingLarge: v.optional(v.array(v.float64())), profileId: v.string(), scopeProfileKey: v.string(),
     ownerPrincipalId: v.string(), scopeProfileOwnerKey: v.string() })
     .index("by_scope_vector", ["tenantId", "memorySpaceId", "vectorId"])
     .index("by_scope_source_revision", ["tenantId", "memorySpaceId", "sourceId", "sourceRevision"])
     .vectorIndex("by_default_embedding_v1", { vectorField: "embedding", dimensions: 1536,
+      filterFields: ["tenantId", "memorySpaceId", "profileId", "scopeProfileKey", "scopeProfileOwnerKey"] })
+    .vectorIndex("by_large_embedding_v1", { vectorField: "embeddingLarge", dimensions: 3072,
       filterFields: ["tenantId", "memorySpaceId", "profileId", "scopeProfileKey", "scopeProfileOwnerKey"] }),
+  runtimeMemoryVectorGenerations: defineTable({ tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string(),
+    ...sourceReference, contentHash: v.string(), profile: embeddingProfile, receiptId: v.string() })
+    .index("by_scope", ["tenantId", "memorySpaceId"])
+    .index("by_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_scope_profile_source", ["tenantId", "memorySpaceId", "profile.profileId", "sourceId", "sourceRevision"]),
   runtimeMemoryReceipts: defineTable({
     tenantId: v.string(), memorySpaceId: v.string(), receiptId: v.string(),
     identity: processingIdentity, canonicalIdentity: v.string(), canonicalPayload: v.string(), createdAt: v.number(),

@@ -1,0 +1,39 @@
+{
+  "scope": "CONTROLLED_LEDGER_ONLY_NOT_QUALIFICATION_OR_MANAGED_RETRIEVAL",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests3.results.json"
+  ],
+  "fixtureEnvironment": {
+    "mode": "local",
+    "url": "http://127.0.0.1:1",
+    "serviceTarget": false
+  },
+  "node": "24.15.0",
+  "exitCode": 0,
+  "elapsedSeconds": 3.0860538482666016,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "1c940f78ef95fa34ead6f5ff22ef983d50cd9dd82dca4d545d84470315bfd12b"
+    },
+    {
+      "path": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "sha256": "f25c02c197de4e44e5edb5e50e919b8d32ddb4e8a7d31dc8814abb0b6b4149c8"
+    }
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "financialRootRolloverImplemented": false,
+  "priorFailuresPreserved": [
+    "selector-tests1:9PASS1fixture schema failure",
+    "selector-tests2:9PASS1oracle error expected release without a terminal; correct conservative slot1 now explicitly retained together with full100000uncertain; no financial guard changed"
+  ],
+  "assertionPurpose": "Exact qualified selectors only; all tenant account/root/window/currency/reserved/settled/uncertain/concurrency remain byte-identical through selection and new budget"
+}

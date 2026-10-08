@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, jest } from "@jest/globals";
-import { installMockRoot, transcriptFixture, transcript, invoke, clock } from "./fixture";
+import { installMockRoot, installIngestionMockRoot, transcriptFixture, transcript, invoke, clock } from "./fixture";
 import { ConvexMemoryRepository } from "../../../convex-dev/runtimeMemoryRepository";
 import { managedSourceIsCurrent, requireDataAuthority, recheckSourceWitnesses } from "../../../convex-dev/runtimeDataAuth";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
@@ -40,7 +40,8 @@ describe("canonical transcript lifetime/compatibility/privacy", () => {
     expect(exported.data).toContain("one canonical text"); expect(exported.data).not.toMatch(/HIDDEN|PROVIDER_SECRET|threadId|authorityReference/);
   });
   it("unlocked edit preserves native ID, records actor/revision, and immediately invalidates facts/vectors/witnesses", async () => {
-    const f = await transcriptFixture(); const run = await f.run(); await unlock(f, run.conversationId);
+    installIngestionMockRoot();
+    const f = await transcriptFixture({ maxContextTokens: 16384 }); const run = await f.run(); await unlock(f, run.conversationId);
     const bridge = f.db.table("runtimeTranscriptMessages")[0]; const source = f.db.table("runtimeMemorySources")[0];
     const old = { ...source, lineage: { ...(source.lineage as object) } } as unknown as Doc<"runtimeMemorySources">;
     const lineage = old.lineage;
@@ -48,7 +49,9 @@ describe("canonical transcript lifetime/compatibility/privacy", () => {
       extractionPolicyVersion: "extract-1", fact: "test", factType: "knowledge", sourceType: "conversation", tags: [], version: 1, createdAt: clock, updatedAt: clock, confidence: 1 });
     const identity = { sourceId: lineage.sourceId, sourceEventId: lineage.sourceEventId, sourceRevision: 1, stage: "vectors", semanticPolicyVersion: "vectors-1" };
     f.db.seed("runtimeMemoryReceipts", { tenantId: "tenant-a", memorySpaceId: "space-a", receiptId: "receipt-1", identity });
-    f.db.seed("runtimeMemoryChunks", { ...identity, tenantId: "tenant-a", memorySpaceId: "space-a", chunkId: "chunk-1", profileId: DEFAULT_EMBEDDING_PROFILE.profileId, ordinal: 0, start: 0, end: old.content.length, text: old.content, textHash: old.contentHash });
+    f.db.seed("runtimeMemoryChunks", { ...identity, tenantId: "tenant-a", memorySpaceId: "space-a", chunkId: "chunk-1",
+      normalization: DEFAULT_EMBEDDING_PROFILE.normalization, chunking: DEFAULT_EMBEDDING_PROFILE.chunking,
+      ordinal: 0, start: 0, end: old.content.length, text: old.content, textHash: old.contentHash });
     const vector = f.db.seed("runtimeMemoryVectors", { ...identity, tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.principal._id, vectorId: "vector-1", chunkId: "chunk-1", profileId: DEFAULT_EMBEDDING_PROFILE.profileId, profile: DEFAULT_EMBEDDING_PROFILE, embedding: Array(1536).fill(0), processingReceiptId: "receipt-1" });
     const repo = new ConvexMemoryRepository(f.ctx, f.reference, "read"); expect(await repo.listFacts({ limit: 100 })).toHaveLength(1);
     expect(await repo.hydrateVectors([{ id: vector._id as never, score: 0.5 }])).toHaveLength(1);

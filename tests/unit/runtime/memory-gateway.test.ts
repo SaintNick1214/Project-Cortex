@@ -560,7 +560,7 @@ describe("governed backend memory adapter (offline)", () => {
   it.each(["profileId", "modelId", "dimensions", "normalization", "chunking", "indexName"] as const)("denies mismatched requested %s before budget/dispatch", async (field) => {
     const f = fixture(); const request = embedRequest("embedding.query");
     request.profile = { ...DEFAULT_EMBEDDING_PROFILE, [field]: field === "dimensions" ? 3 : "wrong-profile-field" };
-    await expect(createGatewayMemoryModel(ctx, f.repository).embed(request)).rejects.toThrow("PROFILE_NOT_READY");
+    await expect(createGatewayMemoryModel(ctx, f.repository).embed(request)).rejects.toThrow(field === "modelId" ? "CAPABILITY_UNSUPPORTED" : "PROFILE_NOT_READY");
     expect(ensureBudget).not.toHaveBeenCalled(); expect(f.recheckAuthority).not.toHaveBeenCalled(); expect(embeddingFactory).not.toHaveBeenCalled();
   });
 

@@ -9,14 +9,14 @@ jest.unstable_mockModule("../../../convex-dev/runtimeMemoryGateway", () => ({ cr
   bindings.push(binding); return { embed, extract: async () => { throw new Error("Unexpected extraction"); }, resolve: async () => { throw new Error("Unexpected conflict inference"); } };
 } }));
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class { define(value: unknown) { return value; } } }));
-const { transcriptFixture, installMockRoot, invoke } = await import("../runtimeTranscript/fixture");
+const { transcriptFixture, installIngestionMockRoot, invoke } = await import("../runtimeTranscript/fixture");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const { executeServerTool } = await import("../../../convex-dev/runtimeAgentTools");
-beforeEach(() => { installMockRoot(); bindings.length = 0; embed.mockClear(); });
+beforeEach(() => { installIngestionMockRoot(); bindings.length = 0; embed.mockClear(); });
 afterEach(() => { jest.restoreAllMocks(); });
 async function setup() {
-  const f = await transcriptFixture(); await f.run(); f.grant.capabilities = [...f.grant.capabilities as string[], "tool"];
+  const f = await transcriptFixture({ maxContextTokens: 16384 }); await f.run(); f.grant.capabilities = [...f.grant.capabilities as string[], "tool"];
   const source = f.db.table("runtimeMemorySources")[0];
   f.db.seed("facts", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId, ownerPrincipalId: f.reference.principalId,
     factId: "tool-fact", fact: "User prefers green tea", factType: "preference", subject: "user", predicate: "prefers", object: "green tea",

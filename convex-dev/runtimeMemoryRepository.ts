@@ -7,10 +7,11 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeResource } from "../src/auth/verified";
 import type { DerivedFact, DerivedVector, MemoryRepository, ProfiledQuery, SourceChunk, SourceContent, TrustedMemoryScope, VectorMatch } from "../src/domain/contracts";
 import type { DomainClock } from "../src/domain/clock";
-import { DEFAULT_EMBEDDING_PROFILE, assertEmbeddingVector, assertProfileMatches, normalizeSourceText, semanticHash } from "../src/domain/profile";
+import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, assertSupportedEmbeddingProfile, assertEmbeddingVector, assertProfileMatches, normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { assertSourceLineage, isCurrentAuthorizedVector, prepareSourceContent, processingIdentityKey } from "../src/domain/sources";
 import { assertResourceScope, createAuthorityReader, recheckAuthority } from "./runtimeAuth";
 import { managedSourceIsCurrent } from "./runtimeDataAuth";
+import type { EmbeddingProfile } from "../src/domain/profile";
 import type { ContextSourcePermission } from "../src/domain/context-witness";
 
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
@@ -30,7 +31,9 @@ export const memoryReferences = {
   putSource: internalMutationRef<ScopedArgs & { source: SourceContent }, { source: SourceContent; created: boolean }>("runtimeMemory:writeSource"),
   commitDerived: internalMutationRef<ScopedArgs & { input: DerivedCommit }, { receiptId: string; created: boolean }>("runtimeMemory:writeDerived"),
   listFacts: internalQueryRef<ScopedArgs & { query: FactQuery }, DerivedFact[]>("runtimeMemory:readFacts"),
-  hydrateVectors: internalQueryRef<ScopedArgs & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[] }, VectorMatch[]>("runtimeMemory:readVectorMatches"),
+  profile: internalQueryRef<{ reference: RuntimeAuthorityReference; operationKey: "embedding.memory" | "embedding.query"; runBudgetId?: string }, EmbeddingProfile>("runtimeModelPolicy:embeddingProfile"),
+  profileReady: internalQueryRef<ScopedArgs & { profile: EmbeddingProfile; runBudgetId?: string }, null>("runtimeMemory:checkProfileReady"),
+  hydrateVectors: internalQueryRef<ScopedArgs & { profile: EmbeddingProfile; runBudgetId?: string; hits: { id: Id<"runtimeMemoryVectors">; score: number }[] }, VectorMatch[]>("runtimeMemory:readVectorMatches"),
 };
 
 export function memoryError(code: string, message: string): never {
@@ -83,7 +86,7 @@ export function vectorOwnerScopeKey(tenantId: string, memorySpaceId: string, pro
 /** Query/mutation adapter. Only a real mutation ctx can write. */
 export class ConvexMemoryRepository {
   readonly scope: TrustedMemoryScope;
-  constructor(private readonly ctx: Pick<QueryCtx, "db">, private readonly reference: RuntimeAuthorityReference,
+  constructor(private readonly ctx: Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">>, private readonly reference: RuntimeAuthorityReference,
     private readonly capability: "read" | "write", private readonly writer?: MutationCtx["db"],
     private readonly clock: DomainClock = { now: () => Date.now() }) {
     this.scope = memoryScope(reference);
@@ -128,12 +131,39 @@ export class ConvexMemoryRepository {
     await db.insert("runtimeMemorySources", source);
     return { source, created: true };
   }
+  async selectedProfile(key: "embedding.memory" | "embedding.query", runBudgetId?: string): Promise<EmbeddingProfile> {
+    if (!this.ctx.runQuery) memoryError("POLICY_NOT_CONFIGURED", "Native profile policy reader is required");
+    return this.ctx.runQuery(memoryReferences.profile, { reference: this.reference, operationKey: key, ...(runBudgetId ? { runBudgetId } : {}) });
+  }
+  /** Bounded metadata scan, never the dimension-sized vector bodies. */
+  async assertProfileReady(profile: EmbeddingProfile, runBudgetId?: string): Promise<void> {
+    assertSupportedEmbeddingProfile(profile);
+    assertProfileMatches(profile, await this.selectedProfile("embedding.query", runBudgetId));
+    const authority = await this.authority(undefined, "read");
+    const selected = authority.resourceAccess === "own"
+      ? this.ctx.db.query("runtimeMemoryVectorGenerations").withIndex("by_owner", q => q.eq("tenantId", this.scope.tenantId)
+        .eq("memorySpaceId", this.scope.memorySpaceId).eq("ownerPrincipalId", authority.principalId))
+      : this.ctx.db.query("runtimeMemoryVectorGenerations").withIndex("by_scope", q => q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId));
+    const generations = await selected.take(1025);
+    if (generations.length > 1024) memoryError("QUERY_TOO_BROAD", "Profile readiness exceeds bounded metadata scan");
+    let incompatible = false;
+    for (const generation of generations) {
+      if (authority.resourceAccess === "own" && generation.ownerPrincipalId !== authority.principalId) continue;
+      const source = await this.visibleSource(generation.sourceId, authority, "canViewMemories");
+      if (!source || !sameReference(source.lineage, generation) || source.contentHash !== generation.contentHash) continue;
+      if (canonicalMemoryValue(generation.profile) === canonicalMemoryValue(profile)) return;
+      incompatible = true;
+    }
+    if (incompatible) memoryError("PROFILE_NOT_READY", "Current sources have no compatible vector generation for the selected profile");
+  }
   async commitDerived(input: DerivedCommit): Promise<{ receiptId: string; created: boolean }> {
     const db = this.writeDb();
     const source = await this.getSource(input.source.sourceId);
     if (!source || !sameReference(source.lineage, input.source) || !sameReference(source.lineage, input.identity)) {
       memoryError("STALE_SOURCE", "Source event/revision is no longer current");
     }
+    const profile = input.vectors?.length ? await this.selectedProfile("embedding.memory", input.embeddingRunBudgetId) : DEFAULT_EMBEDDING_PROFILE;
+    for (const vector of input.vectors ?? []) assertProfileMatches(vector.profile, profile);
     const receiptId = await processingIdentityKey(input.identity);
     const canonicalIdentity = canonicalMemoryValue(input.identity);
     const canonicalPayload = canonicalMemoryValue(input);
@@ -143,7 +173,7 @@ export class ConvexMemoryRepository {
       if (receipt.canonicalIdentity !== canonicalIdentity || receipt.canonicalPayload !== canonicalPayload) conflict("Processing receipt identity/hash was reused with a different canonical payload");
       return { receiptId, created: false };
     }
-    const prepared = await prepareSourceContent(this.scope, source.lineage, source.content, { now: () => source.createdAt });
+    const prepared = await prepareSourceContent(this.scope, source.lineage, source.content, { now: () => source.createdAt }, profile);
     const expectedChunks = new Map(prepared.chunks.map((chunk) => [chunk.chunkId, chunk]));
     const chunks = new Map<string, SourceChunk>();
     for (const chunk of input.chunks ?? []) {
@@ -152,11 +182,11 @@ export class ConvexMemoryRepository {
     }
     const vectorIds = new Set<string>();
     for (const vector of input.vectors ?? []) {
-      assertProfileMatches(vector.profile);
-      assertEmbeddingVector(vector.embedding);
+      assertSupportedEmbeddingProfile(vector.profile); assertProfileMatches(vector.profile, profile);
+      assertEmbeddingVector(vector.embedding, profile);
       const chunk = chunks.get(vector.chunkId) ?? await this.findChunk(vector.chunkId);
       if (vectorIds.has(vector.vectorId) || vector.processingReceiptId !== receiptId || !chunk
-        || !isCurrentAuthorizedVector(vector, source, chunk, this.scope)) memoryError("INVALID_INPUT", "Vector has invalid provenance or duplicate identity");
+        || !isCurrentAuthorizedVector(vector, source, chunk, this.scope, profile)) memoryError("INVALID_INPUT", "Vector has invalid provenance or duplicate identity");
       vectorIds.add(vector.vectorId);
     }
     const factIds = new Set<string>();
@@ -212,10 +242,21 @@ export class ConvexMemoryRepository {
     for (const vector of input.vectors ?? []) {
       const existing = await db.query("runtimeMemoryVectors").withIndex("by_scope_vector", (q) =>
         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("vectorId", vector.vectorId)).unique();
-      if (!existing) await db.insert("runtimeMemoryVectors", { ...vector, embedding: [...vector.embedding], profileId: vector.profile.profileId,
+      const { embedding, ...metadata } = vector;
+      if (!existing) await db.insert("runtimeMemoryVectors", { ...metadata,
+        ...(profile.profileId === LARGE_EMBEDDING_PROFILE.profileId ? { embeddingLarge: [...embedding] } : { embedding: [...embedding] }), profileId: vector.profile.profileId,
         scopeProfileKey: vectorScopeKey(vector.tenantId, vector.memorySpaceId, vector.profile.profileId),
         ownerPrincipalId: source.ownerPrincipalId,
         scopeProfileOwnerKey: vectorOwnerScopeKey(vector.tenantId, vector.memorySpaceId, vector.profile.profileId, source.ownerPrincipalId) });
+    }
+    if (input.vectors?.length) {
+      const previous = await db.query("runtimeMemoryVectorGenerations").withIndex("by_scope_profile_source", q =>
+        q.eq("tenantId", source.tenantId).eq("memorySpaceId", source.memorySpaceId).eq("profile.profileId", profile.profileId)
+          .eq("sourceId", source.lineage.sourceId).eq("sourceRevision", source.lineage.sourceRevision)).unique();
+      const generation = { tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, ownerPrincipalId: source.ownerPrincipalId,
+        ...input.source, contentHash: source.contentHash, profile, receiptId };
+      if (previous && canonicalMemoryValue({ ...stripSystem(previous), receiptId }) !== canonicalMemoryValue(generation)) conflict("Vector generation identity collision");
+      if (!previous) await db.insert("runtimeMemoryVectorGenerations", generation);
     }
     for (const fact of input.facts ?? []) {
       const { _id: _id, ...fields } = fact;
@@ -286,14 +327,15 @@ export class ConvexMemoryRepository {
     }
     return facts;
   }
-  async hydrateVectors(hits: { id: Id<"runtimeMemoryVectors">; score: number }[]): Promise<VectorMatch[]> {
+  async hydrateVectors(hits: { id: Id<"runtimeMemoryVectors">; score: number }[], profile: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE, runBudgetId?: string): Promise<VectorMatch[]> {
     if (hits.length > 100) memoryError("INVALID_INPUT", "Too many vector candidates");
+    assertProfileMatches(profile, await this.selectedProfile("embedding.query", runBudgetId));
     const authority = await this.authority(undefined, "read");
     const matches: VectorMatch[] = [];
     for (const hit of hits) {
       const row = await this.ctx.db.get("runtimeMemoryVectors", hit.id);
       if (!row || row.tenantId !== this.scope.tenantId || row.memorySpaceId !== this.scope.memorySpaceId
-        || row.profileId !== DEFAULT_EMBEDDING_PROFILE.profileId || !Number.isFinite(hit.score)) continue;
+        || row.profileId !== profile.profileId || canonicalMemoryValue(row.profile) !== canonicalMemoryValue(profile) || !Number.isFinite(hit.score)) continue;
       const sourceRow = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", row.sourceId)).unique();
       if (!sourceRow || sourceRow.tombstonedAt !== undefined || row.ownerPrincipalId !== sourceRow.ownerPrincipalId
@@ -305,7 +347,7 @@ export class ConvexMemoryRepository {
         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("receiptId", vector.processingReceiptId)).unique();
       if (!source || !chunk || !receipt || !sameReference(source.lineage, receipt.identity)) continue;
       try {
-        if (isCurrentAuthorizedVector(vector, source, chunk, this.scope)) matches.push({ vector, source, chunk, score: hit.score });
+        if (isCurrentAuthorizedVector(vector, source, chunk, this.scope, profile)) matches.push({ vector, source, chunk, score: hit.score });
       } catch (error) {
         if (!(error instanceof Error) || !error.message.startsWith("PROFILE_NOT_READY:")) throw error;
       }
@@ -315,8 +357,11 @@ export class ConvexMemoryRepository {
 }
 function stripVector(row: Doc<"runtimeMemoryVectors">): DerivedVector {
   const { profileId: _profileId, scopeProfileKey: _scopeProfileKey, ownerPrincipalId: _owner,
-    scopeProfileOwnerKey: _ownerKey, ...vector } = stripSystem(row);
-  return vector;
+    scopeProfileOwnerKey: _ownerKey, embedding, embeddingLarge, ...vector } = stripSystem(row);
+  assertSupportedEmbeddingProfile(vector.profile);
+  const values = vector.profile.profileId === LARGE_EMBEDDING_PROFILE.profileId ? embeddingLarge : embedding;
+  if (!values || (embedding !== undefined && embeddingLarge !== undefined)) memoryError("INVALID_INPUT", "Vector storage field does not match its exact profile");
+  return { ...vector, embedding: values };
 }
 
 /** Action reads/mutations cross ctx through internal registrations, never a ConvexClient. */
@@ -333,11 +378,15 @@ export function createActionMemoryRepository(
     putSource: async (source) => await ctx.runMutation(memoryReferences.putSource, { ...args, source }),
     commitDerived: async (input) => await ctx.runMutation(memoryReferences.commitDerived, { ...args, input }),
     listFacts: async (query) => await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query }),
+    assertProfileReady: async (profile, runBudgetId) => { await ctx.runQuery(memoryReferences.profileReady,
+      { ...args, capability: "read", profile, ...(runBudgetId ? { runBudgetId } : {}) }); },
     searchVectors: async (query: ProfiledQuery, limit) => {
-      boundedLimit(limit); assertProfileMatches(query.profile); assertEmbeddingVector(query.embedding);
+      boundedLimit(limit); assertSupportedEmbeddingProfile(query.profile); assertEmbeddingVector(query.embedding, query.profile);
       const readArgs = { ...args, capability: "read" as const };
       const authority = await ctx.runQuery(memoryReferences.recheck, readArgs);
-      const hits = await ctx.vectorSearch("runtimeMemoryVectors", "by_default_embedding_v1", {
+      const pin = query.embeddingRunBudgetId ? { runBudgetId: query.embeddingRunBudgetId } : {};
+      await ctx.runQuery(memoryReferences.profileReady, { ...readArgs, profile: query.profile, ...pin });
+      const hits = await ctx.vectorSearch("runtimeMemoryVectors", query.profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
         vector: [...query.embedding], limit,
         // Convex vector filters support eq/or only. This exact canonical tuple encodes conjunction.
         filter: (q) => authority.resourceAccess === "own"
@@ -345,7 +394,7 @@ export function createActionMemoryRepository(
           : q.eq("scopeProfileKey", vectorScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId)),
       });
       // A second internal query rechecks revocation and canonical source currentness after search.
-      return await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
+      return await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
     },
   };
 }

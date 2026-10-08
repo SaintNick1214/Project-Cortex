@@ -10,10 +10,10 @@ export const ingestionStageState = v.union(v.literal("pending"), v.literal("runn
 const scope = { tenantId: v.string(), memorySpaceId: v.string() };
 export const runtimeIngestionTables = {
   runtimeIngestionScopes: defineTable({ ...scope, sequence: v.number(), factsThrough: v.number(), vectorsThrough: v.number(),
-    graphThrough: v.number(), version: v.number(), updatedAt: v.number() }).index("by_scope", ["tenantId", "memorySpaceId"]),
+    graphThrough: v.number(), vectorProfileThrough: v.optional(v.record(v.string(), v.number())), version: v.number(), updatedAt: v.number() }).index("by_scope", ["tenantId", "memorySpaceId"]),
   runtimeIngestionEvents: defineTable({ ...scope, version: v.literal(1), eventId: v.string(), identityCanonical: v.string(),
     ownerPrincipalId: v.string(), sequence: v.number(), lineage: sourceLineage, contentHash: v.string(),
-    authorityReference: runtimeAuthorityReference, eligibility: ingestionEligibility, factsState: ingestionStageState, vectorsState: ingestionStageState, extractionVersion: v.string(), beliefVersion: v.string(), profile: embeddingProfile,
+    authorityReference: runtimeAuthorityReference, eligibility: ingestionEligibility, factsState: ingestionStageState, vectorsState: ingestionStageState, extractionVersion: v.string(), beliefVersion: v.string(), profile: embeddingProfile, vectorProfilesComplete: v.optional(v.array(v.string())),
     conversationId: v.optional(v.string()), conversationSequence: v.optional(v.number()), conversationEpoch: v.optional(v.number()),
     nativeMessageId: v.optional(v.string()), runId: v.optional(v.string()), toolOperationId: v.optional(v.string()),
     createdAt: v.number(), updatedAt: v.number() })

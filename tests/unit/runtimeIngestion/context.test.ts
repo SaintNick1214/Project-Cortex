@@ -1,6 +1,7 @@
 /** Controlled native registered-handler checks; no service or paid-model claim. */
 import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { ingestionFixture, installIngestionMockRoot, ingestion } from "./fixture";
+import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { contextSourceKey } from "../../../src/domain/memory-context";
 const context = await import("../../../convex-dev/runtimeMemoryContext");
 
@@ -11,7 +12,7 @@ describe("scoped contiguous memory context", () => {
     for (const id of ["earlier", "later"]) await ingestion.enqueueSourceEvent(f.ctx, f.reference, await f.source(id, id));
     const [earlier, later] = f.db.table("runtimeIngestionEvents");
     await f.db.patch("runtimeIngestionEvents", earlier._id, { factsState: "failed", vectorsState: "complete" });
-    await f.db.patch("runtimeIngestionEvents", later._id, { factsState: "complete", vectorsState: "complete" });
+    await f.db.patch("runtimeIngestionEvents", later._id, { factsState: "complete", vectorsState: "complete", profile: DEFAULT_EMBEDDING_PROFILE });
     expect(await context.refreshScopeWatermarks(f.ctx, f.reference)).toEqual({ sequence: 2, factsThrough: 0, vectorsThrough: 2 });
     expect(await context.readStageProgress(f.ctx, f.reference, 2)).toMatchObject({
       facts: { complete: false, indexedThrough: 0, hole: { sequence: 1, state: "failed" } }, vectors: { complete: true, indexedThrough: 2 } });
@@ -68,7 +69,7 @@ describe("scoped contiguous memory context", () => {
   test("stage-specific progress is bounded without reading extraction payload bodies", async () => {
     const f = await ingestionFixture();
     for (let sequence = 1; sequence <= 270; sequence++) f.db.seed("runtimeIngestionEvents", { tenantId: f.reference.tenantId,
-      memorySpaceId: f.reference.memorySpaceId, sequence, eligibility: "eligible", factsState: sequence === 1 ? "failed" : "complete", vectorsState: "complete" });
+      memorySpaceId: f.reference.memorySpaceId, sequence, eligibility: "eligible", factsState: sequence === 1 ? "failed" : "complete", vectorsState: "complete", profile: DEFAULT_EMBEDDING_PROFILE });
     f.db.seed("runtimeIngestionScopes", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
       sequence: 270, factsThrough: 0, vectorsThrough: 256, graphThrough: 0, version: 1 });
     expect(await context.refreshScopeWatermarks(f.ctx, f.reference)).toEqual({ sequence: 270, factsThrough: 0, vectorsThrough: 270 });
@@ -80,5 +81,26 @@ describe("scoped contiguous memory context", () => {
     f.grant.resourceAccess = "space";
     expect(await f.call(context.status, { memorySpaceId: "space-a" })).toMatchObject({ cutoff: 1,
       stages: { facts: { indexedThrough: 0, hole: { sequence: 1, state: "pending" } } } });
+  });
+  test("a nondefault profile continues all bounded pages even when default and facts are already current", async () => {
+    const f = await ingestionFixture();
+    for (let sequence = 1; sequence <= 600; sequence++) f.db.seed("runtimeIngestionEvents", {
+      tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId, sequence, eligibility: "eligible",
+      factsState: "complete", vectorsState: "complete", profile: DEFAULT_EMBEDDING_PROFILE,
+      vectorProfilesComplete: [DEFAULT_EMBEDDING_PROFILE.profileId, LARGE_EMBEDDING_PROFILE.profileId] });
+    f.db.seed("runtimeIngestionScopes", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
+      sequence: 600, factsThrough: 600, vectorsThrough: 600, graphThrough: 0, version: 1,
+      vectorProfileThrough: { [DEFAULT_EMBEDDING_PROFILE.profileId]: 600, [LARGE_EMBEDDING_PROFILE.profileId]: 0 } });
+    await context.refreshScopeWatermarks(f.ctx, f.reference);
+    expect(f.db.table("runtimeIngestionScopes")[0].vectorProfileThrough).toMatchObject({ [LARGE_EMBEDDING_PROFILE.profileId]: 256 });
+    expect(f.scheduled).toEqual([{ name: "runtimeMemoryContext:refreshWatermarks", args: { reference: f.reference } }]);
+    await context.refreshScopeWatermarks(f.ctx, f.reference);
+    expect(f.db.table("runtimeIngestionScopes")[0].vectorProfileThrough).toMatchObject({ [LARGE_EMBEDDING_PROFILE.profileId]: 512 });
+    expect(f.scheduled).toHaveLength(2);
+    await context.refreshScopeWatermarks(f.ctx, f.reference);
+    expect(f.db.table("runtimeIngestionScopes")[0]).toMatchObject({ factsThrough: 600, vectorsThrough: 600,
+      vectorProfileThrough: { [LARGE_EMBEDDING_PROFILE.profileId]: 600 } });
+    expect(f.scheduled).toHaveLength(2); expect(f.db.table("runtimeIngestionStages")).toHaveLength(0);
+    expect(f.db.table("runtimeModelOperations")).toHaveLength(0);
   });
 });

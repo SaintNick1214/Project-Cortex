@@ -1,0 +1,46 @@
+{
+  "status": "ACTUAL_NATIVE_PASS",
+  "projectId": 3174742,
+  "modelId": "openai/text-embedding-3-large",
+  "profile": {
+    "chunking": "codepoint-1600-overlap-200-v1",
+    "dimensions": 3072,
+    "indexName": "by_large_embedding_v1",
+    "modelId": "openai/text-embedding-3-large",
+    "normalization": "text-nfc-lf-v1",
+    "profileId": "cortex-text-large-3072-v1"
+  },
+  "dimensions": 3072,
+  "actualWireModel": "text-embedding-3-large",
+  "usage": {
+    "tokens": 24
+  },
+  "inputUtf8Bytes": 102,
+  "vectorHash": "d47fbd769c35849aadf3cef0747fd176c24629b4abdfc56e589f5c8df7412314",
+  "reservationBeforeDispatch": true,
+  "finishedSlotReleased": true,
+  "terminalCost": "unavailable",
+  "fullRetainedLiabilityPerAccount": 100000,
+  "replayNoAddedAttempt": true,
+  "internalReachabilityDenialsAlreadyPreserved": "large-commission1-before.json and original script preflight",
+  "oldQualificationsPreserved": 4,
+  "shippedRegistryChanged": false,
+  "notIndependentAcceptance": true,
+  "terminalReceipt": {
+    "actualModel": "text-embedding-3-large",
+    "costSource": "unavailable",
+    "dispatchIdentity": "28937334063fdb244832630a6b890e06bc25ea2cc67139ff15f73f2a4d59a10e",
+    "modelId": "openai/text-embedding-3-large",
+    "nativeInterface": "embedding",
+    "outcome": "confirmed",
+    "proof": "provider-terminal-v1",
+    "receiptId": "fc6c04fe-5d00-4fc4-ac7b-47287a3ba069",
+    "usage": {
+      "inputTokens": 24,
+      "totalTokens": 24
+    },
+    "version": 1
+  },
+  "privateResultBytes": 60746,
+  "priorQAObserverFailurePreserved": true
+}

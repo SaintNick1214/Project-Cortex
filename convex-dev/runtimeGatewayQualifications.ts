@@ -254,7 +254,7 @@ export const TEXT_GATEWAY_POLICY_MANIFEST_V3 = {
   ]
 } as const satisfies DeploymentPolicyManifest;
 
-export const DEFAULT_GATEWAY_POLICY_MANIFEST = {
+export const AGENT_GATEWAY_POLICY_MANIFEST_V5 = {
   "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
   "revision": 5,
   "artifactRevision": "237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf",
@@ -582,4 +582,92 @@ export const DEFAULT_GATEWAY_POLICY_MANIFEST = {
       }
     }
   ]
+} as const satisfies DeploymentPolicyManifest;
+
+/** Genuine Task10 native3072 qualification and managed same-source retrieval.
+ * V5 remains registered unchanged for retained financial/account provenance.
+ * Common pins keep small1536 as the default; only an exact trusted operation
+ * selector may choose the separately qualified large profile. */
+export const DEFAULT_GATEWAY_POLICY_MANIFEST = {
+  ...AGENT_GATEWAY_POLICY_MANIFEST_V5,
+  revision: 9,
+  artifactRevision: "aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c",
+  evidenceHash: "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+  acceptanceHash: "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+  policies: AGENT_GATEWAY_POLICY_MANIFEST_V5.policies.map(policy => ({
+    ...policy, policyId: policy.policyId.replace(/-v5$/, "-v9"), version: 9,
+    rules: "allowedModels" in policy.rules
+      ? { ...policy.rules, allowedModels: [...policy.rules.allowedModels, "openai/text-embedding-3-large"] }
+      : policy.rules,
+  })),
+  qualifications: [
+    ...AGENT_GATEWAY_POLICY_MANIFEST_V5.qualifications,
+    {
+      "receiptId": "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e",
+      "modelId": "openai/text-embedding-3-large",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "coversAllProviderCharges": true,
+        "provenance": "Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund."
+      },
+      "priceRevision": "vercel-gateway-2026-10-08-text-large",
+      "boundRevision": "task10-large-8192-3072-v1"
+    },
+  ],
+  dispatchEvidence: [
+    ...AGENT_GATEWAY_POLICY_MANIFEST_V5.dispatchEvidence,
+    {
+      "receiptId": "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e",
+      "modelId": "openai/text-embedding-3-large",
+      "nativeInterface": "embedding",
+      "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+      "providerVersion": "0.2.1",
+      "priceRevision": "vercel-gateway-2026-10-08-text-large",
+      "boundRevision": "task10-large-8192-3072-v1",
+      "embeddingProfile": {
+        "profileId": "cortex-text-large-3072-v1",
+        "modelId": "openai/text-embedding-3-large",
+        "dimensions": 3072,
+        "normalization": "text-nfc-lf-v1",
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "indexName": "by_large_embedding_v1"
+      },
+      "terminalModelId": "text-embedding-3-large",
+      "checkedAt": 1791487866561,
+      "expiresAt": 1791574266561,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "profile-embedding-utf8-v1",
+        "revision": 1,
+        "featureEnvelope": "profile-embedding-v1",
+        "proofHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "documentHash": "0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 131072,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784"
+      }
+    },
+  ],
 } as const satisfies DeploymentPolicyManifest;

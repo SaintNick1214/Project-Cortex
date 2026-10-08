@@ -59,7 +59,8 @@ export interface SourceChunk extends SourceReference {
   chunkId: string;
   tenantId: string;
   memorySpaceId: string;
-  profileId: string;
+  normalization: string;
+  chunking: string;
   ordinal: number;
   start: number;
   end: number;
@@ -96,6 +97,8 @@ export interface ProfiledQuery {
   text: string;
   profile: EmbeddingProfile;
   embedding: readonly number[];
+  /** Server-issued account for optional agent policy narrowing. */
+  embeddingRunBudgetId?: string;
 }
 
 export interface VectorMatch {
@@ -122,10 +125,12 @@ export interface MemoryRepository {
     identity: ProcessingIdentity;
     chunks?: readonly SourceChunk[];
     vectors?: readonly DerivedVector[];
+    embeddingRunBudgetId?: string;
     facts?: readonly DerivedFact[];
     /** Belief commits compare current versions atomically; stale resolution cannot win. */
     expectedFactVersions?: Readonly<Record<string, number>>;
   }): Promise<{ receiptId: string; created: boolean }>;
+  assertProfileReady?(profile: EmbeddingProfile, runBudgetId?: string): Promise<void>;
   searchVectors(query: ProfiledQuery, limit: number): Promise<readonly VectorMatch[]>;
   listFacts(query: { subject?: string; factType?: FactRecord["factType"]; limit: number }): Promise<readonly DerivedFact[]>;
 }
@@ -144,6 +149,8 @@ export interface InternalModelOperation {
  * dispatched outcomes propagate without retry or direct-provider fallback.
  */
 export interface MemoryModel {
+  /** Trusted backend selection; callers do not choose a model/profile. */
+  resolveProfile?(purpose: "embedding.memory" | "embedding.query"): Promise<{ profile: EmbeddingProfile; runBudgetId?: string }>;
   extract(request: InternalModelOperation & {
     purpose: "memory.extract";
     system: string;

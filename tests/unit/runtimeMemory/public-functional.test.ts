@@ -8,7 +8,10 @@ import type { BackendGatewayBudget, BackendGatewayBudgetArgs } from "../../../co
 import type { MemoryModel } from "../../../src/domain/contracts";
 import type { rememberMemory, recallMemory } from "../../../convex-dev/runtimeMemoryServices";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
-import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import { prepareSourceContent } from "../../../src/domain/sources";
+import { explicitSourceLineage } from "../../../convex-dev/runtimeMemoryServices";
+import { memoryScope } from "../../../convex-dev/runtimeMemoryRepository";
 
 const factory = jest.fn<typeof import("../../../convex-dev/runtimeMemoryGateway").createGatewayMemoryModel>();
 jest.unstable_mockModule("../../../convex-dev/runtimeMemoryGateway", () => ({ createGatewayMemoryModel: factory }));
@@ -23,10 +26,10 @@ const unavailable = { version: 1, code: "CAPABILITY_UNAVAILABLE", message: "Memo
 const failed = { version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.", retryable: false, outcome: "uncertain" };
 const vector = () => Array.from({ length: DEFAULT_EMBEDDING_PROFILE.dimensions }, (_, i) => i === 0 ? 1 : 0);
 
-function setup() {
+function setup(profile = DEFAULT_EMBEDDING_PROFILE) {
   const accounts = new Map<string, { canonical: string; budget: BackendGatewayBudget }>();
   let budgetHook: ((args: BackendGatewayBudgetArgs) => void) | undefined;
-  const f = memoryFixture({ budget: async (args) => {
+  const f = memoryFixture({ profile: () => profile, budget: async (args) => {
     budgetHook?.(args);
     // Controlled exact-request account identity only; native monetary/admission tests live elsewhere.
     const key = canonicalModelJson([args.reference, args.operationKey, args.requestId]);
@@ -186,5 +189,28 @@ describe("functional public memory wiring with an offline model", () => {
     expect(await rejection(async () => await recall(f))).toEqual(failed);
     expect(f.operations.at(-1)!.purpose).toBe("embedding.query"); expect(f.searches).toEqual([]);
     expect(f.db.writes).toBe(writes); expect(f.db.rows).toEqual(snapshot);
+  });
+  it("reports trusted cold-profile readiness before model construction, search, or persistent effects", async () => {
+    const f = setup(LARGE_EMBEDDING_PROFILE);
+    const { source } = await prepareSourceContent(memoryScope(f.reference), explicitSourceLineage(memoryScope(f.reference), "prior-small"),
+      "current small-profile source", { now: () => 1000 });
+    f.db.seed("runtimeMemorySources", source as unknown as Record<string, unknown>);
+    f.db.seed("runtimeMemoryVectorGenerations", { tenantId: source.tenantId, memorySpaceId: source.memorySpaceId,
+      ownerPrincipalId: source.ownerPrincipalId, sourceId: source.lineage.sourceId,
+      sourceEventId: source.lineage.sourceEventId, sourceRevision: source.lineage.sourceRevision,
+      contentHash: source.contentHash, profile: DEFAULT_EMBEDDING_PROFILE, receiptId: "existing-small-receipt" });
+    f.db.table("runtimeAuthTombstones"); // The controlled DB materializes empty tables on read.
+    const before = structuredClone(f.db.rows); const writes = f.db.writes;
+    expect(await rejection(async () => await recall(f))).toEqual({ version: 1, code: "PROFILE_NOT_READY",
+      message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" });
+    expect(f.operations).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+    expect(f.db.rows).toEqual(before); expect(f.db.writes).toBe(writes);
+  });
+  it("a readiness-shaped failure after model invocation remains opaque and uncertain", async () => {
+    const f = setup();
+    f.model.embed = async request => { f.operations.push(request); throw new ConvexError({ version: 1, code: "PROFILE_NOT_READY",
+      message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" }); };
+    expect(await rejection(async () => await recall(f))).toEqual(failed);
+    expect(f.operations).toHaveLength(1); expect(f.searches).toEqual([]);
   });
 });

@@ -1,0 +1,90 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.4s | 58/60 passed | /tests/unit/runtimeAgent/execution.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.9%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.8%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.6%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.6%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.6%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.6%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.5%) - durable Agent execution product boundaries queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries dynamic tool-recalled source changed is denied before next paid admission and finalization
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.42s (9.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.54s
+  Test suites:        1
+  Individual tests:   54
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

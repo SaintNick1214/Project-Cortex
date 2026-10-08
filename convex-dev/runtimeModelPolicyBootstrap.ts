@@ -1,6 +1,7 @@
 /** Deployment artifact is the trust root. No tenant/JWT/env payload can create these attestations. */
 import type { TrustedModelPolicyRecord, TrustedModelQualification } from "../src/domain/model-policy";
-import { DEFAULT_GATEWAY_POLICY_MANIFEST, TEXT_GATEWAY_POLICY_MANIFEST_V3 } from "./runtimeGatewayQualifications";
+import type { EmbeddingProfile } from "../src/domain/profile";
+import { AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST, TEXT_GATEWAY_POLICY_MANIFEST_V3 } from "./runtimeGatewayQualifications";
 
 export interface QualifiedDispatchEvidence {
   readonly receiptId: string;
@@ -12,8 +13,9 @@ export interface QualifiedDispatchEvidence {
    * artifact. Omission retains the canonical modelId fence. No general aliases. */
   readonly terminalModelId?: string;
   /** Reviewed guarantee over full serialized final request plus protocol overhead. Absent proof denies. */
-  readonly inputBound: { readonly ruleId: "plain-chat-cookbook-utf8-v1" | "default-embedding-utf8-v1" | "agent-tools-chat-utf8-v1"; readonly revision: number;
-    readonly featureEnvelope: "plain-chat-v1" | "default-embedding-v1" | "agent-tools-chat-v1"; readonly nativeTransformHash: string; readonly documentHash: string; readonly proofHash: string };
+  readonly inputBound: { readonly ruleId: "plain-chat-cookbook-utf8-v1" | "default-embedding-utf8-v1" | "profile-embedding-utf8-v1" | "agent-tools-chat-utf8-v1"; readonly revision: number;
+    readonly featureEnvelope: "plain-chat-v1" | "default-embedding-v1" | "profile-embedding-v1" | "agent-tools-chat-v1"; readonly nativeTransformHash: string; readonly documentHash: string; readonly proofHash: string };
+  readonly embeddingProfile?: EmbeddingProfile;
   readonly supportsStream?: true;
   readonly toolContract?: { readonly registryVersion: string; readonly toolsCanonical: string; readonly maximumToolCalls: number };
   readonly resultBound: { readonly maximumPrivateResultBytes: number; readonly maximumOutputTokens: number; readonly maximumEmbeddingValues: 1; readonly proofHash: string };
@@ -31,6 +33,9 @@ export function qualifiedTerminalModelId(proof: QualifiedDispatchEvidence): stri
   // This is allowed only when that exact mapping is attested by the trust root.
   if (proof.nativeInterface === "embedding" && proof.modelId === "openai/text-embedding-3-small"
     && proof.terminalModelId === "text-embedding-3-small") return proof.terminalModelId;
+  if (proof.nativeInterface === "embedding" && proof.inputBound.featureEnvelope === "profile-embedding-v1"
+    && proof.modelId === "openai/text-embedding-3-large" && proof.embeddingProfile?.modelId === proof.modelId
+    && proof.terminalModelId === "text-embedding-3-large") return proof.terminalModelId;
   return undefined;
 }
 export interface DeploymentPolicyManifest {
@@ -47,7 +52,7 @@ export interface DeploymentPolicyManifest {
 }
 /** Compiled actual-service candidate; its evidence binding is reviewed with the
  * complete product batch before acceptance. No caller/environment registration. */
-const manifests: readonly DeploymentPolicyManifest[] = Object.freeze([TEXT_GATEWAY_POLICY_MANIFEST_V3, DEFAULT_GATEWAY_POLICY_MANIFEST]);
+const manifests: readonly DeploymentPolicyManifest[] = Object.freeze([TEXT_GATEWAY_POLICY_MANIFEST_V3, AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST]);
 export function lookupDeploymentManifest(manifestId: string, revision: number): DeploymentPolicyManifest | undefined {
   const selected = manifests.filter((entry) => entry.manifestId === manifestId && entry.revision === revision);
   return selected.length === 1 ? selected[0] : undefined;

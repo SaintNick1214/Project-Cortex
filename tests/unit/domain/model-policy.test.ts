@@ -225,7 +225,7 @@ describe("immutable default embedding policy", () => {
       const changed = embedding(); changed.context.semanticProfile![field] = "fixture/changed";
       expect(() => resolveModelPolicy(changed)).toThrow("PROFILE_NOT_READY");
     }
-    const missing = embedding(); delete missing.context.semanticProfile; expect(() => resolveModelPolicy(missing)).toThrow("PROFILE_NOT_READY");
+    const missing = embedding(); delete missing.context.semanticProfile; expect(resolveModelPolicy(missing).semanticProfile).toEqual(DEFAULT_EMBEDDING_PROFILE);
   });
   it("pins batch ordinal/range and prohibits language/tool options or changed profiles", async () => {
     const resolved = resolveModelPolicy(embedding());

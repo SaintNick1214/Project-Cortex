@@ -1,0 +1,35 @@
+{
+  "scope": "CONTROLLED_LEDGER_ONLY_NOT_QUALIFICATION_OR_MANAGED_RETRIEVAL",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests2.results.json"
+  ],
+  "fixtureEnvironment": {
+    "mode": "local",
+    "url": "http://127.0.0.1:1",
+    "serviceTarget": false
+  },
+  "node": "24.15.0",
+  "exitCode": 1,
+  "elapsedSeconds": 3.3270061016082764,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "1c940f78ef95fa34ead6f5ff22ef983d50cd9dd82dca4d545d84470315bfd12b"
+    },
+    {
+      "path": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "sha256": "38da527f5067b82f7b1aa40de4abc4009eac3a447c0a3e721bb7af4f60c41509"
+    }
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "financialRootRolloverImplemented": false,
+  "priorFailurePreserved": "selector-tests1:9PASS/1fixture schema failure; required childCallId added, extra price/bound fields removed from request envelope (qualificationselectors stay in policy), production guards/assertions unchanged"
+}

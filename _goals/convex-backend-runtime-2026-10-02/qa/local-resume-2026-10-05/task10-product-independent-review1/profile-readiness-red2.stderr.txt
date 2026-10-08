@@ -1,0 +1,32 @@
+(node:56027) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent2.test.ts
+  independent selected-profile readiness boundaries
+    ✓ private-peer generations cannot consume an own-only metadata bound (19 ms)
+    ✓ a genuine own-domain oversize remains explicitly bounded (7 ms)
+    ✕ a large-only completed metadata page schedules continuation while facts/default already finished (12 ms)
+
+  ● independent selected-profile readiness boundaries › a large-only completed metadata page schedules continuation while facts/default already finished
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      47 |     await refreshScopeWatermarks(f.ctx,f.reference);
+      48 |     expect(f.db.table("runtimeIngestionScopes")[0].vectorProfileThrough).toEqual({[small.profileId]:270,[large.profileId]:256});
+    > 49 |     expect(scheduled).toHaveLength(1);
+         |                       ^
+      50 |   });
+      51 | });
+      52 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent2.test.ts:49:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 2 passed, 3 total
+Snapshots:   0 total
+Time:        4.7 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-red2.results.json

@@ -1,0 +1,25 @@
+{
+  "scope": "DOMAIN_CODE_ONLY_NOT_MANAGED_RETRIEVAL",
+  "independentlyAuthoredControls": 4,
+  "results": [
+    {
+      "name": "logical source and chunk identities are independent of model generation",
+      "status": "PASS"
+    },
+    {
+      "name": "current vector positive and same-dimensional different-model denial",
+      "status": "PASS"
+    },
+    {
+      "name": "dimension, nonfinite and sparse vectors cannot satisfy profile validation",
+      "status": "PASS"
+    },
+    {
+      "name": "unsupported model and undeclared index have explicit catalog denial",
+      "status": "PASS"
+    }
+  ],
+  "passed": 4,
+  "failed": 0,
+  "noServiceEffects": true
+}

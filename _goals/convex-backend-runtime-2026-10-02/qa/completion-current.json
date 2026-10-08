@@ -1,10 +1,10 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T18:41:20.278514+00:00",
+  "timestamp_utc": "2026-10-08T20:07:20.308765+00:00",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
-  "goal_tasks_complete": 8,
+  "goal_tasks_complete": 9,
   "goal_tasks_total": 17,
-  "goal_task_percent_complete": 47.1,
+  "goal_task_percent_complete": 52.9,
   "goal_product_criteria_accepted": 0,
   "goal_product_criteria_total": 12,
   "goal_product_percent_complete": 0,
@@ -131,13 +131,17 @@
     },
     {
       "task_id": "10",
-      "percent_complete": 0,
-      "criteria_accepted": 0,
+      "percent_complete": 100,
+      "criteria_accepted": 4,
       "criteria_total": 4,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "Original Task10 accepted by one non-author PASS4.0: all 5 requirements and 4 criteria. Both actual managed profiles retrieve identical canonical source/chunks with separate matching 1536/3072 generations; current policy, tracked edit, deletion, revocation and replay fences pass. Five governed calls retain full 500000 uncertain liability and release terminal slots. Shipped revision9 preserves exact V5/four proofs/default-small settings. Task10 scopes are cleaned; owned development target3174742 is retained prospectively for Task11, with final retirement open. Historical failures and scoped limits remain unchanged. No Task11+,03-final or full-goal acceptance.",
+      "independent_acceptance_evidence": [
+        "qa/local-resume-2026-10-05/task10-product-independent-review1/verdict1.json",
+        "qa/local-resume-2026-10-05/task10-product-independent-review1/report1.md",
+        "qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/final-native-report1.json"
+      ],
       "original_task_file": "tasks/10-embedding-profiles.md",
-      "task_file_sha256": "d7d374add02f9441b74b1320a9e7956f91e714ea705b0b98d702d787078fb12c"
+      "task_file_sha256": "98d048d0aaf6046b9327afa253240b62e3734ab45dc0d0dcacc04d2e02b39e4d"
     },
     {
       "task_id": "11",
@@ -147,7 +151,7 @@
       "accepted_scope": null,
       "independent_acceptance_evidence": [],
       "original_task_file": "tasks/11-graph-outbox.md",
-      "task_file_sha256": "17d99dd1b34f3d06bda4be2d776da9072a5c8e5fcea15a74331a1e63427d5f10"
+      "task_file_sha256": "70083f7737084f69e3487e62defeb2c649c9b73d64cf0ac4d719e0bf0315088e"
     },
     {
       "task_id": "12",
@@ -211,7 +215,7 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "functional_v2_task09_actual_bootstrap_and_managed_recall",
+  "latest_milestone_id": "functional_v2_task10_independent_original_acceptance",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
   "assessment_basis_changed_without_denominator_change": true,
@@ -243,9 +247,10 @@
     "task07": "Original Task07 ACCEPTED independent PASS4.0: original5 requirements/4 criteria,32 independent controlled cases; genuine installed live/two observers/reconnect/final-only/backend tool/canonical final+ingestion/gap reconciliation and edit/remove/source/expiry/revocation/renewed-grant controls. Target3172114 retired200/404, owned credentials/clients/processes closed. Unknown liability and prior reds preserved.",
     "task08": "Original Task08 accepted by reused non-author PASS4.0: all5 requirements/4 criteria, current controlled1199 assertions plus24 distinct independent cases; actual delayed8, ordering3 with explicit controlled decisions, fences4+shared3, cached derivative revoke and genuine ordinary facts.resolve exact extraction parent. Owned cleanup55 sources/58 events/62 held rows/10 grants;26 slots released/full2600000 uncertain liability retained. Verified dev3173328 retained for new09tenant; final retirement open. Historical runtime/setup/oracle reds preserved. No09/full-goal acceptance. Lifecycle continuation: original09 subsequently retired3173328 with200/404 and all09credentials/clients; prior08 acceptance scope unchanged.",
     "task09": "Original Task09 accepted by reused non-author PASS4.0: all4 requirements/5criteria. Actual verifiedJWT/currentdefault1536 managed retrieval, finalwithpendingmemory,2 observers/attach/reconnect/noduplicateeffects, UI nextturnexacteligiblependinghistory, oneboundedapprovedrecall+2models/onefinal/oneingestion, queuedcancel, strictfailed-earlierhole and boundedoverflow. Observe terminal-attempt0 defect fixed/regressed and sameinstalledoldrows passunpaid.24governedattempts released/alluncertainliabilityretained;12sourcesretired,2grantsrevoked, target3173328retired200/404, Rootsignout/tabs/server/negativecredentialsclosed. Historical A/D/fixture failures and modelanswer-qualityreds/narrowviewportunavailable/clippedagentfieldretained. No10+/03-final/fullgoalacceptance.",
-    "task10": "Original09 accepted; full original10 delegated to bounded source author plus fresh-disposable actual executor and reused independent reviewer. Matching profile/index provenance, backend policy pins and per-profile readiness remain required; no10 acceptance yet."
+    "task10": "Original Task10 accepted by one non-author PASS4.0: all 5 requirements and 4 criteria. Both actual managed profiles retrieve identical canonical source/chunks with separate matching 1536/3072 generations; current policy, tracked edit, deletion, revocation and replay fences pass. Five governed calls retain full 500000 uncertain liability and release terminal slots. Shipped revision9 preserves exact V5/four proofs/default-small settings. Task10 scopes are cleaned; owned development target3174742 is retained prospectively for Task11, with final retirement open. Historical failures and scoped limits remain unchanged. No Task11+,03-final or full-goal acceptance.",
+    "task11": "Original Task11 in progress with 0/3 criteria accepted. Both fresh owned Linux services passed authenticated baseline/negative checks and original existing adapter43/43, with both graphs empty after cleanup. New durable scoped outbox, trusted worker, remote stale-write/tombstone fencing, graph lag/barrier and actual retries remain to implement and independently accept."
   },
-  "goal_task_criteria_accepted": 28,
+  "goal_task_criteria_accepted": 32,
   "goal_task_criteria_total": 61,
-  "goal_task_criteria_percent_complete": 45.9
+  "goal_task_criteria_percent_complete": 52.5
 }

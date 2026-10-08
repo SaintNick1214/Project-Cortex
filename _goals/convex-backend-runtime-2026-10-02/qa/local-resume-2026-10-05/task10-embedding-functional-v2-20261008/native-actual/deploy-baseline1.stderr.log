@@ -1,0 +1,250 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Added table indexes:
+  [+] agents.by_agentId   agentId, _creationTime
+  [+] agents.by_registered   registeredAt, _creationTime
+  [+] agents.by_runtime_scope_agent   tenantId, memorySpaceId, agentId, _creationTime
+  [+] agents.by_runtime_scope_owner   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] agents.by_status   status, _creationTime
+  [+] agents.by_tenantId   tenantId, _creationTime
+  [+] agents.by_tenant_status   tenantId, status, _creationTime
+  [+] artifacts.by_agentId   agentId, _creationTime
+  [+] artifacts.by_artifactId   artifactId, _creationTime
+  [+] artifacts.by_content (text)   content, filters on agentId, kind, memorySpaceId, participantId, streamingState, tenantId, userId
+  [+] artifacts.by_conversation   conversationRef.conversationId, _creationTime
+  [+] artifacts.by_created   createdAt, _creationTime
+  [+] artifacts.by_lastAccessed   lastAccessedAt, _creationTime
+  [+] artifacts.by_memorySpace   memorySpaceId, _creationTime
+  [+] artifacts.by_memorySpace_agent   memorySpaceId, agentId, _creationTime
+  [+] artifacts.by_memorySpace_conversation   memorySpaceId, conversationRef.conversationId, _creationTime
+  [+] artifacts.by_memorySpace_created   memorySpaceId, createdAt, _creationTime
+  [+] artifacts.by_memorySpace_kind   memorySpaceId, kind, _creationTime
+  [+] artifacts.by_memorySpace_state   memorySpaceId, streamingState, _creationTime
+  [+] artifacts.by_memorySpace_streaming   memorySpaceId, streamingState, updatedAt, _creationTime
+  [+] artifacts.by_memorySpace_updated   memorySpaceId, updatedAt, _creationTime
+  [+] artifacts.by_memorySpace_user   memorySpaceId, userId, _creationTime
+  [+] artifacts.by_participantId   participantId, _creationTime
+  [+] artifacts.by_runtime_key   tenantId, memorySpaceId, artifactId, _creationTime
+  [+] artifacts.by_streamingState   streamingState, _creationTime
+  [+] artifacts.by_tenantId   tenantId, _creationTime
+  [+] artifacts.by_tenant_artifactId   tenantId, artifactId, _creationTime
+  [+] artifacts.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] artifacts.by_tenant_space_kind   tenantId, memorySpaceId, kind, _creationTime
+  [+] artifacts.by_title (text)   title, filters on kind, memorySpaceId, tenantId
+  [+] artifacts.by_updated   updatedAt, _creationTime
+  [+] artifacts.by_userId   userId, _creationTime
+  [+] attachments.by_artifact   artifactId, _creationTime
+  [+] attachments.by_attachmentId   attachmentId, _creationTime
+  [+] attachments.by_conversation   conversationId, _creationTime
+  [+] attachments.by_created   createdAt, _creationTime
+  [+] attachments.by_embedding (vector)   embedding (1536 dimensions), filters on memorySpaceId, tenantId, type
+  [+] attachments.by_memory   memoryId, _creationTime
+  [+] attachments.by_memorySpace   memorySpaceId, _creationTime
+  [+] attachments.by_memorySpace_created   memorySpaceId, createdAt, _creationTime
+  [+] attachments.by_memorySpace_type   memorySpaceId, type, _creationTime
+  [+] attachments.by_memorySpace_user   memorySpaceId, userId, _creationTime
+  [+] attachments.by_message   messageId, _creationTime
+  [+] attachments.by_tenantId   tenantId, _creationTime
+  [+] attachments.by_tenant_attachmentId   tenantId, attachmentId, _creationTime
+  [+] attachments.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] attachments.by_updated   updatedAt, _creationTime
+  [+] attachments.by_userId   userId, _creationTime
+  [+] contexts.by_contextId   contextId, _creationTime
+  [+] contexts.by_created   createdAt, _creationTime
+  [+] contexts.by_memorySpace   memorySpaceId, _creationTime
+  [+] contexts.by_memorySpace_status   memorySpaceId, status, _creationTime
+  [+] contexts.by_parentId   parentId, _creationTime
+  [+] contexts.by_rootId   rootId, _creationTime
+  [+] contexts.by_runtime_scope_context   tenantId, memorySpaceId, contextId, _creationTime
+  [+] contexts.by_runtime_scope_owner   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] contexts.by_status   status, _creationTime
+  [+] contexts.by_tenantId   tenantId, _creationTime
+  [+] contexts.by_tenant_contextId   tenantId, contextId, _creationTime
+  [+] contexts.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] contexts.by_userId   userId, _creationTime
+  [+] conversationShares.by_conversation   conversationId, _creationTime
+  [+] conversationShares.by_grantedBy   grantedBy, _creationTime
+  [+] conversationShares.by_grantedTo   grantedTo, _creationTime
+  [+] conversationShares.by_shareId   shareId, _creationTime
+  [+] conversationShares.by_status   status, _creationTime
+  [+] conversationShares.by_tenant_conversation   tenantId, conversationId, _creationTime
+  [+] conversationShares.by_tenant_shareId   tenantId, shareId, _creationTime
+  [+] conversationSnapshots.by_conversation   conversationId, _creationTime
+  [+] conversationSnapshots.by_createdBy   createdBy, _creationTime
+  [+] conversationSnapshots.by_memorySpace   memorySpaceId, _creationTime
+  [+] conversationSnapshots.by_snapshotId   snapshotId, _creationTime
+  [+] conversationSnapshots.by_status   status, _creationTime
+  [+] conversationSnapshots.by_tenant_snapshotId   tenantId, snapshotId, _creationTime
+  [+] conversations.by_agent   participants.agentId, _creationTime
+  [+] conversations.by_conversationId   conversationId, _creationTime
+  [+] conversations.by_created   createdAt, _creationTime
+  [+] conversations.by_memorySpace   memorySpaceId, _creationTime
+  [+] conversations.by_memorySpace_agent   memorySpaceId, participants.agentId, _creationTime
+  [+] conversations.by_memorySpace_user   memorySpaceId, participants.userId, _creationTime
+  [+] conversations.by_memorySpace_visibility   memorySpaceId, visibility, _creationTime
+  [+] conversations.by_tenantId   tenantId, _creationTime
+  [+] conversations.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] conversations.by_type   type, _creationTime
+  [+] conversations.by_user   participants.userId, _creationTime
+  [+] conversations.by_visibility   visibility, _creationTime
+  [+] factHistory.by_action   action, _creationTime
+  [+] factHistory.by_eventId   eventId, _creationTime
+  [+] factHistory.by_factId   factId, _creationTime
+  [+] factHistory.by_memorySpace   memorySpaceId, _creationTime
+  [+] factHistory.by_memorySpace_timestamp   memorySpaceId, timestamp, _creationTime
+  [+] factHistory.by_timestamp   timestamp, _creationTime
+  [+] factHistory.by_userId   userId, _creationTime
+  [+] facts.by_content (text)   fact, filters on factType, memorySpaceId, ownerPrincipalId, tenantId
+  [+] facts.by_embedding (vector)   embedding (1536 dimensions), filters on memorySpaceId, tenantId
+  [+] facts.by_factId   factId, _creationTime
+  [+] facts.by_memorySpace   memorySpaceId, _creationTime
+  [+] facts.by_memorySpace_subject   memorySpaceId, subject, _creationTime
+  [+] facts.by_participantId   participantId, _creationTime
+  [+] facts.by_runtime_scope_factId   tenantId, memorySpaceId, factId, _creationTime
+  [+] facts.by_tenantId   tenantId, _creationTime
+  [+] facts.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] facts.by_userId   userId, _creationTime
+  [+] governanceEnforcement.by_executed   executedAt, _creationTime
+  [+] governanceEnforcement.by_memorySpace   memorySpaceId, executedAt, _creationTime
+  [+] governanceEnforcement.by_organization   organizationId, executedAt, _creationTime
+  [+] governanceEnforcement.by_runtime_policy   policyId, _creationTime
+  [+] governanceEnforcement.by_runtime_scope_executed   tenantId, memorySpaceId, executedAt, _creationTime
+  [+] governancePolicies.by_active   isActive, organizationId, _creationTime
+  [+] governancePolicies.by_memorySpace   memorySpaceId, _creationTime
+  [+] governancePolicies.by_organization   organizationId, _creationTime
+  [+] governancePolicies.by_runtime_scope_active   tenantId, memorySpaceId, isActive, _creationTime
+  [+] governancePolicies.by_updated   updatedAt, _creationTime
+  [+] graphSyncQueue.by_created   createdAt, _creationTime
+  [+] graphSyncQueue.by_priority   priority, synced, _creationTime
+  [+] graphSyncQueue.by_runtime_worker_entity   tenantId, memorySpaceId, authority.grantId, table, entityId, _creationTime
+  [+] graphSyncQueue.by_runtime_worker_state   tenantId, memorySpaceId, authority.grantId, synced, priority, _creationTime
+  [+] graphSyncQueue.by_synced   synced, _creationTime
+  [+] graphSyncQueue.by_table   table, _creationTime
+  [+] graphSyncQueue.by_table_entity   table, entityId, _creationTime
+  [+] immutable.by_created   createdAt, _creationTime
+  [+] immutable.by_runtime_key   tenantId, memorySpaceId, type, id, _creationTime
+  [+] immutable.by_runtime_scope   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] immutable.by_tenantId   tenantId, _creationTime
+  [+] immutable.by_tenant_type_id   tenantId, type, id, _creationTime
+  [+] immutable.by_type   type, _creationTime
+  [+] immutable.by_type_id   type, id, _creationTime
+  [+] immutable.by_userId   userId, _creationTime
+  [+] memories.by_agentId   agentId, _creationTime
+  [+] memories.by_content (text)   content, filters on agentId, memorySpaceId, ownerPrincipalId, participantId, sourceType, tenantId, userId
+  [+] memories.by_embedding (vector)   embedding (1536 dimensions), filters on agentId, memorySpaceId, participantId, tenantId, userId
+  [+] memories.by_memoryId   memoryId, _creationTime
+  [+] memories.by_memorySpace   memorySpaceId, _creationTime
+  [+] memories.by_memorySpace_agentId   memorySpaceId, agentId, _creationTime
+  [+] memories.by_memorySpace_created   memorySpaceId, createdAt, _creationTime
+  [+] memories.by_memorySpace_userId   memorySpaceId, userId, _creationTime
+  [+] memories.by_participantId   participantId, _creationTime
+  [+] memories.by_runtime_scope_memoryId   tenantId, memorySpaceId, memoryId, _creationTime
+  [+] memories.by_tenantId   tenantId, _creationTime
+  [+] memories.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] memories.by_userId   userId, _creationTime
+  [+] memorySpaces.by_created   createdAt, _creationTime
+  [+] memorySpaces.by_memorySpaceId   memorySpaceId, _creationTime
+  [+] memorySpaces.by_runtime_scope_owner   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] memorySpaces.by_status   status, _creationTime
+  [+] memorySpaces.by_tenantId   tenantId, _creationTime
+  [+] memorySpaces.by_tenant_memorySpaceId   tenantId, memorySpaceId, _creationTime
+  [+] memorySpaces.by_tenant_status   tenantId, status, _creationTime
+  [+] memorySpaces.by_type   type, _creationTime
+  [+] mutable.by_namespace   namespace, _creationTime
+  [+] mutable.by_namespace_key   namespace, key, _creationTime
+  [+] mutable.by_runtime_key   tenantId, memorySpaceId, namespace, key, _creationTime
+  [+] mutable.by_runtime_scope   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] mutable.by_tenantId   tenantId, _creationTime
+  [+] mutable.by_tenant_namespace   tenantId, namespace, _creationTime
+  [+] mutable.by_tenant_namespace_key   tenantId, namespace, key, _creationTime
+  [+] mutable.by_updated   updatedAt, _creationTime
+  [+] mutable.by_userId   userId, _creationTime
+  [+] runtimeAgentDefinitions.by_scoped_publish   tenantId, memorySpaceId, publishPrincipalId, publishIdentityHash, _creationTime
+  [+] runtimeAgentDefinitions.by_scoped_version   tenantId, memorySpaceId, agentId, version, _creationTime
+  [+] runtimeAgentExecutions.by_attempt   tenantId, memorySpaceId, runId, attemptNumber, _creationTime
+  [+] runtimeAgentIngestion.by_run   tenantId, memorySpaceId, runId, _creationTime
+  [+] runtimeAgentOperations.by_attempt   tenantId, memorySpaceId, runId, attemptNumber, kind, ordinal, _creationTime
+  [+] runtimeAgentOperations.by_operation   tenantId, memorySpaceId, operationId, _creationTime
+  [+] runtimeAgentOutput.by_delivery   tenantId, memorySpaceId, runId, attemptNumber, final, sequence, _creationTime
+  [+] runtimeAgentOutput.by_sequence   tenantId, memorySpaceId, runId, attemptNumber, sequence, _creationTime
+  [+] runtimeAuthGrants.by_membership   membershipId, _creationTime
+  [+] runtimeAuthGrants.by_membership_scope_version   membershipId, memorySpaceId, version, _creationTime
+  [+] runtimeAuthMemberships.by_principal_tenant   principalId, tenantId, _creationTime
+  [+] runtimeAuthPrincipals.by_issuer_subject   issuer, subject, _creationTime
+  [+] runtimeAuthScopes.by_tenant_space   tenantId, memorySpaceId, _creationTime
+  [+] runtimeAuthTombstones.by_resource   tenantId, memorySpaceId, resourceType, resourceId, _creationTime
+  [+] runtimeBeliefHeads.by_slot   tenantId, memorySpaceId, slotKey, _creationTime
+  [+] runtimeBeliefHistory.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeBeliefHistory.by_fact   tenantId, memorySpaceId, factId, sequence, _creationTime
+  [+] runtimeBeliefOutbox.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeBudgetAccounts.by_account_key   accountKey, _creationTime
+  [+] runtimeBudgetAccounts.by_run   runBudgetId, _creationTime
+  [+] runtimeBudgetAccounts.by_scope_current   scopeKey, current, _creationTime
+  [+] runtimeConversationShares.by_conversation   tenantId, memorySpaceId, conversationId, _creationTime
+  [+] runtimeConversationShares.by_conversation_state   tenantId, memorySpaceId, conversationId, state, _creationTime
+  [+] runtimeConversationShares.by_owner   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] runtimeConversationShares.by_scoped_id   tenantId, memorySpaceId, shareId, _creationTime
+  [+] runtimeConversationSnapshots.by_conversation   tenantId, memorySpaceId, conversationId, _creationTime
+  [+] runtimeConversationSnapshots.by_owner   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] runtimeConversationSnapshots.by_scoped_id   tenantId, memorySpaceId, snapshotId, _creationTime
+  [+] runtimeConversations.by_scope   tenantId, memorySpaceId, _creationTime
+  [+] runtimeConversations.by_scoped_alias   tenantId, memorySpaceId, legacyConversationId, _creationTime
+  [+] runtimeConversations.by_scoped_id   tenantId, memorySpaceId, conversationId, _creationTime
+  [+] runtimeIngestionEvents.by_conversation_sequence   tenantId, memorySpaceId, conversationId, sequence, _creationTime
+  [+] runtimeIngestionEvents.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeIngestionEvents.by_owner_sequence   tenantId, memorySpaceId, ownerPrincipalId, sequence, _creationTime
+  [+] runtimeIngestionEvents.by_scope_sequence   tenantId, memorySpaceId, sequence, _creationTime
+  [+] runtimeIngestionEvents.by_source   tenantId, memorySpaceId, lineage.sourceId, lineage.sourceRevision, _creationTime
+  [+] runtimeIngestionEvents.by_source_eligibility   tenantId, memorySpaceId, lineage.sourceId, eligibility, _creationTime
+  [+] runtimeIngestionJobs.by_account   runAccountId, _creationTime
+  [+] runtimeIngestionJobs.by_budget   runBudgetId, _creationTime
+  [+] runtimeIngestionJobs.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeIngestionScopes.by_scope   tenantId, memorySpaceId, _creationTime
+  [+] runtimeIngestionStages.by_event_stage   tenantId, memorySpaceId, eventId, stage, _creationTime
+  [+] runtimeMemoryChunks.by_scope_chunk   tenantId, memorySpaceId, chunkId, _creationTime
+  [+] runtimeMemoryReceipts.by_scope_receipt   tenantId, memorySpaceId, receiptId, _creationTime
+  [+] runtimeMemorySources.by_scope_event   tenantId, memorySpaceId, lineage.sourceEventId, _creationTime
+  [+] runtimeMemorySources.by_scope_source   tenantId, memorySpaceId, lineage.sourceId, _creationTime
+  [+] runtimeMemoryVectors.by_default_embedding_v1 (vector)   embedding (1536 dimensions), filters on memorySpaceId, profileId, scopeProfileKey, scopeProfileOwnerKey, tenantId
+  [+] runtimeMemoryVectors.by_scope_source_revision   tenantId, memorySpaceId, sourceId, sourceRevision, _creationTime
+  [+] runtimeMemoryVectors.by_scope_vector   tenantId, memorySpaceId, vectorId, _creationTime
+  [+] runtimeModelAttempts.by_child_attempt   operationDocumentId, childCallId, attemptNumber, _creationTime
+  [+] runtimeModelAttempts.by_operation   operationDocumentId, _creationTime
+  [+] runtimeModelAttempts.by_state_checkpoint   state, checkpointAt, _creationTime
+  [+] runtimeModelOperations.by_identity   tenantId, memorySpaceId, principalId, semanticId, operationKey, _creationTime
+  [+] runtimeModelPolicies.by_policy_version   policyId, version, _creationTime
+  [+] runtimeModelPolicies.by_scope_active   scope, tenantId, active, _creationTime
+  [+] runtimeModelQualifications.by_active   active, _creationTime
+  [+] runtimeModelQualifications.by_receipt   receiptId, version, _creationTime
+  [+] runtimeRunAttempts.by_run_attempt   tenantId, memorySpaceId, runId, attemptNumber, _creationTime
+  [+] runtimeRunOutbox.by_conversation   tenantId, memorySpaceId, conversationId, sequence, _creationTime
+  [+] runtimeRunOutbox.by_run   tenantId, memorySpaceId, runId, _creationTime
+  [+] runtimeRuns.by_conversation_queue   tenantId, memorySpaceId, conversationId, queueSequence, _creationTime
+  [+] runtimeRuns.by_conversation_status   tenantId, memorySpaceId, conversationId, responseStatus, queueSequence, _creationTime
+  [+] runtimeRuns.by_request   tenantId, memorySpaceId, ownerPrincipalId, requestIdentityHash, _creationTime
+  [+] runtimeRuns.by_run_account   runAccountId, _creationTime
+  [+] runtimeRuns.by_scoped_id   tenantId, memorySpaceId, runId, _creationTime
+  [+] runtimeTranscriptMessages.by_conversation_position   tenantId, memorySpaceId, conversationId, order, stepOrder, _creationTime
+  [+] runtimeTranscriptMessages.by_legacy_id   tenantId, memorySpaceId, conversationId, legacyMessageId, _creationTime
+  [+] runtimeTranscriptMessages.by_native   tenantId, memorySpaceId, nativeMessageId, _creationTime
+  [+] runtimeTranscriptOutbox.by_conversation   tenantId, memorySpaceId, conversationId, _creationTime
+  [+] runtimeTranscriptOutbox.by_identity   tenantId, memorySpaceId, identityHash, _creationTime
+  [+] sessions.by_lastActive   lastActiveAt, _creationTime
+  [+] sessions.by_memorySpace   memorySpaceId, _creationTime
+  [+] sessions.by_runtime_key   tenantId, memorySpaceId, sessionId, _creationTime
+  [+] sessions.by_runtime_scope   tenantId, memorySpaceId, ownerPrincipalId, _creationTime
+  [+] sessions.by_sessionId   sessionId, _creationTime
+  [+] sessions.by_status   status, _creationTime
+  [+] sessions.by_tenantId   tenantId, _creationTime
+  [+] sessions.by_tenant_status   tenantId, status, _creationTime
+  [+] sessions.by_tenant_user   tenantId, userId, _creationTime
+  [+] sessions.by_userId   userId, _creationTime
+✔ Installed component agent.
+✔ Installed component workflow.
+✔ Installed component workflow/workpool.
+✔ Installed component workflow/workpool/batchWorker.
+✔ 11:47:34 Convex functions ready! (8.87s)

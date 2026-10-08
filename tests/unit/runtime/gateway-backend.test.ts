@@ -7,7 +7,7 @@ import type { BackendGatewayContext } from "../../../convex-dev/runtimeGatewayBa
 import type { DeploymentPolicyManifest } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import type { Doc } from "../../../convex-dev/_generated/dataModel";
 import { canonicalModelJson, DEFAULT_CHAT_MODEL_ID } from "../../../src/domain/model-policy";
-import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
+import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
 import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../../../src/domain/conflicts";
 import { memoryFixture, registeredHandler } from "../runtimeMemory/fixture";
@@ -474,5 +474,66 @@ describe("backend ActionCtx Gateway adapter — offline native composition", () 
     const f = fixture(); const invalid = createBackendGatewayComposition({ ...f.ctx, runMutation: async () => ({ recorded: false }) } as unknown as BackendGatewayContext);
     await expect(invalid.ledger.markVisible({ reference: f.reference, attemptId: "attempt" as Doc<"runtimeModelAttempts">["_id"], outputVisible: true,
       toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false })).rejects.toMatchObject({ code: "VISIBILITY_NOT_RECORDED" });
+  });
+});
+
+
+describe("qualified profile-specific native embedding envelopes (offline)", () => {
+  function embeddingRoot(large: boolean) {
+    const profile = large ? LARGE_EMBEDDING_PROFILE : DEFAULT_EMBEDDING_PROFILE;
+    const q = { ...root.qualifications[0]!, receiptId: "offline-profile", modelId: profile.modelId, nativeInterface: "embedding" as const,
+      capabilities: ["embedding" as const], allowedOptions: [] };
+    root = { ...root, qualifications: [q], policies: [{ ...root.policies[0]!, rules: { ...root.policies[0]!.rules,
+      modelId: profile.modelId, nativeInterface: "embedding", allowedModels: [profile.modelId], interfaces: ["embedding"], capabilities: ["embedding"], allowedOptions: [] } }],
+      dispatchEvidence: [{ ...root.dispatchEvidence[0]!, receiptId: q.receiptId, modelId: profile.modelId, nativeInterface: "embedding",
+        terminalModelId: large ? "text-embedding-3-large" : "text-embedding-3-small",
+        ...(large ? { embeddingProfile: profile } : {}),
+        inputBound: { ...root.dispatchEvidence[0]!.inputBound, ruleId: large ? "profile-embedding-utf8-v1" : "default-embedding-utf8-v1",
+          featureEnvelope: large ? "profile-embedding-v1" : "default-embedding-v1" },
+        resultBound: { ...root.dispatchEvidence[0]!.resultBound, maximumPrivateResultBytes: large ? 131072 : 60000 } }] };
+    return profile;
+  }
+  it.each([false, true])("pins native profile/dimensions, terminal alias and replay bytes (large=%s)", async large => {
+    const profile = embeddingRoot(large); const f = fixture(); await f.install();
+    const budget = await ensureBackendGatewayBudget(f.ctx, { reference: f.reference, operationKey: "embedding.query", requestId: "profile-native", requestCanonical: canonicalModelJson({ text: "orchid" }) });
+    const binding = { reference: f.reference, operationKey: "embedding.query" as const, runBudgetId: budget.runBudgetId, semanticId: "orchid", ordinal: 0 };
+    const resolution = await f.composition.ledger.resolve(binding);
+    expect(resolution.snapshot.semanticProfile).toEqual(profile); expect(resolution.storageLimits.privateResultBytes).toBe(large ? 131072 : 60000);
+    let calls = 0; const vector = Array(profile.dimensions).fill(0.12345678901234567) as number[];
+    const model: EmbeddingModelV4 = { specificationVersion: "v4", provider: "convexGateway.embedding", modelId: profile.modelId,
+      maxEmbeddingsPerCall: 1, supportsParallelCalls: false, doEmbed: async () => { calls++; return { embeddings: [vector], warnings: [],
+        response: { body: { id: "embedding-terminal", model: root.dispatchEvidence[0]!.terminalModelId, data: [{ embedding: vector }], usage: { prompt_tokens: 6, total_tokens: 6, cost: "0.000040" } } } }; } };
+    const first = governGatewayEmbeddingModel(model, f.composition, binding, resolution);
+    try { expect((await first.model.doEmbed({ values: ["orchid"] })).embeddings[0]).toHaveLength(profile.dimensions); }
+    finally { await first.lifecycle.complete(); }
+    expect(calls).toBe(1); expect(f.attempt().resultAttachmentState).toBe("attached");
+    const encoded = f.attempt().privateResultCanonical!; const bytes = new TextEncoder().encode(encoded).length;
+    expect(bytes).toBeLessThanOrEqual(large ? 131072 : 60000); if (large) expect(bytes).toBeGreaterThan(60000);
+    expect(JSON.parse(encoded).profile).toEqual(profile); expect(f.account("run")).toMatchObject({ reservedUnits: 0, settledUnits: 40, activeConcurrency: 0 });
+    const replay = governGatewayEmbeddingModel(model, f.composition, binding, resolution);
+    try { await expect(replay.model.doEmbed({ values: ["orchid"] })).rejects.toMatchObject({ code: "REPLAY_AVAILABLE" });
+      expect(await replay.lifecycle.consumeReplay()).toEqual({ profile, vectors: [vector] }); }
+    finally { await replay.lifecycle.complete(); }
+    expect(calls).toBe(1); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1); expect(tokenLookup).not.toHaveBeenCalled();
+  });
+  it.each(["small-wide-result", "large-wrong-dimension", "large-alias"])("rejects unqualified %s before any budget or token lookup", async kind => {
+    embeddingRoot(kind !== "small-wide-result");
+    const p = root.dispatchEvidence[0]!;
+    root = { ...root, dispatchEvidence: [{ ...p, ...(kind === "small-wide-result" ? { resultBound: { ...p.resultBound, maximumPrivateResultBytes: 131072 } }
+      : kind === "large-wrong-dimension" ? { embeddingProfile: { ...LARGE_EMBEDDING_PROFILE, dimensions: 1536 } } : { terminalModelId: "azure/text-embedding-3-large" }) }] };
+    const f = fixture(); await expect(f.install()).rejects.toThrow(); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(0);
+    expect(f.db.writes).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+  });
+  it("does not let native small resolution metadata widen its60000-byte storage contract", async () => {
+    const profile = embeddingRoot(false); const f = fixture(); await f.install();
+    const budget = await ensureBackendGatewayBudget(f.ctx, { reference: f.reference, operationKey: "embedding.query", requestId: "small-storage", requestCanonical: "{}" });
+    const binding = { reference: f.reference, operationKey: "embedding.query" as const, runBudgetId: budget.runBudgetId, semanticId: "storage", ordinal: 0 };
+    const resolution = await f.composition.ledger.resolve(binding);
+    const model: EmbeddingModelV4 = { specificationVersion: "v4", provider: "convexGateway.embedding", modelId: profile.modelId,
+      maxEmbeddingsPerCall: 1, supportsParallelCalls: false, doEmbed: async () => { throw new Error("must not dispatch"); } };
+    expect(() => governGatewayEmbeddingModel(model, f.composition, binding, { ...resolution,
+      storageLimits: { ...resolution.storageLimits, privateResultBytes: 131072 } })).toThrow(expect.objectContaining({ code: "CAPABILITY_UNAVAILABLE" }));
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(0); expect(tokenLookup).not.toHaveBeenCalled();
+    expect(f.account("run")).toMatchObject({ activeConcurrency: 0, reservedUnits: 0, settledUnits: 0, uncertainUnits: 0 });
   });
 });

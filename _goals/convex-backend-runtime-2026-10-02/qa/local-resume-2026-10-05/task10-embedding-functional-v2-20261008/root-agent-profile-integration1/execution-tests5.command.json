@@ -1,0 +1,41 @@
+{
+  "scope": "CONTROLLED_HANDLER_ONLY_NOT_MANAGED_QUALIFICATION",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests5.results.json"
+  ],
+  "fixtureEnvironment": {
+    "CONVEX_TEST_MODE": "local",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "serviceTarget": false
+  },
+  "nodeVersion": "v24.15.0",
+  "exitCode": 0,
+  "elapsedSeconds": 5.552592039108276,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e75ca94a758e3bba7603b672eb8972dfdbd9c7fc2764f1ed16dd4987cf76b449"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "77175f07eab77710e5820a6b9a57834c1b18ac50dd3105b8ad629f4220c2f6d7"
+    }
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "priorFailuresPreserved": [
+    "execution-tests1: global environment prerequisite before assertions",
+    "execution-tests2:58PASS2fixturecontextcaps mismatch",
+    "execution-tests3:59PASS1spy did not forward official childComponentreference",
+    "execution-tests4:59PASS1invalidspyexpectation; stage readiness calls localpolicyaccessor so test now proves cancelled exact runbudget denial with actualhandler instead of nonexistentRPC"
+  ],
+  "productLimitsChanged": false,
+  "assertionPurpose": "Positive strictbarrier then cancelled sameownedbudget denial; pending exactbudget forwarding; no billable effects"
+}

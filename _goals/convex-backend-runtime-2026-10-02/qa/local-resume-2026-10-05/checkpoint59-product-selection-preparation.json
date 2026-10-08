@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "scope": "CHECKPOINT59_PRODUCT_SELECTION_PREPARATION_NOT_COMMIT",
+  "timestampUtc": "2026-10-08T20:01:57.212709+00:00",
+  "workingDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseline": {
+    "HEAD": "05086ead2dcddd796c715226f58eed388533fdad",
+    "originDev": "e158b097fc74dbc16def7f33d054aa0cbf6f6fff",
+    "originContinuation": "05086ead2dcddd796c715226f58eed388533fdad"
+  },
+  "productPaths": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 74370,
+      "sha256": "e75ca94a758e3bba7603b672eb8972dfdbd9c7fc2764f1ed16dd4987cf76b449"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "bytes": 73280,
+      "sha256": "b3189416c25d0c675e418a4495562f3b139136d49e8ea72adafb3e21371eb57c"
+    },
+    {
+      "path": "convex-dev/runtimeGatewayQualifications.ts",
+      "bytes": 25994,
+      "sha256": "ec0bdc4206270dbd4a3bf2aea9ccbbcb8209060ad0d67f182fa5684e1a91a44f"
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "bytes": 51617,
+      "sha256": "7ed5c83e2aa8f07c6a79de53291f6b7caab7aed1b0b6a31bda36a8d5207062ec"
+    },
+    {
+      "path": "convex-dev/runtimeIngestionSchema.ts",
+      "bytes": 4443,
+      "sha256": "e56a0b64d0398290f2a4410f05b2858ec28721fcf73694c8ef1b6f84b84538e8"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "bytes": 16064,
+      "sha256": "b6dfed6572ea5228d30429761df41a19107d0fbca4f849e7dbcc8ba896462cba"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "bytes": 13670,
+      "sha256": "0adba91fab715ac3199a0d0370984295145f0e1329ac8a0cb55da313b255a7a8"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 10258,
+      "sha256": "abb592948174cdcc72ee18282ca28de63ee5b4d56b3e892761057ac0840502a8"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 30418,
+      "sha256": "01ae6fe409bc9d920c3066128c192cfc3a04aace4620559ac27d78fef823018c"
+    },
+    {
+      "path": "convex-dev/runtimeMemorySchema.ts",
+      "bytes": 5753,
+      "sha256": "39967b0c577b50172c2913a81dfbd4485206c03d758f9bc1544dfc7daf13bf7e"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryServices.ts",
+      "bytes": 10966,
+      "sha256": "c0ea136e2b8492a3efcf570bbfdc351c0b6a9a5d9640ce29c2f9bd90030ea57b"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "bytes": 100624,
+      "sha256": "1c940f78ef95fa34ead6f5ff22ef983d50cd9dd82dca4d545d84470315bfd12b"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4403,
+      "sha256": "8af7fbf6d616368023beb103e4ac39cd708b4acdb1d21f87c8f1878687915246"
+    },
+    {
+      "path": "src/domain/contracts.ts",
+      "bytes": 6038,
+      "sha256": "af4afef7e6d36a6888afbec3ade31681627e91fe08bb4453cbd691575ca98280"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "bytes": 28620,
+      "sha256": "77e020c2e680cf9cc85fe2361ed0bf134d3af2d9449f317156d60096e2d8272d"
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "src/domain/sources.ts",
+      "bytes": 13752,
+      "sha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a"
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "bytes": 33492,
+      "sha256": "fe851091f60bcb5fdc3dbdc29491efd098d4e72f7c6fb523a53b19fae1a62ac5"
+    },
+    {
+      "path": "tests/unit/domain/sources.test.ts",
+      "bytes": 14642,
+      "sha256": "808cb0506ef8e344d379e877f796da7e1ccfffa478d85c2f376abf58f5582a46"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-backend.test.ts",
+      "bytes": 47929,
+      "sha256": "f655ec20c5d4398dc84ec18d9e81ecaca4f58e35af4ca973aa31a39c7a66843f"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "bytes": 8201,
+      "sha256": "be9359dfdb12e89e78c10421cb3204c92fb0e5dd1b8f6b37ee1be823cac78c91"
+    },
+    {
+      "path": "tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 46623,
+      "sha256": "afb5ad5880393c171b7627596067dab523e9bab9c44c4d4fe2a458375d0a241b"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 96390,
+      "sha256": "f11ae2a4871efea225530d3b81f26323e72f4a98d1f66addccc286f5f19f44bb"
+    },
+    {
+      "path": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "bytes": 8272,
+      "sha256": "f25c02c197de4e44e5edb5e50e919b8d32ddb4e8a7d31dc8814abb0b6b4149c8"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 57235,
+      "sha256": "77175f07eab77710e5820a6b9a57834c1b18ac50dd3105b8ad629f4220c2f6d7"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5589,
+      "sha256": "bd1c884b9c6fa31a53aa68154ddd53a6ee32ff97c37cbb6e8c46cfd4bfb65ec7"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/context.test.ts",
+      "bytes": 9886,
+      "sha256": "79b9c98ae9c63de72c6defd125ce7fbe0e989386e2f133e993ab49b327c364b1"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/worker.test.ts",
+      "bytes": 20709,
+      "sha256": "6d96fc760340428cce4e8f5ac9e65378a7e2a5e23f9253e754b0a6cea5534198"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/fixture.ts",
+      "bytes": 9138,
+      "sha256": "85cdb5651fab7da156352d842da0c7c1e011cec2f9ebbf384076e9a38d665020"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/profiles.test.ts",
+      "bytes": 9573,
+      "sha256": "9f578a2306e1c49cc143fd9634a6e10af19dcc9d399f109633b74690a8273666"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/public-functional.test.ts",
+      "bytes": 17360,
+      "sha256": "7ba2d0de2d96471f50f9c54bfa11efe65658ac3c099c40da16107911e8964e35"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 20249,
+      "sha256": "9dee8dd43b7fb457082d8d958d672da76744dfc73933cf017f6de609898b5310"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/managed.test.ts",
+      "bytes": 16533,
+      "sha256": "9a890a7b4ec8f8257dba5fc36e615f9c0b7b4b21e0fea337fe35170e255c9477"
+    }
+  ],
+  "productFileCount": 33,
+  "reviewPending": true,
+  "staged": false,
+  "noForeignOrOnlyCopyFilesSelected": true
+}

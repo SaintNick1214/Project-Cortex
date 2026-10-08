@@ -1,8 +1,9 @@
 import { jest, beforeEach, afterEach, describe, test, expect } from "@jest/globals";
 import type { ActionCtx } from "../../../convex-dev/_generated/server";
 import type { MemoryModel } from "../../../src/domain/contracts";
-import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { ingestionFixture, installIngestionMockRoot, ingestion, candidate } from "./fixture";
+import { ledger, currentMockRootSelection } from "../runtimeTranscript/fixture";
 import { ConvexError } from "convex/values";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { planBeliefs } from "../../../src/domain/belief-plan";
@@ -34,6 +35,48 @@ async function fullReceipt(f: Fixture, role: "user" | "assistant" = "user") {
 }
 describe("bounded source-stage worker", () => {
   beforeEach(() => installIngestionMockRoot()); afterEach(() => { jest.restoreAllMocks(); });
+  test("first vector claim pins backend large policy and stores3072 without marking default complete", async () => {
+    installIngestionMockRoot({ large: true });
+    const f = await ingestionFixture(); const event = await ingestion.enqueueSourceEvent(f.ctx, f.reference,
+      await f.source("attributed assistant context", "large-assistant", 1, "assistant"));
+    const embed = jest.fn<MemoryModel["embed"]>(async request => ({ profile: request.profile,
+      vectors: request.texts.map(() => Array(request.profile.dimensions).fill(0.25) as number[]) }));
+    await worker(f, event.eventId, "vectors", controlled({ embed }));
+    expect(embed.mock.calls[0]![0].profile).toEqual(LARGE_EMBEDDING_PROFILE);
+    expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ profile: LARGE_EMBEDDING_PROFILE,
+      factsState: "skipped", vectorsState: "complete", vectorProfilesComplete: [LARGE_EMBEDDING_PROFILE.profileId] });
+    const stage = f.db.table("runtimeIngestionStages").find(row => row.stage === "vectors")!;
+    expect(JSON.parse(stage.policyCanonical as string).semanticProfile).toEqual(LARGE_EMBEDDING_PROFILE);
+    expect(f.db.table("runtimeMemoryVectors")[0].embeddingLarge).toHaveLength(3072);
+    expect(f.db.table("runtimeMemoryVectors")[0]).not.toHaveProperty("embedding");
+    expect(f.db.table("runtimeIngestionJobs")).toHaveLength(1); expect(f.db.table("facts")).toHaveLength(0);
+    const context = await import("../../../convex-dev/runtimeMemoryContext");
+    await context.refreshScopeWatermarks(f.ctx, f.reference);
+    expect(f.db.table("runtimeIngestionScopes")[0]).toMatchObject({ vectorsThrough: 0,
+      vectorProfileThrough: { [LARGE_EMBEDDING_PROFILE.profileId]: 1 } });
+  });
+  test("an additional foreground generation updates profile readiness without repeating belief import", async () => {
+    const f = await ingestionFixture(); const completed = await fullReceipt(f);
+    await f.call(nativeMemory.writeDerived, { reference: f.reference, capability: "write", input: completed.input });
+    const sourceBefore = f.db.table("runtimeMemorySources")[0]; const chunksBefore = structuredClone(f.db.table("runtimeMemoryChunks"));
+    const outboxBefore = structuredClone(f.db.table("runtimeBeliefOutbox"));
+    installIngestionMockRoot({ large: true });
+    await f.call(ledger.installDeploymentPolicy, currentMockRootSelection());
+    const identity = { ...completed.input.identity, stage: "vectors" as const, semanticPolicyVersion: LARGE_EMBEDDING_PROFILE.profileId };
+    const receiptId = await processingIdentityKey(identity);
+    const input = { source: completed.input.source, identity, chunks: completed.input.chunks,
+      vectors: completed.input.vectors.map(vector => ({ ...vector, vectorId: `${vector.vectorId}:large`, profile: LARGE_EMBEDDING_PROFILE,
+        embedding: Array(3072).fill(0.25) as number[], processingReceiptId: receiptId })) };
+    await f.call(nativeMemory.writeDerived, { reference: f.reference, capability: "write", input });
+    const writes = f.db.writes;
+    await f.call(nativeMemory.writeDerived, { reference: f.reference, capability: "write", input });
+    expect(f.db.writes).toBe(writes); expect(f.db.table("runtimeIngestionEvents")).toHaveLength(1);
+    expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ profile: DEFAULT_EMBEDDING_PROFILE,
+      vectorProfilesComplete: [DEFAULT_EMBEDDING_PROFILE.profileId, LARGE_EMBEDDING_PROFILE.profileId] });
+    expect(f.db.table("runtimeMemorySources")[0]).toEqual(sourceBefore); expect(f.db.table("runtimeMemoryChunks")).toEqual(chunksBefore);
+    expect(f.db.table("runtimeBeliefOutbox")).toEqual(outboxBefore); expect(f.db.table("runtimeMemoryVectors")).toHaveLength(2);
+    expect(f.db.table("runtimeMemoryVectorGenerations")).toHaveLength(2); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  });
   test("delayed extraction does not alter response finality and duplicate delivery performs no second call", async () => {
     const f = await ingestionFixture(); const source = await f.source("User likes blue");
     const run = f.db.seed("runtimeRuns", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId, runId: "response", conversationId: "conversation", responseStatus: "complete", memoryStatus: "pending" });

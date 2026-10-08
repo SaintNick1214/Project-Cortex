@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T19:44:26.962937+00:00",
+  "scope": "FRESH_OWNED_LINUX_GRAPH_PREREQUISITES_ONLY",
+  "services": [
+    {
+      "service": "neo4j",
+      "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+      "containerName": "cortex-runtime-task11-neo4j-b17103c9",
+      "image": "neo4j@sha256:0dfcadbd51e1d2e5a0cf86d054a0bb537a4bce212796d967cbd88445aaf3fbf3",
+      "uri": "bolt://127.0.0.1:51389",
+      "isolatedToLoopback": true,
+      "privateCredentialsCreated": true,
+      "inspection": "\"4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8\" \"sha256:0dfcadbd51e1d2e5a0cf86d054a0bb537a4bce212796d967cbd88445aaf3fbf3\" \"running\" {\"cortex.goal\":\"convex-backend-runtime-2026-10-02\",\"cortex.owner\":\"backend-runtime-completion\",\"cortex.task\":\"11\"} {\"7687/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"51389\"}]}",
+      "startExit": 0
+    },
+    {
+      "service": "memgraph",
+      "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+      "containerName": "cortex-runtime-task11-memgraph-3d64f4ec",
+      "image": "memgraph/memgraph@sha256:bd3fe13228f40881365486729c78110dde6e04f3c1f102c84720d31f38b693f8",
+      "uri": "bolt://127.0.0.1:51397",
+      "isolatedToLoopback": true,
+      "privateCredentialsCreated": true,
+      "inspection": "\"3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8\" \"sha256:bd3fe13228f40881365486729c78110dde6e04f3c1f102c84720d31f38b693f8\" \"running\" {\"cortex.goal\":\"convex-backend-runtime-2026-10-02\",\"cortex.owner\":\"backend-runtime-completion\",\"cortex.task\":\"11\",\"org.opencontainers.image.version\":\"24.04\"} {\"7687/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"51397\"}]}",
+      "startExit": 0
+    }
+  ],
+  "credentialsPrinted": false,
+  "productImplementationStarted": false,
+  "task11Accepted": false,
+  "foreignContainersChanged": false,
+  "sources": [
+    "https://neo4j.com/docs/operations-manual/current/docker/introduction/",
+    "https://memgraph.com/docs/getting-started/install-memgraph/docker-compose"
+  ],
+  "ownedCleanupPending": true,
+  "privateCredentialDirectory": "/Users/SaintNick/.codex/tmp/cortex-task11-graph-6c189764d39e"
+}

@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-10-08T18:44:44.985Z",
+  "modelId": "openai/text-embedding-3-large",
+  "providerAlias": "text-embedding-3-large",
+  "defaultDimensions": 3072,
+  "inputUsdPerMillionTokens": 0.13,
+  "allowedRequest": "one text value; native embedding V3 doEmbed; no dimensions/providerOptions/batch/fallback",
+  "proposedInputUtf8UnitsCeiling": 8192,
+  "publishedPriceMicroUsdAtCeiling": 1065,
+  "reservationMicroUsd": 100000,
+  "terminalCost": "unavailable unless aggregate completeness is actually known",
+  "unknownCost": "retain full operation/run/tenant liability; bounded complete matching result may replay; no paid retry",
+  "sources": [
+    {
+      "url": "https://vercel.com/ai-gateway/models/text-embedding-3-large",
+      "supports": [
+        "model",
+        "3072 dimensions",
+        "0.13/M both listed providers",
+        "one value official example"
+      ]
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/embeddings",
+      "supports": [
+        "3072 default dimensions",
+        "optional shortening excluded from this profile"
+      ]
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models/text-embedding-3-large",
+      "supports": [
+        "alias only, no pinned dated model snapshot listed",
+        "price0.13/M"
+      ]
+    }
+  ],
+  "qualificationStatus": "NOT YET OBSERVED",
+  "practicalPriceEvidence": true,
+  "universalAggregateCompletenessClaim": false
+}

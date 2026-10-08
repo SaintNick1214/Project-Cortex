@@ -10,7 +10,7 @@ import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { createAuthorityReader, recheckAuthority } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
-import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
+import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
 import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest } from "../src/domain/model-policy";
@@ -134,8 +134,13 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
       || proof.priceRevision !== qualification.priceRevision || proof.boundRevision !== qualification.boundRevision
       || !digest.test(proof.inputBound.nativeTransformHash) || !digest.test(proof.inputBound.documentHash)
       || proof.terminalProof !== "provider-terminal-v1") fail("CAPABILITY_UNAVAILABLE");
-    if (!digest.test(proof.resultBound.proofHash) || proof.resultBound.maximumPrivateResultBytes > MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes
+    if (!digest.test(proof.resultBound.proofHash) || proof.resultBound.maximumPrivateResultBytes > (proof.inputBound.featureEnvelope === "profile-embedding-v1" && proof.embeddingProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : 60_000)
       || proof.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
+    if (proof.inputBound.featureEnvelope === "profile-embedding-v1") {
+      if (proof.nativeInterface !== "embedding" || proof.inputBound.ruleId !== "profile-embedding-utf8-v1" || !proof.embeddingProfile) fail("CAPABILITY_UNAVAILABLE");
+      assertSupportedEmbeddingProfile(proof.embeddingProfile);
+      if (proof.embeddingProfile.modelId !== proof.modelId) fail("CAPABILITY_UNAVAILABLE");
+    } else if (proof.embeddingProfile) fail("CAPABILITY_UNAVAILABLE");
     integer(proof.resultBound.maximumPrivateResultBytes, 1); integer(proof.resultBound.maximumOutputTokens);
     integer(proof.inputBound.revision, 1); integer(proof.checkedAt); integer(proof.expiresAt, 1);
     if (proof.checkedAt >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
@@ -232,7 +237,7 @@ async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: 
 function resolutionContext(reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }): TrustedModelPolicyContext {
   return { scope: memoryScope(reference), operationKey: key, runBudgetId, authorizedOverrides: [], ...(agent ? { agent } : {}),
     ...(source ? { source: { sourceId: source.sourceId, sourceEventId: source.sourceEventId, sourceRevision: source.sourceRevision } } : {}),
-    ...(parentOperationId ? { parentOperationId } : {}), ...(key.startsWith("embedding.") ? { semanticProfile: DEFAULT_EMBEDDING_PROFILE } : {}) };
+    ...(parentOperationId ? { parentOperationId } : {}) };
 }
 async function resolveCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }) {
   const { manifest, root } = await activeRoot(ctx);
@@ -272,7 +277,10 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   }
   const snapshot = snapshotOf(operation);
   const current = await resolveCurrent(ctx, reference, operation.operationKey, run.runBudgetId!, operation.source, operation.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
-  if (!permitCancelled) await assertIngestionPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
+  if (!permitCancelled) {
+    await assertIngestionPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
+    if (snapshot.semanticProfile) assertProfileMatches(snapshot.semanticProfile, current.snapshot.semanticProfile!);
+  }
   if (!current.snapshot.allowedModels.includes(snapshot.modelId) || !snapshot.capabilities.every((cap) => current.snapshot.capabilities.includes(cap))
     || !current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
       && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
@@ -376,8 +384,7 @@ export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.
     membershipId: "bootstrap-validation", membershipVersion: 1, grantId: "bootstrap-validation", grantVersion: 1, tenantEpoch: 1, memorySpaceEpoch: 1 };
   for (const qualification of manifest.qualifications) {
     const key: ModelOperationKey = qualification.nativeInterface === "embedding" ? "embedding.query" : "agent.respond";
-    resolveModelPolicy({ context: { scope: proofScope, operationKey: key, runBudgetId: "bootstrap-validation", authorizedOverrides: [],
-      ...(key.startsWith("embedding.") ? { semanticProfile: DEFAULT_EMBEDDING_PROFILE } : {}) }, policies: manifest.policies.filter((p) => p.scope === "deployment" && (!p.operationKey || p.operationKey === key)), qualifications: manifest.qualifications });
+    resolveModelPolicy({ context: { scope: proofScope, operationKey: key, runBudgetId: "bootstrap-validation", authorizedOverrides: [] }, policies: manifest.policies.filter((p) => p.scope === "deployment" && (!p.operationKey || p.operationKey === key)), qualifications: manifest.qualifications });
   }
   for (const row of old) if (canonical(row.root) !== canonical(root)) await ctx.db.patch("runtimeModelPolicies", row._id, { active: false });
   for (const policy of manifest.policies) {
@@ -417,7 +424,21 @@ export const provisionTenantPolicy = internalMutation({ args: { reference: runti
   }
   if (rules.modelId && !hard.rules.allowedModels?.includes(rules.modelId)) fail("POLICY_DENIED");
   if (rules.nativeInterface && !hard.rules.interfaces?.includes(rules.nativeInterface)) fail("POLICY_DENIED");
-  if (rules.pins && Object.entries(rules.pins).some(([key, value]) => value !== hard.rules.pins?.[key as keyof NonNullable<typeof hard.rules.pins>])) fail("POLICY_DENIED");
+  const changedPins = Object.entries(rules.pins ?? {}).filter(([key, value]) => value !== hard.rules.pins?.[key as keyof NonNullable<typeof hard.rules.pins>]);
+  if (changedPins.length) {
+    // Price/bound IDs are selectors into the current compiled qualification,
+    // never tenant attestations. Keep one financial root/window and every
+    // existing liability while selecting an exact supported embedding profile.
+    if (changedPins.some(([key]) => key !== "priceRevision" && key !== "boundRevision")
+      || policy.operationKey !== "embedding.memory" && policy.operationKey !== "embedding.query"
+      || rules.nativeInterface !== "embedding"
+      || ![DEFAULT_EMBEDDING_PROFILE.modelId, LARGE_EMBEDDING_PROFILE.modelId].includes(rules.modelId ?? "")
+      || !rules.pins?.priceRevision || !rules.pins.boundRevision) fail("POLICY_DENIED");
+    const qualified = single(manifest.qualifications.filter(entry => entry.modelId === rules.modelId
+      && entry.nativeInterface === rules.nativeInterface && entry.priceRevision === rules.pins!.priceRevision
+      && entry.boundRevision === rules.pins!.boundRevision && entry.capabilities.includes("embedding")));
+    if (!qualified) fail("POLICY_DENIED");
+  }
   const sameId = single(await ctx.db.query("runtimeModelPolicies").withIndex("by_policy_version", (q) => q.eq("policyId", policy.policyId).eq("version", policy.version)).take(2));
   if (sameId) {
     if (sameId.scope !== "tenant" || sameId.tenantId !== args.reference.tenantId || sameId.canonical !== policyCanonical || !sameId.actorReference
@@ -441,6 +462,25 @@ async function runAccount(ctx: ReadCtx, reference: RuntimeAuthorityReference, ru
   if (!run || run.kind !== "run" || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId) fail("FORBIDDEN");
   return run;
 }
+/** Policy metadata only: no source writes, model admission or caller profile override. */
+export async function readCurrentEmbeddingProfile(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  operationKey: "embedding.memory" | "embedding.query", runBudgetId?: string) {
+  await currentAuthority(ctx, reference, operationKey);
+  const account = runBudgetId ? await runAccount(ctx, reference, runBudgetId) : undefined;
+  if (account) {
+    if (account.cancelled || !account.current) fail("RUN_CANCELLED");
+    await guardAgentRunBudget(ctx, reference, account._id);
+    await guardIngestionRunBudget(ctx, reference, account._id);
+  }
+  const current = await resolveCurrent(ctx, reference, operationKey, runBudgetId ?? "profile-metadata",
+    undefined, undefined, account?.agentId ? { agentId: account.agentId, version: account.agentVersion! } : undefined);
+  if (!current.snapshot.semanticProfile) fail("CAPABILITY_UNAVAILABLE");
+  assertSupportedEmbeddingProfile(current.snapshot.semanticProfile);
+  return current.snapshot.semanticProfile;
+}
+export const embeddingProfile = internalQuery({ args: { reference: runtimeAuthorityReference,
+  operationKey: v.union(v.literal("embedding.memory"), v.literal("embedding.query")), runBudgetId: v.optional(v.string()) },
+  handler: async (ctx, args) => readCurrentEmbeddingProfile(ctx, args.reference, args.operationKey, args.runBudgetId) });
 const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
 export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, args) => {
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
@@ -454,7 +494,8 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
   }
   const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
   await assertIngestionPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
-  return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: MODEL_LEDGER_STORAGE_LIMITS };
+  return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: { ...MODEL_LEDGER_STORAGE_LIMITS,
+    privateResultBytes: resolved.snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes } };
 } });
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
@@ -463,7 +504,9 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
     for (const point of value) { const code = point.codePointAt(0)!; if (code >= 0xd800 && code <= 0xdfff) fail("INVALID_INPUT"); }
     return new TextEncoder().encode(value).length;
   };
-  if (proof.inputBound.ruleId === "default-embedding-utf8-v1" && proof.inputBound.featureEnvelope === "default-embedding-v1" && proof.nativeInterface === "embedding") {
+  if (proof.nativeInterface === "embedding" && ((proof.inputBound.ruleId === "default-embedding-utf8-v1" && proof.inputBound.featureEnvelope === "default-embedding-v1")
+    || (proof.inputBound.ruleId === "profile-embedding-utf8-v1" && proof.inputBound.featureEnvelope === "profile-embedding-v1"))) {
+    assertProfileMatches(request.profile!, proof.embeddingProfile ?? DEFAULT_EMBEDDING_PROFILE);
     if (request.texts.length > 512) fail("POLICY_DENIED");
     const counts = request.texts.map(bytes);
     if (counts.some((n) => n > 8192) || add(...counts) > 300_000) fail("POLICY_DENIED");
@@ -701,7 +744,7 @@ async function liabilityAuthority(ctx: ReadCtx, reference: RuntimeAuthorityRefer
   if (authority.resourceAccess === "own" && authority.principalId !== operation.principalId) fail("FORBIDDEN");
 }
 function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attempt, encoded?: string): string | undefined {
-  if (!encoded || new TextEncoder().encode(encoded).length > MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes) return undefined;
+  if (!encoded || new TextEncoder().encode(encoded).length > (snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes)) return undefined;
   try {
     const result = decode(encoded);
     if (snapshot.nativeInterface === "chat" && !snapshot.semanticProfile) {

@@ -8,7 +8,7 @@ import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Res
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import { canonicalModelJson, validateModelRequest } from "../src/domain/model-policy";
 import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
-import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
+import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
 import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
@@ -199,6 +199,10 @@ export function conservativeUsdDecimal(value: unknown): string | undefined {
   if (units > BigInt(Number.MAX_SAFE_INTEGER)) return undefined;
   return `${units / 1_000_000n}.${(units % 1_000_000n).toString().padStart(6, "0")}`;
 }
+function embeddingResultCeiling(proof: QualifiedDispatchEvidence): number {
+  return proof.nativeInterface === "embedding" && proof.inputBound.featureEnvelope === "profile-embedding-v1"
+    && proof.embeddingProfile?.modelId === "openai/text-embedding-3-large" ? 131_072 : 60_000;
+}
 function proofFor(resolution: GatewayResolution, now: number): void {
   const { snapshot: s, dispatchEvidence: p, storageLimits: limits } = resolution;
   if (qualifiedTerminalModelId(p) === undefined || p.receiptId !== s.qualificationReceiptId || p.modelId !== s.modelId || p.nativeInterface !== s.nativeInterface
@@ -206,8 +210,8 @@ function proofFor(resolution: GatewayResolution, now: number): void {
     || p.checkedAt > now || p.expiresAt <= now || p.terminalProof !== "provider-terminal-v1"
     || ![p.evidenceHash, p.inputBound.nativeTransformHash, p.inputBound.documentHash, p.inputBound.proofHash, p.resultBound.proofHash].every((h) => /^[a-f0-9]{64}$/.test(h))
     || p.inputBound.revision !== 1 || !count(p.resultBound.maximumOutputTokens) || !count(p.resultBound.maximumPrivateResultBytes)
-    || p.resultBound.maximumPrivateResultBytes < 1 || p.resultBound.maximumPrivateResultBytes > 60_000
-    || !count(limits.canonicalBytes) || limits.canonicalBytes < 1 || !count(limits.privateResultBytes) || limits.privateResultBytes < 1 || limits.canonicalBytes > 180_000 || limits.privateResultBytes > 60_000 || limits.embeddingValuesPerCall !== 1 || p.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
+    || p.resultBound.maximumPrivateResultBytes < 1 || p.resultBound.maximumPrivateResultBytes > embeddingResultCeiling(p)
+    || !count(limits.canonicalBytes) || limits.canonicalBytes < 1 || !count(limits.privateResultBytes) || limits.privateResultBytes < 1 || limits.canonicalBytes > 180_000 || limits.privateResultBytes > embeddingResultCeiling(p) || limits.embeddingValuesPerCall !== 1 || p.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
   if (s.nativeInterface === "chat" && p.inputBound.ruleId === "plain-chat-cookbook-utf8-v1" && p.inputBound.featureEnvelope === "plain-chat-v1" && !s.capabilities.includes("tools")) return;
   if (s.nativeInterface === "chat" && p.inputBound.ruleId === "agent-tools-chat-utf8-v1" && p.inputBound.featureEnvelope === "agent-tools-chat-v1"
     && s.operationKey === "agent.respond" && s.capabilities.includes("tools") && s.pins.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION
@@ -216,6 +220,9 @@ function proofFor(resolution: GatewayResolution, now: number): void {
     && s.limits.toolSteps <= p.toolContract.maximumToolCalls) return;
   if (s.nativeInterface === "embedding" && p.inputBound.ruleId === "default-embedding-utf8-v1" && p.inputBound.featureEnvelope === "default-embedding-v1") {
     assertProfileMatches(s.semanticProfile!); return;
+  }
+  if (s.nativeInterface === "embedding" && p.inputBound.ruleId === "profile-embedding-utf8-v1" && p.inputBound.featureEnvelope === "profile-embedding-v1" && p.embeddingProfile) {
+    assertSupportedEmbeddingProfile(p.embeddingProfile); assertProfileMatches(s.semanticProfile!, p.embeddingProfile); return;
   }
   fail("CAPABILITY_UNAVAILABLE");
 }
@@ -586,9 +593,9 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
       }
       const item = record(result, ["text"]); if (typeof item.text !== "string" || !item.text) fail("INVALID_REPLAY"); utf8(item.text); assertDelivery(); return { text: item.text };
     }
-    const item = record(result, ["profile", "vectors"]); assertProfileMatches(item.profile as typeof DEFAULT_EMBEDDING_PROFILE);
-    if (!Array.isArray(item.vectors) || item.vectors.length !== 1) fail("INVALID_REPLAY"); item.vectors.forEach((v: number[]) => assertEmbeddingVector(v));
-    assertDelivery(); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: item.vectors as number[][] };
+    const item = record(result, ["profile", "vectors"]); assertProfileMatches(item.profile as typeof DEFAULT_EMBEDDING_PROFILE, resolution.snapshot.semanticProfile!);
+    if (!Array.isArray(item.vectors) || item.vectors.length !== 1) fail("INVALID_REPLAY"); item.vectors.forEach((v: number[]) => assertEmbeddingVector(v, resolution.snapshot.semanticProfile!));
+    assertDelivery(); return { profile: resolution.snapshot.semanticProfile!, vectors: item.vectors as number[][] };
   }) };
   async function admit(request: ModelCallRequest): Promise<Reserved & { dispatchIdentity: string }> {
     proofFor(resolution, (composition.now ?? Date.now)()); assertDelivery();
@@ -802,7 +809,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
 }
 export function governGatewayEmbeddingModel(model: EmbeddingModelV4, composition: GatewayComposition, binding: GatewayBinding, resolution: GatewayResolution): { model: EmbeddingModelV4; lifecycle: GatewayLifecycle } {
   const state = stateFor(composition, binding, resolution);
-  if (resolution.snapshot.nativeInterface !== "embedding" || model.modelId !== DEFAULT_EMBEDDING_PROFILE.modelId || model.provider !== "convexGateway.embedding") fail("MODEL_IDENTITY_MISMATCH");
+  if (resolution.snapshot.nativeInterface !== "embedding" || model.modelId !== resolution.snapshot.semanticProfile?.modelId || model.provider !== "convexGateway.embedding") fail("MODEL_IDENTITY_MISMATCH");
   const requests = new WeakMap<object, ModelCallRequest>();
   const wrapped = wrapEmbeddingModel({ model, middleware: { specificationVersion: "v4", overrideMaxEmbeddingsPerCall: () => 1,
     transformParams: async ({ params }) => {
@@ -810,7 +817,7 @@ export function governGatewayEmbeddingModel(model: EmbeddingModelV4, composition
       if (n.headers !== undefined || n.providerOptions !== undefined || (n.abortSignal !== undefined && n.abortSignal !== state.controller.signal)) fail("UNSUPPORTED_NATIVE_FIELD");
       const values = arrayValues(n.values); if (values.length !== 1 || typeof values[0] !== "string") fail("EMBEDDING_VALUE_BOUND");
       const text = values[0]; utf8(text); const normalized = normalizeSourceText(text); const bytes = utf8(normalized); if (bytes > 8192) fail("INPUT_BOUND_EXCEEDED");
-      const request = requestBase(state.resolution.snapshot, state.binding); request.texts = [normalized]; request.inputTokens = bytes; request.profile = DEFAULT_EMBEDDING_PROFILE;
+      const request = requestBase(state.resolution.snapshot, state.binding); request.texts = [normalized]; request.inputTokens = bytes; request.profile = state.resolution.snapshot.semanticProfile!;
       request.batch = { ordinal: state.binding.ordinal, start: state.binding.ordinal, end: state.binding.ordinal + 1 };
       const checked = validateModelRequest(state.resolution.snapshot, request).request;
       const transformed: EmbeddingModelV4CallOptions = { values: [...checked.texts], abortSignal: state.controller.signal }; requests.set(transformed, detached(checked)); return transformed;
@@ -825,7 +832,7 @@ export function governGatewayEmbeddingModel(model: EmbeddingModelV4, composition
       const raw = providerJSON(result.response?.body);
       if (!raw || !Array.isArray(raw.data) || raw.data.length !== 1 || result.embeddings.length !== 1) fail("UNQUALIFIED_TERMINAL");
       let payload: string | undefined;
-      try { const vectors = detached(result.embeddings); assertEmbeddingVector(vectors[0]!); payload = json({ profile: DEFAULT_EMBEDDING_PROFILE, vectors }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); }
+      try { const vectors = detached(result.embeddings); assertEmbeddingVector(vectors[0]!, state.resolution.snapshot.semanticProfile!); payload = json({ profile: state.resolution.snapshot.semanticProfile!, vectors }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); }
       catch { /* Invalid output never discards terminal charge. */ }
       try { await state.terminal(attempt, raw, state.canDeliver() ? payload : undefined); } finally { state.endLifetime(); }
       state.assertDelivery();

@@ -1,6 +1,6 @@
 # Task 11: Scoped durable external graph projection
 
-**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
+**Status:** In progress — Task10 accepted; fresh owned Linux graph services and existing adapter qualified. Durable scoped outbox/worker implementation and all original criteria remain pending.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [09 accepted actual text/UI slice](09-text-client-slice.md), [03 authorization foundation](03-authorization.md#authorization-execution-gates), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
 

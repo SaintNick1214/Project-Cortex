@@ -1,0 +1,40 @@
+{
+  "scope": "CONTROLLED_HANDLER_ONLY_NOT_MANAGED_QUALIFICATION",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests4.results.json"
+  ],
+  "fixtureEnvironment": {
+    "CONVEX_TEST_MODE": "local",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "serviceTarget": false
+  },
+  "nodeVersion": "v24.15.0",
+  "exitCode": 1,
+  "elapsedSeconds": 4.52237606048584,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e75ca94a758e3bba7603b672eb8972dfdbd9c7fc2764f1ed16dd4987cf76b449"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "cc8743d5ecad2ebb815b516f3f4346e5f4751a9fbcf95b269f94a569ee2bd5e3"
+    }
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "priorFailuresPreserved": [
+    "execution-tests1: global environment prerequisite before assertions",
+    "execution-tests2:58PASS2fixturecontextcaps mismatch",
+    "execution-tests3:59PASS1spy did not forward official childComponentreference; fix routes it to originalfixture"
+  ],
+  "assertionsWeakened": false,
+  "productLimitsChanged": false
+}

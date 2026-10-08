@@ -1,3 +1,5 @@
+import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import type { EmbeddingProfile } from "../../../src/domain/profile";
 import { getFunctionName } from "convex/server";
 import { ConvexError } from "convex/values";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
@@ -64,7 +66,7 @@ export class MemoryTestDb {
     try { return await run(); } catch (error) { this.rows = before; this.writes = writes; this.sequence = sequence; throw error; }
   }
 }
-export function memoryFixture(options: { budget?: (args: BackendGatewayBudgetArgs) => Promise<BackendGatewayBudget> } = {}) {
+export function memoryFixture(options: { profile?: () => EmbeddingProfile; budget?: (args: BackendGatewayBudgetArgs) => Promise<BackendGatewayBudget> } = {}) {
   const db = new MemoryTestDb();
   const principal = db.seed("runtimeAuthPrincipals", { issuer: "https://host.test", subject: "user-a", actorKind: "user", version: 1, createdAt: 1000 });
   const membership = db.seed("runtimeAuthMemberships", { principalId: principal._id, tenantId: "tenant-a", version: 1, createdAt: 1000 });
@@ -83,6 +85,10 @@ export function memoryFixture(options: { budget?: (args: BackendGatewayBudgetArg
     runQuery: async (ref: unknown, args: unknown) => {
       const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
       const [module, key] = name.split(":");
+      if (module === "runtimeModelPolicy" && key === "embeddingProfile") {
+        await registeredHandler<unknown, unknown>(memory.checkAuthority)(ctx, { reference: (args as { reference: unknown }).reference, capability: (args as { operationKey: string }).operationKey === "embedding.query" ? "read" : "write" });
+        return options.profile?.() ?? DEFAULT_EMBEDDING_PROFILE;
+      }
       const registration = (module === "runtimeAuth" ? auth : memory) as unknown as Record<string, unknown>;
       return await registeredHandler<unknown, unknown>(registration[key!]!)(ctx, args);
     },
@@ -109,6 +115,7 @@ export function memoryFixture(options: { budget?: (args: BackendGatewayBudgetArg
       return db.table(table).filter((row) => row[filter.key] === filter.value).slice(0, query.limit).map((row) => ({ _id: row._id, _score: 0.9 }));
     },
   } as unknown as ActionCtx;
+  ctx.runQuery = actionCtx.runQuery as unknown as MutationCtx["runQuery"];
   ctx.runMutation = actionCtx.runMutation as unknown as MutationCtx["runMutation"];
   ctx.scheduler = { runAfter: async () => "scheduled:memory-bookkeeping" } as unknown as MutationCtx["scheduler"];
   return { db, ctx, actionCtx, reference, principal, membership, grant, searches, policyRequests };

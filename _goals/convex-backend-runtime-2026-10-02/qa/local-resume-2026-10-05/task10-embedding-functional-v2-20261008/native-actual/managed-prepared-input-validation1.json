@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "bytes": 28620,
+      "sha256": "77e020c2e680cf9cc85fe2361ed0bf134d3af2d9449f317156d60096e2d8272d"
+    }
+  ],
+  "manifestSha256": "556c22fbc395c17c4522fb2452cf5fb2c30ad414721f300c8171f30f0a38e442",
+  "snapshots": [
+    {
+      "operationKey": "agent.respond",
+      "modelId": "openai/gpt-4o-mini",
+      "boundRevision": "agent-tools-32768-512-v1"
+    },
+    {
+      "operationKey": "memory.extract",
+      "modelId": "openai/gpt-4o-mini",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "operationKey": "facts.resolve",
+      "modelId": "openai/gpt-4o-mini",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "operationKey": "embedding.memory",
+      "modelId": "openai/text-embedding-3-small",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "operationKey": "embedding.memory",
+      "modelId": "openai/text-embedding-3-large",
+      "boundRevision": "task10-large-8192-3072-v1"
+    },
+    {
+      "operationKey": "embedding.query",
+      "modelId": "openai/text-embedding-3-small",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "operationKey": "embedding.query",
+      "modelId": "openai/text-embedding-3-large",
+      "boundRevision": "task10-large-8192-3072-v1"
+    }
+  ],
+  "authorityProjectionFields": [
+    "principalId",
+    "principalVersion",
+    "membershipId",
+    "membershipVersion",
+    "grantId",
+    "grantVersion",
+    "tenantId",
+    "tenantEpoch",
+    "memorySpaceId",
+    "memorySpaceEpoch"
+  ],
+  "oldQualifications": 4,
+  "preparedLargeProvenanceLength": 181,
+  "effects": false
+}

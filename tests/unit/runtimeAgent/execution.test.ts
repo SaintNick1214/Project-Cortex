@@ -10,7 +10,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   async cancel(_ctx: unknown, id: string) { cancellations.push(id); }
   async sendEvent(_ctx: unknown, args: unknown) { events.push(args); }
 } }));
-const { installMockRoot, transcriptFixture, transcript, runs, invoke } = await import("../runtimeTranscript/fixture");
+const { installMockRoot, installIngestionMockRoot, transcriptFixture, transcript, runs, invoke } = await import("../runtimeTranscript/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const memory = await import("../../../convex-dev/runtimeMemory");
@@ -23,8 +23,8 @@ const { memoryScope } = await import("../../../convex-dev/runtimeMemoryRepositor
 type F = Awaited<ReturnType<typeof transcriptFixture>>;
 beforeEach(() => { installMockRoot(); starts.length = cancellations.length = events.length = 0; });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture() {
-  const f = await transcriptFixture(); const mutation = f.ctx.runMutation.bind(f.ctx), query = f.ctx.runQuery.bind(f.ctx);
+async function fixture(options: { maxContextTokens?: number } = {}) {
+  const f = await transcriptFixture(options); const mutation = f.ctx.runMutation.bind(f.ctx), query = f.ctx.runQuery.bind(f.ctx);
   const route = (name: string) => name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext
     : name === "runs:cancel" ? runs.cancel : name === "runs:recoverQueue" ? runs.recoverQueue : name === "runs:recoverOwnedQueue" ? runs.recoverOwnedQueue : name === "runtimeMemory:readSource" ? memory.readSource : undefined;
   f.ctx.runMutation = (async (ref: unknown, args: unknown) => {
@@ -275,7 +275,8 @@ describe("durable Agent execution product boundaries", () => {
     await expect(f.call(runtime.startContext, args)).rejects.toThrow(); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
   });
   it("strict facts barrier waits and then reports the pinned deadline before embedding dispatch", async () => {
-    const f = await fixture(); const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, {
+    installIngestionMockRoot();
+    const f = await fixture({ maxContextTokens: 16384 }); const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, {
       memorySpaceId: "space-a", clientMutationId: "strict", expectedPreviousVersion: 0,
       definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, memoryMode: "strict", requiredStages: ["facts"], barrier: { deadlineMs: 100, onFailure: "fail" } } } });
     const run = await f.call<{ runId: string }>(runs.submit, { request: { ...f.request("strict-input"), agentId: published.agentId, agentVersion: published.version } });
@@ -289,6 +290,36 @@ describe("durable Agent execution product boundaries", () => {
     await f.call(runtime.endInterrupted, { ...args, cancelled: false });
     expect(f.db.table("runtimeRuns")[0]).toMatchObject({ responseStatus: "failed", contextCompleteness: "incomplete", failureCode: "MEMORY_BARRIER_TIMEOUT" });
     expect(f.db.table("runtimeModelOperations")).toEqual([]);
+  });
+  it("strict readiness and pending context resolve against the owned run budget before model effects", async () => {
+    installIngestionMockRoot();
+    const f = await fixture({ maxContextTokens: 16384 }); const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, {
+      memorySpaceId: "space-a", clientMutationId: "context-budget", expectedPreviousVersion: 0,
+      definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, memoryMode: "strict", requiredStages: ["vectors"], barrier: { deadlineMs: 100, onFailure: "fail" } } } });
+    const run = await f.call<{ runId: string }>(runs.submit, { request: { ...f.request("context-budget-input"), agentId: published.agentId, agentVersion: published.version } });
+    await f.call(runtime.start, { runId: run.runId }); const owned = f.db.table("runtimeAgentExecutions")[0];
+    const args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion };
+    await f.call(runtime.startContext, args);
+    const runBudgetId = f.db.table("runtimeRuns")[0].runBudgetId;
+    expect(await f.call(runtime.contextBarrier, args)).toMatchObject({ state: "waiting" });
+    const account = f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run" && row.runBudgetId === runBudgetId)!;
+    await f.db.patch("runtimeBudgetAccounts", account._id, { cancelled: true });
+    await expect(f.call(runtime.contextBarrier, args)).rejects.toThrow("RUN_CANCELLED");
+    await f.db.patch("runtimeBudgetAccounts", account._id, { cancelled: false });
+    const originalQuery = f.ctx.runQuery.bind(f.ctx); const selections: Record<string, unknown>[] = [];
+    f.ctx.runQuery = (async (ref: unknown, input: unknown) => {
+      if ((ref as Partial<Record<symbol, string>>)[Symbol.for("toReferencePath")]) return await originalQuery(ref as never, input as never);
+      const name = getFunctionName(ref as never); const selected = input as Record<string, unknown>;
+      if (name === "runtimeMemoryContext:pendingContext") {
+        selections.push({ name, ...selected });
+        throw new Error("CONTROLLED_STOP_BEFORE_RECALL");
+      }
+      return await originalQuery(ref as never, input as never);
+    }) as unknown as typeof f.ctx.runQuery;
+    await expect(f.call(runtime.prepareContext, args)).rejects.toThrow("CONTROLLED_STOP_BEFORE_RECALL");
+    expect(selections).toHaveLength(1);
+    expect(selections[0]).toMatchObject({ name: "runtimeMemoryContext:pendingContext", reference: f.reference, runBudgetId });
+    expect(f.db.table("runtimeModelOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
   });
   it("explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event", async () => {
     installMockRoot({ tools: true }); const f = await fixture(); f.grant.capabilities = [...f.grant.capabilities as string[], "tool"];

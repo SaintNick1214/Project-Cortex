@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { TrustedMemoryScope } from "./contracts.js";
-import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "./profile.js";
+import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "./profile.js";
 
 /** Pure contracts: only a verified backend lookup may supply policy and qualifications. */
 export const MODEL_OPERATION_KEYS = Object.freeze([
@@ -211,11 +211,10 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
   limits = tighten(limits, receipt.limits); assertLimits(limits);
   if (receipt.costBound.maximumCostUnits > limits.operationBudgetUnits) deny("qualified cost ceiling exceeds operation budget");
   options = intersect(options, receipt.allowedOptions); capabilities = intersect(capabilities, receipt.capabilities);
-  if (operation.capability === "embedding") {
-    if (!context.semanticProfile) throw new Error("PROFILE_NOT_READY: embedding profile is required");
-    assertProfileMatches(context.semanticProfile);
+  const semanticProfile = operation.capability === "embedding" ? embeddingProfileForModel(selected) : undefined;
+  if (semanticProfile) {
+    if (context.semanticProfile) assertProfileMatches(context.semanticProfile, semanticProfile);
     options = []; tools = []; capabilities = ["embedding"];
-    if (selected !== DEFAULT_EMBEDDING_PROFILE.modelId) throw new Error("PROFILE_NOT_READY: embedding model changed");
   } else if (context.semanticProfile) deny("text policy cannot select an embedding profile");
   const fallbackCandidates = fallbacks.filter((candidate) => candidate !== selected && models.includes(candidate)).map((candidate) => {
     const candidateReceipt = qualified(candidate);
@@ -231,7 +230,7 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
     limits, pins, policyVersions: ordered.map(({ policyId, version, override }) => ({ policyId, version, ...(override ? { override } : {}) })),
     qualificationReceiptId: receipt.receiptId, costBound: receipt.costBound, scope: context.scope, ...(context.agent ? { agent: context.agent } : {}),
     runBudgetId: context.runBudgetId, ...(context.parentOperationId ? { parentOperationId: context.parentOperationId } : {}),
-    ...(context.source ? { source: context.source } : {}), ...(context.semanticProfile ? { semanticProfile: context.semanticProfile } : {}),
+    ...(context.source ? { source: context.source } : {}), ...(semanticProfile ? { semanticProfile } : {}),
     fallbackCandidates, currency: "USD", monetaryUnit: "micro-USD" });
 }
 

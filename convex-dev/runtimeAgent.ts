@@ -209,7 +209,7 @@ export const contextBarrier = internalMutation({ args: agentAttempt, handler: as
   if (current.definition.context.memoryMode !== "strict") return { state: "ready" as const, remainingMs: 0 };
   await refreshScopeWatermarks(ctx, args.reference);
   const cutoff = current.snapshot.ingestionCutoff.sequence;
-  const progress = await readStageProgress(ctx, args.reference, cutoff);
+  const progress = await readStageProgress(ctx, args.reference, cutoff, current.run.runBudgetId);
   const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
   const decision = evaluateMemoryBarrier({ cutoff, requiredStages: current.snapshot.ingestionCutoff.requiredStages,
     progress, startedAt: current.execution.barrierStartedAt, deadlineMs: barrier.deadlineMs, now: Date.now(), onFailure: barrier.onFailure });
@@ -240,9 +240,9 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   const boundary = { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence,
     anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
   const represented = current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId }));
-  const pending = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; cutoff: number; alreadyRepresented: string[]; maxBytes: number; boundary: typeof boundary },
+  const pending = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; cutoff: number; alreadyRepresented: string[]; maxBytes: number; boundary: typeof boundary; runBudgetId: string },
     Awaited<ReturnType<typeof readPendingContext>>>("query", "runtimeMemoryContext:pendingContext"),
-  { reference: args.reference, cutoff, alreadyRepresented: represented, maxBytes: Math.min(16_384, current.definition.context.maxContextTokens), boundary });
+  { reference: args.reference, cutoff, alreadyRepresented: represented, maxBytes: Math.min(16_384, current.definition.context.maxContextTokens), boundary, runBudgetId: current.run.runBudgetId });
   if (pending.completeness === "incomplete") {
     if (barrier.onFailure === "fail") return await fail("CONTEXT_OVERFLOW");
     completeness = "incomplete"; failureCode = "CONTEXT_OVERFLOW";

@@ -1,0 +1,37 @@
+(node:55398) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent1.test.ts
+  independent selected-profile readiness boundaries
+    ✓ private-peer generations cannot consume an own-only metadata bound (2 ms)
+    ✓ a genuine own-domain oversize remains explicitly bounded (2 ms)
+    ✕ a large-only completed metadata page schedules continuation while facts/default already finished (1 ms)
+
+  ● independent selected-profile readiness boundaries › a large-only completed metadata page schedules continuation while facts/default already finished
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:375:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:160:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:156:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:160:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:161:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent1.test.ts:27:49)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 2 passed, 3 total
+Snapshots:   0 total
+Time:        4.973 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-red1.results.json

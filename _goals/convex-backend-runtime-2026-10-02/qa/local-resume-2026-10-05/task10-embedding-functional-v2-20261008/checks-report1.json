@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "task": "10-embedding-profiles",
+  "state": "SOURCE_READY_ACTUAL_QUALIFICATION_PENDING",
+  "scope": "Controlled product implementation checks only; no native managed index/model claim",
+  "createdAt": "2026-10-08T19:31:59.716083+00:00",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "selectionResults": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-final1.json",
+      "total": 849,
+      "passed": 848,
+      "failed": 1,
+      "skipped": 0,
+      "suites": 28
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-native-contracts1.json",
+      "total": 249,
+      "passed": 249,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 3
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/transcript-profile-repair1.json",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1
+    }
+  ],
+  "uniqueCurrentAssertionCount": 1094,
+  "uniqueCurrentStatuses": {
+    "passed": 1094,
+    "failed": 0,
+    "pending": 0
+  },
+  "checks": {
+    "sdkTypes": {
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/sdk-types3.log"
+    },
+    "backendTypes": {
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/backend-types3.log"
+    },
+    "scopedLint": {
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/scoped-lint2.log"
+    },
+    "affectedFixtureLint": {
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/transcript-fixture-lint1.log"
+    }
+  },
+  "assertionIdentityRule": "absolute suite path + full assertion name; later affected replay replaces only the same identity, never discards earlier raw",
+  "sourceSnapshot": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/contracts.ts",
+      "bytes": 6038,
+      "sha256": "af4afef7e6d36a6888afbec3ade31681627e91fe08bb4453cbd691575ca98280"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "bytes": 28620,
+      "sha256": "77e020c2e680cf9cc85fe2361ed0bf134d3af2d9449f317156d60096e2d8272d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/sources.ts",
+      "bytes": 13752,
+      "sha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 73280,
+      "sha256": "b3189416c25d0c675e418a4495562f3b139136d49e8ea72adafb3e21371eb57c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemorySchema.ts",
+      "bytes": 5753,
+      "sha256": "39967b0c577b50172c2913a81dfbd4485206c03d758f9bc1544dfc7daf13bf7e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 30418,
+      "sha256": "01ae6fe409bc9d920c3066128c192cfc3a04aace4620559ac27d78fef823018c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryServices.ts",
+      "bytes": 10966,
+      "sha256": "c0ea136e2b8492a3efcf570bbfdc351c0b6a9a5d9640ce29c2f9bd90030ea57b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 10258,
+      "sha256": "abb592948174cdcc72ee18282ca28de63ee5b4d56b3e892761057ac0840502a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 16064,
+      "sha256": "b6dfed6572ea5228d30429761df41a19107d0fbca4f849e7dbcc8ba896462cba"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 100624,
+      "sha256": "1c940f78ef95fa34ead6f5ff22ef983d50cd9dd82dca4d545d84470315bfd12b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4335,
+      "sha256": "4384353bc4b549d983e51b278a6ca853a8fe08d54165ff188f64f248ec0c4e81"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestionSchema.ts",
+      "bytes": 4443,
+      "sha256": "e56a0b64d0398290f2a4410f05b2858ec28721fcf73694c8ef1b6f84b84538e8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts",
+      "bytes": 51617,
+      "sha256": "7ed5c83e2aa8f07c6a79de53291f6b7caab7aed1b0b6a31bda36a8d5207062ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts",
+      "bytes": 13670,
+      "sha256": "0adba91fab715ac3199a0d0370984295145f0e1329ac8a0cb55da313b255a7a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "bytes": 74370,
+      "sha256": "e75ca94a758e3bba7603b672eb8972dfdbd9c7fc2764f1ed16dd4987cf76b449"
+    }
+  ],
+  "references": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-final1.json",
+      "bytes": 430150,
+      "sha256": "d8050b73a74e027436fd09ec736eba2bacb48fff58111524c4dceb00aa3b58ae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-native-contracts1.json",
+      "bytes": 126752,
+      "sha256": "bde0c618b4005db68372bb15c64fc9e0b731bb392ac43e31af439c6be546e6cf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/transcript-profile-repair1.json",
+      "bytes": 8718,
+      "sha256": "34bd530c49e15068b19791cd987d0051751a96c5c50723279c9cb51a58b93805"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-final1-command.json",
+      "bytes": 1347,
+      "sha256": "1515bb1ea0af3664c3bb964e8dcba45d382d6f900cd187210f6174b775fe805f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-final1.log",
+      "bytes": 70592,
+      "sha256": "733dd63135fe547d16e47cad5105f7b52a65fdf8d068c6d08e67f5dac33353fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-native-contracts1.log",
+      "bytes": 14308,
+      "sha256": "ed0502033100c24df47bf580135e44d675e600d3723f6c0384f2440df55711fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/transcript-profile-repair1.log",
+      "bytes": 9743,
+      "sha256": "6465f12488337bc510858d1cf6e3c4406b720e75ce1073447bf46a8344c55d92"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/sdk-types3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/backend-types3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/scoped-lint2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/transcript-fixture-lint1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "implementedRequirements": [
+    "Profile-independent canonical sources/chunks; exact six-field vector provenance and separate1536/3072 index fields.",
+    "Backend operation policy/profile/account pins and catalog-selected tenant pins; no caller qualification or price evidence.",
+    "Current source, grant, dimension, catalog, policy, index and generation fences on commit/query/hydration.",
+    "Cold-profile metadata preflight yields static PROFILE_NOT_READY/not_dispatched; paid/later failures remain opaque uncertain. Per-profile contiguous cursors advance every bounded page.",
+    "Single current-source vector-only derivation adds a separate generation without source/chunk relabeling or duplicate belief import; no reindex/migration/image work."
+  ],
+  "remainingActualWork": [
+    "Fresh actual native text-embedding-3-large3072 terminal alias/vector/result-byte qualification with full bounded accounting.",
+    "Compile exact actual record into one small-default catalog preserving prior four qualifications; tenant chooses exact trusted embedding.memory/query tuple.",
+    "Actual enabled schema3072 registration and managed known fixture retrieval under each qualified profile.",
+    "Actual same-source dual generations, cold readiness, policy races, revision/delete/revoke, malformed/unsupported denials and cleanup.",
+    "One coherent non-author final Task10 verdict; no original criterion is author-accepted here."
+  ],
+  "largeResultEnvelope": {
+    "maximumPrivateResultBytes": 131072,
+    "oldSmallAndChatMaximum": 60000,
+    "rationale": "3072 finite JSON coordinates plus profile metadata can exceed60000 bytes; cap applies only to the exact qualified large3072 contract. Controlled native-ledger replay test exercised >60000 bytes; genuine observed bytes remain an actual qualification dependency."
+  },
+  "preservedFailures": [
+    "affected-first1.json:four implementation/fixture contract gaps corrected.",
+    "affected-broad1.json:early runtimeMemory\u2192ledger import timing plus legitimate fixture qualification/shape updates; leaf RPC preserves module trust initialization.",
+    "native-envelope-tests1.json:new controlled provider reported8tokens for6UTF8bytes, correctly denied; fixture corrected to6, bounds unchanged.",
+    "readiness-native-repair2.json:duplicate foreground import wrote redundant metadata; corrected idempotent patch, plus empty-table fixture snapshot correction.",
+    "ingestion-profile-tests1/2.json:new synthetic root setup failed to select/install a distinct current policy; corrected fixture operation records/version identities.",
+    "storage-contract-test1/2.json:new oracle expected async denial/diagnostic message; actual early static-code denial preserved and asserted in successor.",
+    "affected-final1.json:848PASS1FAIL; managed fixture chat-only embedding metadata/retired chunk shape corrected, unchanged edit/stale assertions15PASS in transcript-profile-repair1.json.",
+    "Independent private-cap, pagination and public-readiness reds remain in reviewer namespace."
+  ],
+  "selectionNotes": [
+    "affected-final1 command retained two nonexistent old selectors; no coverage is attributed to them. Actual terminal/drift suites were explicitly selected in affected-native-contracts1.",
+    "gateway-dispatch.test.ts is intentionally retired by canonical jest.config.mjs; maintained gateway-terminal-composition covers188 current controls.",
+    "Focused name-selected tests have unselected cases; final full selections reported above have0 skipped."
+  ],
+  "currentPassingCaseInstances": 1098,
+  "duplicateDisplayedNameAudit": [
+    {
+      "suite": "tests/unit/runtime/model-policy-admission.test.ts",
+      "displayName": "native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts",
+      "instances": 3,
+      "distinctParameters": [
+        "options.topP=0.5",
+        "promptVersion=untrusted-prompt",
+        "timeoutMs=10001"
+      ]
+    },
+    {
+      "suite": "tests/unit/runtimeTranscript/contracts.test.ts",
+      "displayName": "strict frozen TextSubmitV1 rejects malformed Unicode",
+      "instances": 3,
+      "distinctParameters": [
+        "unpaired high surrogate",
+        "unpaired low surrogate",
+        "embedded unpaired high surrogate"
+      ]
+    }
+  ],
+  "countClarification": "1098 executed case instances across nonoverlapping full-suite selections; 1094 unique displayed path/name identities because two parameterized assertions each share one display name across three distinct cases. The15-case managed replay replaces the same original suite scope; it is not added to1098."
+}

@@ -507,3 +507,33 @@ Accepted tasks **7/17 (41.2%)**; original task criteria **23/61 (37.7%)**; full-
 Original Task09 accepted by reused non-author PASS4.0: all4 requirements/5criteria. Actual verifiedJWT/currentdefault1536 managed retrieval, finalwithpendingmemory,2 observers/attach/reconnect/noduplicateeffects, UI nextturnexacteligiblependinghistory, oneboundedapprovedrecall+2models/onefinal/oneingestion, queuedcancel, strictfailed-earlierhole and boundedoverflow. Observe terminal-attempt0 defect fixed/regressed and sameinstalledoldrows passunpaid.24governedattempts released/alluncertainliabilityretained;12sourcesretired,2grantsrevoked, target3173328retired200/404, Rootsignout/tabs/server/negativecredentialsclosed. Historical A/D/fixture failures and modelanswer-qualityreds/narrowviewportunavailable/clippedagentfieldretained. No10+/03-final/fullgoalacceptance.
 
 Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-goal outcomes **0/12 (0%)**. Task09 **5/5 accepted**; Tasks10–17/03-final and independent final audit remain open.
+
+### Milestone152 — Task10 profile controls and fresh disposable baseline (2026-10-08T19:07:05.444924+00:00)
+
+Original10 underway: current supported small1536/large3072 catalog, model-independent chunks and backend per-run policy/profile readiness. Independent CODE-only4 domain controlsPASS and author focused110PASS; concrete own-only private-peer volume defect underrepair, affected fixtures/import-cycle repairs inprogress. Freshdevelopmentproject3174742 baseline preserveshost/currentauth with0paidcalls; actualadditionalqualification/managedretrieval/currentraces/cleanup and samecoherentreview remainpending. Original10 0/4 accepted; no promotion of code checks to service outcomes. Checkpoint58 delivered exact `05086ead2dcddd796c715226f58eed388533fdad`; draftPR135 remains incomplete fullgoal. Earlier failed controlled receipts remain preserved.
+
+Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-goal outcomes **0/12 (0%)**. Task10 **0/4 accepted**; final audit open.
+
+### Milestone153 — Task10 same-root profile selection and actual source handoff (2026-10-08T19:27:56.998259+00:00)
+
+Original10 source handed to exclusive actual builder: model-independent chunks, supported1536/3072 indexes, exact per-runprofile/readiness, samefinancialroot qualifiedembedding selectors. RootcontrolledAgent60 and selectors10 PASS in disjoint suites; independentdomain4 and repairedreadiness4 CODE-onlyPASS. Price/bound selector maps only exactcurrentcompiledembeddingqualification; hardotherpins and all financialwindow/counters remainunchanged. Nativeverified3174742 baseline had0attempts atsource-release; actualonecommission+fourordinarymanagedembeddingcalls nowauthorized/running. Original10 managedqualification/retrieval/races/cleanup and samefullreview pending0/4; no check-count promotion.
+
+Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-goal outcomes **0/12 (0%)**. Task10 **0/4 accepted**; final audit open.
+
+### Milestone154 — Task10 genuine large-profile qualification (2026-10-08T19:40:45.267518+00:00)
+
+One genuine large-profile commission returned3072 finite coordinates/24tokens, exact wire model and60746-byte cached replay. All ten referenced raw receipts match. Replay added no paid attempt; full100000 uncertain liability remains and finished slot released. QA legacy-receipt reader failure preserved and corrected without another model call. Ordinary small/large managed retrieval, policy-currentness and cleanup remain pending; no Task10 acceptance.
+
+Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-goal outcomes **0/12 (0%)**. Task10 **0/4 accepted**; final audit open.
+
+### Milestone155 — Task10 both actual managed profiles (2026-10-08T19:52:26.058012+00:00)
+
+Ordinary actual managed small1536 and large3072 derive/query/replay passed on identical canonical source/chunks with separate matching generations/indexes. Four ordinary governed attempts retain400000 unknown liability; same tenant account/root/window, slots/reservations0. Cold large profile and stale small profile deny before paid attempts. Noncontractual exact-score/whole-metadata and empty-account oracles corrected read-only with failures preserved. Edit/delete/revocation, shipped registration and same coherent independent acceptance remain pending; original10 0/4.
+
+Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-goal outcomes **0/12 (0%)**. Task10 **0/4 accepted**; final audit open.
+
+### Milestone156 — Original Task10 independent acceptance (2026-10-08T20:07:20.308765+00:00)
+
+Original Task10 accepted by one non-author PASS4.0: all 5 requirements and 4 criteria. Both actual managed profiles retrieve identical canonical source/chunks with separate matching 1536/3072 generations; current policy, tracked edit, deletion, revocation and replay fences pass. Five governed calls retain full 500000 uncertain liability and release terminal slots. Shipped revision9 preserves exact V5/four proofs/default-small settings. Task10 scopes are cleaned; owned development target3174742 is retained prospectively for Task11, with final retirement open. Historical failures and scoped limits remain unchanged. No Task11+,03-final or full-goal acceptance.
+
+Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-goal outcomes **0/12 (0%)**. Task10 **4/4 accepted**; Task11 **0/3**, later tasks,03-final and final audit remain open.

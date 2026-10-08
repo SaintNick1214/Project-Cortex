@@ -6,6 +6,7 @@ import type { DeploymentPolicyManifest } from "../../../convex-dev/runtimeModelP
 import type { TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { semanticHash } from "../../../src/domain/profile";
+import { LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { DEFAULT_GATEWAY_POLICY_MANIFEST } from "../../../convex-dev/runtimeGatewayQualifications";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 
@@ -41,12 +42,33 @@ export function installMockRoot(options: { tools?: boolean } = {}) {
   jest.spyOn(Date, "now").mockReturnValue(clock);
 }
 /** Same native policy handlers with controlled installed-manifest time; no service/model claim. */
-export function installIngestionMockRoot() {
-  root = { ...DEFAULT_GATEWAY_POLICY_MANIFEST, manifestId: "ingestion-offline-root", classification: "fixture-synthetic",
-    dispatchEvidence: DEFAULT_GATEWAY_POLICY_MANIFEST.dispatchEvidence.map(proof => ({ ...proof, checkedAt: clock - 1, expiresAt: clock + 600_000 })) };
+export function installIngestionMockRoot(options: { large?: boolean } = {}) {
+  const installed = clone(DEFAULT_GATEWAY_POLICY_MANIFEST);
+  root = { ...installed, manifestId: "ingestion-offline-root", classification: "fixture-synthetic",
+    dispatchEvidence: installed.dispatchEvidence.map(proof => ({ ...proof, checkedAt: clock - 1, expiresAt: clock + 600_000 })) };
+  if (options.large) {
+    const old = root.qualifications.find(item => item.modelId === "openai/text-embedding-3-small")!;
+    const proof = root.dispatchEvidence.find(item => item.modelId === old.modelId)!;
+    const receiptId = "offline-large-profile";
+    const large = root.qualifications.find(item => item.modelId === LARGE_EMBEDDING_PROFILE.modelId);
+    const largeProof = large && root.dispatchEvidence.find(item => item.receiptId === large.receiptId);
+    if (large && !largeProof) throw new Error("Missing installed large-profile proof");
+    const selected = large ?? { ...old, receiptId, modelId: LARGE_EMBEDDING_PROFILE.modelId };
+    root = { ...root, revision: root.revision + 1, qualifications: large ? root.qualifications : [...root.qualifications, selected],
+      dispatchEvidence: largeProof ? root.dispatchEvidence : [...root.dispatchEvidence, { ...proof, receiptId, modelId: LARGE_EMBEDDING_PROFILE.modelId,
+        terminalModelId: "text-embedding-3-large", embeddingProfile: LARGE_EMBEDDING_PROFILE,
+        inputBound: { ...proof.inputBound, ruleId: "profile-embedding-utf8-v1", featureEnvelope: "profile-embedding-v1" },
+        resultBound: { ...proof.resultBound, maximumPrivateResultBytes: 131072 } }],
+      policies: [...root.policies.map(item => ({ ...item, policyId: `${item.policyId}-large-fixture`, version: item.version + 1, rules: { ...item.rules,
+        ...(item.rules.allowedModels ? { allowedModels: [...new Set([...item.rules.allowedModels, LARGE_EMBEDDING_PROFILE.modelId])] } : {}) } })),
+      ...(["embedding.memory", "embedding.query"] as const).map(operationKey => ({ policyId: `offline-large-${operationKey}`, version: 1,
+        scope: "deployment" as const, operationKey, rules: { modelId: LARGE_EMBEDDING_PROFILE.modelId, nativeInterface: "embedding" as const,
+          pins: { priceRevision: selected.priceRevision, boundRevision: selected.boundRevision } } }))] };
+  }
   lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
   jest.spyOn(Date, "now").mockReturnValue(clock);
 }
+export function currentMockRootSelection() { return { manifestId: root.manifestId, expectedRevision: root.revision }; }
 // Keep controlled persisted records in the Jest realm, like Convex JSON-decoded values.
 export function clone<T>(value: T): T {
   if (value instanceof Map) return new Map([...value].map(([key, item]) => [key, clone(item)])) as T;
@@ -116,6 +138,7 @@ export async function transcriptFixture(options: { maxContextTokens?: number } =
   runQuery: async (ref: unknown, input: unknown) => {
     const path = (ref as Partial<Record<symbol, string>>)[Symbol.for("toReferencePath")];
     const args = input as Record<string, unknown>;
+    if (!path && getFunctionName(ref as Parameters<typeof getFunctionName>[0]) === "runtimeModelPolicy:embeddingProfile") return await invoke(ledger.embeddingProfile, ctx, args);
     if (path?.endsWith("/getMessagesByIds")) return (args.messageIds as string[]).map(id => native.messages.get(id) ?? null);
     if (path?.endsWith("/listMessagesByThreadId")) {
       const anchor = typeof args.upToAndIncludingMessageId === "string" ? native.messages.get(args.upToAndIncludingMessageId) : undefined;

@@ -27,12 +27,14 @@ export async function rememberMemory(
 ): Promise<{ sourceId: string; sourceRevision: number; receiptId: string; created: boolean; facts: Omit<DerivedFact, "_id">[] }> {
   const { repository, model, clock } = adapters;
   await repository.recheckAuthority();
-  const prepared = await prepareSourceContent(repository.scope, input.lineage, input.text, clock);
+  const selection = await model.resolveProfile?.("embedding.memory") ?? { profile: DEFAULT_EMBEDDING_PROFILE };
+  const profile = selection.profile;
+  const prepared = await prepareSourceContent(repository.scope, input.lineage, input.text, clock, profile);
   const persisted = await repository.putSource(prepared.source);
   const source = persisted.source;
   const reference = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId, sourceRevision: source.lineage.sourceRevision };
   const identity = { ...reference, stage: "facts" as const,
-    semanticPolicyVersion: `${SOURCE_EXTRACTION_POLICY_VERSION}+${DEFAULT_EMBEDDING_PROFILE.profileId}` };
+    semanticPolicyVersion: `${SOURCE_EXTRACTION_POLICY_VERSION}+${profile.profileId}` };
   const receiptId = await processingIdentityKey(identity);
   const recheckSource = async () => {
     await repository.recheckAuthority();
@@ -46,9 +48,9 @@ export async function rememberMemory(
   });
   await recheckSource();
   const embeddingResult = await model.embed({ purpose: "embedding.memory", operationId: `embedding.memory:${receiptId}`,
-    policyVersion: DEFAULT_EMBEDDING_PROFILE.profileId, attempt: 1, source: reference,
-    profile: DEFAULT_EMBEDDING_PROFILE, texts: prepared.chunks.map((chunk) => chunk.text) });
-  validateModelEmbeddings(embeddingResult, DEFAULT_EMBEDDING_PROFILE, prepared.chunks.length);
+    policyVersion: profile.profileId, attempt: 1, source: reference,
+    profile, texts: prepared.chunks.map((chunk) => chunk.text) });
+  validateModelEmbeddings(embeddingResult, profile, prepared.chunks.length);
   if (extracted.length > 100) memoryError("INVALID_INPUT", "Extraction exceeds the bounded fact commit size");
   const facts: DerivedFact[] = await Promise.all(extracted.map(async (fact, ordinal) => ({
     _id: "", factId: await semanticHash(JSON.stringify([source.tenantId, source.memorySpaceId, source.lineage,
@@ -62,12 +64,12 @@ export async function rememberMemory(
   })));
   const vectors = await Promise.all(prepared.chunks.map(async (chunk, index) => ({
     sourceId: chunk.sourceId, sourceEventId: chunk.sourceEventId, sourceRevision: chunk.sourceRevision,
-    vectorId: await semanticHash(JSON.stringify([chunk.chunkId, DEFAULT_EMBEDDING_PROFILE, receiptId])), chunkId: chunk.chunkId,
-    tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, profile: DEFAULT_EMBEDDING_PROFILE,
+    vectorId: await semanticHash(JSON.stringify([chunk.chunkId, profile, receiptId])), chunkId: chunk.chunkId,
+    tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, profile,
     embedding: embeddingResult.vectors[index]!, processingReceiptId: receiptId,
   })));
   await recheckSource();
-  const committed = await repository.commitDerived({ source: reference, identity, chunks: prepared.chunks, vectors, facts,
+  const committed = await repository.commitDerived({ source: reference, identity, chunks: prepared.chunks, vectors, facts, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}),
     expectedFactVersions: Object.fromEntries(facts.map((fact) => [fact.factId, 0])) });
   // A write receipt returns only this committed payload by stable factId, without unrelated read access.
   const committedFacts = facts.map(({ _id: _id, ...fact }) => fact);
@@ -85,12 +87,15 @@ export async function recallMemory(
   await repository.recheckAuthority();
   // Read methods enforce read independently; a write-only injected adapter cannot dispatch recall.
   await repository.listFacts({ limit: 1 });
+  const selection = await model.resolveProfile?.("embedding.query") ?? { profile: DEFAULT_EMBEDDING_PROFILE };
+  const profile = selection.profile;
   const operationId = `embedding.query:${JSON.stringify([repository.scope.tenantId, repository.scope.memorySpaceId,
-    repository.scope.principalId, input.requestId, DEFAULT_EMBEDDING_PROFILE.profileId])}`;
+    repository.scope.principalId, input.requestId, profile.profileId])}`;
+  await repository.assertProfileReady?.(profile, selection.runBudgetId);
   const result = await model.embed({ purpose: "embedding.query", operationId,
-    policyVersion: DEFAULT_EMBEDDING_PROFILE.profileId, attempt: 1, profile: DEFAULT_EMBEDDING_PROFILE, texts: [text] });
-  validateModelEmbeddings(result, DEFAULT_EMBEDDING_PROFILE, 1);
-  const vectors = await repository.searchVectors({ text, profile: DEFAULT_EMBEDDING_PROFILE, embedding: result.vectors[0]! }, input.limit);
+    policyVersion: profile.profileId, attempt: 1, profile, texts: [text] });
+  validateModelEmbeddings(result, profile, 1);
+  const vectors = await repository.searchVectors({ text, profile, embedding: result.vectors[0]!, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) }, input.limit);
   const facts = await repository.listFacts({ limit: input.limit });
   const vectorItems: RecallItem[] = vectors.map((match) => ({ type: "memory", id: match.chunk.chunkId,
     content: match.chunk.text, score: match.score, source: "vector", memory: {
@@ -103,5 +108,32 @@ export async function recallMemory(
     }, graphContext: { connectedEntities: [] } }));
   await repository.recheckAuthority();
   const items = rankResults(deduplicateResults([...vectorItems, ...facts.map((fact) => factToRecallItem(fact, "facts", 0.7))]), clock).slice(0, input.limit);
-  return { items, context: formatForLLM(items, clock), profileId: DEFAULT_EMBEDDING_PROFILE.profileId };
+  return { items, context: formatForLLM(items, clock), profileId: profile.profileId };
+}
+
+/** One current source, one new profile-specific generation. No history scan,
+ * source rewrite, reindex loop or fallback; used by trusted backend compositions. */
+export async function deriveSourceVectors(adapters: MemoryDomainAdapters, input: { sourceId: string; requestId: string }) {
+  assertMemoryRequestId(input.requestId);
+  const { repository, model, clock } = adapters;
+  await repository.recheckAuthority();
+  const source = await repository.getSource(input.sourceId);
+  if (!source) memoryError("STALE_SOURCE", "Source is unavailable");
+  const selection = await model.resolveProfile?.("embedding.memory") ?? { profile: DEFAULT_EMBEDDING_PROFILE };
+  const profile = selection.profile;
+  const prepared = await prepareSourceContent(repository.scope, source.lineage, source.content, clock, profile);
+  const reference = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId, sourceRevision: source.lineage.sourceRevision };
+  const identity = { ...reference, stage: "vectors" as const, semanticPolicyVersion: profile.profileId };
+  const receiptId = await processingIdentityKey(identity);
+  const embedded = await model.embed({ purpose: "embedding.memory", operationId: `embedding.memory:${receiptId}`,
+    policyVersion: profile.profileId, attempt: 1, source: reference, profile, texts: prepared.chunks.map(chunk => chunk.text) });
+  validateModelEmbeddings(embedded, profile, prepared.chunks.length);
+  const vectors = await Promise.all(prepared.chunks.map(async (chunk, ordinal) => ({ ...reference,
+    vectorId: await semanticHash(JSON.stringify([chunk.chunkId, profile, receiptId])), chunkId: chunk.chunkId,
+    tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, profile, embedding: embedded.vectors[ordinal]!, processingReceiptId: receiptId })));
+  const current = await repository.getSource(input.sourceId);
+  if (canonicalMemoryValue(source) !== canonicalMemoryValue(current)) memoryError("STALE_SOURCE", "Source changed before vector commit");
+  const committed = await repository.commitDerived({ source: reference, identity, chunks: prepared.chunks, vectors,
+    ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) });
+  return { ...committed, profile, sourceId: input.sourceId };
 }

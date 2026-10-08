@@ -34,7 +34,7 @@ describe("attributed source domain", () => {
     expect(first.source.contentHash).toBe(same.source.contentHash);
     expect(first.chunks).toEqual(same.chunks);
     expect(first.chunks[0].chunkId).not.toBe(revision.chunks[0].chunkId);
-    expect(first.chunks[0]).toMatchObject({ ordinal: 0, start: 0, end: 4, sourceEventId: "event", sourceRevision: 1, profileId: DEFAULT_EMBEDDING_PROFILE.profileId });
+    expect(first.chunks[0]).toMatchObject({ ordinal: 0, start: 0, end: 4, sourceEventId: "event", sourceRevision: 1, normalization: DEFAULT_EMBEDDING_PROFILE.normalization, chunking: DEFAULT_EMBEDDING_PROFILE.chunking });
     expect(first.source).not.toHaveProperty("embedding");
     expect(first.chunks[0]).not.toHaveProperty("embedding");
     await expect(prepareSourceContent({ ...scope, memorySpaceId: "" }, lineage, "x", { now: () => 0 })).rejects.toThrow("trusted tenant");

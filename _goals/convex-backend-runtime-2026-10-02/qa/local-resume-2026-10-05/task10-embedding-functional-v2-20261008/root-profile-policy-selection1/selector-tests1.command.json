@@ -1,0 +1,34 @@
+{
+  "scope": "CONTROLLED_LEDGER_ONLY_NOT_QUALIFICATION_OR_MANAGED_RETRIEVAL",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests1.results.json"
+  ],
+  "fixtureEnvironment": {
+    "mode": "local",
+    "url": "http://127.0.0.1:1",
+    "serviceTarget": false
+  },
+  "node": "24.15.0",
+  "exitCode": 1,
+  "elapsedSeconds": 3.2967138290405273,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "1c940f78ef95fa34ead6f5ff22ef983d50cd9dd82dca4d545d84470315bfd12b"
+    },
+    {
+      "path": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "sha256": "2087b28f35e1b51d6aa5e59742c0556aa61f718aa0db19bcab19ed0456292c61"
+    }
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "financialRootRolloverImplemented": false
+}

@@ -10,7 +10,7 @@ import type { SourceContent, AttributedFact, DerivedFact } from "../src/domain/c
 import type { IngestionStage, IngestionEligibility } from "../src/domain/ingestion";
 import { BELIEF_POLICY_VERSION, INGESTION_LEASE_MS, MAX_INGESTION_ATTEMPTS, ingestionIdentity, skipsIngestion } from "../src/domain/ingestion";
 import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, validateModelEmbeddings, processingIdentityKey, parseSourceFactsResponse } from "../src/domain/sources";
-import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
+import { DEFAULT_EMBEDDING_PROFILE, assertSupportedEmbeddingProfile, assertProfileMatches, semanticHash } from "../src/domain/profile";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import type { ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
 import { buildConflictResolutionPrompt } from "../src/domain/conflicts";
@@ -37,7 +37,7 @@ export async function readScopeCutoff(ctx: ReadCtx, reference: RuntimeAuthorityR
   await new ConvexMemoryRepository(ctx, reference, "read").recheckAuthority();
   const row = await ctx.db.query("runtimeIngestionScopes").withIndex("by_scope", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!)).unique();
   return { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, sequence: row?.sequence ?? 0,
-    factsThrough: row?.factsThrough ?? 0, vectorsThrough: row?.vectorsThrough ?? 0, graphThrough: row?.graphThrough ?? 0 };
+    factsThrough: row?.factsThrough ?? 0, vectorsThrough: row?.vectorsThrough ?? 0, vectorProfileThrough: row?.vectorProfileThrough ?? {}, graphThrough: row?.graphThrough ?? 0 };
 }
 export async function eventById(ctx: ReadCtx, reference: RuntimeAuthorityReference, eventId: string) {
   return exactOne(await ctx.db.query("runtimeIngestionEvents").withIndex("by_event", q => q.eq("tenantId", reference.tenantId)
@@ -241,6 +241,12 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
       ...(parentOperationId ? { parentOperationId } : {}) });
   const policyCanonical = canonicalModelJson(resolution.snapshot);
   if (row.policyCanonical !== undefined && row.policyCanonical !== policyCanonical) ingestionDenied("POLICY_CHANGED");
+  if (args.stage === "vectors") {
+    if (!resolution.snapshot.semanticProfile) ingestionDenied("PROFILE_NOT_READY");
+    assertSupportedEmbeddingProfile(resolution.snapshot.semanticProfile);
+    if (row.policyCanonical !== undefined) assertProfileMatches(current.event.profile, resolution.snapshot.semanticProfile);
+    else await ctx.db.patch("runtimeIngestionEvents", current.event._id, { profile: resolution.snapshot.semanticProfile });
+  }
   await ctx.db.patch("runtimeIngestionStages", row._id, { policyCanonical });
   await ctx.scheduler.runAfter(INGESTION_LEASE_MS + 1, ref<"mutation", StageLease, null>("mutation", "runtimeIngestion:expireStage"),
     { reference: args.reference, eventId: args.eventId, stage: args.stage, attempt: row.attempt + 1, leaseVersion: row.leaseVersion + 1 });
@@ -348,7 +354,10 @@ export const commitVectors = internalMutation({ args: { ...leaseArgs, payloadCan
   const payload = JSON.parse(args.payloadCanonical) as import("./runtimeMemoryRepository").DerivedCommit;
   if (canonicalModelJson(payload) !== args.payloadCanonical || payload.facts?.length || payload.expectedFactVersions && Object.keys(payload.expectedFactVersions).length
     || payload.identity.stage !== "vectors" || payload.identity.semanticPolicyVersion !== current.event.profile.profileId) ingestionDenied("INVALID_INPUT");
+  const job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", current.event.tenantId).eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", args.eventId)).unique();
+  if (!job || payload.embeddingRunBudgetId !== job.runBudgetId) ingestionDenied("POLICY_DENIED");
   const result = await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).commitDerived(payload);
+  await ctx.db.patch("runtimeIngestionEvents", current.event._id, { vectorProfilesComplete: [...new Set([...(current.event.vectorProfilesComplete ?? []), current.event.profile.profileId])] });
   await writeStage(ctx, current.event, current.stage, { state: "complete", receiptId: result.receiptId, payloadCanonical: args.payloadCanonical, updatedAt: Date.now() });
   await readiness(ctx, current.event); return result;
 } });
@@ -412,7 +421,7 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
       const vectors = await Promise.all(prepared.chunks.map(async (chunk, ordinal) => ({ sourceId: chunk.sourceId, sourceEventId: chunk.sourceEventId, sourceRevision: chunk.sourceRevision,
         vectorId: await semanticHash(canonicalModelJson([args.eventId, input.event.profile, ordinal])), chunkId: chunk.chunkId,
         tenantId: input.source.tenantId, memorySpaceId: input.source.memorySpaceId, profile: input.event.profile, embedding: embedded.vectors[ordinal]!, processingReceiptId: receiptId })));
-      const payload = { source: identity, identity, chunks: prepared.chunks, vectors };
+      const payload = { source: identity, identity, chunks: prepared.chunks, vectors, embeddingRunBudgetId: owned.runBudgetId };
       // Source RPC is the exact three-field source reference, not the processing identity.
       const source = { sourceId: identity.sourceId, sourceEventId: identity.sourceEventId, sourceRevision: identity.sourceRevision };
       const payloadCanonical = canonicalModelJson({ ...payload, source });
@@ -438,22 +447,28 @@ export async function registerCompletedDerivedSource(ctx: MutationCtx, reference
     .eq("memorySpaceId", reference.memorySpaceId!).eq("receiptId", receiptId)).unique();
   if (!receipt) ingestionDenied("INVALID_INPUT");
   const payload = JSON.parse(receipt.canonicalPayload) as import("./runtimeMemoryRepository").DerivedCommit;
-  // Only the existing complete foreground source pipeline carries both logical chunks and default vectors.
-  if (payload.identity.stage !== "facts" || !payload.vectors?.length || !payload.chunks?.length) return null;
+  // A complete foreground source pipeline carries logical chunks plus one exact derived profile.
+  if (!["facts", "vectors"].includes(payload.identity.stage) || !payload.vectors?.length || !payload.chunks?.length) return null;
+  const profile = payload.vectors[0]!.profile; assertSupportedEmbeddingProfile(profile);
   const source = await new ConvexMemoryRepository(ctx, reference, "write").getSource(receipt.identity.sourceId);
   if (!source || source.lineage.sourceEventId !== receipt.identity.sourceEventId || source.lineage.sourceRevision !== receipt.identity.sourceRevision
-    || payload.vectors.some(vector => canonicalModelJson(vector.profile) !== canonicalModelJson(DEFAULT_EMBEDDING_PROFILE))) ingestionDenied("STALE_SOURCE");
+    || payload.vectors.some(vector => canonicalModelJson(vector.profile) !== canonicalModelJson(profile))) ingestionDenied("STALE_SOURCE");
   const admitted = await enqueueSourceEvent(ctx, reference, source, { ...origin, eligibility: source.lineage.role === "tool" ? "awaiting_tool" : "eligible",
     ...(source.lineage.role === "tool" ? { toolOperationId: source.lineage.operationId } : {}) });
   const event = (await eventById(ctx, reference, admitted.eventId))!;
   if (skipsIngestion(event.eligibility)) ingestionDenied("STALE_SOURCE");
+  if (!event.vectorProfilesComplete?.includes(profile.profileId)) {
+    await ctx.db.patch("runtimeIngestionEvents", event._id, { ...(event.vectorsState === "pending" && !(event.vectorProfilesComplete?.length) ? { profile } : {}),
+      vectorProfilesComplete: [...new Set([...(event.vectorProfilesComplete ?? []), profile.profileId])] });
+  }
   for (const stage of await readEventStages(ctx, event)) {
+    if (payload.identity.stage === "vectors" && stage.stage !== "vectors") continue;
     const state = stage.stage === "extract" || source.lineage.role === "assistant" && stage.stage === "facts" ? "skipped" as const : "complete" as const;
     if (stage.state !== state || stage.receiptId !== receiptId) await writeStage(ctx, event, stage,
       { state, receiptId, updatedAt: Date.now() });
   }
   const oldOutbox = await ctx.db.query("runtimeBeliefOutbox").withIndex("by_event", q => q.eq("tenantId", event.tenantId).eq("memorySpaceId", event.memorySpaceId).eq("eventId", event.eventId)).unique();
-  if (!oldOutbox && source.lineage.role !== "assistant") {
+  if (!oldOutbox && payload.identity.stage === "facts" && source.lineage.role !== "assistant") {
     for (const [ordinal, fact] of (payload.facts ?? []).entries()) {
       const slotKey = canonicalModelJson([source.ownerPrincipalId, beliefSlot(fact)]);
       const head = await ctx.db.query("runtimeBeliefHeads").withIndex("by_slot", q => q.eq("tenantId", event.tenantId).eq("memorySpaceId", event.memorySpaceId).eq("slotKey", slotKey)).unique();
@@ -494,7 +509,7 @@ export async function registerCompletedToolSource(ctx: MutationCtx, reference: R
   if (event.eligibility === "eligible") return;
   if (event.eligibility !== "awaiting_tool") ingestionDenied("INVALID_STATE");
   const payload = JSON.parse(receipt.canonicalPayload) as import("./runtimeMemoryRepository").DerivedCommit;
-  if (!payload.vectors?.length || payload.vectors.some(vector => canonicalModelJson(vector.profile) !== canonicalModelJson(event.profile)) || payload.identity.stage !== "facts") ingestionDenied("INVALID_INPUT");
+  if (!payload.vectors?.length || payload.vectors.some(vector => !event.vectorProfilesComplete?.includes(vector.profile.profileId)) || payload.identity.stage !== "facts") ingestionDenied("INVALID_INPUT");
   await ctx.db.patch("runtimeIngestionEvents", event._id, { eligibility: "eligible", updatedAt: Date.now() });
   for (const stage of await readEventStages(ctx, event)) await writeStage(ctx, event, stage,
     { state: stage.stage === "extract" ? "skipped" : "complete", receiptId: receipt.receiptId, payloadCanonical: receipt.canonicalPayload, updatedAt: Date.now() });

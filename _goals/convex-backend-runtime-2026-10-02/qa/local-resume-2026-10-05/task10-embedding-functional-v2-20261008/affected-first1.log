@@ -1,0 +1,499 @@
+(node:53279) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/services.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+  ● remember write permission › write-only memory admission returns only this successful commit's facts without a general read query
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      45 |
+      46 | function deny(code: "UNAUTHENTICATED" | "FORBIDDEN" | "INVALID_INPUT" = "FORBIDDEN"): never {
+    > 47 |   throw new ConvexError({ version: 1, code, message: code === "UNAUTHENTICATED"
+         |         ^
+      48 |     ? "Verified identity required" : code === "INVALID_INPUT" ? "Invalid authority configuration" : "Access denied",
+      49 |   retryable: false, outcome: "not_dispatched" });
+      50 | }
+
+      at deny (convex-dev/runtimeAuth.ts:47:9)
+      at materialize (convex-dev/runtimeAuth.ts:127:82)
+      at resolveAuthorityReference (convex-dev/runtimeAuth.ts:203:16)
+      at recheckAuthority (convex-dev/runtimeAuth.ts:257:10)
+      at ConvexMemoryRepository.authority (convex-dev/runtimeMemoryRepository.ts:95:12)
+      at handler (convex-dev/runtimeMemory.ts:31:33)
+      at Object.runQuery (tests/unit/runtimeMemory/fixture.ts:89:9)
+      at ConvexMemoryRepository.commitDerived (convex-dev/runtimeMemoryRepository.ts:162:45)
+      at handler (convex-dev/runtimeMemory.ts:38:20)
+      at tests/unit/runtimeMemory/fixture.ts:110:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:66:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:110:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:376:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:72:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:118:21)
+
+FAIL tests/unit/runtimeIngestion/context.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● scoped contiguous memory context › stage-specific progress is bounded without reading extraction payload bodies
+
+    TypeError: Cannot read properties of undefined (reading 'profileId')
+
+      30 |   if (event.eligibility !== "eligible") return "pending";
+      31 |   const summary = stage === "facts" ? event.factsState : event.vectorsState;
+    > 32 |   if (stage === "vectors" && summary === "complete" && !(event.vectorProfilesComplete ?? [event.profile.profileId]).includes(profileId)) return "pending";
+         |                                                                                                         ^
+      33 |   if (summary === "complete" || summary === "skipped") return summary;
+      34 |   return ["failed", "unknown", "dead_letter"].includes(summary) ? "failed" : "pending";
+      35 | }
+
+      at state (convex-dev/runtimeMemoryContext.ts:32:105)
+      at convex-dev/runtimeMemoryContext.ts:57:86
+          at Array.map (<anonymous>)
+      at progress (convex-dev/runtimeMemoryContext.ts:57:37)
+      at convex-dev/runtimeMemoryContext.ts:73:108
+          at async Promise.all (index 0)
+      at Module.refreshScopeWatermarks (convex-dev/runtimeMemoryContext.ts:73:20)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/context.test.ts:74:12)
+
+FAIL tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● scoped Convex memory persistence › post-filters actual vector candidate with invalid profile
+
+    CAPABILITY_UNSUPPORTED: embedding model has no supported profile/index
+
+      30 | export function embeddingProfileForModel(modelId: string): Readonly<EmbeddingProfile> {
+      31 |   const profile = SUPPORTED_EMBEDDING_PROFILES.find(value => value.modelId === modelId);
+    > 32 |   if (!profile) throw new Error("CAPABILITY_UNSUPPORTED: embedding model has no supported profile/index");
+         |                       ^
+      33 |   return profile;
+      34 | }
+      35 | export function assertSupportedEmbeddingProfile(actual: EmbeddingProfile): void {
+
+      at embeddingProfileForModel (src/domain/profile.ts:32:23)
+      at assertSupportedEmbeddingProfile (src/domain/profile.ts:36:32)
+      at stripVector (convex-dev/runtimeMemoryRepository.ts:358:3)
+      at ConvexMemoryRepository.hydrateVectors (convex-dev/runtimeMemoryRepository.ts:342:22)
+      at tests/unit/runtimeMemory/repository.test.ts:139:12
+
+FAIL tests/unit/domain/model-policy.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● immutable default embedding policy › requires actual qualified embedding receipt and every immutable profile field
+
+    expect(received).toThrow(expected)
+
+    Expected substring: "PROFILE_NOT_READY"
+
+    Received function did not throw
+
+      226 |       expect(() => resolveModelPolicy(changed)).toThrow("PROFILE_NOT_READY");
+      227 |     }
+    > 228 |     const missing = embedding(); delete missing.context.semanticProfile; expect(() => resolveModelPolicy(missing)).toThrow("PROFILE_NOT_READY");
+          |                                                                                                                    ^
+      229 |   });
+      230 |   it("pins batch ordinal/range and prohibits language/tool options or changed profiles", async () => {
+      231 |     const resolved = resolveModelPolicy(embedding());
+
+      at Object.<anonymous> (tests/unit/domain/model-policy.test.ts:228:116)
+
+PASS tests/unit/domain/sources.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.7s | 16/17 passed | /tests/unit/runtimeMemory/services.test.ts
+  ❌     1.0s | 6/7 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ❌     0.8s | 35/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ❌     0.8s | 35/36 passed | /tests/unit/domain/model-policy.test.ts
+  ✅     0.3s | 12/12 passed | /tests/unit/domain/sources.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 1.2%) - trusted pure model policy keeps distinct bound revisions for the same model/interface unambiguous
+    /tests/unit/domain/model-policy.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.3%) - trusted pure model policy allows only exact versioned authorized overrides within hard bounds
+    /tests/unit/domain/model-policy.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.3%) - exact dispatch request identity rejects invalid options, retries, headers, versions, token/time/cost/tool caps
+    /tests/unit/domain/model-policy.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context later queued input is excluded from pending and indexed paths despite captured scope sequence
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context 33 unrepresented sources withhold the whole tail; history dedup happens before the source bound
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - scoped contiguous memory context a failed earlier fact event blocks only facts; explicit retirement closes the hole
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - trusted pure model policy fails ambiguous, incomplete, unknown, cross-scope and stale-agent records closed
+    /tests/unit/domain/model-policy.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.2%) - exact dispatch request identity normalizes text and hashes exact canonical scope/source/policy/request
+    /tests/unit/domain/model-policy.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - trusted pure model policy requires exact qualified capability/price/bound and rejects ambiguous receipts
+    /tests/unit/domain/model-policy.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - trusted pure model policy defaults to qualified gpt-4o-mini Chat and requires explicit Responses receipt
+    /tests/unit/domain/model-policy.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context authorized cross-thread tail respects cutoff and deduplicates exact approved history
+    /tests/unit/runtimeIngestion/context.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context current scope auth and owner index exclude another principal before source hydration
+    /tests/unit/runtimeIngestion/context.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context whole-scope diagnostics require a scope-wide grant while own readiness stays on the run
+    /tests/unit/runtimeIngestion/context.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services fails closed on incompatible model profile/dimensions before committing vectors
+    /tests/unit/runtimeMemory/services.test.ts
+
+16. [31m✗[0m    0.01s ( 0.1%) - scoped contiguous memory context stage-specific progress is bounded without reading extraction payload bodies
+    /tests/unit/runtimeIngestion/context.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - scoped Convex memory persistence uses injected clock for temporal validity
+    /tests/unit/runtimeMemory/repository.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - trusted pure model policy rejects zero positive caps, inconsistent ceilings and unqualified model IDs
+    /tests/unit/domain/model-policy.test.ts
+
+19. [31m✗[0m    0.01s ( 0.1%) - immutable default embedding policy requires actual qualified embedding receipt and every immutable profile field
+    /tests/unit/domain/model-policy.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - conservative fallback eligibility forbids visible text/tools, committed effects, ambiguous paid/cancelled and unchecked replay
+    /tests/unit/domain/model-policy.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.30s (4.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.85s
+  Test suites:        5
+  Individual tests:   91
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 failed, 1 passed, 5 total
+Tests:       4 failed, 104 passed, 108 total
+Snapshots:   0 total
+Time:        6.855 s
+Ran all test suites matching tests/unit/domain/sources.test.ts|tests/unit/domain/model-policy.test.ts|tests/unit/runtimeMemory/repository.test.ts|tests/unit/runtimeMemory/services.test.ts|tests/unit/runtimeIngestion/context.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-first1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

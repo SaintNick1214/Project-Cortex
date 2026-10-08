@@ -1,4 +1,4 @@
-/** Immutable fresh-install profile qualified by Task 01. */
+/** Exact supported configurations. Catalogue membership is not model qualification. */
 export interface EmbeddingProfile {
   readonly profileId: string;
   readonly modelId: string;
@@ -16,6 +16,25 @@ export const DEFAULT_EMBEDDING_PROFILE: Readonly<EmbeddingProfile> = Object.free
   chunking: "codepoint-1600-overlap-200-v1",
   indexName: "by_default_embedding_v1",
 });
+
+/** Additional candidate; production dispatch also requires current native qualification. */
+export const LARGE_EMBEDDING_PROFILE: Readonly<EmbeddingProfile> = Object.freeze({
+  profileId: "cortex-text-large-3072-v1",
+  modelId: "openai/text-embedding-3-large",
+  dimensions: 3072,
+  normalization: "text-nfc-lf-v1",
+  chunking: "codepoint-1600-overlap-200-v1",
+  indexName: "by_large_embedding_v1",
+});
+export const SUPPORTED_EMBEDDING_PROFILES = Object.freeze([DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE]);
+export function embeddingProfileForModel(modelId: string): Readonly<EmbeddingProfile> {
+  const profile = SUPPORTED_EMBEDDING_PROFILES.find(value => value.modelId === modelId);
+  if (!profile) throw new Error("CAPABILITY_UNSUPPORTED: embedding model has no supported profile/index");
+  return profile;
+}
+export function assertSupportedEmbeddingProfile(actual: EmbeddingProfile): void {
+  assertProfileMatches(actual, embeddingProfileForModel(actual.modelId));
+}
 
 export const DEFAULT_VECTOR_FILTER_FIELDS = Object.freeze([
   "tenantId", "memorySpaceId", "profileId",

@@ -399,15 +399,15 @@ describe("native private policy ledger — offline logic only", () => {
       expect(reg.exportArgs?.()).not.toContain('"type":"any"');
     }
   });
-  it("preserves all original native, transcript and Agent tables, adding exactly seven ingestion/belief tables with unique indexes", () => {
+  it("preserves all original native, transcript and Agent tables, adding seven ingestion/belief tables and one profile-generation metadata table with unique indexes", () => {
     const original = ["conversations", "conversationShares", "conversationSnapshots", "immutable", "mutable", "memories", "facts", "factHistory", "memorySpaces", "contexts", "agents", "sessions", "governancePolicies", "governanceEnforcement", "graphSyncQueue", "artifacts", "attachments",
       "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
       "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"];
     const added = ["runtimeAgentDefinitions", "runtimeConversations", "runtimeConversationShares", "runtimeConversationSnapshots", "runtimeTranscriptMessages", "runtimeRuns", "runtimeRunOutbox", "runtimeRunAttempts", "runtimeTranscriptOutbox"];
     const execution = ["runtimeAgentExecutions", "runtimeAgentOutput", "runtimeAgentOperations", "runtimeAgentIngestion"];
     const ingestion = ["runtimeIngestionScopes", "runtimeIngestionEvents", "runtimeIngestionStages", "runtimeIngestionJobs", "runtimeBeliefHeads", "runtimeBeliefHistory", "runtimeBeliefOutbox"];
-    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion].sort());
-    const required = { runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
+    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, "runtimeMemoryVectorGenerations"].sort());
+    const required = { runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
       runtimeIngestionScopes: ["by_scope"], runtimeIngestionEvents: ["by_event", "by_scope_sequence", "by_owner_sequence", "by_source", "by_source_eligibility", "by_conversation_sequence"],
       runtimeIngestionStages: ["by_event_stage"], runtimeIngestionJobs: ["by_event", "by_budget", "by_account"],
       runtimeBeliefHeads: ["by_slot"], runtimeBeliefHistory: ["by_fact", "by_event"], runtimeBeliefOutbox: ["by_event"] } as const;

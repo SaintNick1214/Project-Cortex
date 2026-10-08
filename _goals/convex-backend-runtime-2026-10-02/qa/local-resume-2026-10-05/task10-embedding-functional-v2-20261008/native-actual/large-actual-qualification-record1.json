@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "scope": "ACTUAL_NATIVE_EMBEDDING_PROFILE_QUALIFICATION_REVIEW_CANDIDATE",
+  "projectId": 3174742,
+  "deploymentName": "formal-husky-914",
+  "modelId": "openai/text-embedding-3-large",
+  "actualWireModel": "text-embedding-3-large",
+  "profile": {
+    "chunking": "codepoint-1600-overlap-200-v1",
+    "dimensions": 3072,
+    "indexName": "by_large_embedding_v1",
+    "modelId": "openai/text-embedding-3-large",
+    "normalization": "text-nfc-lf-v1",
+    "profileId": "cortex-text-large-3072-v1"
+  },
+  "usage": {
+    "tokens": 24
+  },
+  "inputUtf8Bytes": 102,
+  "vectorHash": "d47fbd769c35849aadf3cef0747fd176c24629b4abdfc56e589f5c8df7412314",
+  "terminalCost": "unavailable",
+  "reservationUnits": 100000,
+  "fullLiabilityRetained": true,
+  "finishedSlotReleased": true,
+  "exactReplayNoDispatch": true,
+  "priceBasis": "Published0.13USD/M text input, <=8192UTF8 units, 1065microUSD envelope, 100000 retained ceiling; no batch/options/dimensions override",
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission-call1.json",
+      "bytes": 10278,
+      "sha256": "2985d2df0618d307eba1b168ee1a7126d7e28f9a9f48bc49b371f4a2c9e239db"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission1-before.json",
+      "bytes": 59,
+      "sha256": "20e75a267089ea4bfe9688000f5b827158a30f8136dd2f3b38a50f83a9b447f0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission1-after.json",
+      "bytes": 4862,
+      "sha256": "cf2da7392963d2efd374eda4cdf1e7600cadc3f839c018c8930c2fa19f127d8a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission-replay1.json",
+      "bytes": 6592,
+      "sha256": "d6394ff75f474caea1caa2185dae332ce970343f8a911af682cf5488a6091bb9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission-outcomes2.json",
+      "bytes": 1684,
+      "sha256": "ea6cfe590774dff77d0c6d02648e19f5d7de0e9db8758a4077ac3e8cb9f12308"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission-internal-reachability3.json",
+      "bytes": 600,
+      "sha256": "5789e29008a2f21c41b3b21773fd40c9289baf27f1eb835b3c3ac446f683fe1d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-commission-observation-correction2.json",
+      "bytes": 324,
+      "sha256": "b352bcd8fc2b3515a66780400822105c10703a33fb598683b23814072c34af12"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/commissioning-path1.json",
+      "bytes": 3468,
+      "sha256": "0f6817d4ae47fcf033156bd69e93f38a69f61ac67c33a126fd10dec75a4dc8cd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/current-price-interface-evidence1.json",
+      "bytes": 1436,
+      "sha256": "0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/commission-fixture-source-manifest2.json",
+      "bytes": 26119,
+      "sha256": "50a371e5ab8696434a4ad69434f949ef15d389cb30cc81ea214d373c2aaaf154"
+    }
+  ],
+  "sourceManifestSha256": "5e7e5e6ee0b50ab5fcd3edca86b0d38f1116a3f763be269fc0418f8ee11b4226",
+  "independentAcceptanceClaimed": false,
+  "notTask10Acceptance": true
+}

@@ -1,0 +1,321 @@
+(node:57941) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeIngestion/context.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● functional public memory wiring with an offline model › reuses normalized request account and derived receipt without duplicate persistent data
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 21
+    Received: 22
+
+      104 |     const again = await remember(f, { ...input, text: "I prefer dark mode" });
+      105 |     expect(again).toEqual({ ...first, created: false }); expect(f.accounts.size).toBe(1);
+    > 106 |     expect(f.db.writes).toBe(writes);
+          |                         ^
+      107 |     expect(f.policyRequests[0]!.requestCanonical).toBe(f.policyRequests[1]!.requestCanonical);
+      108 |     expect(factory.mock.calls[0]![2]).toEqual(factory.mock.calls[1]![2]);
+      109 |     expect(f.operations[0]!.operationId).toBe(f.operations[2]!.operationId);
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:106:25)
+
+  ● functional public memory wiring with an offline model › reports trusted cold-profile readiness before model construction, search, or persistent effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: Map {"runtimeAuthPrincipals" => [{"_creationTime": 1000, "_id": "runtimeAuthPrincipals:1", "actorKind": "user", "createdAt": 1000, "issuer": "https://host.test", "subject": "user-a", "version": 1}], "runtimeAuthMemberships" => [{"_creationTime": 1000, "_id": "runtimeAuthMemberships:2", "createdAt": 1000, "principalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a", "version": 1}], "runtimeAuthScopes" => [{"_creationTime": 1000, "_id": "runtimeAuthScopes:3", "createdAt": 1000, "epoch": 1, "tenantId": "tenant-a"}, {"_creationTime": 1000, "_id": "runtimeAuthScopes:4", "createdAt": 1000, "epoch": 1, "memorySpaceId": "space-a", "tenantId": "tenant-a"}], "runtimeAuthGrants" => [{"_creationTime": 1000, "_id": "runtimeAuthGrants:5", "capabilities": ["read", "write"], "createdAt": 1000, "membershipId": "runtimeAuthMemberships:2", "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "resourceAccess": "own", "tenantEpoch": 1, "tenantId": "tenant-a", "version": 1}], "runtimeMemorySources" => [{"_creationTime": 1000, "_id": "runtimeMemorySources:6", "content": "current small-profile source", "contentHash": "bdfa2a8e1fc7e6d014d7561bfede76c0cd5a32cefcb06249caf5d48e1569e6d0", "createdAt": 1000, "lineage": {"role": "user", "sourceEventId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceRevision": 1, "trust": "user_assertion"}, "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a"}], "runtimeMemoryVectorGenerations" => [{"_creationTime": 1000, "_id": "runtimeMemoryVectorGenerations:7", "contentHash": "bdfa2a8e1fc7e6d014d7561bfede76c0cd5a32cefcb06249caf5d48e1569e6d0", "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "profile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "receiptId": "existing-small-receipt", "sourceEventId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceRevision": 1, "tenantId": "tenant-a"}]}
+    Received: Map {"runtimeAuthPrincipals" => [{"_creationTime": 1000, "_id": "runtimeAuthPrincipals:1", "actorKind": "user", "createdAt": 1000, "issuer": "https://host.test", "subject": "user-a", "version": 1}], "runtimeAuthMemberships" => [{"_creationTime": 1000, "_id": "runtimeAuthMemberships:2", "createdAt": 1000, "principalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a", "version": 1}], "runtimeAuthScopes" => [{"_creationTime": 1000, "_id": "runtimeAuthScopes:3", "createdAt": 1000, "epoch": 1, "tenantId": "tenant-a"}, {"_creationTime": 1000, "_id": "runtimeAuthScopes:4", "createdAt": 1000, "epoch": 1, "memorySpaceId": "space-a", "tenantId": "tenant-a"}], "runtimeAuthGrants" => [{"_creationTime": 1000, "_id": "runtimeAuthGrants:5", "capabilities": ["read", "write"], "createdAt": 1000, "membershipId": "runtimeAuthMemberships:2", "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "resourceAccess": "own", "tenantEpoch": 1, "tenantId": "tenant-a", "version": 1}], "runtimeMemorySources" => [{"_creationTime": 1000, "_id": "runtimeMemorySources:6", "content": "current small-profile source", "contentHash": "bdfa2a8e1fc7e6d014d7561bfede76c0cd5a32cefcb06249caf5d48e1569e6d0", "createdAt": 1000, "lineage": {"role": "user", "sourceEventId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceRevision": 1, "trust": "user_assertion"}, "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a"}], "runtimeMemoryVectorGenerations" => [{"_creationTime": 1000, "_id": "runtimeMemoryVectorGenerations:7", "contentHash": "bdfa2a8e1fc7e6d014d7561bfede76c0cd5a32cefcb06249caf5d48e1569e6d0", "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "profile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "receiptId": "existing-small-receipt", "sourceEventId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"prior-small\"]", "sourceRevision": 1, "tenantId": "tenant-a"}], "runtimeAuthTombstones" => []}
+
+      204 |       message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" });
+      205 |     expect(f.operations).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+    > 206 |     expect(f.db.rows).toEqual(before); expect(f.db.writes).toBe(writes);
+          |                       ^
+      207 |   });
+      208 |   it("a readiness-shaped failure after model invocation remains opaque and uncertain", async () => {
+      209 |     const f = setup();
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:206:23)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.7s | 41/41 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     1.2s | 8/8 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ❌     1.1s | 25/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 0.8%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.7%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.7%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=true)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.6%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.6%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.5%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.5%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=false)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.4%) - actual-service regressions — native terminal identity and semantic schemas binds fixed memory.extract semantic schema to admission without native response_format
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.4%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - backend ActionCtx Gateway adapter — offline native composition records streamed visibility through native current-authority checks before delivering text
+    /tests/unit/runtime/gateway-backend.test.ts
+
+11. [32m✓[0m    0.02s ( 0.3%) - backend ActionCtx Gateway adapter — offline native composition replays only authorized persisted text, without another reservation or native call
+    /tests/unit/runtime/gateway-backend.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context a failed earlier fact event blocks only facts; explicit retirement closes the hole
+    /tests/unit/runtimeIngestion/context.test.ts
+
+13. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context later queued input is excluded from pending and indexed paths despite captured scope sequence
+    /tests/unit/runtimeIngestion/context.test.ts
+
+14. [32m✓[0m    0.02s ( 0.3%) - backend ActionCtx Gateway adapter — offline native composition rechecks the parent's cancelled before child model construction
+    /tests/unit/runtime/gateway-backend.test.ts
+
+15. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context 33 unrepresented sources withhold the whole tail; history dedup happens before the source bound
+    /tests/unit/runtimeIngestion/context.test.ts
+
+16. [32m✓[0m    0.02s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-large
+    /tests/unit/runtime/gateway-backend.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / foreign/text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas binds fixed facts.resolve semantic schema to admission without native response_format
+    /tests/unit/runtime/gateway-backend.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - backend ActionCtx Gateway adapter — offline native composition rechecks the parent's sourceTombstone before child model construction
+    /tests/unit/runtime/gateway-backend.test.ts
+
+20. [32m✓[0m    0.02s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity undefined / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.61s (8.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.31s
+  Test suites:        3
+  Individual tests:   63
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       2 failed, 74 passed, 76 total
+Snapshots:   0 total
+Time:        7.312 s
+Ran all test suites matching tests/unit/runtime/gateway-backend.test.ts|tests/unit/runtimeMemory/public-functional.test.ts|tests/unit/runtimeIngestion/context.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/readiness-native-repair2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

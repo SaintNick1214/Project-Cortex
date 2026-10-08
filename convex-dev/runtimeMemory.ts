@@ -7,10 +7,11 @@ import type { ActionCtx } from "./_generated/server";
 import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent } from "./runtimeMemorySchema";
-import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope } from "./runtimeMemoryRepository";
+import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope, memoryReferences } from "./runtimeMemoryRepository";
 import { assertMemoryRequestId, explicitSourceLineage, recallMemory, rememberMemory } from "./runtimeMemoryServices";
-import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
-import { requireDataAuthority } from "./runtimeDataAuth";
+import { normalizeSourceText } from "../src/domain/profile";
+import { embeddingProfile } from "./runtimeMemorySchema";
+import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
@@ -19,8 +20,8 @@ import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
 export const defaultProfile = query({
   args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    await requireDataAuthority(ctx, args, "read");
-    return { version: 1 as const, profile: DEFAULT_EMBEDDING_PROFILE };
+    const authority = await requireDataAuthority(ctx, args, "read");
+    return { version: 1 as const, profile: await ctx.runQuery(memoryReferences.profile, { reference: dataAuthorityReference(authority), operationKey: "embedding.query" }) };
   },
 });
 
@@ -41,8 +42,10 @@ export const readFacts = internalQuery({ args: { ...scopedArgs, query: v.object(
   subject: v.optional(v.string()), factType: v.optional(v.union(v.literal("preference"), v.literal("identity"), v.literal("knowledge"),
     v.literal("relationship"), v.literal("event"), v.literal("observation"), v.literal("custom"))), limit: v.number(),
 }) }, handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).listFacts(args.query) });
-export const readVectorMatches = internalQuery({ args: { ...scopedArgs, hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })) },
-  handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).hydrateVectors(args.hits) });
+export const checkProfileReady = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()) },
+  handler: async (ctx, args) => { await new ConvexMemoryRepository(ctx, args.reference, args.capability).assertProfileReady(args.profile, args.runBudgetId); return null; } });
+export const readVectorMatches = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()), hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })) },
+  handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).hydrateVectors(args.hits, args.profile, args.runBudgetId) });
 
 const authorize = makeFunctionReference<"query", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize") as unknown as
   FunctionReference<"query", "internal", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>;
@@ -134,6 +137,7 @@ function foregroundControlFailure(error: unknown): never {
           BUDGET_EXCEEDED: ["Model operation control failed."],
           IDEMPOTENCY_CONFLICT: ["Model operation control failed."],
           POLICY_DENIED: ["Model operation control failed."],
+          PROFILE_NOT_READY: ["Current sources have no compatible vector generation for the selected profile"],
         };
         if (typeof fields.code === "string" && Object.prototype.hasOwnProperty.call(messages, fields.code)
           && typeof fields.message === "string" && messages[fields.code]!.includes(fields.message)) {
@@ -204,6 +208,12 @@ export const recall = action({ args: { ...requestArgs, limit: v.optional(v.numbe
   const text = normalizeSourceText(args.text); const limit = args.limit ?? 10;
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) memoryError("INVALID_INPUT", "Limit must be between 1 and 100");
   const budget = await memoryBudget(ctx, reference, "embedding.query", args.requestId, { purpose: "recall", text, limit });
+  // This trusted metadata-only preflight precedes every model call. A later
+  // readiness race remains a functional failure, whose dispatch is uncertain.
+  try {
+    const profile = await ctx.runQuery(memoryReferences.profile, { reference, operationKey: "embedding.query", runBudgetId: budget.runBudgetId });
+    await repository.assertProfileReady?.(profile, budget.runBudgetId);
+  } catch (error) { return foregroundControlFailure(error); }
   return await memoryOperation(async () => await recallMemory({ repository,
     model: createGatewayMemoryModel(ctx, repository, budget), clock: { now: () => Date.now() } },
   { text, requestId: args.requestId, limit }));

@@ -1,0 +1,4 @@
+import { build } from 'esbuild';
+import { writeFile } from 'node:fs/promises';
+const result=await build({entryPoints:['/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.mjs'],outfile:'/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.bundle.mjs',bundle:true,platform:'node',format:'esm',target:'node24',metafile:true});
+await writeFile('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.metafile.json',JSON.stringify(result.metafile,null,2)+'\n');

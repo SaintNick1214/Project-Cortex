@@ -4,9 +4,13 @@ import { ConvexError } from "convex/values";
 import type { MemoryModel, MemoryRepository, InternalModelOperation, SourceReference } from "../src/domain/contracts";
 import { CONFLICT_DECISION_JSON_SCHEMA, parseConflictDecision } from "../src/domain/conflicts";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
-import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
+import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, semanticHash } from "../src/domain/profile";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import type { ModelOperationKey } from "../src/domain/model-policy";
+import { makeFunctionReference } from "convex/server";
+import type { FunctionReference } from "convex/server";
+import type { EmbeddingProfile } from "../src/domain/profile";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { Id } from "./_generated/dataModel";
 import { dataAuthorityReference } from "./runtimeDataAuth";
 import { createBackendGatewayComposition, ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
@@ -103,6 +107,17 @@ export function createGatewayMemoryModel(
     } finally { await call.lifecycle.complete(); }
   }
   return {
+    resolveProfile: async (purpose) => {
+      await repository.recheckAuthority();
+      if (!budget) budget = ensureBackendGatewayBudget(ctx, { reference, operationKey: purpose,
+        requestId: await semanticHash(canonicalModelJson([purpose, "profile-resolution", run.parentOperationId ?? null])),
+        requestCanonical: canonicalModelJson({ purpose, profileResolution: 1 }) }).then(value => value.runBudgetId);
+      const runBudgetId = await budget;
+      const profile = await ctx.runQuery(makeFunctionReference("runtimeModelPolicy:embeddingProfile") as unknown as FunctionReference<"query", "internal",
+        { reference: RuntimeAuthorityReference; operationKey: "embedding.memory" | "embedding.query"; runBudgetId: string }, EmbeddingProfile>,
+        { reference, operationKey: purpose, runBudgetId });
+      assertSupportedEmbeddingProfile(profile); return { profile, runBudgetId };
+    },
     extract: async (request) => {
       if (canonicalModelJson(request.schema) !== canonicalModelJson(FACTS_JSON_SCHEMA)) memoryError("INVALID_INPUT", "Extraction schema does not match the deployed domain contract");
       // Domain extraction validates this JSON and assigns source attribution.
@@ -116,13 +131,14 @@ export function createGatewayMemoryModel(
       catch { return invalidModelOutput("Memory conflict resolution returned invalid JSON"); }
     },
     embed: async (request) => {
-      assertProfileMatches(request.profile, DEFAULT_EMBEDDING_PROFILE);
+      assertSupportedEmbeddingProfile(request.profile);
       const vectors: number[][] = [];
       // One native request/reservation per value. A hidden SDK batch split cannot
       // create a second billable request under the first operation's reservation.
       for (let ordinal = 0; ordinal < request.texts.length; ordinal++) {
         const call = await prepare(request, request.purpose, ordinal);
         try {
+          assertProfileMatches(request.profile, call.resolution.snapshot.semanticProfile!);
           if (!("doEmbed" in call.model)) throw new GatewayDispatchError("MODEL_IDENTITY_MISMATCH");
           try {
             const result = await (call.model as EmbeddingModelV4).doEmbed({ values: [request.texts[ordinal]!], abortSignal: call.lifecycle.signal });
@@ -139,7 +155,7 @@ export function createGatewayMemoryModel(
           }
         } finally { await call.lifecycle.complete(); }
       }
-      return { profile: DEFAULT_EMBEDDING_PROFILE, vectors };
+      return { profile: request.profile, vectors };
     },
   };
 }
