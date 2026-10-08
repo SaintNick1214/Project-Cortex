@@ -1,0 +1,18 @@
+{
+  "fullTextDiff": "--- immutable_A5\n+++ Root_R6\n@@ -136,6 +136,8 @@\n             self.unknown_close = True\n \n     def approval_binding(self):\n+        if self.unknown_close:\n+            raise Denied('sticky_unknown_SOURCE_close')\n         for key, row in self.rows.items():\n             if admission_id(row) != key:\n                 raise Denied('stored_SOURCE_tuple_changed')\n@@ -160,6 +162,8 @@\n \n     def preflight(self, mf=CAPS['MF'], approval=CAPS['approval'], data=CAPS['DATA'],\n                   future_paths=()):\n+        if self.unknown_close:\n+            raise Denied('sticky_unknown_SOURCE_close')\n         if (type(mf) is not int or not 0 <= mf <= CAPS['MF']\n                 or type(approval) is not int or not 0 <= approval <= CAPS['approval']\n                 or data != CAPS['DATA'] or type(data) is not int):\n@@ -465,6 +469,8 @@\n         self.approved_source_binding = None\n \n     def advance(self, next_phase, receipt, independent_verifier=None):\n+        if self.ledger.unknown_close:\n+            raise Denied('sticky_unknown_SOURCE_close')\n         index=self.ORDER.index(self.phase)\n         if index+1 >= len(self.ORDER) or self.ORDER[index+1] != next_phase:\n             raise Denied('original_phase_order')\n",
+  "otherASTUnchanged": true,
+  "semanticMethodChanges": [
+    [
+      "Ledger",
+      "approval_binding"
+    ],
+    [
+      "Ledger",
+      "preflight"
+    ],
+    [
+      "PhaseMachine",
+      "advance"
+    ]
+  ]
+}

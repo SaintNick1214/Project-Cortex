@@ -1,0 +1,175 @@
+{
+  "scope": "ADJACENT_UNCHANGED_R6_HELDBROKER_REGISTRATION_SOURCE_MOCK_ONLY",
+  "discovered": 6,
+  "executed": 6,
+  "passed": 0,
+  "failed": 6,
+  "skipped": 0,
+  "cases": [
+    {
+      "name": "successful_open_owner_registration_0_complete_once_cleanup",
+      "outcome": "FAIL",
+      "expected": "new successful open is either registered or fallback closed once before primary propagation; no leaked virtual handle",
+      "detail": {
+        "faultPosition": 0,
+        "primary": {
+          "type": "MemoryError",
+          "message": "independent_immediate_owner_map_insertion_fault"
+        },
+        "openedVirtualHandles": [
+          100
+        ],
+        "closeAttempts": [],
+        "remainingVirtualHandles": [
+          100
+        ],
+        "closeError": null,
+        "ledgerUnknownClose": false,
+        "ledgerOwnedHandles": 0,
+        "phase": "ACTUAL_READY",
+        "phaseError": null
+      }
+    },
+    {
+      "name": "untracked_registration_0_cannot_claim_ready",
+      "outcome": "FAIL",
+      "expected": "unknown owned descriptor state cannot reach ACTUAL_READY with the unchanged original receipt",
+      "detail": {
+        "faultPosition": 0,
+        "primary": {
+          "type": "MemoryError",
+          "message": "independent_immediate_owner_map_insertion_fault"
+        },
+        "openedVirtualHandles": [
+          100
+        ],
+        "closeAttempts": [],
+        "remainingVirtualHandles": [
+          100
+        ],
+        "closeError": null,
+        "ledgerUnknownClose": false,
+        "ledgerOwnedHandles": 0,
+        "phase": "ACTUAL_READY",
+        "phaseError": null
+      }
+    },
+    {
+      "name": "successful_open_owner_registration_1_complete_once_cleanup",
+      "outcome": "FAIL",
+      "expected": "new successful open is either registered or fallback closed once before primary propagation; no leaked virtual handle",
+      "detail": {
+        "faultPosition": 1,
+        "primary": {
+          "type": "MemoryError",
+          "message": "independent_immediate_owner_map_insertion_fault"
+        },
+        "openedVirtualHandles": [
+          100,
+          101
+        ],
+        "closeAttempts": [
+          100
+        ],
+        "remainingVirtualHandles": [
+          101
+        ],
+        "closeError": null,
+        "ledgerUnknownClose": false,
+        "ledgerOwnedHandles": 0,
+        "phase": "ACTUAL_READY",
+        "phaseError": null
+      }
+    },
+    {
+      "name": "untracked_registration_1_cannot_claim_ready",
+      "outcome": "FAIL",
+      "expected": "unknown owned descriptor state cannot reach ACTUAL_READY with the unchanged original receipt",
+      "detail": {
+        "faultPosition": 1,
+        "primary": {
+          "type": "MemoryError",
+          "message": "independent_immediate_owner_map_insertion_fault"
+        },
+        "openedVirtualHandles": [
+          100,
+          101
+        ],
+        "closeAttempts": [
+          100
+        ],
+        "remainingVirtualHandles": [
+          101
+        ],
+        "closeError": null,
+        "ledgerUnknownClose": false,
+        "ledgerOwnedHandles": 0,
+        "phase": "ACTUAL_READY",
+        "phaseError": null
+      }
+    },
+    {
+      "name": "successful_open_owner_registration_2_complete_once_cleanup",
+      "outcome": "FAIL",
+      "expected": "new successful open is either registered or fallback closed once before primary propagation; no leaked virtual handle",
+      "detail": {
+        "faultPosition": 2,
+        "primary": {
+          "type": "MemoryError",
+          "message": "independent_immediate_owner_map_insertion_fault"
+        },
+        "openedVirtualHandles": [
+          100,
+          101,
+          102
+        ],
+        "closeAttempts": [
+          100,
+          101
+        ],
+        "remainingVirtualHandles": [
+          102
+        ],
+        "closeError": null,
+        "ledgerUnknownClose": false,
+        "ledgerOwnedHandles": 0,
+        "phase": "ACTUAL_READY",
+        "phaseError": null
+      }
+    },
+    {
+      "name": "untracked_registration_2_cannot_claim_ready",
+      "outcome": "FAIL",
+      "expected": "unknown owned descriptor state cannot reach ACTUAL_READY with the unchanged original receipt",
+      "detail": {
+        "faultPosition": 2,
+        "primary": {
+          "type": "MemoryError",
+          "message": "independent_immediate_owner_map_insertion_fault"
+        },
+        "openedVirtualHandles": [
+          100,
+          101,
+          102
+        ],
+        "closeAttempts": [
+          100,
+          101
+        ],
+        "remainingVirtualHandles": [
+          102
+        ],
+        "closeError": null,
+        "ledgerUnknownClose": false,
+        "ledgerOwnedHandles": 0,
+        "phase": "ACTUAL_READY",
+        "phaseError": null
+      }
+    }
+  ],
+  "virtualHandlesOnly": true,
+  "candidateBytesUnchanged": true,
+  "SourceEligibility": false,
+  "effects": 0,
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]"
+}

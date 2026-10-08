@@ -1,0 +1,30 @@
+{
+  "scope": "ROOT_AUTHORED_G_BORROWED_SOURCE_SEAM_SOURCE_ONLY",
+  "original": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/source-gates.py",
+    "bytes": 20341,
+    "sha256": "26bc39acc1846ebb56d1a39924dd3da11b0f87bfa1a405f5676fa5f45f7770c7"
+  },
+  "candidate": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam1/source-gates-borrowed1.py",
+    "bytes": 25290,
+    "sha256": "e9d2a386baf6391dcce39306cda4c25c1092d98295181112567db8cd40050f87"
+  },
+  "preservedOriginalGuard": true,
+  "changedFunctions": [
+    "source_read",
+    "qualify_sources"
+  ],
+  "newClass": "RootBorrowedGuardLease",
+  "unchangedOriginalScopesAndCapsAndReleaseAssertions": true,
+  "noBorrowerDescriptorExport": true,
+  "RootSessionRetainsAllCloseOwnership": true,
+  "externalBridgeBindingRequired": true,
+  "wholeSourceNonuseAndCurrentManifestAgreementRequired": true,
+  "tests": "PENDING",
+  "independentReview": "PENDING",
+  "sourceEligibility": false,
+  "functionalAcceptance": false,
+  "effects": 0,
+  "atUnixNs": "1791425979503609000"
+}
