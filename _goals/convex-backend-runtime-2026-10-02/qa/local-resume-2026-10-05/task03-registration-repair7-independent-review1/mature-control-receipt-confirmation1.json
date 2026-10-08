@@ -1,0 +1,1535 @@
+{
+  "SourceEligibility": false,
+  "allFiveDocumentsHeldThroughValidationAndFinal": true,
+  "author48Passed": 48,
+  "candidate": "e4e35ac0b7089b8db8e2d2a99cdf39374bd415c9bc4c76a52ab6ed9e0b776a4b",
+  "candidateNegativeCases": [
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": false,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "independent_close_receipt_append",
+          "type": "MemoryError"
+        },
+        "closeAttempts": [
+          100
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 0,
+        "remainingLedgerOwners": [
+          101,
+          102
+        ],
+        "remainingVirtualHandles": [
+          101,
+          102
+        ],
+        "seam": "close_receipt_append",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_close_receipt_append_0_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": false,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "independent_close_receipt_append",
+          "type": "MemoryError"
+        },
+        "closeAttempts": [
+          100
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 0,
+        "remainingLedgerOwners": [
+          101,
+          102
+        ],
+        "remainingVirtualHandles": [
+          101,
+          102
+        ],
+        "seam": "close_receipt_append",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_close_receipt_append_0_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": false,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "independent_close_receipt_append",
+          "type": "MemoryError"
+        },
+        "closeAttempts": [
+          100,
+          101
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 1,
+        "remainingLedgerOwners": [
+          102
+        ],
+        "remainingVirtualHandles": [
+          102
+        ],
+        "seam": "close_receipt_append",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_close_receipt_append_1_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": false,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "independent_close_receipt_append",
+          "type": "MemoryError"
+        },
+        "closeAttempts": [
+          100,
+          101
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 1,
+        "remainingLedgerOwners": [
+          102
+        ],
+        "remainingVirtualHandles": [
+          102
+        ],
+        "seam": "close_receipt_append",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_close_receipt_append_1_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "independent_close_receipt_append",
+          "type": "MemoryError"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 2,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "close_receipt_append",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_close_receipt_append_2_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "independent_close_receipt_append",
+          "type": "MemoryError"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 2,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "close_receipt_append",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_close_receipt_append_2_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 0,
+        "remainingLedgerOwners": [
+          100
+        ],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_before",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_before_0_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 0,
+        "remainingLedgerOwners": [
+          100
+        ],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_before",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_before_0_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 1,
+        "remainingLedgerOwners": [
+          101
+        ],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_before",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_before_1_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 1,
+        "remainingLedgerOwners": [
+          101
+        ],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_before",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_before_1_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 2,
+        "remainingLedgerOwners": [
+          102
+        ],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_before",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_before_2_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 2,
+        "remainingLedgerOwners": [
+          102
+        ],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_before",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_before_2_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 0,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_after",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_after_0_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 0,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_after",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_after_0_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 1,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_after",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_after_1_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 1,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_after",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_after_1_SOURCE_APPROVED"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE",
+        "position": 2,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_after",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_after_2_SOURCE"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "allOwnedCloseAttempts": true,
+        "candidateBytesUnchanged": true,
+        "cleanupError": {
+          "message": "all_close_attempted_errors:MemoryError",
+          "type": "Denied"
+        },
+        "closeAttempts": [
+          100,
+          101,
+          102
+        ],
+        "externalCallbacks": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "ledgerUnknownClose": false,
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "SOURCE_APPROVED",
+        "position": 2,
+        "remainingLedgerOwners": [],
+        "remainingVirtualHandles": [],
+        "seam": "ledger_release_after",
+        "stageError": null,
+        "virtualOnly": true
+      },
+      "name": "cleanup_bookkeeping_ledger_release_after_2_SOURCE_APPROVED"
+    }
+  ],
+  "cumulativeConservativeDebtBytes": 3848791,
+  "documentFDCloses": [
+    {
+      "attempts": 1,
+      "error": null,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/source-plan-bootstrap-readback1.json"
+    },
+    {
+      "attempts": 1,
+      "error": null,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-results1.json"
+    },
+    {
+      "attempts": 1,
+      "error": null,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json"
+    },
+    {
+      "attempts": 1,
+      "error": null,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-stdout1.txt"
+    },
+    {
+      "attempts": 1,
+      "error": null,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/control-producers-stopped1.json"
+    }
+  ],
+  "documentFailureChain": [],
+  "documentRows": [
+    {
+      "FINAL9": {
+        "ctime_ns": "1791432026056925438",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95302312",
+        "mode": "33188",
+        "mtime_ns": "1791432025930239733",
+        "nlink": "1",
+        "size": "4361",
+        "uid": "501"
+      },
+      "OPEN9": {
+        "ctime_ns": "1791432026056925438",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95302312",
+        "mode": "33188",
+        "mtime_ns": "1791432025930239733",
+        "nlink": "1",
+        "size": "4361",
+        "uid": "501"
+      },
+      "POST9": {
+        "ctime_ns": "1791432026056925438",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95302312",
+        "mode": "33188",
+        "mtime_ns": "1791432025930239733",
+        "nlink": "1",
+        "size": "4361",
+        "uid": "501"
+      },
+      "PRE9": {
+        "ctime_ns": "1791432026056925438",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95302312",
+        "mode": "33188",
+        "mtime_ns": "1791432025930239733",
+        "nlink": "1",
+        "size": "4361",
+        "uid": "501"
+      },
+      "bytes": 4361,
+      "finalFullEOFHashSize": true,
+      "firstCaptureAgeNs": "749606957562",
+      "fullEOF": true,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/source-plan-bootstrap-readback1.json",
+      "pathFINAL9": {
+        "ctime_ns": "1791432026056925438",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95302312",
+        "mode": "33188",
+        "mtime_ns": "1791432025930239733",
+        "nlink": "1",
+        "size": "4361",
+        "uid": "501"
+      },
+      "sha256": "e3999c4d107f4236a18f39242327871150b1d6ddf949f175910175d93603a20a"
+    },
+    {
+      "FINAL9": {
+        "ctime_ns": "1791432036476375346",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303860",
+        "mode": "33188",
+        "mtime_ns": "1791432036292949553",
+        "nlink": "1",
+        "size": "129909",
+        "uid": "501"
+      },
+      "OPEN9": {
+        "ctime_ns": "1791432036476375346",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303860",
+        "mode": "33188",
+        "mtime_ns": "1791432036292949553",
+        "nlink": "1",
+        "size": "129909",
+        "uid": "501"
+      },
+      "POST9": {
+        "ctime_ns": "1791432036476375346",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303860",
+        "mode": "33188",
+        "mtime_ns": "1791432036292949553",
+        "nlink": "1",
+        "size": "129909",
+        "uid": "501"
+      },
+      "PRE9": {
+        "ctime_ns": "1791432036476375346",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303860",
+        "mode": "33188",
+        "mtime_ns": "1791432036292949553",
+        "nlink": "1",
+        "size": "129909",
+        "uid": "501"
+      },
+      "bytes": 129909,
+      "finalFullEOFHashSize": true,
+      "firstCaptureAgeNs": "739187552654",
+      "fullEOF": true,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-results1.json",
+      "pathFINAL9": {
+        "ctime_ns": "1791432036476375346",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303860",
+        "mode": "33188",
+        "mtime_ns": "1791432036292949553",
+        "nlink": "1",
+        "size": "129909",
+        "uid": "501"
+      },
+      "sha256": "0fb5816b7c0324295d1ab99e6160c5e8b24ebb9fb72c6a94dd30f3b7c121e6e0"
+    },
+    {
+      "FINAL9": {
+        "ctime_ns": "1791432036477269929",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303862",
+        "mode": "33188",
+        "mtime_ns": "1791432036295904134",
+        "nlink": "1",
+        "size": "113023",
+        "uid": "501"
+      },
+      "OPEN9": {
+        "ctime_ns": "1791432036477269929",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303862",
+        "mode": "33188",
+        "mtime_ns": "1791432036295904134",
+        "nlink": "1",
+        "size": "113023",
+        "uid": "501"
+      },
+      "POST9": {
+        "ctime_ns": "1791432036477269929",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303862",
+        "mode": "33188",
+        "mtime_ns": "1791432036295904134",
+        "nlink": "1",
+        "size": "113023",
+        "uid": "501"
+      },
+      "PRE9": {
+        "ctime_ns": "1791432036477269929",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303862",
+        "mode": "33188",
+        "mtime_ns": "1791432036295904134",
+        "nlink": "1",
+        "size": "113023",
+        "uid": "501"
+      },
+      "bytes": 113023,
+      "finalFullEOFHashSize": true,
+      "firstCaptureAgeNs": "739186689071",
+      "fullEOF": true,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json",
+      "pathFINAL9": {
+        "ctime_ns": "1791432036477269929",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303862",
+        "mode": "33188",
+        "mtime_ns": "1791432036295904134",
+        "nlink": "1",
+        "size": "113023",
+        "uid": "501"
+      },
+      "sha256": "2094f775356bdc74e8ead72053901d466256633f2c65aa403970f850ab08601b"
+    },
+    {
+      "FINAL9": {
+        "ctime_ns": "1791432036474826556",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303859",
+        "mode": "33188",
+        "mtime_ns": "1791432036290438805",
+        "nlink": "1",
+        "size": "29340",
+        "uid": "501"
+      },
+      "OPEN9": {
+        "ctime_ns": "1791432036474826556",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303859",
+        "mode": "33188",
+        "mtime_ns": "1791432036290438805",
+        "nlink": "1",
+        "size": "29340",
+        "uid": "501"
+      },
+      "POST9": {
+        "ctime_ns": "1791432036474826556",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303859",
+        "mode": "33188",
+        "mtime_ns": "1791432036290438805",
+        "nlink": "1",
+        "size": "29340",
+        "uid": "501"
+      },
+      "PRE9": {
+        "ctime_ns": "1791432036474826556",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303859",
+        "mode": "33188",
+        "mtime_ns": "1791432036290438805",
+        "nlink": "1",
+        "size": "29340",
+        "uid": "501"
+      },
+      "bytes": 29340,
+      "finalFullEOFHashSize": true,
+      "firstCaptureAgeNs": "739189161444",
+      "fullEOF": true,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-stdout1.txt",
+      "pathFINAL9": {
+        "ctime_ns": "1791432036474826556",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95303859",
+        "mode": "33188",
+        "mtime_ns": "1791432036290438805",
+        "nlink": "1",
+        "size": "29340",
+        "uid": "501"
+      },
+      "sha256": "b7c0b628d0cd2db48ad131d9a8aceac7d63bc6aff042b3cb688fc980360f039f"
+    },
+    {
+      "FINAL9": {
+        "ctime_ns": "1791432199220362505",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95319332",
+        "mode": "33188",
+        "mtime_ns": "1791432199024817804",
+        "nlink": "1",
+        "size": "1725",
+        "uid": "501"
+      },
+      "OPEN9": {
+        "ctime_ns": "1791432199220362505",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95319332",
+        "mode": "33188",
+        "mtime_ns": "1791432199024817804",
+        "nlink": "1",
+        "size": "1725",
+        "uid": "501"
+      },
+      "POST9": {
+        "ctime_ns": "1791432199220362505",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95319332",
+        "mode": "33188",
+        "mtime_ns": "1791432199024817804",
+        "nlink": "1",
+        "size": "1725",
+        "uid": "501"
+      },
+      "PRE9": {
+        "ctime_ns": "1791432199220362505",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95319332",
+        "mode": "33188",
+        "mtime_ns": "1791432199024817804",
+        "nlink": "1",
+        "size": "1725",
+        "uid": "501"
+      },
+      "bytes": 1725,
+      "finalFullEOFHashSize": true,
+      "firstCaptureAgeNs": "576443650495",
+      "fullEOF": true,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/control-producers-stopped1.json",
+      "pathFINAL9": {
+        "ctime_ns": "1791432199220362505",
+        "dev": "16777234",
+        "gid": "20",
+        "ino": "95319332",
+        "mode": "33188",
+        "mtime_ns": "1791432199024817804",
+        "nlink": "1",
+        "size": "1725",
+        "uid": "501"
+      },
+      "sha256": "9f83d4c94772e4d85b4d29a4bcb54d22cd832a8184b04e13646383dfd728e733"
+    }
+  ],
+  "effects": 0,
+  "excludedOwnOrderOracleFailures": [
+    {
+      "PASS": false,
+      "evidence": {
+        "cleanup": null,
+        "closeAttempts": [
+          101,
+          100
+        ],
+        "ledgerOwned": [],
+        "opened": [
+          100,
+          101
+        ],
+        "position": 1,
+        "primary": {
+          "message": "independent_same_original_registration_gap",
+          "type": "MemoryError"
+        },
+        "probe": {
+          "callbacks": [],
+          "error": {
+            "message": "sticky_unknown_SOURCE_close",
+            "type": "Denied"
+          },
+          "phase": "SOURCE"
+        },
+        "remaining": [],
+        "unknown": true
+      },
+      "name": "original_gap_1_all_once_cleanup"
+    },
+    {
+      "PASS": false,
+      "evidence": {
+        "cleanup": null,
+        "closeAttempts": [
+          102,
+          100,
+          101
+        ],
+        "ledgerOwned": [],
+        "opened": [
+          100,
+          101,
+          102
+        ],
+        "position": 2,
+        "primary": {
+          "message": "independent_same_original_registration_gap",
+          "type": "MemoryError"
+        },
+        "probe": {
+          "callbacks": [],
+          "error": {
+            "message": "sticky_unknown_SOURCE_close",
+            "type": "Denied"
+          },
+          "phase": "SOURCE"
+        },
+        "remaining": [],
+        "unknown": true
+      },
+      "name": "original_gap_2_all_once_cleanup"
+    }
+  ],
+  "minimumDocumentFirstCaptureAgeNs": "576443650495",
+  "original165": {
+    "discovered": 165,
+    "failed": 0,
+    "passed": 165,
+    "raw36HasOriginal97WrapperCountedOnce": true
+  },
+  "priorConservativeDebtBytes": 3570433,
+  "rawCounts": {
+    "discovered": 238,
+    "executed": 238,
+    "failed": 20,
+    "passed": 218,
+    "skipped": 0
+  },
+  "remainingOriginalReservations": 7340032,
+  "scope": "MATURE_R7_OBSERVED_RECEIPTS_VERIFICATION_ONLY",
+  "sourceClosure": {
+    "all50FullEOFHashSizeOriginalNineFinalExact": true,
+    "all50OnceClosed": true,
+    "allFDsBeforeMemberBodies": true,
+    "bytes": 804146,
+    "closeErrors": 0,
+    "humanFinalVerdictAfterDescriptorClose": true,
+    "inputs": 50,
+    "minimumFirstCaptureAgeNs": 323298945500,
+    "sourceFailureChain": [],
+    "sourceRowsReference": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json",
+    "sourceRowsReferenceSha256": "2094f775356bdc74e8ead72053901d466256633f2c65aa403970f850ab08601b"
+  },
+  "thisDocumentAdmissionBytes": 278358,
+  "preservedFirstDecoderFailure": {
+    "closes": [
+      {
+        "attempts": 1,
+        "error": null,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/source-plan-bootstrap-readback1.json"
+      },
+      {
+        "attempts": 1,
+        "error": null,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-results1.json"
+      },
+      {
+        "attempts": 1,
+        "error": null,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json"
+      },
+      {
+        "attempts": 1,
+        "error": null,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-stdout1.txt"
+      },
+      {
+        "attempts": 1,
+        "error": null,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/control-producers-stopped1.json"
+      }
+    ],
+    "errors": [
+      {
+        "error": "'sourceWriters'",
+        "stage": "primary",
+        "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 37, in <module>\n    assert stop['sourceWriters']=='STOPPED'and stop['remainingProducerWrites']==[]\n           ~~~~^^^^^^^^^^^^^^^^^\nKeyError: 'sourceWriters'\n",
+        "type": "KeyError"
+      }
+    ],
+    "rows": [
+      {
+        "FINAL9": {
+          "ctime_ns": "1791432026056925438",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95302312",
+          "mode": "33188",
+          "mtime_ns": "1791432025930239733",
+          "nlink": "1",
+          "size": "4361",
+          "uid": "501"
+        },
+        "OPEN9": {
+          "ctime_ns": "1791432026056925438",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95302312",
+          "mode": "33188",
+          "mtime_ns": "1791432025930239733",
+          "nlink": "1",
+          "size": "4361",
+          "uid": "501"
+        },
+        "POST9": {
+          "ctime_ns": "1791432026056925438",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95302312",
+          "mode": "33188",
+          "mtime_ns": "1791432025930239733",
+          "nlink": "1",
+          "size": "4361",
+          "uid": "501"
+        },
+        "PRE9": {
+          "ctime_ns": "1791432026056925438",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95302312",
+          "mode": "33188",
+          "mtime_ns": "1791432025930239733",
+          "nlink": "1",
+          "size": "4361",
+          "uid": "501"
+        },
+        "bytes": 4361,
+        "finalFullEOFHashSize": true,
+        "firstCaptureAgeNs": "702489533562",
+        "fullEOF": true,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/source-plan-bootstrap-readback1.json",
+        "pathFINAL9": {
+          "ctime_ns": "1791432026056925438",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95302312",
+          "mode": "33188",
+          "mtime_ns": "1791432025930239733",
+          "nlink": "1",
+          "size": "4361",
+          "uid": "501"
+        },
+        "sha256": "e3999c4d107f4236a18f39242327871150b1d6ddf949f175910175d93603a20a"
+      },
+      {
+        "FINAL9": {
+          "ctime_ns": "1791432036476375346",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303860",
+          "mode": "33188",
+          "mtime_ns": "1791432036292949553",
+          "nlink": "1",
+          "size": "129909",
+          "uid": "501"
+        },
+        "OPEN9": {
+          "ctime_ns": "1791432036476375346",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303860",
+          "mode": "33188",
+          "mtime_ns": "1791432036292949553",
+          "nlink": "1",
+          "size": "129909",
+          "uid": "501"
+        },
+        "POST9": {
+          "ctime_ns": "1791432036476375346",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303860",
+          "mode": "33188",
+          "mtime_ns": "1791432036292949553",
+          "nlink": "1",
+          "size": "129909",
+          "uid": "501"
+        },
+        "PRE9": {
+          "ctime_ns": "1791432036476375346",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303860",
+          "mode": "33188",
+          "mtime_ns": "1791432036292949553",
+          "nlink": "1",
+          "size": "129909",
+          "uid": "501"
+        },
+        "bytes": 129909,
+        "finalFullEOFHashSize": true,
+        "firstCaptureAgeNs": "692070133654",
+        "fullEOF": true,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-results1.json",
+        "pathFINAL9": {
+          "ctime_ns": "1791432036476375346",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303860",
+          "mode": "33188",
+          "mtime_ns": "1791432036292949553",
+          "nlink": "1",
+          "size": "129909",
+          "uid": "501"
+        },
+        "sha256": "0fb5816b7c0324295d1ab99e6160c5e8b24ebb9fb72c6a94dd30f3b7c121e6e0"
+      },
+      {
+        "FINAL9": {
+          "ctime_ns": "1791432036477269929",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303862",
+          "mode": "33188",
+          "mtime_ns": "1791432036295904134",
+          "nlink": "1",
+          "size": "113023",
+          "uid": "501"
+        },
+        "OPEN9": {
+          "ctime_ns": "1791432036477269929",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303862",
+          "mode": "33188",
+          "mtime_ns": "1791432036295904134",
+          "nlink": "1",
+          "size": "113023",
+          "uid": "501"
+        },
+        "POST9": {
+          "ctime_ns": "1791432036477269929",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303862",
+          "mode": "33188",
+          "mtime_ns": "1791432036295904134",
+          "nlink": "1",
+          "size": "113023",
+          "uid": "501"
+        },
+        "PRE9": {
+          "ctime_ns": "1791432036477269929",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303862",
+          "mode": "33188",
+          "mtime_ns": "1791432036295904134",
+          "nlink": "1",
+          "size": "113023",
+          "uid": "501"
+        },
+        "bytes": 113023,
+        "finalFullEOFHashSize": true,
+        "firstCaptureAgeNs": "692069274071",
+        "fullEOF": true,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json",
+        "pathFINAL9": {
+          "ctime_ns": "1791432036477269929",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303862",
+          "mode": "33188",
+          "mtime_ns": "1791432036295904134",
+          "nlink": "1",
+          "size": "113023",
+          "uid": "501"
+        },
+        "sha256": "2094f775356bdc74e8ead72053901d466256633f2c65aa403970f850ab08601b"
+      },
+      {
+        "FINAL9": {
+          "ctime_ns": "1791432036474826556",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303859",
+          "mode": "33188",
+          "mtime_ns": "1791432036290438805",
+          "nlink": "1",
+          "size": "29340",
+          "uid": "501"
+        },
+        "OPEN9": {
+          "ctime_ns": "1791432036474826556",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303859",
+          "mode": "33188",
+          "mtime_ns": "1791432036290438805",
+          "nlink": "1",
+          "size": "29340",
+          "uid": "501"
+        },
+        "POST9": {
+          "ctime_ns": "1791432036474826556",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303859",
+          "mode": "33188",
+          "mtime_ns": "1791432036290438805",
+          "nlink": "1",
+          "size": "29340",
+          "uid": "501"
+        },
+        "PRE9": {
+          "ctime_ns": "1791432036474826556",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303859",
+          "mode": "33188",
+          "mtime_ns": "1791432036290438805",
+          "nlink": "1",
+          "size": "29340",
+          "uid": "501"
+        },
+        "bytes": 29340,
+        "finalFullEOFHashSize": true,
+        "firstCaptureAgeNs": "692071750444",
+        "fullEOF": true,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-stdout1.txt",
+        "pathFINAL9": {
+          "ctime_ns": "1791432036474826556",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95303859",
+          "mode": "33188",
+          "mtime_ns": "1791432036290438805",
+          "nlink": "1",
+          "size": "29340",
+          "uid": "501"
+        },
+        "sha256": "b7c0b628d0cd2db48ad131d9a8aceac7d63bc6aff042b3cb688fc980360f039f"
+      },
+      {
+        "FINAL9": {
+          "ctime_ns": "1791432199220362505",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95319332",
+          "mode": "33188",
+          "mtime_ns": "1791432199024817804",
+          "nlink": "1",
+          "size": "1725",
+          "uid": "501"
+        },
+        "OPEN9": {
+          "ctime_ns": "1791432199220362505",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95319332",
+          "mode": "33188",
+          "mtime_ns": "1791432199024817804",
+          "nlink": "1",
+          "size": "1725",
+          "uid": "501"
+        },
+        "POST9": {
+          "ctime_ns": "1791432199220362505",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95319332",
+          "mode": "33188",
+          "mtime_ns": "1791432199024817804",
+          "nlink": "1",
+          "size": "1725",
+          "uid": "501"
+        },
+        "PRE9": {
+          "ctime_ns": "1791432199220362505",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95319332",
+          "mode": "33188",
+          "mtime_ns": "1791432199024817804",
+          "nlink": "1",
+          "size": "1725",
+          "uid": "501"
+        },
+        "bytes": 1725,
+        "finalFullEOFHashSize": true,
+        "firstCaptureAgeNs": "529326244495",
+        "fullEOF": true,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/control-producers-stopped1.json",
+        "pathFINAL9": {
+          "ctime_ns": "1791432199220362505",
+          "dev": "16777234",
+          "gid": "20",
+          "ino": "95319332",
+          "mode": "33188",
+          "mtime_ns": "1791432199024817804",
+          "nlink": "1",
+          "size": "1725",
+          "uid": "501"
+        },
+        "sha256": "9f83d4c94772e4d85b4d29a4bcb54d22cd832a8184b04e13646383dfd728e733"
+      }
+    ]
+  },
+  "correctedInterpretationOnly": true,
+  "candidateControlsRerun": false,
+  "documentaryDecoderSources": {
+    "firstFailedNative": "import hashlib,json,os,stat,time,traceback\nfrom pathlib import Path\nJ=Path(\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1\")\nnames=['source-plan-bootstrap-readback1.json','independent-control-results1.json','held-source-control-FDclosure1.json','independent-control-stdout1.txt','control-producers-stopped1.json']\nsizes=[4361,129909,113023,29340,1725]\nK=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')\ndef nine(s):return {k:str(getattr(s,'st_'+k))for k in K}\nowned=[];rows=[];bodies={};errors=[];closes=[];answer=None\ntry:\n assert 3292075+sum(sizes)+7340032<=67108864\n assert 104+50+5+32<=4096\n for name,size in zip(names,sizes):\n  p=J/name;pre=nine(os.lstat(p));age=time.time_ns()-max(int(pre['mtime_ns']),int(pre['ctime_ns']))\n  assert age>=240000000000,(name,'maturity',age)\n  assert stat.S_ISREG(int(pre['mode']))and pre['uid']=='501'and pre['gid']=='20'and pre['nlink']=='1'and int(pre['size'])==size<=16777216\n  fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)\n  try:owned.append((fd,p))\n  except BaseException as e:\n   err=None\n   try:os.close(fd)\n   except BaseException as c:err=repr(c);errors.append({'stage':'unregistered_close','error':err})\n   closes.append({'path':str(p),'attempts':1,'error':err,'fallback':True});raise\n  op=nine(os.fstat(fd));assert op==pre\n  rows.append({'path':str(p),'bytes':size,'PRE9':pre,'OPEN9':op,'firstCaptureAgeNs':str(age)})\n for (fd,p),row in zip(owned,rows):\n  b=bytearray();off=0\n  while True:\n   x=os.pread(fd,65536,off)\n   if not x:break\n   b.extend(x);off+=len(x);assert len(b)<=16777216\n  row.update({'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),'POST9':nine(os.fstat(fd)),'fullEOF':True})\n  assert row['POST9']==row['PRE9']==nine(os.lstat(p))and len(b)==int(row['PRE9']['size'])\n  bodies[p.name]=bytes(b)\n raw=json.loads(bodies['independent-control-results1.json'])\n closure=json.loads(bodies['held-source-control-FDclosure1.json'])\n stop=json.loads(bodies['control-producers-stopped1.json'])\n assert stop['sourceWriters']=='STOPPED'and stop['remainingProducerWrites']==[]\n assert raw['candidateSHA256']=='e4e35ac0b7089b8db8e2d2a99cdf39374bd415c9bc4c76a52ab6ed9e0b776a4b'\n assert raw['discovered']==raw['executed']==238 and raw['passed']==218 and raw['failed']==20 and raw['skipped']==0\n assert raw['original165']['passed']==165 and raw['original165']['failed']==0 and raw['author48ScopedRegression']['passed']==48\n sr=closure['inputs'];sc=closure['FDCloses']\n assert len(sr)==len(sc)==50 and len({r['path']for r in sr})==50\n assert closure['failures']==[]and closure['allFDsBeforeMemberBodies']is True and closure['allSourcesHeldThroughControlsAndFinal']is True\n cm={r['path']:r for r in sc}\n for r in sr:\n  assert r['fullEOF']is True and r['finalFullEOFHashSize']is True and r['PRE9']==r['OPEN9']==r['POST9']==r['FINAL9']==r['pathFINAL9']\n  assert r['sha256']==r['expectedSha256']and r['bytes']==r['expectedBytes']==int(r['PRE9']['size'])\n  assert cm[r['path']]['attempts']==1 and cm[r['path']]['error']is None\n assert closure['cumulativeConservativeDebtBytes']==3292075\n failed=[r for r in raw['freshIndependent']['conditions']if not r['PASS']]\n own=[r for r in failed if r['name']in ('original_gap_1_all_once_cleanup','original_gap_2_all_once_cleanup')]\n candidate=[r for r in failed if r not in own]\n assert len(own)==2 and len(candidate)==18 and not any('reviewerSetupException'in r for r in failed)\n for r in own:\n  d=r['evidence'];assert sorted(d['closeAttempts'])==sorted(d['opened'])and len(d['closeAttempts'])==len(set(d['closeAttempts']))and d['remaining']==[]and d['unknown']is True\n answer={'scope':'MATURE_R7_OBSERVED_RECEIPTS_VERIFICATION_ONLY','rawCounts':{k:raw[k]for k in ('discovered','executed','passed','failed','skipped')},\n  'candidate':raw['candidateSHA256'],'original165':{k:v for k,v in raw['original165'].items()if k!='blocks'},\n  'author48Passed':48,'candidateNegativeCases':candidate,'excludedOwnOrderOracleFailures':own,\n  'sourceClosure':{'inputs':50,'bytes':804146,'minimumFirstCaptureAgeNs':min(int(r['firstCaptureMinimumAgeNs'])for r in sr),\n    'allFDsBeforeMemberBodies':True,'all50FullEOFHashSizeOriginalNineFinalExact':True,'all50OnceClosed':True,'closeErrors':0,'sourceFailureChain':[],\n    'sourceRowsReference':str(J/'held-source-control-FDclosure1.json'),'sourceRowsReferenceSha256':next(r['sha256']for r in rows if r['path'].endswith('/held-source-control-FDclosure1.json')),\n    'humanFinalVerdictAfterDescriptorClose':True},\n  'thisDocumentAdmissionBytes':sum(r['bytes']for r in rows),'cumulativeConservativeDebtBytes':3292075+sum(r['bytes']for r in rows),\n  'priorConservativeDebtBytes':3292075,'remainingOriginalReservations':7340032,'SourceEligibility':False,'effects':0}\nexcept BaseException as e:errors.append({'stage':'primary','type':type(e).__name__,'error':str(e),'traceback':traceback.format_exc()})\nfinally:\n for (fd,p),row in zip(owned,rows):\n  try:\n   b=bytearray();off=0\n   while True:\n    x=os.pread(fd,65536,off)\n    if not x:break\n    b.extend(x);off+=len(x);assert len(b)<=16777216\n   f=nine(os.fstat(fd));pp=nine(os.lstat(p));assert f==pp==row['PRE9']and len(b)==row['bytes']and hashlib.sha256(b).hexdigest()==row['sha256']\n   row.update({'FINAL9':f,'pathFINAL9':pp,'finalFullEOFHashSize':True})\n  except BaseException as e:errors.append({'stage':'final_document_fence','path':str(p),'error':repr(e)})\n for fd,p in owned:\n  err=None\n  try:os.close(fd)\n  except BaseException as e:err=repr(e);errors.append({'stage':'unknown_close','path':str(p),'error':err})\n  closes.append({'path':str(p),'attempts':1,'error':err})\n if answer is not None:answer.update({'documentRows':rows,'documentFDCloses':closes,'documentFailureChain':errors,'allFiveDocumentsHeldThroughValidationAndFinal':True,\n  'minimumDocumentFirstCaptureAgeNs':str(min(int(r['firstCaptureAgeNs'])for r in rows))})\n print(json.dumps(answer if answer is not None else {'errors':errors,'rows':rows,'closes':closes},sort_keys=True))\n",
+    "correctedNative": "import hashlib,json,os,stat,time,traceback\nfrom pathlib import Path\nJ=Path(\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1\")\nnames=['source-plan-bootstrap-readback1.json','independent-control-results1.json','held-source-control-FDclosure1.json','independent-control-stdout1.txt','control-producers-stopped1.json']\nsizes=[4361,129909,113023,29340,1725]\nK=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')\ndef nine(s):return {k:str(getattr(s,'st_'+k))for k in K}\nexpected={\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/source-plan-bootstrap-readback1.json\":{\"PRE9\":{\"ctime_ns\":\"1791432026056925438\",\"dev\":\"16777234\",\"gid\":\"20\",\"ino\":\"95302312\",\"mode\":\"33188\",\"mtime_ns\":\"1791432025930239733\",\"nlink\":\"1\",\"size\":\"4361\",\"uid\":\"501\"},\"sha256\":\"e3999c4d107f4236a18f39242327871150b1d6ddf949f175910175d93603a20a\",\"bytes\":4361},\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-results1.json\":{\"PRE9\":{\"ctime_ns\":\"1791432036476375346\",\"dev\":\"16777234\",\"gid\":\"20\",\"ino\":\"95303860\",\"mode\":\"33188\",\"mtime_ns\":\"1791432036292949553\",\"nlink\":\"1\",\"size\":\"129909\",\"uid\":\"501\"},\"sha256\":\"0fb5816b7c0324295d1ab99e6160c5e8b24ebb9fb72c6a94dd30f3b7c121e6e0\",\"bytes\":129909},\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json\":{\"PRE9\":{\"ctime_ns\":\"1791432036477269929\",\"dev\":\"16777234\",\"gid\":\"20\",\"ino\":\"95303862\",\"mode\":\"33188\",\"mtime_ns\":\"1791432036295904134\",\"nlink\":\"1\",\"size\":\"113023\",\"uid\":\"501\"},\"sha256\":\"2094f775356bdc74e8ead72053901d466256633f2c65aa403970f850ab08601b\",\"bytes\":113023},\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/independent-control-stdout1.txt\":{\"PRE9\":{\"ctime_ns\":\"1791432036474826556\",\"dev\":\"16777234\",\"gid\":\"20\",\"ino\":\"95303859\",\"mode\":\"33188\",\"mtime_ns\":\"1791432036290438805\",\"nlink\":\"1\",\"size\":\"29340\",\"uid\":\"501\"},\"sha256\":\"b7c0b628d0cd2db48ad131d9a8aceac7d63bc6aff042b3cb688fc980360f039f\",\"bytes\":29340},\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/control-producers-stopped1.json\":{\"PRE9\":{\"ctime_ns\":\"1791432199220362505\",\"dev\":\"16777234\",\"gid\":\"20\",\"ino\":\"95319332\",\"mode\":\"33188\",\"mtime_ns\":\"1791432199024817804\",\"nlink\":\"1\",\"size\":\"1725\",\"uid\":\"501\"},\"sha256\":\"9f83d4c94772e4d85b4d29a4bcb54d22cd832a8184b04e13646383dfd728e733\",\"bytes\":1725}}\nowned=[];rows=[];bodies={};errors=[];closes=[];answer=None\ntry:\n assert 3570433+sum(sizes)+7340032<=67108864\n assert 104+50+10+32<=4096\n for name,size in zip(names,sizes):\n  p=J/name;pre=nine(os.lstat(p));age=time.time_ns()-max(int(pre['mtime_ns']),int(pre['ctime_ns']))\n  assert age>=240000000000,(name,'maturity',age)\n  assert pre==expected[str(p)]['PRE9'],('original_document_nine',str(p))\n  assert stat.S_ISREG(int(pre['mode']))and pre['uid']=='501'and pre['gid']=='20'and pre['nlink']=='1'and int(pre['size'])==size<=16777216\n  fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)\n  try:owned.append((fd,p))\n  except BaseException as e:\n   err=None\n   try:os.close(fd)\n   except BaseException as c:err=repr(c);errors.append({'stage':'unregistered_close','error':err})\n   closes.append({'path':str(p),'attempts':1,'error':err,'fallback':True});raise\n  op=nine(os.fstat(fd));assert op==pre\n  rows.append({'path':str(p),'bytes':size,'PRE9':pre,'OPEN9':op,'firstCaptureAgeNs':str(age)})\n for (fd,p),row in zip(owned,rows):\n  b=bytearray();off=0\n  while True:\n   x=os.pread(fd,65536,off)\n   if not x:break\n   b.extend(x);off+=len(x);assert len(b)<=16777216\n  row.update({'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),'POST9':nine(os.fstat(fd)),'fullEOF':True})\n  assert row['POST9']==row['PRE9']==nine(os.lstat(p))and len(b)==int(row['PRE9']['size'])\n  assert row['sha256']==expected[str(p)]['sha256']and row['bytes']==expected[str(p)]['bytes']\n  bodies[p.name]=bytes(b)\n raw=json.loads(bodies['independent-control-results1.json'])\n closure=json.loads(bodies['held-source-control-FDclosure1.json'])\n stop=json.loads(bodies['control-producers-stopped1.json'])\n assert stop['remainingProducerWrites']==[]and int(stop['stoppedUnixNs'])==1791432199024671000\n assert raw['candidateSHA256']=='e4e35ac0b7089b8db8e2d2a99cdf39374bd415c9bc4c76a52ab6ed9e0b776a4b'\n assert raw['discovered']==raw['executed']==238 and raw['passed']==218 and raw['failed']==20 and raw['skipped']==0\n assert raw['original165']['passed']==165 and raw['original165']['failed']==0 and raw['author48ScopedRegression']['passed']==48\n sr=closure['inputs'];sc=closure['FDCloses']\n assert len(sr)==len(sc)==50 and len({r['path']for r in sr})==50\n assert closure['failures']==[]and closure['allFDsBeforeMemberBodies']is True and closure['allSourcesHeldThroughControlsAndFinal']is True\n cm={r['path']:r for r in sc}\n for r in sr:\n  assert r['fullEOF']is True and r['finalFullEOFHashSize']is True and r['PRE9']==r['OPEN9']==r['POST9']==r['FINAL9']==r['pathFINAL9']\n  assert r['sha256']==r['expectedSha256']and r['bytes']==r['expectedBytes']==int(r['PRE9']['size'])\n  assert cm[r['path']]['attempts']==1 and cm[r['path']]['error']is None\n assert closure['cumulativeConservativeDebtBytes']==3292075\n failed=[r for r in raw['freshIndependent']['conditions']if not r['PASS']]\n own=[r for r in failed if r['name']in ('original_gap_1_all_once_cleanup','original_gap_2_all_once_cleanup')]\n candidate=[r for r in failed if r not in own]\n assert len(own)==2 and len(candidate)==18 and not any('reviewerSetupException'in r for r in failed)\n for r in own:\n  d=r['evidence'];assert sorted(d['closeAttempts'])==sorted(d['opened'])and len(d['closeAttempts'])==len(set(d['closeAttempts']))and d['remaining']==[]and d['unknown']is True\n answer={'scope':'MATURE_R7_OBSERVED_RECEIPTS_VERIFICATION_ONLY','rawCounts':{k:raw[k]for k in ('discovered','executed','passed','failed','skipped')},\n  'candidate':raw['candidateSHA256'],'original165':{k:v for k,v in raw['original165'].items()if k!='blocks'},\n  'author48Passed':48,'candidateNegativeCases':candidate,'excludedOwnOrderOracleFailures':own,\n  'sourceClosure':{'inputs':50,'bytes':804146,'minimumFirstCaptureAgeNs':min(int(r['firstCaptureMinimumAgeNs'])for r in sr),\n    'allFDsBeforeMemberBodies':True,'all50FullEOFHashSizeOriginalNineFinalExact':True,'all50OnceClosed':True,'closeErrors':0,'sourceFailureChain':[],\n    'sourceRowsReference':str(J/'held-source-control-FDclosure1.json'),'sourceRowsReferenceSha256':next(r['sha256']for r in rows if r['path'].endswith('/held-source-control-FDclosure1.json')),\n    'humanFinalVerdictAfterDescriptorClose':True},\n  'thisDocumentAdmissionBytes':sum(r['bytes']for r in rows),'cumulativeConservativeDebtBytes':3570433+sum(r['bytes']for r in rows),\n  'priorConservativeDebtBytes':3570433,'remainingOriginalReservations':7340032,'SourceEligibility':False,'effects':0}\nexcept BaseException as e:errors.append({'stage':'primary','type':type(e).__name__,'error':str(e),'traceback':traceback.format_exc()})\nfinally:\n for (fd,p),row in zip(owned,rows):\n  try:\n   b=bytearray();off=0\n   while True:\n    x=os.pread(fd,65536,off)\n    if not x:break\n    b.extend(x);off+=len(x);assert len(b)<=16777216\n   f=nine(os.fstat(fd));pp=nine(os.lstat(p));assert f==pp==row['PRE9']and len(b)==row['bytes']and hashlib.sha256(b).hexdigest()==row['sha256']\n   row.update({'FINAL9':f,'pathFINAL9':pp,'finalFullEOFHashSize':True})\n  except BaseException as e:errors.append({'stage':'final_document_fence','path':str(p),'error':repr(e)})\n for fd,p in owned:\n  err=None\n  try:os.close(fd)\n  except BaseException as e:err=repr(e);errors.append({'stage':'unknown_close','path':str(p),'error':err})\n  closes.append({'path':str(p),'attempts':1,'error':err})\n if answer is not None:answer.update({'documentRows':rows,'documentFDCloses':closes,'documentFailureChain':errors,'allFiveDocumentsHeldThroughValidationAndFinal':True,\n  'minimumDocumentFirstCaptureAgeNs':str(min(int(r['firstCaptureAgeNs'])for r in rows))})\n print(json.dumps(answer if answer is not None else {'errors':errors,'rows':rows,'closes':closes},sort_keys=True))\n",
+    "compiledBeforeTheirPhysicalSourceAdmission": true
+  },
+  "conservativePlanHeaderExtraDebt": 30997,
+  "finalConservativeDebtBytes": 3879788,
+  "qualificationMeaning": "Recorded CODE/HOST controls and mature documentary confirmations only; no whole Source or functional approval"
+}

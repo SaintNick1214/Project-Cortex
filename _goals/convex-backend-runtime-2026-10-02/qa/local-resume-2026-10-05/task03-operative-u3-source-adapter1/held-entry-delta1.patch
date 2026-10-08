@@ -1,0 +1,54 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters2/source_control_entry3.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-u3-source-adapter1/held-source-entry1.py
+@@ -30,7 +30,7 @@
+ def run(namespace):
+     n=Path(namespace);owned=[];errors=[];headers={};result=None
+     try:
+-        for name,cap in (('source-input-plan3.json',4194304),('source-writers-stopped3.json',1048576)):
++        for name,cap in (('source-input-plan1.json',4194304),('source-writers-stopped1.json',1048576)):
+             path=n/name;fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
+             # Own before the first fallible fstat; the pin is filled afterward.
+             register(owned,fd,path,cap,None)
+@@ -41,19 +41,19 @@
+             raw=read(fd,cap)
+             if len(raw)!=int(pin['size']) or nine(os.lstat(path))!=pin or nine(os.fstat(fd))!=pin:raise ValueError('header full EOF native nine')
+             headers[path.name]=(raw,{'path':str(path),'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw),'PRE9':pin})
+-        plan=json.loads(headers['source-input-plan3.json'][0]);row=next(r for r in plan['inputs'] if r['path']==str(n/'held_runner3.py'))
++        plan=json.loads(headers['source-input-plan1.json'][0]);row=next(r for r in plan['inputs'] if r['path']==str(n/'held-author-replay1.py'))
+         # The runner is a member of the fully opened cohort below; hold it before
+         # compiling its first bytes, and keep this bootstrap fd through the run.
+         runner_path=Path(row['path']);fd=os.open(runner_path,os.O_RDONLY|os.O_NOFOLLOW)
+         register(owned,fd,runner_path,row['bytes'],row['PRE9'])
+         if nine(os.lstat(row['path']))!=row['PRE9'] or nine(os.fstat(fd))!=row['PRE9']:raise ValueError('runner strict original nine')
+         maximum=max(int(row['PRE9'][k]) for k in ('mtime_ns','ctime_ns'))
+-        stop=json.loads(headers['source-writers-stopped3.json'][0])
++        stop=json.loads(headers['source-writers-stopped1.json'][0])
+         if maximum>stop['stoppedUnixNs'] or time.time_ns()-maximum<240000000000:raise ValueError('runner first-use stopped240s maturity')
+         raw=read(fd,row['bytes'])
+         if len(raw)!=row['bytes'] or hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('runner exact held EOF hash')
+-        module=types.ModuleType('adapter2_exact_held_runner');exec(compile(raw,row['path'],'exec',dont_inherit=True),module.__dict__)
+-        result=module.run(*headers['source-input-plan3.json'],*headers['source-writers-stopped3.json'],str(n/'held-source-replay3.json'))
++        module=types.ModuleType('u3_exact_held_runner');exec(compile(raw,row['path'],'exec',dont_inherit=True),module.__dict__)
++        result=module.run(*headers['source-input-plan1.json'],*headers['source-writers-stopped1.json'],str(n/'held-source-replay1.json'))
+     except BaseException as error:errors.append({'stage':'primary','error':repr(error)})
+     finally:
+         handles=owned;owned=[];closes=[]
+@@ -63,15 +63,15 @@
+                 if pin is None:raise ValueError('partial setup had no accepted header pin')
+                 if len(raw)!=int(pin['size']) or nine(os.lstat(path))!=pin or nine(os.fstat(fd))!=pin:raise ValueError('header/runner final EOF nine')
+                 if path.name in headers and hashlib.sha256(raw).hexdigest()!=headers[path.name][1]['sha256']:raise ValueError('header final full EOF hash')
+-                if path.name=='held_runner3.py' and hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('runner final hash')
++                if path.name=='held-author-replay1.py' and hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('runner final hash')
+             except BaseException as error:errors.append({'stage':'final:'+str(path),'error':repr(error)})
+             error=None
+             try:os.close(fd)
+             except BaseException as failure:error=repr(failure);errors.append({'stage':'close:'+str(path),'error':error})
+             closes.append({'path':str(path),'attempt':1,'error':error})
+     receipt={'scope':'AUTHOR_HEADER_BOOTSTRAP_HELD_REPLAY_ONLY','errors':errors,'closes':closes,
+-             'remainingOwned':len(owned),'sourceEligibility':False,'effects':0}
+-    path=n/'held-entry-close-receipt3.json'
++             'remainingOwned':len(owned),'headerObservations':{k:v[1] for k,v in headers.items()},'sourceEligibility':False,'effects':0}
++    path=n/'held-entry-close-receipt1.json'
+     with path.open('x') as output:json.dump(receipt,output,indent=2);output.write('\n')
+     if errors:raise RuntimeError('entry failed; original/final/close errors retained')
+     return result

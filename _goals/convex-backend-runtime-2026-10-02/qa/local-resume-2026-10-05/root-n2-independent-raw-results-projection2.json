@@ -1,0 +1,700 @@
+{
+  "scope": "ROOT_RAW_PROJECTION_NOT_NEW_CONTROL_EXECUTION",
+  "summaries": [
+    {
+      "file": "independent-held-isolation10.json",
+      "errors": [],
+      "sourceCount": 62,
+      "sourceBytes": 1172909,
+      "ownedOnceCloses": 62,
+      "conditions": [
+        {
+          "name": "OBSERVATION_public_run_catches_Source_read_failure_then_compiles_and_returns_success",
+          "status": "PASS"
+        },
+        {
+          "name": "uncaught_same_Source_read_failure_is_retained_by_public_run_and_no_compile",
+          "status": "PASS"
+        },
+        {
+          "name": "corrected_runtime_verifier_deepcopy_mutation_safe_positive",
+          "status": "PASS"
+        }
+      ],
+      "projectedDetails": [
+        {
+          "name": "OBSERVATION_public_run_catches_Source_read_failure_then_compiles_and_returns_success",
+          "fields": {
+            "caughtInsideAction": true,
+            "codeNeverExecuted": true,
+            "finalChecked": true,
+            "protectedEffects": false,
+            "runError": null,
+            "runReturned": "AFTER_FAILED_SOURCE_READ_COMPILED"
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 335,
+            "closeAttempts": 2,
+            "firstInjectedReadError": 1,
+            "laterCompiledCodeFilenames": 1,
+            "publicationCalls": 1,
+            "retainedSessionFailures": 0
+          }
+        },
+        {
+          "name": "corrected_runtime_verifier_deepcopy_mutation_safe_positive",
+          "fields": {
+            "codeNeverExecuted": true,
+            "externalCopyMutated": true,
+            "mainRecipeOriginalHashUnchanged": true,
+            "oldPreparedViewDenialFailure": "Reviewer expectation mismatch, not candidate defect.",
+            "runReturned": "reviewer-module1.py"
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 260,
+            "closeAttempts": 2
+          }
+        },
+        {
+          "name": "uncaught_same_Source_read_failure_is_retained_by_public_run_and_no_compile",
+          "fields": {
+            "caughtInsideAction": false,
+            "codeNeverExecuted": true,
+            "finalChecked": true,
+            "protectedEffects": false,
+            "runReturned": null
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 211,
+            "closeAttempts": 2,
+            "firstInjectedReadError": 1,
+            "laterCompiledCodeFilenames": 0,
+            "publicationCalls": 1,
+            "retainedSessionFailures": 1
+          }
+        }
+      ]
+    },
+    {
+      "file": "independent-held-run8.json",
+      "errors": [],
+      "sourceCount": 63,
+      "sourceBytes": 1188965,
+      "ownedOnceCloses": 63,
+      "conditions": [
+        {
+          "name": "actual_positive_two_FD_collector_read_compile_borrow_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "P1_initial_union_original_reserves_before_IO",
+          "status": "PASS"
+        },
+        {
+          "name": "P1_late_union_before-open_over_reserves",
+          "status": "PASS"
+        },
+        {
+          "name": "P1_late_union_after-open_over_reserves",
+          "status": "PASS"
+        },
+        {
+          "name": "OBSERVATION_below_cap_new_external_root_debt",
+          "status": "PASS"
+        },
+        {
+          "name": "OBSERVATION_removed_prior_read_debt_after_other_source_read",
+          "status": "PASS"
+        },
+        {
+          "name": "P3_collector_detached_PRE9",
+          "status": "PASS"
+        },
+        {
+          "name": "P3_collector_detached_OPEN9",
+          "status": "PASS"
+        },
+        {
+          "name": "P3_collector_detached_POST9",
+          "status": "PASS"
+        },
+        {
+          "name": "P2_actual_positive_lexical_injected_metadata_no_ordinary_resolve",
+          "status": "PASS"
+        },
+        {
+          "name": "runtime_verifier_mutation_unknown_denies_before_IO",
+          "status": "PASS"
+        },
+        {
+          "error": "EXPECTED_PRE_EFFECT_DENIAL_ABSENT",
+          "name": "runtime_verifier_mutation_debt_denies_before_IO",
+          "status": "FAIL",
+          "type": "AssertionError"
+        },
+        {
+          "error": "EXPECTED_PRE_EFFECT_DENIAL_ABSENT",
+          "name": "runtime_verifier_mutation_view_denies_before_IO",
+          "status": "FAIL",
+          "type": "AssertionError"
+        },
+        {
+          "name": "actual_SystemExit0_and_two_reported_close_failures_root_all_owned_once",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_positive_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_copy-safe_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_bad-nine_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_duplicate_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_pre-row_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_pre-edge_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_pre-program_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_forged-owner_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_post-row_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_post-edge_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_post-program_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_post-unknown_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_post-cap_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "G_fresh_stale_callback_order_and_owner_closure",
+          "status": "PASS"
+        },
+        {
+          "name": "OBSERVATION_caught_direct_Source_read_error_before_later_Root_compile",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_positive_boundary_mock",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_bootstrap-custody_boundary_mock",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_uncharged_boundary_mock",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_hidden-debt_boundary_mock",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_held-row-mutation_boundary_mock",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_partition-mutation_boundary_mock",
+          "status": "PASS"
+        },
+        {
+          "name": "source_view_fresh_stale-held_boundary_mock",
+          "status": "PASS"
+        }
+      ],
+      "projectedDetails": [
+        {
+          "name": "G_fresh_bad-nine_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 302,
+            "approvalCallbacks": 0,
+            "virtualHeaderIO": 99
+          }
+        },
+        {
+          "name": "G_fresh_copy-safe_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "externalCallbackCopyMutationsSafe": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 498,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 189
+          }
+        },
+        {
+          "name": "G_fresh_duplicate_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 302,
+            "approvalCallbacks": 0,
+            "virtualHeaderIO": 99
+          }
+        },
+        {
+          "name": "G_fresh_forged-owner_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 302,
+            "approvalCallbacks": 0,
+            "virtualHeaderIO": 21
+          }
+        },
+        {
+          "name": "G_fresh_positive_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "externalCallbackCopyMutationsSafe": false,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 498,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 189
+          }
+        },
+        {
+          "name": "G_fresh_post-cap_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 400,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 144
+          }
+        },
+        {
+          "name": "G_fresh_post-edge_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 400,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 144
+          }
+        },
+        {
+          "name": "G_fresh_post-program_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 400,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 144
+          }
+        },
+        {
+          "name": "G_fresh_post-row_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 400,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 144
+          }
+        },
+        {
+          "name": "G_fresh_post-unknown_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 400,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 144
+          }
+        },
+        {
+          "name": "G_fresh_pre-edge_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 204,
+            "approvalCallbacks": 0,
+            "virtualHeaderIO": 21
+          }
+        },
+        {
+          "name": "G_fresh_pre-program_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 204,
+            "approvalCallbacks": 0,
+            "virtualHeaderIO": 21
+          }
+        },
+        {
+          "name": "G_fresh_pre-row_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 204,
+            "approvalCallbacks": 0,
+            "virtualHeaderIO": 21
+          }
+        },
+        {
+          "name": "G_fresh_stale_callback_order_and_owner_closure",
+          "fields": {
+            "borrowReleaseKeptAllOwnerFDs": true,
+            "noRawFDProjection": true
+          },
+          "listFieldCounts": {
+            "actualFixtureIO": 498,
+            "approvalCallbacks": 1,
+            "virtualHeaderIO": 189
+          }
+        },
+        {
+          "name": "OBSERVATION_below_cap_new_external_root_debt",
+          "fields": {
+            "error": null,
+            "grading": "OBSERVATION_EXACT_PARENT_SOURCE_CENSUS_ABI_SCOPE_PENDING_NOT_A_CAP_REGRESSION_ASSERTION",
+            "ledgerBytes": 83,
+            "ledgerOwnedFDCount": 0,
+            "readDebtCount": 3,
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 166,
+            "belowCapNewDebtCallbacks": 1,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "remainingActualFDs": 0
+          }
+        },
+        {
+          "name": "OBSERVATION_caught_direct_Source_read_error_before_later_Root_compile",
+          "fields": {
+            "compiledCodeNeverExecuted": true,
+            "grading": "OBSERVATION_STICKY_SOURCE_FAILURE_NOT_G1_ADOPTION",
+            "laterCompileReturnedCode": true,
+            "protectedEffects": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 147,
+            "failureStateAfterFirstFailedRead": 0,
+            "laterCompileErrors": 0
+          }
+        },
+        {
+          "name": "OBSERVATION_removed_prior_read_debt_after_other_source_read",
+          "fields": {
+            "error": null,
+            "grading": "OBSERVATION_PRIOR_DEBT_MUTABILITY_PARENT_PHASE_ABI_PENDING",
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 2,
+            "readDebtCount": 1,
+            "removedDebtStillMissingAfterOtherRead": true,
+            "removedPriorDebtKey": "098977ca94da5843c2df0847667e6c96bbe62b7802a1413b33f603d8d43691d2",
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 72,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "remainingActualFDs": 2
+          }
+        },
+        {
+          "name": "P1_initial_union_original_reserves_before_IO",
+          "fields": {
+            "denial": "SOURCE_union_plus_actual_or_original_reserves_over64M",
+            "noRefund": true,
+            "retainedBytes": 67108860
+          },
+          "listFieldCounts": {
+            "events": 0
+          }
+        },
+        {
+          "name": "P1_late_union_after-open_over_reserves",
+          "fields": {
+            "closeError": null,
+            "denial": "SOURCE_union_plus_actual_or_original_reserves_over64M",
+            "lateOverReserve": true,
+            "ledgerBytes": 62914636,
+            "ledgerOwnedFDCount": 0,
+            "noRefund": true,
+            "readDebtCount": 6,
+            "stickyUnknown": false,
+            "unionWithOriginalReserves": 70254668
+          },
+          "listFieldCounts": {
+            "IOEvents": 38,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "payloadCallbacks": 0,
+            "remainingActualFDs": 0
+          }
+        },
+        {
+          "name": "P1_late_union_before-open_over_reserves",
+          "fields": {
+            "closeError": null,
+            "denial": "open_all:Denied:SOURCE_union_plus_actual_or_original_reserves_over64M",
+            "lateOverReserve": true,
+            "ledgerBytes": 62914636,
+            "ledgerOwnedFDCount": 0,
+            "noRefund": true,
+            "readDebtCount": 4,
+            "stickyUnknown": false,
+            "unionWithOriginalReserves": 70254668
+          },
+          "listFieldCounts": {
+            "IOEvents": 0,
+            "candidateCloseAttempts": 0,
+            "failures": 1,
+            "payloadCallbacks": 0,
+            "remainingActualFDs": 0
+          }
+        },
+        {
+          "name": "P2_actual_positive_lexical_injected_metadata_no_ordinary_resolve",
+          "fields": {
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 0,
+            "readDebtCount": 2,
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 200,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "ordinaryResolveAttempts": 0,
+            "remainingActualFDs": 0
+          }
+        },
+        {
+          "name": "P3_collector_detached_OPEN9",
+          "fields": {
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 2,
+            "mainRowsUnchanged": true,
+            "mutatedExport": "OPEN9",
+            "otherTupleFieldsUnchanged": true,
+            "readDebtCount": 2,
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 306,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "remainingActualFDs": 2
+          }
+        },
+        {
+          "name": "P3_collector_detached_POST9",
+          "fields": {
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 2,
+            "mainRowsUnchanged": true,
+            "mutatedExport": "POST9",
+            "otherTupleFieldsUnchanged": true,
+            "readDebtCount": 2,
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 306,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "remainingActualFDs": 2
+          }
+        },
+        {
+          "name": "P3_collector_detached_PRE9",
+          "fields": {
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 2,
+            "mainRowsUnchanged": true,
+            "mutatedExport": "PRE9",
+            "otherTupleFieldsUnchanged": true,
+            "readDebtCount": 2,
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 306,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "remainingActualFDs": 2
+          }
+        },
+        {
+          "name": "actual_SystemExit0_and_two_reported_close_failures_root_all_owned_once",
+          "fields": {
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 0,
+            "readDebtCount": 2,
+            "retainedSystemExit0": true,
+            "retainedTwoCloseFailures": true,
+            "stickyUnknown": true
+          },
+          "listFieldCounts": {
+            "IOEvents": 136,
+            "candidateCloseAttempts": 2,
+            "failures": 3,
+            "remainingActualFDs": 0
+          }
+        },
+        {
+          "name": "actual_positive_two_FD_collector_read_compile_borrow_owner_closure",
+          "fields": {
+            "borrowDidNotCloseOwner": true,
+            "compiledOnlyNeverExecuted": true,
+            "ledgerBytes": 76,
+            "ledgerOwnedFDCount": 0,
+            "readDebtCount": 2,
+            "stickyUnknown": false
+          },
+          "listFieldCounts": {
+            "IOEvents": 460,
+            "candidateCloseAttempts": 2,
+            "failures": 0,
+            "remainingActualFDs": 0
+          }
+        },
+        {
+          "name": "runtime_verifier_mutation_unknown_denies_before_IO",
+          "fields": {
+            "denial": "sticky_unknown_Source_close",
+            "retainedBytes": 0,
+            "unknownClose": true
+          },
+          "listFieldCounts": {
+            "IOEvents": 0,
+            "callbacks": 1
+          }
+        },
+        {
+          "name": "source_view_fresh_bootstrap-custody_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true
+          },
+          "listFieldCounts": {
+            "calls": 4
+          }
+        },
+        {
+          "name": "source_view_fresh_held-row-mutation_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true
+          },
+          "listFieldCounts": {
+            "calls": 1
+          }
+        },
+        {
+          "name": "source_view_fresh_hidden-debt_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true
+          },
+          "listFieldCounts": {
+            "calls": 4
+          }
+        },
+        {
+          "name": "source_view_fresh_partition-mutation_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true
+          },
+          "listFieldCounts": {
+            "calls": 4
+          }
+        },
+        {
+          "name": "source_view_fresh_positive_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true,
+            "threeBootstrapMembersAndDebtExact": true
+          },
+          "listFieldCounts": {}
+        },
+        {
+          "name": "source_view_fresh_stale-held_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true
+          },
+          "listFieldCounts": {
+            "calls": 1
+          }
+        },
+        {
+          "name": "source_view_fresh_uncharged_boundary_mock",
+          "fields": {
+            "actualBodyIO": 0,
+            "boundaryMockNotPhaseValidation": true
+          },
+          "listFieldCounts": {
+            "calls": 1
+          }
+        }
+      ]
+    }
+  ],
+  "SourceEligibility": false,
+  "candidateVerdict": "REJECT2.8",
+  "effects": 0
+}
