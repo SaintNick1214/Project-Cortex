@@ -1,0 +1,26 @@
+{
+  "state": "PREPARATION_AMENDMENT",
+  "priorRunner3Unchanged": true,
+  "changes": [
+    "writer-stop-runner4.json",
+    "acquisition-raw2.json",
+    "acquisition-failure2.json"
+  ],
+  "semanticChanges": false,
+  "setupFailures": [
+    {
+      "receipt": "bootstrap-ordinary-raw1.json",
+      "cause": "wrapper STOP field case codeSHA256 versus actual codeSha256",
+      "successorBodiesRead": false
+    },
+    {
+      "receipt": "bootstrap-ordinary-raw2.json + acquisition-failure1.json",
+      "cause": "command pinsSHA versus runner protocol pinsSha256; both header FDs opened before bodies, then denied",
+      "successorBodiesRead": false
+    },
+    {
+      "cause": "ordinary failed-receipt diagnostic compared whole stat_result including changing atime; corrected diagnostic used literal nine fields",
+      "effect": "read-only"
+    }
+  ]
+}

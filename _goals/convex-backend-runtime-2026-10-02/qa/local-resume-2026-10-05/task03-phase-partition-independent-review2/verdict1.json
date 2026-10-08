@@ -1,0 +1,119 @@
+{
+  "acquisition": {
+    "actorBytes": 214609,
+    "actorDistinctRows": 24,
+    "allAvailableDeclaredPRE9BeforeMemberBodies": true,
+    "closeErrors": 0,
+    "duplicateReferenceBytes": 14530,
+    "finalFullEOFHashSizeAll9Descriptors": 26,
+    "memberFDsBeforeMemberBodies": true,
+    "minimumActorCurrentAgeSeconds": 247.7115306854248,
+    "minimumCandidateCurrentAgeSeconds": 1079.4138188362122,
+    "onceCloses": 26,
+    "ordinaryBootstrapAdditionalFDs": 2,
+    "physicalMemberBytes": 155793,
+    "physicalMembers": 15,
+    "publisherReferenceBytes": 170323,
+    "publisherReferences": 17,
+    "stagedHeaderDiscovery": true
+  },
+  "actualClocksStarted": false,
+  "actualNativeChecks": false,
+  "candidate": {
+    "bytes": 25242,
+    "path": "task03-f2-phase-contract-repair5/phase_partition3.py",
+    "sha256": "02321e86b53b2bfd60acfa0a2674fa9dd3cf7e4ce77b13af4713b9d4f5e0132b"
+  },
+  "currentAdaptersUnchanged": true,
+  "decision": "REJECT",
+  "dimensions": {
+    "code_quality": {
+      "decision": "REJECT",
+      "score": 2
+    },
+    "completeness": {
+      "decision": "NEEDS_REVISION",
+      "score": 3
+    },
+    "pattern_compliance": {
+      "decision": "PASS",
+      "score": 4
+    },
+    "requirements": {
+      "decision": "REJECT",
+      "score": 2
+    },
+    "testing": {
+      "decision": "NEEDS_REVISION",
+      "score": 3
+    }
+  },
+  "findings": [
+    {
+      "failedCases": 6,
+      "lines": [
+        130,
+        138,
+        161,
+        467,
+        475
+      ],
+      "observed": "unknown_close=True; all closes attempted once; initial or already-approved Source advances through ACTUAL_READY; one/three mock handles unresolved",
+      "priority": "P1",
+      "required": "Deny before independent callback and any phase/evidence mutation on unknown closure",
+      "title": "Sticky unknown Source close permits Source approval and all readiness stages"
+    }
+  ],
+  "fourPriorRepairs": "PASS_FRESH_BOUNDED_CONTROLS",
+  "fullGoal": false,
+  "fullTask03": false,
+  "fullTask04": false,
+  "functional": {
+    "Task03": "0/3",
+    "Task04": "0/3",
+    "goal": "1/17 boundedTask01 only",
+    "productPercent": 0
+  },
+  "operativeAdapterAdoption": false,
+  "protectedEffects": 0,
+  "raws": [
+    "independent-controls-raw1.json",
+    "independent-additional-controls-raw1.json",
+    "acquisition-raw2.json",
+    "bootstrap-ordinary-raw3.json",
+    "publication-validation1.json"
+  ],
+  "review1Unchanged": true,
+  "scope": "SUCCESSOR5_INDEPENDENT_BOUNDED_CODE_CONSERVATION_ONLY",
+  "score": 2.8,
+  "setupFailuresPreserved": true,
+  "sourceEligibility": "PENDING_NOT_GRANTED",
+  "tests": {
+    "distinctTotal": {
+      "executed": 139,
+      "failed": 6,
+      "passed": 133,
+      "skipped": 0
+    },
+    "freshAdditional": {
+      "executed": 7,
+      "failed": 6,
+      "passed": 1,
+      "skipped": 0
+    },
+    "freshMain": {
+      "executed": 35,
+      "failed": 0,
+      "passed": 35,
+      "skipped": 0
+    },
+    "mainRawAggregateCount": 36,
+    "original": {
+      "executed": 97,
+      "failed": 0,
+      "passed": 97,
+      "skipped": 0
+    }
+  },
+  "wholeSourceFit": "UNPROVED_INTERNAL_WORK"
+}

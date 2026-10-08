@@ -1,0 +1,96 @@
+{
+  "scope": "ORDINARY_BOOTSTRAP_SOURCE_MOCK_ONLY",
+  "allFDsBeforeBody": true,
+  "rows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-partition-independent-review2/review_bootstrap3.py",
+      "fd": 3,
+      "initial": {
+        "dev": "16777234",
+        "ino": "93932211",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6784",
+        "mtime_ns": "1791421829776421446",
+        "ctime_ns": "1791421829810333837"
+      },
+      "age": 248.2472162246704,
+      "closes": 1,
+      "sha256": "d58d87eb78be875b187055d29d1e0d425260f9c7ef42ce4a77bdaeb783a57cdc",
+      "final": {
+        "dev": "16777234",
+        "ino": "93932211",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6784",
+        "mtime_ns": "1791421829776421446",
+        "ctime_ns": "1791421829810333837"
+      },
+      "pathFinal": {
+        "dev": "16777234",
+        "ino": "93932211",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6784",
+        "mtime_ns": "1791421829776421446",
+        "ctime_ns": "1791421829810333837"
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-partition-independent-review2/writer-stop-runner3.json",
+      "fd": 4,
+      "initial": {
+        "dev": "16777234",
+        "ino": "93932212",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "453",
+        "mtime_ns": "1791421829776582239",
+        "ctime_ns": "1791421829812775734"
+      },
+      "age": 248.24484634399414,
+      "closes": 1,
+      "sha256": "4eaf6ab74b8758afb871efc71c057005aa22ff3a0c580fdb0282191e47327ad1",
+      "final": {
+        "dev": "16777234",
+        "ino": "93932212",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "453",
+        "mtime_ns": "1791421829776582239",
+        "ctime_ns": "1791421829812775734"
+      },
+      "pathFinal": {
+        "dev": "16777234",
+        "ino": "93932212",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "453",
+        "mtime_ns": "1791421829776582239",
+        "ctime_ns": "1791421829812775734"
+      }
+    }
+  ],
+  "success": false,
+  "errors": [
+    {
+      "type": "KeyError",
+      "message": "'codeSHA256'",
+      "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 39, in <module>\n    assert sj[\"codeBytes\"]==6784 and sj[\"codeSHA256\"]==code[\"sha256\"]\n                                     ~~^^^^^^^^^^^^^^\nKeyError: 'codeSHA256'\n"
+    }
+  ],
+  "finishedUnixNs": 1791422078058253000,
+  "onceClose": true
+}
