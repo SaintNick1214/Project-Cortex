@@ -18,6 +18,7 @@ import type { Id } from "./_generated/dataModel";
 type AttemptId = Id<"runtimeModelAttempts">;
 type OperationId = Id<"runtimeModelOperations">;
 type Source = { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string };
+type NativeLanguageParams = Omit<LanguageModelV4CallOptions, "reasoning">;
 export interface GatewayBinding {
   reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; runBudgetId: string;
   semanticId: string; ordinal: number; source?: Source; parentOperationId?: OperationId;
@@ -215,7 +216,7 @@ function requestBase(s: ModelPolicySnapshotV1, binding: GatewayBinding): ModelCa
     promptVersion: s.pins.promptVersion, schemaVersion: s.pins.schemaVersion, extractionVersion: s.pins.extractionVersion, toolRegistryVersion: s.pins.toolRegistryVersion };
 }
 const standardKeys = ["prompt", "maxOutputTokens", "temperature", "topP", "seed", "stopSequences", "topK", "presencePenalty", "frequencyPenalty", "responseFormat", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks", "abortSignal"];
-function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: LanguageModelV4CallOptions; request: ModelCallRequest } {
+function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: NativeLanguageParams; request: ModelCallRequest } {
   const native = record(input, standardKeys);
   for (const key of ["topK", "presencePenalty", "frequencyPenalty", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks"]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
   if (native.abortSignal !== undefined && native.abortSignal !== signal) fail("UNTRUSTED_ABORT_SIGNAL");
@@ -251,7 +252,7 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
   const checked = validateModelRequest(s, request).request;
   return { request: detached(checked), params: nativeLanguage(checked, signal) };
 }
-function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): LanguageModelV4CallOptions {
+function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): NativeLanguageParams {
   return { prompt: request.messages!.map((m) => m.role === "system" ? { role: "system", content: (m.parts[0] as { text: string }).text }
     : { role: m.role as "user" | "assistant", content: [{ type: "text", text: (m.parts[0] as { text: string }).text }] }),
   maxOutputTokens: request.outputTokens, ...request.options.temperature !== undefined ? { temperature: request.options.temperature } : {},

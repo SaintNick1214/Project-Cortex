@@ -116,6 +116,17 @@ describe("bounded governed Gateway middleware", () => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const input = Object.assign(params(), { [key]: key === "headers" ? { Authorization: "fake" } : {} });
     await expect(h.model.doGenerate(input)).rejects.toMatchObject({ code: "UNSUPPORTED_NATIVE_FIELD" }); expect(f.events).toEqual([]); expect(f.count()).toBe(0);
   });
+  it.each(["generate", "stream"] as const)("denies newer-provider reasoning max before %s admission, mint or native effect", async (method) => {
+    const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const input = params();
+    // Model wire inputs can carry a newer provider's value even when the local
+    // declaration omits it. The runtime boundary must still reject that field.
+    Object.defineProperty(input, "reasoning", { value: "max", enumerable: true });
+    try {
+      await expect(method === "generate" ? h.model.doGenerate(input) : h.model.doStream(input)).rejects.toMatchObject({ code: "UNSUPPORTED_NATIVE_FIELD" });
+      expect(f.events).toEqual([]); expect(f.admissions).toEqual([]); expect(f.receipts).toEqual([]);
+      expect(f.attachments).toEqual([]); expect(f.count()).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { await h.lifecycle.complete(); }
+  });
   it.each(["getter", "symbol", "nonenumerable", "sparse", "iterator", "surrogate", "partOptions", "schema", "multipart"])("descriptor/native %s denial has no side effects", async (kind) => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const input = params(); let calls = 0;
     if (kind === "getter") Object.defineProperty(input, "temperature", { enumerable: true, get() { calls++; return 1; } });

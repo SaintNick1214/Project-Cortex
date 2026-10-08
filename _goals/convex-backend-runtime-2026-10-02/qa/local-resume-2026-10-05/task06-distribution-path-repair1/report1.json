@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "status": "OFFLINE_REPAIR_COMPLETE_ACTUAL_REINSTALL_OWNED_BY_NATIVE_EXECUTOR",
+  "scope": "Task06 distribution paths only",
+  "timestamp": "2026-10-08T11:12:45.046359+00:00",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "nodeOrigin": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node"
+  },
+  "changedSources": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/backend/build-distribution.mjs",
+      "bytes": 10427,
+      "sha256": "cf6e1825886603198133cc3c622aea061d989890eee86be2bb6d28dcc04c66d2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 20101,
+      "sha256": "1cd3c2da398ad60471ee9c7aa5e35a3aa7de109066555a76a037c7a94ff6df0f"
+    }
+  ],
+  "behavior": {
+    "sharedSegmentMapping": "Each non ASCII alphanumeric, underscore or period becomes underscore; original source provenance is recorded separately",
+    "collisionGuard": "File and directory prefix ownership collisions deny before any output publication",
+    "relativeImports": "Static imports/exports, import types, literal dynamic imports, require and external-module references share the same mapping",
+    "preserved": "Public endpoint filenames, native runtime directives, host _generated bindings, schema composition and installer conflict refusal",
+    "manifestProvenance": "Output sha256 plus original sourcePath/sourceSha256",
+    "defaultCLI": "Unchanged checkout root/output location and executable build entry"
+  },
+  "checks": [
+    {
+      "name": "selected Jest additive/generator",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0,
+      "suites": 1,
+      "command": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config jest.config.js --selectProjects unit --runTestsByPath src/utils/__tests__/additive-backend.test.ts --runInBand --json --outputFile ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/jest-results1.json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli"
+    },
+    {
+      "name": "CLI typecheck",
+      "exitCode": 0,
+      "command": "node ../../node_modules/typescript/bin/tsc --noEmit",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli"
+    },
+    {
+      "name": "affected test lint",
+      "exitCode": 0,
+      "command": "node ../../node_modules/eslint/bin/eslint.js src/utils/__tests__/additive-backend.test.ts --report-unused-disable-directives",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli"
+    },
+    {
+      "name": "generator syntax",
+      "exitCode": 0,
+      "command": "node --check scripts/backend/build-distribution.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+    },
+    {
+      "name": "default backend rebuild",
+      "exitCode": 0,
+      "command": "node scripts/backend/build-distribution.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+    }
+  ],
+  "newMeaningfulConditions": 3,
+  "originalInstallerConditions": 21,
+  "raw": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/jest-results1.json",
+      "bytes": 12287,
+      "sha256": "ccd38394d0501a5b9fd3812cb5f67f0bb8c5f3e71182308ea6bbb15777dad6a9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/jest1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/jest1.stderr",
+      "bytes": 3956,
+      "sha256": "337470e5aa2fc1b82032462b92d2761f285386d3ee8c8a01e33447d0b118286f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/type1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/type1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/lint1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/lint1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/build1.stdout",
+      "bytes": 93,
+      "sha256": "05a0550562173e5bbce8476d8ac502a8c99a89fcbddec4f3dcf80af418bfa626"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/build1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-distribution-path-repair1/generated-layout-receipt1.json",
+      "bytes": 42068,
+      "sha256": "8d67ef84e0371924855fdd543063928138af3fed78823fc2c6fb4af6afe64f10"
+    }
+  ],
+  "generatedManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/backend/v1/manifest.json",
+    "bytes": 18313,
+    "sha256": "23593c41fd787be824cfc49cd73f5d248eb655660b87ab2fecbeae3d84ae0a62"
+  },
+  "nativeRedPreserved": "task06-additive-functional-v2-20261008/native-actual/custom/registration-diagnostic1.stderr and receipt.json; initial invalid model-policy native module",
+  "remaining": "Separate actual executor packs corrected SDK and reinstalls into verified disposable custom target using explicit reviewed fixture-only original-file ownership repair. No deployment from this lane; Task06 acceptance remains independent."
+}

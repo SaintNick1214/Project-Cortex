@@ -3,10 +3,16 @@ import fs from "fs-extra";
 import path from "node:path";
 import os from "node:os";
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import ts from "typescript";
 import { applyAdditiveBackendInstallation, BackendMergeRequiredError, installAdditiveBackend, planAdditiveBackendInstallation } from "../init/additive-backend.js";
 import { createConvexJson } from "../init/file-operations.js";
 
 const hash = (text: string) => createHash("sha256").update(text).digest("hex");
+const execute = promisify(execFile);
+const builder = fileURLToPath(new URL("../../../../../scripts/backend/build-distribution.mjs", import.meta.url));
 const provider = { type: "customJwt" as const, issuer: "https://issuer.example", jwks: "https://issuer.example/jwks", algorithm: "RS256" as const, applicationID: "cortex" };
 let root: string;
 let sdk: string;
@@ -157,5 +163,74 @@ describe("additive backend installation", () => {
     const value = '{ "functions": "custom/", "node": { "externalPackages": ["host"] } }\n';
     await put("convex.json", value); await createConvexJson(host);
     expect(await read("convex.json")).toBe(value);
+  });
+});
+
+describe("generated Convex module layout", () => {
+  async function buildFixture(entry: string, shared: Record<string, string>) {
+    const source = path.join(root, "generator-source");
+    await fs.outputJson(path.join(source, "package.json"), { version: "test", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" } });
+    await fs.outputFile(path.join(source, "convex-dev/schema.ts"), 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ runtimeRuns: defineTable({}) });\n');
+    await fs.outputFile(path.join(source, "convex-dev/convex.config.ts"), 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, { name: "agent" }); export default app;\n');
+    await fs.outputFile(path.join(source, "convex-dev/runs.ts"), entry);
+    for (const [name, text] of Object.entries(shared)) await fs.outputFile(path.join(source, name), text);
+    return { source, output: path.join(sdk, "dist/backend/v1") };
+  }
+  async function build(source: string, output: string) {
+    // Invoke the real generator with explicit fixture roots; importing it must not build the checkout.
+    return execute(process.execPath, ["--input-type=module", "--eval", `import { buildBackendDistribution } from ${JSON.stringify(pathToFileURL(builder).href)}; await buildBackendDistribution(${JSON.stringify({ sourceRoot: source, outputRoot: output })});`], { timeout: 20_000, maxBuffer: 262_144 });
+  }
+  it("installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings", async () => {
+    const entry = '"use node";\nimport type { QueryCtx } from "./_generated/server";\nimport { base } from "../src/domain/model-policy.js";\nimport { increment } from "../src/type space/with-á.js";\nexport { base } from "../src/domain/model-policy.js";\nexport type Witness = import("../src/domain/model-policy.js").Witness;\nexport const answer = () => increment(base);\nexport const load = () => import("../src/domain/model-policy.js");\n';
+    const shared = { "src/domain/model-policy.ts": 'export const base = 41; export type Witness = { exact: true };\n',
+      "src/type space/with-á.ts": 'import { base } from "../domain/model-policy.js"; export const increment = (value: number) => value + (base === 41 ? 1 : 0);\n' };
+    const { source, output } = await buildFixture(entry, shared);
+    await build(source, output);
+    const manifest = await fs.readJson(path.join(output, "manifest.json")) as { files: { path: string; sha256: string; sourcePath: string; sourceSha256: string }[] };
+    expect(manifest.files.map(file => file.path)).toEqual(["_cortex/components.ts", "_cortex/schema.ts", "_cortex/shared/domain/model_policy.ts", "_cortex/shared/type_space/with__.ts", "runs.ts"]);
+    const compiled = path.join(root, "compiled");
+    for (const file of manifest.files) {
+      expect(file.path.split("/").every(piece => /^[A-Za-z0-9_.]+$/.test(piece))).toBe(true);
+      const generated = await fs.readFile(path.join(output, file.path), "utf8");
+      expect(file.sha256).toBe(hash(generated));
+      expect(file.sourceSha256).toBe(hash(await fs.readFile(path.join(source, file.sourcePath), "utf8")));
+      const ast = ts.createSourceFile(file.path, generated, ts.ScriptTarget.Latest, true);
+      const visit = (node: ts.Node) => {
+        const literal = (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) ? node.moduleSpecifier
+          : ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) ? node.argument.literal
+          : ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : undefined;
+        if (literal && ts.isStringLiteral(literal) && literal.text.startsWith(".") && !literal.text.startsWith("./_generated/")) {
+          expect(manifest.files.some(target => target.path === path.posix.normalize(path.posix.join(path.posix.dirname(file.path), literal.text)) + ".ts")).toBe(true);
+        }
+        ts.forEachChild(node, visit);
+      };
+      visit(ast);
+      await fs.outputFile(path.join(compiled, file.path.replace(/\.ts$/, ".js")), ts.transpileModule(generated, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021 } }).outputText);
+    }
+    const generatedEntry = await fs.readFile(path.join(output, "runs.ts"), "utf8");
+    expect(generatedEntry.startsWith('"use node";')).toBe(true);
+    expect(generatedEntry).toContain('from "./_generated/server"');
+    expect(generatedEntry).toContain('import("./_cortex/shared/domain/model_policy")');
+    const executed = await execute(process.execPath, ["--eval", `const run = require(${JSON.stringify(path.join(compiled, "runs.js"))}); run.load().then(value => console.log(JSON.stringify({ answer: run.answer(), loaded: value.base })));`], { timeout: 10_000, maxBuffer: 262_144 });
+    expect(JSON.parse(executed.stdout)).toEqual({ answer: 42, loaded: 41 });
+    await put("convex.json", '{"functions":"services/backend/"}\n');
+    await installAdditiveBackend(host, sdk, { trustedJwtProvider: provider });
+    expect(await read("services/backend/runs.ts")).toBe(generatedEntry);
+    expect(await read("services/backend/_cortex/shared/domain/model_policy.ts")).toBe(shared["src/domain/model-policy.ts"]);
+    expect(await fs.pathExists(path.join(host, "services/backend/_cortex/shared/domain/model-policy.ts"))).toBe(false);
+    expect(await read("convex.json")).toBe('{"functions":"services/backend/"}\n');
+  });
+  it.each([
+    ["file", "src/domain/model-policy.ts", "src/domain/model_policy.ts"],
+    ["directory", "src/unit-tests/first.ts", "src/unit_tests/second.ts"],
+  ])("rejects a %s normalization collision before replacing any previous distribution", async (_kind, first, second) => {
+    const entry = `import { one } from ${JSON.stringify("../" + first.replace(/\.ts$/, ".js"))}; import { two } from ${JSON.stringify("../" + second.replace(/\.ts$/, ".js"))}; export const answer = one + two;\n`;
+    const { source, output } = await buildFixture(entry, { [first]: "export const one = 1;\n", [second]: "export const two = 2;\n" });
+    const previous = await fs.readFile(path.join(output, "manifest.json"), "utf8");
+    const oldRun = await fs.readFile(path.join(output, "runs.ts"), "utf8");
+    await expect(build(source, output)).rejects.toThrow("normalization collision");
+    expect(await fs.readFile(path.join(output, "manifest.json"), "utf8")).toBe(previous);
+    expect(await fs.readFile(path.join(output, "runs.ts"), "utf8")).toBe(oldRun);
+    expect(await fs.pathExists(path.join(output, "_cortex/shared/domain/model_policy.ts"))).toBe(false);
   });
 });
