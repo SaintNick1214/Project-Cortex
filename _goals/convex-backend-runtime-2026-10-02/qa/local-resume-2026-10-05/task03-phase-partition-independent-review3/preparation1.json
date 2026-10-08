@@ -1,0 +1,54 @@
+{
+  "scope": "REVIEW3_INDEPENDENT_PREPARATION_ONLY_NOT_EXECUTION_OR_ACCEPTANCE",
+  "owner": "task03_phase_partition_independent_judge1",
+  "candidate": "task03-f2-close-fence-repair6",
+  "candidateBodiesRead": false,
+  "parentFinalFiniteClosure": "PENDING",
+  "requires240SecondMaturityBeforeOwnCodeOrCandidateBodies": true,
+  "priorReview2ImmutableSTOP": true,
+  "copiedOriginal97Plus35Plus7AssertionsUnchanged": true,
+  "newCloseFenceCasesExpected": 26,
+  "newCases": "18 first/last/all failures across every six original transitions, 6 normal closure controls, preflight and approval_binding direct sticky guards; denial before callback/evidence/phase/binding mutation",
+  "members": [
+    {
+      "state": "STOPPED",
+      "scope": "independent_cases1.py only",
+      "remainingCodeWrites": [],
+      "stoppedUnixNs": "1791423105207869000",
+      "codeBytes": 13174,
+      "codeSha256": "614cec299e8b65de87983f97206510c00fcec348daea53431a84440b0094f54c",
+      "sourceMockOnly": true,
+      "candidateBodiesRead": false,
+      "name": "independent_cases1.py",
+      "stopName": "writer-stop-independent_cases1.json"
+    },
+    {
+      "state": "STOPPED",
+      "scope": "independent_additional_cases1.py only",
+      "remainingCodeWrites": [],
+      "stoppedUnixNs": "1791423105208063000",
+      "codeBytes": 4387,
+      "codeSha256": "0385125677a04b89cfe5426b72bc98c1997a3f7c7c40f66efa0a12c9653c801e",
+      "sourceMockOnly": true,
+      "candidateBodiesRead": false,
+      "name": "independent_additional_cases1.py",
+      "stopName": "writer-stop-independent_additional_cases1.json"
+    },
+    {
+      "state": "STOPPED",
+      "scope": "independent_close_fence_cases1.py only",
+      "remainingCodeWrites": [],
+      "stoppedUnixNs": "1791423105208220000",
+      "codeBytes": 6321,
+      "codeSha256": "c7898edb08af06b157ff6e740a14d2f59820170d467a8f62109cf6b8e206efa6",
+      "sourceMockOnly": true,
+      "candidateBodiesRead": false,
+      "name": "independent_close_fence_cases1.py",
+      "stopName": "writer-stop-independent_close_fence_cases1.json"
+    }
+  ],
+  "SourceEligibility": false,
+  "operativeAdaptersAdopted": false,
+  "actualClocksStarted": false,
+  "effects": 0
+}

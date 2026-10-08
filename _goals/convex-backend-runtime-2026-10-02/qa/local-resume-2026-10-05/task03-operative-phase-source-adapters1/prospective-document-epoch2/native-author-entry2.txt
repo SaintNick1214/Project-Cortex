@@ -1,0 +1,41 @@
+import hashlib,json,os,stat,sys,time,types
+from pathlib import Path
+N=Path("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1")
+F=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+def nine(s):return {k:str(getattr(s,'st_'+k)) for k in F}
+headers=[('plan',Path("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/prospective-document-epoch2/source-input-plan2.json"),'fd820312c7a0dc589731d6c9fe46a265294b9b96f69c411694e500001437c4a3'),('stop',Path("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/prospective-document-epoch2/source-writers-stopped2.json"),None),('actor',N/'held_control_actor1.py','e384762b38c74f076c6add80ecf5ff9d1d773a4b86773c1eeee9fddf8e6fb7fe')]
+owned=[];raws={};attempts=[];failures=[]
+try:
+ for role,path,expected in headers:
+  s=os.lstat(path);age=time.time_ns()-max(s.st_mtime_ns,s.st_ctime_ns)
+  if age<240000000000 or not stat.S_ISREG(s.st_mode) or s.st_nlink!=1:raise RuntimeError('metadata_maturity_denial')
+  row={'path':str(path),'bytes':s.st_size,'PRE9':nine(s),'sha256':expected,'role':role}
+  fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
+  try:owned.append((str(path),fd,row))
+  except BaseException:
+   os.close(fd);raise
+  if nine(os.fstat(fd))!=row['PRE9']:raise RuntimeError('header_OPEN9_changed')
+ for path,fd,row in owned:
+  raw=b'';off=0
+  while True:
+   part=os.pread(fd,65536,off)
+   if not part:break
+   off+=len(part);raw+=part
+   if off>row['bytes'] or off>16777216:raise RuntimeError('header_size_overflow')
+  actual=hashlib.sha256(raw).hexdigest()
+  if row['sha256'] is not None and actual!=row['sha256']:raise RuntimeError('header_hash_denial')
+  if len(raw)!=row['bytes'] or nine(os.fstat(fd))!=row['PRE9'] or nine(os.lstat(path))!=row['PRE9']:raise RuntimeError('header_EOF_original9_denial')
+  row['sha256']=actual;raws[row['role']]=raw
+ m=types.ModuleType('bounded_source_held_actor');sys.modules[m.__name__]=m
+ exec(compile(raws['actor'],str(N/'held_control_actor1.py'),'exec',dont_inherit=True),m.__dict__)
+ result=m.run(owned,raws['plan'],raws['stop'],"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/prospective-document-epoch2")
+ print(json.dumps({'PASS':result['PASS'],'FAIL':result['FAIL'],'count':result['bootstrapAndWholeInputFDCount'],'bytes':result['sourceMemberBytes'],'minimumCaptureAgeNs':result['minimumCaptureAgeNs'],'sourceEligibility':False,'effects':0}))
+except BaseException as error:
+ failures.append(repr(error));raise
+finally:
+ detached=tuple(owned);owned.clear()
+ for path,fd,row in detached:
+  try:os.close(fd);error=None
+  except BaseException as exc:error=repr(exc);failures.append(error)
+  attempts.append({'path':path,'fd':fd,'attempt':1,'error':error})
+ if failures:(Path("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/prospective-document-epoch2/author-native-bootstrap-failure2.json")).write_text(json.dumps({'scope':'FAILED_AUTHOR_SETUP_NO_PIN_REFRESH','failures':failures,'closeAttempts':attempts,'effects':0},indent=2)+'\n')

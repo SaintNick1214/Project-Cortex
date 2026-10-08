@@ -1,0 +1,247 @@
+{
+  "scope": "AUTHOR_SOURCE_MOCK_ONLY_NOT_INDEPENDENT_AUTHORITY",
+  "conditions": [
+    {
+      "name": "positive_exact_Source_cohort_all_FD_before_body_EOF_hash_nine_final_close",
+      "PASS": true
+    },
+    {
+      "name": "open_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "open_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "open_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "lstat_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "lstat_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "lstat_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "fstat_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "fstat_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "fstat_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "maturity_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "maturity_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "maturity_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "read_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "read_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "read_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "hash_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "hash_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "hash_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "close_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "close_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "close_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "allclose_a_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "allclose_b_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "allclose_c_all_owned_once_sticky_debt",
+      "PASS": true
+    },
+    {
+      "name": "immediate_owner_registration_a_fallback_once",
+      "PASS": true
+    },
+    {
+      "name": "shared_registration_a_before_once",
+      "PASS": true
+    },
+    {
+      "name": "shared_registration_a_after_once",
+      "PASS": true
+    },
+    {
+      "name": "immediate_owner_registration_b_fallback_once",
+      "PASS": true
+    },
+    {
+      "name": "shared_registration_b_before_once",
+      "PASS": true
+    },
+    {
+      "name": "shared_registration_b_after_once",
+      "PASS": true
+    },
+    {
+      "name": "immediate_owner_registration_c_fallback_once",
+      "PASS": true
+    },
+    {
+      "name": "shared_registration_c_before_once",
+      "PASS": true
+    },
+    {
+      "name": "shared_registration_c_after_once",
+      "PASS": true
+    },
+    {
+      "name": "combined_SystemExit0_final_report_allclose_original_errors_retained",
+      "PASS": true
+    },
+    {
+      "name": "primary_SystemExit_0_retained_allclose",
+      "PASS": true
+    },
+    {
+      "name": "primary_SystemExit_7_retained_allclose",
+      "PASS": true
+    },
+    {
+      "name": "held_parse_denial_{\"x\":1,\"x\":2}",
+      "PASS": true
+    },
+    {
+      "name": "held_parse_denial_{\"x\":1e309}",
+      "PASS": true
+    },
+    {
+      "name": "held_parse_denial_{\"x\":NaN}",
+      "PASS": true
+    },
+    {
+      "name": "publication_alone_attempts_every_close",
+      "PASS": true
+    },
+    {
+      "name": "hidden_body_edge_denial_before_open",
+      "PASS": true
+    },
+    {
+      "name": "borrow_exact_tuple_no_owner_transfer_no_new_pool",
+      "PASS": true
+    },
+    {
+      "name": "Root_compile_only_exact_approved_held_program",
+      "PASS": true
+    },
+    {
+      "name": "G_positive_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "G_stale_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "G_missing_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "G_extra_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "G_wrongnine_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "G_planextra_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "G_selfPASS_shared_header_body_debt_exact_sources",
+      "PASS": false,
+      "error": "Failures('shared_ledger_ownership:Denied:duplicate_shared_SOURCE_FD_ownership; open_all:Denied:duplicate_shared_SOURCE_FD_ownership; ledger_release:plan:Denied:ledger_ownership_registration_failed_no_retry')"
+    },
+    {
+      "name": "duplicate_conflicting_original_tuple_denies_before_open",
+      "PASS": true
+    },
+    {
+      "name": "changed_nine_new_charged_admission_no_reset_refund",
+      "PASS": true
+    },
+    {
+      "name": "same64MiB_including_original_reserves_overflow_sticky",
+      "PASS": true
+    },
+    {
+      "name": "G_foreign_ledger_header_lease_denied",
+      "PASS": true
+    },
+    {
+      "name": "protected_or_nonfinite_denial_55",
+      "PASS": true
+    },
+    {
+      "name": "protected_or_nonfinite_denial_56",
+      "PASS": true
+    }
+  ],
+  "PASS": 50,
+  "FAIL": 7,
+  "serviceEffects": 0,
+  "sourceEligibility": false,
+  "authorPreSTOP": true,
+  "qualifiedSourceInterval": false,
+  "failureClass": "SEVEN_FIXTURE_FD_COLLISIONS_NOT_CANDIDATE_FINDINGS"
+}
