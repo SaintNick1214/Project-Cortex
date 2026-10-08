@@ -5,6 +5,8 @@ import { useAuth } from "./AuthProvider";
 
 export function AdminSetup() {
   const { setupAdmin, error, clearError } = useAuth();
+  const [username, setUsername] = useState("");
+  const [setupToken, setSetupToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -15,8 +17,8 @@ export function AdminSetup() {
     setLocalError(null);
     clearError();
 
-    if (password.length < 4) {
-      setLocalError("Password must be at least 4 characters");
+    if (password.length < 6) {
+      setLocalError("Password must be at least 6 characters");
       return;
     }
 
@@ -26,7 +28,7 @@ export function AdminSetup() {
     }
 
     setIsLoading(true);
-    await setupAdmin(password);
+    await setupAdmin(username, password, setupToken);
     setIsLoading(false);
   };
 
@@ -49,6 +51,28 @@ export function AdminSetup() {
         {/* Setup Form */}
         <div className="glass rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            <label className="block">
+              Admin username
+              <input
+                aria-label="Admin username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                autoComplete="username"
+                required
+                className="block w-full px-4 py-3 bg-white/5 rounded-xl"
+              />
+            </label>
+            <label className="block">
+              Setup token
+              <input
+                aria-label="Setup token"
+                type="password"
+                value={setupToken}
+                onChange={(event) => setSetupToken(event.target.value)}
+                required
+                className="block w-full px-4 py-3 bg-white/5 rounded-xl"
+              />
+            </label>
             <div>
               <label
                 htmlFor="password"

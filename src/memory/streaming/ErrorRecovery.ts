@@ -20,6 +20,7 @@ import type {
   StreamError,
 } from "../../types/streaming";
 import crypto from "crypto";
+import type {ProgressiveStorageHandler} from "./ProgressiveStorageHandler";
 
 /**
  * Handles error recovery for streaming operations
@@ -28,7 +29,7 @@ export class StreamErrorRecovery {
   private readonly client: ConvexClient;
   private readonly resumeTokenTTL: number = 3600000; // 1 hour
 
-  constructor(client: ConvexClient) {
+  constructor(client: ConvexClient, private readonly partialStorage?:ProgressiveStorageHandler) {
     this.client = client;
   }
 
@@ -110,10 +111,9 @@ export class StreamErrorRecovery {
     try {
       // Delete partial memory if it exists
       if (context.partialMemoryId) {
-        await this.client.mutation(api.memories.deleteMemory, {
-          memorySpaceId: context.memorySpaceId,
-          memoryId: context.partialMemoryId,
-        });
+        if(!this.partialStorage||context.partialOutcomeUnknown)throw new Error("GRAPH_PARTIAL_OUTCOME_UNKNOWN");
+        await this.partialStorage.rollback();
+        if(!this.partialStorage.wasDeleted())throw new Error("GRAPH_FINALIZED_PARTIAL_PRESERVED");
       }
 
       return {

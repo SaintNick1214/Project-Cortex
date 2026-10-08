@@ -11,6 +11,7 @@
  */
 
 import { Cortex } from "../src";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
@@ -20,11 +21,20 @@ describe("Memory Spaces Registry API", () => {
   const ctx = createNamedTestRunContext("memspaces");
 
   let cortex: Cortex;
+  let erasureTransport: ErasureTransport;
   let client: ConvexClient;
   let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    // Deletion fixtures require an explicitly owned disposable target and key.
+    // Never obtain administrative authority from saved config or client fields.
+    const ownedUrl = process.env.CORTEX_ERASURE_TEST_DISPOSABLE_URL;
+    const key = process.env.CORTEX_ERASURE_TEST_DEPLOYMENT_KEY;
+    if (ownedUrl !== "http://127.0.0.1:46512" || CONVEX_URL !== ownedUrl || !key) {
+      throw new Error("Explicit Task19 disposable erasure test binding required");
+    }
+    erasureTransport = createErasureTransport({url: ownedUrl, deploymentKey: key});
     console.log(`\n🧪 Memory Spaces API Tests - Run ID: ${ctx.runId}\n`);
 
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -38,6 +48,8 @@ describe("Memory Spaces Registry API", () => {
   afterAll(async () => {
     console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
     await scopedCleanup.cleanupAll();
+    erasureTransport.close();
+    await cortex.shutdown();
     await client.close();
     console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
@@ -899,6 +911,7 @@ describe("Memory Spaces Registry API", () => {
 
       const result = await cortex.memorySpaces.delete(deleteSpaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -945,17 +958,21 @@ describe("Memory Spaces Registry API", () => {
       // Delete with cascade
       const result = await cortex.memorySpaces.delete(cascadeSpaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
       expect(result.deleted).toBe(true);
       expect(result.cascade).toBeDefined();
+      expect(result.erasure?.complete).toBe(true);
+      expect(result.erasure?.outcomes.at(-1)?.table).toBe("memorySpaces");
     });
 
     it("throws error for non-existent space", async () => {
       await expect(
         cortex.memorySpaces.delete(`nonexistent-${ctx.runId}`, {
           cascade: true,
+        erasureTransport,
           reason: "test cleanup",
         }),
       ).rejects.toThrow("Memory space not found");
@@ -990,6 +1007,7 @@ describe("Memory Spaces Registry API", () => {
       await expect(
         cortex.memorySpaces.delete(missingReasonSpaceId, {
           cascade: true,
+        erasureTransport,
           reason: "",
         }),
       ).rejects.toThrow("reason");
@@ -1007,6 +1025,7 @@ describe("Memory Spaces Registry API", () => {
       await expect(
         cortex.memorySpaces.delete(confirmMismatchSpaceId, {
           cascade: true,
+        erasureTransport,
           reason: "test",
           confirmId: "wrong-id",
         }),
@@ -1495,6 +1514,7 @@ describe("Memory Spaces Registry API", () => {
       // Delete
       const result = await cortex.memorySpaces.delete(lifecycleSpaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -1522,6 +1542,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(engineeringSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {
@@ -1530,6 +1551,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(designSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {
@@ -1538,6 +1560,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(aliceSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {
@@ -1572,6 +1595,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(engineeringSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {
@@ -1580,6 +1604,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(designSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {
@@ -1588,6 +1613,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(aliceSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {
@@ -1682,6 +1708,7 @@ describe("Memory Spaces Registry API", () => {
         try {
           await cortex.memorySpaces.delete(participantTestSpace, {
             cascade: true,
+        erasureTransport,
             reason: "test cleanup",
           });
         } catch (_error) {

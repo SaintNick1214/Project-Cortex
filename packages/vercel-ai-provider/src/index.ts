@@ -31,11 +31,13 @@ import type { MemoryEntry } from "@cortexmemory/sdk";
 import { Cortex } from "@cortexmemory/sdk";
 import type {
   CortexMemoryConfig,
+  CortexServerCredentials,
   CortexMemoryModel,
   ManualMemorySearchOptions,
   ManualRememberOptions,
   ManualClearOptions,
 } from "./types";
+import { serverRuntimeOptions } from "./server-credentials";
 import { CortexMemoryProvider } from "./provider";
 import {
   validateConfig,
@@ -94,7 +96,9 @@ import { createLogger } from "./types";
  */
 export function createCortexMemory(
   config: CortexMemoryConfig,
+  credentials?: CortexServerCredentials,
 ): CortexMemoryModel {
+  const runtime = serverRuntimeOptions(credentials);
   // Validate configuration
   validateConfig(config);
 
@@ -102,7 +106,13 @@ export function createCortexMemory(
   logger.debug("Creating Cortex Memory provider");
 
   // Initialize Cortex SDK (shared instance)
-  const cortex = new Cortex({ convexUrl: config.convexUrl });
+  const cortexConfig = {
+    convexUrl: config.convexUrl,
+    graph: config.graphConfig?.adapter ? { adapter: config.graphConfig.adapter } : undefined,
+  };
+  const cortex = runtime ? new Cortex(cortexConfig, runtime) : new Cortex(cortexConfig);
+
+  let closePromise: Promise<void> | undefined;
 
   /**
    * Main function: Wrap a language model with memory
@@ -112,7 +122,7 @@ export function createCortexMemory(
       logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
 
       // Create memory-augmented provider
-      return new CortexMemoryProvider(underlyingModel, config);
+      return new CortexMemoryProvider(underlyingModel, config, cortex);
     },
     {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -244,6 +254,9 @@ export function createCortexMemory(
         }
       },
 
+      // Factory owns the shared instance; borrowed wrapper close() leaves it usable.
+      close: (): Promise<void> => (closePromise ??= cortex.shutdown()),
+
       getConfig: (): Readonly<CortexMemoryConfig> => {
         return Object.freeze({ ...config });
       },
@@ -281,7 +294,9 @@ export function createCortexMemory(
  */
 export async function createCortexMemoryAsync(
   config: CortexMemoryConfig,
+  credentials?: CortexServerCredentials,
 ): Promise<CortexMemoryModel> {
+  const runtime = serverRuntimeOptions(credentials);
   // Validate configuration
   validateConfig(config);
 
@@ -290,155 +305,171 @@ export async function createCortexMemoryAsync(
 
   // Use Cortex.create() for async initialization with auto-graph config
   // This handles graph adapter creation/connection from env vars
-  const cortex = await Cortex.create({ convexUrl: config.convexUrl });
+  const cortexConfig = {
+    convexUrl: config.convexUrl,
+    graph: config.graphConfig?.adapter ? { adapter: config.graphConfig.adapter } : undefined,
+    graphEnabled: config.enableGraphMemory,
+    graphConnection: config.graphConfig,
+  };
+  const cortex = runtime ? await Cortex.create(cortexConfig, runtime) : await Cortex.create(cortexConfig);
 
-  logger.debug(
-    "Cortex SDK initialized" +
-      (config.enableGraphMemory ? " (graph support requested)" : ""),
-  );
+  let closePromise: Promise<void> | undefined;
+  try {
+    logger.debug(
+      "Cortex SDK initialized" +
+        (config.enableGraphMemory ? " (graph support requested)" : ""),
+    );
 
-  // Return the model factory that creates providers with the shared Cortex instance
-  const cortexMemory: CortexMemoryModel = Object.assign(
-    (underlyingModel: any, settings?: Record<string, unknown>): any => {
-      logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
-      // Create provider with the pre-initialized Cortex instance (includes graph adapter)
-      return new CortexMemoryProvider(underlyingModel, config, cortex);
-    },
-    {
-      search: async (
-        query: string,
-        options?: ManualMemorySearchOptions,
-      ): Promise<MemoryEntry[]> => {
-        logger.debug(`Manual search: "${query}"`);
+    // Return the model factory that creates providers with the shared Cortex instance
+    const cortexMemory: CortexMemoryModel = Object.assign(
+      (underlyingModel: any, settings?: Record<string, unknown>): any => {
+        logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
+        // Create provider with the pre-initialized Cortex instance (includes graph adapter)
+        return new CortexMemoryProvider(underlyingModel, config, cortex);
+      },
+      {
+        search: async (
+          query: string,
+          options?: ManualMemorySearchOptions,
+        ): Promise<MemoryEntry[]> => {
+          logger.debug(`Manual search: "${query}"`);
 
-        try {
-          let embedding: number[] | undefined;
-          if (options?.embedding) {
-            embedding = options.embedding;
-          } else if (config.embeddingProvider) {
-            embedding = await config.embeddingProvider.generate(query);
+          try {
+            let embedding: number[] | undefined;
+            if (options?.embedding) {
+              embedding = options.embedding;
+            } else if (config.embeddingProvider) {
+              embedding = await config.embeddingProvider.generate(query);
+            }
+
+            const memories = await cortex.memory.search(
+              config.memorySpaceId,
+              query,
+              {
+                embedding,
+                limit: options?.limit || config.memorySearchLimit || 10,
+                minScore: options?.minScore || config.minMemoryRelevance || 0.7,
+                userId: options?.userId,
+                tags: options?.tags,
+                sourceType: options?.sourceType,
+                minImportance: options?.minImportance,
+              },
+            );
+
+            logger.info(`Manual search found ${memories.length} memories`);
+            return memories as MemoryEntry[];
+          } catch (error) {
+            logger.error("Manual search failed:", error);
+            throw error;
+          }
+        },
+
+        remember: async (
+          userMessage: string,
+          agentResponse: string,
+          options?: ManualRememberOptions,
+        ): Promise<void> => {
+          logger.debug("Manual remember called");
+
+          try {
+            const userId = await resolveUserId(config, logger);
+            const conversationId =
+              options?.conversationId ||
+              (await resolveConversationId(config, logger));
+
+            await cortex.memory.remember(
+              {
+                memorySpaceId: config.memorySpaceId,
+                conversationId,
+                userMessage,
+                agentResponse,
+                userId,
+                userName: config.userName || "User",
+                agentId: config.agentId,
+                participantId: config.hiveMode?.participantId,
+                generateEmbedding:
+                  options?.generateEmbedding ||
+                  config.embeddingProvider?.generate,
+                extractFacts: (options?.extractFacts ||
+                  config.extractFacts) as any,
+                importance: config.defaultImportance || 50,
+                tags: config.defaultTags || [],
+              },
+              {
+                // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
+              },
+            );
+
+            logger.info("Manual remember completed");
+          } catch (error) {
+            logger.error("Manual remember failed:", error);
+            throw error;
+          }
+        },
+
+        getMemories: async (options?: {
+          limit?: number;
+        }): Promise<MemoryEntry[]> => {
+          logger.debug("Getting all memories");
+
+          try {
+            const memories = await cortex.memory.list({
+              memorySpaceId: config.memorySpaceId,
+              limit: options?.limit || 100,
+            });
+
+            logger.info(`Retrieved ${memories.length} memories`);
+            return memories as MemoryEntry[];
+          } catch (error) {
+            logger.error("Failed to get memories:", error);
+            throw error;
+          }
+        },
+
+        clearMemories: async (options?: ManualClearOptions): Promise<number> => {
+          logger.debug("Clearing memories");
+
+          if (!options?.confirm) {
+            throw new Error(
+              "clearMemories requires { confirm: true } to prevent accidental deletion",
+            );
           }
 
-          const memories = await cortex.memory.search(
-            config.memorySpaceId,
-            query,
-            {
-              embedding,
-              limit: options?.limit || config.memorySearchLimit || 10,
-              minScore: options?.minScore || config.minMemoryRelevance || 0.7,
-              userId: options?.userId,
-              tags: options?.tags,
-              sourceType: options?.sourceType,
-              minImportance: options?.minImportance,
-            },
-          );
-
-          logger.info(`Manual search found ${memories.length} memories`);
-          return memories as MemoryEntry[];
-        } catch (error) {
-          logger.error("Manual search failed:", error);
-          throw error;
-        }
-      },
-
-      remember: async (
-        userMessage: string,
-        agentResponse: string,
-        options?: ManualRememberOptions,
-      ): Promise<void> => {
-        logger.debug("Manual remember called");
-
-        try {
-          const userId = await resolveUserId(config, logger);
-          const conversationId =
-            options?.conversationId ||
-            (await resolveConversationId(config, logger));
-
-          await cortex.memory.remember(
-            {
+          try {
+            const result = await cortex.memory.deleteMany({
               memorySpaceId: config.memorySpaceId,
-              conversationId,
-              userMessage,
-              agentResponse,
-              userId,
-              userName: config.userName || "User",
-              agentId: config.agentId,
-              participantId: config.hiveMode?.participantId,
-              generateEmbedding:
-                options?.generateEmbedding ||
-                config.embeddingProvider?.generate,
-              extractFacts: (options?.extractFacts ||
-                config.extractFacts) as any,
-              importance: config.defaultImportance || 50,
-              tags: config.defaultTags || [],
-            },
-            {
-              // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
-            },
-          );
+              userId: options.userId,
+              sourceType: options.sourceType,
+            });
 
-          logger.info("Manual remember completed");
-        } catch (error) {
-          logger.error("Manual remember failed:", error);
-          throw error;
-        }
+            logger.info(`Cleared ${result.deleted} memories`);
+            return result.deleted;
+          } catch (error) {
+            logger.error("Failed to clear memories:", error);
+            throw error;
+          }
+        },
+
+        // Factory owns the shared instance; borrowed wrapper close() leaves it usable.
+        close: (): Promise<void> => (closePromise ??= cortex.shutdown()),
+
+        getConfig: (): Readonly<CortexMemoryConfig> => {
+          return Object.freeze({ ...config });
+        },
       },
+    );
 
-      getMemories: async (options?: {
-        limit?: number;
-      }): Promise<MemoryEntry[]> => {
-        logger.debug("Getting all memories");
-
-        try {
-          const memories = await cortex.memory.list({
-            memorySpaceId: config.memorySpaceId,
-            limit: options?.limit || 100,
-          });
-
-          logger.info(`Retrieved ${memories.length} memories`);
-          return memories as MemoryEntry[];
-        } catch (error) {
-          logger.error("Failed to get memories:", error);
-          throw error;
-        }
-      },
-
-      clearMemories: async (options?: ManualClearOptions): Promise<number> => {
-        logger.debug("Clearing memories");
-
-        if (!options?.confirm) {
-          throw new Error(
-            "clearMemories requires { confirm: true } to prevent accidental deletion",
-          );
-        }
-
-        try {
-          const result = await cortex.memory.deleteMany({
-            memorySpaceId: config.memorySpaceId,
-            userId: options.userId,
-            sourceType: options.sourceType,
-          });
-
-          logger.info(`Cleared ${result.deleted} memories`);
-          return result.deleted;
-        } catch (error) {
-          logger.error("Failed to clear memories:", error);
-          throw error;
-        }
-      },
-
-      getConfig: (): Readonly<CortexMemoryConfig> => {
-        return Object.freeze({ ...config });
-      },
-    },
-  );
-
-  return cortexMemory;
+    return cortexMemory;
+  } catch (error) {
+    try { await cortex.shutdown(); } catch { /* Preserve factory initialization failure. */ }
+    throw error;
+  }
 }
 
 // Re-export types for convenience
 export type {
   CortexMemoryConfig,
+  CortexServerCredentials,
   CortexMemoryModel,
   ManualMemorySearchOptions,
   ManualRememberOptions,

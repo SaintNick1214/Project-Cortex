@@ -1,3 +1,5 @@
+import { graphMutation } from "./lib/graphSync";
+import { captureInsertedRow, reconcileRow, markDeletedRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Memory Spaces Registry
  *
@@ -5,8 +7,9 @@
  * Memory space metadata and analytics
  */
 
-import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { ConvexError, convexToJson, v } from "convex/values";
+import { query } from "./_generated/server";
+import { scopedSpace, validateDomainScope, convexDocumentBytes } from "./lib/domainScope";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -15,7 +18,7 @@ import { mutation, query } from "./_generated/server";
 /**
  * Register a new memory space
  */
-export const register = mutation({
+export const register = graphMutation({
   args: {
     memorySpaceId: v.string(),
     name: v.optional(v.string()),
@@ -39,29 +42,7 @@ export const register = mutation({
   },
   handler: async (ctx, args) => {
     // Check if already exists - tenant-aware lookup if tenantId provided
-    let existing;
-    if (args.tenantId) {
-      // For multi-tenant: check within tenant's namespace only using composite index
-      existing = await ctx.db
-        .query("memorySpaces")
-        .withIndex("by_tenant_memorySpaceId", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .first();
-    } else {
-      // For non-tenant: check globally (backwards compatibility)
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant conflicts
-      const candidate = await ctx.db
-        .query("memorySpaces")
-        .withIndex("by_memorySpaceId", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      existing = candidate && !candidate.tenantId ? candidate : null;
-    }
+    const existing = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (existing) {
       // Throw error for explicit duplicate registration attempts
@@ -71,7 +52,7 @@ export const register = mutation({
 
     const now = Date.now();
 
-    const _id = await ctx.db.insert("memorySpaces", {
+    const _id = await captureInsertedRow(ctx, "memorySpaces", {
       memorySpaceId: args.memorySpaceId,
       name: args.name,
       type: args.type,
@@ -90,26 +71,22 @@ export const register = mutation({
 /**
  * Update memory space metadata
  */
-export const update = mutation({
+export const update = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     name: v.optional(v.string()),
     metadata: v.optional(v.any()),
     status: v.optional(v.union(v.literal("active"), v.literal("archived"))),
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
-    await ctx.db.patch(space._id, {
+    await reconcileRow(ctx, space._id, {
       name: args.name !== undefined ? args.name : space.name,
       metadata: args.metadata !== undefined ? args.metadata : space.metadata,
       status: args.status !== undefined ? args.status : space.status,
@@ -123,8 +100,9 @@ export const update = mutation({
 /**
  * Add participant to memory space
  */
-export const addParticipant = mutation({
+export const addParticipant = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     participant: v.object({
       id: v.string(),
@@ -133,12 +111,7 @@ export const addParticipant = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
@@ -149,7 +122,7 @@ export const addParticipant = mutation({
       throw new ConvexError("PARTICIPANT_ALREADY_EXISTS");
     }
 
-    await ctx.db.patch(space._id, {
+    await reconcileRow(ctx, space._id, {
       participants: [...space.participants, args.participant],
       updatedAt: Date.now(),
     });
@@ -161,18 +134,14 @@ export const addParticipant = mutation({
 /**
  * Remove participant from memory space
  */
-export const removeParticipant = mutation({
+export const removeParticipant = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     participantId: v.string(),
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
@@ -182,7 +151,7 @@ export const removeParticipant = mutation({
       (p) => p.id !== args.participantId,
     );
 
-    await ctx.db.patch(space._id, {
+    await reconcileRow(ctx, space._id, {
       participants: updatedParticipants,
       updatedAt: Date.now(),
     });
@@ -194,25 +163,21 @@ export const removeParticipant = mutation({
 /**
  * Archive memory space (marks as inactive but preserves data)
  */
-export const archive = mutation({
+export const archive = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     reason: v.optional(v.string()),
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
-    await ctx.db.patch(space._id, {
+    await reconcileRow(ctx, space._id, {
       status: "archived",
       updatedAt: Date.now(),
       metadata: {
@@ -230,23 +195,19 @@ export const archive = mutation({
 /**
  * Reactivate archived memory space
  */
-export const reactivate = mutation({
+export const reactivate = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
-    await ctx.db.patch(space._id, {
+    await reconcileRow(ctx, space._id, {
       status: "active",
       updatedAt: Date.now(),
     });
@@ -258,7 +219,7 @@ export const reactivate = mutation({
 /**
  * Delete memory space (also cascades to all data)
  */
-export const deleteSpace = mutation({
+export const deleteSpace = graphMutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy filter
@@ -267,32 +228,17 @@ export const deleteSpace = mutation({
     confirmId: v.optional(v.string()), // Optional: Safety check
   },
   handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId);
+    if (!args.cascade) throw new ConvexError("CASCADE_REQUIRED");
+    if (args.reason.trim().length === 0) throw new ConvexError("REASON_REQUIRED");
+
     // Safety check: confirmId must match memorySpaceId if provided
     if (args.confirmId !== undefined && args.confirmId !== args.memorySpaceId) {
       throw new ConvexError("CONFIRM_ID_MISMATCH");
     }
 
     // Tenant-aware lookup using composite index
-    let space;
-    if (args.tenantId) {
-      space = await ctx.db
-        .query("memorySpaces")
-        .withIndex("by_tenant_memorySpaceId", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .first();
-    } else {
-      // For non-tenant: only delete if record has no tenantId
-      const candidate = await ctx.db
-        .query("memorySpaces")
-        .withIndex("by_memorySpaceId", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .first();
-      space = candidate && !candidate.tenantId ? candidate : null;
-    }
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
@@ -306,45 +252,45 @@ export const deleteSpace = mutation({
       // Delete all conversations
       const conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
+        .withIndex("by_tenant_space", (q) =>
+          q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
 
       for (const conv of conversations) {
-        await ctx.db.delete(conv._id);
+        await markDeletedRow(ctx, conv._id);
       }
       conversationsDeleted = conversations.length;
 
       // Delete all memories
       const memories = await ctx.db
         .query("memories")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
+        .withIndex("by_tenant_space", (q) =>
+          q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
 
       for (const mem of memories) {
-        await ctx.db.delete(mem._id);
+        await markDeletedRow(ctx, mem._id);
       }
       memoriesDeleted = memories.length;
 
       // Delete all facts
       const facts = await ctx.db
         .query("facts")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
+        .withIndex("by_tenant_space", (q) =>
+          q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
 
       for (const fact of facts) {
-        await ctx.db.delete(fact._id);
+        await markDeletedRow(ctx, fact._id);
       }
       factsDeleted = facts.length;
     }
 
     // Delete space itself
-    await ctx.db.delete(space._id);
+    await markDeletedRow(ctx, space._id);
 
     return {
       memorySpaceId: args.memorySpaceId,
@@ -374,28 +320,7 @@ export const get = query({
     tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    let space;
-    if (args.tenantId) {
-      // For multi-tenant: find space within tenant's namespace using composite index
-      space = await ctx.db
-        .query("memorySpaces")
-        .withIndex("by_tenant_memorySpaceId", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .first();
-    } else {
-      // For non-tenant: find globally but only return if record has no tenantId
-      const candidate = await ctx.db
-        .query("memorySpaces")
-        .withIndex("by_memorySpaceId", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      space = candidate && !candidate.tenantId ? candidate : null;
-    }
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     return space || null;
   },
@@ -429,12 +354,9 @@ export const list = query({
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    let spaces = await ctx.db.query("memorySpaces").collect();
+    validateDomainScope(args.tenantId);
+    let spaces = await ctx.db.query("memorySpaces").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
 
-    // Tenant isolation filter (apply first for efficiency)
-    if (args.tenantId) {
-      spaces = spaces.filter((s) => s.tenantId === args.tenantId);
-    }
 
     // Apply filters
     if (args.type) {
@@ -499,6 +421,7 @@ export const list = query({
  */
 export const count = query({
   args: {
+    tenantId: v.optional(v.string()),
     type: v.optional(
       v.union(
         v.literal("personal"),
@@ -510,7 +433,8 @@ export const count = query({
     status: v.optional(v.union(v.literal("active"), v.literal("archived"))),
   },
   handler: async (ctx, args) => {
-    let spaces = await ctx.db.query("memorySpaces").collect();
+    validateDomainScope(args.tenantId);
+    let spaces = await ctx.db.query("memorySpaces").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
 
     if (args.type) {
       spaces = spaces.filter((s) => s.type === args.type);
@@ -529,6 +453,7 @@ export const count = query({
  */
 export const getStats = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     timeWindow: v.optional(
       v.union(
@@ -542,12 +467,7 @@ export const getStats = query({
     includeParticipants: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
@@ -569,27 +489,27 @@ export const getStats = query({
     // Get all conversations
     const conversations = await ctx.db
       .query("conversations")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
       .collect();
 
     // Get all memories
     const memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
       .collect();
 
     // Get all facts (active only)
-    const facts = await ctx.db
+    const storedFacts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
-      .collect()
-      .then((f) => f.filter((fact) => fact.supersededBy === undefined));
+      .collect();
+    const facts = storedFacts.filter((fact) => fact.supersededBy === undefined);
 
     // Total counts
     const totalConversations = conversations.length;
@@ -728,8 +648,13 @@ export const getStats = query({
       );
     }
 
+    const conversationsBytes = convexDocumentBytes(conversations);
+    const memoriesBytes = convexDocumentBytes(memories);
+    const factsBytes = convexDocumentBytes(storedFacts);
+
     return {
       memorySpaceId: args.memorySpaceId,
+      storageMeasurement: "convex-json-utf8-estimate" as const,
       totalMemories,
       totalConversations,
       totalFacts,
@@ -737,10 +662,10 @@ export const getStats = query({
       memoriesThisWindow,
       conversationsThisWindow,
       storage: {
-        conversationsBytes: 0, // TODO: Implement size calculation
-        memoriesBytes: 0,
-        factsBytes: 0,
-        totalBytes: 0,
+        conversationsBytes,
+        memoriesBytes,
+        factsBytes,
+        totalBytes: conversationsBytes + memoriesBytes + factsBytes,
       },
       topTags,
       importanceBreakdown,
@@ -754,10 +679,12 @@ export const getStats = query({
  */
 export const findByParticipant = query({
   args: {
+    tenantId: v.optional(v.string()),
     participantId: v.string(),
   },
   handler: async (ctx, args) => {
-    const allSpaces = await ctx.db.query("memorySpaces").collect();
+    validateDomainScope(args.tenantId);
+    const allSpaces = await ctx.db.query("memorySpaces").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
 
     return allSpaces.filter((space) =>
       space.participants.some((p) => p.id === args.participantId),
@@ -770,6 +697,7 @@ export const findByParticipant = query({
  */
 export const search = query({
   args: {
+    tenantId: v.optional(v.string()),
     query: v.string(),
     type: v.optional(
       v.union(
@@ -783,7 +711,8 @@ export const search = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let spaces = await ctx.db.query("memorySpaces").collect();
+    validateDomainScope(args.tenantId);
+    let spaces = await ctx.db.query("memorySpaces").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
 
     // Apply type and status filters
     if (args.type) {
@@ -808,7 +737,7 @@ export const search = query({
 
       // Search in metadata (stringify and search)
       if (space.metadata) {
-        const metadataStr = JSON.stringify(space.metadata).toLowerCase();
+        const metadataStr = JSON.stringify(convexToJson(space.metadata)).toLowerCase();
         if (metadataStr.includes(queryLower)) {
           return true;
         }
@@ -825,8 +754,9 @@ export const search = query({
 /**
  * Update participants (combined add/remove)
  */
-export const updateParticipants = mutation({
+export const updateParticipants = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     add: v.optional(
       v.array(
@@ -840,12 +770,7 @@ export const updateParticipants = mutation({
     remove: v.optional(v.array(v.string())), // Participant IDs to remove
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    const space = await scopedSpace(ctx, args.tenantId, args.memorySpaceId);
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
@@ -870,7 +795,7 @@ export const updateParticipants = mutation({
       }
     }
 
-    await ctx.db.patch(space._id, {
+    await reconcileRow(ctx, space._id, {
       participants: updatedParticipants,
       updatedAt: Date.now(),
     });
@@ -882,7 +807,7 @@ export const updateParticipants = mutation({
 /**
  * Purge all memory spaces (TEST/DEV ONLY)
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {},
   handler: async (ctx) => {
     // Safety check: Only allow in test/dev environments
@@ -906,7 +831,7 @@ export const purgeAll = mutation({
     const allSpaces = await ctx.db.query("memorySpaces").collect();
 
     for (const space of allSpaces) {
-      await ctx.db.delete(space._id);
+      await markDeletedRow(ctx, space._id);
     }
 
     return { deleted: allSpaces.length };

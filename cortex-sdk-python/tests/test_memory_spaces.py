@@ -14,7 +14,7 @@ import asyncio
 
 import pytest
 
-from cortex import RegisterMemorySpaceParams
+from cortex import DeleteMemorySpaceOptions, RegisterMemorySpaceParams
 from cortex.memory_spaces import MemorySpaceValidationError
 
 # ============================================================================
@@ -350,7 +350,7 @@ async def test_get_stats_invalid_time_window(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_register_memory_space(cortex_client, test_ids):
+async def test_register_memory_space(cortex_client, test_ids, erasure_transport):
     """
     Test registering a memory space.
 
@@ -377,11 +377,11 @@ async def test_register_memory_space(cortex_client, test_ids):
     assert result.status == "active"
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 @pytest.mark.asyncio
-async def test_register_shared_memory_space(cortex_client, test_ids):
+async def test_register_shared_memory_space(cortex_client, test_ids, erasure_transport):
     """
     Test registering shared memory space (Hive mode).
 
@@ -410,11 +410,11 @@ async def test_register_shared_memory_space(cortex_client, test_ids):
     assert len(result.participants) >= 3
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 @pytest.mark.asyncio
-async def test_register_with_tenant_id(cortex_client, test_ids):
+async def test_register_with_tenant_id(cortex_client, test_ids, erasure_transport):
     """
     Test registering a memory space with tenant_id (v0.31.0).
 
@@ -443,7 +443,7 @@ async def test_register_with_tenant_id(cortex_client, test_ids):
     assert hasattr(result, "tenant_id")
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 # ============================================================================
@@ -452,7 +452,7 @@ async def test_register_with_tenant_id(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_get_memory_space(cortex_client, test_ids):
+async def test_get_memory_space(cortex_client, test_ids, erasure_transport):
     """
     Test retrieving a memory space by ID.
 
@@ -477,7 +477,7 @@ async def test_get_memory_space(cortex_client, test_ids):
     assert retrieved.name == "Get Test Space"
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 @pytest.mark.asyncio
@@ -493,7 +493,7 @@ async def test_get_nonexistent_returns_none(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_get_with_tenant_isolation(cortex_client, test_ids):
+async def test_get_with_tenant_isolation(cortex_client, test_ids, erasure_transport):
     """
     Test that get() returns memory space with tenant_id field (v0.31.0).
 
@@ -522,7 +522,7 @@ async def test_get_with_tenant_isolation(cortex_client, test_ids):
     assert hasattr(retrieved, "tenant_id")
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 # ============================================================================
@@ -531,7 +531,7 @@ async def test_get_with_tenant_isolation(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_list_memory_spaces(cortex_client, test_ids):
+async def test_list_memory_spaces(cortex_client, test_ids, erasure_transport):
     """
     Test listing memory spaces.
 
@@ -559,11 +559,11 @@ async def test_list_memory_spaces(cortex_client, test_ids):
 
     # Cleanup
     for space_id in space_ids:
-        await cortex_client.memory_spaces.delete(space_id)
+        await cortex_client.memory_spaces.delete(space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 @pytest.mark.asyncio
-async def test_list_filter_by_type(cortex_client, test_ids):
+async def test_list_filter_by_type(cortex_client, test_ids, erasure_transport):
     """
     Test listing memory spaces filtered by type.
 
@@ -600,8 +600,8 @@ async def test_list_filter_by_type(cortex_client, test_ids):
         assert space_type == "personal"
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(personal_id)
-    await cortex_client.memory_spaces.delete(shared_id)
+    await cortex_client.memory_spaces.delete(personal_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
+    await cortex_client.memory_spaces.delete(shared_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 # ============================================================================
@@ -610,7 +610,7 @@ async def test_list_filter_by_type(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_delete_memory_space(cortex_client, test_ids):
+async def test_delete_memory_space(cortex_client, test_ids, erasure_transport):
     """
     Test deleting a memory space.
 
@@ -628,7 +628,7 @@ async def test_delete_memory_space(cortex_client, test_ids):
     )
 
     # Delete space
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
     # Verify deleted
     retrieved = await cortex_client.memory_spaces.get(memory_space_id)
@@ -641,7 +641,7 @@ async def test_delete_memory_space(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_count_memory_spaces(cortex_client, test_ids):
+async def test_count_memory_spaces(cortex_client, test_ids, erasure_transport):
     """
     Test counting memory spaces.
 
@@ -667,7 +667,7 @@ async def test_count_memory_spaces(cortex_client, test_ids):
 
     # Cleanup
     for space_id in space_ids:
-        await cortex_client.memory_spaces.delete(space_id)
+        await cortex_client.memory_spaces.delete(space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 # ============================================================================
@@ -676,7 +676,7 @@ async def test_count_memory_spaces(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_get_memory_space_stats(cortex_client, test_ids, cleanup_helper):
+async def test_get_memory_space_stats(cortex_client, test_ids, cleanup_helper, erasure_transport):
     """
     Test getting memory space statistics.
 
@@ -708,7 +708,7 @@ async def test_get_memory_space_stats(cortex_client, test_ids, cleanup_helper):
 
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 # ============================================================================
@@ -717,7 +717,7 @@ async def test_get_memory_space_stats(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_list_backward_compatible_kwargs(cortex_client, test_ids):
+async def test_list_backward_compatible_kwargs(cortex_client, test_ids, erasure_transport):
     """
     Test that list() still works with keyword arguments (backward compatibility).
 
@@ -746,11 +746,11 @@ async def test_list_backward_compatible_kwargs(cortex_client, test_ids):
     assert len(spaces) >= 1
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(space_id)
+    await cortex_client.memory_spaces.delete(space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
 
 @pytest.mark.asyncio
-async def test_register_backward_compatible_without_tenant_id(cortex_client, test_ids):
+async def test_register_backward_compatible_without_tenant_id(cortex_client, test_ids, erasure_transport):
     """
     Test that register() works without tenant_id (backward compatibility).
 
@@ -772,5 +772,23 @@ async def test_register_backward_compatible_without_tenant_id(cortex_client, tes
     assert result.name == "No Tenant Test"
 
     # Cleanup
-    await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id, options=DeleteMemorySpaceOptions(cascade=True, reason="Task19 native deletion", erasure_transport=erasure_transport))
 
+
+
+@pytest.fixture
+def erasure_transport(cortex_client, test_config):
+    """Explicit owner19 admin capability, never ambient key/client introspection."""
+    import json
+    import os
+    from pathlib import Path
+    root = Path("/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/cli-sandbox-2026/task19-execution")
+    assert os.environ.get("CORTEX_TASK19_PROOF_ROOT") == str(root), "Explicit owned Task19 proof root required"
+    assert test_config["convex_url"] == "http://127.0.0.1:46512", "Exact owned Task19 target required"
+    key = json.loads((root / "private-admin.json").read_text())["key"]
+    transport = cortex_client.users.create_erasure_transport(url=test_config["convex_url"], deployment_key=key)
+    key = None
+    try:
+        yield transport
+    finally:
+        transport.close()

@@ -5,7 +5,15 @@ import { isDevelopmentEnvironment } from "@/lib/constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const redirectUrl = searchParams.get("redirectUrl") || "/";
+  const candidate = searchParams.get("redirectUrl") || "/";
+  let redirectUrl = "/";
+  try {
+    const target = new URL(candidate, request.url);
+    if (target.origin === new URL(request.url).origin)
+      redirectUrl = target.pathname + target.search;
+  } catch {
+    /* Keep local default. */
+  }
 
   const token = await getToken({
     req: request,

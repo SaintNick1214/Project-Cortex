@@ -1,3 +1,13 @@
+import { writeGraphMutation } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
+import { collectCandidates } from "./discovery";
+import { ConvexError } from "convex/values";
+import type { Id } from "../../convex-dev/_generated/dataModel";
+import type { HistoryIntent } from "../../convex-dev/lib/factHistoryProvenance";
+import {
+  RevisionAfterCommitError,
+  FactCommitOutcomeUnknownError,
+} from "./history";
 /**
  * Cortex SDK - Belief Revision Service
  *
@@ -16,7 +26,6 @@
 import type { ConvexClient } from "convex/browser";
 import type { FactRecord } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import { syncFactToGraph, syncFactRelationships } from "../graph/sync";
 import {
   SlotMatchingService,
   type SlotMatchingConfig,
@@ -107,6 +116,7 @@ export interface BeliefRevisionConfig {
  * Parameters for the revise operation
  */
 export interface ReviseParams {
+  syncToGraph?: boolean;
   /** Memory space to operate in */
   memorySpaceId: string;
   /** The new fact to evaluate */
@@ -218,6 +228,7 @@ export class BeliefRevisionService {
     private llmClient?: BeliefRevisionLLMClient,
     private graphAdapter?: GraphAdapter,
     config?: BeliefRevisionConfig,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {
     this.config = config || {};
 
@@ -322,12 +333,38 @@ export class BeliefRevisionService {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Stage 4: Execute Decision
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const revisionOperationId = crypto.randomUUID();
     const executionResult = await this.executeDecision(
       action,
       params,
       targetFact,
       reason,
-    );
+      {
+        operationId: revisionOperationId,
+        phase: "revision",
+        reason,
+        confidence,
+        pipeline: {
+          slotMatching: pipelineResult.slotMatching?.executed,
+          semanticMatching: pipelineResult.semanticMatching?.executed,
+          llmResolution: pipelineResult.llmResolution?.executed,
+        },
+        userId: params.userId,
+        participantId: params.participantId,
+        conversationId: params.sourceRef?.conversationId,
+      },
+    ).catch((error: unknown) => {
+      if (
+        error instanceof RevisionAfterCommitError ||
+        error instanceof ConvexError
+      )
+        throw error;
+      throw new FactCommitOutcomeUnknownError(
+        revisionOperationId,
+        action === "UPDATE" ? "revision_update" : "revision_store",
+        error,
+      );
+    });
 
     return {
       action,
@@ -403,6 +440,7 @@ export class BeliefRevisionService {
       },
       params.memorySpaceId,
       params.userId,
+      params.tenantId,
     );
   }
 
@@ -436,6 +474,7 @@ export class BeliefRevisionService {
       params.memorySpaceId,
       config,
       params.userId,
+      params.tenantId,
     );
 
     if (result.isDuplicate && result.existingFact) {
@@ -467,16 +506,20 @@ export class BeliefRevisionService {
       return [];
     }
 
-    const { api } = await import("../../convex-dev/_generated/api");
-    const facts = await this.client.query(api.facts.list, {
-      memorySpaceId: params.memorySpaceId,
-      userId: params.userId,
-      subject: params.fact.subject,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-      factType: params.fact.factType as any,
-      includeSuperseded: false,
-      limit: 20, // Reasonable limit for LLM processing
-    });
+    const facts = await collectCandidates(
+      this.client,
+      "list",
+      {
+        memorySpaceId: params.memorySpaceId,
+        tenantId: params.tenantId,
+        userId: params.userId,
+        subject: params.fact.subject,
+        factType: params.fact.factType,
+        includeSuperseded: false,
+        limit: 20, // Reasonable limit for LLM processing
+      },
+      20,
+    );
 
     return facts as FactRecord[];
   }
@@ -538,6 +581,7 @@ export class BeliefRevisionService {
     params: ReviseParams,
     targetFact: FactRecord | null,
     _reason: string,
+    historyIntent: HistoryIntent,
   ): Promise<{ fact: FactRecord; superseded: FactRecord[] }> {
     const { api } = await import("../../convex-dev/_generated/api");
     const superseded: FactRecord[] = [];
@@ -555,17 +599,20 @@ export class BeliefRevisionService {
       case "UPDATE": {
         if (targetFact) {
           // Update the existing fact in place (no new version created)
-          const updated = await this.client.mutation(api.facts.updateInPlace, {
+          const updated = await writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, api.facts.updateInPlace, {
             memorySpaceId: params.memorySpaceId,
+            tenantId: params.tenantId,
+            historyIntent: { ...historyIntent, phase: "revision_update" },
+            expectedSourceFactId: targetFact._id as Id<"facts">,
             factId: targetFact.factId,
             fact: params.fact.fact,
             confidence: params.fact.confidence,
             tags: params.fact.tags,
-          });
+          }, params.syncToGraph);
           const updatedFact = updated as FactRecord;
 
           // Sync updated fact to graph
-          await this.syncFactToGraphIfConfigured(updatedFact, params.tenantId);
+          
 
           return { fact: updatedFact, superseded: [] };
         }
@@ -575,11 +622,12 @@ export class BeliefRevisionService {
       case "SUPERSEDE": {
         if (targetFact) {
           // Create new fact
-          const newFact = await this.client.mutation(api.facts.store, {
+          const newFact = await writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, api.facts.store, {
             memorySpaceId: params.memorySpaceId,
             participantId: params.participantId,
             userId: params.userId,
-            tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
+            tenantId: params.tenantId,
+            historyIntent: { ...historyIntent, phase: "revision_store" }, // Exact scope and original decision anchor
             fact: params.fact.fact,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
             factType: (params.fact.factType as any) || "custom",
@@ -595,25 +643,59 @@ export class BeliefRevisionService {
             // Enriched entity/relation extraction for graph sync (v0.30.1+)
             entities: params.fact.entities,
             relations: params.fact.relations,
-          });
+          }, params.syncToGraph);
           const createdFact = newFact as FactRecord;
 
           // Mark old fact as superseded by the new fact
           // This sets both supersededBy and validUntil, and links the facts together
-          await this.client.mutation(api.facts.supersede, {
-            memorySpaceId: params.memorySpaceId,
-            oldFactId: targetFact.factId,
-            newFactId: createdFact.factId,
-            reason: _reason,
-          });
+          let linked;
+          try {
+            linked = await writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, api.facts.supersede, {
+              memorySpaceId: params.memorySpaceId,
+              tenantId: params.tenantId,
+              oldFactId: targetFact.factId,
+              newFactId: createdFact.factId,
+              expectedOldFactId: targetFact._id as Id<"facts">,
+              expectedNewFactId: createdFact._id as Id<"facts">,
+              reason: _reason,
+              historyIntent: { ...historyIntent, phase: "revision_link" },
+            }, params.syncToGraph);
+          } catch (error) {
+            throw new RevisionAfterCommitError(
+              {
+                store: {
+                  committed: true,
+                  createdFactId: createdFact.factId,
+                  createdDocumentId: createdFact._id,
+                  storeAnchor: createdFact.historyReceipt,
+                },
+                link:
+                  error instanceof ConvexError
+                    ? { committed: false }
+                    : { outcome: "unknown" },
+                scope: {
+                  tenantId: params.tenantId,
+                  memorySpaceId: params.memorySpaceId,
+                },
+                intent: historyIntent,
+                expectedOldFactId: targetFact._id,
+                expectedNewFactId: createdFact._id,
+              },
+              error,
+            );
+          }
+          const linkedFact = (
+            "fact" in linked ? linked.fact : createdFact
+          ) as FactRecord;
+          linkedFact.historyReceipt = linked.historyReceipt;
 
           // Update supersededBy relationship (done via update mutation)
           superseded.push(targetFact);
 
           // Sync new fact to graph (includes SUPERSEDES relationship)
-          await this.syncFactToGraphIfConfigured(createdFact, params.tenantId);
+          
 
-          return { fact: createdFact, superseded };
+          return { fact: linkedFact, superseded };
         }
         break;
       }
@@ -621,11 +703,12 @@ export class BeliefRevisionService {
       case "ADD":
       default: {
         // Create new fact
-        const newFact = await this.client.mutation(api.facts.store, {
+        const newFact = await writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, api.facts.store, {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
-          tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
+          tenantId: params.tenantId,
+          historyIntent: { ...historyIntent, phase: "revision_store" }, // Exact scope and original decision anchor
           fact: params.fact.fact,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           factType: (params.fact.factType as any) || "custom",
@@ -641,22 +724,23 @@ export class BeliefRevisionService {
           // Enriched entity/relation extraction for graph sync (v0.30.1+)
           entities: params.fact.entities,
           relations: params.fact.relations,
-        });
+        }, params.syncToGraph);
         const createdFact = newFact as FactRecord;
 
         // Sync new fact to graph
-        await this.syncFactToGraphIfConfigured(createdFact, params.tenantId);
+        
 
         return { fact: createdFact, superseded: [] };
       }
     }
 
     // Fallback: create new fact
-    const newFact = await this.client.mutation(api.facts.store, {
+    const newFact = await writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, api.facts.store, {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
       userId: params.userId,
-      tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
+      tenantId: params.tenantId,
+      historyIntent: { ...historyIntent, phase: "revision_store" }, // Exact scope and original decision anchor
       fact: params.fact.fact,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       factType: (params.fact.factType as any) || "custom",
@@ -672,11 +756,11 @@ export class BeliefRevisionService {
       // Enriched entity/relation extraction for graph sync (v0.30.1+)
       entities: params.fact.entities,
       relations: params.fact.relations,
-    });
+    }, params.syncToGraph);
     const createdFact = newFact as FactRecord;
 
     // Sync new fact to graph
-    await this.syncFactToGraphIfConfigured(createdFact, params.tenantId);
+    
 
     return { fact: createdFact, superseded: [] };
   }
@@ -693,22 +777,7 @@ export class BeliefRevisionService {
    * - IN_SPACE relationship to MemorySpace
    * - SUPERSEDES relationship if fact supersedes another
    */
-  private async syncFactToGraphIfConfigured(
-    fact: FactRecord,
-    tenantId?: string,
-  ): Promise<void> {
-    if (!this.graphAdapter) {
-      return;
-    }
-
-    try {
-      const nodeId = await syncFactToGraph(fact, this.graphAdapter, tenantId);
-      await syncFactRelationships(fact, nodeId, this.graphAdapter);
-    } catch (error) {
-      // Log but don't fail the operation - graph sync is secondary
-      console.warn("[Cortex] Failed to sync fact to graph:", error);
-    }
-  }
+  
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Private: Utilities

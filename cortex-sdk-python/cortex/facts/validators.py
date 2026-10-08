@@ -46,6 +46,7 @@ VALID_SOURCE_TYPES = [
     "tool",
     "manual",
     "a2a",
+    "fact-extraction",
 ]
 
 VALID_EXPORT_FORMATS = ["json", "jsonld", "csv"]

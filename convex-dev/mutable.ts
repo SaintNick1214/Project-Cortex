@@ -1,3 +1,5 @@
+import { graphMutation } from "./lib/graphSync";
+import { reconcileRow, captureInsertedRow, markDeletedRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Mutable Store API (Layer 1c)
  *
@@ -6,7 +8,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -15,7 +17,7 @@ import { mutation, query } from "./_generated/server";
 /**
  * Set a key to a value (creates or overwrites)
  */
-export const set = mutation({
+export const set = graphMutation({
   args: {
     namespace: v.string(),
     key: v.string(),
@@ -55,7 +57,7 @@ export const set = mutation({
 
     if (existing) {
       // Update existing
-      await ctx.db.patch(existing._id, {
+      await reconcileRow(ctx, existing._id, {
         value: args.value,
         userId: args.userId !== undefined ? args.userId : existing.userId,
         metadata:
@@ -66,7 +68,7 @@ export const set = mutation({
       return await ctx.db.get(existing._id);
     }
     // Create new
-    const _id = await ctx.db.insert("mutable", {
+    const _id = await captureInsertedRow(ctx, "mutable", {
       namespace: args.namespace,
       key: args.key,
       value: args.value,
@@ -84,7 +86,7 @@ export const set = mutation({
 /**
  * Atomic update using updater function
  */
-export const update = mutation({
+export const update = graphMutation({
   args: {
     namespace: v.string(),
     key: v.string(),
@@ -151,7 +153,7 @@ export const update = mutation({
         break;
     }
 
-    await ctx.db.patch(existing._id, {
+    await reconcileRow(ctx, existing._id, {
       value: newValue,
       updatedAt: Date.now(),
     });
@@ -163,7 +165,7 @@ export const update = mutation({
 /**
  * Delete a key
  */
-export const deleteKey = mutation({
+export const deleteKey = graphMutation({
   args: {
     namespace: v.string(),
     key: v.string(),
@@ -199,7 +201,7 @@ export const deleteKey = mutation({
       throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
     }
 
-    await ctx.db.delete(entry._id);
+    await markDeletedRow(ctx, entry._id);
 
     return {
       deleted: true,
@@ -215,7 +217,7 @@ export const deleteKey = mutation({
  * SECURITY: When tenantId is provided, only entries belonging to that tenant
  * within the namespace are purged. This prevents cross-tenant data deletion.
  */
-export const purgeNamespace = mutation({
+export const purgeNamespace = graphMutation({
   args: {
     namespace: v.string(),
     dryRun: v.optional(v.boolean()),
@@ -252,7 +254,7 @@ export const purgeNamespace = mutation({
     let deleted = 0;
 
     for (const entry of entries) {
-      await ctx.db.delete(entry._id);
+      await markDeletedRow(ctx, entry._id);
       deleted++;
     }
 
@@ -270,7 +272,7 @@ export const purgeNamespace = mutation({
  * SECURITY: When tenantId is provided, all operations are scoped to that tenant.
  * This prevents cross-tenant data modification in atomic transactions.
  */
-export const transaction = mutation({
+export const transaction = graphMutation({
   args: {
     operations: v.array(
       v.object({
@@ -320,14 +322,14 @@ export const transaction = mutation({
 
       if (operation.op === "set") {
         if (existing) {
-          await ctx.db.patch(existing._id, {
+          await reconcileRow(ctx, existing._id, {
             value: operation.value,
             updatedAt: Date.now(),
           });
           results.push(await ctx.db.get(existing._id));
         } else {
           const now = Date.now();
-          const _id = await ctx.db.insert("mutable", {
+          const _id = await captureInsertedRow(ctx, "mutable", {
             namespace: operation.namespace,
             key: operation.key,
             value: operation.value,
@@ -360,7 +362,7 @@ export const transaction = mutation({
           newValue = operation.value;
         }
 
-        await ctx.db.patch(existing._id, {
+        await reconcileRow(ctx, existing._id, {
           value: newValue,
           updatedAt: Date.now(),
         });
@@ -371,7 +373,7 @@ export const transaction = mutation({
             `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
           );
         }
-        await ctx.db.delete(existing._id);
+        await markDeletedRow(ctx, existing._id);
         results.push({
           deleted: true,
           namespace: operation.namespace,
@@ -394,7 +396,7 @@ export const transaction = mutation({
  * SECURITY: When tenantId is provided, only entries belonging to that tenant
  * are deleted. This prevents cross-tenant data deletion.
  */
-export const purgeMany = mutation({
+export const purgeMany = graphMutation({
   args: {
     namespace: v.string(),
     keyPrefix: v.optional(v.string()),
@@ -436,7 +438,7 @@ export const purgeMany = mutation({
     let deleted = 0;
 
     for (const entry of entries) {
-      await ctx.db.delete(entry._id);
+      await markDeletedRow(ctx, entry._id);
       deleted++;
     }
 
@@ -671,7 +673,7 @@ export const count = query({
  * SECURITY: When tenantId is provided, only entries belonging to that tenant
  * are deleted. Without tenantId, ALL entries are deleted (dangerous!).
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
@@ -707,7 +709,7 @@ export const purgeAll = mutation({
     }
 
     for (const entry of allEntries) {
-      await ctx.db.delete(entry._id);
+      await markDeletedRow(ctx, entry._id);
     }
 
     return { deleted: allEntries.length };

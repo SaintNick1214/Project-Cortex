@@ -9,9 +9,11 @@ description: Complete integration with Vercel AI SDK for Next.js applications wi
 
 <Callout type="info"> **Last Updated**: 2026-01-19 </Callout>
 
-**Package**: `@cortexmemory/vercel-ai-provider` | **Version**: 0.27.2 | **SDK**: v0.21.0+ | **Status**: Production Ready
+**Package**: `@cortexmemory/vercel-ai-provider` | **Version**: 0.37.0 | **SDK**: 0.37.0 | **Apps**: 1.1.0 | **Catalog**: 1.0.0
 
 Complete integration with Vercel AI SDK for Next.js applications with full memory orchestration capabilities.
+
+Use Node.js 22.16.0+ for CLI workflows, npm for Vercel and pnpm 10.33.0 for Chat. The generated README supplies the exact localhost/private session configuration. SDK init/install and template init share optional Neo4j/Memgraph setup; graph off needs no Docker. Template updates are separate from SDK updates.
 
 ## Quickstart Options
 
@@ -30,8 +32,11 @@ Choose the quickstart that fits your needs:
 Minimal demo focused on memory orchestration visualization:
 
 <Terminal>
-cortex init my-app --template vercel-ai-quickstart
-cd my-app && cortex start
+cortex templates init my-app --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cd my-app
+# Configure private server values and the composed backend per README.
+npm run convex:dev
+npm run dev
 </Terminal>
 
 Open http://localhost:3000 to see:
@@ -42,23 +47,26 @@ Open http://localhost:3000 to see:
 - **Streaming with Progressive Storage** - Real-time fact extraction during streaming
 - **Belief Revision** - See facts update when user changes their mind (SDK v0.24.0)
 
-### Option 2: Chat SDK Quickstart (Production)
+### Option 2: Chat SDK Quickstart
 
 Full-featured chat application based on [vercel/ai-chatbot](https://github.com/vercel/ai-chatbot) with Cortex Memory replacing PostgreSQL:
 
 <Terminal>
-cortex init my-chatbot --template chat-sdk
-cd my-chatbot && cortex start
+cortex templates init my-chatbot --template chat-sdk --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cd my-chatbot
+# Configure AUTH_URL/app origin and private server values per README.
+pnpm convex:dev
+pnpm dev
 </Terminal>
 
 Open http://localhost:3000 to get:
 
-- **Production-Ready Chat UI** - Polished interface based on vercel/ai-chatbot
+- **Chat UI** - Polished interface based on vercel/ai-chatbot
 - **Artifacts** - Interactive documents, code snippets with versioning
-- **File Uploads** - Images, PDFs, and file attachments via Cortex Attachments
+- **File Uploads** - Owned uploads with MIME/size and URL-registry checks
 - **Shareable Chats** - Public/private visibility toggle with share links
 - **Memory Retrieval Panel** - Real-time visualization of memory orchestration
-- **Auth.js Authentication** - GitHub, Google, and credential providers
+- **Auth.js Authentication** - Persisted guest and email/password sessions
 
 <Callout type="tip" title="When to use Chat SDK">
 Use the Chat SDK template when building a production chat application. It includes all UI components, authentication, and features you'd expect in a modern AI chat app.

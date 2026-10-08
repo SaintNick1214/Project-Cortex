@@ -1,6 +1,6 @@
 "use client";
 
-import { isAfter } from "date-fns";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
@@ -45,7 +45,8 @@ export const VersionFooter = ({
       <div>
         <div>You are viewing a previous version</div>
         <div className="text-muted-foreground text-sm">
-          Restore this version to make edits
+          Restore this version to make edits. Later versions leave the active
+          history.
         </div>
       </div>
 
@@ -55,35 +56,22 @@ export const VersionFooter = ({
           onClick={async () => {
             setIsMutating(true);
 
-            mutate(
-              `/api/document?id=${artifact.documentId}`,
-              await fetch(
-                `/api/document?id=${artifact.documentId}&timestamp=${getDocumentTimestampByIndex(
-                  documents,
-                  currentVersionIndex
-                )}`,
-                {
-                  method: "DELETE",
-                }
-              ),
-              {
-                optimisticData: documents
-                  ? [
-                      ...documents.filter((document) =>
-                        isAfter(
-                          new Date(document.createdAt),
-                          new Date(
-                            getDocumentTimestampByIndex(
-                              documents,
-                              currentVersionIndex
-                            )
-                          )
-                        )
-                      ),
-                    ]
-                  : [],
-              }
-            );
+            try {
+              const response = await fetch(
+                `/api/document?id=${artifact.documentId}&timestamp=${getDocumentTimestampByIndex(documents, currentVersionIndex)}`,
+                { method: "DELETE" },
+              );
+              if (!response.ok)
+                throw new Error(
+                  "Version could not be restored. Reload and retry.",
+                );
+              await mutate(`/api/document?id=${artifact.documentId}`);
+              toast.success("Version restored");
+            } catch {
+              toast.error("Version could not be restored. Reload and retry.");
+            } finally {
+              setIsMutating(false);
+            }
           }}
         >
           <div>Restore this version</div>

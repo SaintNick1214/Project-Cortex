@@ -1,16 +1,16 @@
 """
 Cortex SDK - Graph Orphan Detection
 
-Sophisticated orphan detection with circular reference protection.
-Prevents deletion of nodes that are still referenced, even in circular graphs.
+Bounded managed cleanup for proven scoped derived Entity islands.
 """
 
 import time
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 
-if TYPE_CHECKING:
-    from ..types import GraphAdapter
+from ..types import GraphScope
+from .errors import GraphDatabaseError
+from .identity import derived_graph_identity
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Types
@@ -49,6 +49,7 @@ class DeletionContext:
     reason: str = ""
     timestamp: int = 0
     orphan_rules: Optional[Dict[str, OrphanRule]] = None
+    scope: Optional[GraphScope] = None
 
 
 @dataclass
@@ -87,402 +88,290 @@ class DeleteResult:
     orphan_islands: List[Dict[str, Any]] = field(default_factory=list)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Default Orphan Rules
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 ORPHAN_RULES: Dict[str, OrphanRule] = {
-    # Conversations: Keep if referenced by Memory, Fact, or Context
-    "Conversation": OrphanRule(
-        keep_if_referenced_by=["Memory", "Fact", "Context"],
-    ),
-    # Entities: Keep if referenced by any Fact
-    "Entity": OrphanRule(
-        keep_if_referenced_by=["Fact"],
-    ),
-    # Users: Never auto-delete (shared across memory spaces)
-    "User": OrphanRule(
-        never_delete=True,
-    ),
-    # Participants: Never auto-delete (Hive Mode participants)
-    "Participant": OrphanRule(
-        never_delete=True,
-    ),
-    # Memory Spaces: Never auto-delete (critical isolation boundary)
-    "MemorySpace": OrphanRule(
-        never_delete=True,
-    ),
-    # Primary entities: Only delete if explicitly requested
-    "Memory": OrphanRule(explicit_only=True),
-    "Fact": OrphanRule(explicit_only=True),
-    "Context": OrphanRule(explicit_only=True),
+    **{
+        kind: OrphanRule(never_delete=True)
+        for kind in ("User", "Agent", "Participant", "MemorySpace")
+    },
+    **{
+        kind: OrphanRule(explicit_only=True)
+        for kind in (
+            "Memory",
+            "Fact",
+            "Context",
+            "Conversation",
+            "Immutable",
+            "Mutable",
+            "Artifact",
+        )
+    },
+    "Entity": OrphanRule(keep_if_referenced_by=["Fact"]),
 }
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Functions
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+def _record(value: Any) -> Dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def _entity(properties: Dict[str, Any], scope: GraphScope) -> str:
+    if (
+        properties.get("kind") != "Entity"
+        or not isinstance(properties.get("name"), str)
+        or not isinstance(properties.get("type"), str)
+    ):
+        raise GraphDatabaseError(
+            "Unknown or non-derived graph node preserved.", "GRAPH_ERASURE_BLOCKED"
+        )
+    expected = derived_graph_identity(
+        "Entity", properties["name"], scope, properties["type"]
+    )
+    if any(
+        properties.get(key) != value for key, value in expected["properties"].items()
+    ):
+        raise GraphDatabaseError(
+            "Foreign or legacy Entity preserved.", "GRAPH_ERASURE_BLOCKED"
+        )
+    return str(expected["key"])
+
+
+async def _selected(
+    node_id: str, node_label: str, context: DeletionContext, adapter: Any
+) -> Optional[tuple[str, GraphScope]]:
+    if node_label != "Entity":
+        return None
+    rule = (context.orphan_rules or {}).get("Entity")
+    if rule and (rule.never_delete or rule.explicit_only):
+        return None
+    if (
+        context.scope is None
+        or context.scope.tenant_known is not True
+        or not isinstance(context.scope.memory_space_id, str)
+    ):
+        raise GraphDatabaseError(
+            "Derived cleanup needs exact known tenant and space.",
+            "GRAPH_IDENTITY_REQUIRED",
+        )
+    reader, dialect = getattr(adapter, "managed_read", None), getattr(adapter, "managed_dialect", None)
+    if not callable(reader) or not callable(dialect):
+        raise GraphDatabaseError("Verified managed reads and engine dialect required.", "GRAPH_SCHEMA_MIGRATION_REQUIRED")
+    engine = await dialect()
+    if engine not in ("neo4j", "memgraph"):
+        raise GraphDatabaseError("Unverified managed engine dialect.", "GRAPH_SCHEMA_MIGRATION_REQUIRED")
+    native_id: Any
+    if engine == "neo4j":
+        if not isinstance(node_id, str) or not node_id:
+            raise GraphDatabaseError("Exact native node ID required.", "GRAPH_IDENTITY_REQUIRED")
+        native_id = node_id
+    else:
+        if not isinstance(node_id, str) or not node_id.isascii() or not node_id.isdecimal():
+            raise GraphDatabaseError("Exact native node ID required.", "GRAPH_IDENTITY_REQUIRED")
+        native_id = int(node_id)
+    id_function = "elementId" if engine == "neo4j" else "id"
+    response = await reader(
+        f"MATCH (n:CortexV2Entity) WHERE {id_function}(n)=$id RETURN properties(n) AS node LIMIT 2",
+        {"id": native_id},
+    )
+    if response.count > 1 or len(response.records) > 1:
+        raise GraphDatabaseError("Ambiguous derived graph node preserved.", "GRAPH_IDENTITY_MISMATCH")
+    return (
+        (_entity(_record(response.records[0].get("node")), context.scope), context.scope)
+        if response.records else None
+    )
+
+
+
+async def _island(tx: Any, start: str, scope: GraphScope, lock: bool) -> Dict[str, Any]:
+    queue = [(start, 0)]
+    seen: Set[str] = set()
+    edges: Set[str] = set()
+    anchors: Set[str] = set()
+    circular = False
+    while queue:
+        key, depth = queue.pop(0)
+        if key in seen:
+            circular = True
+            continue
+        if len(seen) >= 64 or depth > 10:
+            raise GraphDatabaseError(
+                "No truncated derived cleanup allowed.", "GRAPH_QUERY_BUDGET"
+            )
+        found = await tx.query(
+            "MATCH (n:CortexV2Entity {key:$key}) "
+            + ("SET n.key=n.key " if lock else "")
+            + "RETURN properties(n) AS node",
+            {"key": key},
+        )
+        if found.count == 0:
+            if key == start:
+                return {"keys": [], "edges": [], "anchors": [], "circular": False}
+            raise GraphDatabaseError("Derived island changed.", "GRAPH_ERASURE_BLOCKED")
+        if (
+            found.count != 1
+            or _entity(_record(found.records[0].get("node")), scope) != key
+        ):
+            raise GraphDatabaseError(
+                "Derived identity ambiguous.", "GRAPH_ERASURE_BLOCKED"
+            )
+        seen.add(key)
+        links = await tx.query(
+            "MATCH (n:CortexV2Entity {key:$key})-[r]-(other) RETURN properties(r) AS edge,properties(startNode(r)) AS source,properties(endNode(r)) AS target,properties(other) AS other,type(r) AS type LIMIT 65",
+            {"key": key},
+        )
+        if links.count > 64:
+            raise GraphDatabaseError(
+                "Derived incident degree exceeds guard.", "GRAPH_QUERY_BUDGET"
+            )
+        for row in links.records:
+            edge, source, target, other = [
+                _record(row.get(name)) for name in ("edge", "source", "target", "other")
+            ]
+            if (
+                edge.get("schemaVersion") != 2
+                or any(
+                    not isinstance(edge.get(name), str)
+                    for name in ("edgeKey", "ownerKey", "ownerTuple")
+                )
+                or edge.get("sourceKey") != source.get("key")
+                or edge.get("sourceTuple") != source.get("tupleJson")
+                or edge.get("targetKey") != target.get("key")
+                or edge.get("targetTuple") != target.get("tupleJson")
+            ):
+                raise GraphDatabaseError(
+                    "Manual, foreign or legacy edge preserved.", "GRAPH_ERASURE_BLOCKED"
+                )
+            edges.add(edge["edgeKey"])
+            if len(edges) > 128:
+                raise GraphDatabaseError(
+                    "Derived edge budget exceeded.", "GRAPH_QUERY_BUDGET"
+                )
+            if other.get("kind") != "Entity":
+                anchors.add(str(other.get("key")))
+                continue
+            other_key = _entity(other, scope)
+            if row.get("type") != "ENTITY_RELATION":
+                raise GraphDatabaseError(
+                    "Unsupported derived relationship preserved.",
+                    "GRAPH_ERASURE_BLOCKED",
+                )
+            owner = await tx.query(
+                "MATCH (s:CortexV2SourceState {key:$key}) RETURN properties(s) AS state",
+                {"key": edge["ownerKey"]},
+            )
+            if (
+                owner.count != 1
+                or _record(owner.records[0].get("state")).get("tupleJson")
+                != edge["ownerTuple"]
+            ):
+                raise GraphDatabaseError(
+                    "Relationship owner unresolved.", "GRAPH_ERASURE_BLOCKED"
+                )
+            if _record(owner.records[0].get("state")).get("tombstoned") is not True:
+                anchors.add(edge["ownerKey"])
+            if other_key in seen:
+                circular = True
+            else:
+                queue.append((other_key, depth + 1))
+    return {
+        "keys": sorted(seen),
+        "edges": sorted(edges),
+        "anchors": sorted(anchors),
+        "circular": circular,
+    }
+
+
+async def detect_orphan(
+    node_id: str, node_label: str, context: DeletionContext, adapter: Any
+) -> OrphanCheckResult:
+    target = await _selected(node_id, node_label, context, adapter)
+    if target is None:
+        return OrphanCheckResult(
+            False,
+            "Primary, protected or absent node; captured primary erasure separate",
+            [],
+            False,
+        )
+    if not callable(getattr(adapter, "managed_read", None)):
+        raise GraphDatabaseError(
+            "Managed bounded reads required.", "GRAPH_SCHEMA_MIGRATION_REQUIRED"
+        )
+
+    class ReadOnly:
+        async def query(self, text: str, args: Any = None) -> Any:
+            return await adapter.managed_read(text, args)
+
+    found = await _island(ReadOnly(), *target, False)
+    return OrphanCheckResult(
+        bool(found["keys"]) and not found["anchors"],
+        "Preserved live references" if found["anchors"] else "Proven derived island",
+        found["anchors"],
+        found["circular"],
+        found["keys"],
+    )
+
+
+async def delete_with_orphan_cleanup(
+    node_id: str, node_label: str, context: DeletionContext, adapter: Any
+) -> DeleteResult:
+    target = await _selected(node_id, node_label, context, adapter)
+    if target is None:
+        raise GraphDatabaseError(
+            "Primary, protected or unknown node requires captured job.",
+            "GRAPH_ERASURE_BLOCKED",
+        )
+    if not callable(getattr(adapter, "managed_transaction", None)):
+        raise GraphDatabaseError(
+            "Managed transaction required.", "GRAPH_SCHEMA_MIGRATION_REQUIRED"
+        )
+    key, scope = target
+
+    async def remove(tx: Any) -> DeleteResult:
+        found = await _island(tx, key, scope, True)
+        if found["anchors"]:
+            raise GraphDatabaseError(
+                "Live references preserve island.", "GRAPH_ERASURE_BLOCKED"
+            )
+        if found["keys"]:
+            await tx.query(
+                "MATCH (n:CortexV2Entity) WHERE n.key IN $keys AND n.schemaVersion=2 AND n.tenantTag=$tenantTag AND n.tenantValue=$tenantValue AND n.spaceTag='space' AND n.spaceValue=$space DETACH DELETE n",
+                {
+                    "keys": found["keys"],
+                    "tenantTag": "knownTenantless"
+                    if scope.tenant_id is None
+                    else "tenant",
+                    "tenantValue": scope.tenant_id or "",
+                    "space": scope.memory_space_id,
+                },
+            )
+        return DeleteResult(
+            found["keys"],
+            found["edges"],
+            [{"nodes": found["keys"], "reason": "Proven scoped derived island"}]
+            if found["circular"]
+            else [],
+        )
+
+    result: DeleteResult = await adapter.managed_transaction(remove)
+    context.deleted_node_ids.update(result.deleted_nodes)
+    return result
 
 
 def create_deletion_context(
     reason: str,
     orphan_rules: Optional[Dict[str, OrphanRule]] = None,
+    scope: Optional[GraphScope] = None,
 ) -> DeletionContext:
-    """
-    Create deletion context for tracking cascading deletes.
-
-    Args:
-        reason: Reason for deletion
-        orphan_rules: Optional custom orphan rules
-
-    Returns:
-        Deletion context
-
-    Example:
-        >>> ctx = create_deletion_context("Delete Memory mem-123", ORPHAN_RULES)
-    """
     return DeletionContext(
-        deleted_node_ids=set(),
         reason=reason,
         timestamp=int(time.time() * 1000),
         orphan_rules=orphan_rules,
+        scope=scope,
     )
 
 
-async def can_run_orphan_cleanup(adapter: "GraphAdapter") -> bool:
-    """
-    Check if orphan cleanup is safe to run.
-
-    Validates that the graph database is accessible and ready for cleanup.
-
-    Args:
-        adapter: Graph adapter
-
-    Returns:
-        True if safe to run cleanup
-
-    Example:
-        >>> if await can_run_orphan_cleanup(adapter):
-        ...     await delete_with_orphan_cleanup(node_id, "Memory", ctx, adapter)
-    """
+async def can_run_orphan_cleanup(adapter: Any) -> bool:
     try:
-        connected = await adapter.is_connected()
-        return connected
+        return callable(getattr(adapter, "managed_transaction", None)) and bool(
+            await adapter.is_connected()
+        )
     except Exception:
         return False
-
-
-async def detect_orphan(
-    node_id: str,
-    node_label: str,
-    deletion_context: DeletionContext,
-    adapter: "GraphAdapter",
-) -> OrphanCheckResult:
-    """
-    Detect if a node is an orphan (safe for circular references).
-
-    Algorithm:
-    1. Check orphan rules (neverDelete, explicitOnly)
-    2. Find all incoming references
-    3. Filter out nodes being deleted and self-references
-    4. Check if remaining references include "anchor" types
-    5. If no external refs, check for circular orphan island
-
-    Args:
-        node_id: Node ID to check
-        node_label: Node label (e.g., 'Conversation', 'Entity')
-        deletion_context: Context of current deletion operation
-        adapter: Graph database adapter
-
-    Returns:
-        Orphan check result
-
-    Example:
-        >>> result = await detect_orphan("node-123", "Entity", ctx, adapter)
-        >>> if result.is_orphan:
-        ...     print(f"Node is orphan: {result.reason}")
-    """
-    rules = deletion_context.orphan_rules or ORPHAN_RULES
-    rule = rules.get(node_label)
-
-    # Rule 1: Never delete certain node types
-    if rule is not None and rule.never_delete:
-        return OrphanCheckResult(
-            is_orphan=False,
-            reason="Never delete rule",
-            referenced_by=[],
-            part_of_circular_island=False,
-        )
-
-    # Rule 2: Only delete if explicitly requested (not cascaded)
-    if rule is not None and rule.explicit_only:
-        return OrphanCheckResult(
-            is_orphan=False,
-            reason="Explicit delete only",
-            referenced_by=[],
-            part_of_circular_island=False,
-        )
-
-    # Find all incoming references (nodes pointing TO this node)
-    try:
-        incoming = await adapter.query(
-            """
-            MATCH (referrer)-[r]->(target)
-            WHERE id(target) = $nodeId
-            RETURN id(referrer) as referrerId,
-                   labels(referrer)[0] as refererLabel,
-                   type(r) as relationshipType
-            """,
-            {"nodeId": node_id},
-        )
-    except Exception:
-        # If query fails, assume not an orphan for safety
-        return OrphanCheckResult(
-            is_orphan=False,
-            reason="Query failed - assuming not orphan",
-            referenced_by=[],
-            part_of_circular_island=False,
-        )
-
-    # Filter to external references (not being deleted, not self-reference)
-    external_refs = [
-        r
-        for r in incoming.records
-        if r.get("referrerId") not in deletion_context.deleted_node_ids
-        and r.get("referrerId") != node_id
-    ]
-
-    # If no external references, check for circular island
-    if len(external_refs) == 0:
-        island_check = await _check_circular_island(
-            node_id, node_label, deletion_context, adapter
-        )
-
-        return OrphanCheckResult(
-            is_orphan=True,
-            reason="Circular orphan island" if island_check["is_island"] else "No references",
-            referenced_by=[],
-            part_of_circular_island=island_check["is_island"],
-            island_nodes=island_check.get("island_nodes"),
-        )
-
-    # Has external references - check if they're "anchor" types
-    default_anchors = ["Memory", "Fact", "Context"]
-    anchor_labels = (
-        rule.keep_if_referenced_by if rule and rule.keep_if_referenced_by else default_anchors
-    )
-    has_anchor_ref = any(r.get("refererLabel") in anchor_labels for r in external_refs)
-
-    if not has_anchor_ref:
-        # Referenced only by non-anchor types
-        return OrphanCheckResult(
-            is_orphan=True,
-            reason="No anchor references",
-            referenced_by=[str(r.get("referrerId")) for r in external_refs if r.get("referrerId") is not None],
-            part_of_circular_island=False,
-        )
-
-    return OrphanCheckResult(
-        is_orphan=False,
-        reason="Has anchor references",
-        referenced_by=[str(r.get("referrerId")) for r in external_refs if r.get("referrerId") is not None],
-        part_of_circular_island=False,
-    )
-
-
-async def _check_circular_island(
-    node_id: str,
-    node_label: str,
-    deletion_context: DeletionContext,
-    adapter: "GraphAdapter",
-) -> Dict[str, Any]:
-    """
-    Check if node is part of a circular orphan island.
-
-    An orphan island is a group of nodes that reference each other (circular)
-    but have no external references to "anchor" nodes (Memory, Fact, Context).
-
-    Example:
-        Entity A -[:KNOWS]-> Entity B
-        Entity B -[:KNOWS]-> Entity A
-        Fact F1 -[:MENTIONS]-> Entity A
-
-        If F1 is deleted, A and B form an orphan island (circular but no anchor).
-
-    Args:
-        node_id: Starting node
-        node_label: Node label
-        deletion_context: Deletion context
-        adapter: Graph adapter
-
-    Returns:
-        Dict with is_island bool and island_nodes list
-    """
-    visited: Set[str] = set()
-    island_nodes: Set[str] = {node_id}
-    queue = [node_id]
-    max_depth = 10  # Prevent infinite loops
-
-    # BFS to explore connected component
-    depth = 0
-    while queue and depth < max_depth:
-        current_batch = list(queue)
-        queue.clear()
-
-        for current in current_batch:
-            if current in visited:
-                continue
-            visited.add(current)
-
-            # Find all neighbors (undirected - both incoming and outgoing)
-            try:
-                neighbors = await adapter.query(
-                    """
-                    MATCH (n)--(neighbor)
-                    WHERE id(n) = $currentId
-                    RETURN DISTINCT id(neighbor) as neighborId,
-                           labels(neighbor)[0] as neighborLabel
-                    """,
-                    {"currentId": current},
-                )
-            except Exception:
-                continue
-
-            for neighbor in neighbors.records:
-                neighbor_id = neighbor.get("neighborId")
-                neighbor_label = neighbor.get("neighborLabel")
-
-                # Skip if being deleted
-                if neighbor_id in deletion_context.deleted_node_ids:
-                    continue
-
-                # Check if neighbor is an anchor type (Memory, Fact, Context)
-                if neighbor_label in ["Memory", "Fact", "Context"]:
-                    # Found anchor! This is NOT an orphan island
-                    return {"is_island": False, "island_nodes": []}
-
-                # Add to island and continue BFS
-                if neighbor_id is not None and neighbor_id not in visited:
-                    island_nodes.add(str(neighbor_id))
-                    queue.append(str(neighbor_id))
-
-        depth += 1
-
-    # Completed BFS with no anchors found = orphan island
-    return {
-        "is_island": True,
-        "island_nodes": list(island_nodes),
-    }
-
-
-async def delete_with_orphan_cleanup(
-    node_id: str,
-    node_label: str,
-    deletion_context: DeletionContext,
-    adapter: "GraphAdapter",
-) -> DeleteResult:
-    """
-    Delete a node and cascade to orphaned references.
-
-    Uses sophisticated orphan detection to safely clean up related nodes
-    while protecting against circular references.
-
-    Args:
-        node_id: Node to delete
-        node_label: Node label
-        deletion_context: Deletion context
-        adapter: Graph adapter
-
-    Returns:
-        Delete result with all cascaded deletions
-
-    Example:
-        >>> ctx = create_deletion_context("Delete Memory mem-123", ORPHAN_RULES)
-        >>> result = await delete_with_orphan_cleanup("node-123", "Memory", ctx, adapter)
-        >>> print(f"Deleted {len(result.deleted_nodes)} nodes")
-    """
-    deleted_nodes: List[str] = [node_id]
-    deleted_edges: List[str] = []
-    orphan_islands: List[Dict[str, Any]] = []
-
-    # Add this node to deletion context
-    deletion_context.deleted_node_ids.add(node_id)
-
-    # 1. Get all nodes this node references (outgoing edges)
-    try:
-        referenced_nodes = await adapter.query(
-            """
-            MATCH (n)-[r]->(referenced)
-            WHERE id(n) = $nodeId
-            RETURN id(referenced) as refId,
-                   labels(referenced)[0] as refLabel,
-                   id(r) as edgeId
-            """,
-            {"nodeId": node_id},
-        )
-    except Exception:
-        referenced_nodes_records: List[Dict[str, Any]] = []
-    else:
-        referenced_nodes_records = referenced_nodes.records
-
-    # 2. Delete the primary node (detach delete removes all edges)
-    try:
-        await adapter.delete_node(node_id, detach=True)
-    except Exception:
-        # Node may already be deleted
-        pass
-
-    # 3. Check each referenced node for orphan status
-    for ref in referenced_nodes_records:
-        ref_id = ref.get("refId")
-        ref_label = ref.get("refLabel")
-
-        if not ref_id or not ref_label:
-            continue
-
-        orphan_check = await detect_orphan(ref_id, ref_label, deletion_context, adapter)
-
-        if orphan_check.is_orphan:
-            if orphan_check.part_of_circular_island and orphan_check.island_nodes:
-                # Delete entire orphan island
-                for island_node_id in orphan_check.island_nodes:
-                    if island_node_id not in deletion_context.deleted_node_ids:
-                        try:
-                            await adapter.delete_node(island_node_id, detach=True)
-                            deleted_nodes.append(island_node_id)
-                            deletion_context.deleted_node_ids.add(island_node_id)
-                        except Exception:
-                            pass  # Node may have already been deleted via cascade
-
-                orphan_islands.append({
-                    "nodes": orphan_check.island_nodes,
-                    "reason": orphan_check.reason,
-                })
-            else:
-                # Single orphan node - recursive delete with cascade
-                cascade_result = await delete_with_orphan_cleanup(
-                    ref_id, ref_label, deletion_context, adapter
-                )
-
-                deleted_nodes.extend(cascade_result.deleted_nodes)
-                deleted_edges.extend(cascade_result.deleted_edges)
-                orphan_islands.extend(cascade_result.orphan_islands)
-
-    return DeleteResult(
-        deleted_nodes=deleted_nodes,
-        deleted_edges=deleted_edges,
-        orphan_islands=orphan_islands,
-    )
-
-
-__all__ = [
-    "OrphanRule",
-    "DeletionContext",
-    "OrphanCheckResult",
-    "DeleteResult",
-    "ORPHAN_RULES",
-    "create_deletion_context",
-    "can_run_orphan_cleanup",
-    "detect_orphan",
-    "delete_with_orphan_cleanup",
-]

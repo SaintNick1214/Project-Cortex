@@ -529,3 +529,13 @@ def validate_delete_options(memory_space_id: str, cascade: bool, reason: str, co
             "CONFIRM_ID_MISMATCH",
             "confirmId",
         )
+
+
+def resolve_domain_scope(context: Any, selected: Any = None) -> Optional[str]:
+    """Resolve exact caller scope without implying authenticated authority."""
+    for tenant in (context, selected):
+        if tenant is not None and (not isinstance(tenant, str) or not tenant.strip() or len(tenant) > 256):
+            raise MemorySpaceValidationError("Invalid tenant scope", "INVALID_TENANT_ID", "tenant_id")
+    if context is not None and selected is not None and context != selected:
+        raise MemorySpaceValidationError("Tenant scope conflicts with current context", "TENANT_SCOPE_MISMATCH", "tenant_id")
+    return selected if isinstance(selected, str) else context if isinstance(context, str) else None

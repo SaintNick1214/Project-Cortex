@@ -1,3 +1,6 @@
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
 /**
  * Cortex SDK - Mutable Store API
  *
@@ -16,7 +19,6 @@ import type {
   PurgeManyFilter,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import { deleteMutableFromGraph } from "../graph";
 import {
   validateNamespace,
   validateNamespaceFormat,
@@ -46,7 +48,16 @@ export class MutableAPI {
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
     private readonly authContext?: AuthContext,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   /**
    * Execute an operation through the resilience layer (if available)
@@ -109,30 +120,21 @@ export class MutableAPI {
       validateUserId(userId);
     }
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.mutable.set, {
+        this.mutateGraph(api.mutable.set, {
           namespace,
           key,
           value,
           userId,
           tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
           metadata,
-        }),
-      "mutable:set",
+        }, _options?.syncToGraph),
+      "mutable:set", _options?.syncToGraph,
     );
 
     // Sync to graph if requested (mutable data in graph is rare, but supported)
-    if (this.graphAdapter) {
-      try {
-        await this.graphAdapter.createNode({
-          label: "Mutable",
-          properties: { namespace, key, value, userId, metadata },
-        });
-      } catch (error) {
-        console.warn("Failed to sync mutable to graph:", error);
-      }
-    }
+    
 
     return result as MutableRecord;
   }
@@ -225,9 +227,9 @@ export class MutableAPI {
 
     // Set new value using custom operation
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.mutable.update, {
+          this.mutateGraph(api.mutable.update, {
             namespace,
             key,
             operation: "custom",
@@ -263,9 +265,9 @@ export class MutableAPI {
     validateKeyFormat(key);
     validateAmount(amount, "amount");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.mutable.update, {
+        this.mutateGraph(api.mutable.update, {
           namespace,
           key,
           operation: "increment",
@@ -298,9 +300,9 @@ export class MutableAPI {
     validateKeyFormat(key);
     validateAmount(amount, "amount");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.mutable.update, {
+        this.mutateGraph(api.mutable.update, {
           namespace,
           key,
           operation: "decrement",
@@ -451,27 +453,21 @@ export class MutableAPI {
 
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.mutable.deleteKey, {
+          this.mutateGraph(api.mutable.deleteKey, {
             namespace,
             key,
             tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
-          }),
-        "mutable:delete",
+          }, _options?.syncToGraph),
+        "mutable:delete", _options?.syncToGraph,
       );
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Delete from graph
-    if (this.graphAdapter) {
-      try {
-        await deleteMutableFromGraph(namespace, key, this.graphAdapter);
-      } catch (error) {
-        console.warn("Failed to delete mutable from graph:", error);
-      }
-    }
+    
 
     return result as { deleted: boolean; namespace: string; key: string };
   }
@@ -531,14 +527,14 @@ export class MutableAPI {
     validateNamespaceFormat(namespace);
     validatePurgeNamespaceOptions(options);
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.mutable.purgeNamespace, {
+        this.mutateGraph(api.mutable.purgeNamespace, {
           namespace,
           dryRun: options?.dryRun,
           tenantId: options?.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
-        }),
-      "mutable:purgeNamespace",
+        }, options?.syncToGraph),
+      "mutable:purgeNamespace", options?.syncToGraph,
     );
 
     return result as {
@@ -579,9 +575,9 @@ export class MutableAPI {
     validateTransactionOperations(operations);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.mutable.transaction, {
+          this.mutateGraph(api.mutable.transaction, {
             operations,
             tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
           }),
@@ -638,9 +634,9 @@ export class MutableAPI {
     // Client-side validation
     validatePurgeFilter(filter);
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.mutable.purgeMany, {
+        this.mutateGraph(api.mutable.purgeMany, {
           namespace: filter.namespace,
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,

@@ -1,3 +1,4 @@
+import { markDeletedRow } from "./lib/referenceLifecycle";
 /**
  * Cortex Convex Functions - Users API
  *
@@ -261,7 +262,7 @@ export const deleteUserProfile = mutation({
       return { deleted: false };
     }
 
-    await ctx.db.delete(entry._id);
+    await markDeletedRow(ctx, entry._id);
 
     return { deleted: true };
   },

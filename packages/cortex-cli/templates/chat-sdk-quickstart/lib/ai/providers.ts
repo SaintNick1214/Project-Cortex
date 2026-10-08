@@ -1,3 +1,5 @@
+import { chatModels } from "./models";
+import { ChatSDKError } from "../errors";
 import { gateway } from "@ai-sdk/gateway";
 import { createOpenAI, type OpenAIProvider } from "@ai-sdk/openai";
 import { createAnthropic, type AnthropicProvider } from "@ai-sdk/anthropic";
@@ -5,7 +7,7 @@ import {
   customProvider,
   extractReasoningMiddleware,
   wrapLanguageModel,
-  type LanguageModelV1,
+  type LanguageModel,
 } from "ai";
 import { isTestEnvironment } from "../constants";
 
@@ -20,7 +22,7 @@ let _anthropic: AnthropicProvider | null = null;
  */
 function getOpenAIProvider(): OpenAIProvider | null {
   if (_openai) return _openai;
-  
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (apiKey && !process.env.AI_GATEWAY_API_KEY) {
     _openai = createOpenAI({ apiKey });
@@ -34,7 +36,7 @@ function getOpenAIProvider(): OpenAIProvider | null {
  */
 function getAnthropicProvider(): AnthropicProvider | null {
   if (_anthropic) return _anthropic;
-  
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (apiKey && !process.env.AI_GATEWAY_API_KEY) {
     _anthropic = createAnthropic({ apiKey });
@@ -47,7 +49,10 @@ function getAnthropicProvider(): AnthropicProvider | null {
  * Check if we should use direct providers (evaluated at runtime)
  */
 function shouldUseDirectProviders(): boolean {
-  return !process.env.AI_GATEWAY_API_KEY && Boolean(process.env.OPENAI_API_KEY);
+  return (
+    !process.env.AI_GATEWAY_API_KEY &&
+    Boolean(process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY)
+  );
 }
 
 export const myProvider = isTestEnvironment
@@ -74,7 +79,8 @@ export const myProvider = isTestEnvironment
  * Supports both AI Gateway format (provider/model) and direct provider format.
  * Falls back to OpenAI if using direct providers.
  */
-export function getLanguageModel(modelId: string): LanguageModelV1 {
+export function getLanguageModel(modelId: string): LanguageModel {
+  assertModelAvailable(modelId);
   if (isTestEnvironment && myProvider) {
     return myProvider.languageModel(modelId);
   }
@@ -121,18 +127,10 @@ export function getLanguageModel(modelId: string): LanguageModelV1 {
     return anthropic(model);
   }
 
-  // Google, xAI, etc. - fall back to OpenAI if available
-  if (openai) {
-    console.warn(`[AI] Provider "${providerName}" not configured, falling back to OpenAI gpt-5.2`);
-    return openai("gpt-5.2");
-  }
-
-  // Last resort: try gateway anyway (will fail without API key)
-  console.warn(`[AI] No direct provider available, trying gateway for ${modelId}`);
-  return gateway.languageModel(modelId);
+  throw new ChatSDKError("offline:chat", "Configure the selected provider");
 }
 
-export function getTitleModel(): LanguageModelV1 {
+export function getTitleModel(): LanguageModel {
   if (isTestEnvironment && myProvider) {
     return myProvider.languageModel("title-model");
   }
@@ -143,10 +141,15 @@ export function getTitleModel(): LanguageModelV1 {
     return openai("gpt-5-mini");
   }
 
+  if (!process.env.AI_GATEWAY_API_KEY?.trim())
+    throw new ChatSDKError(
+      "offline:chat",
+      "Configure OpenAI or AI Gateway for title generation",
+    );
   return gateway.languageModel("openai/gpt-5-mini");
 }
 
-export function getArtifactModel(): LanguageModelV1 {
+export function getArtifactModel(): LanguageModel {
   if (isTestEnvironment && myProvider) {
     return myProvider.languageModel("artifact-model");
   }
@@ -156,11 +159,39 @@ export function getArtifactModel(): LanguageModelV1 {
   if (anthropic) {
     return anthropic("claude-3-5-haiku-latest");
   }
-  
+
   const openai = getOpenAIProvider();
   if (openai) {
     return openai("gpt-5-mini");
   }
 
+  if (!process.env.AI_GATEWAY_API_KEY?.trim())
+    throw new ChatSDKError(
+      "offline:document",
+      "Configure a document model provider",
+    );
   return gateway.languageModel("anthropic/claude-3-5-haiku-latest");
+}
+
+export function assertModelAvailable(modelId: string): void {
+  if (!chatModels.some((model) => model.id === modelId))
+    throw new ChatSDKError("bad_request:chat", "Select a supported model");
+  if (process.env.AI_GATEWAY_API_KEY?.trim()) return;
+  const provider = modelId.split("/")[0];
+  if (provider === "openai" && process.env.OPENAI_API_KEY?.trim()) return;
+  if (provider === "anthropic" && process.env.ANTHROPIC_API_KEY?.trim()) return;
+  throw new ChatSDKError(
+    "offline:chat",
+    "Configure the selected model provider on the server",
+  );
+}
+
+/** Chat also embeds memory and generates titles; refuse missing dependent configuration before writes. */
+export function assertChatConfiguration(modelId: string): void {
+  assertModelAvailable(modelId);
+  if (!process.env.OPENAI_API_KEY?.trim())
+    throw new ChatSDKError(
+      "offline:chat",
+      "Configure OPENAI_API_KEY for memory embeddings before chatting",
+    );
 }

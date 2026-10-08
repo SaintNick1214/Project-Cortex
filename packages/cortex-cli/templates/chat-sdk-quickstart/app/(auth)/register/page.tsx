@@ -40,7 +40,7 @@ export default function Page() {
 
       setIsSuccessful(true);
       updateSession();
-      router.refresh();
+      router.replace("/");
     }
   }, [state.status]);
 

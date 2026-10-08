@@ -5,9 +5,28 @@ Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector)
 """
 
 import asyncio
+import copy
 import time
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
+from typing import Any, Dict, List, Literal, Optional, Union, cast
+from uuid import uuid4
 
+from .._domain_export import memory_export
+from .._domain_paging import (
+    DomainOperationPartialError,
+    active,
+    collect,
+    definite_failure,
+    loader,
+    mutate,
+    pages,
+    partial,
+    receipt_matches,
+    resolve_scope,
+    same_selection,
+    select,
+    wait_operation,
+)
+from .._utils import filter_none_values
 from ..conversations import ConversationsAPI
 from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI, StoreFactWithDedupOptions
@@ -25,7 +44,9 @@ from ..types import (
     DeleteManyResult,
     DeleteMemoryOptions,
     DeleteMemoryResult,
+    DomainReadOptions,
     EnrichedMemory,
+    FactRecord,
     FactRevisionAction,
     ForgetOptions,
     ForgetResult,
@@ -103,6 +124,7 @@ class MemoryAPI:
         resilience: Optional[Any] = None,
         llm_config: Optional[LLMConfig] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Memory API.
@@ -116,13 +138,17 @@ class MemoryAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self.graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._llm_config = llm_config
         self._auth_context = auth_context
         self._llm_client: Optional[LLMClient] = None
         # Pass resilience layer and auth context to sub-APIs
-        self.conversations = ConversationsAPI(client, graph_adapter, resilience, auth_context)
-        self.vector = VectorAPI(client, graph_adapter, resilience, auth_context)
+        self.conversations = ConversationsAPI(client, graph_adapter, resilience, auth_context, graph_sync_policy=graph_sync_policy)
+        self.vector = VectorAPI(client, graph_adapter, resilience, auth_context, graph_sync_policy=graph_sync_policy)
+        from ..memory_spaces import MemorySpacesAPI
+
+        self.memory_spaces = MemorySpacesAPI(client, graph_adapter, resilience, auth_context, graph_sync_policy=graph_sync_policy)
 
         # Create belief revision LLM client adapter if LLM is configured
         # The LLM client needs a complete() method for belief revision
@@ -132,7 +158,7 @@ class MemoryAPI:
             if llm_client and hasattr(llm_client, "complete"):
                 belief_revision_llm_client = llm_client
 
-        self.facts = FactsAPI(client, graph_adapter, resilience, auth_context, belief_revision_llm_client)
+        self.facts = FactsAPI(client, graph_adapter, resilience, auth_context, belief_revision_llm_client, graph_sync_policy=graph_sync_policy)
 
     @property
     def _tenant_id(self) -> Optional[str]:
@@ -445,32 +471,14 @@ class MemoryAPI:
         Memory spaces are always auto-created when used - they cannot be skipped.
         Uses memorySpaces:get query and memorySpaces:register mutation.
         """
-        try:
-            # Check if memory space exists
-            existing = await self._execute_with_resilience(
-                lambda: self.client.query("memorySpaces:get", {"memorySpaceId": memory_space_id}),
-                "memorySpaces:get",
+        from ..types import RegisterMemorySpaceParams
+
+        existing = await self.memory_spaces.get(memory_space_id)
+        if not existing:
+            await self.memory_spaces.register(
+                RegisterMemorySpaceParams(memory_space_id=memory_space_id, type="custom", name=memory_space_id),
+                sync_to_graph=sync_to_graph,
             )
-            if not existing:
-                # Register memory space with minimal data
-                try:
-                    await self._execute_with_resilience(
-                        lambda: self.client.mutation("memorySpaces:register", {
-                            "memorySpaceId": memory_space_id,
-                            "name": memory_space_id,
-                            "type": "custom",
-                        }),
-                        "memorySpaces:register",
-                    )
-                except Exception as register_error:
-                    # Handle race condition - another call may have registered it first
-                    if "ALREADY_EXISTS" in str(register_error) or "already exists" in str(register_error).lower():
-                        pass  # That's fine
-                    else:
-                        raise register_error
-        except Exception as error:
-            # Log warning but don't fail
-            print(f"Warning: Failed to auto-register memory space: {error}")
 
     async def remember(
         self, params: RememberParams, options: Optional[RememberOptions] = None
@@ -545,9 +553,10 @@ class MemoryAPI:
         self._notify_remember_start(observer, orchestration_id)
 
         # Determine if we should sync to graph (check skipLayers)
+        from ..graph.erasure import requested_graph
+
         should_sync_to_graph = (
-            opts.sync_to_graph is not False
-            and self.graph_adapter is not None
+            requested_graph(self.graph_adapter, opts.sync_to_graph)
             and not self._should_skip_layer("graph", skip_layers)
         )
 
@@ -1272,7 +1281,7 @@ class MemoryAPI:
         user_message = params.get("userMessage") if isinstance(params, dict) else params.user_message
         importance = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
         tags = params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None)
-        response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
+        response_stream: Any = params.get("responseStream") if isinstance(params, dict) else params.response_stream
         skip_layers = params.get("skipLayers") if isinstance(params, dict) else getattr(params, "skip_layers", None)
 
         validate_memory_space_id(str(memory_space_id or ""))
@@ -1344,6 +1353,16 @@ class MemoryAPI:
         else:
             opts = options
 
+        from ..graph.erasure import requested_graph
+        from ..graph.errors import GraphDatabaseError
+
+        should_sync_to_graph = (
+            requested_graph(self.graph_adapter, opts.sync_to_graph)
+            and not self._should_skip_layer("graph", skip_layers)
+        )
+        if opts.progressive_graph_sync and should_sync_to_graph and not opts.store_partial_response:
+            raise GraphDatabaseError("Progressive graph synchronization requires captured partial storage.", "GRAPH_PARTIAL_STORAGE_REQUIRED")
+
         # Initialize components
         metrics = MetricsCollector()
 
@@ -1364,6 +1383,10 @@ class MemoryAPI:
                 str(user_id or ""),
                 opts.partial_response_interval or 3000,
                 resilience=self._resilience,
+                tenant_id=self._tenant_id,
+                graph_adapter=self.graph_adapter if opts.progressive_graph_sync and should_sync_to_graph else None,
+                graph_sync_policy=self.graph_sync_policy,
+                sync_to_graph=opts.progressive_graph_sync and should_sync_to_graph,
             )
 
         # Progressive fact extractor (if enabled)
@@ -1412,10 +1435,11 @@ class MemoryAPI:
 
         # Progressive graph sync (if enabled)
         graph_sync: Optional[ProgressiveGraphSync] = None
-        if opts and opts.progressive_graph_sync and self.graph_adapter:
+        if opts and opts.progressive_graph_sync and should_sync_to_graph:
             graph_sync = ProgressiveGraphSync(
                 self.graph_adapter,
                 opts.graph_sync_interval or 5000,
+                storage_handler,
             )
 
         # Enhanced hooks that integrate progressive features
@@ -1440,7 +1464,7 @@ class MemoryAPI:
                     await hook_result
 
             # Progressive storage update
-            if storage_handler and storage_handler.should_update():
+            if storage_handler and not graph_sync and storage_handler.should_update():
                 await storage_handler.update_partial_content(
                     event.accumulated, event.chunk_number
                 )
@@ -1454,13 +1478,10 @@ class MemoryAPI:
                     extract_facts_fn,  # type: ignore
                     str(user_message_val or ""),
                     str(conversation_id or ""),
-                    sync_to_graph=(opts.sync_to_graph if opts else True) and self.graph_adapter is not None,
+                    sync_to_graph=should_sync_to_graph,
                 )
                 progressive_facts.extend(facts)
 
-            # Progressive graph sync update
-            if graph_sync and graph_sync.should_sync():
-                await graph_sync.update_partial_node(event.accumulated, context)
 
         async def enhanced_on_progress(event: ProgressEvent) -> None:
             # Call original hook if exists
@@ -1512,18 +1533,11 @@ class MemoryAPI:
         )
 
         processor = StreamProcessor(context, enhanced_hooks, metrics)
-        error_recovery = StreamErrorRecovery(self.client, resilience=self._resilience)
+        error_recovery = StreamErrorRecovery(self.client, resilience=self._resilience, partial_storage=storage_handler)
 
         full_response = ""
 
         try:
-            # Determine if we should sync to graph (check skipLayers)
-            should_sync_to_graph = (
-                (opts.sync_to_graph if opts else True)
-                and self.graph_adapter is not None
-                and not self._should_skip_layer("graph", skip_layers)
-            )
-
             # Step 1: Ensure conversation exists (skip if 'conversations' in skipLayers)
             if not self._should_skip_layer("conversations", skip_layers):
                 existing_conversation = await self.conversations.get(
@@ -1567,6 +1581,7 @@ class MemoryAPI:
                     tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
                 )
                 context.partial_memory_id = partial_memory_id
+                context.partial_source = storage_handler.get_partial_source_evidence()
 
                 # Initialize graph node if enabled
                 if graph_sync:
@@ -1579,7 +1594,20 @@ class MemoryAPI:
 
             # Step 3: Process stream with all features
             response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
-            full_response = await processor.process_stream(response_stream, opts)  # type: ignore
+            async def persisted_stream() -> Any:
+                accumulated = ""
+                chunks = 0
+                async for chunk in response_stream:
+                    if chunk:
+                        accumulated += chunk
+                        chunks += 1
+                        assert storage_handler is not None and graph_sync is not None
+                        await storage_handler.update_partial_content(accumulated, chunks)
+                        context.partial_source = storage_handler.get_partial_source_evidence()
+                        await graph_sync.update_partial_node(accumulated, context)
+                        yield chunk
+
+            full_response = await processor.process_stream(persisted_stream() if graph_sync else response_stream, opts)  # type: ignore
 
             # Step 4: Validate we got content
             if not full_response or full_response.strip() == "":
@@ -1595,7 +1623,7 @@ class MemoryAPI:
 
             # Step 6: Use remember() for final storage
             # Determine sync_to_graph - default to True if graph adapter exists
-            should_sync = (opts.sync_to_graph if opts and hasattr(opts, 'sync_to_graph') else True) and self.graph_adapter is not None
+            should_sync = should_sync_to_graph
 
             user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
             # Determine belief_revision setting from options
@@ -1627,8 +1655,8 @@ class MemoryAPI:
             )
 
             # Step 7: Finalize graph sync
-            if graph_sync and remember_result.memories:
-                await graph_sync.finalize_node(remember_result.memories[0])
+            if graph_sync:
+                graph_sync.record_finalized_partial()
 
             # Step 8: Generate performance insights
             metrics_snapshot = metrics.get_snapshot()
@@ -1645,6 +1673,7 @@ class MemoryAPI:
                     facts_extracted_during_stream=progressive_facts,
                     partial_storage_history=storage_handler.get_update_history() if storage_handler else [],
                     graph_sync_events=graph_sync.get_sync_events() if graph_sync else None,
+                    partial_source=storage_handler.get_partial_source_evidence() if storage_handler else None,
                 ),
                 performance=PerformanceInsights(
                     bottlenecks=insights["bottlenecks"],
@@ -1656,6 +1685,8 @@ class MemoryAPI:
             )
 
         except Exception as error:
+            context.partial_source = storage_handler.get_partial_source_evidence() if storage_handler else None
+            context.partial_outcome_unknown = storage_handler.is_outcome_unknown() if storage_handler else False
             # Error recovery
             _ = error_recovery.create_stream_error(
                 error, context, "streaming"
@@ -1685,7 +1716,10 @@ class MemoryAPI:
 
             # Cleanup on failure
             if storage_handler:
-                await storage_handler.rollback()
+                try:
+                    await storage_handler.rollback()
+                except Exception as cleanup_error:
+                    setattr(error, "partial_cleanup_error", cleanup_error)
             if graph_sync:
                 await graph_sync.rollback()
 
@@ -1730,13 +1764,6 @@ class MemoryAPI:
             opts.sync_to_graph is not False and self.graph_adapter is not None
         )
 
-        # Delete from vector
-        await self.vector.delete(
-            memory_space_id,
-            memory_id,
-            DeleteMemoryOptions(sync_to_graph=should_sync_to_graph),
-        )
-
         # Cascade delete associated facts
         conv_id = None
         if memory.conversation_ref:
@@ -1746,6 +1773,13 @@ class MemoryAPI:
             memory_id,
             conv_id,
             should_sync_to_graph,
+        )
+
+        # Delete from vector
+        await self.vector.delete(
+            memory_space_id,
+            memory_id,
+            DeleteMemoryOptions(sync_to_graph=should_sync_to_graph),
         )
 
         conversation_deleted = False
@@ -1783,6 +1817,7 @@ class MemoryAPI:
         memory_space_id: str,
         memory_id: str,
         include_conversation: bool = False,
+        *, tenant_id: Optional[str] = None,
     ) -> Optional[Union[MemoryEntry, EnrichedMemory]]:
         """
         Get memory with optional ACID enrichment.
@@ -1805,7 +1840,7 @@ class MemoryAPI:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        memory = await self.vector.get(memory_space_id, memory_id)
+        memory = await self.vector.get(memory_space_id, memory_id, tenant_id=tenant_id)
 
         if not memory:
             return None
@@ -1820,7 +1855,7 @@ class MemoryAPI:
         if memory.conversation_ref:
             # conversation_ref is a dict after conversion
             conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
-            conv = await self.conversations.get(conv_id)
+            conv = await self.conversations.get(conv_id, tenant_id=tenant_id)
             if conv:
                 conversation = conv
                 msg_ids = memory.conversation_ref["message_ids"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
@@ -1835,7 +1870,7 @@ class MemoryAPI:
         if memory.conversation_ref:
             conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
         related_facts = await self._fetch_facts_for_memory(
-            memory_space_id, memory_id, conv_id
+            memory_space_id, memory_id, conv_id, tenant_id=tenant_id
         )
 
         return EnrichedMemory(
@@ -1897,29 +1932,22 @@ class MemoryAPI:
 
         conversations = {}
         for conv_id in conversation_ids:
-            conv = await self.conversations.get(conv_id)
+            conv = await self.conversations.get(conv_id, tenant_id=opts.tenant_id)
             if conv:
                 conversations[conv_id] = conv
 
         # Batch fetch facts
         from ..types import ListFactsFilter
         all_facts = await self.facts.list(
-            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+            ListFactsFilter(memory_space_id=memory_space_id, tenant_id=opts.tenant_id)
         )
 
         facts_by_memory_id: Dict[str, List[Any]] = {}
-        facts_by_conversation_id: Dict[str, List[Any]] = {}
-
         for fact in all_facts:
-            if fact.source_ref and fact.source_ref.memory_id:
-                if fact.source_ref.memory_id not in facts_by_memory_id:
-                    facts_by_memory_id[fact.source_ref.memory_id] = []
-                facts_by_memory_id[fact.source_ref.memory_id].append(fact)
-
-            if fact.source_ref and fact.source_ref.conversation_id:
-                if fact.source_ref.conversation_id not in facts_by_conversation_id:
-                    facts_by_conversation_id[fact.source_ref.conversation_id] = []
-                facts_by_conversation_id[fact.source_ref.conversation_id].append(fact)
+            source = fact.source_ref
+            source_memory = source.get("memory_id") if isinstance(source, dict) else (source.memory_id if source else None)
+            if source_memory:
+                facts_by_memory_id.setdefault(source_memory, []).append(fact)
 
         # Enrich results
         enriched = []
@@ -1941,11 +1969,6 @@ class MemoryAPI:
 
             # Add facts
             related_facts = facts_by_memory_id.get(memory.memory_id, [])
-            if memory.conversation_ref:
-                conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
-                related_facts.extend(
-                    facts_by_conversation_id.get(conv_id, [])  # type: ignore[arg-type]
-                )
 
             # Deduplicate facts
             unique_facts = list(
@@ -2015,7 +2038,7 @@ class MemoryAPI:
         import uuid
 
         from ..config import resolve_recall_limits
-        from ..types import SearchFactsOptions
+        from ..types import GraphScope, SearchFactsOptions
         from .recall import (
             GraphExpansionConfig,
             enrich_with_conversations,
@@ -2204,6 +2227,7 @@ class MemoryAPI:
                     self.facts,
                     expansion_config,
                     query_text=query,  # NEW: enables graph expansion without facts
+                    selected_scope=GraphScope(True, resolve_scope(self._tenant_id, tenant_id), memory_space_id),
                 )
 
                 discovered_entities = expansion_result.discovered_entities
@@ -2418,7 +2442,7 @@ class MemoryAPI:
                                 ),
                                 tags=fact_data.get("tags", input.metadata.tags),
                             ),
-                            StoreFactOptions(sync_to_graph=True),
+                            StoreFactOptions(),
                         )
                         extracted_facts.append(stored_fact)
                     except Exception as error:
@@ -2518,70 +2542,26 @@ class MemoryAPI:
             facts_reextracted=facts_reextracted if facts_reextracted else None,
         )
 
-    async def delete(
-        self,
-        memory_space_id: str,
-        memory_id: str,
-        options: Optional[DeleteMemoryOptions] = None,
-    ) -> DeleteMemoryResult:
-        """
-        Delete a memory with cascade delete of facts.
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID
-            options: Optional delete options
-
-        Returns:
-            DeleteMemoryResult with deletion details
-
-        Example:
-            >>> result = await cortex.memory.delete('agent-1', 'mem-123')
-        """
-        # Client-side validation
+    async def delete(self, memory_space_id: str, memory_id: str, options: Optional[DeleteMemoryOptions] = None, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> DeleteMemoryResult:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        memories = [row for row in await select(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant}), read_options) if row["document"]["memoryId"] == memory_id]
+        if len(memories) != 1:
+            raise ValueError("DOMAIN_SCOPE_AMBIGUOUS" if memories else "MEMORY_NOT_FOUND")
+        cascade = options is None or options.cascade_delete_facts
+        facts = await select(loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": tenant, "sourceMemoryId": memory_id, "selectedMemoryDocumentId": memories[0]["physicalId"], "selectionMode": "delete", "includeSuperseded": True}), read_options) if cascade else []
+        prepared: Dict[str, Any] = {"memory": memories[0], "facts": facts}
+        try:
+            count, ids = await self._cascade_delete_facts(memory_space_id, memory_id, prepared=prepared, read_options=read_options, tenant_id=tenant)
+        except DomainOperationPartialError as cause:
+            raise DomainOperationPartialError("memory:delete", partial(cause.partial["outcomes"] + [{"physicalId": memories[0]["physicalId"], "disposition": "unstarted"}], cause.partial.get("originalIntents")), cause.original_cause) from cause
+        try:
+            primary = await mutate(self.client, "memories", memories, {"memorySpaceId": memory_space_id, "tenantId": tenant, "requireNoLinkedFacts": cascade}, read_options)
+        except DomainOperationPartialError as cause:
+            raise DomainOperationPartialError("memory:delete", partial(prepared["outcome"]["outcomes"] + cause.partial["outcomes"]), cause.original_cause) from cause
+        return DeleteMemoryResult(deleted=bool(primary["confirmedCount"]), memory_id=memory_id, facts_deleted=count, fact_ids=ids, partial=partial(prepared["outcome"]["outcomes"] + primary["outcomes"]))
 
-        opts = options or DeleteMemoryOptions()
-
-        memory = await self.vector.get(memory_space_id, memory_id)
-
-        if not memory:
-            raise CortexError(ErrorCode.MEMORY_NOT_FOUND, f"Memory {memory_id} not found")
-
-        should_sync_to_graph = (
-            opts.sync_to_graph is not False and self.graph_adapter is not None
-        )
-        should_cascade = opts.cascade_delete_facts
-
-        # Delete facts if cascade enabled
-        facts_deleted = 0
-        fact_ids: List[str] = []
-
-        if should_cascade:
-            conv_id = None
-            if memory.conversation_ref:
-                conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
-            facts_deleted, fact_ids = await self._cascade_delete_facts(
-                memory_space_id,
-                memory_id,
-                conv_id,
-                should_sync_to_graph,
-            )
-
-        # Delete from vector
-        await self.vector.delete(
-            memory_space_id,
-            memory_id,
-            DeleteMemoryOptions(sync_to_graph=should_sync_to_graph),
-        )
-
-        return DeleteMemoryResult(
-            deleted=True,
-            memory_id=memory_id,
-            facts_deleted=facts_deleted,
-            fact_ids=fact_ids,
-        )
 
     # Delegation methods
 
@@ -2593,6 +2573,7 @@ class MemoryAPI:
         source_type: Optional[SourceType] = None,
         limit: Optional[int] = None,
         enrich_facts: bool = False,
+        *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None,
     ) -> List[Union[MemoryEntry, EnrichedMemory]]:
         """List memories (delegates to vector.list)."""
         # Client-side validation
@@ -2604,11 +2585,11 @@ class MemoryAPI:
         if source_type is not None:
             validate_source_type(source_type)
 
-        if limit is not None:
+        if limit is not None and limit != 0:
             validate_limit(limit)
 
         return await self.vector.list(  # type: ignore[return-value]
-            memory_space_id, user_id, participant_id, source_type, limit, enrich_facts
+            memory_space_id, user_id, participant_id, source_type, limit, enrich_facts, tenant_id=tenant_id, read_options=read_options
         )
 
     async def count(
@@ -2690,146 +2671,133 @@ class MemoryAPI:
             facts_affected=len(affected_facts),
         )
 
-    async def delete_many(
-        self, memory_space_id: str, filters: Dict[str, Any]
-    ) -> DeleteManyResult:
-        """Delete many memories (delegates to vector.delete_many).
-
-        Args:
-            memory_space_id: Memory space ID
-            filters: Filters to select memories for deletion
-
-        Returns:
-            DeleteManyResult with deletion details
-
-        Example:
-            >>> result = await cortex.memory.delete_many(
-            ...     'agent-1',
-            ...     {'user_id': 'user-123'}
-            ... )
-        """
-        # Client-side validation
+    async def delete_many(self, memory_space_id: str, filters: Dict[str, Any], *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> DeleteManyResult:
         validate_memory_space_id(memory_space_id)
         validate_filter_combination({"memory_space_id": memory_space_id, **filters})
-
+        tenant = resolve_scope(self._tenant_id, tenant_id if tenant_id is not None else filters.get("tenant_id"))
         if filters.get("user_id") is not None:
             validate_user_id(filters["user_id"])
-
         if filters.get("source_type") is not None:
             validate_source_type(filters["source_type"])
-
-        # Get all memories to delete
-        memories = await self.vector.list(memory_space_id, limit=10000)
-
-        total_facts_deleted = 0
-        all_fact_ids: List[str] = []
-
-        # Cascade delete facts for each memory
+        load = loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant, "userId": filters.get("user_id"), "participantId": filters.get("participant_id"), "sourceType": filters.get("source_type")})
+        memories = await select(load, read_options)
+        if len({r["document"]["memoryId"] for r in memories}) != len(memories):
+            raise ValueError("DOMAIN_SCOPE_AMBIGUOUS")
+        plans: List[Dict[str, Any]] = []
         for memory in memories:
-            facts_deleted, fact_ids = await self._cascade_delete_facts(
-                memory_space_id,
-                memory.memory_id,
-                memory.conversation_ref.conversation_id if memory.conversation_ref else None,
-                True,
-            )
-            total_facts_deleted += facts_deleted
-            all_fact_ids.extend(fact_ids)
+            fact_loader = loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": tenant, "sourceMemoryId": memory["document"]["memoryId"], "selectedMemoryDocumentId": memory["physicalId"], "selectionMode": "delete", "includeSuperseded": True})
+            plans.append({"memory": memory, "facts": await select(fact_loader, read_options), "load": fact_loader})
+        for plan in plans:
+            if not same_selection(plan["facts"], await select(plan["load"], read_options)):
+                raise ValueError("DOMAIN_SELECTION_CHANGED")
+        if not same_selection(memories, await select(load, read_options)):
+            raise ValueError("DOMAIN_SELECTION_CHANGED")
+        all_rows = [row for plan in plans for row in plan["facts"]] + memories
+        outcomes = {row["physicalId"]: {"physicalId": row["physicalId"], "disposition": "unstarted"} for row in all_rows}
+        count = 0
+        fact_ids: List[str] = []
+        memory_ids: List[str] = []
+        for plan in plans:
+            try:
+                changed, ids = await self._cascade_delete_facts(memory_space_id, plan["memory"]["document"]["memoryId"], prepared=plan, read_options=read_options, tenant_id=tenant)
+                count += changed
+                fact_ids.extend(ids)
+                for item in plan["outcome"]["outcomes"]:
+                    outcomes[item["physicalId"]] = item
+                primary = await mutate(self.client, "memories", [plan["memory"]], {"memorySpaceId": memory_space_id, "tenantId": tenant, "requireNoLinkedFacts": True}, read_options)
+                for item in primary["outcomes"]:
+                    outcomes[item["physicalId"]] = item
+                if primary["confirmedCount"]:
+                    memory_ids.append(plan["memory"]["document"]["memoryId"])
+            except DomainOperationPartialError as cause:
+                for item in cause.partial["outcomes"]:
+                    outcomes[item["physicalId"]] = item
+                raise DomainOperationPartialError("memory:delete_many", partial(list(outcomes.values()), cause.partial.get("originalIntents")), cause.original_cause) from cause
+        final = partial(list(outcomes.values()))
+        try:
+            remaining = await select(load, read_options)
+            if remaining:
+                final["remainingPhysicalIds"] = [row["physicalId"] for row in remaining]
+                raise ValueError("DOMAIN_SELECTION_CHANGED")
+        except BaseException as cause:
+            raise DomainOperationPartialError("memory:delete_many", final, cause) from cause
+        return DeleteManyResult(deleted=len(memory_ids), memory_ids=memory_ids, facts_deleted=count, fact_ids=fact_ids, partial=final)
 
-        # Delete memories
-        result = await self.vector.delete_many(
-            memory_space_id,
-            user_id=filters.get("user_id"),
-            source_type=filters.get("source_type"),
-        )
 
-        from ..types import DeleteManyResult
-        return DeleteManyResult(
-            deleted=result.get("deleted", 0),
-            memory_ids=result.get("memoryIds", []),
-            facts_deleted=total_facts_deleted,
-            fact_ids=all_fact_ids,
-        )
-
-    async def export(
-        self,
-        memory_space_id: str,
-        user_id: Optional[str] = None,
-        format: str = "json",
-        include_embeddings: bool = False,
-        include_facts: bool = False,
-    ) -> Dict[str, Any]:
-        """Export memories (delegates to vector.export)."""
-        # Client-side validation
+    async def export(self, memory_space_id: str, user_id: Optional[str] = None, format: str = "json", include_embeddings: bool = False, include_facts: bool = False, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
         validate_export_format(format)
-
         if user_id is not None:
             validate_user_id(user_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        rows = await collect(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant, "userId": user_id}), read_options)
+        facts = await collect(loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": tenant, "includeSuperseded": False}), read_options) if include_facts else []
+        return memory_export(rows, format, include_embeddings, include_facts, facts)
 
-        return await self.vector.export(
-            memory_space_id, user_id, format, include_embeddings, include_facts
-        )
 
-    async def archive(
-        self, memory_space_id: str, memory_id: str
-    ) -> ArchiveResult:
-        """Archive a memory (delegates to vector.archive).
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID to archive
-
-        Returns:
-            ArchiveResult with archive details
-
-        Example:
-            >>> result = await cortex.memory.archive('agent-1', 'mem-123')
-        """
-        # Client-side validation
+    async def archive(self, memory_space_id: str, memory_id: str, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None, intent: Optional[Dict[str, Any]] = None) -> ArchiveResult:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        memories = [row for row in await select(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant}), read_options) if row["document"]["memoryId"] == memory_id]
+        if len(memories) != 1:
+            raise ValueError("DOMAIN_SCOPE_AMBIGUOUS" if memories else "MEMORY_NOT_FOUND")
+        memory = memories[0]
+        if intent is not None:
+            intent = copy.deepcopy(intent)
+            if intent["memorySpaceId"] != memory_space_id or intent["memoryId"] != memory_id or intent.get("tenantId") != tenant or intent["memoryPhysicalId"] != memory["physicalId"] or intent["memoryFingerprint"] != memory["fingerprint"] or any(f["memorySpaceId"] != memory_space_id or f.get("tenantId") != tenant for f in intent["facts"]):
+                raise ValueError("DOMAIN_SELECTION_CHANGED")
+        else:
+            facts = {}
+            load = loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": tenant, "sourceMemoryId": memory_id, "selectedMemoryDocumentId": memory["physicalId"], "selectionMode": "archive", "includeSuperseded": False, "archiveAt": time.time() * 1000, "archiveOperationPrefix": str(uuid4())})
+            async for page in pages(load, read_options):
+                if len(page.get("archiveIntents", [])) != len(page["page"]):
+                    raise ValueError("DOMAIN_INVALID_ARCHIVE_INTENT")
+                for item in page["archiveIntents"]:
+                    facts[item["physicalId"]] = copy.deepcopy(item)
+            intent = {"memorySpaceId": memory_space_id, "tenantId": tenant, "memoryId": memory_id, "memoryPhysicalId": memory["physicalId"], "memoryFingerprint": memory["fingerprint"], "facts": list(facts.values())}
+        outcomes = [{"physicalId": item["physicalId"], "disposition": "unstarted"} for item in intent["facts"]] + [{"physicalId": memory["physicalId"], "disposition": "unstarted"}]
+        for i, item in enumerate(intent["facts"]):
+            sent = False
+            try:
+                active(read_options)
+                receipt_args = filter_none_values({"memorySpaceId": memory_space_id, "tenantId": tenant, "operationId": item["operationId"], "phase": "update"})
+                receipt = await wait_operation(self.client.query("factHistory:getOperationReceipt", receipt_args), read_options)
+                if receipt:
+                    if not receipt_matches(receipt, item):
+                        raise ValueError("FACT_HISTORY_OPERATION_CONFLICT")
+                    outcomes[i]["disposition"] = "knownCommitted"
+                    continue
+                active(read_options)
+                sent = True
+                await wait_operation(self.facts.update(memory_space_id, item["factId"], {"tags": item["tags"], "validUntil": item["validUntil"]}, tenant_id=tenant, operation_id=item["operationId"], expected_source_fact_id=item["physicalId"], expected_source_fingerprint=item["expectedSourceFingerprint"]), read_options)
+                outcomes[i]["disposition"] = "knownCommitted"
+            except BaseException as cause:
+                outcomes[i]["disposition"] = ("knownRolledBack" if definite_failure(cause) else "outcomeUnknown") if sent else "unstarted"
+                if sent and not definite_failure(cause):
+                    try:
+                        receipt = await wait_operation(self.client.query("factHistory:getOperationReceipt", receipt_args), read_options)
+                        if receipt and receipt_matches(receipt, item):
+                            outcomes[i]["disposition"] = "knownCommitted"
+                    except BaseException:
+                        pass
+                raise DomainOperationPartialError("memory:archive", partial(outcomes, [copy.deepcopy(intent)]), cause) from cause
+        try:
+            active(read_options)
+        except BaseException as cause:
+            raise DomainOperationPartialError("memory:archive", partial(outcomes, [copy.deepcopy(intent)]), cause) from cause
+        try:
+            result = await wait_operation(self.client.mutation("memories:archive", filter_none_values({"memorySpaceId": memory_space_id, "tenantId": tenant, "memoryId": memory_id, "expectedPhysicalId": memory["physicalId"], "expectedFingerprint": memory["fingerprint"]})), read_options)
+            outcomes[-1]["disposition"] = "knownCommitted"
+        except BaseException as cause:
+            outcomes[-1]["disposition"] = "knownRolledBack" if definite_failure(cause) else "outcomeUnknown"
+            raise DomainOperationPartialError("memory:archive", partial(outcomes, [copy.deepcopy(intent)]), cause) from cause
+        return ArchiveResult(archived=result["archived"], memory_id=memory_id, restorable=True, facts_archived=len(intent["facts"]), fact_ids=[item["factId"] for item in intent["facts"]], partial=partial(outcomes), intent=copy.deepcopy(intent))
 
-        result = await self.vector.archive(memory_space_id, memory_id)
 
-        # Convert dict result to typed ArchiveResult
-        return ArchiveResult(
-            archived=result.get("archived", True),
-            memory_id=result.get("memoryId", memory_id),
-            restorable=result.get("restorable", True),
-            facts_archived=result.get("factsArchived", 0),
-            fact_ids=result.get("factIds", []),
-        )
+    async def restore_from_archive(self, memory_space_id: str, memory_id: str, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
+        return await self.vector.restore_from_archive(memory_space_id, memory_id, tenant_id=tenant_id, read_options=read_options)
 
-    async def restore_from_archive(
-        self, memory_space_id: str, memory_id: str
-    ) -> Dict[str, Any]:
-        """
-        Restore memory from archive.
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID to restore
-
-        Returns:
-            Restore result
-
-        Example:
-            >>> restored = await cortex.memory.restore_from_archive('agent-1', 'mem-123')
-            >>> print(f"Restored: {restored['restored']}")
-        """
-        # Client-side validation
-        validate_memory_space_id(memory_space_id)
-        validate_memory_id(memory_id)
-
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memories:restoreFromArchive",
-                {"memorySpaceId": memory_space_id, "memoryId": memory_id},
-            ),
-            "memories:restoreFromArchive",
-        )
-
-        return cast(Dict[str, Any], result)
 
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int
@@ -2933,74 +2901,20 @@ class MemoryAPI:
 
     # Helper methods
 
-    async def _cascade_delete_facts(
-        self,
-        memory_space_id: str,
-        memory_id: str,
-        conversation_id: Optional[str],
-        sync_to_graph: Optional[bool],
-    ) -> Tuple[int, List[str]]:
-        """Helper: Find and cascade delete facts linked to a memory."""
-        from ..types import ListFactsFilter
-        all_facts = await self.facts.list(
-            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
-        )
+    async def _cascade_delete_facts(self, memory_space_id: str, memory_id: str, conversation_id: Optional[str] = None, sync_to_graph: Optional[bool] = False, prepared: Optional[Dict[str, Any]] = None, read_options: Optional[DomainReadOptions] = None, tenant_id: Optional[str] = None) -> Any:
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        if prepared is None:
+            memories = [row for row in await select(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant}), read_options) if row["document"]["memoryId"] == memory_id]
+            if len(memories) != 1:
+                raise ValueError("DOMAIN_SCOPE_AMBIGUOUS" if memories else "MEMORY_NOT_FOUND")
+            facts = await select(loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": tenant, "sourceMemoryId": memory_id, "selectedMemoryDocumentId": memories[0]["physicalId"], "selectionMode": "delete", "includeSuperseded": True}), read_options)
+            prepared = {"memory": memories[0], "facts": facts}
+        outcome = await mutate(self.client, "facts", prepared["facts"], {"memorySpaceId": memory_space_id, "tenantId": tenant}, read_options)
+        prepared["outcome"] = outcome
+        return outcome["confirmedCount"], [row["document"]["factId"] for row in prepared["facts"] if row["physicalId"] in outcome["confirmedPhysicalIds"]]
 
-        facts_to_delete = [
-            fact
-            for fact in all_facts
-            if (
-                fact.source_ref
-                and (
-                    fact.source_ref.memory_id == memory_id
-                    or (
-                        conversation_id
-                        and fact.source_ref.conversation_id == conversation_id
-                    )
-                )
-            )
-        ]
 
-        deleted_fact_ids: List[str] = []
-        for fact in facts_to_delete:
-            try:
-                from ..types import DeleteFactOptions
-
-                await self.facts.delete(
-                    memory_space_id,
-                    fact.fact_id,
-                    DeleteFactOptions(sync_to_graph=sync_to_graph),
-                )
-                deleted_fact_ids.append(fact.fact_id)
-            except Exception as error:
-                print(f"Warning: Failed to delete linked fact: {error}")
-
-        return len(deleted_fact_ids), deleted_fact_ids
-
-    async def _fetch_facts_for_memory(
-        self,
-        memory_space_id: str,
-        memory_id: str,
-        conversation_id: Optional[str],
-    ) -> List:
-        """Helper: Fetch facts for a memory or conversation."""
-        from ..types import ListFactsFilter
-        all_facts = await self.facts.list(
-            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
-        )
-
-        return [
-            fact
-            for fact in all_facts
-            if (
-                fact.source_ref
-                and (
-                    fact.source_ref.memory_id == memory_id
-                    or (
-                        conversation_id
-                        and fact.source_ref.conversation_id == conversation_id
-                    )
-                )
-            )
-        ]
-
+    async def _fetch_facts_for_memory(self, memory_space_id: str, memory_id: str, conversation_id: Optional[str] = None, *, tenant_id: Optional[str] = None) -> List[FactRecord]:
+        from ..facts.discovery import parse_fact
+        rows = await collect(loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": resolve_scope(self._tenant_id, tenant_id), "sourceMemoryId": memory_id, "includeSuperseded": False}))
+        return [parse_fact(row) for row in rows]

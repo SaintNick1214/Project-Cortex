@@ -1,88 +1,152 @@
-/**
- * Cortex SDK Client
- *
- * Shared Cortex client instance for API routes.
- * Supports both unauthenticated (shared) and authenticated (per-request) clients.
- */
-
-import { Cortex, type AuthContext } from "@cortexmemory/sdk";
-
-/**
- * Cached unauthenticated client (singleton for operations that don't need auth)
- */
-let cortexClient: Cortex | null = null;
-
-/**
- * Get or create an unauthenticated Cortex SDK client.
- *
- * Use this for operations that don't require user context,
- * such as system-level queries or background jobs.
- *
- * @returns Cortex client without auth context
- */
-export function getCortex(): Cortex {
-  if (!cortexClient) {
-    const convexUrl = process.env.CONVEX_URL;
-    if (!convexUrl) {
-      throw new Error("CONVEX_URL environment variable is required");
-    }
-
-    cortexClient = new Cortex({
-      convexUrl,
-    });
-  }
-
-  return cortexClient;
+import "server-only";
+import { Cortex, CypherGraphAdapter, resolveGraphConnection, type Conversation, type Artifact } from "@cortexmemory/sdk";
+import { auth } from "@/app/(auth)/auth";
+import {
+  privateConfiguration,
+  initializePrivateTransport,
+  privateCall,
+} from "./private-backend";
+import { ChatSDKError } from "./errors";
+export type AppScope = {
+  userId: string;
+  tenantId: string;
+  memorySpaceId: string;
+};
+export function getMemorySpaceId(userId: string): string {
+  if (!userId) throw new ChatSDKError("unauthorized:api");
+  return `${process.env.MEMORY_SPACE_ID || "chat-sdk-demo"}-${userId}`;
 }
-
-/**
- * Create an authenticated Cortex SDK client with user context.
- *
- * Use this for all user-facing operations. The auth context is
- * automatically injected into all Cortex operations.
- *
- * @param authContext - Auth context from getCortexAuthContext() or createCortexAuthContextFromSession()
- * @returns Cortex client with auth context auto-injected to all operations
- *
- * @example
- * ```typescript
- * import { getCortexAuthContext } from "@/lib/auth-cortex";
- * import { getCortexWithAuth } from "@/lib/cortex";
- *
- * const authContext = await getCortexAuthContext();
- * if (!authContext) {
- *   return new Response("Unauthorized", { status: 401 });
- * }
- *
- * const cortex = getCortexWithAuth(authContext);
- * // All operations auto-scoped to the authenticated user
- * await cortex.memory.remember({ ... });
- * ```
- */
-export function getCortexWithAuth(authContext: AuthContext): Cortex {
-  const convexUrl = process.env.CONVEX_URL;
-  if (!convexUrl) {
-    throw new Error("CONVEX_URL environment variable is required");
-  }
-
-  return new Cortex({
-    convexUrl,
-    auth: authContext,
-  });
-}
-
-/**
- * Get the memory space ID for the chat SDK.
- * Uses MEMORY_SPACE_ID env var or defaults to 'chat-sdk-demo'.
- */
-export function getMemorySpaceId(): string {
-  return process.env.MEMORY_SPACE_ID || "chat-sdk-demo";
-}
-
-/**
- * Get the agent/assistant ID for the chat SDK.
- * Uses AGENT_ID env var or defaults to 'chat-assistant'.
- */
 export function getAgentId(): string {
   return process.env.AGENT_ID || "chat-assistant";
+}
+export async function requireScope(expectedUserId?: string): Promise<AppScope> {
+  const session = await auth();
+  if (!session?.user?.id) throw new ChatSDKError("unauthorized:api");
+  if (expectedUserId !== undefined && expectedUserId !== session.user.id)
+    throw new ChatSDKError("forbidden:api");
+  const { tenantId } = privateConfiguration();
+  return {
+    userId: session.user.id,
+    tenantId,
+    memorySpaceId: getMemorySpaceId(session.user.id),
+  };
+}
+const ownedGraphAdapters = new WeakMap<Cortex, CypherGraphAdapter>();
+export async function createScopedCortex(
+  scope: AppScope,
+  graph = false,
+): Promise<Cortex> {
+  // Genuine bounded HTTP refusal occurs before WebSocket construction/model calls.
+  await privateCall("app/chatUsers:credentialByEmail", { email: "" }).catch(
+    (error) => {
+      throw error;
+    },
+  );
+  const connection = graph ? resolveGraphConnection({ enabled: true }) : undefined;
+  const adapter = connection ? new CypherGraphAdapter() : undefined;
+  try {
+    if (adapter && connection) {
+      await adapter.connect(connection);
+    }
+    const cortex = await Cortex.create(
+      {
+      convexUrl: privateConfiguration().convexUrl,
+      auth: { userId: scope.userId, tenantId: scope.tenantId },
+        graphEnabled: graph,
+        ...(adapter ? { graph: { adapter, autoSync: false } } : {}),
+      },
+      { initializeTransport: initializePrivateTransport },
+    );
+    if (adapter) {
+      ownedGraphAdapters.set(cortex, adapter);
+    }
+    return cortex;
+  } catch (error) {
+    if (adapter) {
+      await adapter.disconnect();
+    }
+    throw error;
+  }
+}
+export async function closeOwnedCortex(cortex: Cortex): Promise<void> {
+  const adapter = ownedGraphAdapters.get(cortex);
+  ownedGraphAdapters.delete(cortex);
+  cortex.close();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await Promise.race([
+      (async () => {
+        try {
+          await cortex.shutdown();
+        } finally {
+          if (adapter) {
+            await adapter.disconnect();
+          }
+        }
+      })(),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(
+          () =>
+            reject(
+              new ChatSDKError("offline:api", "Backend cleanup did not finish"),
+            ),
+          30000,
+        );
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+export async function withCortex<T>(
+  scope: AppScope,
+  work: (client: Cortex) => Promise<T>,
+  graph = false,
+): Promise<T> {
+  const client = await createScopedCortex(scope, graph);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      work(client),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(
+          () =>
+            reject(
+              new ChatSDKError(
+                "offline:api",
+                "Backend operation did not finish; check server configuration",
+              ),
+            ),
+          30000,
+        );
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+    await closeOwnedCortex(client);
+  }
+}
+export function assertChatOwner(
+  conversation: Conversation | null,
+  scope: AppScope,
+): asserts conversation is Conversation {
+  if (
+    !conversation ||
+    conversation.participants.userId !== scope.userId ||
+    conversation.tenantId !== scope.tenantId ||
+    conversation.memorySpaceId !== scope.memorySpaceId
+  )
+    throw new ChatSDKError("not_found:chat");
+}
+export function assertArtifactOwner(
+  artifact: Artifact | null,
+  scope: AppScope,
+): asserts artifact is Artifact {
+  if (
+    !artifact ||
+    artifact.userId !== scope.userId ||
+    artifact.tenantId !== scope.tenantId ||
+    artifact.memorySpaceId !== scope.memorySpaceId
+  )
+    throw new ChatSDKError("not_found:document");
 }

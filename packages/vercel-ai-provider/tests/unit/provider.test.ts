@@ -55,10 +55,11 @@ const mockCortex = {
     }),
   },
   close: jest.fn(),
+  shutdown: jest.fn().mockResolvedValue(undefined),
 };
 
 jest.mock("@cortexmemory/sdk", () => ({
-  Cortex: jest.fn().mockImplementation(() => mockCortex),
+  Cortex: Object.assign(jest.fn().mockImplementation(() => mockCortex), { create: jest.fn().mockImplementation(async () => mockCortex) }),
   CypherGraphAdapter: jest.fn().mockImplementation(() => ({
     connect: jest.fn().mockResolvedValue(undefined),
     disconnect: jest.fn().mockResolvedValue(undefined),
@@ -164,15 +165,14 @@ describe("CortexMemoryProvider", () => {
       expect(provider).toBeInstanceOf(CortexMemoryProvider);
     });
 
-    it("should warn when graph enabled but no URI configured", async () => {
+    it("should propagate an explicitly enabled missing connection failure", async () => {
       delete process.env.NEO4J_URI;
       delete process.env.MEMGRAPH_URI;
 
       const config = createTestConfig({ enableGraphMemory: true });
-      const provider = await CortexMemoryProvider.create(mockLLM, config);
-
-      // Should still create provider (graph adapter will be undefined)
-      expect(provider).toBeInstanceOf(CortexMemoryProvider);
+      const { Cortex } = jest.requireMock("@cortexmemory/sdk");
+      Cortex.create.mockRejectedValueOnce(new Error("Graph is enabled but no URI is configured."));
+      await expect(CortexMemoryProvider.create(mockLLM, config)).rejects.toThrow(/no URI/);
     });
   });
 
@@ -523,10 +523,10 @@ describe("CortexMemoryProvider", () => {
       const provider = new CortexMemoryProvider(mockLLM, mockConfig);
       await provider.close();
 
-      expect(mockCortex.close).toHaveBeenCalled();
+      expect(mockCortex.shutdown).toHaveBeenCalled();
     });
 
-    it("should disconnect graph adapter when present", async () => {
+    it("should preserve caller-owned graph adapters and borrowed Cortex", async () => {
       const mockGraphAdapter = {
         connect: jest.fn().mockResolvedValue(undefined),
         disconnect: jest.fn().mockResolvedValue(undefined),
@@ -541,11 +541,11 @@ describe("CortexMemoryProvider", () => {
 
       await provider.close();
 
-      expect(mockGraphAdapter.disconnect).toHaveBeenCalled();
-      expect(mockCortex.close).toHaveBeenCalled();
+      expect(mockGraphAdapter.disconnect).not.toHaveBeenCalled();
+      expect(mockCortex.shutdown).not.toHaveBeenCalled();
     });
 
-    it("should handle graph adapter disconnect failure gracefully", async () => {
+    it("should never invoke borrowed adapter cleanup", async () => {
       const mockGraphAdapter = {
         connect: jest.fn().mockResolvedValue(undefined),
         disconnect: jest.fn().mockRejectedValue(new Error("Disconnect failed")),
@@ -560,7 +560,8 @@ describe("CortexMemoryProvider", () => {
 
       // Should not throw
       await provider.close();
-      expect(mockCortex.close).toHaveBeenCalled();
+      expect(mockGraphAdapter.disconnect).not.toHaveBeenCalled();
+      expect(mockCortex.shutdown).not.toHaveBeenCalled();
     });
   });
 });

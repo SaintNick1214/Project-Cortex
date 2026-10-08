@@ -1,3 +1,4 @@
+import { requireScope } from "@/lib/cortex";
 import { Output, streamText, tool, type UIMessageStreamWriter } from "ai";
 import type { Session } from "next-auth";
 import { z } from "zod";
@@ -23,10 +24,11 @@ export const requestSuggestions = ({
       documentId: z
         .string()
         .describe(
-          "The UUID of an existing document artifact that was previously created with createDocument"
+          "The UUID of an existing document artifact that was previously created with createDocument",
         ),
     }),
     execute: async ({ documentId }) => {
+      await requireScope(session.user?.id);
       const document = await getDocumentById({ id: documentId });
 
       if (!document || !document.content) {
@@ -42,6 +44,7 @@ export const requestSuggestions = ({
 
       const { partialOutputStream } = streamText({
         model: getArtifactModel(),
+        abortSignal: AbortSignal.timeout(30000),
         system:
           "You are a help writing assistant. Given a piece of writing, please offer suggestions to improve the piece of writing and describe the change. It is very important for the edits to contain full sentences instead of just words. Max 5 suggestions.",
         prompt: document.content,

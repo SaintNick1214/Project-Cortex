@@ -44,9 +44,18 @@ export const {
   providers: [
     Credentials({
       credentials: {},
-      async authorize(credentials: { email?: string; password?: string } | undefined) {
+      async authorize(
+        credentials: { email?: string; password?: string } | undefined,
+      ) {
         const { email, password } = credentials ?? {};
-        if (!email || !password) return null;
+        if (
+          typeof email !== "string" ||
+          typeof password !== "string" ||
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+          password.length < 6 ||
+          password.length > 1024
+        )
+          return null;
         const users = await getUser(email);
 
         if (users.length === 0) {
@@ -67,7 +76,7 @@ export const {
           return null;
         }
 
-        return { ...user, type: "regular" };
+        return { id: user.id, email: user.email, type: "regular" };
       },
     }),
     Credentials({

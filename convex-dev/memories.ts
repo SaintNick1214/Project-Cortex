@@ -1,3 +1,12 @@
+import { graphMutation } from "./lib/graphSync";
+import {validateDomainSelection} from "./lib/domainPaging";
+import { requireNoLinkedFacts } from "./lib/domainPaging";
+import { memoryVectorScopeKey } from "./lib/memoryVectorScope";
+import { lifecycleControl, WRITER_MANIFEST_HASH } from "./lib/referenceLifecycle";
+import { paginationOptsValidator } from "convex/server";
+import { domainGraphIdentity, scopedMemory, memoryFilterFields, matchesMemory, domainFingerprint, checkFingerprint, domainBudget, domainPageOptions, domainInteger } from "./lib/domainPaging";
+import { captureInsertedRow, reconcileRow, markDeletedRow } from "./lib/referenceLifecycle";
+import { validateDomainScope } from "./lib/domainScope";
 /**
  * Cortex SDK - Vector Memory API (Layer 2)
  *
@@ -5,10 +14,28 @@
  * References Layer 1 stores for full context
  */
 
-import { ConvexError, v } from "convex/values";
-import { action, internalQuery, mutation, query } from "./_generated/server";
+import { ConvexError, convexToJson, v } from "convex/values";
+import { action, internalQuery, query, type MutationCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { Doc } from "./_generated/dataModel";
+import { Doc, type Id } from "./_generated/dataModel";
+import { uniqueReference } from "./lib/referenceLifecycle";
+const partialGuards={expectedPhysicalId:v.optional(v.id("memories")),expectedSourceRevision:v.optional(v.number()),expectedReferenceGeneration:v.optional(v.string())};
+async function partialReceipt(ctx:MutationCtx,row:Doc<"memories">) {
+  const target=await ctx.db.query("cortexReferenceTargets").withIndex("by_document",q=>q.eq("table","memories").eq("documentId",String(row._id))).take(2).then(uniqueReference);
+  if(!target||!Number.isSafeInteger(target.sourceRevision)||target.sourceRevision!<1||target.state!=="live"||target.documentId!==row._id||
+    !target.scopeKnown||target.tenantId!==row.tenantId||target.memorySpaceId!==row.memorySpaceId)throw new ConvexError("GRAPH_PARTIAL_SOURCE_UNRESOLVED");
+  return {memoryId:row.memoryId,_id:row._id,sourceRevision:target.sourceRevision!,referenceGeneration:target.generation,ownershipRevision:target.ownershipRevision!};
+}
+async function selectedPartial(ctx:MutationCtx,args:{tenantId?:string;memorySpaceId:string;memoryId:string;expectedPhysicalId?:Id<"memories">;expectedSourceRevision?:number;expectedReferenceGeneration?:string}) {
+  const row=args.expectedPhysicalId?await ctx.db.get(args.expectedPhysicalId):await scopedMemory(ctx,args);
+  if(!row||row.memoryId!==args.memoryId||row.memorySpaceId!==args.memorySpaceId||row.tenantId!==args.tenantId||row.isPartial!==true)
+    throw new ConvexError("GRAPH_PARTIAL_SELECTION_CHANGED");
+  const receipt=await partialReceipt(ctx,row);
+  if(args.expectedSourceRevision!==undefined&&(!Number.isSafeInteger(args.expectedSourceRevision)||receipt.sourceRevision!==args.expectedSourceRevision)||
+    args.expectedReferenceGeneration!==undefined&&receipt.referenceGeneration!==args.expectedReferenceGeneration)
+    throw new ConvexError("GRAPH_PARTIAL_SELECTION_CHANGED");
+  return row;
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -17,7 +44,7 @@ import { Doc } from "./_generated/dataModel";
 /**
  * Store a new vector memory
  */
-export const store = mutation({
+export const store = graphMutation({
   args: {
     memorySpaceId: v.string(), // Updated
     participantId: v.optional(v.string()), // NEW: Hive Mode
@@ -80,7 +107,7 @@ export const store = mutation({
     const now = Date.now();
     const memoryId = `mem-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
-    const _id = await ctx.db.insert("memories", {
+    const _id = await captureInsertedRow(ctx, "memories", {
       memoryId,
       memorySpaceId: args.memorySpaceId, // Updated
       participantId: args.participantId, // NEW
@@ -119,8 +146,9 @@ export const store = mutation({
  * Store a partial memory (for streaming)
  * Creates a memory marked as in-progress
  */
-export const storePartialMemory = mutation({
+export const storePartialMemory = graphMutation({
   args: {
+    tenantId:v.optional(v.string()),
     memorySpaceId: v.string(),
     participantId: v.optional(v.string()),
     conversationId: v.string(),
@@ -135,9 +163,10 @@ export const storePartialMemory = mutation({
     const now = Date.now();
     const memoryId = `mem-partial-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
-    const _id = await ctx.db.insert("memories", {
+    const _id = await captureInsertedRow(ctx, "memories", {
       memoryId,
       memorySpaceId: args.memorySpaceId,
+      tenantId:args.tenantId,
       participantId: args.participantId,
       content: args.content,
       contentType: "raw" as const,
@@ -160,7 +189,8 @@ export const storePartialMemory = mutation({
       partialMetadata: args.metadata,
     });
 
-    return { memoryId, _id };
+    const row=await ctx.db.get(_id);if(!row)throw new ConvexError("GRAPH_PARTIAL_SOURCE_UNRESOLVED");
+    return partialReceipt(ctx,row);
   },
 });
 
@@ -168,29 +198,26 @@ export const storePartialMemory = mutation({
  * Update a partial memory (for streaming)
  * Updates content and metadata during streaming
  */
-export const updatePartialMemory = mutation({
+export const updatePartialMemory = graphMutation({
   args: {
+    ...partialGuards,
+    tenantId:v.optional(v.string()),
+    memorySpaceId:v.string(),
     memoryId: v.string(),
     content: v.string(),
     metadata: v.any(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const memory=await selectedPartial(ctx,args);
 
-    if (!memory) {
-      throw new ConvexError("MEMORY_NOT_FOUND");
-    }
-
-    await ctx.db.patch(memory._id, {
+    await reconcileRow(ctx, memory._id, {
       content: args.content,
       updatedAt: Date.now(),
       partialMetadata: args.metadata,
     });
 
-    return { success: true };
+    const row=await ctx.db.get(memory._id);if(!row)throw new ConvexError("GRAPH_PARTIAL_SOURCE_UNRESOLVED");
+    return {success:true,...await partialReceipt(ctx,row)};
   },
 });
 
@@ -198,29 +225,25 @@ export const updatePartialMemory = mutation({
  * Finalize a partial memory (for streaming)
  * Marks memory as complete and removes partial flag
  */
-export const finalizePartialMemory = mutation({
+export const finalizePartialMemory = graphMutation({
   args: {
+    ...partialGuards,
+    tenantId:v.optional(v.string()),
+    memorySpaceId:v.string(),
     memoryId: v.string(),
     content: v.string(),
     embedding: v.optional(v.array(v.float64())),
     metadata: v.any(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
-
-    if (!memory) {
-      throw new ConvexError("MEMORY_NOT_FOUND");
-    }
+    const memory=await selectedPartial(ctx,args);
 
     // Remove streaming-related tags
     const finalTags = memory.tags.filter(
       (tag) => tag !== "streaming" && tag !== "partial",
     );
 
-    await ctx.db.patch(memory._id, {
+    await reconcileRow(ctx, memory._id, {
       content: args.content,
       embedding: args.embedding,
       updatedAt: Date.now(),
@@ -229,23 +252,24 @@ export const finalizePartialMemory = mutation({
       partialMetadata: args.metadata,
     });
 
-    return { success: true };
+    const row=await ctx.db.get(memory._id);if(!row)throw new ConvexError("GRAPH_PARTIAL_SOURCE_UNRESOLVED");
+    return {success:true,...await partialReceipt(ctx,row)};
   },
 });
 
 /**
  * Delete a memory
  */
-export const deleteMemory = mutation({
+export const deleteMemory = graphMutation({
   args: {
+    ...partialGuards,
+    expectedPartial:v.optional(v.boolean()),
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // Updated
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const memory = await scopedMemory(ctx, args);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -256,7 +280,14 @@ export const deleteMemory = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
-    await ctx.db.delete(memory._id);
+    if(args.expectedPhysicalId!==undefined&&memory._id!==args.expectedPhysicalId)throw new ConvexError("GRAPH_PARTIAL_SELECTION_CHANGED");
+    if(args.expectedPartial===true)await selectedPartial(ctx,args);
+    else if(args.expectedSourceRevision!==undefined||args.expectedReferenceGeneration!==undefined) {
+      const captured=await partialReceipt(ctx,memory);
+      if(captured.sourceRevision!==args.expectedSourceRevision||captured.referenceGeneration!==args.expectedReferenceGeneration)throw new ConvexError("GRAPH_PARTIAL_SELECTION_CHANGED");
+    }
+
+    await markDeletedRow(ctx, memory._id);
 
     return { deleted: true, memoryId: args.memoryId };
   },
@@ -271,14 +302,12 @@ export const deleteMemory = mutation({
  */
 export const get = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const memory = await scopedMemory(ctx, args);
 
     if (!memory) {
       return null;
@@ -297,16 +326,13 @@ export const get = query({
  * Internal query to fetch memories by their IDs (used by search action)
  */
 export const fetchMemoriesByIds = internalQuery({
-  args: { ids: v.array(v.id("memories")) },
-  handler: async (ctx, { ids }): Promise<Doc<"memories">[]> => {
+  args: {...memoryFilterFields, ids: v.array(v.id("memories"))},
+  handler: async (ctx, args): Promise<Doc<"memories">[]> => {
+    validateDomainScope(args.tenantId); validateDomainSelection(args);
+    if (args.ids.length > 256) throw new ConvexError("DOMAIN_READ_BUDGET_EXCEEDED");
     const results: Doc<"memories">[] = [];
-    for (const id of ids) {
-      const doc = await ctx.db.get(id);
-      if (doc !== null) {
-        results.push(doc);
-      }
-    }
-    return results;
+    for (const id of args.ids) { const doc = await ctx.db.get(id); if (doc && matchesMemory(doc, args)) results.push(doc); }
+    await domainBudget(ctx, results); return results;
   },
 });
 
@@ -314,18 +340,12 @@ export const fetchMemoriesByIds = internalQuery({
  * Internal query for keyword search (used by search action)
  */
 export const keywordSearchMemories = internalQuery({
-  args: {
-    memorySpaceId: v.string(),
-    query: v.string(),
-    limit: v.number(),
-  },
+  args: {...memoryFilterFields, query: v.string(), limit: v.number()},
   handler: async (ctx, args) => {
-    return await ctx.db
-      .query("memories")
-      .withSearchIndex("by_content", (q) =>
-        q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId),
-      )
-      .take(args.limit);
+    validateDomainScope(args.tenantId); validateDomainSelection(args); domainInteger(args.limit, 20);
+    const rows = await ctx.db.query("memories").withSearchIndex("by_content", q => q.search("content", args.query).eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId)).take(257);
+    const result = rows.filter(row => matchesMemory(row, args)).slice(0, args.limit);
+    await domainBudget(ctx, result); return result;
   },
 });
 
@@ -335,29 +355,34 @@ export const keywordSearchMemories = internalQuery({
  * Note: Vector search requires using ctx.vectorSearch() which is only
  * available in actions, so this is implemented as an action.
  */
+/** Fresh empty is searchable; nonempty legacy coverage must migrate before vector search. */
+export const vectorReadiness = internalQuery({
+  args: {},
+  handler: async ctx => {
+    const state = await lifecycleControl(ctx);
+    if (state?.status === "ready" && state.writerManifestHash === WRITER_MANIFEST_HASH) return true;
+    if (!state && !(await ctx.db.query("memories").first())) return true;
+    throw new ConvexError("MEMORY_VECTOR_SCOPE_NOT_READY: Run cortex schema migrate on this deployment");
+  },
+});
 export const search = action({
   args: {
-    memorySpaceId: v.string(),
+    ...memoryFilterFields,
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
-    userId: v.optional(v.string()),
-    tags: v.optional(v.array(v.string())),
-    sourceType: v.optional(
-      v.union(
-        v.literal("conversation"),
-        v.literal("system"),
-        v.literal("tool"),
-        v.literal("a2a"),
-        v.literal("fact-extraction"),
-      ),
-    ),
-    minImportance: v.optional(v.number()),
+    offset: v.optional(v.number()),
     minScore: v.optional(v.number()),
     queryCategory: v.optional(v.string()),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const limit = args.limit || 20;
+    validateDomainScope(args.tenantId); validateDomainSelection(args);
+    const limit = domainInteger(args.limit, 20);
+    const offset = domainInteger(args.offset, 0);
+    const {query: _query, embedding: _embedding, offset: _offset, limit: _limit, minScore: _minScore, queryCategory: _queryCategory, ...filters} = args;
+    void [_query, _embedding, _offset, _limit, _minScore, _queryCategory];
+    if (limit === 0) return [];
+    if (args.embedding && args.embedding.length) await ctx.runQuery(internal.memories.vectorReadiness, {});
     let results: any[] = [];
 
     if (args.embedding && args.embedding.length > 0) {
@@ -365,15 +390,18 @@ export const search = action({
       // This is the correct Convex API for vector search (only available in actions)
       const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
         vector: args.embedding,
-        limit: Math.min(limit * 2, 256), // Fetch more for post-filtering, max 256
-        filter: (q) => q.eq("memorySpaceId", args.memorySpaceId),
+        limit: 256, // Explicit native candidate bound; all declared postfilters precede the returned window.
+        filter: (q) => q.eq("vectorScopeKey", memoryVectorScopeKey(args.tenantId, args.memorySpaceId)),
       });
 
       // Fetch full documents using internal query
       const ids = vectorResults.map((r) => r._id);
-      const docs = await ctx.runQuery(internal.memories.fetchMemoriesByIds, {
-        ids,
-      });
+      const docs = [];
+      for (let start = 0; start < ids.length; start += 128) {
+        docs.push(...await ctx.runQuery(internal.memories.fetchMemoriesByIds, {
+          ids: ids.slice(start, start + 128), ...filters,
+        }));
+      }
 
       // Merge scores with documents (preserve order from vector search)
       const scoreMap = new Map(
@@ -389,9 +417,9 @@ export const search = action({
     } else {
       // Keyword search using internal query
       results = await ctx.runQuery(internal.memories.keywordSearchMemories, {
-        memorySpaceId: args.memorySpaceId,
+        ...filters,
         query: args.query,
-        limit,
+        limit: Math.min(256, offset + limit),
       });
     }
 
@@ -467,7 +495,9 @@ export const search = action({
       });
     }
 
-    return results.slice(0, limit);
+    const selected = results.slice(offset, offset + limit);
+    if (new TextEncoder().encode(JSON.stringify(convexToJson(selected))).byteLength > 8 * 1024 * 1024) throw new ConvexError("DOMAIN_RESULT_BUDGET_EXCEEDED");
+    return selected;
   },
 });
 
@@ -475,39 +505,13 @@ export const search = action({
  * List memories with filters
  */
 export const list = query({
-  args: {
-    memorySpaceId: v.string(), // Updated
-    userId: v.optional(v.string()),
-    sourceType: v.optional(
-      v.union(
-        v.literal("conversation"),
-        v.literal("system"),
-        v.literal("tool"),
-        v.literal("a2a"),
-        v.literal("fact-extraction"), // NEW
-      ),
-    ),
-    limit: v.optional(v.number()),
-  },
+  args: {...memoryFilterFields, limit: v.optional(v.number())},
   handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      ) // Updated
-      .order("desc")
-      .take(args.limit || 100);
-
-    // Apply filters
-    if (args.userId) {
-      memories = memories.filter((m) => m.userId === args.userId);
-    }
-
-    if (args.sourceType) {
-      memories = memories.filter((m) => m.sourceType === args.sourceType);
-    }
-
-    return memories;
+    validateDomainScope(args.tenantId);
+    const limit = domainInteger(args.limit, 100);
+    const scan = await ctx.db.query("memories").withIndex("by_tenant_space", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId)).order("desc").take(257);
+    const result = scan.filter(row => matchesMemory(row, args)).slice(0, limit);
+    await domainBudget(ctx, result); return result;
   },
 });
 
@@ -516,8 +520,10 @@ export const list = query({
  */
 export const count = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
     sourceType: v.optional(
       v.union(
         v.literal("conversation"),
@@ -529,12 +535,15 @@ export const count = query({
     ),
   },
   handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId);
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       ) // Updated
       .collect();
+
+    if (args.participantId !== undefined) memories = memories.filter(m => m.participantId === args.participantId);
 
     // Apply filters
     if (args.userId) {
@@ -556,7 +565,7 @@ export const count = query({
 /**
  * Update a memory (creates new version)
  */
-export const update = mutation({
+export const update = graphMutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),
@@ -593,7 +602,7 @@ export const update = mutation({
       },
     ];
 
-    await ctx.db.patch(memory._id, {
+    await reconcileRow(ctx, memory._id, {
       content: args.content || memory.content,
       embedding:
         args.embedding !== undefined ? args.embedding : memory.embedding,
@@ -696,49 +705,9 @@ export const getHistory = query({
 /**
  * Delete many memories
  */
-export const deleteMany = mutation({
-  args: {
-    memorySpaceId: v.string(), // Updated
-    userId: v.optional(v.string()),
-    sourceType: v.optional(
-      v.union(
-        v.literal("conversation"),
-        v.literal("system"),
-        v.literal("tool"),
-        v.literal("a2a"),
-      ),
-    ),
-  },
-  handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
-
-    if (args.userId) {
-      memories = memories.filter(
-        (m) => m.userId === args.userId || m.sourceUserId === args.userId,
-      );
-    }
-
-    if (args.sourceType) {
-      memories = memories.filter((m) => m.sourceType === args.sourceType);
-    }
-
-    let deleted = 0;
-
-    for (const memory of memories) {
-      await ctx.db.delete(memory._id);
-      deleted++;
-    }
-
-    return {
-      deleted,
-      memoryIds: memories.map((m) => m.memoryId),
-    };
-  },
+export const deleteMany = graphMutation({
+  args: {...memoryFilterFields},
+  handler: async () => { throw new ConvexError("DOMAIN_PREFLIGHT_REQUIRED: use SDK physical selection preflight"); },
 });
 
 /**
@@ -746,7 +715,7 @@ export const deleteMany = mutation({
  * Much faster than calling deleteMemory multiple times
  * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
-export const deleteByIds = mutation({
+export const deleteByIds = graphMutation({
   args: {
     memoryIds: v.array(v.string()),
   },
@@ -762,7 +731,7 @@ export const deleteByIds = mutation({
         .first();
 
       if (memory) {
-        await ctx.db.delete(memory._id);
+        await markDeletedRow(ctx, memory._id);
         deletedIds.push(memoryId);
       }
     }
@@ -784,7 +753,7 @@ export const deleteByIds = mutation({
  * - Test deployments: dev-* deployment names allowed
  * - Production: Explicitly blocked
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {},
   handler: async (ctx) => {
     // Security check: Only allow in test/dev environments
@@ -811,7 +780,7 @@ export const purgeAll = mutation({
     let deleted = 0;
 
     for (const memory of allMemories) {
-      await ctx.db.delete(memory._id);
+      await markDeletedRow(ctx, memory._id);
       deleted++;
     }
 
@@ -824,6 +793,7 @@ export const purgeAll = mutation({
  */
 export const exportMemories = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
     format: v.union(v.literal("json"), v.literal("csv")),
@@ -832,10 +802,10 @@ export const exportMemories = query({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
-      .collect();
+      .take(257);
 
     if (args.userId) {
       memories = memories.filter(
@@ -843,6 +813,7 @@ export const exportMemories = query({
       );
     }
 
+    await domainBudget(ctx, memories);
     if (args.format === "json") {
       const data = memories.map((m) => ({
         memoryId: m.memoryId,
@@ -873,14 +844,14 @@ export const exportMemories = query({
     ];
     const rows = memories.map((m) => [
       m.memoryId,
-      m.content.replace(/,/g, ";"),
+      m.content,
       m.sourceType,
       m.importance.toString(),
       m.tags.join(";"),
       new Date(m.createdAt).toISOString(),
     ]);
 
-    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const csv = [headers.join(","), ...rows.map((r) => r.map(cell => `"${cell.replace(/"/g, '""')}"`).join(","))].join("\n");
 
     return {
       format: "csv",
@@ -894,7 +865,7 @@ export const exportMemories = query({
 /**
  * Update many memories
  */
-export const updateMany = mutation({
+export const updateMany = graphMutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -938,7 +909,7 @@ export const updateMany = mutation({
         patches.tags = args.tags;
       }
 
-      await ctx.db.patch(memory._id, patches);
+      await reconcileRow(ctx, memory._id, patches);
       updated++;
     }
 
@@ -952,16 +923,16 @@ export const updateMany = mutation({
 /**
  * Archive memory (soft delete)
  */
-export const archive = mutation({
+export const archive = graphMutation({
   args: {
+    expectedPhysicalId: v.optional(v.id("memories")),
+    expectedFingerprint: v.optional(v.string()),
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const memory = await scopedMemory(ctx, args);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -971,12 +942,14 @@ export const archive = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
+    if (args.expectedPhysicalId !== undefined && memory._id !== args.expectedPhysicalId) throw new ConvexError("DOMAIN_SELECTION_CHANGED");
+    if (args.expectedFingerprint !== undefined) checkFingerprint(memory, args.expectedFingerprint);
     // Mark as archived by adding to tags
     const updatedTags = memory.tags.includes("archived")
       ? memory.tags
       : [...memory.tags, "archived"];
 
-    await ctx.db.patch(memory._id, {
+    await reconcileRow(ctx, memory._id, {
       tags: updatedTags,
       importance: Math.min(memory.importance, 10), // Reduce importance
       updatedAt: Date.now(),
@@ -993,16 +966,16 @@ export const archive = mutation({
 /**
  * Restore memory from archive
  */
-export const restoreFromArchive = mutation({
+export const restoreFromArchive = graphMutation({
   args: {
+    expectedPhysicalId: v.optional(v.id("memories")),
+    expectedFingerprint: v.optional(v.string()),
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const memory = await scopedMemory(ctx, args);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -1012,6 +985,8 @@ export const restoreFromArchive = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
+    if (args.expectedPhysicalId !== undefined && memory._id !== args.expectedPhysicalId) throw new ConvexError("DOMAIN_SELECTION_CHANGED");
+    if (args.expectedFingerprint !== undefined) checkFingerprint(memory, args.expectedFingerprint);
     // Check if memory is archived
     if (!memory.tags.includes("archived")) {
       throw new ConvexError("MEMORY_NOT_ARCHIVED");
@@ -1023,7 +998,7 @@ export const restoreFromArchive = mutation({
     // Restore importance to a reasonable default if it was reduced
     const restoredImportance = memory.importance < 50 ? 50 : memory.importance;
 
-    await ctx.db.patch(memory._id, {
+    await reconcileRow(ctx, memory._id, {
       tags: updatedTags,
       importance: restoredImportance,
       updatedAt: Date.now(),
@@ -1088,5 +1063,31 @@ export const getAtTimestamp = query({
     }
 
     return null;
+  },
+});
+
+/** Native cursor/range service for ordinary public domain management. */
+export const domainPage = query({
+  args: {...memoryFilterFields, paginationOpts: paginationOptsValidator},
+  handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId); validateDomainSelection(args);
+    const scan = await ctx.db.query("memories").withIndex("by_tenant_space", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId)).order("desc").paginate(domainPageOptions(args.paginationOpts));
+    const page = scan.pageStatus === "SplitRequired" ? [] : scan.page.filter(row => matchesMemory(row, args));
+    const result = {...scan, page, fingerprints: Object.fromEntries(page.map(row => [row._id, domainFingerprint(row)]))};
+    await domainBudget(ctx, result); return result;
+  },
+});
+/** One frozen physical primary record per transaction; no durable receipt is claimed. */
+export const eraseSelected = graphMutation({
+  args: {tenantId: v.optional(v.string()), memorySpaceId: v.string(), physicalId: v.id("memories"), expectedFingerprint: v.string(), requireNoLinkedFacts: v.optional(v.boolean())},
+  handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId); validateDomainSelection(args);
+    const row = await ctx.db.get(args.physicalId);
+    if (!row) return {deleted: false, alreadyAbsent: true, memoryId: "", physicalId: args.physicalId};
+    if (row.tenantId !== args.tenantId || row.memorySpaceId !== args.memorySpaceId) throw new ConvexError("DOMAIN_SELECTION_CHANGED");
+    checkFingerprint(row, args.expectedFingerprint);
+    if (args.requireNoLinkedFacts) await requireNoLinkedFacts(ctx, row);
+    const graphIdentity = await domainGraphIdentity(ctx, "memories", row); await markDeletedRow(ctx, row._id);
+    return {deleted: true, memoryId: row.memoryId, physicalId: row._id, graphIdentity};
   },
 });

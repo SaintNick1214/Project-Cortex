@@ -5,7 +5,7 @@
  * Built on Convex for reactive TypeScript queries
  */
 
-import { ConvexClient } from "convex/browser";
+import { ConvexClient, type ConvexClientOptions } from "convex/browser";
 import { ConversationsAPI } from "./conversations";
 import { ImmutableAPI } from "./immutable";
 import { MutableAPI } from "./mutable";
@@ -24,6 +24,7 @@ import { AttachmentsAPI } from "./attachments";
 import type { AuthContext } from "./auth/types";
 import type { GraphAdapter } from "./graph/types";
 import { CypherGraphAdapter } from "./graph";
+import { resolveGraphConnection, type GraphConnectionOptions } from "./graph/config";
 import {
   GraphSyncWorker,
   type GraphSyncWorkerOptions,
@@ -34,6 +35,74 @@ import {
   type ResilienceConfig,
   type ResilienceMetrics,
 } from "./resilience";
+
+/** Ephemeral server transport setup, completed before any Cortex API construction. */
+export interface CortexRuntimeOptions {
+  initializeTransport?: (client: ConvexClient) => undefined;
+}
+
+type InitializationResourceStatus = "pending" | "complete" | "failed";
+interface InitializationCleanup {
+  status: InitializationResourceStatus;
+  completion: Promise<void>;
+}
+const failedInitializations = new WeakMap<object, InitializationCleanup>();
+const INITIALIZATION_FAILURE = "Cortex transport initialization failed.";
+
+// Invoke release synchronously and observe rejection immediately, without retaining causes.
+function observeInitializationRelease(release: () => unknown): InitializationCleanup {
+  const observation: InitializationCleanup = { status: "pending", completion: Promise.resolve() };
+  try {
+    const result = release();
+    observation.completion = Promise.resolve(result).then(
+      () => { observation.status = "complete"; },
+      () => { observation.status = "failed"; },
+    );
+  } catch {
+    observation.status = "failed";
+  }
+  return observation;
+}
+
+async function observeFailedInitialization(
+  client: InitializationCleanup,
+  ownedAdapter?: GraphAdapter,
+): Promise<never> {
+  // The bound starts at factory failure entry; initiate every release before awaiting.
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<void>((resolve) => { timer = setTimeout(resolve, 30000); });
+  const graph = ownedAdapter
+    ? observeInitializationRelease(() => ownedAdapter.disconnect())
+    : undefined;
+  try {
+    await Promise.race([Promise.all([client.completion, graph?.completion]), deadline]);
+  } finally {
+    clearTimeout(timer);
+  }
+  const snapshot = `client: ${client.status}; owned graph: ${graph?.status ?? "not-owned"}`;
+  const incomplete = client.status === "pending" || graph?.status === "pending";
+  throw new Error(`${INITIALIZATION_FAILURE} ${incomplete ? "Cleanup incomplete" : "Cleanup observed"} (${snapshot}).`);
+}
+
+function initializeTransport(client: ConvexClient, runtime?: CortexRuntimeOptions): void {
+  try {
+    const initializer = runtime?.initializeTransport;
+    if (initializer === undefined) return;
+    if (typeof initializer !== "function" || Object.prototype.toString.call(initializer) === "[object AsyncFunction]") {
+      throw new Error(INITIALIZATION_FAILURE);
+    }
+    const result: unknown = initializer(client);
+    if (result !== undefined) {
+      // Includes rejecting thenables and hostile then getters. No raw cause escapes.
+      void Promise.resolve(result).then(() => undefined, () => undefined);
+      throw new Error(INITIALIZATION_FAILURE);
+    }
+  } catch {
+    const failure = new Error(INITIALIZATION_FAILURE);
+    failedInitializations.set(failure, observeInitializationRelease(() => client.close()));
+    throw failure;
+  }
+}
 
 /**
  * Graph database configuration
@@ -162,8 +231,17 @@ export interface CortexConfig {
   /** Convex deployment URL */
   convexUrl: string;
 
-  /** Optional graph database integration */
+  /** Convex transport logger. Set false to suppress transport logs; omitted uses Convex defaults. */
+  convexLogger?: ConvexClientOptions["logger"];
+
+  /** Optional caller-owned graph adapter; takes precedence over automatic configuration. */
   graph?: GraphConfig;
+
+  /** Explicit automatic graph switch; false prevents driver work regardless of env. */
+  graphEnabled?: boolean;
+
+  /** One provider-specific automatic graph connection tuple. */
+  graphConnection?: GraphConnectionOptions;
 
   /**
    * Optional LLM configuration for auto fact extraction.
@@ -254,6 +332,9 @@ export interface CortexConfig {
 export class Cortex {
   private readonly client: ConvexClient;
   private syncWorker?: GraphSyncWorker;
+  private syncWorkerStart?: Promise<void>;
+  private ownedGraphAdapter?: GraphAdapter;
+  private cleanupPromise?: Promise<void>;
   private readonly resilienceLayer: ResilienceLayer;
   private readonly llmConfig?: LLMConfig;
   private readonly embeddingConfig?: EmbeddingConfig;
@@ -348,66 +429,12 @@ export class Cortex {
    *
    * @returns GraphConfig if both gates pass, undefined otherwise
    */
-  private static async autoConfigureGraph(): Promise<GraphConfig | undefined> {
-    const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === "true";
-
-    if (!graphSyncEnabled) {
-      return undefined;
-    }
-
-    // Check providers in priority order
-    const neo4jUri = process.env.NEO4J_URI;
-    const memgraphUri = process.env.MEMGRAPH_URI;
-
-    if (neo4jUri && memgraphUri) {
-      console.warn(
-        "[Cortex] Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j.",
-      );
-    }
-
-    if (neo4jUri) {
-      try {
-        const adapter = new CypherGraphAdapter();
-        await adapter.connect({
-          uri: neo4jUri,
-          username: process.env.NEO4J_USERNAME || "neo4j",
-          password: process.env.NEO4J_PASSWORD || "",
-        });
-        return { adapter, autoSync: true };
-      } catch (error) {
-        console.error(
-          "[Cortex] Failed to connect to Neo4j:",
-          error instanceof Error ? error.message : error,
-        );
-        return undefined;
-      }
-    }
-
-    if (memgraphUri) {
-      try {
-        const adapter = new CypherGraphAdapter();
-        await adapter.connect({
-          uri: memgraphUri,
-          username: process.env.MEMGRAPH_USERNAME || "memgraph",
-          password: process.env.MEMGRAPH_PASSWORD || "",
-        });
-        return { adapter, autoSync: true };
-      } catch (error) {
-        console.error(
-          "[Cortex] Failed to connect to Memgraph:",
-          error instanceof Error ? error.message : error,
-        );
-        return undefined;
-      }
-    }
-
-    // CORTEX_GRAPH_SYNC=true but no URI found - warn user
-    console.warn(
-      "[Cortex] CORTEX_GRAPH_SYNC=true but no graph database URI found. " +
-        "Set NEO4J_URI or MEMGRAPH_URI to enable graph sync.",
-    );
-
-    return undefined;
+  private static async autoConfigureGraph(config: CortexConfig): Promise<GraphConfig | undefined> {
+    const connection = resolveGraphConnection({ enabled: config.graphEnabled, connection: config.graphConnection });
+    if (!connection) return undefined;
+    const adapter = new CypherGraphAdapter();
+    await adapter.connect(connection);
+    return { adapter, autoSync: true };
   }
 
   /**
@@ -429,15 +456,27 @@ export class Cortex {
    * @param config - Cortex configuration (explicit config takes priority over env vars)
    * @returns Promise<Cortex> - Fully configured Cortex instance
    */
-  static async create(config: CortexConfig): Promise<Cortex> {
-    // Auto-configure graph if not explicitly provided
-    const graphConfig = config.graph ?? (await Cortex.autoConfigureGraph());
-
-    // Create instance with potentially auto-configured graph
-    return new Cortex({
-      ...config,
-      graph: graphConfig,
-    });
+  static async create(config: CortexConfig, runtime?: CortexRuntimeOptions): Promise<Cortex> {
+    const graphConfig = config.graph ?? (await Cortex.autoConfigureGraph(config));
+    const ownedAdapter = config.graph ? undefined : graphConfig?.adapter;
+    let cortex: Cortex | undefined;
+    try {
+      cortex = new Cortex({ ...config, graph: graphConfig }, runtime);
+      cortex.ownedGraphAdapter = ownedAdapter;
+      await cortex.syncWorkerStart;
+      return cortex;
+    } catch (error) {
+      const failedInitialization = typeof error === "object" && error !== null ? failedInitializations.get(error) : undefined;
+      if (failedInitialization) return observeFailedInitialization(failedInitialization, ownedAdapter);
+      if (cortex) {
+        try { await cortex.shutdown(); } catch { /* All resource cleanup was attempted. */ }
+        throw new Error("Graph sync initialization failed. Check the graph and Convex connection configuration.");
+      }
+      if (ownedAdapter) {
+        try { await ownedAdapter.disconnect(); } catch { /* Preserve construction failure without exposing credentials. */ }
+      }
+      throw error;
+    }
   }
 
   // Layer 1a: Conversations
@@ -485,9 +524,12 @@ export class Cortex {
   // Attachments - Multi-modal File Storage
   public attachments: AttachmentsAPI;
 
-  constructor(config: CortexConfig) {
+  constructor(config: CortexConfig, runtime?: CortexRuntimeOptions) {
     // Initialize Convex client
-    this.client = new ConvexClient(config.convexUrl);
+    this.client = config.convexLogger === undefined
+      ? new ConvexClient(config.convexUrl)
+      : new ConvexClient(config.convexUrl, { logger: config.convexLogger });
+    initializeTransport(this.client, runtime);
 
     // Store LLM config for fact extraction
     // Use explicit config if provided, otherwise auto-configure from environment
@@ -507,48 +549,50 @@ export class Cortex {
 
     // Get graph adapter if configured
     const graphAdapter = config.graph?.adapter;
+    const graphPolicy: import("./graph/types").GraphSyncPolicy = {mode: config.graph?.autoSync ? "background" : "inline"};
 
     // Initialize API modules with graph adapter, resilience layer, and auth context
     this.conversations = new ConversationsAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext,
+      this.authContext, graphPolicy
     );
     this.immutable = new ImmutableAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext,
+      this.authContext, graphPolicy
     );
     this.mutable = new MutableAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext,
+      this.authContext, graphPolicy
     );
     this.vector = new VectorAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext, graphPolicy
     );
     this.facts = new FactsAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext,
+      this.authContext, undefined, undefined, graphPolicy
     );
     this.contexts = new ContextsAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext, // Pass authContext for multi-tenancy
+      this.authContext, graphPolicy // Pass authContext for multi-tenancy
     );
     this.memorySpaces = new MemorySpacesAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext,
+      this.authContext, graphPolicy
     );
     this.users = new UsersAPI(
       this.client,
@@ -577,7 +621,7 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
-      this.authContext,
+      this.authContext, graphPolicy
     );
     this.attachments = new AttachmentsAPI(
       this.client,
@@ -597,6 +641,7 @@ export class Cortex {
         llm: this.llmConfig,
         embedding: this.embeddingConfig, // Pass embedding config for auto semantic search
         authContext: this.authContext, // Pass authContext for tenant isolation
+        graphSyncPolicy: graphPolicy,
       },
     );
 
@@ -605,12 +650,13 @@ export class Cortex {
       this.syncWorker = new GraphSyncWorker(
         this.client,
         graphAdapter,
-        config.graph.syncWorkerOptions,
+        config.graph.syncWorkerOptions, {tenantId: this.authContext?.tenantId}
       );
 
       // Start worker asynchronously (don't block constructor)
-      void this.syncWorker.start().catch((error) => {
-        console.error("Failed to start graph sync worker:", error);
+      this.syncWorkerStart = this.syncWorker.start();
+      void this.syncWorkerStart.catch(() => {
+        console.error("[Cortex] Graph sync worker initialization failed.");
       });
     }
   }
@@ -693,40 +739,46 @@ export class Cortex {
    * Close the connection to Convex and stop all workers
    */
   close(): void {
-    // Stop graph sync worker
-    if (this.syncWorker) {
-      this.syncWorker.stop();
-    }
-
-    // Stop resilience layer queue processor
-    this.resilienceLayer.stopQueueProcessor();
-
-    void this.client.close();
+    // Keep the synchronous public signature; shutdown() can await the same cleanup.
+    void this.dispose(false).catch(() => {
+      console.warn("[Cortex] Resource cleanup failed. Use shutdown() to observe completion.");
+    });
   }
 
-  /**
-   * Gracefully shutdown the SDK
-   *
-   * Waits for pending operations to complete before closing.
-   *
-   * @param timeoutMs Maximum time to wait (default: 30000ms)
-   */
-  async shutdown(timeoutMs: number = 30000): Promise<void> {
-    // Stop graph sync worker
-    if (this.syncWorker) {
-      this.syncWorker.stop();
+  private dispose(graceful: boolean, timeoutMs = 30000): Promise<void> {
+    if (!this.cleanupPromise) {
+      this.cleanupPromise = (async () => {
+        const failures: unknown[] = [];
+        try { await this.syncWorkerStart; } catch (error) { failures.push(error); }
+        try {
+          await this.syncWorker?.stop();
+          if (graceful) await this.resilienceLayer.shutdown(timeoutMs);
+          else this.resilienceLayer.stopQueueProcessor();
+        } catch (error) { failures.push(error); }
+        const adapter = this.ownedGraphAdapter;
+        this.ownedGraphAdapter = undefined;
+        // Each owned resource is attempted even if an earlier cleanup fails.
+        const results = await Promise.allSettled([
+          Promise.resolve().then(() => this.client.close()),
+          ...(adapter ? [Promise.resolve().then(() => adapter.disconnect())] : []),
+        ]);
+        if (failures.length || results.some((result) => result.status === "rejected")) {
+          throw new Error("Cortex resource cleanup failed.");
+        }
+      })();
     }
+    return this.cleanupPromise;
+  }
 
-    // Gracefully shutdown resilience layer
-    await this.resilienceLayer.shutdown(timeoutMs);
-
-    // Close Convex client
-    void this.client.close();
+  /** Await exactly-once cleanup, including automatically created graph resources. */
+  async shutdown(timeoutMs: number = 30000): Promise<void> {
+    await this.dispose(true, timeoutMs);
   }
 }
 
 // Re-export types
 export type * from "./types";
+export { DomainOperationPartialError, A2ATimeoutError } from "./types";
 
 // Re-export graph types and classes
 export type * from "./graph/types";
@@ -735,7 +787,7 @@ export type {
   SyncHealthMetrics,
 } from "./graph/worker/GraphSyncWorker";
 export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
-export { CypherGraphAdapter } from "./graph";
+export { CypherGraphAdapter, GraphDatabaseError, GraphConnectionError, GraphAuthenticationError, GraphQueryError, GraphNotFoundError } from "./graph";
 
 // Re-export validation errors for user catch blocks
 export { UserValidationError } from "./users";
@@ -818,3 +870,10 @@ export type {
   /** Observer interface for real-time orchestration monitoring */
   OrchestrationObserver,
 } from "./types";
+
+export { resolveGraphConnection } from "./graph/config";
+export type { GraphConnectionOptions } from "./graph/config";
+
+// Managed graph administration and truthful original-job reconciliation.
+export {createGraphRebuildTransport,createGraphErasureTransport,initialGraphSync,GraphRebuildPartialError,GraphErasureProgressError,prepareGraphErasure,eraseGraphItem,verifyGraphErasure,deliverGraphJob,GraphJobUnresolved,GraphPrimaryOutcomeUnknown,GraphCommittedPartial,assertManagedGraphCompatibility,initializeGraphSchema,verifyGraphSchema,dropGraphSchema} from "./graph";
+export type {GraphRebuildTransport,GraphRebuildSelection,GraphErasureTransport,GraphErasureStatus,BatchSyncOptions,BatchSyncResult,GraphErasureItem,PreparedGraphErasureItem,GraphErasureDelivery} from "./graph";

@@ -1,14 +1,15 @@
+import { markDeletedRow } from "./lib/referenceLifecycle";
 /**
  * Admin Operations
  *
  * Low-level administrative functions for database management.
- * These bypass normal validation for cleanup/maintenance operations.
+ * These bypass application scope checks for cleanup/maintenance operations.
  *
- * WARNING: These functions are powerful and should only be used by
- * authorized administrative tools like the CLI.
+ * Internal registration prevents ordinary clients from invoking these functions.
+ * Deployment administrators can intentionally invoke them with native Convex tools.
  */
 
-import { mutation, query } from "./_generated/server";
+import { internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -18,7 +19,7 @@ import { v } from "convex/values";
 /**
  * List all records from any table
  */
-export const listTable = query({
+export const listTable = internalQuery({
   args: {
     table: v.union(
       v.literal("agents"),
@@ -54,7 +55,7 @@ export const listTable = query({
 /**
  * Delete a record by its Convex _id
  */
-export const deleteRecord = mutation({
+export const deleteRecord = internalMutation({
   args: {
     table: v.union(
       v.literal("agents"),
@@ -93,7 +94,7 @@ export const deleteRecord = mutation({
   handler: async (ctx, args) => {
     // Delete the record directly using Convex _id
     // Convex routes to the correct table based on the ID prefix
-    await ctx.db.delete(args.id);
+    await markDeletedRow(ctx, args.id, {raw: true, table: args.table});
     return { deleted: true };
   },
 });
@@ -102,7 +103,7 @@ export const deleteRecord = mutation({
  * Bulk delete all records from a table (up to limit)
  * Returns count of deleted records
  */
-export const clearTable = mutation({
+export const clearTable = internalMutation({
   args: {
     table: v.union(
       v.literal("agents"),
@@ -133,7 +134,7 @@ export const clearTable = mutation({
 
     let deleted = 0;
     for (const record of records) {
-      await ctx.db.delete(record._id);
+      await markDeletedRow(ctx, record._id, {raw: true, table: args.table});
       deleted++;
     }
 
@@ -151,7 +152,7 @@ export const clearTable = mutation({
 /**
  * Count records in a table
  */
-export const countTable = query({
+export const countTable = internalQuery({
   args: {
     table: v.union(
       v.literal("agents"),
@@ -182,7 +183,7 @@ export const countTable = query({
 /**
  * Get counts for all tables at once
  */
-export const getAllCounts = query({
+export const getAllCounts = internalQuery({
   args: {},
   handler: async (ctx) => {
     const tables = [

@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
   // Required for @cortexmemory packages to work with Turbopack
-  transpilePackages: ["@cortexmemory/vercel-ai-provider", "@cortexmemory/sdk", "react-data-grid"],
+  transpilePackages: [
+    "@cortexmemory/vercel-ai-provider",
+    "@cortexmemory/sdk",
+    "react-data-grid",
+  ],
   images: {
     remotePatterns: [
       {

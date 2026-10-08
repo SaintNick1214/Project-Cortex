@@ -1,3 +1,4 @@
+import { privateRequest, requireSameOrigin } from "@/lib/private-request";
 import { geolocation } from "@vercel/functions";
 import {
   convertToModelMessages,
@@ -9,8 +10,20 @@ import {
 } from "ai";
 import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
-import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
+import { CortexMemoryProvider } from "@cortexmemory/vercel-ai-provider";
 import type { LayerObserver } from "@cortexmemory/vercel-ai-provider";
+import {
+  createScopedCortex,
+  closeOwnedCortex,
+  requireScope,
+} from "@/lib/cortex";
+import { privateCall } from "@/lib/private-backend";
+import {
+  branchContext,
+  applyToolApprovals,
+  type RecallBranch,
+} from "@/lib/active-branch";
+import { assertChatConfiguration } from "@/lib/ai/providers";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
@@ -20,10 +33,7 @@ import { getWeather } from "@/lib/ai/tools/get-weather";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { updateDocument } from "@/lib/ai/tools/update-document";
 import { isProductionEnvironment } from "@/lib/constants";
-import {
-  getCortexMemoryConfig,
-  getMemorySpaceId,
-} from "@/lib/cortex-memory-config";
+import { getCortexMemoryConfig } from "@/lib/cortex-memory-config";
 import {
   createStreamId,
   deleteChatById,
@@ -32,10 +42,13 @@ import {
   getMessagesByChatId,
   saveChat,
   updateChatTitleById,
-  updateMessage,
+  saveMessages,
+  prepareChatMessages,
 } from "@/lib/db/queries";
 import type { DBMessage } from "@/lib/types";
 import { ChatSDKError } from "@/lib/errors";
+import { reportChatStreamError } from "@/lib/chat-stream-errors";
+import { resolveOwnedModelUploads } from "@/lib/owned-model-uploads";
 import type { ChatMessage } from "@/lib/types";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
 import { generateTitleFromUserMessage } from "../../actions";
@@ -51,16 +64,17 @@ function getStreamContext() {
   }
 }
 
-export { getStreamContext };
-
 export async function POST(request: Request) {
   let requestBody: PostRequestBody;
 
   try {
+    requireSameOrigin(request);
     const json = await request.json();
     requestBody = postRequestBodySchema.parse(json);
-  } catch (_) {
-    return new ChatSDKError("bad_request:api").toResponse();
+  } catch (error) {
+    return error instanceof ChatSDKError
+      ? error.toResponse()
+      : new ChatSDKError("bad_request:api").toResponse();
   }
 
   try {
@@ -73,7 +87,24 @@ export async function POST(request: Request) {
       return new ChatSDKError("unauthorized:chat").toResponse();
     }
 
+    assertChatConfiguration(selectedChatModel);
+    const scope = await requireScope(session.user.id);
+    const signal = AbortSignal.any([
+      request.signal,
+      AbortSignal.timeout(60000),
+    ]);
     const userType: UserType = session.user.type;
+    if (message)
+      await privateCall("app/chatData:verifyUploads", {
+        ...scope,
+        files: message.parts
+          .filter((part) => part.type === "file")
+          .map((part) => ({
+            url: part.url,
+            name: part.name,
+            mediaType: part.mediaType,
+          })),
+      });
 
     const messageCount = await getMessageCountByUserId({
       id: session.user.id,
@@ -88,15 +119,13 @@ export async function POST(request: Request) {
 
     const chat = await getChatById({ id });
     let messagesFromDb: DBMessage[] = [];
-    let titlePromise: Promise<string> | null = null;
+    let makeTitle: (() => Promise<string>) | null = null;
 
     if (chat) {
       if (chat.userId !== session.user.id) {
         return new ChatSDKError("forbidden:chat").toResponse();
       }
-      if (!isToolApprovalFlow) {
-        messagesFromDb = await getMessagesByChatId({ id });
-      }
+      messagesFromDb = await getMessagesByChatId({ id });
     } else if (message?.role === "user") {
       await saveChat({
         id,
@@ -104,12 +133,42 @@ export async function POST(request: Request) {
         title: "New chat",
         visibility: selectedVisibilityType,
       });
-      titlePromise = generateTitleFromUserMessage({ message });
+      makeTitle = () => generateTitleFromUserMessage({ message, chatId: id });
     }
 
+    if (!chat && message?.role !== "user")
+      throw new ChatSDKError("bad_request:chat");
+    if (!isToolApprovalFlow && !message)
+      throw new ChatSDKError("bad_request:chat");
+    if (message)
+      messagesFromDb = await prepareChatMessages({
+        chatId: id,
+        message,
+        regenerate: !!requestBody.regenerate,
+      });
+    const current = convertToUIMessages(messagesFromDb);
     const uiMessages = isToolApprovalFlow
-      ? (messages as ChatMessage[])
-      : [...convertToUIMessages(messagesFromDb), message as ChatMessage];
+      ? applyToolApprovals(current, messages as ChatMessage[])
+      : [...current, message as ChatMessage];
+    if (message)
+      await saveMessages({
+        messages: [
+          {
+            id: message.id,
+            chatId: id,
+            role: "user",
+            parts: message.parts,
+            attachments: [],
+            createdAt: new Date(),
+          },
+        ],
+      });
+    const branches = await privateCall<RecallBranch[]>(
+      "app/chatData:recallBranches",
+      scope,
+    );
+    const currentBranch = await getMessagesByChatId({ id });
+    const customContextBuilder = branchContext(scope, branches, currentBranch);
 
     const { longitude, latitude, city, country } = geolocation(request);
 
@@ -120,18 +179,18 @@ export async function POST(request: Request) {
       country,
     };
 
-    // Note: User message storage is handled by Cortex Memory's rememberStream()
-    // to avoid duplicate messages in conversation history.
-    // See: rememberStream stores both user and assistant messages with ACID guarantees.
+    // Model context and reload use the active app branch. SDK persistence retains its audit and memory separately.
 
     const isReasoningModel =
       selectedChatModel.includes("reasoning") ||
       selectedChatModel.includes("thinking");
 
-    const modelMessages = await convertToModelMessages(uiMessages);
+    const modelMessages = await convertToModelMessages(
+      await resolveOwnedModelUploads(uiMessages, scope, signal),
+    );
 
     const stream = createUIMessageStream({
-      originalMessages: isToolApprovalFlow ? uiMessages : undefined,
+      originalMessages: uiMessages,
       execute: async ({ writer: dataStream }) => {
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // Layer Observer - emits phase-aware events for real-time UI visualization
@@ -200,8 +259,8 @@ export async function POST(request: Request) {
                 data: { orchestrationId },
                 transient: true,
               });
-            } catch (error) {
-              console.error("Error in onRecallStart:", error);
+            } catch {
+              console.error("Memory onRecallStart event could not be written");
               // Ensure reasoning-end is emitted even on error
               try {
                 dataStream.write({
@@ -230,8 +289,10 @@ export async function POST(request: Request) {
                 data: summary,
                 transient: true,
               });
-            } catch (error) {
-              console.error("Error in onRecallComplete:", error);
+            } catch {
+              console.error(
+                "Memory onRecallComplete event could not be written",
+              );
               // Attempt to emit reasoning-end even on error
               try {
                 dataStream.write({
@@ -259,8 +320,10 @@ export async function POST(request: Request) {
                 data: { orchestrationId },
                 transient: true,
               });
-            } catch (error) {
-              console.error("Error in onRememberStart:", error);
+            } catch {
+              console.error(
+                "Memory onRememberStart event could not be written",
+              );
               // Ensure reasoning-end is emitted even on error
               try {
                 dataStream.write({
@@ -289,8 +352,10 @@ export async function POST(request: Request) {
                 data: summary,
                 transient: true,
               });
-            } catch (error) {
-              console.error("Error in onRememberComplete:", error);
+            } catch {
+              console.error(
+                "Memory onRememberComplete event could not be written",
+              );
               // Attempt to emit reasoning-end even on error
               try {
                 dataStream.write({
@@ -312,8 +377,18 @@ export async function POST(request: Request) {
               // Determine phase - use explicit phase if available, otherwise infer from layer
               // Recall layers: memorySpace, user, agent, vector, facts, graph
               // Storage layers: conversation (after response)
-              const recallLayers = ["memorySpace", "user", "agent", "vector", "facts", "graph", "context"];
-              const inferredPhase = recallLayers.includes(event.layer) ? "recall" : "remember";
+              const recallLayers = [
+                "memorySpace",
+                "user",
+                "agent",
+                "vector",
+                "facts",
+                "graph",
+                "context",
+              ];
+              const inferredPhase = recallLayers.includes(event.layer)
+                ? "recall"
+                : "remember";
               const phase = event.phase || inferredPhase;
 
               let orchestrationId =
@@ -363,16 +438,26 @@ export async function POST(request: Request) {
               // Keep existing transient event for backward compatibility (all statuses)
               dataStream.write({
                 type: "data-layer-update",
-                data: event,
+                data: {
+                  ...event,
+                  error: event.error
+                    ? { message: "Memory operation failed" }
+                    : undefined,
+                },
                 transient: true,
               });
-            } catch (error) {
-              console.error("Error in onLayerUpdate:", error);
+            } catch {
+              console.error("Memory onLayerUpdate event could not be written");
               // Still emit the transient event even if reasoning-delta fails
               try {
                 dataStream.write({
                   type: "data-layer-update",
-                  data: event,
+                  data: {
+                    ...event,
+                    error: event.error
+                      ? { message: "Memory operation failed" }
+                      : undefined,
+                  },
                   transient: true,
                 });
               } catch {
@@ -388,92 +473,159 @@ export async function POST(request: Request) {
         // Auth context: session.user.id comes from Auth.js JWT session
         // See lib/auth-cortex.ts for getCortexAuthContext() helper
         const cortexConfig = getCortexMemoryConfig(
-          getMemorySpaceId(),
+          scope.memorySpaceId,
           session.user.id, // userId from authenticated JWT session
           id, // conversationId (chat ID)
           layerObserver,
+          signal,
         );
 
         // Create Cortex memory wrapper
-        const cortexMemory = await createCortexMemoryAsync(cortexConfig);
+        const cortex = await createScopedCortex(
+          scope,
+          process.env.CORTEX_GRAPH_SYNC === "true",
+        );
+        let provider: CortexMemoryProvider | undefined;
+        try {
+          provider = new CortexMemoryProvider(
+            getLanguageModel(selectedChatModel),
+            { ...cortexConfig, customContextBuilder },
+            cortex,
+          );
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Stream with Cortex Memory-wrapped model
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        const result = streamText({
-          model: cortexMemory(getLanguageModel(selectedChatModel)),
-          system: systemPrompt({ selectedChatModel, requestHints }),
-          messages: modelMessages,
-          stopWhen: stepCountIs(5),
-          experimental_activeTools: isReasoningModel
-            ? []
-            : [
-                "getWeather",
-                "createDocument",
-                "updateDocument",
-                "requestSuggestions",
-              ],
-          providerOptions: isReasoningModel
-            ? {
-                anthropic: {
-                  thinking: { type: "enabled", budgetTokens: 10_000 },
-                },
-              }
-            : undefined,
-          tools: {
-            getWeather,
-            createDocument: createDocument({ session, dataStream }),
-            updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({ session, dataStream }),
-          },
-          experimental_telemetry: {
-            isEnabled: isProductionEnvironment,
-            functionId: "stream-text",
-          },
-        });
+          // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          // Stream with Cortex Memory-wrapped model
+          // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          assertV3Provider(provider);
+          const result = streamText({
+            model: provider,
+            onError: ({ error }) => reportChatStreamError("model-stream", error),
+            abortSignal: signal,
+            system: systemPrompt({ selectedChatModel, requestHints }),
+            messages: modelMessages,
+            stopWhen: stepCountIs(5),
+            activeTools: isReasoningModel
+              ? []
+              : [
+                  "getWeather",
+                  "createDocument",
+                  "updateDocument",
+                  "requestSuggestions",
+                ],
+            providerOptions: isReasoningModel
+              ? {
+                  anthropic: {
+                    thinking: { type: "enabled", budgetTokens: 10_000 },
+                  },
+                }
+              : undefined,
+            tools: {
+              getWeather,
+              createDocument: createDocument({
+                session,
+                dataStream,
+                conversationId: id,
+              }),
+              updateDocument: updateDocument({ session, dataStream }),
+              requestSuggestions: requestSuggestions({ session, dataStream }),
+            },
+            experimental_telemetry: {
+              isEnabled: isProductionEnvironment,
+              functionId: "stream-text",
+            },
+          });
 
-        dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
+          dataStream.merge(result.toUIMessageStream({
+            sendReasoning: true,
+            onError: (error) => {
+              reportChatStreamError("model-stream", error);
+              return "Oops, an error occurred!";
+            },
+          }));
 
-        if (titlePromise) {
-          const title = await titlePromise;
-          // IMPORTANT: Save title to database FIRST, then notify client
-          // This ensures when client re-fetches, the new title is already in Convex
-          try {
-            await updateChatTitleById({ chatId: id, title, userId: session.user.id });
-          } catch (error) {
-            console.error("Error updating chat title:", error);
+          if (makeTitle) {
+            let title: string;
+            try {
+              title = await makeTitle();
+            } catch (error) {
+              reportChatStreamError("chat-title", error);
+              throw error;
+            }
+            // IMPORTANT: Save title to database FIRST, then notify client
+            // This ensures when client re-fetches, the new title is already in Convex
+            try {
+              await updateChatTitleById({
+                chatId: id,
+                title,
+                userId: session.user.id,
+              });
+            } catch (error) {
+              reportChatStreamError("chat-title-save", error);
+              throw error;
+            }
+            // Now notify client to refresh - title is already saved in Convex
+            dataStream.write({ type: "data-chat-title", data: title });
           }
-          // Now notify client to refresh - title is already saved in Convex
-          dataStream.write({ type: "data-chat-title", data: title });
+          await new Promise<void>((resolve, reject) => {
+            const abort = () =>
+              reject(
+                new ChatSDKError("offline:chat", "Chat cancelled or timed out"),
+              );
+            if (signal.aborted) return abort();
+            signal.addEventListener("abort", abort, { once: true });
+            Promise.resolve(
+              result.consumeStream({
+                onError: (error) => {
+                  reportChatStreamError("stream-consume", error);
+                  reject(new ChatSDKError("offline:chat"));
+                },
+              }),
+            )
+              .then(resolve, (error) => {
+                reportChatStreamError("stream-consume", error);
+                reject(new ChatSDKError("offline:chat"));
+              })
+              .finally(() => signal.removeEventListener("abort", abort));
+          });
+        } catch (error) {
+          reportChatStreamError("stream-execute", error);
+          throw error;
+        } finally {
+          try {
+            await provider?.close().catch((error) => {
+              reportChatStreamError("provider-close", error);
+              throw error;
+            });
+          } finally {
+            await closeOwnedCortex(cortex).catch((error) => {
+              reportChatStreamError("cortex-close", error);
+              throw error;
+            });
+          }
         }
       },
       generateId: generateUUID,
       onFinish: async ({ messages: finishedMessages }) => {
-        // Note: Message storage is handled by Cortex Memory's rememberStream()
-        // to avoid duplicate messages in conversation history.
-        // rememberStream stores both user and assistant messages with ACID guarantees.
-        // 
-        // Tool approval flow may still need message updates for tool state changes:
-        if (isToolApprovalFlow) {
-          for (const finishedMsg of finishedMessages) {
-            const existingMsg = uiMessages.find((m) => m.id === finishedMsg.id);
-            if (existingMsg) {
-              // Only update existing messages (Cortex messages are immutable, so this is a no-op)
-              try {
-                await updateMessage({
-                  id: finishedMsg.id,
-                  parts: finishedMsg.parts,
-                });
-              } catch {
-                // Cortex messages are immutable - this is expected to fail
-              }
-            }
-            // Don't save new messages - rememberStream handles this
-          }
+        try {
+          await saveMessages({
+            messages: finishedMessages.map((message) => ({
+              id: message.id,
+              chatId: id,
+              role: message.role,
+              parts: message.parts,
+              attachments: [],
+              createdAt: new Date(),
+            })),
+          });
+        } catch (error) {
+          reportChatStreamError("stream-finish", error);
+          throw error;
         }
-        // Normal flow: rememberStream handles all message storage
       },
-      onError: () => "Oops, an error occurred!",
+      onError: (error) => {
+        reportChatStreamError("stream-response", error);
+        return "Oops, an error occurred!";
+      },
     });
 
     return createUIMessageStreamResponse({
@@ -489,7 +641,7 @@ export async function POST(request: Request) {
             await createStreamId({ streamId, chatId: id });
             await streamContext.createNewResumableStream(
               streamId,
-              () => sseStream
+              () => sseStream,
             );
           }
         } catch (_) {
@@ -498,8 +650,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    const vercelId = request.headers.get("x-vercel-id");
-
+    reportChatStreamError("request-prepare", error);
     if (error instanceof ChatSDKError) {
       return error.toResponse();
     }
@@ -507,38 +658,48 @@ export async function POST(request: Request) {
     if (
       error instanceof Error &&
       error.message?.includes(
-        "AI Gateway requires a valid credit card on file to service requests"
+        "AI Gateway requires a valid credit card on file to service requests",
       )
     ) {
       return new ChatSDKError("bad_request:activate_gateway").toResponse();
     }
 
-    console.error("Unhandled error in chat API:", error, { vercelId });
     return new ChatSDKError("offline:chat").toResponse();
   }
 }
 
 export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+  return privateRequest(request, async () => {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
 
-  if (!id) {
-    return new ChatSDKError("bad_request:api").toResponse();
-  }
+    if (!id) {
+      return new ChatSDKError("bad_request:api").toResponse();
+    }
 
-  const session = await auth();
+    const session = await auth();
 
-  if (!session?.user) {
-    return new ChatSDKError("unauthorized:chat").toResponse();
-  }
+    if (!session?.user) {
+      return new ChatSDKError("unauthorized:chat").toResponse();
+    }
 
-  const chat = await getChatById({ id });
+    const chat = await getChatById({ id });
 
-  if (chat?.userId !== session.user.id) {
-    return new ChatSDKError("forbidden:chat").toResponse();
-  }
+    if (chat?.userId !== session.user.id) {
+      return new ChatSDKError("forbidden:chat").toResponse();
+    }
 
-  const deletedChat = await deleteChatById({ id });
+    const deletedChat = await deleteChatById({ id });
 
-  return Response.json(deletedChat, { status: 200 });
+    return Response.json(deletedChat, { status: 200 });
+  });
+}
+
+function assertV3Provider(
+  provider: CortexMemoryProvider,
+): asserts provider is CortexMemoryProvider & {
+  readonly specificationVersion: "v3";
+} {
+  if (provider.specificationVersion !== "v3")
+    throw new ChatSDKError("offline:chat", "Use an AI SDK 6 model");
 }

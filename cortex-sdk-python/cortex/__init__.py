@@ -64,6 +64,37 @@ from .facts import (
 )
 from .facts.validators import FactsValidationError
 from .governance.validators import GovernanceValidationError
+
+# Validation Errors already imported above, UserValidationError completes the set
+# Managed graph helpers have no optional driver requirement. A broken import is
+# a real package error, while CypherGraphAdapter itself reports missing neo4j.
+from .graph import (
+    GraphCommittedPartial,
+    GraphErasureApplyResult,
+    GraphErasureEvidence,
+    GraphErasureItem,
+    GraphErasureProgressError,
+    GraphErasureStatus,
+    GraphJobUnresolved,
+    GraphPrimaryOutcomeUnknown,
+    GraphRebuildPartialError,
+    PreparedGraphErasureItem,
+    assert_managed_graph_compatibility,
+    create_graph_erasure_transport,
+    create_graph_rebuild_transport,
+    deliver_graph_job,
+    erase_graph_item,
+    initial_graph_sync,
+    prepare_graph_erasure,
+    verify_graph_erasure,
+)
+from .graph.adapters import CypherGraphAdapter
+from .graph.schema import (
+    drop_graph_schema,
+    initialize_graph_schema,
+    verify_graph_schema,
+)
+from .graph.worker import GraphSyncWorker
 from .immutable.validators import ImmutableValidationError
 from .memory.validators import MemoryValidationError
 from .memory_spaces.validators import MemorySpaceValidationError
@@ -182,6 +213,9 @@ from .types import (
     EnforcementStats,
     EnforcementStatsOptions,
     EnrichedMemory,
+    ErasureGraphParticipant,
+    ErasureReceipt,
+    ErasureTransportProtocol,
     ExpireSessionsOptions,
     ExportAgentsOptions,
     ExportAgentsResult,
@@ -201,15 +235,22 @@ from .types import (
     GetHistoryResult,
     GetMemorySpaceStatsOptions,
     GovernancePolicy,
+    GraphApplyResult,
     GraphConfig,
     GraphConnectionConfig,
     GraphDeleteResult,
     GraphEdge,
+    GraphIdentity,
+    GraphJob,
+    GraphJobReceipt,
     GraphNode,
     GraphOperation,
     GraphPath,
+    GraphProjection,
     GraphQuery,
     GraphQueryResult,
+    GraphReference,
+    GraphScope,
     GraphSyncWorkerOptions,
     ImmutableEntry,
     ImmutablePolicy,
@@ -349,26 +390,7 @@ from .types import (
 from .users.validators import UserValidationError
 from .vector.validators import VectorValidationError
 
-# Validation Errors already imported above, UserValidationError completes the set
-
-# Graph Integration (optional import)
-try:
-    from .graph.adapters import CypherGraphAdapter
-    from .graph.schema import (
-        drop_graph_schema,
-        initialize_graph_schema,
-        verify_graph_schema,
-    )
-    from .graph.worker import GraphSyncWorker
-
-    _GRAPH_AVAILABLE = True
-except ImportError:
-    _GRAPH_AVAILABLE = False
-    CypherGraphAdapter = None  # type: ignore
-    initialize_graph_schema = None  # type: ignore[assignment]
-    verify_graph_schema = None  # type: ignore[assignment]
-    drop_graph_schema = None  # type: ignore[assignment]
-    GraphSyncWorker = None  # type: ignore
+_GRAPH_AVAILABLE = True
 
 
 # Read version dynamically from package metadata (pyproject.toml)
@@ -556,6 +578,9 @@ __all__ = [
     "UserProfile",
     "UserVersion",
     "DeleteUserOptions",
+    "ErasureGraphParticipant",
+    "ErasureReceipt",
+    "ErasureTransportProtocol",
     "UserDeleteResult",
     "RegisteredAgent",
     "AgentRegistration",
@@ -693,3 +718,14 @@ __all__ = [
     "GraphSyncWorker",
 ]
 
+
+__all__ += [
+    "assert_managed_graph_compatibility", "create_graph_rebuild_transport",
+    "create_graph_erasure_transport", "initial_graph_sync", "prepare_graph_erasure",
+    "erase_graph_item", "verify_graph_erasure", "deliver_graph_job",
+    "GraphRebuildPartialError", "GraphErasureProgressError", "GraphJobUnresolved",
+    "GraphPrimaryOutcomeUnknown", "GraphCommittedPartial", "GraphScope",
+    "GraphIdentity", "GraphProjection", "GraphReference", "GraphJob",
+    "GraphJobReceipt", "GraphApplyResult", "GraphErasureEvidence", "GraphErasureItem",
+    "PreparedGraphErasureItem", "GraphErasureStatus", "GraphErasureApplyResult",
+]

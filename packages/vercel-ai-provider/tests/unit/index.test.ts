@@ -47,6 +47,7 @@ jest.mock("@cortexmemory/sdk", () => {
   const mockInstance = {
     memory: mockMemory,
     close: jest.fn(),
+    shutdown: jest.fn().mockResolvedValue(undefined),
   };
 
   const MockCortex = jest.fn().mockImplementation(() => mockInstance);

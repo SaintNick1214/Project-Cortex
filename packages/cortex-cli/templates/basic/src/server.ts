@@ -28,6 +28,7 @@ import { printWelcome, printInfo, printError, printSuccess } from "./display.js"
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const app = new Hono();
+let server: ReturnType<typeof serve> | undefined;
 
 // Middleware
 app.use("*", cors());
@@ -267,7 +268,7 @@ async function main(): Promise<void> {
   console.log('     -d \'{"message": "My name is Alex"}\'');
   console.log("");
 
-  serve({
+  server = serve({
     fetch: app.fetch,
     port: PORT,
   });
@@ -275,17 +276,21 @@ async function main(): Promise<void> {
   printInfo(`Server running on port ${PORT}`);
 }
 
-// Handle cleanup
-process.on("SIGINT", () => {
-  console.log("\n\nShutting down...");
-  closeCortex();
-  process.exit(0);
-});
-
-process.on("SIGTERM", () => {
-  closeCortex();
-  process.exit(0);
-});
+// Stop HTTP admission and await the client before reporting shutdown complete.
+let stopping: Promise<void> | undefined;
+function stop(): Promise<void> {
+  return stopping ??= (async () => {
+    if (server) await new Promise<void>((resolve, reject) => {
+      server!.close((error) => error ? reject(error) : resolve());
+    });
+    await closeCortex();
+  })();
+}
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+  process.on(signal, () => {
+    void stop().then(() => process.exit(0), () => process.exit(1));
+  });
+}
 
 // Run
 main().catch((error) => {

@@ -188,8 +188,8 @@ describeE2E("Space Workflow E2E", () => {
     });
   });
 
-  // Note: Participant management tests are skipped due to backend function issues
-  // TODO: Re-enable when memorySpaces:addParticipant backend function is fixed
+  // Live participant proof is pending task06; historical skip retained until execution.
+  // Fixtures now match the actual backend participant validator (joinedAt, no role).
   describe.skip("Space Participants", () => {
     const participantSpaceId = `${TEST_PREFIX}-participant-space`;
 
@@ -207,7 +207,7 @@ describeE2E("Space Workflow E2E", () => {
         {
           id: "test-user-1",
           type: "user",
-          role: "member",
+          joinedAt: Date.now(),
         },
       );
 
@@ -220,7 +220,7 @@ describeE2E("Space Workflow E2E", () => {
         {
           id: "test-agent-1",
           type: "agent",
-          role: "viewer",
+          joinedAt: Date.now(),
         },
       );
 

@@ -4,14 +4,22 @@
  * Tests pure functions from env-file.ts that don't require file system mocking.
  */
 
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
 import {
   serializeEnvFile,
   setEnvVar,
   removeEnvVar,
   getDeploymentEnvKeys,
+  parseEnvFile,
+  addDeploymentToEnv,
+  removeDeploymentFromEnv,
+  serializeEnvAssignment,
 } from "../env-file.js";
 import type { EnvLine } from "../env-file.js";
+import { parse as parseDotenv } from "dotenv";
+import { mkdtempSync, writeFileSync, readFileSync, rmSync, statSync } from "fs";
+import { join } from "path";
+import { tmpdir, homedir } from "os";
 
 describe("env-file utilities", () => {
   describe("serializeEnvFile", () => {
@@ -275,5 +283,126 @@ describe("env-file utilities", () => {
         keyKey: "MYDEPLOYMENT_CONVEX_DEPLOY_KEY",
       });
     });
+  });
+});
+
+describe("dotenv loader readback and owned filesystem persistence", () => {
+  let root: string;
+  let oldCwd: string;
+  beforeEach(() => {
+    if (homedir() !== process.env.CORTEX_TEST_HOME_ROOT)
+      throw new Error("Native HOME is not externally isolated");
+    oldCwd = process.cwd();
+    root = mkdtempSync(join(tmpdir(), "cortex-env-owned-"));
+    process.chdir(root);
+  });
+  afterEach(() => {
+    process.chdir(oldCwd);
+    rmSync(root, { recursive: true, force: true });
+  });
+  const unchanged =
+    '# standalone comment\r\nOTHER="first\r\nTWO_CONVEX_DEPLOY_KEY=embedded\r\nlast"\r\nUNCHANGED = " edge # literal " # note\r\n';
+  it("parser preserves exact bytes, multiline embedded assignments and all ordinary loader forms", async () => {
+    const source =
+      unchanged +
+      " export TWO_CONVEX_URL = http://127.0.0.1:2 # old\r\nTWO_CONVEX_DEPLOY_KEY: stale\r\n";
+    writeFileSync(".env.local", source);
+    const lines = await parseEnvFile(".env.local");
+    expect(serializeEnvFile(lines)).toBe(source);
+    expect(
+      lines.filter((line) => line.key === "TWO_CONVEX_DEPLOY_KEY"),
+    ).toHaveLength(1);
+    expect(parseDotenv(serializeEnvFile(lines))).toEqual(parseDotenv(source));
+  });
+  it("helper collapses duplicates to requested effective URL/key, preserves unrelated bytes, mode600 and idempotency", async () => {
+    writeFileSync(
+      ".env.local",
+      unchanged +
+        "TWO_CONVEX_URL=http://127.0.0.1:2\r\n# between duplicates\r\nexport TWO_CONVEX_URL = http://127.0.0.1:4\r\nTWO_CONVEX_DEPLOY_KEY=old-first\r\n TWO_CONVEX_DEPLOY_KEY: old-last\r\n",
+    );
+    await addDeploymentToEnv("two", "http://127.0.0.1:7", " literal#key ");
+    const result = readFileSync(".env.local", "utf-8");
+    expect(parseDotenv(result).TWO_CONVEX_URL).toBe("http://127.0.0.1:7");
+    expect(parseDotenv(result).TWO_CONVEX_DEPLOY_KEY).toBe(" literal#key ");
+    expect(result).toContain(unchanged);
+    expect(result).toContain("# between duplicates\r\n");
+    expect(result).not.toContain("old-first");
+    expect(result).not.toContain("old-last");
+    expect(result).not.toContain("http://127.0.0.1:4");
+    const lines = await parseEnvFile(".env.local");
+    expect(lines.filter((line) => line.key === "TWO_CONVEX_URL")).toHaveLength(
+      1,
+    );
+    expect(
+      lines.filter((line) => line.key === "TWO_CONVEX_DEPLOY_KEY"),
+    ).toHaveLength(1);
+    expect(statSync(".env.local").mode & 0o777).toBe(0o600);
+    await addDeploymentToEnv("two", "http://127.0.0.1:7", " literal#key ");
+    expect(readFileSync(".env.local", "utf-8")).toBe(result);
+  });
+  it.each([
+    "export TWO_CONVEX_DEPLOY_KEY=stale",
+    " TWO_CONVEX_DEPLOY_KEY = stale",
+    "TWO_CONVEX_DEPLOY_KEY =stale",
+    "TWO_CONVEX_DEPLOY_KEY: stale",
+    'TWO_CONVEX_DEPLOY_KEY="first\nTWO_CONVEX_URL=embedded\nlast"',
+  ])(
+    "stale key clearing/removal recognizes %s without editing unrelated multiline content",
+    async (assignment) => {
+      writeFileSync(
+        ".env.local",
+        unchanged + assignment + "\nTWO_CONVEX_URL=http://127.0.0.1:2\n",
+      );
+      await addDeploymentToEnv("two", "http://127.0.0.1:7");
+      const cleared = readFileSync(".env.local", "utf-8");
+      expect(Object.hasOwn(parseDotenv(cleared), "TWO_CONVEX_DEPLOY_KEY")).toBe(
+        false,
+      );
+      expect(parseDotenv(cleared).TWO_CONVEX_URL).toBe("http://127.0.0.1:7");
+      expect(cleared).toContain(unchanged);
+      await removeDeploymentFromEnv("two");
+      const removed = readFileSync(".env.local", "utf-8");
+      expect(Object.hasOwn(parseDotenv(removed), "TWO_CONVEX_URL")).toBe(false);
+      expect(Object.hasOwn(parseDotenv(removed), "TWO_CONVEX_DEPLOY_KEY")).toBe(
+        false,
+      );
+      expect(removed).toContain(unchanged);
+      await removeDeploymentFromEnv("two");
+      expect(readFileSync(".env.local", "utf-8")).toBe(removed);
+    },
+  );
+  it.each([
+    "synthetic#suffix",
+    " synthetic-leading",
+    "synthetic-trailing ",
+    " edge#space ",
+    "literal'quote#hash",
+    'literal"quote#hash',
+    "literal`tick#hash",
+    "literal\\n#hash",
+    "literal'\"\\n#hash",
+    "",
+    "a=b:c",
+  ])(
+    "standard dotenv serialization roundtrips accepted literal %j exactly",
+    (value) => {
+      const serialized = serializeEnvAssignment("KEY", value);
+      expect(parseDotenv(serialized).KEY).toBe(value);
+      expect(
+        parseDotenv(serializeEnvFile(setEnvVar([], "KEY", value))).KEY,
+      ).toBe(value);
+    },
+  );
+  it("unrepresentable quote combinations or controls reject without any env file write", async () => {
+    const source =
+      unchanged +
+      "TWO_CONVEX_URL=http://127.0.0.1:2\nTWO_CONVEX_DEPLOY_KEY=old\n";
+    writeFileSync(".env.local", source);
+    for (const invalid of ["bad'\"`#literal", "line\nbreak", "nul\0value"]) {
+      await expect(
+        addDeploymentToEnv("two", "http://127.0.0.1:7", invalid),
+      ).rejects.toThrow();
+      expect(readFileSync(".env.local", "utf-8")).toBe(source);
+    }
   });
 });

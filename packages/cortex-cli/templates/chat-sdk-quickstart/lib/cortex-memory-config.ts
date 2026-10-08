@@ -10,6 +10,7 @@ import type {
   CortexMemoryConfig,
   LayerObserver,
 } from "@cortexmemory/vercel-ai-provider";
+import { getAgentId } from "./cortex";
 import { openai } from "@ai-sdk/openai";
 import { embed } from "ai";
 
@@ -27,6 +28,7 @@ export function getCortexMemoryConfig(
   userId: string,
   conversationId: string,
   layerObserver?: LayerObserver,
+  signal?: AbortSignal,
 ): CortexMemoryConfig {
   return {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -34,9 +36,10 @@ export function getCortexMemoryConfig(
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     convexUrl: process.env.CONVEX_URL!,
     memorySpaceId,
+    enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
     userId,
     userName: "User",
-    agentId: "chat-sdk-assistant",
+    agentId: getAgentId(),
     agentName: "Chat SDK Assistant",
     conversationId,
 
@@ -62,6 +65,7 @@ export function getCortexMemoryConfig(
         const result = await embed({
           model: openai.embedding("text-embedding-3-small"),
           value: text,
+          abortSignal: signal,
         });
         return result.embedding;
       },
@@ -90,13 +94,4 @@ export function getCortexMemoryConfig(
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     debug: process.env.NODE_ENV === "development",
   };
-}
-
-/**
- * Get the memory space ID from environment or use a default.
- *
- * @returns Memory space ID
- */
-export function getMemorySpaceId(): string {
-  return process.env.MEMORY_SPACE_ID || "chat-sdk-demo";
 }

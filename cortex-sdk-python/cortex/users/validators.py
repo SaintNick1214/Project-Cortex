@@ -5,7 +5,8 @@ Client-side validation for user operations to catch errors before
 they reach the backend, providing faster feedback and better error messages.
 """
 
-from typing import Any, List, Optional
+import math
+from typing import Any, Dict, List, Optional
 
 
 class UserValidationError(Exception):
@@ -305,30 +306,21 @@ def validate_delete_options(options: Any) -> None:
             "options",
         )
 
-    # Validate boolean fields if they exist
-    if hasattr(options, "cascade"):
-        if options.cascade is not None and not isinstance(options.cascade, bool):
-            raise UserValidationError(
-                "options.cascade must be a boolean",
-                "INVALID_OPTIONS",
-                "options.cascade",
-            )
-
-    if hasattr(options, "verify"):
-        if options.verify is not None and not isinstance(options.verify, bool):
-            raise UserValidationError(
-                "options.verify must be a boolean",
-                "INVALID_OPTIONS",
-                "options.verify",
-            )
-
-    if hasattr(options, "dry_run"):
-        if options.dry_run is not None and not isinstance(options.dry_run, bool):
-            raise UserValidationError(
-                "options.dry_run must be a boolean",
-                "INVALID_OPTIONS",
-                "options.dry_run",
-            )
+    allowed = {"cascade", "verify", "dry_run", "erasure_transport", "tenant_id", "cancel_event", "graph_participant"}
+    if isinstance(options, dict) and set(options) - allowed:
+        raise UserValidationError("Unknown deletion option", "INVALID_OPTIONS", "options")
+    def get(name: str, default: Any = None) -> Any:
+        return options.get(name, default) if isinstance(options, dict) else getattr(options, name, default)
+    for name in ("cascade", "verify", "dry_run"):
+        if type(get(name, False if name != "verify" else True)) is not bool:
+            raise UserValidationError(f"options.{name} must be a boolean", "INVALID_OPTIONS", f"options.{name}")
+    resolve_domain_scope(None, get("tenant_id"))
+    event = get("cancel_event")
+    if event is not None and not all(callable(getattr(event, name, None)) for name in ("is_set", "wait")):
+        raise UserValidationError("Invalid cancellation event", "INVALID_OPTIONS", "cancel_event")
+    participant = get("graph_participant")
+    if participant is not None and (getattr(participant, "adapter", None) is None or getattr(participant, "disposal_transport", None) is None):
+        raise UserValidationError("Invalid graph participant", "INVALID_OPTIONS", "graph_participant")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -545,3 +537,60 @@ def validate_bulk_delete_options(options: Any) -> None:
                 "INVALID_OPTIONS",
                 "options.dry_run",
             )
+
+
+def resolve_domain_scope(context: Any, selected: Any = None) -> Optional[str]:
+    """Resolve exact caller scope without implying authenticated authority."""
+    for tenant in (context, selected):
+        if tenant is not None and (not isinstance(tenant, str) or not tenant.strip() or len(tenant) > 256):
+            raise UserValidationError("Invalid tenant scope", "INVALID_TENANT_ID", "tenant_id")
+    if context is not None and selected is not None and context != selected:
+        raise UserValidationError("Tenant scope conflicts with current context", "TENANT_SCOPE_MISMATCH", "tenant_id")
+    return selected if isinstance(selected, str) else context if isinstance(context, str) else None
+
+
+def validate_user_count_filter(filters: Any, context: Any) -> Dict[str, Any]:
+    """Flat profile count only, with exact native numeric date cutoffs."""
+    if filters is None:
+        filters = {}
+    if type(filters) is not dict:
+        raise UserValidationError("Count filters must be a dictionary", "INVALID_COUNT_FILTER", "filters")
+    aliases = {"tenant_id": "tenantId", "tenantId": "tenantId",
+               "created_after": "createdAfter", "createdAfter": "createdAfter",
+               "created_before": "createdBefore", "createdBefore": "createdBefore",
+               "updated_after": "updatedAfter", "updatedAfter": "updatedAfter",
+               "updated_before": "updatedBefore", "updatedBefore": "updatedBefore"}
+    result: Dict[str, Any] = {}
+    for key, value in filters.items():
+        if not isinstance(key, str) or key not in aliases or aliases[key] in result or value is None:
+            raise UserValidationError("Unsupported or duplicate count filter", "INVALID_COUNT_FILTER", "filters")
+        target = aliases[key]
+        if target != "tenantId":
+            if type(value) not in (int, float):
+                raise UserValidationError("Invalid numeric count cutoff", "INVALID_TIMESTAMP", target)
+            try:
+                numeric = float(value)
+            except (OverflowError, ValueError):
+                raise UserValidationError("Invalid numeric count cutoff", "INVALID_TIMESTAMP", target) from None
+            if not math.isfinite(numeric) or numeric < 0 or (type(value) is int and int(numeric) != value):
+                raise UserValidationError("Unrepresentable count cutoff", "INVALID_TIMESTAMP", target)
+        # The official Python codec accepts int inputs only through 2**53.
+        # An exactly representable larger int uses Float64 without rounding.
+        result[target] = numeric if target != "tenantId" and type(value) is int and value > 2**53 else value
+    tenant = resolve_domain_scope(context, result.get("tenantId"))
+    if tenant is not None:
+        result["tenantId"] = tenant
+    for after, before in (("createdAfter", "createdBefore"), ("updatedAfter", "updatedBefore")):
+        if after in result and before in result and result[after] >= result[before]:
+            raise UserValidationError("Invalid count date range", "INVALID_DATE_RANGE", after)
+    return result
+
+
+def validate_user_count_result(result: Any) -> int:
+    try:
+        valid = type(result) in (int, float) and math.isfinite(result) and result >= 0 and int(result) == result
+    except (OverflowError, ValueError):
+        valid = False
+    if not valid:
+        raise UserValidationError("Invalid profile count response", "INVALID_COUNT_RESPONSE")
+    return int(result)

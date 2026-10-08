@@ -1,179 +1,124 @@
-/**
- * Conversations API Route
- *
- * GET: List conversations for a user (chat history)
- * POST: Create a new conversation
- * DELETE: Delete a conversation
- */
-
-import { getCortex } from "@/lib/cortex";
-
+import { randomUUID } from "node:crypto";
+import {
+  requireSession,
+  selectSpace,
+  errorResponse,
+  AppError,
+} from "@/lib/app-auth";
+import { withCortex, assertConversationOwner } from "@/lib/cortex";
+function projection(conversation: {
+  conversationId: string;
+  metadata?: Record<string, unknown>;
+  createdAt: number;
+  updatedAt: number;
+  messageCount: number;
+}) {
+  return {
+    id: conversation.conversationId,
+    title:
+      typeof conversation.metadata?.title === "string"
+        ? conversation.metadata.title
+        : "New Chat",
+    createdAt: conversation.createdAt,
+    updatedAt: conversation.updatedAt,
+    messageCount: conversation.messageCount,
+  };
+}
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const conversationId = searchParams.get("conversationId");
-    const userId = searchParams.get("userId");
-    const memorySpaceId =
-      searchParams.get("memorySpaceId") || "quickstart-demo";
-
-    const cortex = getCortex();
-
-    // If conversationId is provided, fetch single conversation with messages
-    if (conversationId) {
-      const conversation = await cortex.conversations.get(conversationId, {
-        includeMessages: true,
-        messageLimit: 100,
-      });
-
-      if (!conversation) {
-        return Response.json(
-          { error: "Conversation not found" },
-          { status: 404 },
-        );
-      }
-
-      // Transform messages to the format expected by AI SDK useChat
-      const messages = (conversation.messages || []).map((msg) => ({
-        id: msg.id,
-        role: msg.role as "user" | "assistant",
-        content: msg.content,
-        createdAt: new Date(msg.timestamp),
-      }));
-
-      return Response.json({
-        conversation: {
-          id: conversation.conversationId,
-          title:
-            (conversation.metadata?.title as string) ||
-            getDefaultTitle(conversation),
-          createdAt: conversation.createdAt,
-          updatedAt: conversation.updatedAt,
-          messageCount: conversation.messageCount || 0,
-        },
-        messages,
-      });
-    }
-
-    // List conversations for user (requires userId)
-    if (!userId) {
-      return Response.json({ error: "userId is required" }, { status: 400 });
-    }
-
-    // Get conversations for the user
-    const result = await cortex.conversations.list({
-      memorySpaceId,
-      userId,
-      limit: 50,
+    const account = await requireSession(req),
+      params = new URL(req.url).searchParams;
+    const space = selectSpace(account, {
+      userId: params.get("userId"),
+      tenantId: params.get("tenantId"),
+      memorySpaceId: params.get("memorySpaceId"),
     });
-
-    // Map conversations to a simpler format for the UI
-    const conversations = result.conversations.map((conv) => ({
-      id: conv.conversationId,
-      title: (conv.metadata?.title as string) || getDefaultTitle(conv),
-      createdAt: conv.createdAt,
-      updatedAt: conv.updatedAt,
-      messageCount: conv.messageCount || 0,
-    }));
-
-    // Sort by updatedAt descending (most recent first)
-    conversations.sort((a, b) => b.updatedAt - a.updatedAt);
-
-    return Response.json({ conversations });
+    const id = params.get("conversationId");
+    return await withCortex(account, async (cortex) => {
+      if (id) {
+        const conversation = await cortex.conversations.get(id, {
+          includeMessages: true,
+          messageLimit: 100,
+        });
+        assertConversationOwner(conversation, account, space);
+        return Response.json({
+          conversation: projection(conversation),
+          messages: (conversation.messages ?? []).map((message) => ({
+            id: message.id,
+            role: message.role === "agent" ? "assistant" : message.role,
+            content: message.content,
+            createdAt: new Date(message.timestamp),
+          })),
+        });
+      }
+      const result = await cortex.conversations.list({
+        memorySpaceId: space,
+        userId: account.accountId,
+        limit: 50,
+      });
+      for (const conversation of result.conversations)
+        assertConversationOwner(conversation, account, space);
+      return Response.json({
+        conversations: result.conversations
+          .map(projection)
+          .sort((a, b) => b.updatedAt - a.updatedAt),
+      });
+    });
   } catch (error) {
-    console.error("[Conversations Error]", error);
-
-    return Response.json(
-      { error: "Failed to fetch conversations" },
-      { status: 500 },
-    );
+    return errorResponse(error);
   }
 }
-
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { userId, memorySpaceId = "quickstart-demo", title } = body;
-
-    if (!userId) {
-      return Response.json({ error: "userId is required" }, { status: 400 });
-    }
-
-    const cortex = getCortex();
-
-    // Create a new conversation
-    const conversationId = `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-
-    const conversation = await cortex.conversations.create({
-      memorySpaceId,
-      conversationId,
-      type: "user-agent",
-      participants: {
-        userId,
-        agentId: "quickstart-assistant",
-      },
-      metadata: {
-        title: title || "New Chat",
-      },
-    });
-
-    return Response.json({
-      success: true,
-      conversation: {
-        id: conversation.conversationId,
-        title: (conversation.metadata?.title as string) || "New Chat",
-        createdAt: conversation.createdAt,
-        updatedAt: conversation.updatedAt,
-        messageCount: 0,
-      },
+    const account = await requireSession(req),
+      body = await req.json();
+    const space = selectSpace(account, body);
+    if (
+      body.title !== undefined &&
+      (typeof body.title !== "string" || body.title.length > 200)
+    )
+      throw new AppError(400, "Invalid title");
+    return await withCortex(account, async (cortex) => {
+      const conversation = await cortex.conversations.create({
+        memorySpaceId: space,
+        conversationId: randomUUID(),
+        type: "user-agent",
+        participants: {
+          userId: account.accountId,
+          agentId: "quickstart-assistant",
+        },
+        metadata: { title: body.title || "New Chat" },
+      });
+      return Response.json({
+        success: true,
+        conversation: projection(conversation),
+      });
     });
   } catch (error) {
-    console.error("[Conversation Create Error]", error);
-
-    return Response.json(
-      { error: "Failed to create conversation" },
-      { status: 500 },
-    );
+    return errorResponse(error);
   }
 }
-
 export async function DELETE(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const conversationId = searchParams.get("conversationId");
-
-    if (!conversationId) {
-      return Response.json(
-        { error: "conversationId is required" },
-        { status: 400 },
+    const account = await requireSession(req),
+      params = new URL(req.url).searchParams;
+    const space = selectSpace(account, {
+      userId: params.get("userId"),
+      tenantId: params.get("tenantId"),
+      memorySpaceId: params.get("memorySpaceId"),
+    });
+    const id = params.get("conversationId");
+    if (!id) throw new AppError(400, "conversationId required");
+    return await withCortex(account, async (cortex) => {
+      assertConversationOwner(
+        await cortex.conversations.get(id),
+        account,
+        space,
       );
-    }
-
-    const cortex = getCortex();
-
-    await cortex.conversations.delete(conversationId);
-
-    return Response.json({ success: true });
+      await cortex.conversations.delete(id);
+      return Response.json({ success: true });
+    }, process.env.CORTEX_GRAPH_SYNC === "true");
   } catch (error) {
-    console.error("[Conversation Delete Error]", error);
-
-    return Response.json(
-      { error: "Failed to delete conversation" },
-      { status: 500 },
-    );
+    return errorResponse(error);
   }
-}
-
-/**
- * Generate a default title from conversation data
- */
-function getDefaultTitle(conv: {
-  createdAt: number;
-  messageCount?: number;
-}): string {
-  const date = new Date(conv.createdAt);
-  const timeStr = date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-  return `Chat at ${timeStr}`;
 }

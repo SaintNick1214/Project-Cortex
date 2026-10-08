@@ -6,7 +6,7 @@ Port of: tests/gdprCascade.test.ts
 Tests validate:
 - Complete cascade deletion across all layers
 - Verification phase
-- Rollback on failure
+- Commit-only partial receipts; no reconstruction rollback
 - Deletion planning
 """
 
@@ -22,7 +22,7 @@ from cortex import DeleteUserOptions, RememberParams
 
 
 @pytest.mark.asyncio
-async def test_cascade_delete_user_profile_layer(cortex_client, test_user_id, cleanup_helper):
+async def test_cascade_delete_user_profile_layer(cortex_client, test_user_id, cleanup_helper, erasure_transport):
     """
     Test cascade deletion removes user profile.
 
@@ -44,7 +44,7 @@ async def test_cascade_delete_user_profile_layer(cortex_client, test_user_id, cl
     # Delete with cascade
     result = await cortex_client.users.delete(
         test_user_id,
-        DeleteUserOptions(cascade=True),
+        DeleteUserOptions(cascade=True, erasure_transport=erasure_transport),
     )
 
     # The key assertion: user should be gone after delete
@@ -56,7 +56,7 @@ async def test_cascade_delete_user_profile_layer(cortex_client, test_user_id, cl
 
 
 @pytest.mark.asyncio
-async def test_cascade_delete_conversations_layer(cortex_client, test_ids, cleanup_helper):
+async def test_cascade_delete_conversations_layer(cortex_client, test_ids, cleanup_helper, erasure_transport):
     """
     Test cascade deletion removes user's conversations.
 
@@ -83,7 +83,7 @@ async def test_cascade_delete_conversations_layer(cortex_client, test_ids, clean
     # Delete user with cascade
     result = await cortex_client.users.delete(
         user_id,
-        DeleteUserOptions(cascade=True),
+        DeleteUserOptions(cascade=True, erasure_transport=erasure_transport),
     )
 
     # In parallel execution, another test's cascade might have already deleted
@@ -101,7 +101,7 @@ async def test_cascade_delete_conversations_layer(cortex_client, test_ids, clean
 
 
 @pytest.mark.asyncio
-async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_helper):
+async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_helper, erasure_transport):
     """
     Test cascade deletion removes user's memories.
 
@@ -137,7 +137,7 @@ async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_he
     # Delete user with cascade
     delete_result = await cortex_client.users.delete(
         user_id,
-        DeleteUserOptions(cascade=True),
+        DeleteUserOptions(cascade=True, erasure_transport=erasure_transport),
     )
 
     # Verify memories are gone (count should be 0)
@@ -163,7 +163,7 @@ async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_he
 
 
 @pytest.mark.asyncio
-async def test_cascade_with_verification(cortex_client, ctx, cleanup_helper):
+async def test_cascade_with_verification(cortex_client, ctx, cleanup_helper, erasure_transport):
     """
     Test cascade deletion with verification enabled.
 
@@ -192,7 +192,7 @@ async def test_cascade_with_verification(cortex_client, ctx, cleanup_helper):
     # Delete with verification
     result = await cortex_client.users.delete(
         user_id,
-        DeleteUserOptions(cascade=True, verify=True),
+        DeleteUserOptions(cascade=True, verify=True, erasure_transport=erasure_transport),
     )
 
     # Should have verification result
@@ -205,7 +205,7 @@ async def test_cascade_with_verification(cortex_client, ctx, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper):
+async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper, erasure_transport):
     """
     Test cascade deletion dry run (plan only, no actual deletion).
 
@@ -236,34 +236,16 @@ async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper):
     # Dry run cascade
     result = await cortex_client.users.delete(
         user_id,
-        DeleteUserOptions(cascade=True, dry_run=True),
+        DeleteUserOptions(cascade=True, dry_run=True, erasure_transport=erasure_transport),
     )
 
-    # Should return plan (dry_run returns what would be deleted, not actual deletions)
-    assert result.total_deleted >= 0  # Plan shows what would be deleted
-
-    # In parallel execution, another test's cascade might delete our data.
-    # The key test is that DRY_RUN itself doesn't delete - we verify this by
-    # checking the user still exists (dry_run shouldn't delete the user profile).
-    # Note: In parallel, other cascades can affect memory counts, so we focus
-    # on verifying the dry_run behavior through the result, not memory counts.
-
-    # If we had memories before, verify dry_run didn't delete them
-    # (unless another parallel test did)
+    assert result.total_deleted == 0
+    assert result.erasure.executed is False and result.erasure.complete is False
+    assert result.erasure.planned
+    assert await cortex_client.users.get(user_id) is not None
     count_after = await cortex_client.vector.count(memory_space_id, user_id=user_id)
-
-    # In isolated execution: count_after should equal count_before
-    # In parallel execution: count_after might be less due to other cascades
-    # The important assertion: dry_run returned a valid result structure
-    assert hasattr(result, "total_deleted")
-    assert hasattr(result, "deleted_layers")
-
-    # If memories existed before and still exist, that confirms dry_run worked
-    if count_before > 0 and count_after > 0:
-        # Dry run didn't delete our memories (as expected)
-        pass
-    # If count_before was 0, the memory.remember might have been filtered (noise)
-    # If count_after is 0 but count_before > 0, another parallel cascade deleted them
+    assert count_after == count_before, "Dry-run must preserve selected memories"
+    assert result.deleted_layers == []
 
 
 # ============================================================================
@@ -272,7 +254,7 @@ async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_cascade_all_layers(cortex_client, test_ids, cleanup_helper):
+async def test_cascade_all_layers(cortex_client, test_ids, cleanup_helper, erasure_transport):
     """
     Test cascade deletion across all 4 layers.
 
@@ -341,16 +323,34 @@ async def test_cascade_all_layers(cortex_client, test_ids, cleanup_helper):
     # Delete user with full cascade
     result = await cortex_client.users.delete(
         user_id,
-        DeleteUserOptions(cascade=True, verify=True),
+        DeleteUserOptions(cascade=True, verify=True, erasure_transport=erasure_transport),
     )
 
     # Should have deleted from all layers
     assert result.total_deleted > 0
     # At minimum should delete user-profile and vector (memories)
     # Conversations may or may not be in deleted_layers depending on cascade implementation
-    assert "user-profile" in result.deleted_layers or "vector" in result.deleted_layers
+    assert "immutable" in result.deleted_layers or "memories" in result.deleted_layers
     assert result.total_deleted >= 2  # At least user + some data
 
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
+
+
+@pytest.fixture
+def erasure_transport(cortex_client, test_config):
+    """Explicit owner19 admin capability, never ambient key/client introspection."""
+    import json
+    import os
+    from pathlib import Path
+    root = Path("/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/cli-sandbox-2026/task19-execution")
+    assert os.environ.get("CORTEX_TASK19_PROOF_ROOT") == str(root), "Explicit owned Task19 proof root required"
+    assert test_config["convex_url"] == "http://127.0.0.1:46512", "Exact owned Task19 target required"
+    key = json.loads((root / "private-admin.json").read_text())["key"]
+    transport = cortex_client.users.create_erasure_transport(url=test_config["convex_url"], deployment_key=key)
+    key = None
+    try:
+        yield transport
+    finally:
+        transport.close()

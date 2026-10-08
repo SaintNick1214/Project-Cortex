@@ -1,29 +1,45 @@
 """
 Cortex SDK - Users API
 
-Coordination Layer: User profile management with GDPR cascade deletion
+Coordination Layer: User profiles and explicit supported-primary erasure
 """
 
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, AsyncGenerator, Dict, List, Optional, Union, cast
 
 __all__ = ["UsersAPI", "UserValidationError"]
 
 from .._utils import convert_convex_response, filter_none_values  # noqa: F401
-from ..errors import CascadeDeletionError, CortexError, ErrorCode
+from ..errors import CortexError, ErrorCode
 from ..types import (
     AuthContext,
     DeleteUserOptions,
+    ErasureReceipt,
     ExportUsersOptions,
     ListUsersFilter,
     ListUsersResult,
     UserDeleteResult,
+    UserExportEvent,
     UserProfile,
     UserVersion,
     VerificationResult,
 )
+from .erasure import (
+    DomainErasureError,
+    ErasureTransport,
+    create_erasure_transport,
+    execute_erasure,
+    prepare_erasure,
+)
+from .export import (
+    UserExportTransport,
+    export_user_data,
+    resolve_user_export_identity,
+    serialize_user_export_event,
+)
 from .validators import (
     UserValidationError,
+    resolve_domain_scope,
     validate_bulk_delete_options,
     validate_bulk_update_options,
     validate_data,
@@ -34,6 +50,8 @@ from .validators import (
     validate_list_users_filter,
     validate_offset,  # noqa: F401 - Re-exported for public API
     validate_timestamp,
+    validate_user_count_filter,
+    validate_user_count_result,
     validate_user_id,
     validate_user_ids_array,
     validate_version_number,
@@ -63,27 +81,6 @@ def _is_user_not_found_error(e: Exception) -> bool:
     )
 
 
-def _is_conversation_not_found_error(e: Exception) -> bool:
-    """Check if an exception indicates a conversation was not found.
-
-    This enables idempotent deletion - if a conversation is already deleted,
-    that's a success for cascade deletion (goal was to delete it anyway).
-
-    This is particularly important for parallel test execution where another
-    test or cleanup process may have already deleted the conversation.
-
-    Args:
-        e: The exception to check
-
-    Returns:
-        True if this is a "not found" error for a conversation
-    """
-    error_str = str(e)
-    # Check for error code patterns from Convex backend
-    return (
-        "CONVERSATION_NOT_FOUND" in error_str
-        or "conversation not found" in error_str.lower()
-    )
 
 
 class UsersAPI:
@@ -91,11 +88,12 @@ class UsersAPI:
     Users API
 
     Provides convenience wrappers over immutable store (type='user') with the
-    critical feature of GDPR cascade deletion across all layers.
+    supported exclusive-primary erasure through explicit maintenance transport.
 
-    Key Principle: Same code for free SDK and Cloud Mode
-    - Free SDK: User provides graph adapter (DIY), cascade works if configured
-    - Cloud Mode: Cortex provides managed graph adapter, cascade always works + legal guarantees
+    Cascade requires the fixed administrator erasure transport and exact tenant scope.
+    The returned receipt discloses shared/foreign/operational/provenance residuals.
+    A configured graph needs its matching explicit graph participant. This API does
+    not guarantee universal physical erasure or legal compliance.
     """
 
     def __init__(
@@ -118,6 +116,42 @@ class UsersAPI:
         self.graph_adapter = graph_adapter
         self._resilience = resilience
         self._auth_context = auth_context
+
+    def create_export_transport(self, *, url: str, deployment_key: str, timeout: float = 30, socket_timeout: float = 5) -> UserExportTransport:
+        """Explicit administration; does not alter the ordinary SDK identity."""
+        return UserExportTransport(url, deployment_key, timeout, socket_timeout)
+
+    def create_erasure_transport(self, *, url: str, deployment_key: str,
+                                 timeout: float = 30, socket_timeout: float = 5) -> ErasureTransport:
+        """Explicit fixed administrator authority, separate from export and user auth."""
+        return create_erasure_transport(url=url, deployment_key=deployment_key,
+                                        timeout=timeout, socket_timeout=socket_timeout)
+
+    def serialize_export_event(self, event: UserExportEvent) -> str:
+        """Canonical JSON text for export_data events; raw values stay unchanged.
+
+        Persist this text rather than plain json.dumps for matching TypeScript
+        and Python number/string formatting. Publish only after a validated
+        terminal manifest; serialization does not grant completion or access.
+        """
+        return serialize_user_export_event(event)
+
+    def export_data(
+        self,
+        user_id: str,
+        *,
+        transport: UserExportTransport,
+        tenant_id: Optional[str] = None,
+        page_size: int = 100,
+    ) -> AsyncGenerator[UserExportEvent, None]:
+        """Stream supported raw records and binaries with deployment administration.
+
+        Only the terminal complete manifest certifies a successful stream. Reads
+        are rolling observations, not a global snapshot. Closing or cancelling
+        the iterator releases its owned resources; the SDK never publishes files.
+        """
+        identity = resolve_user_export_identity(user_id, tenant_id, self._tenant_id)
+        return cast(AsyncGenerator[UserExportEvent, None], export_user_data(identity, transport, page_size))
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
@@ -150,11 +184,13 @@ class UsersAPI:
         # Client-side validation
         validate_user_id(user_id)
 
+        tenant_id = resolve_domain_scope(self._tenant_id)
+
         result = await self._execute_with_resilience(
             lambda: self.client.query("immutable:get", filter_none_values({
                 "type": "user",
                 "id": user_id,
-                "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+                "tenantId": tenant_id,  # Multi-tenancy: scope to tenant
             })),
             "immutable:get",
         )
@@ -162,12 +198,8 @@ class UsersAPI:
         if not result:
             return None
 
-        # Enforce tenant isolation: only deny if both have tenantId and they don't match
-        # Users without tenantId (legacy) are accessible to all (backwards compatibility)
-        result_tenant = result.get("tenantId")
-        if result_tenant and self._tenant_id:
-            if result_tenant != self._tenant_id:
-                return None  # User belongs to a different tenant
+        if result.get("tenantId") != tenant_id:
+            return None
 
         return UserProfile(
             id=result["id"],
@@ -203,13 +235,15 @@ class UsersAPI:
         validate_user_id(user_id)
         validate_data(data, "data")
 
+        tenant_id = resolve_domain_scope(self._tenant_id)
+
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "immutable:store", filter_none_values({
                     "type": "user",
                     "id": user_id,
                     "data": data,
-                    "tenantId": self._tenant_id,  # Inject tenantId from auth context
+                    "tenantId": tenant_id,  # Inject tenantId from auth context
                 })
             ),
             "immutable:store",
@@ -233,15 +267,12 @@ class UsersAPI:
         self, user_id: str, options: Optional[DeleteUserOptions] = None
     ) -> UserDeleteResult:
         """
-        Delete user profile with optional cascade deletion across all layers.
+        Delete a profile or its explicitly selected supported exclusive primary scope.
 
-        This implements GDPR "right to be forgotten" with cascade deletion across:
-        - Conversations (Layer 1a)
-        - Immutable records (Layer 1b)
-        - Mutable keys (Layer 1c)
-        - Vector memories (Layer 2)
-        - Facts (Layer 3)
-        - Graph nodes (if configured)
+        Cascade requires a separate administrator transport and exact tenant scope.
+        Shared/foreign/operational/provenance residuals are disclosed in the erasure
+        receipt. A configured graph requires a matching explicit graph participant;
+        completion is not universal physical erasure or an automatic legal guarantee.
 
         Args:
             user_id: User ID to delete
@@ -254,38 +285,59 @@ class UsersAPI:
             >>> # Simple deletion (profile only)
             >>> await cortex.users.delete('user-123')
             >>>
-            >>> # GDPR cascade deletion (all layers)
-            >>> result = await cortex.users.delete(
-            ...     'user-123',
-            ...     DeleteUserOptions(cascade=True)
-            ... )
-            >>> print(f"Deleted {result.total_deleted} records")
+            >>> import os
+            >>> # Preview supported erasure, with residuals disclosed in its receipt.
+            >>> transport = cortex.users.create_erasure_transport(
+            ...     url=os.environ['CONVEX_URL'],
+            ...     deployment_key=os.environ['CONVEX_DEPLOY_KEY'])
+            >>> try:
+            ...     result = await cortex.users.delete('user-123', DeleteUserOptions(
+            ...         cascade=True, tenant_id='team-a', erasure_transport=transport,
+            ...         dry_run=True))
+            ...     print(result.erasure)  # Not universal physical erasure.
+            ... finally:
+            ...     transport.close()
         """
         # Client-side validation
         validate_user_id(user_id)
         validate_delete_options(options)
 
-        opts = options or DeleteUserOptions()
+        opts = DeleteUserOptions(**options) if isinstance(options, dict) else options or DeleteUserOptions()
+        tenant_id = resolve_domain_scope(self._tenant_id, opts.tenant_id)
 
         if not opts.cascade:
             # Simple deletion - just the user profile
-            try:
-                await self._execute_with_resilience(
-                    lambda: self.client.mutation("immutable:purge", filter_none_values({
+            total_deleted = 0
+            if not opts.dry_run:
+                try:
+                    await self._execute_with_resilience(
+                        lambda: self.client.mutation("immutable:purge", filter_none_values({
+                            "type": "user",
+                            "id": user_id,
+                            "tenantId": tenant_id,  # Multi-tenancy: scope to tenant
+                        })),
+                        "immutable:purge",
+                    )
+                    total_deleted = 1
+                except Exception as e:
+                    # Only ignore "not found" errors - user profile may not exist
+                    if _is_user_not_found_error(e):
+                        total_deleted = 0
+                    else:
+                        # Re-raise unexpected errors (connection issues, permission errors, etc.)
+                        raise
+
+            complete = False
+            if not opts.dry_run and opts.verify:
+                remaining = await self._execute_with_resilience(
+                    lambda: self.client.query("immutable:get", filter_none_values({
                         "type": "user",
                         "id": user_id,
-                        "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+                        "tenantId": tenant_id,
                     })),
-                    "immutable:purge",
+                    "immutable:get",
                 )
-                total_deleted = 1
-            except Exception as e:
-                # Only ignore "not found" errors - user profile may not exist
-                if _is_user_not_found_error(e):
-                    total_deleted = 0
-                else:
-                    # Re-raise unexpected errors (connection issues, permission errors, etc.)
-                    raise
+                complete = remaining is None
 
             return UserDeleteResult(
                 user_id=user_id,
@@ -298,70 +350,40 @@ class UsersAPI:
                 facts_deleted=0,
                 total_deleted=total_deleted,
                 deleted_layers=["user-profile"] if total_deleted > 0 else [],
-                verification=VerificationResult(complete=True, issues=[]),
+                verification=VerificationResult(complete=complete, issues=[], scope="user-profile"),
             )
 
-        # Cascade deletion across all layers
-        if opts.dry_run:
-            # Phase 1: Collection (count what would be deleted)
-            plan = await self._collect_deletion_plan(user_id)
+        domain = {"kind": "user", "userId": user_id}
+        if tenant_id is not None:
+            domain["tenantId"] = tenant_id
+        prepared = await prepare_erasure(domain, opts, self.graph_adapter)
+        return self._erasure_user_result(user_id, await execute_erasure(prepared, self.client))
 
-            # Build predicted deleted_layers to match actual execution semantics
-            predicted_deleted_layers: List[str] = []
-            if len(plan.get("vector", [])) > 0:
-                predicted_deleted_layers.append("vector")
-            if len(plan.get("facts", [])) > 0:
-                predicted_deleted_layers.append("facts")
-            if len(plan.get("mutable", [])) > 0:
-                predicted_deleted_layers.append("mutable")
-            if len(plan.get("immutable", [])) > 0:
-                predicted_deleted_layers.append("immutable")
-            if len(plan.get("conversations", [])) > 0:
-                predicted_deleted_layers.append("conversations")
-            # User profile deletion always happens in cascade mode
-            predicted_deleted_layers.append("user-profile")
-            if len(plan.get("graph", [])) > 0:
-                predicted_deleted_layers.append("graph")
-
-            return UserDeleteResult(
-                user_id=user_id,
-                deleted_at=int(time.time() * 1000),
-                conversations_deleted=len(plan.get("conversations", [])),
-                conversation_messages_deleted=sum(
-                    conv.get("messageCount", 0) for conv in plan.get("conversations", [])
-                ),
-                immutable_records_deleted=len(plan.get("immutable", [])),
-                mutable_keys_deleted=len(plan.get("mutable", [])),
-                vector_memories_deleted=len(plan.get("vector", [])),
-                facts_deleted=len(plan.get("facts", [])),
-                total_deleted=sum(
-                    len(v) if isinstance(v, list) else 0
-                    for v in plan.values()
-                ),
-                deleted_layers=predicted_deleted_layers,
-                verification=VerificationResult(complete=True, issues=[]),
-            )
-
-        # Phase 1: Collection
-        plan = await self._collect_deletion_plan(user_id)
-
-        # Phase 2: Backup (for rollback)
-        backup = await self._create_deletion_backup(plan)
-
-        # Phase 3: Execute deletion with rollback on failure
-        try:
-            result = await self._execute_deletion(plan, user_id)
-
-            # Verify if requested
-            if opts.verify:
-                verification = await self._verify_deletion(user_id)
-                result.verification = verification
-
-            return result
-        except Exception as e:
-            # Rollback on failure
-            await self._rollback_deletion(backup)
-            raise CascadeDeletionError(f"Cascade deletion failed: {e}", cause=e)
+    @staticmethod
+    def _erasure_user_result(user_id: str, receipt: ErasureReceipt) -> UserDeleteResult:
+        """Compatibility fields count received native commits only."""
+        def count(table: str) -> int:
+            return receipt.per_table[table]["deleted"]
+        roots = {row["id"] for row in receipt.planned if row["table"] == "immutable" and row["action"] == "root"}
+        profiles_deleted = sum(int(item["deleted"]) for item in receipt.outcomes
+                               if item["table"] == "immutable" and item["id"] in roots and item["state"] == "committed")
+        immutable_records_deleted = max(0, count("immutable") - profiles_deleted)
+        deleted_layers = ["vector" if table == "memories" else table for table, value in receipt.per_table.items()
+                          if value["deleted"] > 0 and (table != "immutable" or immutable_records_deleted > 0)]
+        if receipt.graph["nodesDeleted"] > 0:
+            deleted_layers.append("graph")
+        if profiles_deleted > 0:
+            deleted_layers.append("user-profile")
+        return UserDeleteResult(
+            user_id=user_id, deleted_at=receipt.ended_at,
+            conversations_deleted=count("conversations"),
+            conversation_messages_deleted=sum(int(item["messages"]) for item in receipt.outcomes),
+            immutable_records_deleted=immutable_records_deleted, mutable_keys_deleted=count("mutable"),
+            vector_memories_deleted=count("memories"), facts_deleted=count("facts"),
+            total_deleted=receipt.total_deleted, graph_nodes_deleted=receipt.graph["nodesDeleted"],
+            deleted_layers=deleted_layers,
+            verification=VerificationResult(complete=receipt.verification["complete"], issues=receipt.errors),
+            erasure=receipt)
 
     async def search(self, filters: Optional[ListUsersFilter] = None) -> List[UserProfile]:
         """
@@ -490,7 +512,7 @@ class UsersAPI:
         limit = filters.limit if filters and filters.limit else 50
 
         # Determine tenant_id: use filter if provided, otherwise use auth context
-        tenant_id = (filters.tenant_id if filters and filters.tenant_id else None) or self._tenant_id
+        tenant_id = resolve_domain_scope(self._tenant_id, filters.tenant_id if filters else None)
 
         # Query using immutable:list with type='user' (like TS SDK)
         result = await self._execute_with_resilience(
@@ -572,15 +594,12 @@ class UsersAPI:
         Example:
             >>> total = await cortex.users.count()
         """
-        # Client-side validation
-        # filters is optional dict - no specific validation needed
-
+        args = validate_user_count_filter(filters, self._tenant_id)
         result = await self._execute_with_resilience(
-            lambda: self.client.query("users:count", filter_none_values({"filters": filters})),
+            lambda: self.client.query("immutable:count", {"type": "user", **args}),
             "users:count",
         )
-
-        return int(result)
+        return validate_user_count_result(result)
 
     async def exists(self, user_id: str) -> bool:
         """
@@ -693,479 +712,6 @@ class UsersAPI:
 
     # Helper methods for cascade deletion
 
-    async def _collect_deletion_plan(self, user_id: str) -> Dict[str, List[Any]]:
-        """Phase 1: Collect all records to delete."""
-        plan: Dict[str, Any] = {
-            "conversations": [],
-            "immutable": [],
-            "mutable": [],
-            "vector": [],
-            "facts": [],
-            "graph": [],
-        }
-
-        # Collect conversations
-        conversations_result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "conversations:list", filter_none_values({"userId": user_id, "limit": 10000})
-            ),
-            "conversations:list",
-        )
-        # Handle both list format (legacy) and dict format (new API)
-        if isinstance(conversations_result, dict):
-            plan["conversations"] = conversations_result.get("conversations", [])
-        else:
-            plan["conversations"] = conversations_result if isinstance(conversations_result, list) else []
-
-        # Collect immutable records
-        immutable = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "immutable:list", filter_none_values({
-                    "userId": user_id,
-                    "limit": 10000,
-                    "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
-                })
-            ),
-            "immutable:list",
-        )
-        # Handle both list format (legacy) and dict format (new API with entries)
-        if isinstance(immutable, dict):
-            raw_entries = immutable.get("entries", [])
-        else:
-            raw_entries = immutable if isinstance(immutable, list) else []
-
-        # Filter to only include valid dict entries with required fields (type, id)
-        # Some API responses might include strings or malformed entries
-        plan["immutable"] = [
-            entry for entry in raw_entries
-            if isinstance(entry, dict) and entry.get("type") and entry.get("id")
-        ]
-
-        # Skip mutable collection for now - backend requires namespace parameter
-        # Would need to know all namespaces upfront to query
-        plan["mutable"] = []
-
-        # Collect vector memories
-        # Problem: Spaces may not be registered, so we need to find memories differently
-        # Solution: Collect memory space IDs from conversations (those ARE collected)
-
-        # Get memory space IDs from user's conversations
-        # This is an optimization: only check spaces where user has data, not ALL spaces
-        memory_space_ids_to_check = set()
-        for conv in plan["conversations"]:
-            space_id = conv.get("memorySpaceId")
-            if space_id:
-                memory_space_ids_to_check.add(space_id)
-
-        # Store space IDs for deletion phase
-        plan["vector"] = list(memory_space_ids_to_check)
-
-        # Collect facts (query only user's memory spaces, not ALL spaces)
-        # This is an optimization to avoid O(n) queries where n = total spaces in DB
-        all_facts = []
-        for space_id in memory_space_ids_to_check:
-            try:
-                facts = await self._execute_with_resilience(
-                    lambda sid=space_id: self.client.query(
-                        "facts:list",
-                        filter_none_values({"memorySpaceId": sid, "limit": 10000})
-                    ),
-                    "facts:list",
-                )
-                fact_list = facts if isinstance(facts, list) else facts.get("facts", [])
-                # Filter for this user
-                user_facts = [f for f in fact_list if f.get("userId") == user_id or f.get("sourceUserId") == user_id]
-                all_facts.extend(user_facts)
-            except:
-                pass  # Space might not have facts
-        plan["facts"] = all_facts
-
-        return plan
-
-    async def _create_deletion_backup(self, plan: Dict[str, List[Any]]) -> Dict[str, List[Any]]:
-        """Phase 2: Create backup for rollback."""
-        # Return a copy of the plan as backup
-        # Handle both list values and dict values (paginated responses that weren't extracted)
-        backup: Dict[str, List[Any]] = {}
-        for k, v in plan.items():
-            if isinstance(v, list):
-                backup[k] = list(v)
-            elif isinstance(v, dict):
-                # Extract entries from paginated response
-                backup[k] = list(v.get("entries", []))
-            else:
-                backup[k] = []
-        return backup
-
-    async def _execute_deletion(
-        self, plan: Dict[str, List[Any]], user_id: str
-    ) -> UserDeleteResult:
-        """
-        Execute user deletion with strict error handling.
-
-        STRICT MODE: Any error triggers immediate rollback of all operations.
-        This ensures data integrity - either all user data is deleted or none is.
-
-        Raises:
-            CascadeDeletionError: On any failure, triggers rollback
-        """
-        deleted_at = int(time.time() * 1000)
-        deleted_layers: List[str] = []
-
-        conversations_deleted = 0
-        messages_deleted = 0
-        vector_deleted = 0
-        facts_deleted = 0
-        mutable_deleted = 0
-        immutable_deleted = 0
-        graph_nodes_deleted: Optional[int] = None
-
-        # Helper to build partial deletion info for error reporting
-        def _build_partial_info(failed_layer: str) -> str:
-            return (f"Partial deletion state - deleted_layers: {deleted_layers}, "
-                    f"vector: {vector_deleted}, facts: {facts_deleted}, "
-                    f"mutable: {mutable_deleted}, immutable: {immutable_deleted}, "
-                    f"conversations: {conversations_deleted}, failed at: {failed_layer}")
-
-        # 1. Delete vector memories - STRICT: raise on error
-        for space_id in plan.get("vector", []):
-            try:
-                result = await self.client.mutation(
-                    "memories:deleteMany",
-                    filter_none_values({"memorySpaceId": space_id, "userId": user_id})
-                )
-                deleted_count = result.get("deleted", 0)
-                if deleted_count > 0:
-                    vector_deleted += deleted_count
-            except Exception as e:
-                raise CascadeDeletionError(
-                    f"Failed to delete vector memories in space {space_id}: {e}. {_build_partial_info('vector')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
-
-        if vector_deleted > 0:
-            deleted_layers.append("vector")
-
-        # 2. Delete facts - STRICT: raise on error
-        for fact in plan.get("facts", []):
-            try:
-                memory_space_id = fact.get("memorySpaceId") or fact.get("memory_space_id")
-                fact_id = fact.get("factId") or fact.get("fact_id")
-
-                await self.client.mutation(
-                    "facts:deleteFact",
-                    filter_none_values({"memorySpaceId": memory_space_id, "factId": fact_id}),
-                )
-                facts_deleted += 1
-            except Exception as e:
-                raise CascadeDeletionError(
-                    f"Failed to delete fact {fact.get('factId', fact.get('fact_id', 'unknown'))}: {e}. {_build_partial_info('facts')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
-
-        if facts_deleted > 0:
-            deleted_layers.append("facts")
-
-        # 3. Delete mutable keys - STRICT: raise on error
-        for mutable_key in plan.get("mutable", []):
-            try:
-                await self.client.mutation(
-                    "mutable:deleteKey",
-                    {"namespace": mutable_key["namespace"], "key": mutable_key["key"]},
-                )
-                mutable_deleted += 1
-            except Exception as e:
-                raise CascadeDeletionError(
-                    f"Failed to delete mutable key {mutable_key.get('key')}: {e}. {_build_partial_info('mutable')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
-
-        if mutable_deleted > 0:
-            deleted_layers.append("mutable")
-
-        # 4. Delete immutable records - STRICT: raise on error
-        # Handle both list format and dict format (paginated response)
-        immutable_records = plan.get("immutable", [])
-        if isinstance(immutable_records, dict):
-            immutable_records = immutable_records.get("entries", [])
-        for record in immutable_records:
-            # Skip non-dict records (defensive: handle malformed data)
-            if not isinstance(record, dict):
-                continue
-            try:
-                await self.client.mutation(
-                    "immutable:purge",
-                    filter_none_values({
-                        "type": record["type"],
-                        "id": record["id"],
-                        "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
-                    }),
-                )
-                immutable_deleted += 1
-            except Exception as e:
-                raise CascadeDeletionError(
-                    f"Failed to delete immutable record {record.get('id')}: {e}. {_build_partial_info('immutable')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
-
-        if immutable_deleted > 0:
-            deleted_layers.append("immutable")
-
-        # 5. Delete conversations - IDEMPOTENT: "not found" = already deleted = success
-        for conv in plan.get("conversations", []):
-            try:
-                await self.client.mutation(
-                    "conversations:deleteConversation",
-                    {"conversationId": conv["conversationId"]},
-                )
-                conversations_deleted += 1
-                messages_deleted += conv.get("messageCount", 0)
-            except Exception as e:
-                # Idempotent: if conversation is already deleted, that's a success
-                # (the goal was to delete it anyway). This handles race conditions
-                # in parallel test execution where another process may have already
-                # deleted the conversation between plan collection and execution.
-                if _is_conversation_not_found_error(e):
-                    # Already deleted - count as success
-                    conversations_deleted += 1
-                    messages_deleted += conv.get("messageCount", 0)
-                else:
-                    raise CascadeDeletionError(
-                        f"Failed to delete conversation {conv.get('conversationId')}: {e}. {_build_partial_info('conversations')}",
-                        cause=e if isinstance(e, Exception) else None,
-                    )
-
-        if conversations_deleted > 0:
-            deleted_layers.append("conversations")
-
-        # 6. Delete user profile - STRICT: raise on error (except not-found)
-        try:
-            await self.client.mutation("immutable:purge", filter_none_values({
-                "type": "user",
-                "id": user_id,
-                "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
-            }))
-            deleted_layers.append("user-profile")
-        except Exception as e:
-            if not _is_user_not_found_error(e):
-                raise CascadeDeletionError(
-                    f"Failed to delete user profile: {e}. {_build_partial_info('user-profile')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
-
-        # 7. Delete from graph - STRICT: raise on error
-        if self.graph_adapter:
-            try:
-                from ..graph import delete_user_from_graph
-
-                graph_nodes_deleted = await delete_user_from_graph(
-                    user_id, self.graph_adapter
-                )
-                if graph_nodes_deleted > 0:
-                    deleted_layers.append("graph")
-            except Exception as e:
-                raise CascadeDeletionError(
-                    f"Failed to delete from graph: {e}. {_build_partial_info('graph')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
-
-        # Calculate total deleted
-        user_profile_count = 1 if "user-profile" in deleted_layers else 0
-
-        total_deleted = (
-            conversations_deleted
-            + immutable_deleted
-            + mutable_deleted
-            + vector_deleted
-            + facts_deleted
-            + user_profile_count
-        )
-
-        return UserDeleteResult(
-            user_id=user_id,
-            deleted_at=deleted_at,
-            conversations_deleted=conversations_deleted,
-            conversation_messages_deleted=messages_deleted,
-            immutable_records_deleted=immutable_deleted,
-            mutable_keys_deleted=mutable_deleted,
-            vector_memories_deleted=vector_deleted,
-            facts_deleted=facts_deleted,
-            graph_nodes_deleted=graph_nodes_deleted,
-            total_deleted=total_deleted,
-            deleted_layers=deleted_layers,
-            verification=VerificationResult(complete=True, issues=[]),
-        )
-
-    async def _verify_deletion(self, user_id: str) -> VerificationResult:
-        """Verify deletion completeness."""
-        issues = []
-
-        # Check conversations
-        conv_count = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "conversations:count", filter_none_values({"userId": user_id})
-            ),
-            "conversations:count",
-        )
-        if conv_count > 0:
-            issues.append(f"Found {conv_count} remaining conversations")
-
-        # Check immutable
-        immutable_count = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "immutable:count", filter_none_values({"userId": user_id})
-            ),
-            "immutable:count",
-        )
-        if immutable_count > 0:
-            issues.append(f"Found {immutable_count} remaining immutable records")
-
-        # Check user profile
-        user = await self.get(user_id)
-        if user:
-            issues.append("User profile still exists")
-
-        return VerificationResult(complete=len(issues) == 0, issues=issues)
-
-    async def _rollback_deletion(self, backup: Dict[str, List[Any]]) -> Dict[str, Any]:
-        """
-        Rollback user deletion on failure by re-creating deleted data.
-
-        Args:
-            backup: Dict containing the original data that was deleted
-
-        Returns:
-            Dict with rollback statistics
-        """
-        rollback_stats: Dict[str, Any] = {
-            "vector_restored": 0,
-            "facts_restored": 0,
-            "mutable_restored": 0,
-            "immutable_restored": 0,
-            "conversations_restored": 0,
-            "errors": [],
-        }
-
-        # Restore vector memories
-        for memory in backup.get("vector_memories", []):
-            try:
-                await self.client.mutation(
-                    "memories:store",
-                    filter_none_values({
-                        "memorySpaceId": memory.get("memorySpaceId"),
-                        "memoryId": memory.get("memoryId"),
-                        "content": memory.get("content"),
-                        "contentType": memory.get("contentType", "raw"),
-                        "embedding": memory.get("embedding"),
-                        "importance": memory.get("importance"),
-                        "sourceType": memory.get("sourceType"),
-                        "sourceUserId": memory.get("sourceUserId"),
-                        "sourceUserName": memory.get("sourceUserName"),
-                        # conversationRef is a nested object, not a flat field
-                        "conversationRef": memory.get("conversationRef"),
-                        "userId": memory.get("userId"),
-                        "agentId": memory.get("agentId"),
-                        "participantId": memory.get("participantId"),
-                        "tags": memory.get("tags", []),
-                    }),
-                )
-                rollback_stats["vector_restored"] += 1
-            except Exception as e:
-                rollback_stats["errors"].append(f"Failed to restore memory {memory.get('memoryId')}: {e}")
-
-        # Restore facts
-        for fact in backup.get("facts", []):
-            try:
-                await self.client.mutation(
-                    "facts:store",
-                    filter_none_values({
-                        "memorySpaceId": fact.get("memorySpaceId") or fact.get("memory_space_id"),
-                        "factId": fact.get("factId") or fact.get("fact_id"),
-                        "content": fact.get("content"),
-                        "subject": fact.get("subject"),
-                        "predicate": fact.get("predicate"),
-                        "object": fact.get("object"),
-                        "confidence": fact.get("confidence"),
-                        "source": fact.get("source"),
-                        "memoryId": fact.get("memoryId"),
-                        "userId": fact.get("userId"),
-                        "tags": fact.get("tags"),
-                        "metadata": fact.get("metadata"),
-                    }),
-                )
-                rollback_stats["facts_restored"] += 1
-            except Exception as e:
-                rollback_stats["errors"].append(f"Failed to restore fact: {e}")
-
-        # Restore mutable keys
-        for mutable_key in backup.get("mutable", []):
-            try:
-                await self.client.mutation(
-                    "mutable:setKey",
-                    {
-                        "namespace": mutable_key["namespace"],
-                        "key": mutable_key["key"],
-                        "value": mutable_key.get("value", {}),
-                    },
-                )
-                rollback_stats["mutable_restored"] += 1
-            except Exception as e:
-                rollback_stats["errors"].append(f"Failed to restore mutable key: {e}")
-
-        # Restore immutable records
-        # Handle both list format and dict format (paginated response)
-        immutable_records = backup.get("immutable", [])
-        if isinstance(immutable_records, dict):
-            immutable_records = immutable_records.get("entries", [])
-        for record in immutable_records:
-            # Skip non-dict records (defensive: handle malformed data)
-            if not isinstance(record, dict):
-                continue
-            try:
-                await self.client.mutation(
-                    "immutable:store",
-                    filter_none_values({
-                        "type": record["type"],
-                        "id": record["id"],
-                        "data": record.get("data", {}),
-                        "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
-                    }),
-                )
-                rollback_stats["immutable_restored"] += 1
-            except Exception as e:
-                rollback_stats["errors"].append(f"Failed to restore immutable record: {e}")
-
-        # Restore conversations (without messages - those are harder to restore)
-        for conv in backup.get("conversations", []):
-            try:
-                await self.client.mutation(
-                    "conversations:create",
-                    filter_none_values({
-                        "memorySpaceId": conv.get("memorySpaceId"),
-                        "conversationId": conv.get("conversationId"),
-                        "type": conv.get("type"),
-                        "participants": conv.get("participants"),
-                        "metadata": conv.get("metadata"),
-                    }),
-                )
-                rollback_stats["conversations_restored"] += 1
-            except Exception as e:
-                rollback_stats["errors"].append(f"Failed to restore conversation: {e}")
-
-        # Log rollback results
-        if rollback_stats["errors"]:
-            print(f"Rollback completed with errors: {len(rollback_stats['errors'])} failures")
-            for error in rollback_stats["errors"]:
-                print(f"  - {error}")
-        else:
-            print(f"Rollback completed: {rollback_stats['vector_restored']} memories, "
-                  f"{rollback_stats['facts_restored']} facts, "
-                  f"{rollback_stats['mutable_restored']} mutable keys, "
-                  f"{rollback_stats['immutable_restored']} immutable records, "
-                  f"{rollback_stats['conversations_restored']} conversations restored")
-
-        return rollback_stats
-
     async def update_many(
         self,
         user_ids_or_filters: Union[List[str], ListUsersFilter],
@@ -1274,78 +820,75 @@ class UsersAPI:
             Delete result with count and affected user_ids
 
         Example:
-            >>> # Delete by explicit IDs
-            >>> result = await cortex.users.delete_many(
-            ...     ['user-1', 'user-2', 'user-3'],
-            ...     {'cascade': True}
-            ... )
-            >>>
-            >>> # Delete by filters (inactive users older than 1 year)
-            >>> old_users = await cortex.users.delete_many(
-            ...     ListUsersFilter(created_before=int((time.time() - 365 * 24 * 60 * 60) * 1000)),
-            ...     {'cascade': True}
-            ... )
-            >>>
-            >>> # Dry run to preview what would be deleted
-            >>> preview = await cortex.users.delete_many(
-            ...     ListUsersFilter(updated_before=int((time.time() - 90 * 24 * 60 * 60) * 1000)),
-            ...     {'dry_run': True}
-            ... )
-            >>> print(f"Would delete {len(preview['user_ids'])} users")
+            >>> import os
+            >>> transport = cortex.users.create_erasure_transport(
+            ...     url=os.environ['CONVEX_URL'],
+            ...     deployment_key=os.environ['CONVEX_DEPLOY_KEY'])
+            >>> try:
+            ...     preview = await cortex.users.delete_many(['user-1', 'user-2'],
+            ...         {'cascade': True, 'tenant_id': 'team-a',
+            ...          'erasure_transport': transport, 'dry_run': True})
+            ...     print(preview)  # Per-user supported-scope receipts and residuals.
+            ... finally:
+            ...     transport.close()
         """
-        # Client-side validation
         validate_bulk_delete_options(options)
-
-        # Determine if we're using userIds array or filters
-        target_user_ids: List[str]
-
+        validate_delete_options(options)
+        opts = DeleteUserOptions(**(options or {}))
+        tenant_id = resolve_domain_scope(self._tenant_id, opts.tenant_id)
+        target_user_ids: List[str] = []
         if isinstance(user_ids_or_filters, list):
-            # Explicit userIds array
             validate_user_ids_array(user_ids_or_filters, min_length=1, max_length=100)
-            target_user_ids = user_ids_or_filters
+            target_user_ids = list(user_ids_or_filters)
         else:
-            # Filter-based selection - search for matching users
+            from dataclasses import replace
             validate_list_users_filter(user_ids_or_filters)
-            matching_users = await self.search(user_ids_or_filters)
-            target_user_ids = [u.id for u in matching_users]
-
-            # Limit to 100 users for safety
-            if len(target_user_ids) > 100:
-                raise UserValidationError(
-                    f"Filter matched {len(target_user_ids)} users, maximum is 100. Add more specific filters or use limit.",
-                    "TOO_MANY_MATCHES",
-                    "filters",
-                )
-
-        # Check for dry run
-        if options and options.get("dry_run"):
-            return {
-                "deleted": 0,
-                "user_ids": target_user_ids,
-            }
-
-        # Extract cascade option
-        cascade = options.get("cascade", False) if options else False
-
-        # Client-side implementation (like TypeScript SDK)
-        results: List[str] = []
-
-        for user_id in target_user_ids:
+            resolve_domain_scope(tenant_id, user_ids_or_filters.tenant_id)
+            offset = 0
+            while True:
+                if opts.cancel_event is not None and opts.cancel_event.is_set():
+                    raise DomainErasureError("ERASURE_CANCELLED", "bulkDiscovery")
+                page = await self.list(replace(user_ids_or_filters, tenant_id=tenant_id, limit=500, offset=offset))
+                target_user_ids.extend(user.id for user in page.users)
+                if not page.has_more:
+                    break
+                offset += 500
+            target_user_ids = list(dict.fromkeys(target_user_ids))
+        outcomes: List[UserDeleteResult] = []
+        unstarted = list(target_user_ids)
+        committed: List[str] = []
+        prepared = []
+        if opts.cascade:
+            # Every selected user's whole-domain preflight precedes the first write.
+            for user_id in target_user_ids:
+                domain = {"kind": "user", "userId": user_id}
+                if tenant_id is not None:
+                    domain["tenantId"] = tenant_id
+                prepared.append(await prepare_erasure(domain, opts, self.graph_adapter))
+        for index, user_id in enumerate(target_user_ids):
             try:
-                await self.delete(user_id, DeleteUserOptions(cascade=cascade))
-                results.append(user_id)
-            except Exception:
-                # Continue if user doesn't exist
-                continue
-
-        return {
-            "deleted": len(results),
-            "user_ids": results,
-        }
+                result = (self._erasure_user_result(user_id, await execute_erasure(prepared[index], self.client))
+                          if opts.cascade else await self.delete(user_id, opts))
+                outcomes.append(result)
+                unstarted.pop(0)
+                if result.total_deleted:
+                    committed.append(user_id)
+            except DomainErasureError as error:
+                if error.receipt is not None and (error.receipt.executed or error.receipt.outcomes or error.receipt.unknown):
+                    unstarted.pop(0)
+                error.outcomes, error.unstarted = outcomes, unstarted
+                error.deleted, error.user_ids = len(committed), committed
+                raise
+        return {"deleted": len(committed), "user_ids": target_user_ids if opts.dry_run else committed,
+                "complete": all(result.verification.complete for result in outcomes),
+                "outcomes": outcomes, "unstarted": unstarted}
 
     async def export(self, options: Optional[ExportUsersOptions] = None) -> str:
         """
-        Export user profiles with optional related data.
+        Legacy aggregate profile export with optional related data.
+
+        Results follow legacy list limits and optional reads can be omitted.
+        Use export_data for the complete supported records and binary stream.
 
         Args:
             options: Export options including format and what to include
@@ -1363,14 +906,6 @@ class UsersAPI:
             ...     include_version_history=True
             ... ))
             >>>
-            >>> # Full GDPR export with conversations and memories
-            >>> gdpr_export = await cortex.users.export(ExportUsersOptions(
-            ...     format='json',
-            ...     filters=ListUsersFilter(display_name='alex'),
-            ...     include_version_history=True,
-            ...     include_conversations=True,
-            ...     include_memories=True
-            ... ))
         """
         import json
 
@@ -1565,9 +1100,11 @@ class UsersAPI:
         # Client-side validation
         validate_user_id(user_id)
 
+        tenant_id = resolve_domain_scope(self._tenant_id)
+
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "immutable:getHistory", filter_none_values({"type": "user", "id": user_id})
+                "immutable:getHistory", filter_none_values({"type": "user", "id": user_id, "tenantId": tenant_id})
             ),
             "immutable:getHistory",
         )
@@ -1613,6 +1150,3 @@ class UsersAPI:
         return UserVersion(
             version=result["version"], data=result["data"], timestamp=result["timestamp"]
         )
-
-
-

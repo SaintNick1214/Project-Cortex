@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useLayerTracking } from "@cortexmemory/vercel-ai-provider/react";
-import { DefaultChatTransport } from "ai";
+import { type DataUIPart, DefaultChatTransport } from "ai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
@@ -23,7 +23,7 @@ import { useAutoResume } from "@/hooks/use-auto-resume";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";
 import type { Vote } from "@/lib/types";
 import { ChatSDKError } from "@/lib/errors";
-import type { Attachment, ChatMessage } from "@/lib/types";
+import type { Attachment, ChatMessage, CustomUIDataTypes } from "@/lib/types";
 import { fetcher, fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
 import { Artifact } from "./artifact";
 import { useDataStream } from "./data-stream-provider";
@@ -84,7 +84,7 @@ export function Chat({
 
   // Combined data handler for stream parts
   const handleDataPart = useCallback(
-    (dataPart: unknown) => {
+    (dataPart: DataUIPart<CustomUIDataTypes>) => {
       // Pass to layer tracking for memory visualization
       handleLayerDataPart(dataPart);
       // Pass to existing data stream handler
@@ -114,7 +114,7 @@ export function Chat({
             "state" in part &&
             part.state === "approval-responded" &&
             "approval" in part &&
-            (part.approval as { approved?: boolean })?.approved === true
+            typeof (part.approval as { approved?: boolean })?.approved === "boolean"
         ) ?? false;
       return shouldContinue;
     },
@@ -124,19 +124,15 @@ export function Chat({
       prepareSendMessagesRequest(request) {
         const lastMessage = request.messages.at(-1);
         const isToolApprovalContinuation =
-          lastMessage?.role !== "user" ||
-          request.messages.some((msg) =>
-            msg.parts?.some((part) => {
-              const state = (part as { state?: string }).state;
-              return (
-                state === "approval-responded" || state === "output-denied"
-              );
-            })
+          lastMessage?.role === "assistant" &&
+          lastMessage.parts.some(
+            (part) => "state" in part && part.state === "approval-responded"
           );
 
         return {
           body: {
             id: request.id,
+            regenerate: request.trigger === "regenerate-message",
             ...(isToolApprovalContinuation
               ? { messages: request.messages }
               : { message: lastMessage }),
@@ -163,6 +159,11 @@ export function Chat({
             description: error.message,
           });
         }
+      } else {
+        toast({
+          type: "error",
+          description: "We couldn't complete the response. Please try again.",
+        });
       }
     },
   });

@@ -8,6 +8,11 @@ from typing import Any, Dict, List, Optional
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AuthContext,
     DeleteMemorySpaceCascade,
@@ -24,8 +29,15 @@ from ..types import (
     RegisterMemorySpaceParams,
     UpdateMemorySpaceOptions,
 )
+from ..users.erasure import (
+    ErasureTransport,
+    create_erasure_transport,
+    execute_erasure,
+    prepare_erasure,
+)
 from .validators import (
     MemorySpaceValidationError,
+    resolve_domain_scope,
     validate_delete_options,
     validate_limit,
     validate_memory_space_id,
@@ -55,6 +67,7 @@ class MemorySpacesAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Memory Spaces API.
@@ -67,24 +80,36 @@ class MemorySpacesAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
+
+    def create_erasure_transport(self, *, url: str, deployment_key: str,
+                                 timeout: float = 30, socket_timeout: float = 5) -> ErasureTransport:
+        """Construct the same fixed Task19 administrator transport used by users."""
+        return create_erasure_transport(url=url, deployment_key=deployment_key,
+                                        timeout=timeout, socket_timeout=socket_timeout)
 
     @property
     def _tenant_id(self) -> Optional[str]:
         """Get tenant_id from auth context (for multi-tenancy)."""
-        return self._auth_context.tenant_id if self._auth_context else None
+        return resolve_domain_scope(self._auth_context.tenant_id if self._auth_context else None)
+
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
 
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
 
     async def register(
-        self, params: RegisterMemorySpaceParams, sync_to_graph: bool = False
+        self, params: RegisterMemorySpaceParams, sync_to_graph: Optional[bool] = None
     ) -> MemorySpace:
         """
         Register a memory space with metadata and participant tracking.
@@ -122,10 +147,10 @@ class MemorySpacesAPI:
             validate_participants(params.participants)
 
         # Determine tenant_id: explicit param > auth context
-        tenant_id = params.tenant_id if params.tenant_id else self._tenant_id
+        tenant_id = resolve_domain_scope(self._tenant_id, params.tenant_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memorySpaces:register",
                 filter_none_values({
                     "memorySpaceId": params.memory_space_id,
@@ -135,18 +160,11 @@ class MemorySpacesAPI:
                     "participants": params.participants,
                     "metadata": params.metadata or {},
                 }),
-            ),
+            sync_to_graph, ),
             "memorySpaces:register",
-        )
+        graph_write=sync_to_graph, )
 
         # Sync to graph if requested
-        if sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_memory_space_to_graph
-
-                await sync_memory_space_to_graph(result, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync memory space to graph: {error}")
 
         return MemorySpace(**convert_convex_response(result))
 
@@ -217,7 +235,7 @@ class MemorySpacesAPI:
         # Support both filter object and keyword arguments
         f_type = filter.type if filter else type
         f_status = filter.status if filter else status
-        f_tenant_id = filter.tenant_id if filter and filter.tenant_id else self._tenant_id
+        f_tenant_id = resolve_domain_scope(self._tenant_id, filter.tenant_id if filter else None)
         f_participant = filter.participant if filter else participant
         f_limit = filter.limit if filter else limit
         f_offset = filter.offset if filter else offset
@@ -307,7 +325,7 @@ class MemorySpacesAPI:
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "memorySpaces:search",
-                filter_none_values({"query": query, "type": type, "status": status, "limit": limit}),
+                filter_none_values({"tenantId": self._tenant_id, "query": query, "type": type, "status": status, "limit": limit}),
             ),
             "memorySpaces:search",
         )
@@ -354,25 +372,19 @@ class MemorySpacesAPI:
             validate_memory_space_status(updates["status"])
 
         # Flatten updates - backend expects direct fields, not an updates dict
-        mutation_args = {"memorySpaceId": memory_space_id}
+        mutation_args: Dict[str, Any] = {"memorySpaceId": memory_space_id}
         mutation_args.update(updates)
+        mutation_args["tenantId"] = self._tenant_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memorySpaces:update", filter_none_values(mutation_args)
-            ),
+            , graph_option(options)),
             "memorySpaces:update",
-        )
+        graph_write=graph_option(options), )
 
         memory_space = MemorySpace(**convert_convex_response(result))
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_memory_space_to_graph
-
-                await sync_memory_space_to_graph(result, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync memory space update to graph: {error}")
 
         return memory_space
 
@@ -434,16 +446,17 @@ class MemorySpacesAPI:
                     )
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memorySpaces:updateParticipants",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id,
                     "add": p_add,
                     "remove": p_remove,
                 }),
-            ),
+            None, ),
             "memorySpaces:updateParticipants",
-        )
+        graph_write=None, )
 
         return MemorySpace(**convert_convex_response(result))
 
@@ -473,12 +486,13 @@ class MemorySpacesAPI:
         validate_memory_space_id(memory_space_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memorySpaces:archive",
-                filter_none_values({"memorySpaceId": memory_space_id, "reason": reason, "metadata": metadata}),
-            ),
+                filter_none_values({"memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id, "reason": reason, "metadata": metadata}),
+            None, ),
             "memorySpaces:archive",
-        )
+        graph_write=None, )
 
         return MemorySpace(**convert_convex_response(result))
 
@@ -498,11 +512,11 @@ class MemorySpacesAPI:
         validate_memory_space_id(memory_space_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memorySpaces:reactivate", {"memorySpaceId": memory_space_id}
-            ),
+            lambda: self._mutate_graph(
+                "memorySpaces:reactivate", filter_none_values({"memorySpaceId": memory_space_id, "tenantId": self._tenant_id})
+            , None),
             "memorySpaces:reactivate",
-        )
+        graph_write=None, )
 
         return MemorySpace(**convert_convex_response(result))
 
@@ -531,15 +545,16 @@ class MemorySpacesAPI:
         validate_participant(participant)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memorySpaces:addParticipant",
-                {
+                filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id,
                     "participant": participant,
-                },
-            ),
+                }),
+            None, ),
             "memorySpaces:addParticipant",
-        )
+        graph_write=None, )
 
         return MemorySpace(**convert_convex_response(result))
 
@@ -570,15 +585,16 @@ class MemorySpacesAPI:
             )
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memorySpaces:removeParticipant",
-                {
+                filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id,
                     "participantId": participant_id,
-                },
-            ),
+                }),
+            None, ),
             "memorySpaces:removeParticipant",
-        )
+        graph_write=None, )
 
         return MemorySpace(**convert_convex_response(result))
 
@@ -605,7 +621,7 @@ class MemorySpacesAPI:
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "memorySpaces:findByParticipant",
-                {"participantId": participant_id},
+                filter_none_values({"participantId": participant_id, "tenantId": self._tenant_id}),
             ),
             "memorySpaces:findByParticipant",
         )
@@ -622,7 +638,10 @@ class MemorySpacesAPI:
         confirm_id: Optional[str] = None,
     ) -> DeleteMemorySpaceResult:
         """
-        Delete memory space and ALL associated data.
+        Delete a memory space and its supported exclusive primary data.
+
+        Requires explicit administrator transport and exact tenant scope; the erasure
+        receipt discloses residual/partial outcomes, not universal physical removal.
 
         WARNING: This is DESTRUCTIVE!
 
@@ -637,60 +656,45 @@ class MemorySpacesAPI:
             Deletion result with cascade details
 
         Example:
-            >>> # Using options object (new API)
-            >>> result = await cortex.memory_spaces.delete(
-            ...     'user-123-personal',
-            ...     DeleteMemorySpaceOptions(cascade=True, reason='GDPR request')
-            ... )
-            >>>
-            >>> # Using simple call (backward compatible)
-            >>> await cortex.memory_spaces.delete('space-id')
+            >>> import os
+            >>> transport = cortex.memory_spaces.create_erasure_transport(
+            ...     url=os.environ['CONVEX_URL'],
+            ...     deployment_key=os.environ['CONVEX_DEPLOY_KEY'])
+            >>> try:
+            ...     result = await cortex.memory_spaces.delete('user-123-personal',
+            ...         DeleteMemorySpaceOptions(cascade=True, reason='Reviewed retention',
+            ...             confirm_id='user-123-personal', tenant_id='team-a',
+            ...             erasure_transport=transport, dry_run=True))
+            ...     print(result.erasure)  # Supported scope with explicit residuals.
+            ... finally:
+            ...     transport.close()
         """
         validate_memory_space_id(memory_space_id)
 
-        # Support both options object and keyword arguments
-        d_cascade = options.cascade if options else cascade
-        d_reason = options.reason if options else reason
-        d_confirm_id = options.confirm_id if options else confirm_id
-
-        # Backend requires reason - provide default if not specified
-        if d_reason is None:
-            d_reason = "SDK deletion request"
-
-        # Only validate delete options if explicitly provided and reason is set
-        if options is not None and d_reason is not None:
-            validate_delete_options(memory_space_id, d_cascade, d_reason, d_confirm_id)
-
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memorySpaces:deleteSpace",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "tenantId": self._tenant_id,  # Multi-tenancy: ensure delete is tenant-scoped
-                    "cascade": d_cascade,
-                    "reason": d_reason,
-                    "confirmId": d_confirm_id,
-                }),
-            ),
-            "memorySpaces:deleteSpace",
-        )
-
-        # Convert response to typed result
-        response = convert_convex_response(result)
-        cascade_data = response.get("cascade", {})
-
+        opts = options or DeleteMemorySpaceOptions(cascade=cascade, reason=reason or "SDK deletion request", confirm_id=confirm_id)
+        validate_delete_options(memory_space_id, opts.cascade, opts.reason, opts.confirm_id)
+        for name in ("dry_run", "verify"):
+            if type(getattr(opts, name)) is not bool:
+                raise MemorySpaceValidationError(f"{name} must be boolean", "INVALID_OPTIONS", name)
+        if opts.cancel_event is not None and not all(callable(getattr(opts.cancel_event, name, None)) for name in ("is_set", "wait")):
+            raise MemorySpaceValidationError("Invalid cancellation event", "INVALID_OPTIONS", "cancel_event")
+        if opts.graph_participant is not None and (getattr(opts.graph_participant, "adapter", None) is None or getattr(opts.graph_participant, "disposal_transport", None) is None):
+            raise MemorySpaceValidationError("Invalid graph participant", "INVALID_OPTIONS", "graph_participant")
+        tenant_id = resolve_domain_scope(self._tenant_id, opts.tenant_id)
+        domain = {"kind": "space", "memorySpaceId": memory_space_id}
+        if tenant_id is not None:
+            domain["tenantId"] = tenant_id
+        receipt = await execute_erasure(await prepare_erasure(domain, opts, self.graph_adapter), self.client)
         return DeleteMemorySpaceResult(
-            memory_space_id=response.get("memory_space_id", memory_space_id),
-            deleted=response.get("deleted", True),
+            memory_space_id=memory_space_id,
+            deleted=receipt.per_table["memorySpaces"]["deleted"] > 0,
             cascade=DeleteMemorySpaceCascade(
-                conversations_deleted=cascade_data.get("conversations_deleted", 0),
-                memories_deleted=cascade_data.get("memories_deleted", 0),
-                facts_deleted=cascade_data.get("facts_deleted", 0),
-                total_bytes=cascade_data.get("total_bytes", 0),
-            ),
-            reason=response.get("reason", d_reason or ""),
-            deleted_at=response.get("deleted_at", 0),
-        )
+                conversations_deleted=receipt.per_table["conversations"]["deleted"],
+                memories_deleted=receipt.per_table["memories"]["deleted"],
+                facts_deleted=receipt.per_table["facts"]["deleted"],
+                total_bytes=sum(int(item.get("serializedBytes", 0)) for item in receipt.outcomes)),
+            reason=opts.reason, deleted_at=receipt.ended_at,
+            total_bytes_kind="serializedDocumentEstimate", erasure=receipt)
 
     async def get_stats(
         self,
@@ -736,6 +740,7 @@ class MemorySpacesAPI:
                 "memorySpaces:getStats",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id,
                     "timeWindow": options.time_window if options else None,
                     "includeParticipants": options.include_participants if options else None,
                 }),
@@ -772,6 +777,7 @@ class MemorySpacesAPI:
             lambda: self.client.query(
                 "memorySpaces:count",
                 filter_none_values({
+                    "tenantId": self._tenant_id,
                     "type": type,
                     "status": status,
                 }),
@@ -784,4 +790,3 @@ class MemorySpacesAPI:
 
 # Export validation error for users who want to catch it specifically
 __all__ = ["MemorySpacesAPI", "MemorySpaceValidationError"]
-

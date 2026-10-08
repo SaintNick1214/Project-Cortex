@@ -1,3 +1,4 @@
+import { collectCandidates } from "./discovery";
 /**
  * Cortex SDK - Fact Deduplication Service
  *
@@ -8,7 +9,6 @@
  */
 
 import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
 import type { FactRecord } from "../types";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -182,6 +182,7 @@ export class FactDeduplicationService {
     memorySpaceId: string,
     config: DeduplicationConfig,
     userId?: string,
+    tenantId?: string,
   ): Promise<DuplicateResult> {
     // Skip if strategy is 'none'
     if (config.strategy === "none") {
@@ -197,6 +198,7 @@ export class FactDeduplicationService {
         candidate,
         memorySpaceId,
         userId,
+        tenantId,
       );
 
       if (structuralMatch) {
@@ -216,6 +218,7 @@ export class FactDeduplicationService {
         candidate,
         memorySpaceId,
         userId,
+        tenantId,
       );
 
       if (exactMatch) {
@@ -245,6 +248,7 @@ export class FactDeduplicationService {
         config.generateEmbedding,
         config.similarityThreshold ?? 0.85,
         userId,
+        tenantId,
       );
 
       if (semanticMatch) {
@@ -268,27 +272,27 @@ export class FactDeduplicationService {
     candidate: FactCandidate,
     memorySpaceId: string,
     userId?: string,
+    tenantId?: string,
   ): Promise<FactRecord | null> {
     // Only check structural match if we have at least subject AND (predicate OR object)
     if (!candidate.subject || (!candidate.predicate && !candidate.object)) {
       return null;
     }
 
-    try {
-      const facts = await this.client.query(api.facts.findByStructure, {
+    const facts = await collectCandidates(
+      this.client,
+      "findByStructure",
+      {
         memorySpaceId,
+        tenantId,
         subject: candidate.subject,
         predicate: candidate.predicate,
         object: candidate.object,
         userId,
-        limit: 1,
-      });
-
-      return (facts && facts.length > 0 ? facts[0] : null) as FactRecord | null;
-    } catch {
-      // Query might not exist yet, fall through
-      return null;
-    }
+      },
+      1,
+    );
+    return facts[0] ?? null;
   }
 
   /**
@@ -298,23 +302,30 @@ export class FactDeduplicationService {
     candidate: FactCandidate,
     memorySpaceId: string,
     userId?: string,
+    tenantId?: string,
   ): Promise<FactRecord | null> {
     const normalizedCandidate = normalizeFactText(candidate.fact);
 
     // Get facts for this memory space and optionally filter by user
-    const facts = (await this.client.query(api.facts.list, {
-      memorySpaceId,
-      userId,
-      factType: candidate.factType as
-        | "preference"
-        | "identity"
-        | "knowledge"
-        | "relationship"
-        | "event"
-        | "observation"
-        | "custom",
-      limit: 100, // Check first 100 facts
-    })) as FactRecord[];
+    const facts = await collectCandidates(
+      this.client,
+      "list",
+      {
+        memorySpaceId,
+        tenantId,
+        userId,
+        factType: candidate.factType as
+          | "preference"
+          | "identity"
+          | "knowledge"
+          | "relationship"
+          | "event"
+          | "observation"
+          | "custom",
+        limit: 100, // Check first 100 facts
+      },
+      100,
+    );
 
     // Find exact match by normalized text
     for (const fact of facts) {
@@ -336,24 +347,31 @@ export class FactDeduplicationService {
     generateEmbedding: (text: string) => Promise<number[]>,
     threshold: number,
     userId?: string,
+    tenantId?: string,
   ): Promise<{ fact: FactRecord; score: number } | null> {
     // Generate embedding for candidate fact
     const candidateEmbedding = await generateEmbedding(candidate.fact);
 
     // Get existing facts
-    const facts = (await this.client.query(api.facts.list, {
-      memorySpaceId,
-      userId,
-      factType: candidate.factType as
-        | "preference"
-        | "identity"
-        | "knowledge"
-        | "relationship"
-        | "event"
-        | "observation"
-        | "custom",
-      limit: 50, // Limit for performance
-    })) as FactRecord[];
+    const facts = await collectCandidates(
+      this.client,
+      "list",
+      {
+        memorySpaceId,
+        tenantId,
+        userId,
+        factType: candidate.factType as
+          | "preference"
+          | "identity"
+          | "knowledge"
+          | "relationship"
+          | "event"
+          | "observation"
+          | "custom",
+        limit: 50, // Limit for performance
+      },
+      50,
+    );
 
     let bestMatch: { fact: FactRecord; score: number } | null = null;
 

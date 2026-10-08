@@ -383,7 +383,7 @@ export class AttachmentsAPI {
   /**
    * Delete an attachment.
    *
-   * Removes both the metadata record and the file from storage.
+   * Removes the metadata record. Bytes are deleted only when no document or retained version references them. The boolean reports metadata deletion.
    *
    * @example
    * ```typescript

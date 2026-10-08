@@ -6,13 +6,16 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 
+
+Python requires 3.10 or newer; the Cortex CLI setup workflow requires Node.js 22.16.0 and selected Convex 1.46.0. SDK/provider/CLI/Python 0.37.0, apps 1.1.0 and catalog 1.0.0 release independently. Install an unavailable release through an explicit matching wheel/sdist, rather than assuming registry availability.
+
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
 # Basic installation
-pip install cortex-memory
+pip install cortex-memory==0.37.0
 
 # With graph database support
 pip install "cortex-memory[graph]"
@@ -55,6 +58,7 @@ async def main():
             user_message="I prefer dark mode",
             agent_response="Got it! I'll remember that.",
             user_id="user-123",
+            agent_id="my-assistant",
             user_name="User"
         )
     )
@@ -68,7 +72,7 @@ async def main():
     for memory in results:
         print(f"Found: {memory.content}")
 
-    # Clean up
+    # Close the SDK resources when done.
     await cortex.close()
 
 # Run
@@ -77,7 +81,7 @@ asyncio.run(main())
 
 ## ✨ Features
 
-The Python SDK provides 100% API compatibility with the TypeScript SDK:
+The Python SDK mirrors the namespaced TypeScript APIs; release 0.37.0 keeps explicit administrative and graph contracts:
 
 - 🧠 **Flexible Memory** - Remember anything without hardcoded schemas
 - 🔒 **Memory Space Isolation** - Flexible boundaries (per user, team, or project)
@@ -86,7 +90,7 @@ The Python SDK provides 100% API compatibility with the TypeScript SDK:
 - 🗄️ **ACID + Vector Hybrid** - Immutable conversation source + fast searchable index
 - 🔍 **Semantic Search** - AI-powered retrieval with embeddings
 - 🔗 **Context Chains** - Hierarchical context sharing across agents
-- 👥 **User Profiles** - Rich user context with GDPR cascade deletion
+- 👥 **User Profiles** - Rich user context with supported administrative erasure
 - 📊 **Facts Layer** - Extract structured knowledge for 60-90% storage savings
 - 🕸️ **Graph Integration** - Optional Neo4j/Memgraph support
 - 🤝 **A2A Communication** - Agent-to-agent messaging helpers
@@ -196,32 +200,57 @@ await cortex.memory.update(
 await cortex.memory.delete("agent-1", memory_id)
 ```
 
-### User Profiles & GDPR
+### User profiles, export and supported erasure
+
+Profile CRUD follows ordinary SDK scope. Cascade needs a separate fixed administrator transport; user identity/tenant fields do not grant that authority.
 
 ```python
+import os
 from cortex import DeleteUserOptions
 
-# Create/update user profile
-user = await cortex.users.update(
-    "user-123",
-    {
-        "displayName": "Alex Johnson",
-        "email": "alex@example.com",
-        "preferences": {"theme": "dark"}
-    }
+transport = cortex.users.create_erasure_transport(
+    url=os.environ["CONVEX_URL"],
+    deployment_key=os.environ["CONVEX_DEPLOY_KEY"],
 )
-
-# GDPR cascade deletion (deletes across ALL layers)
-result = await cortex.users.delete(
-    "user-123",
-    DeleteUserOptions(cascade=True, verify=True)
-)
-
-print(f"Deleted {result.total_deleted} records")
-print(f"Layers affected: {', '.join(result.deleted_layers)}")
+try:
+    result = await cortex.users.delete(
+        "user-123",
+        DeleteUserOptions(
+            cascade=True, tenant_id="team-a", erasure_transport=transport,
+            dry_run=True, verify=True,
+        ),
+    )
+    print(result.erasure)
+finally:
+    transport.close()
 ```
 
+Review the preview before removing `dry_run`. Supported completion is verified exclusive primary erasure, with shared/foreign/operational/provenance residuals, not universal physical removal. `result.erasure.full_user_data_erased` remains false. Partial/unknown errors carry their receipt; inspect persisted state before retrying. A configured graph or selected managed graph jobs require a matching explicit graph participant and the fixed graph erasure transport. Space deletion has the same requirement through `cortex.memory_spaces.create_erasure_transport`, `DeleteMemorySpaceOptions(cascade=True, reason=..., confirm_id=..., tenant_id=..., erasure_transport=...)`.
+
+Complete supported user export is separate from ordinary `users.export` profile views:
+
+```python
+from contextlib import aclosing
+
+transport = cortex.users.create_export_transport(
+    url=os.environ["CONVEX_URL"],
+    deployment_key=os.environ["CONVEX_DEPLOY_KEY"],
+)
+async with aclosing(cortex.users.export_data(
+    "user-123", transport=transport, tenant_id="team-a", page_size=100
+)) as events:
+    async for event in events:
+        canonical_text = cortex.users.serialize_export_event(event)
+        # Write to private staging; publish only after the complete terminal manifest.
+```
+
+Version 1 exports all eligible records/histories/shared projections and verified binary bytes in 17 supported authoritative families. Reads are rolling, not an atomic snapshot. The serializer preserves Convex value encoding/canonical values. Omitted tenant means tenantless only; unknown historical ownership is not inferred. External graph infrastructure and operational reference/erasure tables are disclosed exclusions. The SDK never publishes files; CLI `users export` uses private atomic JSON output after validation.
+
+
 ### Graph Integration
+
+SDK init/install and template init share the CLI's optional Neo4j/Memgraph graph setup service. `cortex graph setup/start/stop/status` select project-owned resources; stop preserves volumes. Graph off needs no Docker. Python `await Cortex.create(CortexConfig(...))` uses the mirrored resolver: explicit `graph_enabled=False` disables driver work; enabled configuration selects one complete provider tuple without mixing credentials. Missing/ambiguous configuration and failed connection are errors. Manual injection below borrows the adapter; its owner must disconnect it after SDK close. Import adapters from `cortex.graph`, not a TypeScript package subpath.
+
 
 ```python
 from cortex import CortexConfig, GraphConfig, GraphConnectionConfig
@@ -367,18 +396,18 @@ pytest tests/test_memory.py -v
 
 ### Quick Links
 
-- **[START HERE](./START_HERE.md)** - Navigation guide for all documentation
-- **[Developer Guide](./docs/guides/developer-guide.md)** - Comprehensive Python guide
-- **[Migration Guide](./docs/guides/migration-guide.md)** - TypeScript to Python migration
+- **[START HERE](../Documentation/reference/cheat-sheet.mdx)** - Navigation guide for all documentation
+- **[Developer Guide](./scripts/README.md)** - Comprehensive Python guide
+- **[Migration Guide](../Documentation/getting-started/installation.mdx)** - TypeScript to Python migration
 - **[Testing Guide](../dev-docs/python-sdk-testing.md)** - How to test the SDK
 - **[Examples](./examples/)** - 4 working applications
 
 ### Shared Documentation
 
-- **[API Reference](../Documentation/03-api-reference/01-overview.md)** - Complete API documentation
-- **[Core Features](../Documentation/02-core-features/)** - Feature guides
-- **[Architecture](../Documentation/04-architecture/)** - System architecture
-- **[Advanced Topics](../Documentation/07-advanced-topics/)** - Graph DB, facts, etc.
+- **[API Reference](../Documentation/api-reference/overview.mdx)** - Complete API documentation
+- **[Core Features](../Documentation/core-features/)** - Feature guides
+- **[Architecture](../Documentation/architecture/)** - System architecture
+- **[Advanced Topics](../Documentation/advanced-topics/)** - Graph DB, facts, etc.
 
 ## 🔒 Requirements
 
@@ -438,10 +467,7 @@ CONVEX_TEST_MODE=managed pytest tests/ -v
 
 ### Test Coverage
 
-- **579 tests** covering all APIs (includes 5 OpenAI tests that skip in CI)
-- **73% code coverage** (actively increasing)
-- **100% pass rate** on both local and managed environments
-- OpenAI tests run locally with OPENAI_API_KEY, skip in CI (too expensive)
+Suite discovery/results depend on the selected local/managed environment. Required graph, provider and managed-vector tests need their real services; skipped tests do not prove coverage. Inspect the current run report rather than assuming a historical count, percentage or pass rate.
 
 ### Test Environments
 
@@ -476,7 +502,7 @@ FSL-1.1-Apache-2.0 - Same as the TypeScript SDK
 - 📧 Email: support@cortexmemory.dev
 - 💬 Discussions: [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - 🐛 Issues: [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
-- 📖 Docs: [Documentation](../Documentation/00-README.md)
+- 📖 Docs: [Documentation](../Documentation/index.mdx)
 
 ---
 

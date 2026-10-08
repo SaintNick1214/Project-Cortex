@@ -1,3 +1,5 @@
+import { graphMutation } from "./lib/graphSync";
+import { captureInsertedRow, reconcileRow, markDeletedRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Context Chains API
  *
@@ -6,7 +8,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Backward Compatibility Helpers
@@ -33,7 +35,7 @@ function getContextPreviousVersions(context: any): any[] {
 /**
  * Create a new context (root or child)
  */
-export const create = mutation({
+export const create = graphMutation({
   args: {
     purpose: v.string(),
     memorySpaceId: v.string(), // Memory space creating this context
@@ -114,11 +116,11 @@ export const create = mutation({
       contextData.tenantId = args.tenantId;
     }
 
-    const _id = await ctx.db.insert("contexts", contextData);
+    const _id = await captureInsertedRow(ctx, "contexts", contextData);
 
     // Update parent's childIds
     if (parentContext) {
-      await ctx.db.patch(parentContext._id, {
+      await reconcileRow(ctx, parentContext._id, {
         childIds: [...parentContext.childIds, contextId],
       });
     }
@@ -130,7 +132,7 @@ export const create = mutation({
 /**
  * Update a context (creates new version)
  */
-export const update = mutation({
+export const update = graphMutation({
   args: {
     contextId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
@@ -201,7 +203,7 @@ export const update = mutation({
 
     const newStatus = args.status !== undefined ? args.status : context.status;
 
-    await ctx.db.patch(context._id, {
+    await reconcileRow(ctx, context._id, {
       status: newStatus,
       description:
         args.description !== undefined ? args.description : context.description,
@@ -224,7 +226,7 @@ export const update = mutation({
 /**
  * Delete a context
  */
-export const deleteContext = mutation({
+export const deleteContext = graphMutation({
   args: {
     contextId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
@@ -297,7 +299,7 @@ export const deleteContext = mutation({
           const newRootId = context.parentId ? context.rootId : child.contextId;
           const newDepth = context.parentId ? context.depth : 0;
 
-          await ctx.db.patch(child._id, {
+          await reconcileRow(ctx, child._id, {
             parentId: newParentId,
             rootId: newRootId,
             depth: newDepth,
@@ -316,7 +318,7 @@ export const deleteContext = mutation({
               .first();
 
             if (grandparent) {
-              await ctx.db.patch(grandparent._id, {
+              await reconcileRow(ctx, grandparent._id, {
                 childIds: [...grandparent.childIds, childId],
                 updatedAt: Date.now(),
               });
@@ -336,7 +338,7 @@ export const deleteContext = mutation({
         .first();
 
       if (parent) {
-        await ctx.db.patch(parent._id, {
+        await reconcileRow(ctx, parent._id, {
           childIds: parent.childIds.filter(
             (id: string) => id !== context.contextId,
           ),
@@ -346,7 +348,7 @@ export const deleteContext = mutation({
     }
 
     // Delete this context
-    await ctx.db.delete(context._id);
+    await markDeletedRow(ctx, context._id);
     deletedCount += 1;
 
     return {
@@ -381,7 +383,7 @@ async function deleteContextRecursive(
   }
 
   // Delete this one
-  await ctx.db.delete(context._id);
+  await markDeletedRow(ctx, context._id);
   count += 1;
 
   return count;
@@ -390,7 +392,7 @@ async function deleteContextRecursive(
 /**
  * Add participant to context
  */
-export const addParticipant = mutation({
+export const addParticipant = graphMutation({
   args: {
     contextId: v.string(),
     participantId: v.string(),
@@ -409,7 +411,7 @@ export const addParticipant = mutation({
       return context; // Already exists
     }
 
-    await ctx.db.patch(context._id, {
+    await reconcileRow(ctx, context._id, {
       participants: [...context.participants, args.participantId],
       updatedAt: Date.now(),
     });
@@ -421,7 +423,7 @@ export const addParticipant = mutation({
 /**
  * Grant cross-space access
  */
-export const grantAccess = mutation({
+export const grantAccess = graphMutation({
   args: {
     contextId: v.string(),
     targetMemorySpaceId: v.string(),
@@ -449,7 +451,7 @@ export const grantAccess = mutation({
     );
     updated.push(grant);
 
-    await ctx.db.patch(context._id, {
+    await reconcileRow(ctx, context._id, {
       grantedAccess: updated,
       updatedAt: Date.now(),
     });
@@ -970,7 +972,7 @@ export const search = query({
  *
  * IMPORTANT: Uses indexed queries to avoid OCC conflicts with parallel workers.
  */
-export const updateMany = mutation({
+export const updateMany = graphMutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     userId: v.optional(v.string()),
@@ -1048,7 +1050,7 @@ export const updateMany = mutation({
         ? { ...context.data, ...args.updates.data }
         : context.data;
 
-      await ctx.db.patch(context._id, {
+      await reconcileRow(ctx, context._id, {
         status:
           args.updates.status !== undefined
             ? args.updates.status
@@ -1076,7 +1078,7 @@ export const updateMany = mutation({
  * Full table scans create read dependencies on the entire table, causing infinite
  * retry loops when other workers are creating/updating contexts simultaneously.
  */
-export const deleteMany = mutation({
+export const deleteMany = graphMutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     userId: v.optional(v.string()),
@@ -1136,7 +1138,7 @@ export const deleteMany = mutation({
         const count = await deleteContextRecursive(ctx, context.contextId);
         totalDeleted += count;
       } else {
-        await ctx.db.delete(context._id);
+        await markDeletedRow(ctx, context._id);
         totalDeleted += 1;
       }
 
@@ -1153,7 +1155,7 @@ export const deleteMany = mutation({
 /**
  * Remove participant from context
  */
-export const removeParticipant = mutation({
+export const removeParticipant = graphMutation({
   args: {
     contextId: v.string(),
     participantId: v.string(),
@@ -1168,7 +1170,7 @@ export const removeParticipant = mutation({
       throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
-    await ctx.db.patch(context._id, {
+    await reconcileRow(ctx, context._id, {
       participants: context.participants.filter(
         (p) => p !== args.participantId,
       ),
@@ -1465,7 +1467,7 @@ export const exportContexts = query({
 /**
  * Purge all contexts (TEST/DEV ONLY)
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {},
   handler: async (ctx) => {
     // Safety check: Only allow in test/dev environments
@@ -1489,7 +1491,7 @@ export const purgeAll = mutation({
     const allContexts = await ctx.db.query("contexts").collect();
 
     for (const context of allContexts) {
-      await ctx.db.delete(context._id);
+      await markDeletedRow(ctx, context._id);
     }
 
     return { deleted: allContexts.length };

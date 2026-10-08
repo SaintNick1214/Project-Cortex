@@ -390,6 +390,7 @@ class SlotMatchingService:
         candidate: Dict[str, Optional[str]],
         memory_space_id: str,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> SlotConflictResult:
         """
         Find existing facts that occupy the same slot as the candidate.
@@ -421,14 +422,15 @@ class SlotMatchingService:
             memory_space_id,
             candidate.get("subject") or "",
             user_id,
+            tenant_id,
         )
 
         # Filter to facts in the same slot class
         conflicting_facts = []
         for fact in subject_facts:
             fact_slot = extract_slot(
-                getattr(fact, "subject", None) or fact.get("subject") if isinstance(fact, dict) else None,
-                getattr(fact, "predicate", None) or fact.get("predicate") if isinstance(fact, dict) else None,
+                fact.get("subject") if isinstance(fact, dict) else getattr(fact, "subject", None),
+                fact.get("predicate") if isinstance(fact, dict) else getattr(fact, "predicate", None),
                 self._custom_classes,
             )
 
@@ -451,6 +453,7 @@ class SlotMatchingService:
         memory_space_id: str,
         subject: str,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> List[Any]:
         """
         Query facts by subject from the database.
@@ -463,23 +466,12 @@ class SlotMatchingService:
         Returns:
             List of facts matching the subject
         """
-        try:
-            from .._utils import filter_none_values
+        from .discovery import collect_candidates
 
-            facts = await self._client.query(
-                "facts:queryBySubject",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "subject": normalize_subject(subject),
-                    "userId": user_id,
-                    "includeSuperseded": False,
-                    "limit": 100,  # Reasonable limit for slot matching
-                }),
-            )
-            return facts or []
-        except Exception:
-            # Fallback if query fails
-            return []
+        return await collect_candidates(self._client, "queryBySubject", {
+            "memorySpaceId": memory_space_id, "subject": normalize_subject(subject),
+            "userId": user_id, "tenantId": tenant_id, "includeSuperseded": False,
+        }, 100)
 
     def get_slot(
         self,

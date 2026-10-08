@@ -158,7 +158,7 @@ def validate_content_type(content_type: str) -> None:
         )
 
 
-VALID_SOURCE_TYPES = ["conversation", "system", "tool", "a2a"]
+VALID_SOURCE_TYPES = ["conversation", "system", "tool", "a2a", "fact-extraction"]
 
 
 def validate_source_type(source_type: str) -> None:
@@ -482,7 +482,22 @@ def validate_search_options(options: SearchOptions) -> None:
         validate_min_score(options.min_score)
 
     if options.limit is not None:
-        validate_limit(options.limit)
+        if type(options.limit) is not int:
+            raise VectorValidationError("limit must be an integer", "INVALID_LIMIT", "limit")
+        if options.limit != 0:
+            validate_limit(options.limit)
+    for field in ("offset", "access_count", "version", "created_before", "created_after", "updated_before", "updated_after", "last_accessed_before", "last_accessed_after"):
+        value = getattr(options, field)
+        if value is not None and (type(value) is not int or value < 0 or value > 9007199254740991):
+            raise VectorValidationError(f"{field} must be a nonnegative safe integer", "INVALID_FILTER", field)
+    if options.importance is not None:
+        if type(options.importance) is not int:
+            raise VectorValidationError("importance must be an integer", "INVALID_FILTER", "importance")
+        validate_importance(options.importance, "importance")
+    if options.tag_match not in ("any", "all"):
+        raise VectorValidationError("tag_match must be any or all", "INVALID_FILTER", "tag_match")
+    if options.content_type is not None:
+        validate_content_type(options.content_type)
 
     if options.tags is not None:
         validate_tags(options.tags)
@@ -735,3 +750,13 @@ def validate_update_many_inputs(filter: Any, updates: Any) -> None:
     # Validate optional tags
     if tags is not None:
         validate_tags(tags)
+
+
+def resolve_domain_scope(context: Any, selected: Any = None) -> Optional[str]:
+    """Resolve exact caller scope without implying authenticated authority."""
+    for tenant in (context, selected):
+        if tenant is not None and (not isinstance(tenant, str) or not tenant.strip() or len(tenant) > 256):
+            raise VectorValidationError("Invalid tenant scope", "INVALID_TENANT_ID", "tenant_id")
+    if context is not None and selected is not None and context != selected:
+        raise VectorValidationError("Tenant scope conflicts with current context", "TENANT_SCOPE_MISMATCH", "tenant_id")
+    return selected if isinstance(selected, str) else context if isinstance(context, str) else None

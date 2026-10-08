@@ -45,6 +45,7 @@ export const CONFIG = {
 
 let cortexClient: Cortex | null = null;
 let initPromise: Promise<Cortex> | null = null;
+let closePromise: Promise<void> | null = null;
 
 /**
  * Initialize the Cortex SDK client (async)
@@ -57,6 +58,7 @@ let initPromise: Promise<Cortex> | null = null;
  * No need to pass syncToGraph option to remember() calls.
  */
 export async function initCortex(): Promise<Cortex> {
+  if (closePromise) await closePromise;
   if (cortexClient) {
     return cortexClient;
   }
@@ -96,7 +98,11 @@ export async function initCortex(): Promise<Cortex> {
     return cortexClient;
   })();
 
-  return initPromise;
+  try {
+    return await initPromise;
+  } finally {
+    initPromise = null;
+  }
 }
 
 /**
@@ -116,10 +122,18 @@ export function getCortex(): Cortex {
 /**
  * Close the Cortex client connection
  */
-export function closeCortex(): void {
-  if (cortexClient) {
-    cortexClient.close();
+export async function closeCortex(): Promise<void> {
+  if (closePromise) return closePromise;
+  closePromise = (async () => {
+    // Startup may still be connecting. Join it before releasing its client.
+    const client = cortexClient ?? (initPromise ? await initPromise : null);
     cortexClient = null;
+    if (client) await client.shutdown();
+  })();
+  try {
+    await closePromise;
+  } finally {
+    closePromise = null;
   }
 }
 

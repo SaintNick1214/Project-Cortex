@@ -13,6 +13,13 @@ description: Complete API reference for graph database integration, multi-hop qu
 
 Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations.
 
+## Release 0.37 graph scope
+
+Import graph APIs from the public `@cortexmemory/sdk` root export. SDK/provider automatic configuration shares `resolveGraphConnection`; Python mirrors the provider-specific selection. Explicit off performs no driver work; missing/ambiguous enabled credentials and failed connection are errors. SDK init/install and template init share optional graph setup, with separate project-owned start/stop/status; stop preserves volumes and graph off needs no Docker.
+
+Managed version 2 operations use physical source identity and exact tenant/user/space scope. They preserve legacy/manual namespaces. Current managed labels use `CortexV2*` and captured physical source keys; unprefixed low-level query examples describe manual/legacy graphs and do not provide tenant authorization. Administrator rebuild and erasure use fixed `createGraphRebuildTransport`/`createGraphErasureTransport` factories with explicit URL/deployment key, not caller-supplied identity. User/space cascade additionally needs its separate erasure transport and matching graph participant, with residual/partial/unknown receipts. The low-level adapter `clearDatabase` below is an explicit database-wide operation and is not used by scoped SDK deletion or project graph stop.
+
+
 ## Overview
 
 The Graph Operations API (`@cortexmemory/sdk/graph`) provides advanced graph database capabilities for Cortex, enabling multi-hop relationship queries, knowledge discovery, and cross-layer context enrichment.
@@ -63,7 +70,7 @@ import { Cortex } from "@cortexmemory/sdk";
 import {
   CypherGraphAdapter,
   initializeGraphSchema,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 
 // 1. Setup graph adapter
 const graphAdapter = new CypherGraphAdapter();
@@ -478,7 +485,7 @@ import {
   syncContextRelationships,
   syncConversationRelationships,
   syncA2ARelationships,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 
 // Manual sync workflow
 const memory = await cortex.vector.store(memorySpaceId, data);
@@ -632,7 +639,7 @@ Utility functions for managing graph nodes and lookups.
 Find a graph node ID by Cortex entity ID.
 
 ```typescript
-import { findGraphNodeId } from "@cortexmemory/sdk/graph";
+import { findGraphNodeId } from "@cortexmemory/sdk";
 
 async function findGraphNodeId(
   label: string, // 'Context', 'Conversation', 'Memory', 'Fact', 'MemorySpace', 'User', 'Agent', 'Participant'
@@ -660,7 +667,7 @@ const factNodeId = await findGraphNodeId("Fact", "fact-456", adapter);
 Create or get a User node using MERGE semantics (idempotent).
 
 ```typescript
-import { ensureUserNode } from "@cortexmemory/sdk/graph";
+import { ensureUserNode } from "@cortexmemory/sdk";
 
 async function ensureUserNode(
   userId: string,
@@ -681,7 +688,7 @@ const userNodeId = await ensureUserNode("user-123", adapter, "tenant-acme");
 Create or get an Agent node using MERGE semantics (idempotent).
 
 ```typescript
-import { ensureAgentNode } from "@cortexmemory/sdk/graph";
+import { ensureAgentNode } from "@cortexmemory/sdk";
 
 async function ensureAgentNode(
   agentId: string,
@@ -702,7 +709,7 @@ const agentNodeId = await ensureAgentNode("assistant-v1", adapter);
 Create or get a Participant node for Hive Mode using MERGE semantics.
 
 ```typescript
-import { ensureParticipantNode } from "@cortexmemory/sdk/graph";
+import { ensureParticipantNode } from "@cortexmemory/sdk";
 
 async function ensureParticipantNode(
   participantId: string,
@@ -726,7 +733,7 @@ const participantNodeId = await ensureParticipantNode(
 Create or get an Entity node using MERGE semantics. Used for fact subject/object entities.
 
 ```typescript
-import { ensureEntityNode } from "@cortexmemory/sdk/graph";
+import { ensureEntityNode } from "@cortexmemory/sdk";
 
 async function ensureEntityNode(
   entityName: string, // Entity name (e.g., "Alice", "Acme Corp")
@@ -757,7 +764,7 @@ await adapter.createEdge({
 Create or get an enriched Entity node with additional metadata from bullet-proof extraction.
 
 ```typescript
-import { ensureEnrichedEntityNode } from "@cortexmemory/sdk/graph";
+import { ensureEnrichedEntityNode } from "@cortexmemory/sdk";
 
 async function ensureEnrichedEntityNode(
   entityName: string, // Entity name (e.g., "Alex")
@@ -834,7 +841,7 @@ cortex.close();
 ### Manual Worker Control
 
 ```typescript
-import { GraphSyncWorker } from "@cortexmemory/sdk/graph";
+import { GraphSyncWorker } from "@cortexmemory/sdk";
 
 // Create worker manually
 const worker = new GraphSyncWorker(client, graphAdapter, {
@@ -898,7 +905,7 @@ import {
   deleteContextFromGraph,
   deleteConversationFromGraph,
   deleteMemorySpaceFromGraph,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 #### deleteMemoryFromGraph()
@@ -973,7 +980,7 @@ const result = await deleteMemorySpaceFromGraph(
 Delete an immutable record from the graph. For facts, uses `deleteFactFromGraph` internally.
 
 ```typescript
-import { deleteImmutableFromGraph } from "@cortexmemory/sdk/graph";
+import { deleteImmutableFromGraph } from "@cortexmemory/sdk";
 
 async function deleteImmutableFromGraph(
   immutableType: string, // Type of immutable record (e.g., "fact")
@@ -1003,7 +1010,7 @@ const result2 = await deleteImmutableFromGraph("document", "doc-456", adapter);
 Delete a mutable record from the graph. Simple delete with no cascading.
 
 ```typescript
-import { deleteMutableFromGraph } from "@cortexmemory/sdk/graph";
+import { deleteMutableFromGraph } from "@cortexmemory/sdk";
 
 async function deleteMutableFromGraph(
   namespace: string, // Mutable namespace
@@ -1076,7 +1083,7 @@ import {
   deleteWithOrphanCleanup,
   detectOrphan,
   canRunOrphanCleanup,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 #### ORPHAN_RULES
@@ -1180,7 +1187,7 @@ Functions for managing fact versioning and supersession in the graph database. T
 Sync a fact supersession to the graph database. Creates a SUPERSEDES relationship from the new fact to the old fact.
 
 ```typescript
-import { syncFactSupersession } from "@cortexmemory/sdk/graph";
+import { syncFactSupersession } from "@cortexmemory/sdk";
 
 async function syncFactSupersession(
   oldFact: FactRecord, // The fact being superseded
@@ -1216,7 +1223,7 @@ console.log(`Fact ${newFact.factId} supersedes ${oldFact.factId}`);
 Update the status of a fact node in the graph.
 
 ```typescript
-import { updateFactGraphStatus } from "@cortexmemory/sdk/graph";
+import { updateFactGraphStatus } from "@cortexmemory/sdk";
 
 async function updateFactGraphStatus(
   factId: string,
@@ -1240,7 +1247,7 @@ await updateFactGraphStatus("fact-456", "deleted", adapter);
 Sync an in-place fact update to the graph. Used for UPDATE action in belief revision (content refinement without supersession).
 
 ```typescript
-import { syncFactUpdateInPlace } from "@cortexmemory/sdk/graph";
+import { syncFactUpdateInPlace } from "@cortexmemory/sdk";
 
 async function syncFactUpdateInPlace(
   fact: FactRecord, // The updated fact
@@ -1262,7 +1269,7 @@ const nodeId = await syncFactUpdateInPlace(updatedFact, adapter);
 Create a REVISED_FROM relationship between facts. Used when a fact is refined (content updated) rather than superseded.
 
 ```typescript
-import { syncFactRevision } from "@cortexmemory/sdk/graph";
+import { syncFactRevision } from "@cortexmemory/sdk";
 
 async function syncFactRevision(
   originalFact: FactRecord, // The original fact
@@ -1295,7 +1302,7 @@ const result = await syncFactRevision(
 Get the complete supersession chain for a fact from the graph.
 
 ```typescript
-import { getFactSupersessionChainFromGraph } from "@cortexmemory/sdk/graph";
+import { getFactSupersessionChainFromGraph } from "@cortexmemory/sdk";
 
 async function getFactSupersessionChainFromGraph(
   factId: string,
@@ -1328,7 +1335,7 @@ for (const item of chain) {
 Remove supersession relationships for a fact. Used when undoing a supersession or during cleanup.
 
 ```typescript
-import { removeFactSupersessionRelationships } from "@cortexmemory/sdk/graph";
+import { removeFactSupersessionRelationships } from "@cortexmemory/sdk";
 
 async function removeFactSupersessionRelationships(
   factId: string,
@@ -1353,7 +1360,7 @@ console.log(`Removed ${deleted} supersession relationships`);
 Create constraints and indexes (one-time setup).
 
 ```typescript
-import { initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import { initializeGraphSchema } from "@cortexmemory/sdk";
 
 await initializeGraphSchema(adapter);
 // Creates:
@@ -1366,7 +1373,7 @@ await initializeGraphSchema(adapter);
 Check if schema is properly initialized.
 
 ```typescript
-import { verifyGraphSchema } from "@cortexmemory/sdk/graph";
+import { verifyGraphSchema } from "@cortexmemory/sdk";
 
 const status = await verifyGraphSchema(adapter);
 console.log("Schema valid:", status.valid);
@@ -1399,7 +1406,7 @@ Remove all constraints and indexes (testing/reset).
 </Callout>
 
 ```typescript
-import { dropGraphSchema } from "@cortexmemory/sdk/graph";
+import { dropGraphSchema } from "@cortexmemory/sdk";
 
 await dropGraphSchema(adapter);
 ```
@@ -1759,7 +1766,7 @@ await cortex.memory.forget(memorySpaceId, memoryId, {
 For initial sync or large data imports:
 
 ```typescript
-import { initialGraphSync } from "@cortexmemory/sdk/graph";
+import { initialGraphSync } from "@cortexmemory/sdk";
 
 const result = await initialGraphSync(cortex, adapter, {
   limits: {
@@ -1955,7 +1962,7 @@ import type {
   DeletionContext,
   DeleteResult,
   OrphanCheckResult,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 ### Sync Functions
@@ -2010,7 +2017,7 @@ import {
 
   // Batch Sync
   initialGraphSync,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 ### GraphNode
@@ -2224,7 +2231,7 @@ import type {
   DeletionContext,
   DeleteResult,
   OrphanCheckResult,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 ### Error Classes
@@ -2236,7 +2243,7 @@ import {
   GraphAuthenticationError,
   GraphQueryError,
   GraphNotFoundError,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 ### OrphanRule
@@ -2328,7 +2335,7 @@ import {
   GraphAuthenticationError,
   GraphQueryError,
   GraphNotFoundError,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 ```
 
 - **GraphDatabaseError** - Base error for graph operations

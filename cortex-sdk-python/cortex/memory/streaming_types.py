@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Awaitable, Callable, Dict, List, Literal, Optional
 
+from ..types import GraphJobReceipt
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Stream Hooks & Events
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -120,11 +122,26 @@ class ProgressiveFact:
 
 
 @dataclass
+class PartialSourceEvidence:
+    """Captured native partial, distinct from the final remember record."""
+
+    memory_id: str
+    physical_source_id: str
+    source_revision: int
+    reference_generation: str
+    ownership_revision: int
+    memory_space_id: str
+    tenant_id: Optional[str] = None
+    graph_jobs: List[GraphJobReceipt] = field(default_factory=list)
+    graph_disposition: Optional[str] = None
+
+
+@dataclass
 class GraphSyncEvent:
     """Graph sync event during streaming"""
 
     timestamp: int
-    event_type: Literal["node-created", "node-updated", "relationship-created", "finalized"]
+    event_type: Literal["node-created", "node-updated", "relationship-created", "finalized", "queued"]
     node_id: Optional[str] = None
     details: Optional[str] = None
 
@@ -277,7 +294,7 @@ class StreamingOptions:
     """Comprehensive streaming options"""
 
     # Graph sync
-    sync_to_graph: bool = True
+    sync_to_graph: Optional[bool] = None
     progressive_graph_sync: bool = False
     graph_sync_interval: int = 5000
 
@@ -341,6 +358,7 @@ class ProgressiveProcessing:
     facts_extracted_during_stream: List[ProgressiveFact] = field(default_factory=list)
     partial_storage_history: List[PartialUpdate] = field(default_factory=list)
     graph_sync_events: Optional[List[GraphSyncEvent]] = None
+    partial_source: Optional[PartialSourceEvidence] = None
 
 
 @dataclass
@@ -397,6 +415,8 @@ class StreamContext:
 
     # Processing
     partial_memory_id: Optional[str] = None
+    partial_source: Optional[PartialSourceEvidence] = None
+    partial_outcome_unknown: bool = False
     extracted_fact_ids: List[str] = field(default_factory=list)
     graph_node_id: Optional[str] = None
 

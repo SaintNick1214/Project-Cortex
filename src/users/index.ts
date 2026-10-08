@@ -1,7 +1,9 @@
+import { createErasureTransport, prepareErasure, executeErasure, ErasureError, type ErasureReceipt, type ErasureTransport } from "./erasure";
+import { graphOffResult } from "../graph/erasure";
 /**
  * Cortex SDK - Users API
  *
- * Coordination Layer: User profile management with GDPR cascade deletion
+ * Coordination Layer: User profiles and supported administrative erasure
  */
 
 import type { ConvexClient } from "convex/browser";
@@ -11,39 +13,33 @@ import type {
   UserVersion,
   DeleteUserOptions,
   UserDeleteResult,
-  DeletionPlan,
-  DeletionBackup,
-  VerificationResult,
   ListUsersFilter,
   ListUsersResult,
   UserFilters,
   ExportUsersOptions,
   Conversation,
   ImmutableRecord,
-  MutableRecord,
   MemoryEntry,
-  FactRecord,
 } from "../types";
 
-// Type for Neo4j record results (reused from agents)
-interface Neo4jNodeRecord {
-  id: string;
-  labels: string[];
-}
-
-// Type for Neo4j count results
-interface Neo4jCountRecord {
-  count: number;
-}
-import type { GraphAdapter } from "../graph/types";
 import {
-  deleteWithOrphanCleanup,
-  createDeletionContext,
-  ORPHAN_RULES,
-} from "../graph/sync/orphanDetection";
+  createUserExportTransport,
+  exportUserData,
+  resolveUserExportIdentity,
+  serializeUserExportEvent,
+  type UserExportDataOptions,
+  type UserExportEvent,
+  type UserExportTransportOptions,
+  type UserExportTransport,
+} from "./export";
+
+import type { GraphAdapter } from "../graph/types";
 import {
   UserValidationError,
   validateUserId,
+  resolveDomainScope,
+  validateUserCountFilter,
+  validateUserCountResult,
   validateData,
   validateVersionNumber,
   validateTimestamp,
@@ -63,6 +59,7 @@ export class CascadeDeletionError extends Error {
   constructor(
     message: string,
     public readonly cause?: unknown,
+    public readonly receipt?: ErasureReceipt,
   ) {
     super(message);
     this.name = "CascadeDeletionError";
@@ -79,11 +76,12 @@ import type { AuthContext } from "../auth/types";
  * Users API
  *
  * Provides convenience wrappers over immutable store (type='user') with the
- * critical feature of GDPR cascade deletion across all layers.
+ * supported exclusive-primary erasure through explicit maintenance transport.
  *
- * Key Principle: Same code for free SDK and Cloud Mode
- * - Free SDK: User provides graph adapter (DIY), cascade works if configured
- * - Cloud Mode: Cortex provides managed graph adapter, cascade always works + legal guarantees
+ * Cascade requires the fixed administrator erasure transport and exact tenant scope.
+ * Shared/foreign/operational/provenance residuals remain in the returned receipt.
+ * A configured graph requires its matching explicit graph participant; no universal
+ * physical erasure or legal guarantee is supplied by this API.
  */
 export class UsersAPI {
   constructor(
@@ -92,6 +90,37 @@ export class UsersAPI {
     private readonly resilience?: ResilienceLayer,
     private readonly authContext?: AuthContext,
   ) {}
+
+  /** Creates only the fixed administrative export transport; never changes SDK identity. */
+  createExportTransport(
+    options: UserExportTransportOptions,
+  ): UserExportTransport {
+    return createUserExportTransport(options);
+  }
+
+  createErasureTransport(options:Parameters<typeof createErasureTransport>[0]):ErasureTransport {
+    return createErasureTransport(options);
+  }
+
+  /** Canonical JSON text for exportData events; publish after the terminal manifest. */
+  serializeExportEvent(event: UserExportEvent): string {
+    return serializeUserExportEvent(event);
+  }
+
+  /** Administrative complete export. Consume through the terminal manifest before publishing a bundle. */
+  exportData(
+    userId: string,
+    options: UserExportDataOptions,
+  ): AsyncGenerator<UserExportEvent> {
+    return exportUserData(
+      resolveUserExportIdentity(
+        userId,
+        options.tenantId,
+        this.authContext?.tenantId,
+      ),
+      options,
+    );
+  }
 
   /**
    * Execute an operation through the resilience layer (if available)
@@ -125,12 +154,14 @@ export class UsersAPI {
     // Client-side validation
     validateUserId(userId);
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.immutable.get, {
           type: "user",
           id: userId,
-          tenantId: this.authContext?.tenantId, // Tenant isolation
+          tenantId, // Tenant isolation
         }),
       "users:get",
     );
@@ -139,13 +170,7 @@ export class UsersAPI {
       return null;
     }
 
-    // Enforce tenant isolation: only deny if both have tenantId and they don't match
-    // Users without tenantId (legacy) are accessible to all (backwards compatibility)
-    if (result.tenantId && this.authContext?.tenantId) {
-      if (result.tenantId !== this.authContext.tenantId) {
-        return null; // User belongs to a different tenant
-      }
-    }
+    if (result.tenantId !== tenantId) return null;
 
     return {
       id: result.id,
@@ -196,16 +221,18 @@ export class UsersAPI {
       finalData = this.deepMerge(existing.data, data);
     }
 
-    const result = await this.executeWithResilience(
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
+    const result = graphOffResult(await this.executeWithResilience(
       () =>
         this.client.mutation(api.immutable.store, {
           type: "user",
           id: userId,
           data: finalData,
-          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
+          tenantId, // Inject tenantId from auth context
         }),
       "users:update",
-    );
+    ));
 
     if (!result) {
       // Use a static error message to avoid leaking user-controlled identifiers into logs
@@ -223,11 +250,11 @@ export class UsersAPI {
   }
 
   /**
-   * Delete user profile with optional cascade deletion across all layers
+   * Delete a profile or explicitly erase its supported exclusive primary scope
    *
    * @param userId - User ID to delete
    * @param options - Deletion options
-   * @param options.cascade - Enable cascade deletion across all layers (default: false)
+   * @param options.cascade - Use explicit administrator transport for supported erasure (default: false)
    * @param options.verify - Run verification after deletion (default: true)
    * @param options.dryRun - Preview what would be deleted without actually deleting (default: false)
    *
@@ -236,11 +263,18 @@ export class UsersAPI {
    * // Simple deletion (user profile only)
    * await cortex.users.delete('user-123');
    *
-   * // GDPR cascade deletion (all layers)
-   * const result = await cortex.users.delete('user-123', {
-   *   cascade: true
+   * // Preview supported erasure; shared/provenance residuals remain in the receipt.
+   * const erasureTransport = cortex.users.createErasureTransport({
+   *   url: process.env.CONVEX_URL!, deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
    * });
-   * console.log(`Deleted ${result.totalDeleted} records across ${result.deletedLayers.length} layers`);
+   * try {
+   *   const result = await cortex.users.delete('user-123', {
+   *     cascade: true, tenantId: 'team-a', erasureTransport, dryRun: true,
+   *   });
+   *   console.log(result.erasure); // Not universal physical erasure.
+   * } finally {
+   *   erasureTransport.close();
+   * }
    * ```
    */
   async delete(
@@ -256,18 +290,24 @@ export class UsersAPI {
     const dryRun = options?.dryRun ?? false;
 
     if (!cascade) {
+      const tenantId = resolveDomainScope(this.authContext?.tenantId, options?.tenantId);
       // Simple delete: just user profile from immutable
       if (!dryRun) {
-        await this.executeWithResilience(
+        graphOffResult(await this.executeWithResilience(
           () =>
             this.client.mutation(api.immutable.purge, {
               type: "user",
               id: userId,
-              tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
+              tenantId, // Multi-tenancy: scope to tenant
             }),
           "users:delete",
-        );
+        ));
       }
+
+      const complete = !dryRun && verify ? (await this.executeWithResilience(
+        () => this.client.query(api.immutable.get, {type:"user",id:userId,tenantId}),
+        "users:delete:verify-profile",
+      )) === null : false;
 
       return {
         userId,
@@ -280,7 +320,8 @@ export class UsersAPI {
         factsDeleted: 0,
         graphNodesDeleted: 0,
         verification: {
-          complete: true,
+          complete,
+          scope: "user-profile",
           issues: [],
         },
         totalDeleted: dryRun ? 0 : 1,
@@ -288,49 +329,13 @@ export class UsersAPI {
       };
     }
 
-    // PHASE 1: Collect all records (verification)
-    const deletionPlan = await this.collectDeletionTargets(userId);
-
-    // Calculate totals for dry run or actual deletion
-    const totals = this.calculateDeletionTotals(deletionPlan);
-
-    if (dryRun) {
-      // Return preview without deleting
-      return {
-        userId,
-        deletedAt: Date.now(),
-        ...totals,
-        verification: {
-          complete: true,
-          issues: [
-            `DRY RUN: Would delete ${totals.totalDeleted} total records`,
-          ],
-        },
-        deletedLayers: this.getAffectedLayers(deletionPlan),
-      };
-    }
-
-    // PHASE 2: Backup records for rollback
-    const backups = await this.backupRecords(deletionPlan);
-
-    // PHASE 3: Execute cascade deletion with rollback on failure
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, options?.tenantId);
     try {
-      const result = await this.executeCascadeDeletion(userId, deletionPlan);
-
-      // PHASE 4: Verify deletion (if requested)
-      if (verify) {
-        const verification = await this.verifyDeletion(userId);
-        result.verification = verification;
-      }
-
-      return result;
+      const prepared = await prepareErasure({kind:"user", userId, tenantId}, options ?? {}, this.graphAdapter);
+      return this.erasureUserResult(userId, await executeErasure(prepared, this.client));
     } catch (error) {
-      // ROLLBACK: Restore backed up records
-      await this.rollbackDeletion(backups);
-      throw new CascadeDeletionError(
-        `Cascade deletion failed for user ${userId}, rolled back all changes`,
-        error,
-      );
+      if (error instanceof ErasureError) throw new CascadeDeletionError(error.message, error, error.receipt);
+      throw error;
     }
   }
 
@@ -366,6 +371,8 @@ export class UsersAPI {
     // Client-side validation
     validateListUsersFilter(filters);
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, filters?.tenantId);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.immutable.list, {
@@ -378,7 +385,7 @@ export class UsersAPI {
           updatedBefore: filters?.updatedBefore,
           sortBy: filters?.sortBy,
           sortOrder: filters?.sortOrder,
-          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
+          tenantId, // Inject tenantId for tenant isolation
         }),
       "users:list",
     );
@@ -530,21 +537,21 @@ export class UsersAPI {
    * ```
    */
   async count(filters?: UserFilters): Promise<number> {
-    // Client-side validation
-    validateUserFilters(filters);
-
-    return await this.executeWithResilience(
-      () =>
-        this.client.query(api.immutable.count, {
-          type: "user",
-          createdAfter: filters?.createdAfter,
-          createdBefore: filters?.createdBefore,
-          updatedAfter: filters?.updatedAfter,
-          updatedBefore: filters?.updatedBefore,
-          // Note: count doesn't have tenantId filter in Convex schema yet
-        }),
+    validateUserCountFilter(filters);
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, filters?.tenantId);
+    const result: unknown = await this.executeWithResilience(
+      () => this.client.query(api.immutable.count, {
+        type: "user",
+        tenantId,
+        createdAfter: filters?.createdAfter,
+        createdBefore: filters?.createdBefore,
+        updatedAfter: filters?.updatedAfter,
+        updatedBefore: filters?.updatedBefore,
+      }),
       "users:count",
     );
+    validateUserCountResult(result);
+    return result;
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -602,9 +609,12 @@ export class UsersAPI {
     // Client-side validation
     validateUserId(userId);
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.immutable.getHistory, {
+          tenantId,
           type: "user",
           id: userId,
         }),
@@ -812,7 +822,7 @@ export class UsersAPI {
    *   includeVersionHistory: true
    * });
    *
-   * // Full GDPR export with conversations and memories
+   * // Limited aggregate export of selected profile and related domains; use exportData for the complete supported bundle
    * const gdprExport = await cortex.users.export({
    *   format: 'json',
    *   filters: { displayName: 'alex' },
@@ -1066,754 +1076,81 @@ export class UsersAPI {
    *
    * @example
    * ```typescript
-   * // Delete by explicit IDs
-   * const result = await cortex.users.deleteMany(
-   *   ['user-1', 'user-2', 'user-3'],
-   *   { cascade: true }
-   * );
-   *
-   * // Delete by filters (inactive users older than 1 year)
-   * const oldUsers = await cortex.users.deleteMany(
-   *   { createdBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
-   *   { cascade: true }
-   * );
-   *
-   * // Dry run to preview what would be deleted
-   * const preview = await cortex.users.deleteMany(
-   *   { updatedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000 },
-   *   { dryRun: true }
-   * );
-   * console.log(`Would delete ${preview.userIds.length} users`);
+   * const erasureTransport = cortex.users.createErasureTransport({
+   *   url: process.env.CONVEX_URL!, deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+   * });
+   * try {
+   *   const preview = await cortex.users.deleteMany(['user-1', 'user-2'], {
+   *     cascade: true, tenantId: 'team-a', erasureTransport, dryRun: true,
+   *   });
+   *   console.log(preview); // Inspect per-user supported-scope receipts and residuals.
+   * } finally {
+   *   erasureTransport.close();
+   * }
    * ```
    */
   async deleteMany(
     userIdsOrFilters: string[] | UserFilters,
-    options?: { cascade?: boolean; dryRun?: boolean },
-  ): Promise<{ deleted: number; userIds: string[] }> {
+    options?: DeleteUserOptions,
+  ): Promise<{ deleted: number; userIds: string[]; complete: boolean; outcomes: UserDeleteResult[]; unstarted: string[] }> {
     validateBulkDeleteOptions(options);
-
-    // Determine if we're using userIds array or filters
+    validateDeleteUserOptions(options);
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, options?.tenantId);
     let targetUserIds: string[];
-
     if (Array.isArray(userIdsOrFilters)) {
-      // Explicit userIds array
       validateUserIdsArray(userIdsOrFilters, 1, 100);
-      targetUserIds = userIdsOrFilters;
+      targetUserIds = [...new Set(userIdsOrFilters)];
     } else {
-      // Filter-based selection - search for matching users
       validateUserFilters(userIdsOrFilters);
-      const matchingUsers = await this.search(userIdsOrFilters);
-      targetUserIds = matchingUsers.map((u) => u.id);
-
-      // Limit to 100 users for safety
-      if (targetUserIds.length > 100) {
-        throw new UserValidationError(
-          `Filter matched ${targetUserIds.length} users, maximum is 100. Add more specific filters or use limit.`,
-          "TOO_MANY_MATCHES",
-          "filters",
-        );
+      resolveDomainScope(tenantId, userIdsOrFilters.tenantId);
+      targetUserIds = [];
+      let offset = 0;
+      for (;;) {
+        if (options?.signal?.aborted) throw new ErasureError("ERASURE_CANCELLED");
+        const page = await this.list({...userIdsOrFilters, tenantId, limit:500, offset});
+        targetUserIds.push(...page.users.map(user=>user.id));
+        if (!page.hasMore) break;
+        offset += 500;
       }
+      targetUserIds = [...new Set(targetUserIds)];
     }
-
-    if (options?.dryRun) {
-      return {
-        deleted: 0,
-        userIds: targetUserIds,
-      };
-    }
-
-    const results: string[] = [];
-
-    for (const userId of targetUserIds) {
-      try {
-        await this.delete(userId, options);
-        results.push(userId);
-      } catch (_e) {
-        // Continue if user doesn't exist
-        continue;
-      }
-    }
-
-    return {
-      deleted: results.length,
-      userIds: results,
-    };
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Private Helper Methods - Cascade Deletion Implementation
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  /**
-   * PHASE 1: Collect all records that will be deleted
-   *
-   * OPTIMIZED: Instead of collecting all individual records (which requires
-   * looping through all memory spaces), we collect:
-   * - Memory space IDs (for batch deleteMany operations)
-   * - Individual records only where batch operations aren't available
-   *
-   * This matches the Python SDK approach for fast cascade deletion.
-   */
-  private async collectDeletionTargets(userId: string): Promise<DeletionPlan> {
-    const plan: DeletionPlan = {
-      conversations: [],
-      immutable: [],
-      mutable: [],
-      vector: [], // Will store MemoryEntry[] for compatibility, but we use memorySpaceIds for deletion
-      facts: [],
-      graph: [],
-      userProfile: null,
-    };
-
-    // Collect memory space IDs from user's conversations only
-    // This is much more efficient than scanning ALL registered memory spaces
-    // which could number in the hundreds from previous test runs
-    const memorySpaceIds = new Set<string>();
-
-    // Collect conversations - single query with userId filter
-    try {
-      const convosResult = await this.client.query(api.conversations.list, {
-        userId,
-      });
-      // conversations.list returns { conversations, total, ... } or just array
-      const convos = Array.isArray(convosResult)
-        ? convosResult
-        : (convosResult as { conversations: Conversation[] }).conversations;
-      plan.conversations = convos as Conversation[];
-
-      // Add memory space IDs from conversations - these are the spaces that
-      // could have user-associated data (memories, facts)
-      for (const conv of plan.conversations) {
-        if (conv.memorySpaceId) {
-          memorySpaceIds.add(conv.memorySpaceId);
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to collect conversations:", error);
-    }
-
-    // NOTE: We intentionally DON'T scan all registered memory spaces here.
-    // Previously we did: `memorySpaces.list` → loop through all → 100+ queries
-    // This caused 60s+ timeouts when there were many test-created spaces.
-    //
-    // Instead, we only check spaces from user's conversations. If there are
-    // memories in other spaces (unlikely for properly structured data), they
-    // should be cleaned up separately or will fail verification.
-
-    // Store memory space IDs in the plan for batch deletion
-    (plan as DeletionPlan & { memorySpaceIds?: string[] }).memorySpaceIds =
-      Array.from(memorySpaceIds);
-
-    // Collect immutable records (excluding user profile itself) - single query
-    try {
-      const result = await this.client.query(api.immutable.list, {
-        userId,
-        tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
-      });
-      // Extract entries from the paginated response
-      const immutableRecords = (
-        result as { entries: ImmutableRecord[]; total: number }
-      ).entries;
-      plan.immutable = immutableRecords.filter(
-        (r) => !(r.type === "user" && r.id === userId),
-      );
-    } catch (error) {
-      console.warn("Failed to collect immutable records:", error);
-    }
-
-    // Collect mutable keys (limited to known namespaces)
-    try {
-      const mutableKeys = await this.collectMutableKeys(userId);
-      plan.mutable = mutableKeys;
-    } catch (error) {
-      console.warn("Failed to collect mutable keys:", error);
-    }
-
-    // Collect facts using userId filter (facts.list supports userId)
-    // This is more efficient than collecting all facts and filtering client-side
-    for (const spaceId of memorySpaceIds) {
-      try {
-        const facts = await this.client.query(api.facts.list, {
-          memorySpaceId: spaceId,
-          userId,
-        });
-        plan.facts.push(...(facts as FactRecord[]));
-      } catch (_error) {
-        // Space might not have facts - continue
-      }
-    }
-
-    // Note: We don't collect individual vector memories here anymore
-    // Instead, we use batch deleteMany operations in the execution phase
-
-    // Collect graph nodes (if adapter provided)
-    if (this.graphAdapter) {
-      try {
-        const graphNodes = await this.collectGraphNodes(userId);
-        plan.graph = graphNodes;
-      } catch (error) {
-        console.warn("Failed to collect graph nodes:", error);
-      }
-    }
-
-    // User profile
-    const profile = await this.get(userId);
-    plan.userProfile = profile;
-
-    return plan;
-  }
-
-  /**
-   * Collect mutable keys associated with user
-   */
-  private async collectMutableKeys(userId: string): Promise<MutableRecord[]> {
-    // In Convex, we need to query across all namespaces
-    // This is a limitation - in production, you'd maintain a registry of namespaces
-    // For now, we'll query common namespaces
-    const commonNamespaces = [
-      "user-sessions",
-      "user-cache",
-      "user-preferences",
-      "user-data",
-      "sessions",
-      "cache",
-      "preferences",
-    ];
-
-    const allMutableKeys: MutableRecord[] = [];
-
-    for (const namespace of commonNamespaces) {
-      try {
-        const keys = await this.client.query(api.mutable.list, {
-          namespace,
-          userId,
-        });
-        allMutableKeys.push(...(keys as MutableRecord[]));
-      } catch (_error) {
-        // Namespace might not exist, skip
-        continue;
-      }
-    }
-
-    return allMutableKeys;
-  }
-
-  // NOTE: collectVectorMemories and collectFacts were removed as part of
-  // optimization. We now use batch deleteMany operations instead of collecting
-  // individual records. This matches the Python SDK approach.
-
-  /**
-   * Collect graph nodes associated with user
-   */
-  private async collectGraphNodes(
-    userId: string,
-  ): Promise<Array<{ nodeId: string; labels: string[] }>> {
-    if (!this.graphAdapter) {
-      return [];
-    }
-
-    try {
-      // Query graph for all nodes with userId property
-      // Return both the node and its ID using the appropriate ID function
-      const result = await this.graphAdapter.query(
-        `MATCH (n {userId: $userId}) RETURN elementId(n) as id, labels(n) as labels`,
-        { userId },
-      );
-
-      // GraphQueryResult has a .records property
-      return result.records.map((record) => {
-        const node = record as unknown as Neo4jNodeRecord;
-        return {
-          nodeId: node.id,
-          labels: node.labels,
-        };
-      });
-    } catch (error) {
-      console.warn("Failed to query graph nodes:", error);
-      return [];
-    }
-  }
-
-  /**
-   * PHASE 2: Backup records for rollback
-   */
-  private async backupRecords(plan: DeletionPlan): Promise<DeletionBackup> {
-    // Create deep copies of all records for potential rollback
-    return {
-      conversations: JSON.parse(
-        JSON.stringify(plan.conversations),
-      ) as Conversation[],
-      immutable: JSON.parse(
-        JSON.stringify(plan.immutable),
-      ) as ImmutableRecord[],
-      mutable: JSON.parse(JSON.stringify(plan.mutable)) as MutableRecord[],
-      vector: JSON.parse(JSON.stringify(plan.vector)) as MemoryEntry[],
-      facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
-      userProfile: plan.userProfile
-        ? (JSON.parse(
-            JSON.stringify(plan.userProfile),
-          ) as unknown as UserProfile)
-        : null,
-    };
-  }
-
-  /**
-   * PHASE 3: Execute cascade deletion in reverse dependency order
-   *
-   * OPTIMIZED: Uses batch deleteMany operations instead of individual deletes.
-   * This is much faster for large datasets and matches the Python SDK approach.
-   */
-  private async executeCascadeDeletion(
-    userId: string,
-    plan: DeletionPlan,
-  ): Promise<UserDeleteResult> {
-    const result: UserDeleteResult = {
-      userId,
-      deletedAt: Date.now(),
-      conversationsDeleted: 0,
-      conversationMessagesDeleted: 0,
-      immutableRecordsDeleted: 0,
-      mutableKeysDeleted: 0,
-      vectorMemoriesDeleted: 0,
-      factsDeleted: 0,
-      graphNodesDeleted: 0,
-      verification: {
-        complete: false,
-        issues: [],
-      },
-      totalDeleted: 0,
-      deletedLayers: [],
-    };
-
-    // Get memory space IDs from the plan
-    const memorySpaceIds =
-      (plan as DeletionPlan & { memorySpaceIds?: string[] }).memorySpaceIds ||
-      [];
-
-    // Delete in reverse dependency order to maintain referential integrity
-    // Order: vector → facts → mutable → immutable → conversations → graph → user profile
-
-    // 1. Delete vector memories using batch deleteMany (one call per space)
-    for (const spaceId of memorySpaceIds) {
-      try {
-        const deleteResult = await this.client.mutation(
-          api.memories.deleteMany,
-          {
-            memorySpaceId: spaceId,
-            userId,
-          },
-        );
-        const deleted = (deleteResult as { deleted: number }).deleted || 0;
-        result.vectorMemoriesDeleted += deleted;
-      } catch (error) {
-        // Space might not exist or have no memories - continue
-        console.warn(`Failed to delete memories in space ${spaceId}:`, error);
-      }
-    }
-    if (result.vectorMemoriesDeleted > 0) {
-      result.deletedLayers.push("vector");
-    }
-
-    // 2. Delete facts using batch approach (if available) or individual deletes
-    // Note: facts.deleteMany doesn't support userId filter, so we use collected facts
-    for (const fact of plan.facts) {
-      try {
-        await this.client.mutation(api.facts.deleteFact, {
-          memorySpaceId: fact.memorySpaceId,
-          factId: fact.factId,
-        });
-        result.factsDeleted++;
-      } catch (error) {
-        // Fact might already be deleted - continue
-        console.warn(`Failed to delete fact ${fact.factId}:`, error);
-      }
-    }
-    if (result.factsDeleted > 0) {
-      result.deletedLayers.push("facts");
-    }
-
-    // 3. Delete mutable records
-    for (const mutable of plan.mutable) {
-      try {
-        await this.client.mutation(api.mutable.deleteKey, {
-          namespace: mutable.namespace,
-          key: mutable.key,
-        });
-        result.mutableKeysDeleted++;
-      } catch (error) {
-        // Key might already be deleted - continue
-        console.warn(
-          `Failed to delete mutable ${mutable.namespace}:${mutable.key}:`,
-          error,
-        );
-      }
-    }
-    if (result.mutableKeysDeleted > 0) {
-      result.deletedLayers.push("mutable");
-    }
-
-    // 4. Delete immutable records (excluding user profile)
-    for (const immutable of plan.immutable) {
-      try {
-        await this.client.mutation(api.immutable.purge, {
-          type: immutable.type,
-          id: immutable.id,
-          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
-        });
-        result.immutableRecordsDeleted++;
-      } catch (error) {
-        // Record might already be deleted - continue
-        console.warn(
-          `Failed to delete immutable ${immutable.type}:${immutable.id}:`,
-          error,
-        );
-      }
-    }
-    if (result.immutableRecordsDeleted > 0) {
-      result.deletedLayers.push("immutable");
-    }
-
-    // 5. Delete conversations (idempotent - "not found" = success)
-    for (const conversation of plan.conversations) {
-      try {
-        await this.client.mutation(api.conversations.deleteConversation, {
-          conversationId: conversation.conversationId,
-        });
-        result.conversationsDeleted++;
-        result.conversationMessagesDeleted += conversation.messageCount || 0;
-      } catch (error) {
-        // Check if conversation was already deleted (race condition in parallel tests)
-        const errorStr = String(error);
-        if (
-          errorStr.includes("CONVERSATION_NOT_FOUND") ||
-          errorStr.includes("not found")
-        ) {
-          // Already deleted - count as success
-          result.conversationsDeleted++;
-          result.conversationMessagesDeleted += conversation.messageCount || 0;
-        } else {
-          console.warn(
-            `Failed to delete conversation ${conversation.conversationId}:`,
-            error,
-          );
-        }
-      }
-    }
-    if (result.conversationsDeleted > 0) {
-      result.deletedLayers.push("conversations");
-    }
-
-    // 6. Delete graph nodes (if adapter provided)
-    if (this.graphAdapter && plan.graph.length > 0) {
-      const deletionContext = createDeletionContext(
-        `GDPR cascade deletion for user ${userId}`,
-        {
-          ...ORPHAN_RULES,
-          User: { explicitOnly: false, neverDelete: false },
-        },
-      );
-
-      for (const node of plan.graph) {
+    const outcomes: UserDeleteResult[] = [], unstarted = [...targetUserIds], committed: string[] = [];
+    if (options?.cascade) {
+      // Full all-user preparation is completed before the first mutation.
+      const prepared = [];
+      for (const userId of targetUserIds) prepared.push(await prepareErasure({kind:"user", userId, tenantId}, options, this.graphAdapter));
+      for (let index=0;index<prepared.length;index++) {
         try {
-          const deleteResult = await deleteWithOrphanCleanup(
-            node.nodeId,
-            node.labels[0] || "User",
-            deletionContext,
-            this.graphAdapter,
-          );
-          result.graphNodesDeleted =
-            (result.graphNodesDeleted || 0) + deleteResult.deletedNodes.length;
+          const receipt = await executeErasure(prepared[index], this.client);
+          outcomes.push(this.erasureUserResult(targetUserIds[index], receipt));
+          unstarted.shift();
+          if (receipt.outcomes.some(item=>item.deleted)) committed.push(targetUserIds[index]);
         } catch (error) {
-          console.warn(`Failed to delete graph node ${node.nodeId}:`, error);
+          const partial = new CascadeDeletionError("Bulk erasure stopped; prior commits and unstarted users are retained.", error, error instanceof ErasureError ? error.receipt : undefined);
+          if (partial.receipt && (partial.receipt.executed || partial.receipt.outcomes.length > 0 || partial.receipt.unknown.length > 0)) unstarted.shift();
+          Object.assign(partial,{outcomes,unstarted,deleted:committed.length,userIds:committed});
+          throw partial;
         }
       }
-      if (result.graphNodesDeleted && result.graphNodesDeleted > 0) {
-        result.deletedLayers.push("graph");
-      }
+    } else {
+      for (const userId of targetUserIds) {const result=await this.delete(userId,options);outcomes.push(result);unstarted.shift();if(result.totalDeleted)committed.push(userId);}
     }
-
-    // 7. Delete user profile (last)
-    if (plan.userProfile) {
-      try {
-        await this.client.mutation(api.immutable.purge, {
-          type: "user",
-          id: userId,
-          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
-        });
-        result.deletedLayers.push("user-profile");
-      } catch (error) {
-        // User profile might already be deleted
-        const errorStr = String(error);
-        if (
-          !errorStr.includes("IMMUTABLE_ENTRY_NOT_FOUND") &&
-          !errorStr.includes("not found")
-        ) {
-          console.warn(`Failed to delete user profile ${userId}:`, error);
-        }
-      }
-    }
-
-    // Calculate total
-    result.totalDeleted =
-      result.conversationsDeleted +
-      result.immutableRecordsDeleted +
-      result.mutableKeysDeleted +
-      result.vectorMemoriesDeleted +
-      result.factsDeleted +
-      (result.graphNodesDeleted || 0) +
-      (plan.userProfile ? 1 : 0);
-
-    return result;
+    return {deleted:committed.length,userIds:options?.dryRun?targetUserIds:committed,complete:outcomes.every(result=>result.verification.complete),outcomes,unstarted};
   }
 
-  /**
-   * ROLLBACK: Restore backed up records
-   */
-  private async rollbackDeletion(backups: DeletionBackup): Promise<void> {
-    console.warn("Rolling back cascade deletion...");
-
-    // Restore in reverse order of deletion
-    // Note: This is best-effort rollback, some operations may fail
-
-    // 1. Restore user profile
-    if (backups.userProfile) {
-      try {
-        await this.client.mutation(api.immutable.store, {
-          type: "user",
-          id: backups.userProfile.id,
-          data: backups.userProfile.data,
-          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
-        });
-      } catch (error) {
-        console.error("Failed to restore user profile:", error);
-      }
-    }
-
-    // 2. Restore conversations
-    for (const conversation of backups.conversations) {
-      try {
-        // Note: Restoring conversations is complex due to message IDs
-        // In production, this would use a dedicated restore API
-        console.warn(
-          `Conversation ${conversation.conversationId} requires manual restoration`,
-        );
-      } catch (error) {
-        console.error("Failed to restore conversation:", error);
-      }
-    }
-
-    // 3. Restore immutable records
-    for (const immutable of backups.immutable) {
-      try {
-        await this.client.mutation(api.immutable.store, {
-          type: immutable.type,
-          id: immutable.id,
-          data: immutable.data,
-          userId: immutable.userId,
-          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
-          metadata: immutable.metadata,
-        });
-      } catch (error) {
-        console.error("Failed to restore immutable record:", error);
-      }
-    }
-
-    // 4. Restore mutable records
-    for (const mutable of backups.mutable) {
-      try {
-        await this.client.mutation(api.mutable.set, {
-          namespace: mutable.namespace,
-          key: mutable.key,
-          value: mutable.value,
-          userId: mutable.userId,
-          metadata: mutable.metadata,
-        });
-      } catch (error) {
-        console.error("Failed to restore mutable record:", error);
-      }
-    }
-
-    // 5. Restore vector memories
-    for (const memory of backups.vector) {
-      try {
-        // Note: Vector restoration is complex due to version history
-        console.warn(`Memory ${memory.memoryId} requires manual restoration`);
-      } catch (error) {
-        console.error("Failed to restore memory:", error);
-      }
-    }
-
-    // 6. Restore facts
-    for (const fact of backups.facts) {
-      try {
-        // Note: Fact restoration may require re-extraction
-        console.warn(`Fact ${fact.factId} requires manual restoration`);
-      } catch (error) {
-        console.error("Failed to restore fact:", error);
-      }
-    }
-
-    console.warn(
-      "Rollback completed (best-effort, some records may require manual restoration)",
-    );
+  /** Compatibility fields count received native primary commits only. */
+  private erasureUserResult(userId:string, receipt:ErasureReceipt):UserDeleteResult {
+    const count=(table:string)=>receipt.perTable[table]?.deleted??0;
+    const roots = new Set(receipt.planned.filter(row => row.table === "immutable" && row.action === "root").map(row => row.id));
+    const profilesDeleted = receipt.outcomes.reduce((sum, item) => sum + (item.table === "immutable" && roots.has(item.id) && item.state === "committed" ? item.deleted : 0), 0);
+    const immutableRecordsDeleted = Math.max(0, count("immutable") - profilesDeleted);
+    const deletedLayers = Object.entries(receipt.perTable).flatMap(([table, value]) => {
+      if (value.deleted === 0 || (table === "immutable" && immutableRecordsDeleted === 0)) return [];
+      return [table === "memories" ? "vector" : table];
+    });
+    if (receipt.graph.nodesDeleted > 0) deletedLayers.push("graph");
+    if (profilesDeleted > 0) deletedLayers.push("user-profile");
+    return {userId,deletedAt:receipt.endedAt,conversationsDeleted:count("conversations"),conversationMessagesDeleted:receipt.outcomes.reduce((sum,item)=>sum+item.messages,0),immutableRecordsDeleted,mutableKeysDeleted:count("mutable"),vectorMemoriesDeleted:count("memories"),factsDeleted:count("facts"),graphNodesDeleted:receipt.graph.nodesDeleted,totalDeleted:receipt.totalDeleted,deletedLayers,verification:{complete:receipt.verification.complete,issues:receipt.errors},erasure:receipt};
   }
 
-  /**
-   * PHASE 4: Verify deletion completeness
-   *
-   * OPTIMIZED: Uses simple count queries instead of looping through all memory spaces.
-   * This matches the Python SDK approach for fast verification.
-   */
-  private async verifyDeletion(userId: string): Promise<VerificationResult> {
-    const issues: string[] = [];
-
-    // Check conversations - single query with userId filter
-    try {
-      const remainingConvos = await this.client.query(api.conversations.count, {
-        userId,
-      });
-      if (remainingConvos > 0) {
-        issues.push(`${remainingConvos} conversations still reference userId`);
-      }
-    } catch (error) {
-      issues.push(`Failed to verify conversations: ${error}`);
-    }
-
-    // Check immutable records - single query with userId filter
-    try {
-      const remainingImmutable = await this.client.query(api.immutable.count, {
-        userId,
-      });
-      if (remainingImmutable > 0) {
-        issues.push(
-          `${remainingImmutable} immutable records still reference userId`,
-        );
-      }
-    } catch (error) {
-      issues.push(`Failed to verify immutable records: ${error}`);
-    }
-
-    // Check user profile still exists
-    try {
-      const user = await this.get(userId);
-      if (user) {
-        issues.push("User profile still exists");
-      }
-    } catch (error) {
-      issues.push(`Failed to verify user profile: ${error}`);
-    }
-
-    // Note: Vector memories and facts are verified implicitly through the deletion
-    // execution phase. Looping through all memory spaces for verification is too
-    // expensive (O(n) queries where n = number of spaces). The deletion phase
-    // already uses efficient deleteMany operations with userId filters.
-
-    // Graph verification is optional and only if adapter is available
-    if (this.graphAdapter) {
-      try {
-        const remainingGraph = await this.countGraphNodes(userId);
-        if (remainingGraph > 0) {
-          issues.push(`${remainingGraph} graph nodes still reference userId`);
-        }
-      } catch (error) {
-        issues.push(`Failed to verify graph nodes: ${error}`);
-      }
-    }
-
-    return {
-      complete: issues.length === 0,
-      issues,
-    };
-  }
-
-  // NOTE: countVectorMemories and countFacts were removed as part of
-  // verification optimization. Vector memories and facts are now verified
-  // implicitly through the deletion execution phase, avoiding expensive
-  // O(n) queries across all memory spaces.
-
-  /**
-   * Count remaining graph nodes for user
-   */
-  private async countGraphNodes(userId: string): Promise<number> {
-    if (!this.graphAdapter) {
-      return 0;
-    }
-
-    try {
-      const result = await this.graphAdapter.query(
-        `MATCH (n {userId: $userId}) RETURN count(n) as count`,
-        { userId },
-      );
-      // GraphQueryResult has a .records property
-      const record = result.records[0] as unknown as
-        | Neo4jCountRecord
-        | undefined;
-      return record?.count ?? 0;
-    } catch (error) {
-      console.warn("Failed to count graph nodes:", error);
-      return 0;
-    }
-  }
-
-  /**
-   * Calculate deletion totals from plan
-   */
-  private calculateDeletionTotals(plan: DeletionPlan): {
-    conversationsDeleted: number;
-    conversationMessagesDeleted: number;
-    immutableRecordsDeleted: number;
-    mutableKeysDeleted: number;
-    vectorMemoriesDeleted: number;
-    factsDeleted: number;
-    graphNodesDeleted?: number;
-    totalDeleted: number;
-  } {
-    const conversationsDeleted = plan.conversations.length;
-    const conversationMessagesDeleted = plan.conversations.reduce(
-      (sum, c) => sum + (c.messageCount || 0),
-      0,
-    );
-    const immutableRecordsDeleted = plan.immutable.length;
-    const mutableKeysDeleted = plan.mutable.length;
-    const vectorMemoriesDeleted = plan.vector.length;
-    const factsDeleted = plan.facts.length;
-    const graphNodesDeleted = plan.graph.length;
-
-    const totalDeleted =
-      conversationsDeleted +
-      immutableRecordsDeleted +
-      mutableKeysDeleted +
-      vectorMemoriesDeleted +
-      factsDeleted +
-      graphNodesDeleted +
-      (plan.userProfile ? 1 : 0);
-
-    return {
-      conversationsDeleted,
-      conversationMessagesDeleted,
-      immutableRecordsDeleted,
-      mutableKeysDeleted,
-      vectorMemoriesDeleted,
-      factsDeleted,
-      graphNodesDeleted,
-      totalDeleted,
-    };
-  }
-
-  /**
-   * Get affected layers from deletion plan
-   */
-  private getAffectedLayers(plan: DeletionPlan): string[] {
-    const layers: string[] = [];
-
-    if (plan.conversations.length > 0) layers.push("conversations");
-    if (plan.immutable.length > 0) layers.push("immutable");
-    if (plan.mutable.length > 0) layers.push("mutable");
-    if (plan.vector.length > 0) layers.push("vector");
-    if (plan.facts.length > 0) layers.push("facts");
-    if (plan.graph.length > 0) layers.push("graph");
-    if (plan.userProfile) layers.push("user-profile");
-
-    return layers;
-  }
 }

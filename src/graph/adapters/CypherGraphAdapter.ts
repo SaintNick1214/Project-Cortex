@@ -20,6 +20,7 @@ import type {
   TraversalConfig,
   ShortestPathConfig,
   GraphOperation,
+  ManagedGraphTransaction,
 } from "../types";
 import {
   GraphDatabaseError,
@@ -39,12 +40,102 @@ export class CypherGraphAdapter implements GraphAdapter {
   private driver: Driver | null = null;
   private config: GraphConnectionConfig | null = null;
   private useElementId: boolean = true; // Neo4j uses elementId(), Memgraph uses id()
+  private managedEngine: "neo4j" | "memgraph" | undefined;
+
+  async managedDialect(): Promise<"neo4j" | "memgraph"> {
+    if (!this.driver) throw new GraphConnectionError("Not connected to graph database");
+    if (!this.managedEngine) {
+      // Memgraph can implement elementId while retaining its own schema syntax. ID capability is not engine identity.
+      const response = await this.managedRead("CALL dbms.components() YIELD name RETURN name");
+      if (response.records.some(row => row.name === "Memgraph")) this.managedEngine = "memgraph";
+      else if (response.records.some(row => row.name === "Neo4j Kernel")) this.managedEngine = "neo4j";
+      else throw new GraphDatabaseError("Managed schema setup supports the verified Neo4j/Memgraph dialects only.", "GRAPH_SCHEMA_MIGRATION_REQUIRED");
+    }
+    return this.managedEngine;
+  }
+
+  async managedRead(cypher: string, params: Record<string, unknown> = {}): Promise<GraphQueryResult> {
+    const session = this.getSession();
+    const plain = (value: unknown): unknown => {
+      if (neo4j.isInt(value)) {
+        if (!value.inSafeRange()) throw new GraphDatabaseError("Managed numeric result is not representable.", "GRAPH_RESULT_BUDGET");
+        return value.toNumber();
+      }
+      if (Array.isArray(value)) return value.map(plain);
+      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, plain(item)]));
+      return value;
+    };
+    try {
+      const response = await session.run(cypher, params, {timeout:10000});
+      const records = response.records.map(record => Object.fromEntries(record.keys.map(key => [String(key), plain(record.get(key))])));
+      if (records.length>257 || Buffer.byteLength(JSON.stringify(records),"utf8")>1024*1024)
+        throw new GraphDatabaseError("Managed read result exceeds its finite budget.","GRAPH_RESULT_BUDGET");
+      return {records,count:records.length};
+    } catch(error) {
+      if(error instanceof GraphDatabaseError)throw error;
+      const nativeCode = (error as {code?:string})?.code;
+      throw Object.assign(new GraphDatabaseError("Managed graph read failed. Check the selected connection and schema.","GRAPH_READ_FAILED"),
+        {nativeCode: typeof nativeCode === "string" && /^[A-Za-z0-9_.-]{1,128}$/.test(nativeCode) ? nativeCode : undefined});
+    } finally { await session.close(); }
+  }
+
+  async managedTransaction<T>(operation: (transaction: ManagedGraphTransaction) => Promise<T>): Promise<T> {
+    const session = this.getSession();
+    const tx = session.beginTransaction({timeout: 10000});
+    let committed = false, committing = false, requests = 0, parameterBytes = 0;
+    const plain = (value: unknown): unknown => {
+      if (neo4j.isInt(value)) {
+        if (!value.inSafeRange()) throw new GraphDatabaseError("Managed graph numeric result exceeds safe integer range.", "GRAPH_RESULT_BUDGET");
+        return value.toNumber();
+      }
+      if (Array.isArray(value)) return value.map(plain);
+      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, plain(item)]));
+      return value;
+    };
+    try {
+      const result = await operation({query: async (cypher, params = {}) => {
+        parameterBytes += Buffer.byteLength(JSON.stringify(params), "utf8");
+        if (++requests > 256 || parameterBytes > 1024 * 1024)
+          throw new GraphDatabaseError("Managed graph transaction request budget exceeded.", "GRAPH_TRANSACTION_BUDGET");
+        // Maps stay maps for fixed SET/MERGE statements. Payloads are already canonical JSON properties.
+        const response = await tx.run(cypher, params);
+        const records = response.records.map((record) => Object.fromEntries(record.keys.map((key) => [String(key), plain(record.get(key))])));
+        if (records.length > 257 || Buffer.byteLength(JSON.stringify(records), "utf8") > 1024 * 1024)
+          throw new GraphDatabaseError("Managed graph transaction result budget exceeded.", "GRAPH_RESULT_BUDGET");
+        const counters = response.summary.counters.updates();
+        return {records, count: records.length, stats: {
+          nodesCreated: counters.nodesCreated, nodesDeleted: counters.nodesDeleted,
+          relationshipsCreated: counters.relationshipsCreated, relationshipsDeleted: counters.relationshipsDeleted,
+        }};
+      }});
+      committing = true;
+      await tx.commit();
+      committed = true;
+      return result;
+    } catch (error) {
+      if (error instanceof GraphDatabaseError) throw error;
+      const code = (error as {code?: string})?.code ?? "", message = error instanceof Error ? error.message : "";
+      // These are the actual A0 serialization/SourceState uniqueness refusals, not timeouts.
+      const conflict = code.startsWith("Neo.TransientError.") ||
+        (code.startsWith("Memgraph.TransientError.") && /serialization|conflict/i.test(message)) ||
+        (code === "Memgraph.ClientError.MemgraphError.MemgraphError" &&
+          /Unable to commit due to unique constraint violation on :CortexV2SourceState\(key\)/.test(message));
+      throw Object.assign(new GraphDatabaseError(conflict ? "Managed graph transaction conflicted; a fresh graph-only attempt is permitted." :
+        "Managed graph transaction failed; no primary mutation may be resent.",
+      conflict ? "GRAPH_TRANSACTION_CONFLICT" : committing ? "GRAPH_TRANSACTION_OUTCOME_UNKNOWN" : "GRAPH_TRANSACTION_FAILED"),
+        {nativeCode: /^[A-Za-z0-9_.-]{1,128}$/.test(code) ? code : undefined});
+    } finally {
+      if (!committed) try { await tx.rollback(); } catch { /* A failed commit can already have closed the native transaction. */ }
+      await session.close();
+    }
+  }
 
   // ============================================================================
   // Connection Management
   // ============================================================================
 
   async connect(config: GraphConnectionConfig): Promise<void> {
+    if (this.driver) throw new GraphConnectionError("Graph adapter is already connected. Disconnect before reconnecting.");
     try {
       this.config = config;
 
@@ -69,14 +160,10 @@ export class CypherGraphAdapter implements GraphAdapter {
       // Detect database type (Neo4j uses elementId(), Memgraph uses id())
       await this.detectDatabaseType();
     } catch (error) {
-      // Parse error for better diagnostics
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      const errorCode = (error as any)?.code;
-      const cause = error instanceof Error ? error : undefined;
-
-      // Throw specific error type based on diagnosis
-      throw this.createConnectionError(errorMessage, errorCode, config, cause);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorCode = (error as { code?: string })?.code;
+      try { await this.disconnect(); } catch { /* The original connection diagnosis takes priority. */ }
+      throw this.createConnectionError(errorMessage, errorCode);
     }
   }
 
@@ -86,85 +173,27 @@ export class CypherGraphAdapter implements GraphAdapter {
   private createConnectionError(
     errorMessage: string,
     errorCode: string | undefined,
-    config: GraphConnectionConfig,
-    cause?: Error,
   ): GraphConnectionError {
     const lowerMessage = errorMessage.toLowerCase();
-
-    // Authentication failure detection - throw specific GraphAuthenticationError
-    if (
-      lowerMessage.includes("authentication") ||
-      lowerMessage.includes("unauthorized") ||
-      lowerMessage.includes("credentials") ||
-      errorCode?.includes("Security.Unauthorized") ||
-      errorCode?.includes("Security.Authentication")
-    ) {
-      const message =
-        `Graph database authentication failed at ${config.uri}. ` +
-        `Check that NEO4J_USERNAME and NEO4J_PASSWORD environment variables are correct. ` +
-        `Current username: '${config.username}'. ` +
-        `Original error: ${errorMessage}`;
+    // Never retain raw driver errors/cause, usernames or credential-bearing URIs.
+    if (lowerMessage.includes("authentication") || lowerMessage.includes("unauthorized") ||
+        lowerMessage.includes("credentials") || errorCode?.includes("Security.")) {
       return new GraphAuthenticationError(
-        message,
-        config.uri,
-        config.username,
-        cause,
+        "Graph database authentication failed. Check the selected provider's username and password.",
+        "[redacted]", "[redacted]",
       );
     }
-
-    // Connection refused detection
-    if (
-      lowerMessage.includes("econnrefused") ||
-      lowerMessage.includes("connection refused") ||
-      lowerMessage.includes("failed to connect")
-    ) {
-      const message =
-        `Cannot connect to graph database at ${config.uri}. ` +
-        `Ensure Neo4j/Memgraph is running and accessible. ` +
-        `For Docker: 'docker compose -f docker-compose.graph.yml up -d'. ` +
-        `Original error: ${errorMessage}`;
-      return new GraphConnectionError(message, cause);
-    }
-
-    // DNS/host resolution failure
-    if (
-      lowerMessage.includes("enotfound") ||
-      lowerMessage.includes("getaddrinfo") ||
-      lowerMessage.includes("name or service not known")
-    ) {
-      const message =
-        `Cannot resolve graph database host in ${config.uri}. ` +
-        `Check that NEO4J_URI is correctly configured. ` +
-        `Original error: ${errorMessage}`;
-      return new GraphConnectionError(message, cause);
-    }
-
-    // Timeout detection
-    if (
-      lowerMessage.includes("timeout") ||
-      lowerMessage.includes("timed out") ||
-      lowerMessage.includes("timedout")
-    ) {
-      const message =
-        `Connection to graph database timed out at ${config.uri}. ` +
-        `The database may be starting up, overloaded, or unreachable. ` +
-        `Original error: ${errorMessage}`;
-      return new GraphConnectionError(message, cause);
-    }
-
-    // Generic fallback with context
     return new GraphConnectionError(
-      `Failed to connect to graph database at ${config.uri}: ${errorMessage}`,
-      cause,
+      "Graph database connection failed. Check the selected provider's URI, readiness and network access.",
     );
   }
 
   async disconnect(): Promise<void> {
-    if (this.driver) {
-      await this.driver.close();
-      this.driver = null;
-      this.config = null;
-    }
+    const driver = this.driver;
+    this.driver = null;
+    this.config = null;
+    this.managedEngine = undefined;
+    if (driver) await driver.close();
   }
 
   async isConnected(): Promise<boolean> {
@@ -204,19 +233,20 @@ export class CypherGraphAdapter implements GraphAdapter {
   private async detectDatabaseType(): Promise<void> {
     const session = this.getSession();
     try {
-      // Try elementId() - if it fails, we're on Memgraph
-      await session.run("CREATE (n:__TEST__) RETURN elementId(n) as id");
-      await session.run("MATCH (n:__TEST__) DELETE n");
+      // A null argument tests parsing/capability without creating or touching nodes.
+      await session.run("RETURN elementId(null) AS id");
       this.useElementId = true;
-    } catch {
-      // elementId() not supported, use id() instead (Memgraph)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const code = (error as { code?: string })?.code;
+      const unsupported = /elementid/i.test(message) &&
+        /unknown function|unrecognized function|not (?:yet )?(?:supported|implemented|defined)|does not exist|doesn't exist/i.test(message) &&
+        (!code || /SyntaxError|SemanticError|Unsupported/i.test(code) ||
+          code === "Memgraph.ClientError.MemgraphError.MemgraphError");
+      if (!unsupported) throw error;
+      // Verify the fallback as well; auth/network failures must propagate.
+      await session.run("RETURN id(null) AS id");
       this.useElementId = false;
-      // Clean up if test node was created
-      try {
-        await session.run("MATCH (n:__TEST__) DELETE n");
-      } catch {
-        // Ignore cleanup errors
-      }
     } finally {
       await session.close();
     }

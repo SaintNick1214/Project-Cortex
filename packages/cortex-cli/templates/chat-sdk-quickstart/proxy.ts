@@ -13,7 +13,11 @@ export async function proxy(request: NextRequest) {
     return new Response("pong", { status: 200 });
   }
 
-  if (pathname.startsWith("/api/auth")) {
+  if (
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/share/") ||
+    ["/login", "/register"].includes(pathname)
+  ) {
     return NextResponse.next();
   }
 
@@ -23,11 +27,13 @@ export async function proxy(request: NextRequest) {
     secureCookie: !isDevelopmentEnvironment,
   });
 
+  if (!token && pathname.startsWith("/api/"))
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   if (!token) {
     const redirectUrl = encodeURIComponent(request.url);
 
     return NextResponse.redirect(
-      new URL(`/api/auth/guest?redirectUrl=${redirectUrl}`, request.url)
+      new URL(`/api/auth/guest?redirectUrl=${redirectUrl}`, request.url),
     );
   }
 

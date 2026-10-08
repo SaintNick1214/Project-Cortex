@@ -8,6 +8,11 @@ from typing import Any, Callable, Dict, List, Optional, cast
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AuthContext,
     CountMutableFilter,
@@ -55,6 +60,7 @@ class MutableAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Mutable API.
@@ -67,13 +73,19 @@ class MutableAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -124,7 +136,7 @@ class MutableAPI:
             validate_user_id(user_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:set",
                 filter_none_values({
                     "namespace": namespace,
@@ -134,26 +146,11 @@ class MutableAPI:
                     "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                     "metadata": metadata,
                 }),
-            ),
+            graph_option(options), ),
             "mutable:set",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                await self.graph_adapter.create_node({
-                    "label": "Mutable",
-                    "properties": {
-                        "namespace": namespace,
-                        "key": key,
-                        "value": value,
-                        "userId": user_id,
-                        "metadata": metadata,
-                    },
-                })
-            except Exception as e:
-                import warnings
-                warnings.warn(f"Failed to sync mutable to graph: {e}")
 
         return MutableRecord(**convert_convex_response(result))
 
@@ -227,7 +224,7 @@ class MutableAPI:
 
         # Use backend update mutation with "custom" operation
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:update",
                 filter_none_values({
                     "namespace": namespace,
@@ -236,9 +233,9 @@ class MutableAPI:
                     "operand": new_value,
                     "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
-            ),
+            None, ),
             "mutable:update",
-        )
+        graph_write=None, )
 
         return MutableRecord(**convert_convex_response(result))
 
@@ -267,7 +264,7 @@ class MutableAPI:
         validate_amount(amount, "amount")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:update",
                 filter_none_values({
                     "namespace": namespace,
@@ -276,9 +273,9 @@ class MutableAPI:
                     "operand": amount,
                     "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
-            ),
+            None, ),
             "mutable:increment",
-        )
+        graph_write=None, )
 
         return MutableRecord(**convert_convex_response(result))
 
@@ -307,7 +304,7 @@ class MutableAPI:
         validate_amount(amount, "amount")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:update",
                 filter_none_values({
                     "namespace": namespace,
@@ -316,9 +313,9 @@ class MutableAPI:
                     "operand": amount,
                     "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
-            ),
+            None, ),
             "mutable:decrement",
-        )
+        graph_write=None, )
 
         return MutableRecord(**convert_convex_response(result))
 
@@ -386,26 +383,18 @@ class MutableAPI:
         validate_key_format(key)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:deleteKey",
                 filter_none_values({
                     "namespace": namespace,
                     "key": key,
                     "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
-            ),
+            graph_option(options), ),
             "mutable:delete",
-        )
+        graph_write=graph_option(options), )
 
         # Delete from graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                # Find and delete the mutable node from graph
-                from ..graph import delete_mutable_from_graph
-                await delete_mutable_from_graph(namespace, key, self.graph_adapter)
-            except Exception as e:
-                import warnings
-                warnings.warn(f"Failed to delete mutable from graph: {e}")
 
         return cast(Dict[str, Any], result)
 
@@ -600,16 +589,16 @@ class MutableAPI:
         validate_purge_namespace_options(options)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:purgeNamespace",
                 filter_none_values({
                     "namespace": namespace,
                     "dryRun": options.dry_run if options else None,
                     "tenantId": (options.tenant_id if options and options.tenant_id else self._tenant_id),  # Support explicit or auth context
                 }),
-            ),
+            graph_option(options), ),
             "mutable:purgeNamespace",
-        )
+        graph_write=graph_option(options), )
 
         return cast(Dict[str, Any], result)
 
@@ -652,7 +641,7 @@ class MutableAPI:
         validate_purge_filter(filter)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:purgeMany",
                 filter_none_values({
                     "namespace": filter.namespace,
@@ -661,9 +650,9 @@ class MutableAPI:
                     "updatedBefore": filter.updated_before,
                     "tenantId": filter.tenant_id if filter.tenant_id else self._tenant_id,  # Support explicit or auth context
                 }),
-            ),
+            None, ),
             "mutable:purgeMany",
-        )
+        graph_write=None, )
 
         return cast(Dict[str, Any], result)
 
@@ -711,19 +700,19 @@ class MutableAPI:
         ]
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "mutable:transaction",
                 filter_none_values({
                     "operations": ops_for_backend,
                     "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
-            ),
+            None, ),
             "mutable:transaction",
-        )
+        graph_write=None, )
 
         return TransactionResult(
             success=result["success"],
             operations_executed=result["operationsExecuted"],
             results=result.get("results", []),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 

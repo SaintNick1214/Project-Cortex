@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { type ReactNode, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,7 +57,7 @@ export function VisibilitySelector({
 
   const selectedVisibility = useMemo(
     () => visibilities.find((visibility) => visibility.id === visibilityType),
-    [visibilityType]
+    [visibilityType],
   );
 
   return (
@@ -65,7 +66,7 @@ export function VisibilitySelector({
         asChild
         className={cn(
           "w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
-          className
+          className,
         )}
       >
         <Button
@@ -87,7 +88,9 @@ export function VisibilitySelector({
             data-testid={`visibility-selector-item-${visibility.id}`}
             key={visibility.id}
             onSelect={() => {
-              setVisibilityType(visibility.id);
+              void setVisibilityType(visibility.id).catch(() =>
+                toast.error("Visibility could not be saved. Retry."),
+              );
               setOpen(false);
             }}
           >

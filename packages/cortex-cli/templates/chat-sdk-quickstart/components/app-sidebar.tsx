@@ -14,6 +14,7 @@ import {
 } from "@/components/sidebar-history";
 import { SidebarUserNav } from "@/components/sidebar-user-nav";
 import { Button } from "@/components/ui/button";
+import { fetchWithErrorHandlers } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
@@ -41,7 +42,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
 
   const handleDeleteAll = () => {
-    const deletePromise = fetch("/api/history", {
+    const deletePromise = fetchWithErrorHandlers("/api/history", {
       method: "DELETE",
     });
 

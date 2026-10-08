@@ -48,7 +48,7 @@ This document covers the `cortex.memorySpaces.*` namespace for managing memory s
 - [findByParticipant()](#findbyparticipant) - Find spaces by participant
 - [archive()](#archive) - Mark memory space as inactive
 - [reactivate()](#reactivate) - Reactivate archived space
-- [delete()](#delete) - Delete memory space and all data
+- [delete()](#delete) - Delete supported memory-space data
 - [getStats()](#getstats) - Get analytics for a memory space
 
 ---
@@ -778,106 +778,32 @@ console.log(space.status); // 'active'
 
 ## delete()
 
-<Callout type="danger">
-
-**DESTRUCTIVE:** This operation permanently deletes the memory space and ALL associated data. This cannot be undone.
-
-</Callout>
-
-### Signature
+Delete the exact memory-space registry and its supported exclusive primary data using an explicit administrator capability. The operation requires `cascade:true`, a reason and matching `confirmId` when supplied. Omitted tenant selects tenantless only.
 
 ```typescript
-cortex.memorySpaces.delete(
-  memorySpaceId: string,
-  options: DeleteMemorySpaceOptions
-): Promise<DeleteMemorySpaceResult>
-```
-
-### Parameters
-
-<APITable
-  parameters={[
-    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID to delete" },
-    { name: "cascade", type: "boolean", required: true, description: "Must be true to proceed with deletion" },
-    { name: "reason", type: "string", required: true, description: "Why deleting (for audit trail)" },
-    { name: "confirmId", type: "string", required: false, description: "Safety check - must match memorySpaceId" },
-  ]}
-/>
-
-{/* Note: syncToGraph removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true */}
-
-### Returns
-
-```typescript
-interface DeleteMemorySpaceResult {
-  memorySpaceId: string;
-  deleted: true;
-  cascade: {
-    conversationsDeleted: number; // Layer 1a
-    memoriesDeleted: number; // Layer 2
-    factsDeleted: number; // Layer 3
-    totalBytes: number; // Storage freed
-  };
-  reason: string;
-  deletedAt: number;
-}
-```
-
-### Examples
-
-<Tabs>
-<TabItem value="gdpr" label="GDPR Deletion">
-
-```typescript
-// User requests data deletion
-const result = await cortex.memorySpaces.delete("user-123-personal", {
-  cascade: true,
-  reason: "GDPR deletion request from user-123",
-  confirmId: "user-123-personal", // Safety check
+const erasureTransport = cortex.memorySpaces.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
 });
-
-console.log(`Deleted ${result.cascade.memoriesDeleted} memories`);
-console.log(`Deleted ${result.cascade.conversationsDeleted} conversations`);
-console.log(`Deleted ${result.cascade.factsDeleted} facts`);
-```
-
-</TabItem>
-<TabItem value="cleanup" label="Project Cleanup">
-
-```typescript
-// Project archived, delete after retention period
-await cortex.memorySpaces.delete("project-old-2023", {
-  cascade: true,
-  reason: "Data retention policy: 2 years expired",
-});
-```
-
-</TabItem>
-<TabItem value="safety" label="Safety Checks">
-
-```typescript
-// Without cascade - ERROR
 try {
-  await cortex.memorySpaces.delete("user-123-personal", {
-    cascade: false, // Must be true
-    reason: "Test",
+  const preview = await cortex.memorySpaces.delete("team-alpha", {
+    cascade: true,
+    reason: "Reviewed project retention cleanup",
+    confirmId: "team-alpha",
+    tenantId: "team-a",
+    erasureTransport,
+    dryRun: true,
+    verify: true,
   });
-} catch (error) {
-  console.error("Must set cascade: true to delete");
+  console.log(preview.erasure);
+} finally {
+  erasureTransport.close();
 }
-
-// With confirmId (extra safety)
-await cortex.memorySpaces.delete("production-space", {
-  cascade: true,
-  reason: "Migration to new architecture",
-  confirmId: "production-space", // Must match memorySpaceId
-});
 ```
 
-</TabItem>
-</Tabs>
+Cascade requires the separate fixed administrative erasure transport and an exact tenant selection. Omitted tenant selects tenantless data only. Its scope is exclusive supported primary records, with shared/foreign/operational/provenance residuals disclosed in `result.erasure`; `complete` is supported verified completion, while `fullUserDataErased` remains false. Partial/unknown errors carry a receipt: inspect that and persisted state before another attempt. No transaction-wide rollback or universal physical erasure is promised. A configured graph or selected managed graph jobs additionally require an explicit graph participant using the matching adapter and fixed `createGraphErasureTransport({url, deploymentKey})`; manual/legacy graph data is preserved. Ordinary AuthContext is not administrator authority.
 
----
+The result retains compatibility counts in `cascade`, plus the detailed `erasure` receipt. `deleted` reflects whether the registry actually deleted. `totalBytesKind` is `serializedDocumentEstimate`, not physical disk space freed. Archiving is a separate non-destructive registry lifecycle operation; it does not erase data.
 
 ## getStats()
 
@@ -1072,6 +998,11 @@ async function addTeamMember(teamId: string, memberId: string) {
 ### Pattern 3: Lifecycle Management
 
 ```typescript
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+
 // Complete lifecycle
 async function memorySpaceLifecycle(projectId: string) {
   const memorySpaceId = `project-${projectId}`;
@@ -1093,7 +1024,7 @@ async function memorySpaceLifecycle(projectId: string) {
 
   // 4. After retention period - delete
   await cortex.memorySpaces.delete(memorySpaceId, {
-    cascade: true,
+    cascade: true, erasureTransport, tenantId: "team-a",
     reason: "Retention period (2 years) expired",
   });
 }
@@ -1205,6 +1136,11 @@ Always archive a memory space before deleting it. This provides a grace period f
 </Callout>
 
 ```typescript
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+
 // Recommended: Archive first, delete later
 await cortex.memorySpaces.archive(memorySpaceId, { reason: "Inactive" });
 
@@ -1212,7 +1148,7 @@ await cortex.memorySpaces.archive(memorySpaceId, { reason: "Inactive" });
 
 // Then delete
 await cortex.memorySpaces.delete(memorySpaceId, {
-  cascade: true,
+  cascade: true, erasureTransport, tenantId: "team-a",
   reason: "Retention period expired",
 });
 
@@ -1255,14 +1191,19 @@ if (space === null) {
 **CASCADE_REQUIRED (Delete Prevention):**
 
 ```typescript
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+
 try {
   await cortex.memorySpaces.delete("active-space", {
     cascade: false,
     reason: "Test",
   });
 } catch (error) {
-  if (error.message?.includes("CASCADE_REQUIRED")) {
-    console.error("Must set cascade: true to delete space with data");
+  if (error instanceof Error && error.message.includes("CASCADE_REQUIRED")) {
+    console.error('Must set cascade: true, erasureTransport, tenantId: "team-a" to delete space with data');
   }
 }
 ```
@@ -1270,9 +1211,14 @@ try {
 **CONFIRM_ID_MISMATCH:**
 
 ```typescript
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+
 try {
   await cortex.memorySpaces.delete("space-123", {
-    cascade: true,
+    cascade: true, erasureTransport, tenantId: "team-a",
     reason: "Test",
     confirmId: "wrong-id", // Doesn't match
   });

@@ -1,3 +1,8 @@
+import { graphMutation } from "./lib/graphSync";
+import { checkArchiveFactAuthority } from "./lib/domainPaging";
+import { domainGraphIdentity, domainFingerprint, checkFingerprint, domainBudget, selectedFactSource } from "./lib/domainPaging";
+import { captureInsertedRow, reconcileRow, markDeletedRow } from "./lib/referenceLifecycle";
+import { validateDomainScope } from "./lib/domainScope";
 /**
  * Cortex SDK - Facts Store API (Layer 3)
  *
@@ -5,10 +10,32 @@
  * Structured knowledge with relationships
  */
 
-import { ConvexError, v } from "convex/values";
-import { action, internalQuery, mutation, query } from "./_generated/server";
+import { v } from "convex/values";
+import {
+  action,
+  internalQuery,
+ 
+  query,
+  type QueryCtx,
+} from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Doc } from "./_generated/dataModel";
+import { paginationOptsValidator } from "convex/server";
+import {
+  CaptureBudget,
+  intentValidator,
+  sourceFact,
+  capture,
+  prepareCapture,
+  insertPrepared,
+  provenance,
+  replay,
+  eventReceipt,
+  endpoint,
+  relationship,
+  assertTail,
+  fail,
+} from "./lib/factHistoryProvenance";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -17,7 +44,7 @@ import { Doc } from "./_generated/dataModel";
 /**
  * Store a new fact
  */
-export const store = mutation({
+export const store = graphMutation({
   args: {
     memorySpaceId: v.string(),
     participantId: v.optional(v.string()), // Hive Mode: who extracted this fact
@@ -80,12 +107,25 @@ export const store = mutation({
     ), // Subject-predicate-object triples for graph
     // Embedding for semantic search (v0.30.0+)
     embedding: v.optional(v.array(v.float64())),
+    historyIntent: v.optional(intentValidator),
   },
   handler: async (ctx, args) => {
+    const budget = new CaptureBudget();
+    const prior = await replay(ctx, args, args.historyIntent, args, budget);
+    if (prior.length) {
+      const result = prior[0].resultFactId
+        ? await ctx.db.get(prior[0].resultFactId)
+        : null;
+      if (!result) fail("FACT_HISTORY_COMMITTED_RESULT_UNAVAILABLE");
+      return budget.finish(ctx, {
+        ...result,
+        historyReceipt: eventReceipt(prior),
+      });
+    }
     const now = Date.now();
     const factId = `fact-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
-    const _id = await ctx.db.insert("facts", {
+    const _id = await captureInsertedRow(ctx, "facts", {
       factId,
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
@@ -114,19 +154,49 @@ export const store = mutation({
       version: 1,
       supersededBy: undefined,
       supersedes: undefined,
+      supersedesEndpoint: { state: "absent" },
+      supersededByEndpoint: { state: "absent" },
       createdAt: now,
       updatedAt: now,
     });
 
-    return await ctx.db.get(_id);
+    const result = await ctx.db.get(_id);
+    if (!result) fail("FACT_HISTORY_SOURCE_REQUIRED");
+    if (!args.historyIntent) return result;
+    budget.write(result);
+    const event = await capture(
+      ctx,
+      result,
+      {
+        action: "CREATE",
+        newValue: result.fact,
+        intent: args.historyIntent,
+        role: "source",
+        kind: "revision_store",
+        request: args,
+        affected: [_id],
+        result: _id,
+        publish: false,
+      },
+      budget,
+    );
+    return budget.finish(ctx, {
+      ...result,
+      historyReceipt: eventReceipt([event]),
+    });
   },
 });
 
 /**
  * Update a fact (creates new version, marks old as superseded)
  */
-export const update = mutation({
+export const update = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    expectedSourceFactId: v.optional(v.id("facts")),
+    expectedSourceFingerprint: v.optional(v.string()),
+    operationId: v.optional(v.string()),
+    historyIntent: v.optional(intentValidator),
     memorySpaceId: v.string(),
     factId: v.string(),
     fact: v.optional(v.string()),
@@ -160,25 +230,41 @@ export const update = mutation({
     embedding: v.optional(v.array(v.float64())),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
-
-    if (!existing) {
-      throw new ConvexError("FACT_NOT_FOUND");
+    const budget = new CaptureBudget(20);
+    const intent = args.historyIntent ?? {
+      operationId: args.operationId ?? crypto.randomUUID(),
+      phase: "update",
+    };
+    const prior = await replay(ctx, args, intent, args, budget);
+    if (prior.length) {
+      const result = prior[0].resultFactId
+        ? await ctx.db.get(prior[0].resultFactId)
+        : null;
+      if (!result) fail("FACT_HISTORY_COMMITTED_RESULT_UNAVAILABLE");
+      return budget.finish(ctx, {
+        ...result,
+        historyReceipt: eventReceipt(prior),
+      });
     }
-
-    // Verify memorySpace owns this fact
-    if (existing.memorySpaceId !== args.memorySpaceId) {
-      throw new ConvexError("PERMISSION_DENIED");
+    const existing = await sourceFact(
+      ctx,
+      args,
+      args.factId,
+      budget,
+      args.expectedSourceFactId,
+    );
+    if (args.expectedSourceFingerprint !== undefined) {
+      checkFingerprint(existing, args.expectedSourceFingerprint);
+      await checkArchiveFactAuthority(ctx, existing);
     }
-
     const now = Date.now();
     const newFactId = `fact-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
+    assertTail(existing);
+    await provenance(ctx, existing, budget);
+
     // Create new version (manually copy fields to avoid _id/_creationTime)
-    const _id = await ctx.db.insert("facts", {
+    const _id = await captureInsertedRow(ctx, "facts", {
       factId: newFactId,
       memorySpaceId: existing.memorySpaceId,
       participantId: existing.participantId,
@@ -217,48 +303,105 @@ export const update = mutation({
       version: existing.version + 1,
       supersedes: existing.factId, // Link to previous
       supersededBy: undefined,
+      supersedesEndpoint: endpoint(existing),
+      supersededByEndpoint: { state: "absent" },
       createdAt: existing.createdAt, // Preserve original creation time across versions
       updatedAt: now,
-    });
+    }, {cloneFrom: existing._id});
 
-    // Mark old as superseded
-    await ctx.db.patch(existing._id, {
+    const result = await ctx.db.get(_id);
+    if (!result) fail("FACT_HISTORY_SOURCE_REQUIRED");
+    const oldPatch = {
       supersededBy: newFactId,
       validUntil: now,
+      supersededByEndpoint: endpoint(result),
+      supersedesEndpoint: relationship(existing, "supersedes"),
+    };
+    budget.write(result);
+    budget.write({ ...existing, ...oldPatch });
+    const oldPrepared = await prepareCapture(
+      ctx,
+      { ...existing, ...oldPatch },
+      {
+        action: "SUPERSEDE",
+        oldValue: existing.fact,
+        newValue: result.fact,
+        intent,
+        role: "old",
+        kind: "version_update",
+        request: args,
+        affected: [existing._id, _id],
+        result: _id,
+      },
+      budget,
+    );
+    const freshPrepared = await prepareCapture(
+      ctx,
+      result,
+      {
+        action: "SUPERSEDE",
+        oldValue: existing.fact,
+        newValue: result.fact,
+        intent,
+        role: "new",
+        kind: "version_update",
+        request: args,
+        affected: [existing._id, _id],
+        result: _id,
+      },
+      budget,
+    );
+    const old = await insertPrepared(ctx, oldPrepared);
+    const fresh = await insertPrepared(ctx, freshPrepared);
+    await reconcileRow(ctx, existing._id, oldPatch);
+    return budget.finish(ctx, {
+      ...result,
+      historyReceipt: eventReceipt([old, fresh]),
     });
-
-    return await ctx.db.get(_id);
   },
 });
 
 /**
  * Delete a fact (soft delete - mark as invalidated)
  */
-export const deleteFact = mutation({
+export const deleteFact = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    operationId: v.optional(v.string()),
     memorySpaceId: v.string(),
     factId: v.string(),
   },
   handler: async (ctx, args) => {
-    const fact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
-
-    if (!fact) {
-      throw new ConvexError("FACT_NOT_FOUND");
-    }
-
-    // Verify memorySpace owns this fact
-    if (fact.memorySpaceId !== args.memorySpaceId) {
-      throw new ConvexError("PERMISSION_DENIED");
-    }
-
-    await ctx.db.patch(fact._id, {
-      validUntil: Date.now(),
-      updatedAt: Date.now(),
-    });
-
+    const budget = new CaptureBudget();
+    const intent = {
+      operationId: args.operationId ?? crypto.randomUUID(),
+      phase: "delete",
+    };
+    const prior = await replay(ctx, args, intent, args, budget);
+    if (prior.length)
+      return {
+        deleted: true,
+        factId: args.factId,
+        historyReceipt: eventReceipt(prior),
+      };
+    const fact = await sourceFact(ctx, args, args.factId, budget);
+    const patch = { validUntil: Date.now(), updatedAt: Date.now() };
+    budget.write({ ...fact, ...patch });
+    await capture(
+      ctx,
+      fact,
+      {
+        action: "DELETE",
+        oldValue: fact.fact,
+        intent,
+        role: "source",
+        kind: "soft_delete",
+        request: args,
+        affected: [fact._id],
+      },
+      budget,
+    );
+    await reconcileRow(ctx, fact._id, patch);
     return { deleted: true, factId: args.factId };
   },
 });
@@ -267,63 +410,118 @@ export const deleteFact = mutation({
  * Supersede a fact with a new one (belief revision)
  * Marks the old fact as superseded and creates a relationship to the new fact
  */
-export const supersede = mutation({
+export const supersede = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    expectedSourceFactId: v.optional(v.id("facts")),
+    operationId: v.optional(v.string()),
+    historyIntent: v.optional(intentValidator),
     memorySpaceId: v.string(),
+    expectedOldFactId: v.optional(v.id("facts")),
+    expectedNewFactId: v.optional(v.id("facts")),
     oldFactId: v.string(),
     newFactId: v.string(),
     reason: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const oldFact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.oldFactId))
-      .first();
-
-    if (!oldFact) {
-      throw new ConvexError("OLD_FACT_NOT_FOUND");
-    }
-
-    // Verify memorySpace owns this fact
-    if (oldFact.memorySpaceId !== args.memorySpaceId) {
-      throw new ConvexError("PERMISSION_DENIED");
-    }
-
-    const newFact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.newFactId))
-      .first();
-
-    if (!newFact) {
-      throw new ConvexError("NEW_FACT_NOT_FOUND");
-    }
-
-    // Verify new fact is in the same memory space
-    if (newFact.memorySpaceId !== args.memorySpaceId) {
-      throw new ConvexError("FACTS_MUST_BE_IN_SAME_SPACE");
-    }
-
+    const budget = new CaptureBudget(20);
+    const intent = args.historyIntent ?? {
+      operationId: args.operationId ?? crypto.randomUUID(),
+      phase: "supersede",
+      reason: args.reason,
+    };
+    const prior = await replay(ctx, args, intent, args, budget);
+    if (prior.length)
+      return budget.finish(ctx, {
+        superseded: true,
+        oldFactId: args.oldFactId,
+        newFactId: args.newFactId,
+        reason: args.reason,
+        historyReceipt: eventReceipt(prior),
+      });
+    const old = await sourceFact(
+      ctx,
+      args,
+      args.oldFactId,
+      budget,
+      args.expectedOldFactId,
+    );
+    const fresh = await sourceFact(
+      ctx,
+      args,
+      args.newFactId,
+      budget,
+      args.expectedNewFactId,
+    );
+    if (old._id === fresh._id) fail("FACT_HISTORY_RELATIONSHIP_CONFLICT");
+    assertTail(old);
+    assertTail(fresh);
+    if (relationship(fresh, "supersedes").state !== "absent")
+      fail("FACT_HISTORY_RELATIONSHIP_CONFLICT");
     const now = Date.now();
-
-    // Mark old fact as superseded
-    await ctx.db.patch(oldFact._id, {
-      supersededBy: args.newFactId,
+    const oldPatch = {
+      supersededBy: fresh.factId,
+      supersededByEndpoint: endpoint(fresh),
+      supersedesEndpoint: relationship(old, "supersedes"),
       validUntil: now,
       updatedAt: now,
-    });
-
-    // Update new fact to reference old
-    await ctx.db.patch(newFact._id, {
-      supersedes: args.oldFactId,
+    };
+    const newPatch = {
+      supersedes: old.factId,
+      supersedesEndpoint: endpoint(old),
+      supersededByEndpoint: relationship(fresh, "supersededBy"),
       updatedAt: now,
-    });
-
-    return {
+    };
+    budget.write({ ...old, ...oldPatch });
+    budget.write({ ...fresh, ...newPatch });
+    const first = await prepareCapture(
+      ctx,
+      { ...old, ...oldPatch },
+      {
+        action: "SUPERSEDE",
+        oldValue: old.fact,
+        newValue: fresh.fact,
+        intent,
+        role: "old",
+        kind: "supersede",
+        request: args,
+        affected: [old._id, fresh._id],
+        result: fresh._id,
+        publish: !args.historyIntent,
+      },
+      budget,
+    );
+    const second = await prepareCapture(
+      ctx,
+      { ...fresh, ...newPatch },
+      {
+        action: "SUPERSEDE",
+        oldValue: old.fact,
+        newValue: fresh.fact,
+        intent,
+        role: "new",
+        kind: "supersede",
+        request: args,
+        affected: [old._id, fresh._id],
+        result: fresh._id,
+        publish: !args.historyIntent,
+      },
+      budget,
+    );
+    const inserted = [
+      await insertPrepared(ctx, first),
+      await insertPrepared(ctx, second),
+    ];
+    await reconcileRow(ctx, old._id, oldPatch);
+    await reconcileRow(ctx, fresh._id, newPatch);
+    return budget.finish(ctx, {
       superseded: true,
       oldFactId: args.oldFactId,
       newFactId: args.newFactId,
       reason: args.reason,
-    };
+      fact: { ...fresh, ...newPatch },
+      historyReceipt: eventReceipt(inserted),
+    });
   },
 });
 
@@ -331,8 +529,12 @@ export const supersede = mutation({
  * Update a fact in place (without creating new version)
  * Used by belief revision for UPDATE action
  */
-export const updateInPlace = mutation({
+export const updateInPlace = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    expectedSourceFactId: v.optional(v.id("facts")),
+    operationId: v.optional(v.string()),
+    historyIntent: v.optional(intentValidator),
     memorySpaceId: v.string(),
     factId: v.string(),
     fact: v.optional(v.string()),
@@ -364,20 +566,29 @@ export const updateInPlace = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
-
-    if (!existing) {
-      throw new ConvexError("FACT_NOT_FOUND");
+    const budget = new CaptureBudget(20);
+    const intent = args.historyIntent ?? {
+      operationId: args.operationId ?? crypto.randomUUID(),
+      phase: "update",
+    };
+    const prior = await replay(ctx, args, intent, args, budget);
+    if (prior.length) {
+      const result = prior[0].resultFactId
+        ? await ctx.db.get(prior[0].resultFactId)
+        : null;
+      if (!result) fail("FACT_HISTORY_COMMITTED_RESULT_UNAVAILABLE");
+      return budget.finish(ctx, {
+        ...result,
+        historyReceipt: eventReceipt(prior),
+      });
     }
-
-    // Verify memorySpace owns this fact
-    if (existing.memorySpaceId !== args.memorySpaceId) {
-      throw new ConvexError("PERMISSION_DENIED");
-    }
-
+    const existing = await sourceFact(
+      ctx,
+      args,
+      args.factId,
+      budget,
+      args.expectedSourceFactId,
+    );
     const now = Date.now();
 
     // Build update object with only provided fields
@@ -398,17 +609,49 @@ export const updateInPlace = mutation({
     if (args.entities !== undefined) updates.entities = args.entities;
     if (args.relations !== undefined) updates.relations = args.relations;
 
-    await ctx.db.patch(existing._id, updates);
+    budget.write({ ...existing, ...updates });
+    const event = args.historyIntent
+      ? await capture(
+          ctx,
+          { ...existing, ...updates },
+          {
+            action: "UPDATE",
+            oldValue: existing.fact,
+            newValue: args.fact ?? existing.fact,
+            intent,
+            role: "source",
+            kind: "revision_update",
+            request: args,
+            affected: [existing._id],
+            result: existing._id,
+            publish: false,
+          },
+          budget,
+        )
+      : undefined;
+    await reconcileRow(ctx, existing._id, updates);
 
-    return await ctx.db.get(existing._id);
+    const result = await ctx.db.get(existing._id);
+    return budget.finish(ctx, {
+      ...result,
+      historyReceipt: event ? eventReceipt([event]) : undefined,
+    });
   },
 });
 
 /**
  * Delete many facts matching filters
  */
-export const deleteMany = mutation({
+export const deleteMany = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    selectedPhysicalId: v.optional(v.id("facts")),
+    selectedMemoryDocumentId: v.optional(v.id("memories")),
+    sourceMemoryExpectedFingerprint: v.optional(v.string()),
+    expectedFingerprint: v.optional(v.string()),
+    operationId: v.optional(v.string()),
+    includeSuperseded: v.optional(v.boolean()),
+    paginationOpts: v.optional(paginationOptsValidator),
     memorySpaceId: v.string(),
     userId: v.optional(v.string()),
     factType: v.optional(
@@ -424,28 +667,82 @@ export const deleteMany = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
+    validateDomainScope(args.tenantId);
+    if (args.selectedPhysicalId !== undefined) {
+      const intent = {operationId: args.operationId ?? crypto.randomUUID(), phase: "physical_delete"};
+      const budget = new CaptureBudget(20);
+      const prior = await replay(ctx, args, intent, args, budget);
+      if (prior.length) return budget.finish(ctx, {deleted: 1, memorySpaceId: args.memorySpaceId, physicalId: args.selectedPhysicalId, historyReceipt: eventReceipt(prior), page: [], isDone: true, continueCursor: ""});
+      const fact = await ctx.db.get(args.selectedPhysicalId);
+      if (!fact) return {deleted: 0, alreadyAbsent: true, memorySpaceId: args.memorySpaceId, physicalId: args.selectedPhysicalId, page: [], isDone: true, continueCursor: ""};
+      budget.account([fact]);
+      if (fact.tenantId !== args.tenantId || fact.memorySpaceId !== args.memorySpaceId || (args.includeSuperseded === false && fact.supersededBy !== undefined) ||
+        (args.userId !== undefined && fact.userId !== args.userId) || (args.factType !== undefined && fact.factType !== args.factType) ) fail("DOMAIN_SELECTION_CHANGED");
+      if (!args.expectedFingerprint) fail("DOMAIN_INVALID_FINGERPRINT");
+      checkFingerprint(fact, args.expectedFingerprint);
+      if (args.selectedMemoryDocumentId) {
+        const memory = await ctx.db.get(args.selectedMemoryDocumentId);
+        if (!memory || memory.tenantId !== args.tenantId || memory.memorySpaceId !== args.memorySpaceId || !args.sourceMemoryExpectedFingerprint || !(await selectedFactSource(ctx, fact, memory))) fail("SOURCE_PROVENANCE_UNRESOLVED");
+        checkFingerprint(memory, args.sourceMemoryExpectedFingerprint);
+      }
+      const event = await capture(ctx, fact, {action: "DELETE", oldValue: fact.fact, intent, role: "source", kind: "physical_delete", request: args, affected: [fact._id]}, budget);
+      const graphIdentity = await domainGraphIdentity(ctx, "facts", fact);
+      await markDeletedRow(ctx, fact._id);
+      return budget.finish(ctx, {deleted: 1, memorySpaceId: args.memorySpaceId, physicalId: fact._id, graphIdentity, historyReceipt: eventReceipt([event]), page: [], isDone: true, continueCursor: ""});
+    }
+    const scan = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
-      .collect();
-
-    // Apply optional filters
-    if (args.userId) {
-      facts = facts.filter((f) => f.userId === args.userId);
-    }
-    if (args.factType) {
-      facts = facts.filter((f) => f.factType === args.factType);
-    }
-
+      .paginate({
+        ...(args.paginationOpts ?? { numItems: 1, cursor: null }),
+        numItems: 1,
+        maximumRowsRead: 1,
+        maximumBytesRead: 1024 * 1024,
+      });
+    if (scan.pageStatus === "SplitRequired")
+      return {
+        ...scan,
+        page: [],
+        deleted: 0,
+        memorySpaceId: args.memorySpaceId,
+      };
     let deleted = 0;
-    for (const fact of facts) {
-      await ctx.db.delete(fact._id);
+    const budget = new CaptureBudget();
+    budget.account(scan.page);
+    for (const fact of scan.page) {
+      if (
+        (args.userId !== undefined && fact.userId !== args.userId) ||
+        (args.factType !== undefined && fact.factType !== args.factType)
+      )
+        continue;
+      await capture(
+        ctx,
+        fact,
+        {
+          action: "DELETE",
+          oldValue: fact.fact,
+          intent: {
+            operationId: crypto.randomUUID(),
+            phase: "physical_delete",
+          },
+          role: "source",
+          kind: "physical_delete",
+          request: args,
+          affected: [fact._id],
+        },
+        budget,
+      );
+      await markDeletedRow(ctx, fact._id);
       deleted++;
     }
-
-    return { deleted, memorySpaceId: args.memorySpaceId };
+    return budget.finish(ctx, {
+      ...scan,
+      page: [],
+      deleted,
+      memorySpaceId: args.memorySpaceId,
+    });
   },
 });
 
@@ -463,10 +760,10 @@ export const get = query({
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    const fact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
+    validateDomainScope(args.tenantId);
+    const rows = await ctx.db.query("facts").withIndex("by_history_scope_fact", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId).eq("factId", args.factId)).take(2);
+    if (rows.length > 1) fail("DOMAIN_SCOPE_AMBIGUOUS");
+    const fact = rows[0] ?? null;
 
     if (!fact) {
       return null;
@@ -538,12 +835,14 @@ export const list = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId);
     let facts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
-      .collect();
+      .take(257);
+    await domainBudget(ctx, facts);
 
     // Filter out superseded by default
     if (!args.includeSuperseded) {
@@ -710,10 +1009,11 @@ export const count = query({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId);
     let facts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
       .collect();
 
@@ -722,10 +1022,6 @@ export const count = query({
       facts = facts.filter((f) => f.supersededBy === undefined);
     }
 
-    // Tenant isolation filter (apply early for security)
-    if (args.tenantId) {
-      facts = facts.filter((f) => f.tenantId === args.tenantId);
-    }
 
     // Apply universal filters (same as list)
     if (args.factType) {
@@ -859,9 +1155,10 @@ export const search = query({
     const results = await ctx.db
       .query("facts")
       .withSearchIndex("by_content", (q) =>
-        q.search("fact", args.query).eq("memorySpaceId", args.memorySpaceId),
+        q.search("fact", args.query).eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
-      .collect();
+      .take(257);
+    await domainBudget(ctx, results);
 
     // Filter superseded unless explicitly requested
     let filtered = args.includeSuperseded
@@ -1099,64 +1396,32 @@ export const semanticSearch = action({
  */
 export const getHistory = query({
   args: {
+    tenantId: v.optional(v.string()),
+    sourceFactId: v.optional(v.id("facts")),
     memorySpaceId: v.string(),
     factId: v.string(),
   },
   handler: async (ctx, args) => {
-    const fact = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
-      .first();
-
-    if (!fact || fact.memorySpaceId !== args.memorySpaceId) {
-      return [];
-    }
-
-    // Build version chain - start from given fact and go both directions
-    const history: any[] = [];
-
-    // First, go backward to find oldest version
-    let oldest = fact;
-    while (oldest.supersedes) {
-      const previous = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", oldest.supersedes!))
-        .first();
-
-      if (previous) {
-        oldest = previous;
-      } else {
-        break;
-      }
-    }
-
-    // Now go forward from oldest to build complete chain
-    history.push(oldest);
-    let current = oldest;
-
-    while (current.supersededBy) {
-      const next = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", current.supersededBy!))
-        .first();
-
-      if (next) {
-        history.push(next);
-        current = next;
-      } else {
-        break;
-      }
-    }
-
-    return history; // Already in chronological order
+    const budget = new CaptureBudget();
+    const fact = await sourceFact(
+      ctx,
+      args,
+      args.factId,
+      budget,
+      args.sourceFactId,
+    );
+    if (
+      relationship(fact, "supersedes").state === "unknown" ||
+      relationship(fact, "supersededBy").state === "unknown"
+    )
+      fail("FACT_HISTORY_RELATIONSHIP_UNRESOLVED");
+    return budget.finish(ctx, [fact]);
   },
 });
 
-/**
- * Query facts by subject (entity-centric)
- */
 export const queryBySubject = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     subject: v.string(),
     // Fact-specific filters
@@ -1203,125 +1468,49 @@ export const queryBySubject = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace_subject", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject),
-      )
-      .collect();
-
-    // Filter superseded (unless explicitly requested)
-    if (!args.includeSuperseded) {
-      facts = facts.filter((f) => f.supersededBy === undefined);
+    const offset = args.offset ?? 0,
+      limit = args.limit ?? 256;
+    if (
+      !Number.isInteger(offset) ||
+      offset < 0 ||
+      !Number.isInteger(limit) ||
+      limit < 1 ||
+      offset + limit > 256
+    )
+      fail("FACT_HISTORY_PAGING_REQUIRED");
+    const result = await factCandidatePage(ctx, args, {
+      numItems: 256,
+      cursor: null,
+    });
+    if (
+      result.pageStatus === "SplitRequired" ||
+      (!result.isDone &&
+        (args.limit === undefined ||
+          args.sortBy !== undefined ||
+          result.page.length < offset + limit))
+    )
+      fail("FACT_HISTORY_PAGING_REQUIRED");
+    const rows = result.page;
+    if (
+      args.sortBy &&
+      ["createdAt", "updatedAt", "confidence", "version"].includes(args.sortBy)
+    ) {
+      const field = args.sortBy as
+        | "createdAt"
+        | "updatedAt"
+        | "confidence"
+        | "version";
+      rows.sort(
+        (a, b) =>
+          (args.sortOrder === "asc" ? 1 : -1) *
+          (a[field] < b[field] ? -1 : a[field] > b[field] ? 1 : 0),
+      );
     }
-
-    // Apply universal filters
-    if (args.factType) {
-      facts = facts.filter((f) => f.factType === args.factType);
-    }
-    if (args.userId !== undefined) {
-      facts = facts.filter((f) => f.userId === args.userId);
-    }
-    if (args.participantId !== undefined) {
-      facts = facts.filter((f) => f.participantId === args.participantId);
-    }
-    if (args.predicate !== undefined) {
-      facts = facts.filter((f) => f.predicate === args.predicate);
-    }
-    if (args.object !== undefined) {
-      facts = facts.filter((f) => f.object === args.object);
-    }
-    if (args.minConfidence !== undefined) {
-      facts = facts.filter((f) => f.confidence >= args.minConfidence!);
-    }
-    if (args.confidence !== undefined) {
-      facts = facts.filter((f) => f.confidence === args.confidence);
-    }
-    if (args.sourceType !== undefined) {
-      facts = facts.filter((f) => f.sourceType === args.sourceType);
-    }
-    if (args.tags && args.tags.length > 0) {
-      if (args.tagMatch === "all") {
-        facts = facts.filter((f) =>
-          args.tags!.every((tag) => f.tags.includes(tag)),
-        );
-      } else {
-        // "any" is default
-        facts = facts.filter((f) =>
-          args.tags!.some((tag) => f.tags.includes(tag)),
-        );
-      }
-    }
-    if (args.createdAfter !== undefined) {
-      facts = facts.filter((f) => f.createdAt >= args.createdAfter!);
-    }
-    if (args.createdBefore !== undefined) {
-      facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
-    }
-    if (args.updatedAfter !== undefined) {
-      facts = facts.filter((f) => f.updatedAt >= args.updatedAfter!);
-    }
-    if (args.updatedBefore !== undefined) {
-      facts = facts.filter((f) => f.updatedAt <= args.updatedBefore!);
-    }
-    if (args.version !== undefined) {
-      facts = facts.filter((f) => f.version === args.version);
-    }
-    if (args.validAt !== undefined) {
-      facts = facts.filter((f) => {
-        const isValid =
-          (!f.validFrom || f.validFrom <= args.validAt!) &&
-          (!f.validUntil || f.validUntil > args.validAt!);
-        return isValid;
-      });
-    }
-    if (args.metadata !== undefined) {
-      facts = facts.filter((f) => {
-        if (!f.metadata) return false;
-        // Match all provided metadata fields
-        return Object.entries(args.metadata as Record<string, any>).every(
-          ([key, value]) => f.metadata[key] === value,
-        );
-      });
-    }
-
-    // Apply sorting (safe - only if facts exist and sortBy is valid)
-    if (args.sortBy && facts.length > 0) {
-      // Validate sortBy is a valid field
-      const validSortFields = [
-        "createdAt",
-        "updatedAt",
-        "confidence",
-        "version",
-      ];
-      if (validSortFields.includes(args.sortBy)) {
-        const sortField = args.sortBy as
-          | "createdAt"
-          | "updatedAt"
-          | "confidence"
-          | "version";
-        facts.sort((a, b) => {
-          const aVal = a[sortField] as any;
-          const bVal = b[sortField] as any;
-          const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-          return args.sortOrder === "asc" ? comparison : -comparison;
-        });
-      }
-    }
-
-    // Apply pagination (offset and limit combined)
-    const offset = args.offset || 0;
-    const limit = args.limit !== undefined ? offset + args.limit : undefined;
-    facts =
-      limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
-
-    return facts;
+    return rows.slice(offset, offset + limit);
   },
 });
 
-/**
- * Query facts by relationship (graph traversal)
- */
+/** Query facts by relationship (graph traversal). */
 export const queryByRelationship = query({
   args: {
     memorySpaceId: v.string(),
@@ -1488,6 +1677,7 @@ export const queryByRelationship = query({
  */
 export const exportFacts = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     format: v.union(v.literal("json"), v.literal("jsonld"), v.literal("csv")),
     factType: v.optional(
@@ -1503,12 +1693,14 @@ export const exportFacts = query({
     ),
   },
   handler: async (ctx, args) => {
+    validateDomainScope(args.tenantId);
     let facts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
+      .withIndex("by_tenant_space", (q) =>
+        q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId),
       )
-      .collect();
+      .take(257);
+    await domainBudget(ctx, facts);
 
     // Filter superseded
     facts = facts.filter((f) => f.supersededBy === undefined);
@@ -1599,68 +1791,109 @@ export const exportFacts = query({
 /**
  * Consolidate duplicate facts
  */
-export const consolidate = mutation({
+export const consolidate = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    expectedFactIds: v.optional(
+      v.array(v.object({ factId: v.string(), factDocumentId: v.id("facts") })),
+    ),
+    operationId: v.optional(v.string()),
+    historyIntent: v.optional(intentValidator),
     memorySpaceId: v.string(),
     factIds: v.array(v.string()), // Facts to merge
     keepFactId: v.string(), // Fact to keep
   },
   handler: async (ctx, args) => {
-    if (!args.factIds.includes(args.keepFactId)) {
-      throw new Error("KEEP_FACT_NOT_IN_LIST");
-    }
-
+    if (
+      args.factIds.length < 2 ||
+      args.factIds.length > 3 ||
+      new Set(args.factIds).size !== args.factIds.length
+    )
+      fail("FACT_HISTORY_CONSOLIDATION_BUDGET");
+    if (!args.factIds.includes(args.keepFactId)) fail("KEEP_FACT_NOT_IN_LIST");
+    const budget = new CaptureBudget(24);
+    const intent = args.historyIntent ?? {
+      operationId: args.operationId ?? crypto.randomUUID(),
+      phase: "consolidate",
+    };
+    const prior = await replay(ctx, args, intent, args, budget);
+    if (prior.length)
+      return budget.finish(ctx, {
+        consolidated: true,
+        keptFactId: args.keepFactId,
+        mergedCount: args.factIds.length - 1,
+        historyReceipt: eventReceipt(prior),
+      });
+    const guards = new Map(
+      args.expectedFactIds?.map((guard) => [
+        guard.factId,
+        guard.factDocumentId,
+      ]),
+    );
+    if (
+      args.expectedFactIds &&
+      (guards.size !== args.factIds.length ||
+        args.expectedFactIds.length !== args.factIds.length ||
+        args.factIds.some((id) => !guards.has(id)))
+    )
+      fail("FACT_HISTORY_SOURCE_MISMATCH");
+    const facts = [];
+    for (const id of args.factIds)
+      facts.push(await sourceFact(ctx, args, id, budget, guards.get(id)));
+    for (const fact of facts) assertTail(fact);
+    const kept = facts.find((f) => f.factId === args.keepFactId)!;
     const now = Date.now();
-
-    // Mark all others as superseded by the kept fact
-    for (const factId of args.factIds) {
-      if (factId === args.keepFactId) continue;
-
-      const fact = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", factId))
-        .first();
-
-      if (fact && fact.memorySpaceId === args.memorySpaceId) {
-        await ctx.db.patch(fact._id, {
-          supersededBy: args.keepFactId,
-          validUntil: now,
-        });
-      }
-    }
-
-    // Update confidence of kept fact (average of all)
-    const kept = await ctx.db
-      .query("facts")
-      .withIndex("by_factId", (q) => q.eq("factId", args.keepFactId))
-      .first();
-
-    if (kept && kept.memorySpaceId === args.memorySpaceId) {
-      const allFacts = await Promise.all(
-        args.factIds.map((id) =>
-          ctx.db
-            .query("facts")
-            .withIndex("by_factId", (q) => q.eq("factId", id))
-            .first(),
+    const confidence = Math.round(
+      facts.reduce((n, f) => n + f.confidence, 0) / facts.length,
+    );
+    const planned = facts.map((f) => ({
+      fact: f,
+      patch:
+        f._id === kept._id
+          ? {
+              confidence,
+              updatedAt: now,
+              supersedesEndpoint: relationship(f, "supersedes"),
+              supersededByEndpoint: relationship(f, "supersededBy"),
+            }
+          : {
+              supersededBy: kept.factId,
+              supersededByEndpoint: endpoint(kept),
+              supersedesEndpoint: relationship(f, "supersedes"),
+              validUntil: now,
+            },
+    }));
+    for (const item of planned) budget.write({ ...item.fact, ...item.patch });
+    const events = [];
+    for (const item of planned)
+      events.push(
+        await prepareCapture(
+          ctx,
+          { ...item.fact, ...item.patch },
+          {
+            action: item.fact._id === kept._id ? "UPDATE" : "SUPERSEDE",
+            oldValue: item.fact.fact,
+            newValue: kept.fact,
+            intent,
+            role:
+              item.fact._id === kept._id ? "kept" : `source:${item.fact._id}`,
+            kind: "consolidate",
+            request: args,
+            affected: facts.map((f) => f._id),
+            result: kept._id,
+          },
+          budget,
         ),
       );
-
-      const validFacts = allFacts.filter((f) => f !== null) as any[];
-      const avgConfidence =
-        validFacts.reduce((sum, f) => sum + f.confidence, 0) /
-        validFacts.length;
-
-      await ctx.db.patch(kept._id, {
-        confidence: Math.round(avgConfidence),
-        updatedAt: now,
-      });
-    }
-
-    return {
+    const inserted = [];
+    for (const event of events) inserted.push(await insertPrepared(ctx, event));
+    for (const item of planned) await reconcileRow(ctx, item.fact._id, item.patch);
+    return budget.finish(ctx, {
       consolidated: true,
-      keptFactId: args.keepFactId,
-      mergedCount: args.factIds.length - 1,
-    };
+      keptFactId: kept.factId,
+      mergedCount: facts.length - 1,
+      historyReceipt: eventReceipt(inserted),
+    });
   },
 });
 
@@ -1670,6 +1903,7 @@ export const consolidate = mutation({
  */
 export const findByStructure = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     subject: v.optional(v.string()),
     predicate: v.optional(v.string()),
@@ -1689,82 +1923,74 @@ export const findByStructure = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // Start with memorySpace filter
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
-
-    // Filter out superseded facts
-    facts = facts.filter((f) => f.supersededBy === undefined);
-
-    // Apply structural filters
-    if (args.subject !== undefined) {
-      facts = facts.filter((f) => f.subject === args.subject);
-    }
-    if (args.predicate !== undefined) {
-      facts = facts.filter((f) => f.predicate === args.predicate);
-    }
-    if (args.object !== undefined) {
-      facts = facts.filter((f) => f.object === args.object);
-    }
-    if (args.userId !== undefined) {
-      facts = facts.filter((f) => f.userId === args.userId);
-    }
-    if (args.factType !== undefined) {
-      facts = facts.filter((f) => f.factType === args.factType);
-    }
-
-    // Apply limit
-    const limit = args.limit ?? 10;
-    return facts.slice(0, limit);
+    const limit = args.limit ?? 256;
+    if (!Number.isInteger(limit) || limit < 1 || limit > 256)
+      fail("FACT_HISTORY_PAGING_REQUIRED");
+    const result = await factCandidatePage(ctx, args, {
+      numItems: 256,
+      cursor: null,
+    });
+    if (
+      result.pageStatus === "SplitRequired" ||
+      (!result.isDone &&
+        (args.limit === undefined || result.page.length < limit))
+    )
+      fail("FACT_HISTORY_PAGING_REQUIRED");
+    return result.page.slice(0, limit);
   },
 });
 
-/**
- * Delete multiple facts by their IDs (batch delete for cascade operations)
- * Much faster than calling deleteFact multiple times
- * Uses index lookups instead of full table scan to avoid memory issues with large tables
- */
-export const deleteByIds = mutation({
+/** Delete-by-ID scalar audit compatibility; larger erasure belongs task19. */
+export const deleteByIds = graphMutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     factIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    const deletedIds: string[] = [];
-    const now = Date.now();
-
-    // Look up each fact by index to avoid full table scan
-    // This is O(n) index lookups vs O(entire table) memory usage
-    for (const factId of args.factIds) {
-      const fact = await ctx.db
-        .query("facts")
-        .withIndex("by_factId", (q) => q.eq("factId", factId))
-        .first();
-
-      if (fact) {
-        // Soft delete by marking as invalidated
-        await ctx.db.patch(fact._id, {
-          validUntil: now,
-          updatedAt: now,
-        });
-        deletedIds.push(factId);
-      }
-    }
-
-    return {
-      deleted: deletedIds.length,
-      factIds: deletedIds,
-    };
+    if (args.factIds.length !== 1) fail("FACT_HISTORY_DELETE_BATCH_REQUIRED");
+    const budget = new CaptureBudget();
+    budget.reserve(2);
+    const rows = await ctx.db
+      .query("facts")
+      .withIndex("by_history_tenant_fact", (q) =>
+        q.eq("tenantId", args.tenantId).eq("factId", args.factIds[0]),
+      )
+      .take(2);
+    budget.account(rows);
+    if (rows.length > 1) fail("FACT_HISTORY_SOURCE_AMBIGUOUS");
+    const fact = rows[0];
+    if (!fact) return { deleted: 0, factIds: [] };
+    if (
+      args.memorySpaceId !== undefined &&
+      fact.memorySpaceId !== args.memorySpaceId
+    )
+      fail("FACT_HISTORY_SCOPE_MISMATCH");
+    const patch = { validUntil: Date.now(), updatedAt: Date.now() };
+    budget.write({ ...fact, ...patch });
+    await capture(
+      ctx,
+      fact,
+      {
+        action: "DELETE",
+        oldValue: fact.fact,
+        intent: { operationId: crypto.randomUUID(), phase: "soft_delete" },
+        role: "source",
+        kind: "soft_delete",
+        request: args,
+        affected: [fact._id],
+      },
+      budget,
+    );
+    await reconcileRow(ctx, fact._id, patch);
+    return { deleted: 1, factIds: [fact.factId] };
   },
 });
 
 /**
  * Purge all facts (TEST/DEV ONLY)
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {},
   handler: async (ctx) => {
     // Safety check: Only allow in test/dev environments
@@ -1788,9 +2014,166 @@ export const purgeAll = mutation({
     const allFacts = await ctx.db.query("facts").collect();
 
     for (const fact of allFacts) {
-      await ctx.db.delete(fact._id);
+      await markDeletedRow(ctx, fact._id);
     }
 
     return { deleted: allFacts.length };
+  },
+});
+
+type CandidateSelection = {
+  tenantId?: string;
+  memorySpaceId: string;
+  subject?: string;
+  predicate?: string;
+  object?: string;
+  userId?: string;
+  participantId?: string;
+  factType?: string;
+  includeSuperseded?: boolean;
+  minConfidence?: number;
+  confidence?: number;
+  sourceType?: string;
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  createdBefore?: number;
+  createdAfter?: number;
+  updatedBefore?: number;
+  updatedAfter?: number;
+  version?: number;
+  validAt?: number;
+  metadata?: unknown;
+  query?: string;
+  sourceMemoryId?: string;
+};
+async function factCandidatePage(
+  ctx: QueryCtx,
+  args: CandidateSelection,
+  opts: { numItems: number; cursor: string | null; endCursor?: string | null },
+) {
+  if (
+    opts.numItems < 1 ||
+    opts.numItems > 256 ||
+    !Number.isInteger(opts.numItems)
+  )
+    fail("FACT_HISTORY_INVALID_PAGE_SIZE");
+  validateDomainScope(args.tenantId);
+  const selected = args.query === undefined
+    ? ctx.db.query("facts").withIndex("by_tenant_space", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId))
+    : ctx.db.query("facts").withSearchIndex("by_content", q => q.search("fact", args.query!).eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId));
+  const result = await selected.paginate({...opts, maximumRowsRead: 256, maximumBytesRead: 1024 * 1024});
+  const native = await ctx.meta.getTransactionMetrics();
+  if (native.bytesRead.used > 2 * 1024 * 1024 || native.documentsRead.used > 256) fail("FACT_HISTORY_BUDGET_EXCEEDED");
+  const page = result.page.filter(
+    (f) =>
+      (args.includeSuperseded || !f.supersededBy) &&
+      (args.sourceMemoryId === undefined || f.sourceRef?.memoryId === args.sourceMemoryId) &&
+      (args.subject === undefined || f.subject === args.subject) &&
+      (args.predicate === undefined || f.predicate === args.predicate) &&
+      (args.object === undefined || f.object === args.object) &&
+      (args.userId === undefined || f.userId === args.userId) &&
+      (args.participantId === undefined ||
+        f.participantId === args.participantId) &&
+      (args.factType === undefined || f.factType === args.factType) &&
+      (args.minConfidence === undefined ||
+        f.confidence >= args.minConfidence) &&
+      (args.confidence === undefined || f.confidence === args.confidence) &&
+      (args.sourceType === undefined || f.sourceType === args.sourceType) &&
+      (args.createdBefore === undefined || f.createdAt <= args.createdBefore) &&
+      (args.createdAfter === undefined || f.createdAt >= args.createdAfter) &&
+      (args.updatedBefore === undefined || f.updatedAt <= args.updatedBefore) &&
+      (args.updatedAfter === undefined || f.updatedAt >= args.updatedAfter) &&
+      (args.version === undefined || f.version === args.version) &&
+      (args.validAt === undefined ||
+        ((!f.validFrom || f.validFrom <= args.validAt) &&
+          (!f.validUntil || f.validUntil > args.validAt))) &&
+      (!args.tags?.length ||
+        (args.tagMatch === "all"
+          ? args.tags.every((tag) => f.tags.includes(tag))
+          : args.tags.some((tag) => f.tags.includes(tag)))) &&
+      (args.metadata === undefined ||
+        (f.metadata &&
+          typeof args.metadata === "object" &&
+          args.metadata !== null &&
+          Object.entries(args.metadata).every(
+            ([key, value]) => f.metadata[key] === value,
+          ))),
+  );
+  return { ...result, page };
+}
+
+/** Fixed writer-discovery selectors; retained legacy query return shapes remain arrays. */
+export const candidatePage = query({
+  args: {
+    operation: v.union(
+      v.literal("list"),
+      v.literal("queryBySubject"),
+      v.literal("findByStructure"),
+    ),
+    tenantId: v.optional(v.string()),
+    query: v.optional(v.string()),
+    sourceMemoryId: v.optional(v.string()),
+    selectedMemoryDocumentId: v.optional(v.id("memories")),
+    selectionMode: v.optional(v.union(v.literal("read"), v.literal("delete"), v.literal("archive"))),
+    archiveAt: v.optional(v.number()),
+    archiveOperationPrefix: v.optional(v.string()),
+    deleteOperationPrefix: v.optional(v.string()),
+    memorySpaceId: v.string(),
+    subject: v.optional(v.string()),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
+    factType: v.optional(
+      v.union(
+        v.literal("preference"),
+        v.literal("identity"),
+        v.literal("knowledge"),
+        v.literal("relationship"),
+        v.literal("event"),
+        v.literal("observation"),
+        v.literal("custom"),
+      ),
+    ),
+    includeSuperseded: v.optional(v.boolean()),
+    minConfidence: v.optional(v.number()),
+    confidence: v.optional(v.number()),
+    sourceType: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+    tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
+    createdBefore: v.optional(v.number()), createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()), updatedAfter: v.optional(v.number()),
+    version: v.optional(v.number()), validAt: v.optional(v.number()), metadata: v.optional(v.any()),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    if (args.operation === "queryBySubject" && args.subject === undefined)
+      fail("FACT_HISTORY_SUBJECT_REQUIRED");
+    const scan = await factCandidatePage(ctx, args, args.paginationOpts);
+    let page = scan.pageStatus === "SplitRequired" ? [] : scan.page;
+    if (args.selectionMode && args.selectionMode !== "read") {
+      if (!args.selectedMemoryDocumentId || !args.sourceMemoryId) fail("SOURCE_PROVENANCE_UNRESOLVED");
+      const memory = await ctx.db.get(args.selectedMemoryDocumentId);
+      if (!memory || memory.tenantId !== args.tenantId || memory.memorySpaceId !== args.memorySpaceId || memory.memoryId !== args.sourceMemoryId) fail("SOURCE_PROVENANCE_UNRESOLVED");
+      const eligible: Doc<"facts">[] = [];
+      for (const fact of page) if (await selectedFactSource(ctx, fact, memory)) eligible.push(fact);
+      page = eligible;
+    }
+    if (args.selectionMode === "archive" && (args.archiveAt === undefined || !Number.isFinite(args.archiveAt) || !args.archiveOperationPrefix)) fail("DOMAIN_INVALID_ARCHIVE_INTENT");
+    const archiveIntents = args.selectionMode === "archive" ? page.map(row => {
+      const operationId = args.archiveOperationPrefix! + ":" + row._id;
+      const tags = [...row.tags.filter(tag => tag !== "archived"), "archived"];
+      const expectedSourceFingerprint = domainFingerprint(row);
+      const request = {memorySpaceId: args.memorySpaceId, tenantId: args.tenantId, factId: row.factId, expectedSourceFactId: row._id, expectedSourceFingerprint, operationId, tags, validUntil: args.archiveAt!};
+      return {memorySpaceId: args.memorySpaceId, tenantId: args.tenantId, physicalId: row._id, factId: row.factId, expectedSourceFingerprint, operationId, requestDigest: domainFingerprint(request), tags, validUntil: args.archiveAt!};
+    }) : undefined;
+    const selectedMemory = args.selectedMemoryDocumentId ? await ctx.db.get(args.selectedMemoryDocumentId) : null;
+    const deleteIntents = args.deleteOperationPrefix ? page.map(row => {
+      const request = {memorySpaceId: args.memorySpaceId, tenantId: args.tenantId, userId: args.userId, factType: args.factType, includeSuperseded: args.includeSuperseded ?? true, selectedPhysicalId: row._id, expectedFingerprint: domainFingerprint(row), operationId: args.deleteOperationPrefix! + ":" + row._id,
+        ...(selectedMemory ? {selectedMemoryDocumentId: selectedMemory._id, sourceMemoryExpectedFingerprint: domainFingerprint(selectedMemory)} : {})};
+      return {physicalId: row._id, operationId: request.operationId, requestDigest: domainFingerprint(request), request};
+    }) : undefined;
+    const result = {...scan, page, ...(archiveIntents ? {archiveIntents} : {}), ...(deleteIntents ? {deleteIntents} : {}), fingerprints: Object.fromEntries(page.map(row => [row._id, domainFingerprint(row)]))};
+    await domainBudget(ctx, result); return result;
   },
 });

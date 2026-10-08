@@ -1,274 +1,151 @@
-"""
-Graph Auto-Configuration Tests
-
-Tests the two-gate approach for automatic graph database configuration:
-- Gate 1: Connection credentials must be present (NEO4J_URI or MEMGRAPH_URI + auth)
-- Gate 2: CORTEX_GRAPH_SYNC must be set to 'true'
-
-These are unit tests that mock the CypherGraphAdapter to avoid requiring
-actual graph database connections.
-"""
-
-import os
-import warnings
+"""Automatic graph tuple selection and ownership contract, with no service calls."""
+import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from cortex.client import Cortex
+from cortex.graph.config import GraphConnectionOptions, resolve_graph_connection
 from cortex.types import CortexConfig, GraphConfig
 
+CONNECTION = GraphConnectionOptions(uri="bolt://127.0.0.1:45387", username="owned", password="private-password")
 
-class TestGraphAutoConfiguration:
-    """Test the two-gate approach for graph auto-configuration."""
+@pytest.fixture(autouse=True)
+def clean_environment(monkeypatch):
+    for key in ("CORTEX_GRAPH_SYNC", "NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD", "MEMGRAPH_URI", "MEMGRAPH_USERNAME", "MEMGRAPH_PASSWORD"):
+        monkeypatch.delenv(key, raising=False)
 
-    @pytest.fixture(autouse=True)
-    def clean_env(self):
-        """Clear relevant env vars before each test."""
-        env_vars_to_clear = [
-            "CORTEX_GRAPH_SYNC",
-            "NEO4J_URI",
-            "NEO4J_USERNAME",
-            "NEO4J_PASSWORD",
-            "MEMGRAPH_URI",
-            "MEMGRAPH_USERNAME",
-            "MEMGRAPH_PASSWORD",
-        ]
-        original_values = {}
+@pytest.mark.parametrize("provider", ["neo4j", "memgraph"])
+def test_provider_tuple(provider):
+    prefix = provider.upper()
+    result = resolve_graph_connection(env={"CORTEX_GRAPH_SYNC": "true", f"{prefix}_URI": CONNECTION.uri, f"{prefix}_USERNAME": CONNECTION.username, f"{prefix}_PASSWORD": CONNECTION.password})
+    assert (result.uri, result.username, result.password) == (CONNECTION.uri, CONNECTION.username, CONNECTION.password)
 
-        for var in env_vars_to_clear:
-            original_values[var] = os.environ.get(var)
-            if var in os.environ:
-                del os.environ[var]
+def test_explicit_off_and_opt_in():
+    assert resolve_graph_connection(env={"NEO4J_URI": CONNECTION.uri}) is None
+    assert resolve_graph_connection(False, env={"CORTEX_GRAPH_SYNC": "true"}) is None
 
-        yield
+def test_ambiguous_missing_and_mixed_tuples():
+    for values, match in [({}, "no URI"), ({"NEO4J_URI": CONNECTION.uri, "MEMGRAPH_URI": CONNECTION.uri}, "ambiguous"), ({"MEMGRAPH_URI": CONNECTION.uri, "NEO4J_USERNAME": "wrong", "NEO4J_PASSWORD": "secret"}, "incomplete")]:
+        with pytest.raises(ValueError, match=match):
+            resolve_graph_connection(True, env=values)
 
-        # Restore original values
-        for var, value in original_values.items():
-            if value is not None:
-                os.environ[var] = value
-            elif var in os.environ:
-                del os.environ[var]
+def test_explicit_selected_provider_and_untyped_uri():
+    result = resolve_graph_connection(True, GraphConnectionOptions(type="memgraph"), {"NEO4J_URI": "wrong", "NEO4J_USERNAME": "wrong", "NEO4J_PASSWORD": "wrong", "MEMGRAPH_URI": CONNECTION.uri, "MEMGRAPH_USERNAME": CONNECTION.username, "MEMGRAPH_PASSWORD": CONNECTION.password})
+    assert result.username == CONNECTION.username and result.password == CONNECTION.password
+    with pytest.raises(ValueError, match="incomplete") as error:
+        resolve_graph_connection(True, GraphConnectionOptions(uri="bolt://secret:private-password@localhost"), {"NEO4J_USERNAME": "wrong", "NEO4J_PASSWORD": "wrong"})
+    assert "private-password" not in str(error.value)
+    assert resolve_graph_connection(True, CONNECTION, {}).password == CONNECTION.password
 
-    @pytest.mark.asyncio
-    async def test_no_auto_config_when_only_uri_set(self):
-        """Gate 1 satisfied, Gate 2 NOT satisfied - should NOT auto-configure."""
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-        os.environ["NEO4J_USERNAME"] = "neo4j"
-        os.environ["NEO4J_PASSWORD"] = "password"
-        # CORTEX_GRAPH_SYNC is NOT set
+@pytest.mark.asyncio
+async def test_explicit_off_never_creates_driver(monkeypatch):
+    monkeypatch.setenv("CORTEX_GRAPH_SYNC", "true")
+    with patch("cortex.graph.adapters.CypherGraphAdapter") as factory:
+        assert await Cortex._auto_configure_graph(False) is None
+        factory.assert_not_called()
 
-        result = await Cortex._auto_configure_graph()
+@pytest.mark.asyncio
+async def test_connection_failure_is_honest():
+    with patch("cortex.graph.adapters.CypherGraphAdapter") as factory:
+        factory.return_value.connect = AsyncMock(side_effect=RuntimeError("connection failed"))
+        with pytest.raises(RuntimeError, match="connection failed"):
+            await Cortex._auto_configure_graph(True, CONNECTION)
 
-        assert result is None
+def bare_cortex(adapter=None):
+    cortex = object.__new__(Cortex)
+    cortex._owned_graph_adapter = adapter
+    cortex._cleanup_task = None
+    cortex._worker_task = None
+    cortex.sync_worker = MagicMock()
+    cortex._resilience = MagicMock(shutdown=AsyncMock())
+    cortex.client = MagicMock(close=AsyncMock())
+    return cortex
 
-    @pytest.mark.asyncio
-    async def test_no_auto_config_when_only_graph_sync_set(self):
-        """Gate 2 satisfied, Gate 1 NOT satisfied - should NOT auto-configure."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        # No URI set
+@pytest.mark.asyncio
+@pytest.mark.parametrize("first", ["close", "shutdown"])
+async def test_exactly_once_concurrent_disposal(first):
+    adapter = MagicMock(disconnect=AsyncMock())
+    cortex = bare_cortex(adapter)
+    await asyncio.gather(getattr(cortex, first)(), cortex.close(), cortex.shutdown())
+    await cortex.close()
+    adapter.disconnect.assert_awaited_once()
+    cortex.client.close.assert_awaited_once()
 
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
-            result = await Cortex._auto_configure_graph()
+@pytest.mark.asyncio
+async def test_cleanup_is_awaited_and_cancellation_does_not_cancel_owner():
+    gate = asyncio.Event()
+    adapter = MagicMock(disconnect=AsyncMock(side_effect=gate.wait))
+    cortex = bare_cortex(adapter)
+    waiter = asyncio.create_task(cortex.close())
+    await asyncio.sleep(0)
+    waiter.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await waiter
+    assert not cortex._cleanup_task.done()
+    gate.set()
+    await cortex.shutdown()
+    adapter.disconnect.assert_awaited_once()
 
-            assert result is None
-            assert len(w) == 1
-            assert "CORTEX_GRAPH_SYNC=true but no graph database URI found" in str(w[0].message)
-
-    @pytest.mark.asyncio
-    async def test_auto_config_neo4j_when_both_gates_satisfied(self):
-        """Both gates satisfied with Neo4j - should auto-configure Neo4j."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-        os.environ["NEO4J_USERNAME"] = "neo4j"
-        os.environ["NEO4J_PASSWORD"] = "testpassword"
-
-        # This test verifies the env var gating logic
-        # The actual adapter connection is tested in integration tests
-        # Since neo4j package may not be installed, we just verify no crash
-        # and that the function handles the situation appropriately
-        result = await Cortex._auto_configure_graph()
-
-        # Will return None if neo4j package not installed (ImportError handled)
-        # or return GraphConfig if neo4j is installed (connection may fail)
-        # Either way, no unhandled exception should be raised
-
-    @pytest.mark.asyncio
-    async def test_auto_config_memgraph_when_both_gates_satisfied(self):
-        """Both gates satisfied with Memgraph only - should auto-configure Memgraph."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["MEMGRAPH_URI"] = "bolt://localhost:7688"
-        os.environ["MEMGRAPH_USERNAME"] = "memgraph"
-        os.environ["MEMGRAPH_PASSWORD"] = "testpassword"
-
-        # Similar to neo4j test - just verify no exceptions
-        result = await Cortex._auto_configure_graph()
-        # Will return None or GraphConfig depending on neo4j package availability
-
-    @pytest.mark.asyncio
-    async def test_prefers_neo4j_over_memgraph(self):
-        """When both URIs present, Neo4j should take priority with warning."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-        os.environ["NEO4J_USERNAME"] = "neo4j"
-        os.environ["NEO4J_PASSWORD"] = "neo4jpass"
-        os.environ["MEMGRAPH_URI"] = "bolt://localhost:7688"
-        os.environ["MEMGRAPH_USERNAME"] = "memgraph"
-        os.environ["MEMGRAPH_PASSWORD"] = "memgraphpass"
-
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
-            result = await Cortex._auto_configure_graph()
-
-            # Should have warning about both URIs set
-            warning_messages = [str(warning.message) for warning in w]
-            assert any("Both NEO4J_URI and MEMGRAPH_URI set" in msg for msg in warning_messages)
-
-    @pytest.mark.asyncio
-    async def test_no_auto_config_when_graph_sync_false(self):
-        """CORTEX_GRAPH_SYNC='false' should NOT trigger auto-config."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "false"
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-
-        result = await Cortex._auto_configure_graph()
-
-        assert result is None
-
-    @pytest.mark.asyncio
-    async def test_no_auto_config_when_graph_sync_empty(self):
-        """CORTEX_GRAPH_SYNC='' should NOT trigger auto-config."""
-        os.environ["CORTEX_GRAPH_SYNC"] = ""
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-
-        result = await Cortex._auto_configure_graph()
-
-        assert result is None
-
-
-class TestDefaultCredentials:
-    """Test default credential handling."""
-
-    @pytest.fixture(autouse=True)
-    def clean_env(self):
-        """Clear relevant env vars before each test."""
-        env_vars_to_clear = [
-            "CORTEX_GRAPH_SYNC",
-            "NEO4J_URI",
-            "NEO4J_USERNAME",
-            "NEO4J_PASSWORD",
-            "MEMGRAPH_URI",
-            "MEMGRAPH_USERNAME",
-            "MEMGRAPH_PASSWORD",
-        ]
-        original_values = {}
-
-        for var in env_vars_to_clear:
-            original_values[var] = os.environ.get(var)
-            if var in os.environ:
-                del os.environ[var]
-
-        yield
-
-        # Restore original values
-        for var, value in original_values.items():
-            if value is not None:
-                os.environ[var] = value
-            elif var in os.environ:
-                del os.environ[var]
-
-    @pytest.mark.asyncio
-    async def test_default_neo4j_username(self):
-        """Uses default username 'neo4j' if NEO4J_USERNAME not set."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-        os.environ["NEO4J_PASSWORD"] = "password"
-        # NEO4J_USERNAME not set - should default to "neo4j"
-
-        # This test verifies the logic exists; actual connection tested in integration
-        # The implementation uses os.environ.get("NEO4J_USERNAME", "neo4j")
-        assert os.environ.get("NEO4J_USERNAME", "neo4j") == "neo4j"
-
-    @pytest.mark.asyncio
-    async def test_default_memgraph_username(self):
-        """Uses default username 'memgraph' if MEMGRAPH_USERNAME not set."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["MEMGRAPH_URI"] = "bolt://localhost:7688"
-        os.environ["MEMGRAPH_PASSWORD"] = "password"
-        # MEMGRAPH_USERNAME not set - should default to "memgraph"
-
-        assert os.environ.get("MEMGRAPH_USERNAME", "memgraph") == "memgraph"
-
-    @pytest.mark.asyncio
-    async def test_empty_password_default(self):
-        """Uses empty password if not set."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
-        # NEO4J_PASSWORD not set - should default to ""
-
-        assert os.environ.get("NEO4J_PASSWORD", "") == ""
-
-
-class TestCortexCreateFactory:
-    """Test Cortex.create() factory method."""
-
-    @pytest.fixture(autouse=True)
-    def clean_env(self):
-        """Clear relevant env vars before each test."""
-        env_vars_to_clear = [
-            "CORTEX_GRAPH_SYNC",
-            "NEO4J_URI",
-            "NEO4J_USERNAME",
-            "NEO4J_PASSWORD",
-            "MEMGRAPH_URI",
-            "MEMGRAPH_USERNAME",
-            "MEMGRAPH_PASSWORD",
-            "CORTEX_FACT_EXTRACTION",
-            "OPENAI_API_KEY",
-        ]
-        original_values = {}
-
-        for var in env_vars_to_clear:
-            original_values[var] = os.environ.get(var)
-            if var in os.environ:
-                del os.environ[var]
-
-        yield
-
-        # Restore original values
-        for var, value in original_values.items():
-            if value is not None:
-                os.environ[var] = value
-            elif var in os.environ:
-                del os.environ[var]
-
-    @pytest.mark.asyncio
-    async def test_create_without_graph_config(self):
-        """Cortex.create() works without graph config."""
-        config = CortexConfig(convex_url="http://127.0.0.1:3210")
-
-        cortex = await Cortex.create(config)
-
-        assert cortex is not None
-        assert cortex.graph_adapter is None
-
+@pytest.mark.asyncio
+async def test_cleanup_failure_is_redacted_and_all_resources_attempted():
+    adapter = MagicMock(disconnect=AsyncMock(side_effect=RuntimeError("private-password bolt://secret:password@host")))
+    cortex = bare_cortex(adapter)
+    cortex._resilience.shutdown.side_effect = RuntimeError("failed drain")
+    with pytest.raises(RuntimeError, match="Cortex resource cleanup failed") as error:
+        await cortex.shutdown()
+    assert "private-password" not in str(error.value)
+    with pytest.raises(RuntimeError, match="Cortex resource cleanup failed"):
         await cortex.close()
+    adapter.disconnect.assert_awaited_once()
+    cortex.client.close.assert_awaited_once()
 
-    @pytest.mark.asyncio
-    async def test_create_uses_explicit_graph_config(self):
-        """Explicit config.graph takes priority over auto-config."""
-        os.environ["CORTEX_GRAPH_SYNC"] = "true"
-        os.environ["NEO4J_URI"] = "bolt://localhost:7687"
+@pytest.mark.asyncio
+async def test_failed_construction_releases_owned_graph():
+    adapter = MagicMock(disconnect=AsyncMock())
+    with patch.object(Cortex, "_auto_configure_graph", AsyncMock(return_value=GraphConfig(adapter=adapter))), patch.object(Cortex, "__init__", side_effect=ValueError("construction sentinel")):
+        with pytest.raises(ValueError, match="construction sentinel"):
+            await Cortex.create(CortexConfig(convex_url="http://127.0.0.1:43210"), graph_enabled=True)
+    adapter.disconnect.assert_awaited_once()
 
-        mock_adapter = MagicMock()
-        explicit_config = CortexConfig(
-            convex_url="http://127.0.0.1:3210",
-            graph=GraphConfig(adapter=mock_adapter),
-        )
+@pytest.mark.asyncio
+async def test_manual_adapter_precedence_and_retained_usability():
+    adapter = MagicMock(disconnect=AsyncMock(), is_connected=AsyncMock(return_value=True))
+    with patch.object(Cortex, "_auto_configure_graph", AsyncMock()) as automatic, patch.object(Cortex, "__init__", return_value=None):
+        cortex = await Cortex.create(CortexConfig(convex_url="http://127.0.0.1:43210", graph=GraphConfig(adapter=adapter)), graph_enabled=False)
+    automatic.assert_not_awaited()
+    assert cortex._owned_graph_adapter is None
+    # Constructor normally supplies these state fields; retain the observed ownership.
+    cortex._cleanup_task = None
+    cortex._worker_task = None; cortex.sync_worker = None
+    cortex._resilience = MagicMock(); cortex.client = MagicMock(close=AsyncMock())
+    await cortex.close()
+    adapter.disconnect.assert_not_awaited()
+    assert await adapter.is_connected()
 
-        cortex = await Cortex.create(explicit_config)
+@pytest.mark.asyncio
+async def test_pending_worker_cannot_restart_after_disposal():
+    cortex = bare_cortex()
+    gate = asyncio.Event()
+    cortex._worker_task = asyncio.create_task(gate.wait())
+    await cortex.close()
+    assert cortex._worker_task.cancelled()
+    cortex.sync_worker.stop.assert_called_once()
 
-        assert cortex is not None
-        assert cortex.graph_adapter is mock_adapter
+@pytest.mark.asyncio
+async def test_optional_graph_dependency_error_is_actionable():
+    with patch("cortex.graph.adapters.CypherGraphAdapter", side_effect=ImportError("neo4j unavailable")):
+        with pytest.raises(ImportError, match=r"cortex-memory\[graph\]"):
+            await Cortex._auto_configure_graph(True, CONNECTION)
 
-        await cortex.close()
+@pytest.mark.asyncio
+async def test_worker_stop_failure_still_cancels_task_and_releases_resources():
+    adapter = MagicMock(disconnect=AsyncMock())
+    cortex = bare_cortex(adapter)
+    cortex.sync_worker.stop.side_effect = RuntimeError("failed stop")
+    cortex._worker_task = asyncio.create_task(asyncio.Event().wait())
+    with pytest.raises(RuntimeError, match="Cortex resource cleanup failed"):
+        await cortex.shutdown()
+    assert cortex._worker_task.cancelled()
+    adapter.disconnect.assert_awaited_once()
+    cortex.client.close.assert_awaited_once()

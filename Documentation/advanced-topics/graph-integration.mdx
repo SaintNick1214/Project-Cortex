@@ -44,64 +44,53 @@ Cortex's graph integration extends your memory system with relationship-aware ca
 - Pure vector similarity searches
 - Small fact databases (<100 facts)
 
-## Quick Start
+## Project-owned setup and runtime configuration
+
+SDK init/install and independently versioned template init call one shared optional graph setup service. Both Neo4j and Memgraph are supported; graph off does not require Docker.
+
+```bash
+cortex init agent --template basic --local --yes --graph neo4j --graph-mode local
+cortex install ./existing-project --no-deploy --yes --graph memgraph --graph-mode local
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph neo4j --graph-mode local
+cortex graph setup . --graph neo4j --graph-mode local --yes --dry-run
+cortex graph setup . --graph neo4j --graph-mode local --yes
+cortex graph status .
+cortex graph stop .
+cortex graph start .
+```
+
+Local setup uses pinned images, loopback ports, private credential/env files and validated project-owned Compose resources. Stop preserves volumes. No global container names, port/PID guessing or unrelated resource deletion is performed. `--graph-bolt-port` and `--graph-http-port` select SDK/setup local ports; template init uses `--bolt-port` and `--http-port`. Repeated setup preserves existing credentials and data. `--skip-graph` conflicts with an explicitly enabled graph. Dry-run performs no configuration, dependency, credential, container or metadata writes.
+
+An existing service uses `--graph-mode existing --graph-uri bolt://localhost:7687` with a credential-free URI and that provider's environment tuple, or `--graph-credentials` for the SDK/setup private 0600 credential file. It is probed without graph data writes; external start/stop is not owned by the CLI.
+
+```env
+CORTEX_GRAPH_SYNC=true
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your-private-password
+```
+
+For Memgraph use `MEMGRAPH_URI`, `MEMGRAPH_USERNAME`, `MEMGRAPH_PASSWORD` instead. The shared TypeScript SDK/provider resolver and its Python counterpart never mix the providers' credentials. Explicit off prevents driver work; explicit provider/connection selects one tuple; missing/ambiguous enabled configuration or failed connection reports an error.
 
 ```typescript
-import { Cortex } from "@cortexmemory/sdk";
-import {
-  CypherGraphAdapter,
-  initializeGraphSchema,
-} from "@cortexmemory/sdk/graph";
+import { Cortex, resolveGraphConnection } from "@cortexmemory/sdk";
 
-// 1. Setup graph adapter
-const graphAdapter = new CypherGraphAdapter();
-await graphAdapter.connect({
-  uri: "bolt://localhost:7687",
-  username: "neo4j",
-  password: process.env.NEO4J_PASSWORD!,
-});
-
-// 2. Initialize schema (one-time)
-await initializeGraphSchema(graphAdapter);
-
-// 3. Initialize Cortex with graph
-const cortex = new Cortex({
+const connection = resolveGraphConnection({ enabled: true });
+const cortex = await Cortex.create({
   convexUrl: process.env.CONVEX_URL!,
-  graph: {
-    adapter: graphAdapter,
-    autoSync: true, // Auto-start sync worker
-  },
+  graphEnabled: true,
 });
-
-// 4. Use Cortex normally - graph syncs automatically!
-await cortex.memory.remember({
-  memorySpaceId: "agent-1",
-  conversationId: "conv-123",
-  userMessage: "Alice works at Acme Corp with Bob",
-  agentResponse: "Got it!",
-  userId: "alice",
-  userName: "Alice",
-  extractFacts: async () => [
-    {
-      fact: "Alice works at Acme Corp",
-      factType: "relationship",
-      subject: "Alice",
-      predicate: "works_at",
-      object: "Acme Corp",
-      confidence: 95,
-    },
-    {
-      fact: "Bob works at Acme Corp",
-      factType: "relationship",
-      subject: "Bob",
-      predicate: "works_at",
-      object: "Acme Corp",
-      confidence: 95,
-    },
-  ],
-});
-// Memory, facts, and graph all updated!
+try {
+  // Use ordinary namespaced APIs with verified application scope.
+} finally {
+  cortex.close();
+  await cortex.shutdown();
+}
 ```
+
+`new Cortex()` remains manual configuration; `Cortex.create()` performs asynchronous environment-based graph connection. Manual adapters are borrowed; disconnect them in their owner's finally block. Provider auto setup uses `createCortexMemoryAsync` with `enableGraphMemory:true` and awaited factory `close()`. Native deployment credentials are server-only transport initialization, distinct from application session verification.
+
+Current managed synchronization uses a disjoint version 2 namespace with physical source identities, exact tenant/user/space scope, SourceState and queued jobs. Legacy/manual graph data is preserved rather than reinterpreted as managed ownership. Managed labels are `CortexV2Memory`, `CortexV2Fact`, `CortexV2Conversation` and the other `CortexV2*` kinds, keyed by captured physical source and exact scope. Unprefixed low-level Cypher examples below illustrate manual/legacy graphs; they do not select the current managed namespace or provide tenant authorization. Use the scoped SDK operations for managed data. Rebuild/erasure maintenance requires the matching fixed administrator transports (`createGraphRebuildTransport`, `createGraphErasureTransport`) and an explicit domain; an ordinary application AuthContext does not grant this capability. User/space cascade requires its separate erasure transport and matching graph participant. Readiness/reference migrations and unknown/partial receipts must be inspected before another mutation; a successful primary SDK deletion alone does not prove graph erasure.
 
 ## Graph-Powered Queries
 
@@ -325,7 +314,7 @@ async function buildEnrichedContext(memorySpaceId: string, query: string) {
 import {
   syncFactSupersession,
   getFactSupersessionChainFromGraph,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 
 // When a fact is superseded, sync to graph
 await syncFactSupersession(
@@ -507,7 +496,7 @@ import {
   GraphConnectionError,
   GraphAuthenticationError,
   GraphQueryError,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 
 try {
   await graphAdapter.connect(config);

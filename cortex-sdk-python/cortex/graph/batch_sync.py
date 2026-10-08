@@ -1,509 +1,166 @@
-"""
-Cortex SDK - Graph Batch Sync
+"""Complete rolling rebuild through two fixed administrative query services."""
 
-Functions for initial bulk sync of Cortex data to graph database.
-"""
-
+import math
 import time
 from dataclasses import asdict
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import Any, AsyncIterator, Dict, Optional
 
 from ..types import (
     BatchSyncError,
-    BatchSyncLimits,
     BatchSyncOptions,
     BatchSyncResult,
-    BatchSyncStats,
-    GraphAdapter,
-    ListContextsFilter,
-    ListMemorySpacesFilter,
-    ListUsersFilter,
+    GraphApplyResult,
+    GraphJob,
 )
-from . import (
-    sync_a2a_relationships,
-    sync_context_relationships,
-    sync_context_to_graph,
-    sync_conversation_relationships,
-    sync_conversation_to_graph,
-    sync_fact_relationships,
-    sync_fact_to_graph,
-    sync_memory_relationships,
-    sync_memory_space_to_graph,
-    sync_memory_to_graph,
-)
-
-if TYPE_CHECKING:
-    from ..client import Cortex
+from .erasure import apply_graph_rebuild_snapshot
+from .errors import GraphDatabaseError
+from .identity import GRAPH_TABLES, graph_job_from_wire, safe_integer
+from .schema.init_schema import assert_managed_graph_compatibility
 
 
-async def initial_graph_sync(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    options: Optional[BatchSyncOptions] = None,
-) -> BatchSyncResult:
-    """
-    Perform initial graph sync from Cortex.
+class GraphRebuildPartialError(GraphDatabaseError):
+    def __init__(self, result: BatchSyncResult, original_error: BaseException) -> None:
+        super().__init__("Graph rebuild stopped after confirmed work; counts are partial.", "GRAPH_REBUILD_PARTIAL")
+        self.result, self.original_error = result, original_error
 
-    Syncs all existing Cortex data to the graph database.
-    This should be run once after setting up a new graph database.
 
-    Args:
-        cortex: Cortex client instance
-        adapter: Graph database adapter
-        options: Batch sync options
+def _page(value: Any) -> Dict[str, Any]:
+    if not isinstance(value, dict) or value.get("schemaVersion") != 2 or not isinstance(value.get("page"), list) or type(value.get("isDone")) is not bool or not isinstance(value.get("continueCursor"), str) or value.get("pageStatus") not in (None, "SplitRequired", "SplitRecommended") or value.get("splitCursor") is not None and not isinstance(value["splitCursor"], str):
+        raise GraphDatabaseError("Invalid native graph rebuild page.", "GRAPH_REBUILD_INVALID_PAGE")
+    return value
 
-    Returns:
-        Batch sync result with statistics
 
-    Example:
-        >>> from cortex.graph.adapters import CypherGraphAdapter
-        >>>
-        >>> adapter = CypherGraphAdapter()
-        >>> await adapter.connect(GraphConnectionConfig(
-        ...     uri='bolt://localhost:7687',
-        ...     username='neo4j',
-        ...     password='password'
-        ... ))
-        >>>
-        >>> result = await initial_graph_sync(cortex, adapter, BatchSyncOptions(
-        ...     on_progress=lambda entity, current, total: print(f"Syncing {entity}: {current}/{total}")
-        ... ))
-        >>>
-        >>> print(f"Sync complete: {result.memories.synced} memories synced")
-    """
-    start_time = int(time.time() * 1000)
+async def graph_rebuild_pages(load: Any) -> AsyncIterator[Dict[str, Any]]:
+    ranges = [{"cursor": None, "endCursor": None}]
+    seen = set()
+    while ranges:
+        range_ = ranges.pop(0)
+        while True:
+            key = (range_["cursor"], range_["endCursor"])
+            if key in seen:
+                raise GraphDatabaseError("Native rebuild cursor did not advance.", "GRAPH_REBUILD_NONADVANCING_CURSOR")
+            seen.add(key)
+            page = _page(await load({**range_, "numItems": 8}))
+            if page.get("pageStatus") == "SplitRequired":
+                split = page.get("splitCursor")
+                if not split or split in key:
+                    raise GraphDatabaseError("Invalid native rebuild split.", "GRAPH_REBUILD_INVALID_PAGE")
+                ranges.insert(0, {"cursor": split, "endCursor": range_["endCursor"]})
+                range_ = {"cursor": range_["cursor"], "endCursor": split}
+                continue
+            if not page["isDone"] and (not page["continueCursor"] or page["continueCursor"] == range_["cursor"]):
+                raise GraphDatabaseError("Native rebuild cursor did not advance.", "GRAPH_REBUILD_NONADVANCING_CURSOR")
+            yield page
+            if page["isDone"] or range_["endCursor"] is not None and page["continueCursor"] == range_["endCursor"]:
+                break
+            range_ = {**range_, "cursor": page["continueCursor"]}
+
+
+def _sum(target: GraphApplyResult, value: GraphApplyResult) -> None:
+    for field in ("nodes_created", "nodes_deleted", "relationships_created", "relationships_deleted"):
+        setattr(target, field, getattr(target, field) + getattr(value, field))
+    target.absent_targets.extend(value.absent_targets)
+
+
+def _table_field(table: str) -> str:
+    return "memory_spaces" if table == "memorySpaces" else table
+
+
+async def initial_graph_sync(cortex: Any, adapter: Any, options: Optional[BatchSyncOptions] = None) -> BatchSyncResult:
+    """The Cortex argument is retained for compatibility; it supplies no authority."""
     opts = options or BatchSyncOptions()
-    limits = opts.limits or BatchSyncLimits()
-
-    result = BatchSyncResult()
-    sync_rels = opts.sync_relationships
-
+    if opts.transport is None:
+        raise GraphDatabaseError("Pass an explicit administrator rebuild transport.", "GRAPH_REBUILD_TRANSPORT_REQUIRED")
+    transport = opts.transport
+    start = time.monotonic()
+    result = BatchSyncResult(scope={**({"tenantId": opts.tenant_id} if opts.tenant_id is not None else {}), **({"memorySpaceId": opts.memory_space_id} if opts.memory_space_id is not None else {})})
+    current = None
     try:
-        # Phase 1: Sync Memory Spaces
-        print("📦 Phase 1: Syncing Memory Spaces...")
-        memory_spaces_result = await _sync_memory_spaces(
-            cortex, adapter, limits.memory_spaces, opts.on_progress
-        )
-        result.memory_spaces = memory_spaces_result["stats"]
-        result.errors.extend(memory_spaces_result["errors"])
+        if opts.deadline_ms is not None and (type(opts.deadline_ms) not in (int, float) or not math.isfinite(opts.deadline_ms) or opts.deadline_ms <= 0):
+            raise GraphDatabaseError("Invalid optional rebuild deadline.", "GRAPH_REBUILD_CANCELLED")
+        expires = math.inf if opts.deadline_ms is None else start + opts.deadline_ms / 1000
+        limits = opts.limits if isinstance(opts.limits, dict) else asdict(opts.limits) if opts.limits is not None else {}
+        limits = {key: value for key, value in limits.items() if value is not None}
+        if any(not safe_integer(value) or value < 0 for value in limits.values()):
+            raise GraphDatabaseError("Rebuild limits must be explicit nonnegative safe integers.", "GRAPH_REBUILD_LIMIT_INVALID")
 
-        # Phase 2: Sync Contexts
-        print("📦 Phase 2: Syncing Contexts...")
-        contexts_result = await _sync_contexts(
-            cortex, adapter, sync_rels, limits.contexts, opts.on_progress
-        )
-        result.contexts = contexts_result["stats"]
-        result.errors.extend(contexts_result["errors"])
+        def request() -> Dict[str, Any]:
+            if opts.cancel_event is not None and opts.cancel_event.is_set() or time.monotonic() >= expires:
+                raise GraphDatabaseError("Rebuild cancelled or deadline expired.", "GRAPH_REBUILD_CANCELLED")
+            return {"cancel_event": opts.cancel_event, "timeout_ms": min(30000, (expires - time.monotonic()) * 1000)}
 
-        # Phase 3: Sync Conversations
-        print("📦 Phase 3: Syncing Conversations...")
-        conversations_result = await _sync_conversations(
-            cortex, adapter, sync_rels, limits.conversations, opts.on_progress
-        )
-        result.conversations = conversations_result["stats"]
-        result.errors.extend(conversations_result["errors"])
+        request()
+        await assert_managed_graph_compatibility(adapter)
+        selected = []
+        for table, kind in GRAPH_TABLES.items():
+            field = _table_field(table)
+            if opts.memory_space_id is not None and table in ("immutable", "mutable"):
+                result.excluded_kinds.append(table)
+                continue
+            seen: Dict[str, str] = {}
+            maximum = limits.get(table, limits.get(field, math.inf))
+            result.confirmed_physical_ids[table] = []
+            stats = getattr(result, field)
+            if maximum == 0:
+                result.limited = True
+                continue
 
-        # Phase 4: Sync Memories
-        print("📦 Phase 4: Syncing Memories...")
-        memories_result = await _sync_memories(
-            cortex, adapter, sync_rels, limits.memories, opts.on_progress
-        )
-        result.memories = memories_result["stats"]
-        result.errors.extend(memories_result["errors"])
+            async def source(range_: Any, kind: str = kind) -> Any:
+                return await transport.source_page({"version": 2, "kind": kind, **result.scope, "paginationOpts": range_}, **request())
 
-        # Phase 5: Sync Facts
-        print("📦 Phase 5: Syncing Facts...")
-        facts_result = await _sync_facts(
-            cortex, adapter, sync_rels, limits.facts, opts.on_progress
-        )
-        result.facts = facts_result["stats"]
-        result.errors.extend(facts_result["errors"])
-
-        # Phase 6: Sync Users
-        print("📦 Phase 6: Syncing Users...")
-        users_result = await _sync_users(cortex, adapter, limits.users, opts.on_progress)
-        result.users = users_result["stats"]
-        result.errors.extend(users_result["errors"])
-
-        # Phase 7: Sync Agents
-        print("📦 Phase 7: Syncing Agents...")
-        agents_result = await _sync_agents(cortex, adapter, limits.agents, opts.on_progress)
-        result.agents = agents_result["stats"]
-        result.errors.extend(agents_result["errors"])
-
-        print("✅ Initial graph sync complete!")
-
-    except Exception as e:
-        print(f"❌ Batch sync failed: {e}")
-        raise
-
-    result.duration = int(time.time() * 1000) - start_time
-    return result
-
-
-# ============================================================================
-# Internal Sync Functions
-# ============================================================================
-
-
-async def _sync_memory_spaces(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync memory spaces to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # List all memory spaces (API max limit is 1000)
-        effective_limit = min(limit, 1000)
-        memory_spaces_result = await cortex.memory_spaces.list(
-            ListMemorySpacesFilter(limit=effective_limit)
-        )
-        memory_spaces = memory_spaces_result.spaces
-
-        for i, memory_space in enumerate(memory_spaces):
-            try:
-                # Convert dataclass to dict for sync function
-                memory_space_dict = asdict(memory_space)
-                await sync_memory_space_to_graph(memory_space_dict, adapter)
-                stats.synced += 1
-
-                if on_progress:
-                    on_progress("MemorySpaces", i + 1, len(memory_spaces))
-            except Exception as e:
-                stats.failed += 1
-                errors.append(BatchSyncError(
-                    entity_type="MemorySpace",
-                    entity_id=memory_space.memory_space_id,
-                    error=str(e),
-                ))
-
-    except Exception as e:
-        print(f"Failed to list memory spaces: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-async def _sync_contexts(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    sync_rels: bool,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync contexts to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # List all contexts (API max limit is 1000)
-        effective_limit = min(limit, 1000)
-        contexts = await cortex.contexts.list(ListContextsFilter(limit=effective_limit))
-
-        for i, context in enumerate(contexts):
-            try:
-                # Convert dataclass to dict for sync function
-                context_dict = asdict(context)
-                # Sync node
-                node_id = await sync_context_to_graph(context_dict, adapter)
-                stats.synced += 1
-
-                # Sync relationships
-                if sync_rels:
-                    await sync_context_relationships(context_dict, node_id, adapter)
-
-                if on_progress:
-                    on_progress("Contexts", i + 1, len(contexts))
-            except Exception as e:
-                stats.failed += 1
-                context_id = context.id if hasattr(context, 'id') else str(context)
-                errors.append(BatchSyncError(
-                    entity_type="Context",
-                    entity_id=context_id,
-                    error=str(e),
-                ))
-
-    except Exception as e:
-        print(f"Failed to list contexts: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-async def _sync_conversations(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    sync_rels: bool,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync conversations to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # List all conversations (API limit is 1000)
-        from ..types import ListConversationsFilter
-        conversations_result = await cortex.conversations.list(
-            ListConversationsFilter(limit=min(limit, 1000))
-        )
-        conversations = conversations_result.conversations
-
-        for i, conversation in enumerate(conversations):
-            try:
-                # Convert dataclass to dict for sync function
-                conversation_dict = asdict(conversation)
-                # Sync node
-                node_id = await sync_conversation_to_graph(conversation_dict, adapter)
-                stats.synced += 1
-
-                # Sync relationships
-                if sync_rels:
-                    await sync_conversation_relationships(conversation_dict, node_id, adapter)
-
-                if on_progress:
-                    on_progress("Conversations", i + 1, len(conversations))
-            except Exception as e:
-                stats.failed += 1
-                conv_id = conversation.conversation_id if hasattr(conversation, 'conversation_id') else str(conversation)
-                errors.append(BatchSyncError(
-                    entity_type="Conversation",
-                    entity_id=conv_id,
-                    error=str(e),
-                ))
-
-    except Exception as e:
-        print(f"Failed to list conversations: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-async def _sync_memories(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    sync_rels: bool,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync memories to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # Get all memory spaces to list memories
-        memory_spaces_result = await cortex.memory_spaces.list(
-            ListMemorySpacesFilter(limit=1000)
-        )
-        memory_spaces = memory_spaces_result.spaces
-
-        processed_count = 0
-        limit_per_space = limit // max(len(memory_spaces), 1)
-
-        for memory_space in memory_spaces:
-            if processed_count >= limit:
-                break
-
-            try:
-                # List memories for this memory space
-                memories = await cortex.vector.list(
-                    memory_space.memory_space_id,
-                    limit=limit_per_space,
-                )
-
-                for memory in memories:
-                    if processed_count >= limit:
+            async for page in graph_rebuild_pages(source):
+                for index, value in enumerate(page["page"]):
+                    snapshot = graph_job_from_wire(value)
+                    identity = snapshot.identity
+                    current = (field, identity.physical_source_id)
+                    if snapshot.table != table or identity.tenant_id != opts.tenant_id or opts.memory_space_id is not None and identity.memory_space_id != opts.memory_space_id:
+                        raise GraphDatabaseError("Native rebuild returned another scope or kind.", "GRAPH_SCOPE_MISMATCH")
+                    prior = seen.get(identity.physical_source_id)
+                    if prior is not None:
+                        if prior != snapshot.projection_digest:
+                            raise GraphDatabaseError("Repeated physical source changed during rebuild.", "GRAPH_REBUILD_SOURCE_CHANGED")
+                        continue
+                    request()
+                    _sum(result.graph, await apply_graph_rebuild_snapshot(adapter, snapshot, "nodes"))
+                    seen[identity.physical_source_id] = snapshot.projection_digest
+                    selected.append((field, snapshot))
+                    stats.synced += 1
+                    result.confirmed_physical_ids[table].append(identity.physical_source_id)
+                    if opts.on_progress:
+                        opts.on_progress(table, stats.synced, stats.synced)
+                    if stats.synced >= maximum:
+                        result.limited = result.limited or not page["isDone"] or index != len(page["page"]) - 1
                         break
+                if stats.synced >= maximum:
+                    result.limited = result.limited or not page["isDone"]
+                    break
+        if opts.sync_relationships:
+            for field, item in selected:
+                current = (field, item.identity.physical_source_id)
+                edge_snapshot: Optional[GraphJob] = None
 
-                    try:
-                        # Convert dataclass to dict for sync function
-                        memory_dict = asdict(memory)
-                        # Sync node
-                        node_id = await sync_memory_to_graph(memory_dict, adapter)
-                        stats.synced += 1
+                async def edge(range_: Any) -> Any:
+                    return await transport.edge_page({"version": 2, "kind": item.identity.kind, **result.scope, "physicalSourceId": item.identity.physical_source_id,
+                        "expectedSourceRevision": item.source_revision, "expectedOwnershipRevision": item.ownership_revision,
+                        "expectedReferenceGeneration": item.reference_generation, "paginationOpts": range_}, **request())
 
-                        # Sync relationships
-                        if sync_rels:
-                            await sync_memory_relationships(memory_dict, node_id, adapter)
-
-                            # Check for A2A relationships
-                            if memory.source_type == "a2a":
-                                await sync_a2a_relationships(memory_dict, adapter)
-
-                        processed_count += 1
-
-                        if on_progress:
-                            on_progress("Memories", processed_count, limit)
-                    except Exception as e:
-                        stats.failed += 1
-                        errors.append(BatchSyncError(
-                            entity_type="Memory",
-                            entity_id=memory.memory_id,
-                            error=str(e),
-                        ))
-
-            except Exception as e:
-                print(f"Failed to list memories for space {memory_space.memory_space_id}: {e}")
-
-    except Exception as e:
-        print(f"Failed to sync memories: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-async def _sync_facts(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    sync_rels: bool,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync facts to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # Get all memory spaces to list facts
-        memory_spaces_result = await cortex.memory_spaces.list(
-            ListMemorySpacesFilter(limit=1000)
-        )
-        memory_spaces = memory_spaces_result.spaces
-
-        processed_count = 0
-        limit_per_space = limit // max(len(memory_spaces), 1)
-
-        for memory_space in memory_spaces:
-            if processed_count >= limit:
-                break
-
-            try:
-                # List facts for this memory space
-                from ..types import ListFactsFilter
-                facts = await cortex.facts.list(ListFactsFilter(
-                    memory_space_id=memory_space.memory_space_id,
-                    limit=limit_per_space,
-                ))
-
-                for fact in facts:
-                    if processed_count >= limit:
-                        break
-
-                    try:
-                        # Convert dataclass to dict for sync function
-                        fact_dict = asdict(fact)
-                        # Sync node
-                        node_id = await sync_fact_to_graph(fact_dict, adapter)
-                        stats.synced += 1
-
-                        # Sync relationships
-                        if sync_rels:
-                            await sync_fact_relationships(fact_dict, node_id, adapter)
-
-                        processed_count += 1
-
-                        if on_progress:
-                            on_progress("Facts", processed_count, limit)
-                    except Exception as e:
-                        stats.failed += 1
-                        errors.append(BatchSyncError(
-                            entity_type="Fact",
-                            entity_id=fact.fact_id,
-                            error=str(e),
-                        ))
-
-            except Exception as e:
-                print(f"Failed to list facts for space {memory_space.memory_space_id}: {e}")
-
-    except Exception as e:
-        print(f"Failed to sync facts: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-async def _sync_users(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync users to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # List all users
-        users_result = await cortex.users.list(ListUsersFilter(limit=limit))
-        users = users_result.users if hasattr(users_result, 'users') else []
-
-        for i, user in enumerate(users):
-            try:
-                # Sync user node
-                from . import ensure_user_node
-                # Access user_id attribute from UserProfile dataclass
-                user_id = user.user_id if hasattr(user, 'user_id') else str(user)
-                await ensure_user_node(user_id, adapter)
-                stats.synced += 1
-
-                if on_progress:
-                    on_progress("Users", i + 1, len(users))
-            except Exception as e:
-                stats.failed += 1
-                user_id = user.user_id if hasattr(user, 'user_id') else str(user)
-                errors.append(BatchSyncError(
-                    entity_type="User",
-                    entity_id=user_id,
-                    error=str(e),
-                ))
-
-    except Exception as e:
-        print(f"Failed to sync users: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-async def _sync_agents(
-    cortex: "Cortex",
-    adapter: GraphAdapter,
-    limit: int,
-    on_progress: Optional[Callable[[str, int, int], None]],
-) -> Dict[str, Any]:
-    """Sync agents to graph."""
-    stats = BatchSyncStats()
-    errors: List[BatchSyncError] = []
-
-    try:
-        # List all agents - returns List[RegisteredAgent]
-        agents = await cortex.agents.list()
-        # Apply limit client-side
-        agents = agents[:limit] if len(agents) > limit else agents
-
-        for i, agent in enumerate(agents):
-            try:
-                # Sync agent node
-                from . import ensure_agent_node
-                # Access agent_id attribute from RegisteredAgent dataclass
-                agent_id = agent.agent_id if hasattr(agent, 'agent_id') else str(agent)
-                await ensure_agent_node(agent_id, adapter)
-                stats.synced += 1
-
-                if on_progress:
-                    on_progress("Agents", i + 1, len(agents))
-            except Exception as e:
-                stats.failed += 1
-                agent_id = agent.agent_id if hasattr(agent, 'agent_id') else str(agent)
-                errors.append(BatchSyncError(
-                    entity_type="Agent",
-                    entity_id=agent_id,
-                    error=str(e),
-                ))
-
-    except Exception as e:
-        print(f"Failed to sync agents: {e}")
-
-    return {"stats": stats, "errors": errors}
-
-
-__all__ = [
-    "initial_graph_sync",
-]
+                async for page in graph_rebuild_pages(edge):
+                    next_snapshot = graph_job_from_wire(page["snapshot"])
+                    if next_snapshot.identity.physical_source_id != item.identity.physical_source_id or next_snapshot.source_digest != item.source_digest or edge_snapshot is not None and edge_snapshot.projection_digest != next_snapshot.projection_digest:
+                        raise GraphDatabaseError("Physical source/edge snapshot changed during rolling rebuild.", "GRAPH_REBUILD_SOURCE_CHANGED")
+                    edge_snapshot = next_snapshot
+                if edge_snapshot is None:
+                    raise GraphDatabaseError("Native edge service returned no physical source snapshot.", "GRAPH_REBUILD_INVALID_PAGE")
+                request()
+                _sum(result.graph, await apply_graph_rebuild_snapshot(adapter, edge_snapshot, "edges"))
+        result.complete = not result.limited and opts.sync_relationships
+        return result
+    except Exception as error:
+        if current:
+            field, physical_id = current
+            getattr(result, field).failed += 1
+            result.errors.append(BatchSyncError(field, physical_id, getattr(error, "code", None) or "GRAPH_REBUILD_NATIVE_FAILED"))
+        raise GraphRebuildPartialError(result, error) from error
+    finally:
+        result.duration = int((time.monotonic() - start) * 1000)
+        transport.close()

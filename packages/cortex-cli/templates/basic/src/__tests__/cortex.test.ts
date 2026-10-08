@@ -4,6 +4,12 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
+const { create, client } = vi.hoisted(() => ({
+  create: vi.fn(),
+  client: { memory: {}, close: vi.fn(), shutdown: vi.fn().mockResolvedValue(undefined) },
+}));
+vi.mock("@cortexmemory/sdk", () => ({ Cortex: { create } }));
+
 // Mock the display module before importing cortex
 vi.mock("../display.js", () => ({
   printLayerUpdate: vi.fn(),
@@ -21,6 +27,9 @@ describe("cortex", () => {
 
   beforeEach(() => {
     vi.resetModules();
+    create.mockReset().mockResolvedValue(client);
+    client.shutdown.mockReset().mockResolvedValue(undefined);
+    client.close.mockClear();
     process.env = { ...originalEnv };
   });
 
@@ -75,77 +84,81 @@ describe("cortex", () => {
     });
   });
 
-  describe("getCortex", () => {
-    it("throws error when CONVEX_URL is not set", async () => {
+  describe("async client lifecycle", () => {
+    it("refuses cold getCortex and missing initialization URL", async () => {
       delete process.env.CONVEX_URL;
-
-      const { getCortex } = await import("../cortex.js");
-
-      expect(() => getCortex()).toThrow("CONVEX_URL environment variable is required");
+      const { getCortex, initCortex } = await import("../cortex.js");
+      expect(() => getCortex()).toThrow("not initialized");
+      await expect(initCortex()).rejects.toThrow("CONVEX_URL environment variable is required");
+      expect(create).not.toHaveBeenCalled();
     });
-
-    it("creates Cortex client when CONVEX_URL is set", async () => {
+    it("initializes once for concurrent calls and returns the initialized singleton", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
-
-      // Mock Cortex SDK
-      vi.doMock("@cortexmemory/sdk", () => ({
-        Cortex: vi.fn().mockImplementation(() => ({
-          memory: {},
-          close: vi.fn(),
-        })),
-      }));
-
-      const { getCortex } = await import("../cortex.js");
-      const cortex = getCortex();
-
-      expect(cortex).toBeDefined();
-      expect(cortex.memory).toBeDefined();
+      const { getCortex, initCortex } = await import("../cortex.js");
+      const [one, two] = await Promise.all([initCortex(), initCortex()]);
+      expect(one).toBe(client);
+      expect(two).toBe(one);
+      expect(getCortex()).toBe(one);
+      expect(create).toHaveBeenCalledTimes(1);
+      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud" });
     });
-
-    it("returns same instance on subsequent calls (singleton)", async () => {
+    it("allows a genuine retry after failed creation", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
-
-      vi.doMock("@cortexmemory/sdk", () => ({
-        Cortex: vi.fn().mockImplementation(() => ({
-          memory: {},
-          close: vi.fn(),
-        })),
-      }));
-
-      const { getCortex } = await import("../cortex.js");
-
-      const instance1 = getCortex();
-      const instance2 = getCortex();
-
-      expect(instance1).toBe(instance2);
+      create.mockRejectedValueOnce(new Error("offline fixture refused"));
+      const { initCortex, getCortex } = await import("../cortex.js");
+      await expect(initCortex()).rejects.toThrow("offline fixture refused");
+      expect(() => getCortex()).toThrow("not initialized");
+      expect(await initCortex()).toBe(client);
+      expect(create).toHaveBeenCalledTimes(2);
     });
-  });
-
-  describe("closeCortex", () => {
-    it("closes the client and resets singleton", async () => {
+    it("joins shutdown, closes once, and permits a fresh initialization", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
-
-      const closeMock = vi.fn();
-      vi.doMock("@cortexmemory/sdk", () => ({
-        Cortex: vi.fn().mockImplementation(() => ({
-          memory: {},
-          close: closeMock,
-        })),
-      }));
-
-      const { getCortex, closeCortex } = await import("../cortex.js");
-
-      getCortex(); // Create instance
-      closeCortex();
-
-      expect(closeMock).toHaveBeenCalled();
+      const { initCortex, getCortex, closeCortex } = await import("../cortex.js");
+      await initCortex();
+      let finish!: () => void;
+      client.shutdown.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve; }));
+      let done = false;
+      const closing = closeCortex().then(() => { done = true; });
+      const again = closeCortex();
+      await Promise.resolve();
+      expect(done).toBe(false);
+      expect(client.shutdown).toHaveBeenCalledTimes(1);
+      expect(client.close).not.toHaveBeenCalled();
+      expect(() => getCortex()).toThrow("not initialized");
+      finish();
+      await Promise.all([closing, again]);
+      expect(done).toBe(true);
+      expect(await initCortex()).toBe(client);
+      expect(create).toHaveBeenCalledTimes(2);
     });
-
-    it("does nothing when no client exists", async () => {
+    it("joins pending startup before shutdown and propagates cleanup failure", async () => {
+      process.env.CONVEX_URL = "https://test.convex.cloud";
+      let finish!: (value: typeof client) => void;
+      create.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+      const { initCortex, closeCortex } = await import("../cortex.js");
+      const starting = initCortex();
+      const closing = closeCortex();
+      expect(client.shutdown).not.toHaveBeenCalled();
+      finish(client);
+      await starting;
+      await closing;
+      expect(client.shutdown).toHaveBeenCalledTimes(1);
+      await initCortex();
+      client.shutdown.mockRejectedValueOnce(new Error("cleanup failed"));
+      await expect(closeCortex()).rejects.toThrow("cleanup failed");
+    });
+    it("does nothing when there is no owned client", async () => {
       const { closeCortex } = await import("../cortex.js");
-
-      // Should not throw
-      expect(() => closeCortex()).not.toThrow();
+      await closeCortex();
+      expect(client.shutdown).not.toHaveBeenCalled();
+    });
+    it("configures fact extraction through the SDK factory instead of unsupported RememberParams fields", async () => {
+      process.env.CONVEX_URL = "https://test.convex.cloud";
+      process.env.OPENAI_API_KEY = "synthetic-unit-key";
+      process.env.CORTEX_FACT_EXTRACTION = "true";
+      const { initCortex } = await import("../cortex.js");
+      await initCortex();
+      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud", llm: { provider: "openai", apiKey: "synthetic-unit-key", model: "gpt-4o-mini" } });
     });
   });
 
@@ -267,13 +280,13 @@ describe("cortex", () => {
 
       // Mock OpenAI
       vi.doMock("openai", () => ({
-        default: vi.fn().mockImplementation(() => ({
+        default: vi.fn().mockImplementation(function () { return ({
           embeddings: {
             create: vi.fn().mockResolvedValue({
               data: [{ embedding: new Array(1536).fill(0.1) }],
             }),
           },
-        })),
+        }); }),
       }));
 
       const { getEmbeddingProvider } = await import("../cortex.js");
@@ -305,24 +318,13 @@ describe("cortex", () => {
       expect(params.conversationId).toBe("conv-123");
     });
 
-    it("includes belief revision when fact extraction is enabled", async () => {
+    it("keeps client-level fact extraction out of RememberParams", async () => {
       delete process.env.OPENAI_API_KEY;
-      process.env.CORTEX_FACT_EXTRACTION = "true";
-
       const { buildRememberParams } = await import("../cortex.js");
-
-      const params = await buildRememberParams({
-        userMessage: "Hello",
-        agentResponse: "Hi",
-        conversationId: "conv-123",
-      });
-
-      expect(params.extractFacts).toBe(true);
-      expect(params.beliefRevision).toEqual({
-        enabled: true,
-        slotMatching: true,
-        llmResolution: false, // No OpenAI key
-      });
+      const params = await buildRememberParams({ userMessage: "Hello", agentResponse: "Hi", conversationId: "conv-123" });
+      expect(params.userMessage).toBe("Hello");
+      expect(params).not.toHaveProperty("extractFacts");
+      expect(params).not.toHaveProperty("beliefRevision");
     });
   });
 });

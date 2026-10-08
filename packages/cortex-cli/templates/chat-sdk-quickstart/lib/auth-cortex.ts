@@ -1,3 +1,4 @@
+import "server-only";
 /**
  * Auth.js to Cortex Auth Context Bridge
  *
@@ -5,11 +6,9 @@
  * and convert to Cortex SDK AuthContext format.
  */
 
+import { privateConfiguration } from "./private-backend";
 import { auth } from "@/app/(auth)/auth";
-import {
-  createAuthContext,
-  type AuthContext,
-} from "@cortexmemory/sdk";
+import { createAuthContext, type AuthContext } from "@cortexmemory/sdk";
 
 /**
  * Session type from Auth.js
@@ -50,6 +49,7 @@ export async function getCortexAuthContext(): Promise<AuthContext | null> {
 
   return createAuthContext({
     userId: session.user.id,
+    tenantId: privateConfiguration().tenantId,
     authProvider: "nextauth",
     authMethod: "session",
     authenticatedAt: Date.now(),
@@ -88,6 +88,7 @@ export function createCortexAuthContextFromSession(
 
   return createAuthContext({
     userId: session.user.id,
+    tenantId: privateConfiguration().tenantId,
     authProvider: "nextauth",
     authMethod: "session",
     authenticatedAt: Date.now(),

@@ -3,7 +3,6 @@
 import { useTheme } from "next-themes";
 import { parse, unparse } from "papaparse";
 import { memo, useEffect, useMemo, useState } from "react";
-// @ts-expect-error - react-data-grid@7 beta types are outdated; runtime uses named exports
 import { DataGrid, renderTextEditor } from "react-data-grid";
 import { cn } from "@/lib/utils";
 

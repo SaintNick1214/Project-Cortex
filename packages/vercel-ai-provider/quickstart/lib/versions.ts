@@ -25,10 +25,10 @@ export async function detectVersions(): Promise<VersionInfo> {
       cortexSdk = cortexModule.VERSION as string;
     } else {
       // Fallback: try to detect from package
-      cortexSdk = "0.24.0";
+      cortexSdk = "0.37.0";
     }
   } catch {
-    cortexSdk = "0.24.0";
+    cortexSdk = "0.37.0";
   }
 
   // Detect AI SDK version by checking for v6-specific exports

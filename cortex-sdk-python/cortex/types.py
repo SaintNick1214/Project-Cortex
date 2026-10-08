@@ -6,11 +6,35 @@ Complete type system for all Cortex operations, matching the TypeScript SDK.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Literal, Optional, Protocol
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Awaitable,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Protocol,
+    TypeVar,
+    Union,
+)
+
+from typing_extensions import Required, TypedDict
+
+if TYPE_CHECKING:
+    from .facts.history import HistoryReceipt
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Core Type Aliases
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@dataclass(kw_only=True)
+class GraphCaptureMetadata:
+    """Original captured jobs; these never authorize a primary mutation resend."""
+    graph_jobs: Optional[List["GraphJobReceipt"]] = None
+    graph_disposition: Optional[Literal["queued", "delivered"]] = None
+
 
 ConversationType = Literal["user-agent", "agent-agent"]
 
@@ -20,7 +44,7 @@ ConversationType = Literal["user-agent", "agent-agent"]
 # - 'public': Anyone with the conversationId can access
 ConversationVisibility = Literal["private", "space", "public"]
 
-SourceType = Literal["conversation", "system", "tool", "a2a"]
+SourceType = Literal["conversation", "system", "tool", "a2a", "fact-extraction"]
 ContentType = Literal["raw", "summarized"]
 FactType = Literal["preference", "identity", "knowledge", "relationship", "event", "observation", "custom"]
 ContextStatus = Literal["active", "completed", "cancelled", "blocked"]
@@ -238,7 +262,7 @@ class ConversationParticipants:
 
 
 @dataclass
-class Conversation:
+class Conversation(GraphCaptureMetadata):
     """ACID conversation record."""
     _id: str
     conversation_id: str
@@ -253,6 +277,7 @@ class Conversation:
     participant_id: Optional[str] = None
     visibility: Optional[ConversationVisibility] = None  # Defaults to 'private' if None
     collaborative_settings: Optional[CollaborativeSettings] = None  # Phase 4
+    tenant_id: Optional[str] = None  # Exact selected tenant; omission is tenantless.
 
 
 @dataclass
@@ -553,7 +578,7 @@ class GetHistoryResult:
 
 
 @dataclass
-class ConversationDeletionResult:
+class ConversationDeletionResult(GraphCaptureMetadata):
     """Result from deleting a conversation."""
     deleted: bool
     conversation_id: str
@@ -561,6 +586,8 @@ class ConversationDeletionResult:
     deleted_at: int
     restorable: bool  # Always false for conversations
 
+
+    partial: Optional[Dict[str, Any]] = None
 
 @dataclass
 class DeleteManyConversationsOptions:
@@ -579,6 +606,8 @@ class DeleteManyConversationsResult:
     would_delete: Optional[int] = None  # For dryRun mode
     dry_run: Optional[bool] = None
 
+
+    partial: Optional[Dict[str, Any]] = None
 
 @dataclass
 class SearchConversationsOptions:
@@ -620,7 +649,7 @@ class ImmutableVersion:
 
 
 @dataclass
-class ImmutableRecord:
+class ImmutableRecord(GraphCaptureMetadata):
     """Immutable store record with versioning."""
     _id: str
     type: str
@@ -702,7 +731,7 @@ class StoreImmutableOptions:
 
 
 @dataclass
-class PurgeImmutableResult:
+class PurgeImmutableResult(GraphCaptureMetadata):
     """Result from purging an immutable entry."""
     deleted: bool
     type: str
@@ -718,7 +747,7 @@ class PurgeManyFilter:
 
 
 @dataclass
-class PurgeManyImmutableResult:
+class PurgeManyImmutableResult(GraphCaptureMetadata):
     """Result from bulk purging immutable entries."""
     deleted: int
     total_versions_deleted: int
@@ -726,7 +755,7 @@ class PurgeManyImmutableResult:
 
 
 @dataclass
-class PurgeVersionsResult:
+class PurgeVersionsResult(GraphCaptureMetadata):
     """Result from purging old versions."""
     versions_purged: int
     versions_remaining: int
@@ -737,7 +766,7 @@ class PurgeVersionsResult:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @dataclass
-class MutableRecord:
+class MutableRecord(GraphCaptureMetadata):
     """Mutable store record (current value only)."""
     _id: str
     namespace: str
@@ -818,7 +847,7 @@ class MutableOperation:
 
 
 @dataclass
-class TransactionResult:
+class TransactionResult(GraphCaptureMetadata):
     """Result from a mutable transaction."""
     success: bool
     operations_executed: int
@@ -921,7 +950,7 @@ class ArtifactVersion:
 
 
 @dataclass
-class Artifact:
+class Artifact(GraphCaptureMetadata):
     """An artifact with versioned content and metadata.
 
     Artifacts are versioned content objects that support undo/redo operations,
@@ -1146,7 +1175,7 @@ class FinalizeStreamingParams:
 
 
 @dataclass
-class UndoRedoResult:
+class UndoRedoResult(GraphCaptureMetadata):
     """Result from an undo or redo operation.
 
     Attributes:
@@ -1317,6 +1346,7 @@ class DetachFileResult:
     version: int
     updated_at: int
     previous_file_ref: Optional[Dict[str, Any]] = None
+    binary_disposition: Optional[Literal["deleted", "protected", "missing"]] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1373,7 +1403,7 @@ class MemoryVersion:
 
 
 @dataclass
-class MemoryEntry:
+class MemoryEntry(GraphCaptureMetadata):
     """Vector memory entry."""
     _id: str
     memory_id: str
@@ -1409,6 +1439,8 @@ class MemoryEntry:
     enriched_content: Optional[str] = None  # Concatenated searchable content for embedding
     fact_category: Optional[str] = None  # Category for filtering (e.g., "addressing_preference")
 
+
+    vector_scope_key: Optional[str] = None  # Derived operational metadata, never ownership authority
 
 @dataclass
 class MemorySource:
@@ -1491,8 +1523,75 @@ class FactSourceRef:
     memory_id: Optional[str] = None
 
 
+class FactHistoryEndpoint(TypedDict, total=False):
+    state: Required[Literal["absent", "known", "unknown"]]
+    logicalFactId: str
+    factDocumentId: str
+    memorySpaceId: str
+    tenantId: str
+    scopeVersion: Literal[1]
+
+
+class FactHistoryPipeline(TypedDict, total=False):
+    slotMatching: bool
+    semanticMatching: bool
+    llmResolution: bool
+
+
+class FactHistorySourceRef(TypedDict, total=False):
+    conversationId: str
+    memoryId: str
+    messageIds: List[str]
+
+
+class FactHistoryEvidence(TypedDict, total=False):
+    kind: Required[Literal["live-source", "verified-migration"]]
+    reference: str
+    hash: str
+
+
+class FactHistoryPayload(TypedDict, total=False):
+    """The literal backend event payload, including known absence and physical identity."""
+    eventId: Required[str]
+    factId: Required[str]
+    memorySpaceId: Required[str]
+    action: Required[Literal["CREATE", "UPDATE", "SUPERSEDE", "DELETE"]]
+    timestamp: Required[int]
+    oldValue: str
+    newValue: str
+    reason: str
+    confidence: int
+    pipeline: FactHistoryPipeline
+    userId: str
+    participantId: str
+    conversationId: str
+    scopeVersion: Literal[1]
+    tenantId: str
+    sourceFactId: str
+    sourceMemorySpaceId: str
+    ownerKnown: bool
+    ownerUserId: str
+    sourceMemoryId: str
+    sourceConversationId: str
+    associationKnown: bool
+    associatedUserIds: List[str]
+    sourceRef: FactHistorySourceRef
+    evidence: FactHistoryEvidence
+    supersedesEndpoint: FactHistoryEndpoint
+    supersededByEndpoint: FactHistoryEndpoint
+    supersedes: str
+    supersededBy: str
+    operationId: str
+    phase: str
+    eventRole: str
+    operationKind: str
+    requestDigest: str
+    affectedFactIds: List[str]
+    resultFactId: str
+
+
 @dataclass
-class FactRecord:
+class FactRecord(GraphCaptureMetadata):
     """Structured fact record."""
     _id: str
     fact_id: str
@@ -1500,7 +1599,7 @@ class FactRecord:
     fact: str
     fact_type: FactType
     confidence: int  # 0-100
-    source_type: Literal["conversation", "system", "tool", "manual", "a2a"]
+    source_type: Literal["conversation", "system", "tool", "manual", "a2a", "fact-extraction"]
     tags: List[str]
     created_at: int
     updated_at: int
@@ -1516,6 +1615,11 @@ class FactRecord:
     valid_until: Optional[int] = None
     superseded_by: Optional[str] = None
     supersedes: Optional[str] = None
+    # Immutable physical endpoints and retained Task18 operation receipt.
+    tenant_id: Optional[str] = None
+    supersedes_endpoint: Optional[FactHistoryEndpoint] = None
+    superseded_by_endpoint: Optional[FactHistoryEndpoint] = None
+    history_receipt: Optional["HistoryReceipt"] = None
     # Enrichment fields (for bullet-proof retrieval)
     category: Optional[str] = None  # Specific sub-category (e.g., "addressing_preference")
     search_aliases: Optional[List[str]] = None  # Alternative search terms
@@ -1535,7 +1639,7 @@ class StoreFactParams:
     fact: str
     fact_type: FactType
     confidence: int
-    source_type: Literal["conversation", "system", "tool", "manual", "a2a"]
+    source_type: Literal["conversation", "system", "tool", "manual", "a2a", "fact-extraction"]
     participant_id: Optional[str] = None  # Hive Mode tracking
     user_id: Optional[str] = None  # GDPR compliance - links to user
     subject: Optional[str] = None
@@ -1554,6 +1658,10 @@ class StoreFactParams:
     relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples for graph
     # Vector embedding for semantic search (v0.30.0+)
     embedding: Optional[List[float]] = None
+
+
+    tenant_id: Optional[str] = None
+    operation_id: Optional[str] = None
 
 
 @dataclass
@@ -1579,6 +1687,7 @@ class ListFactsFilter:
     """Universal filters for listing facts (v0.9.1+)."""
     # Required
     memory_space_id: str
+    tenant_id: Optional[str] = None
 
     # Fact-specific filters
     fact_type: Optional[FactType] = None
@@ -1647,6 +1756,7 @@ class CountFactsFilter:
     valid_at: Optional[datetime] = None
     metadata: Optional[Dict[str, Any]] = None
 
+    tenant_id: Optional[str] = None
 
 @dataclass
 class SearchFactsOptions:
@@ -1678,6 +1788,8 @@ class SearchFactsOptions:
     sort_by: Optional[Literal["confidence", "createdAt", "updatedAt"]] = None  # Note: search doesn't return scores
     sort_order: Optional[Literal["asc", "desc"]] = None
 
+
+    tenant_id: Optional[str] = None
 
 @dataclass
 class SemanticSearchFactsOptions:
@@ -1810,6 +1922,8 @@ class DeleteMemoryResult:
     fact_ids: List[str] = field(default_factory=list)
 
 
+    partial: Optional[Dict[str, Any]] = None
+
 @dataclass
 class ArchiveResult:
     """Result from archive() operation."""
@@ -1819,6 +1933,9 @@ class ArchiveResult:
     facts_archived: int
     fact_ids: List[str] = field(default_factory=list)
 
+
+    partial: Optional[Dict[str, Any]] = None
+    intent: Optional[Dict[str, Any]] = None
 
 @dataclass
 class MemoryVersionInfo:
@@ -2223,7 +2340,7 @@ class ContextVersion:
 
 
 @dataclass
-class Context:
+class Context(GraphCaptureMetadata):
     """Context chain node for workflow coordination."""
     id: str
     memory_space_id: str
@@ -2263,7 +2380,7 @@ class ContextInput:
 
 
 @dataclass
-class ContextWithChain:
+class ContextWithChain(GraphCaptureMetadata):
     """Context with full chain information."""
     current: Context
     root: Context
@@ -2371,6 +2488,71 @@ class DeleteUserOptions:
     cascade: bool = False
     verify: bool = True
     dry_run: bool = False
+    erasure_transport: Optional["ErasureTransportProtocol"] = None
+    tenant_id: Optional[str] = None
+    cancel_event: Optional[Any] = None
+    graph_participant: Optional["ErasureGraphParticipant"] = None
+
+
+class ErasureTransportProtocol(Protocol):
+    """Distinct fixed administrative erasure capability; never user/export authority."""
+    @property
+    def kind(self) -> str: ...
+    @property
+    def protocol_version(self) -> int: ...
+    @property
+    def operations(self) -> tuple[str, ...]: ...
+    async def discover_page(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    async def check_record(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    async def check_binary_references(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    async def verify_page(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    async def get_receipt_page(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    async def erase_record(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    async def purge_expired_receipts_page(self, request: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]: ...
+    def close(self) -> None: ...
+
+
+@dataclass
+class ErasureGraphParticipant:
+    """Accepted managed adapter and explicit fixed copied-job disposal authority."""
+    adapter: Any
+    disposal_transport: Any
+
+
+@dataclass
+class ErasureReceipt:
+    """Rolling exclusive-primary outcomes, not universal legal-data certification."""
+    operation_id: str
+    domain: Dict[str, Any]
+    started_at: int
+    ended_at: int
+    planned: List[Dict[str, Any]]
+    remaining: List[str]
+    per_table: Dict[str, Dict[str, int]]
+    version: Literal[1] = 1
+    deletion_scope: Literal["exclusiveSupportedPrimary"] = "exclusiveSupportedPrimary"
+    executed: bool = False
+    complete: bool = False
+    full_user_data_erased: bool = False
+    outcomes: List[Dict[str, Any]] = field(default_factory=list)
+    blockers: List[Dict[str, str]] = field(default_factory=list)
+    total_deleted: int = 0
+    graph: Dict[str, Any] = field(default_factory=lambda: {"state": "notConfigured", "jobs": [], "nodesDeleted": 0})
+    verification: Dict[str, Any] = field(default_factory=lambda: {"state": "notExecuted", "complete": False})
+    exclusions: List[str] = field(default_factory=list)
+    errors: List[str] = field(default_factory=list)
+    unknown: List[str] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """The shared version1 wire fixture, preserving native outcome/job bodies."""
+        return {"version": self.version, "operationId": self.operation_id, "domain": self.domain,
+                "deletionScope": self.deletion_scope, "executed": self.executed,
+                "complete": self.complete, "fullUserDataErased": self.full_user_data_erased,
+                "startedAt": self.started_at, "endedAt": self.ended_at, "planned": self.planned,
+                "outcomes": self.outcomes, "remaining": self.remaining, "blockers": self.blockers,
+                "perTable": self.per_table, "totalDeleted": self.total_deleted, "graph": self.graph,
+                "verification": self.verification, "exclusions": self.exclusions,
+                "errors": self.errors, "unknown": self.unknown}
 
 
 @dataclass
@@ -2379,6 +2561,7 @@ class VerificationResult:
     complete: bool
     issues: List[str]
 
+    scope: Optional[Literal["user-profile"]] = None
 
 @dataclass
 class UserDeleteResult:
@@ -2395,6 +2578,7 @@ class UserDeleteResult:
     deleted_layers: List[str]
     verification: VerificationResult
     graph_nodes_deleted: Optional[int] = None
+    erasure: Optional["ErasureReceipt"] = None
 
 
 @dataclass
@@ -2603,7 +2787,7 @@ class MemorySpaceParticipant:
 
 
 @dataclass
-class MemorySpace:
+class MemorySpace(GraphCaptureMetadata):
     """Memory space registry entry."""
     _id: str
     memory_space_id: str
@@ -2644,6 +2828,7 @@ class MemorySpaceStats:
     avg_search_time: Optional[str] = None
     participants: Optional[List[Dict[str, Any]]] = None
 
+    storage_measurement: Optional[Literal["convex-json-utf8-estimate"]] = None
 
 @dataclass
 class ListMemorySpacesFilter:
@@ -2674,6 +2859,12 @@ class DeleteMemorySpaceOptions:
     reason: str
     confirm_id: Optional[str] = None
     sync_to_graph: Optional[bool] = None
+    dry_run: bool = False
+    verify: bool = True
+    erasure_transport: Optional["ErasureTransportProtocol"] = None
+    tenant_id: Optional[str] = None
+    cancel_event: Optional[Any] = None
+    graph_participant: Optional["ErasureGraphParticipant"] = None
 
 
 @dataclass
@@ -2693,6 +2884,8 @@ class DeleteMemorySpaceResult:
     cascade: DeleteMemorySpaceCascade
     reason: str
     deleted_at: int
+    total_bytes_kind: Optional[Literal["serializedDocumentEstimate"]] = None
+    erasure: Optional["ErasureReceipt"] = None
 
 
 @dataclass
@@ -2907,6 +3100,7 @@ class SearchOptions:
     boost_recent: bool = False
     boost_popular: bool = False
     enrich_conversation: bool = False
+    tenant_id: Optional[str] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2914,14 +3108,14 @@ class SearchOptions:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @dataclass
-class DeleteResult:
+class DeleteResult(GraphCaptureMetadata):
     """Generic deletion result."""
     deleted: bool
     deleted_at: int
 
 
 @dataclass
-class DeleteManyResult:
+class DeleteManyResult(GraphCaptureMetadata):
     """Result from bulk delete operation."""
     deleted: int
     memory_ids: List[str]
@@ -2929,8 +3123,10 @@ class DeleteManyResult:
     fact_ids: List[str]
 
 
+    partial: Optional[Dict[str, Any]] = None
+
 @dataclass
-class UpdateManyResult:
+class UpdateManyResult(GraphCaptureMetadata):
     """Result from bulk update operation."""
     updated: int
     memory_ids: List[str]
@@ -3075,19 +3271,19 @@ class GraphDeleteResult:
 
 @dataclass
 class BatchSyncLimits:
-    """Limits for batch sync operations per entity type."""
-    memory_spaces: int = 1000
-    contexts: int = 1000
-    conversations: int = 10000
-    memories: int = 10000
-    facts: int = 10000
-    users: int = 1000
-    agents: int = 1000
+    """Only explicitly supplied maxima limit an otherwise complete rebuild."""
+    memory_spaces: Optional[int] = None
+    contexts: Optional[int] = None
+    conversations: Optional[int] = None
+    memories: Optional[int] = None
+    facts: Optional[int] = None
+    immutable: Optional[int] = None
+    mutable: Optional[int] = None
+    artifacts: Optional[int] = None
 
 
 @dataclass
 class BatchSyncStats:
-    """Stats for a single entity type in batch sync."""
     synced: int = 0
     failed: int = 0
     skipped: int = 0
@@ -3095,7 +3291,6 @@ class BatchSyncStats:
 
 @dataclass
 class BatchSyncError:
-    """Error from batch sync operation."""
     entity_type: str
     entity_id: str
     error: str
@@ -3103,24 +3298,43 @@ class BatchSyncError:
 
 @dataclass
 class BatchSyncResult:
-    """Full result from batch graph sync."""
     memory_spaces: BatchSyncStats = field(default_factory=BatchSyncStats)
     contexts: BatchSyncStats = field(default_factory=BatchSyncStats)
     conversations: BatchSyncStats = field(default_factory=BatchSyncStats)
     memories: BatchSyncStats = field(default_factory=BatchSyncStats)
     facts: BatchSyncStats = field(default_factory=BatchSyncStats)
-    users: BatchSyncStats = field(default_factory=BatchSyncStats)
-    agents: BatchSyncStats = field(default_factory=BatchSyncStats)
+    immutable: BatchSyncStats = field(default_factory=BatchSyncStats)
+    mutable: BatchSyncStats = field(default_factory=BatchSyncStats)
+    artifacts: BatchSyncStats = field(default_factory=BatchSyncStats)
     errors: List[BatchSyncError] = field(default_factory=list)
     duration: int = 0
+    schema_version: Literal[2] = 2
+    scope: Dict[str, str] = field(default_factory=dict)
+    complete: bool = False
+    limited: bool = False
+    consistency: Literal["rolling"] = "rolling"
+    legacy_excluded: bool = True
+    excluded_kinds: List[str] = field(default_factory=list)
+    graph: "GraphApplyResult" = field(default_factory=lambda: GraphApplyResult())
+    confirmed_physical_ids: Dict[str, List[str]] = field(default_factory=dict)
+
+
+class GraphRebuildTransport(Protocol):
+    async def source_page(self, args: Dict[str, Any], *, cancel_event: Any = None, timeout_ms: float = 30000) -> Any: ...
+    async def edge_page(self, args: Dict[str, Any], *, cancel_event: Any = None, timeout_ms: float = 30000) -> Any: ...
+    def close(self) -> None: ...
 
 
 @dataclass
 class BatchSyncOptions:
-    """Options for batch graph sync."""
-    limits: Optional[BatchSyncLimits] = None
+    limits: Optional[Union[BatchSyncLimits, Dict[str, int]]] = None
     sync_relationships: bool = True
-    on_progress: Optional[Any] = None  # Callback function
+    on_progress: Optional[Any] = None
+    transport: Optional[GraphRebuildTransport] = None
+    tenant_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    cancel_event: Any = None
+    deadline_ms: Optional[float] = None
 
 
 @dataclass
@@ -3159,6 +3373,7 @@ class SyncHealthMetrics:
     avg_sync_time_ms: float
     queue_size: int
     last_sync_at: Optional[int] = None
+    last_error_code: Optional[str] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -3171,6 +3386,11 @@ class GraphSyncWorkerOptions:
     batch_size: int = 100
     retry_attempts: int = 3
     verbose: bool = False
+
+
+@dataclass
+class GraphSyncPolicy:
+    mode: Literal["inline", "background"] = "inline"
 
 
 @dataclass
@@ -3264,7 +3484,7 @@ class StoreFactOptions(GraphSyncOption):
 @dataclass
 class UpdateFactOptions(GraphSyncOption):
     """Options for updating a fact."""
-    pass
+    expected_source_fingerprint: Optional[str] = None
 
 
 @dataclass
@@ -3284,8 +3504,11 @@ class DeleteManyFactsParams:
     fact_type: Optional[FactType] = None  # Filter by fact type
 
 
+    tenant_id: Optional[str] = None
+    include_superseded: bool = True
+
 @dataclass
-class DeleteFactResult:
+class DeleteFactResult(GraphCaptureMetadata):
     """Result from deleting a fact."""
     deleted: bool
     fact_id: str
@@ -3297,6 +3520,8 @@ class DeleteManyFactsResult:
     deleted: int
     memory_space_id: str
 
+
+    partial: Optional[Dict[str, Any]] = None
 
 @dataclass
 class CreateContextOptions(GraphSyncOption):
@@ -3331,6 +3556,127 @@ class RememberOptions(GraphSyncOption):
     generate_embedding: Optional[Callable] = None
     auto_embed: Optional[bool] = None
     auto_summarize: Optional[bool] = None
+
+
+# Managed graph v2 captures physical source authority; logical IDs are display data.
+GraphKind = Literal["Memory", "Fact", "Context", "Conversation", "MemorySpace", "Immutable", "Mutable", "Artifact"]
+GraphTable = Literal["memories", "facts", "contexts", "conversations", "memorySpaces", "immutable", "mutable", "artifacts"]
+
+
+@dataclass(frozen=True)
+class GraphScope:
+    tenant_known: Literal[True]
+    tenant_id: Optional[str]
+    memory_space_id: Optional[str]
+
+
+@dataclass(frozen=True)
+class GraphIdentity(GraphScope):
+    schema_version: Literal[2]
+    kind: GraphKind
+    physical_source_id: str
+    key: str
+    tuple_json: str
+
+
+@dataclass
+class GraphReference:
+    role: str
+    slot: str
+    relationship: str
+    identity: GraphIdentity
+    source_revision: int
+    ownership_revision: int
+    reference_generation: str
+
+
+@dataclass
+class GraphDerivedNode:
+    kind: Literal["User", "Agent", "Participant", "Entity"]
+    logical_id: str
+    relationship: str
+    properties: Dict[str, Any]
+    entity_type: Optional[str] = None
+
+
+@dataclass
+class GraphProjection:
+    identity: GraphIdentity
+    source_revision: int
+    properties: Dict[str, Any]
+    references: List[GraphReference]
+    derived: List[GraphDerivedNode]
+    derived_relations: Optional[List[Dict[str, Any]]] = None
+
+
+@dataclass(frozen=True)
+class GraphJobReceipt:
+    id: str
+    generation: str
+    identity: GraphIdentity
+    source_revision: int
+
+
+@dataclass
+class GraphJob:
+    id: str  # Native wire name: _id.
+    schema_version: Literal[2]
+    table: GraphTable
+    identity: GraphIdentity
+    source_revision: int
+    operation: Literal["insert", "update", "delete"]
+    graph_invocation_id: str
+    request_digest: str
+    generation: str
+    attempt_token: str
+    reference_generation: str
+    ownership_revision: int
+    state: Literal["pending", "synced", "failed", "suppressed"]
+    failed_attempts: int
+    projection: GraphProjection
+    created_at: float
+    # Native official canonical bytes avoid cross-language float reserialization.
+    projection_json: str
+    projection_digest: str
+    request_json: str
+    source_digest: Optional[str] = None
+    suppressed_jobs: Optional[List[Dict[str, Any]]] = None
+    priority: Optional[Literal["high", "normal", "low"]] = None
+
+
+@dataclass
+class GraphApplyResult:
+    disposition: Literal["applied", "idempotent", "suppressed"] = "applied"
+    nodes_created: int = 0
+    nodes_deleted: int = 0
+    relationships_created: int = 0
+    relationships_deleted: int = 0
+    absent_targets: List[str] = field(default_factory=list)
+
+
+class ManagedGraphTransaction(Protocol):
+    async def query(self, cypher: str, params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
+        ...
+
+
+GraphTransactionResult = TypeVar("GraphTransactionResult")
+
+
+class ManagedGraphAdapter(Protocol):
+    async def managed_dialect(self) -> Literal["neo4j", "memgraph"]:
+        ...
+
+    async def managed_read(self, cypher: str, params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
+        ...
+
+    async def managed_transaction(self, operation: Callable[[ManagedGraphTransaction], Awaitable[GraphTransactionResult]]) -> GraphTransactionResult:
+        ...
+
+    async def is_connected(self) -> bool:
+        ...
+
+    async def query(self, query: Union[GraphQuery, str], params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
+        ...
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -4768,3 +5114,113 @@ class DeleteManyAttachmentsResult:
     deleted: int
     total: int
     errors: Optional[List[Dict[str, str]]] = None
+    binary_dispositions: Optional[List[Dict[str, str]]] = None
+
+
+# Version1 complete user export. Encoded record values use the official Convex codec.
+class UserExportNode(TypedDict):
+    domain: str
+    id: str
+
+
+class UserExportIdentity(TypedDict):
+    userId: str
+    scope: Dict[str, str]
+
+
+class UserExportReferrer(TypedDict, total=False):
+    node: Required[UserExportNode]
+    version: int
+
+
+class UserExportBlob(TypedDict):
+    storageId: str
+    size: int
+    mimeType: str
+    sha256: str
+    referrers: List[UserExportReferrer]
+
+
+class UserExportHeaderEvent(TypedDict):
+    type: Literal["header"]
+    format: Literal["cortex-user-export"]
+    version: Literal[1]
+    identity: UserExportIdentity
+    consistency: Literal["rolling-read"]
+    startedAt: int
+
+
+class UserExportRecordEvent(TypedDict):
+    type: Literal["record"]
+    node: UserExportNode
+    fingerprint: str
+    disposition: Literal["record", "membershipProjection"]
+    record: Any
+
+
+class UserExportBlobEvent(UserExportBlob):
+    type: Literal["blob"]
+
+
+class UserExportChunkEvent(TypedDict):
+    type: Literal["chunk"]
+    storageId: str
+    sequence: int
+    byteLength: int
+    data: str
+
+
+class UserExportBlobEndEvent(TypedDict):
+    type: Literal["blobEnd"]
+    storageId: str
+    chunks: int
+    size: int
+    sha256: str
+
+
+class UserExportTableManifest(TypedDict):
+    domain: str
+    records: int
+    projections: int
+    pages: int
+
+
+class UserExportPageObservation(TypedDict):
+    domain: str
+    selection: Literal["rootProjections", "closureProjections"]
+    observationTime: float
+
+
+class UserExportManifestEvent(TypedDict):
+    type: Literal["manifest"]
+    version: Literal[1]
+    complete: Literal[True]
+    identity: UserExportIdentity
+    consistency: Literal["rolling-read"]
+    startedAt: int
+    endedAt: int
+    tableManifest: List[UserExportTableManifest]
+    pageCount: int
+    pageObservations: List[UserExportPageObservation]
+    projectionCount: int
+    blobs: List[UserExportBlob]
+    diagnostics: List[Dict[str, Any]]
+    exclusions: List[str]
+
+
+UserExportEvent = (
+    UserExportHeaderEvent
+    | UserExportRecordEvent
+    | UserExportBlobEvent
+    | UserExportChunkEvent
+    | UserExportBlobEndEvent
+    | UserExportManifestEvent
+)
+
+@dataclass
+class DomainReadOptions:
+    """Finite per-operation deadline/cancellation. Cancellation is not rollback."""
+    tenant_id: Optional[str] = None
+    deadline_ms: Optional[float] = None
+    cancel_event: Optional[Any] = None
+    sync_to_graph: Optional[bool] = None

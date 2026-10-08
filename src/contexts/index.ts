@@ -1,3 +1,6 @@
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
 /**
  * Cortex SDK - Context Chains API
  *
@@ -8,11 +11,9 @@ import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type { GraphAdapter } from "../graph/types";
 import {
-  syncContextToGraph,
-  syncContextRelationships,
-  deleteContextFromGraph,
 } from "../graph";
 import type {
+  GraphCaptureMetadata,
   CreateContextOptions,
   UpdateContextOptions,
   DeleteContextOptions,
@@ -44,7 +45,7 @@ export interface ContextVersion {
   updatedBy?: string;
 }
 
-export interface Context {
+export interface Context extends GraphCaptureMetadata {
   _id: string;
   contextId: string;
   memorySpaceId: string;
@@ -152,7 +153,16 @@ export class ContextsAPI {
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
     private authContext?: AuthContext,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   /**
    * Execute an operation through the resilience layer (if available)
@@ -233,9 +243,9 @@ export class ContextsAPI {
 
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.contexts.create, {
+          this.mutateGraph(api.contexts.create, {
             purpose: params.purpose,
             memorySpaceId: params.memorySpaceId,
             tenantId: this.authContext?.tenantId, // Multi-tenancy
@@ -245,29 +255,15 @@ export class ContextsAPI {
             conversationRef: params.conversationRef,
             data: params.data,
             status: params.status,
-          }),
-        "contexts:create",
+          }, _options?.syncToGraph),
+        "contexts:create", _options?.syncToGraph,
       );
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Sync to graph if requested
-    if (this.graphAdapter) {
-      try {
-        const nodeId = await syncContextToGraph(
-          result as Context,
-          this.graphAdapter,
-        );
-        await syncContextRelationships(
-          result as Context,
-          nodeId,
-          this.graphAdapter,
-        );
-      } catch (error) {
-        console.warn("Failed to sync context to graph:", error);
-      }
-    }
+    
 
     return result as Context;
   }
@@ -343,37 +339,21 @@ export class ContextsAPI {
       validateTimestamp(updates.completedAt, "completedAt");
     }
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.contexts.update, {
+        this.mutateGraph(api.contexts.update, {
           contextId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy
           status: updates.status,
           description: updates.description,
           data: updates.data,
           completedAt: updates.completedAt,
-        }),
-      "contexts:update",
+        }, _options?.syncToGraph),
+      "contexts:update", _options?.syncToGraph,
     );
 
     // Update in graph if requested
-    if (this.graphAdapter) {
-      try {
-        const nodes = await this.graphAdapter.findNodes(
-          "Context",
-          { contextId },
-          1,
-        );
-        if (nodes.length > 0) {
-          await this.graphAdapter.updateNode(
-            nodes[0].id!,
-            updates as unknown as Record<string, unknown>,
-          );
-        }
-      } catch (error) {
-        console.warn("Failed to update context in graph:", error);
-      }
-    }
+    
 
     return result as Context;
   }
@@ -411,28 +391,22 @@ export class ContextsAPI {
 
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.contexts.deleteContext, {
+          this.mutateGraph(api.contexts.deleteContext, {
             contextId,
             tenantId: this.authContext?.tenantId, // Multi-tenancy
             cascadeChildren: options?.cascadeChildren,
             orphanChildren: options?.orphanChildren,
-          }),
-        "contexts:delete",
+          }, options?.syncToGraph),
+        "contexts:delete", options?.syncToGraph,
       );
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Delete from graph with orphan cleanup
-    if (this.graphAdapter) {
-      try {
-        await deleteContextFromGraph(contextId, this.graphAdapter, true);
-      } catch (error) {
-        console.warn("Failed to delete context from graph:", error);
-      }
-    }
+    
 
     return result as {
       deleted: boolean;
@@ -656,9 +630,9 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateRequiredString(participantId, "participantId");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.contexts.addParticipant, {
+        this.mutateGraph(api.contexts.addParticipant, {
           contextId,
           participantId,
         }),
@@ -687,9 +661,9 @@ export class ContextsAPI {
     validateRequiredString(targetMemorySpaceId, "targetMemorySpaceId");
     validateRequiredString(scope, "scope");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.contexts.grantAccess, {
+        this.mutateGraph(api.contexts.grantAccess, {
           contextId,
           targetMemorySpaceId,
           scope,
@@ -756,9 +730,9 @@ export class ContextsAPI {
       validateDataObject(updates.data);
     }
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.contexts.updateMany, {
+        this.mutateGraph(api.contexts.updateMany, {
           memorySpaceId: filters.memorySpaceId,
           userId: filters.userId,
           status: filters.status,
@@ -811,9 +785,9 @@ export class ContextsAPI {
       validateTimestamp(filters.completedBefore, "completedBefore");
     }
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.contexts.deleteMany, {
+        this.mutateGraph(api.contexts.deleteMany, {
           memorySpaceId: filters.memorySpaceId,
           userId: filters.userId,
           status: filters.status,
@@ -911,9 +885,9 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateRequiredString(participantId, "participantId");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.contexts.removeParticipant, {
+        this.mutateGraph(api.contexts.removeParticipant, {
           contextId,
           participantId,
         }),

@@ -13,9 +13,10 @@ const baseConfig = {
   moduleNameMapper: {
     // Handle path aliases from tsconfig
     "^@/(.*)$": "<rootDir>/$1",
+    "^server-only$": "<rootDir>/tests/helpers/server-only.ts",
   },
   transform: {
-    "^.+\\.tsx?$": [
+    "^.+\\.[tj]sx?$": [
       "ts-jest",
       {
         tsconfig: "tsconfig.json",

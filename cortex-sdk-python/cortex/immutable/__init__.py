@@ -5,10 +5,15 @@ Layer 1b: Shared immutable data with automatic versioning
 """
 
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AuthContext,
     CountImmutableFilter,
@@ -74,6 +79,7 @@ class ImmutableAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Immutable API.
@@ -86,13 +92,19 @@ class ImmutableAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -131,7 +143,7 @@ class ImmutableAPI:
         validate_immutable_entry(entry)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "immutable:store",
                 filter_none_values({
                     "type": entry.type,
@@ -141,33 +153,14 @@ class ImmutableAPI:
                     "tenantId": self._tenant_id,  # Inject tenantId from auth context
                     "metadata": entry.metadata,
                 }),
-            ),
+            graph_option(options), ),
             "immutable:store",
-        )
+        graph_write=graph_option(options), )
 
         record = ImmutableRecord(**convert_convex_response(result))
 
         # Sync to graph automatically when graph_adapter is configured
         # (facts are handled specially in FactsAPI)
-        if self.graph_adapter and entry.type != "fact":
-            try:
-                await self.graph_adapter.create_node({
-                    "label": "Immutable",
-                    "properties": {
-                        "immutableType": entry.type,
-                        "immutableId": entry.id,
-                        "_id": record._id,
-                        "type": record.type,
-                        "id": record.id,
-                        "version": record.version,
-                        "createdAt": record.created_at,
-                        "updatedAt": record.updated_at,
-                    },
-                })
-            except Exception as error:
-                # Log but don't fail the operation
-                import warnings
-                warnings.warn(f"Failed to sync immutable to graph: {error}")
 
         return record
 
@@ -524,17 +517,17 @@ class ImmutableAPI:
 
         try:
             result = await self._execute_with_resilience(
-                lambda: self.client.mutation(
+                lambda: self._mutate_graph(
                     "immutable:purge", filter_none_values({"type": type, "id": id})
-                ),
+                , None),
                 "immutable:purge",
-            )
+            graph_write=None, )
             return PurgeImmutableResult(
                 deleted=result.get("deleted", False),
                 type=result.get("type", type),
                 id=result.get("id", id),
                 versions_deleted=result.get("versionsDeleted", 0),
-            )
+            graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
         except Exception as e:
             # Entry may not exist (already deleted by parallel run or global purge)
             # Check for IMMUTABLE_ENTRY_NOT_FOUND error code in the exception
@@ -570,21 +563,21 @@ class ImmutableAPI:
         validate_purge_many_filter(filter.type, filter.user_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "immutable:purgeMany",
                 filter_none_values({
                     "type": filter.type,
                     "userId": filter.user_id,
                 }),
-            ),
+            None, ),
             "immutable:purgeMany",
-        )
+        graph_write=None, )
 
         return PurgeManyImmutableResult(
             deleted=result.get("deleted", 0),
             total_versions_deleted=result.get("totalVersionsDeleted", 0),
             entries=result.get("entries", []),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def purge_versions(
         self,
@@ -616,17 +609,17 @@ class ImmutableAPI:
         validate_keep_latest(keep_latest, "keep_latest")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "immutable:purgeVersions",
                 filter_none_values({"type": type, "id": id, "keepLatest": keep_latest}),
-            ),
+            None, ),
             "immutable:purgeVersions",
-        )
+        graph_write=None, )
 
         return PurgeVersionsResult(
             versions_purged=result.get("versionsPurged", 0),
             versions_remaining=result.get("versionsRemaining", 0),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
 
 # Export validation error for specific error handling

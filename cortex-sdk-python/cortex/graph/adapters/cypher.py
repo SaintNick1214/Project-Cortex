@@ -7,7 +7,17 @@ using the Bolt protocol and Cypher query language.
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Union
+from typing import (
+    Any,
+    Awaitable,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    TypeVar,
+    Union,
+)
 
 from ...types import (
     GraphConnectionConfig,
@@ -17,6 +27,7 @@ from ...types import (
     GraphPath,
     GraphQuery,
     GraphQueryResult,
+    ManagedGraphTransaction,
     QueryStatistics,
     ShortestPathConfig,
     TraversalConfig,
@@ -31,7 +42,7 @@ from ..errors import (
 
 # Try to import neo4j driver - it's optional
 try:
-    from neo4j import AsyncDriver, AsyncGraphDatabase, AsyncSession
+    from neo4j import AsyncDriver, AsyncGraphDatabase, AsyncSession, Query
     from neo4j.graph import Node, Path, Relationship  # noqa: F401 - Used for type hints
     HAS_NEO4J = True
 except ImportError:
@@ -39,6 +50,9 @@ except ImportError:
     AsyncGraphDatabase = None  # type: ignore[assignment, misc]
     AsyncDriver = None  # type: ignore[assignment, misc]
     AsyncSession = None  # type: ignore[assignment, misc]
+
+
+T = TypeVar("T")
 
 
 class CypherGraphAdapter:
@@ -76,6 +90,111 @@ class CypherGraphAdapter:
         self._driver: Optional[AsyncDriver] = None
         self._config: Optional[GraphConnectionConfig] = None
         self._use_element_id: bool = True  # Neo4j uses elementId(), Memgraph uses id()
+        self._managed_engine: Optional[Literal["neo4j", "memgraph"]] = None
+
+    async def managed_dialect(self) -> Literal["neo4j", "memgraph"]:
+        """Engine identity is separate from accepted elementId/id capability."""
+        if self._driver is None:
+            raise GraphConnectionError("Not connected to graph database")
+        if self._managed_engine is None:
+            response = await self.managed_read("CALL dbms.components() YIELD name RETURN name")
+            if any(row.get("name") == "Memgraph" for row in response.records):
+                self._managed_engine = "memgraph"
+            elif any(row.get("name") == "Neo4j Kernel" for row in response.records):
+                self._managed_engine = "neo4j"
+            else:
+                raise GraphDatabaseError("Managed schema supports verified Neo4j/Memgraph dialects only.", "GRAPH_SCHEMA_MIGRATION_REQUIRED")
+        return self._managed_engine
+
+    @staticmethod
+    def _managed_plain(value: Any) -> Any:
+        if type(value) is int and abs(value) > 9007199254740991:
+            raise GraphDatabaseError("Managed numeric result exceeds safe integer range.", "GRAPH_RESULT_BUDGET")
+        if isinstance(value, dict):
+            return {key: CypherGraphAdapter._managed_plain(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [CypherGraphAdapter._managed_plain(item) for item in value]
+        return value
+
+    @staticmethod
+    async def _managed_result(response: Any, statistics: bool = False) -> GraphQueryResult:
+        records: List[Dict[str, Any]] = []
+        encoded_bytes = 2
+        async for record in response:
+            value = CypherGraphAdapter._managed_plain(dict(record))
+            encoded_bytes += len(json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8")) + (1 if records else 0)
+            if len(records) >= 257 or encoded_bytes > 1024 * 1024:
+                raise GraphDatabaseError("Managed result exceeds finite budget.", "GRAPH_RESULT_BUDGET")
+            records.append(value)
+        summary = await response.consume()
+        stats = None
+        if statistics:
+            counters = summary.counters
+            stats = QueryStatistics(nodes_created=counters.nodes_created, nodes_deleted=counters.nodes_deleted,
+                                    relationships_created=counters.relationships_created, relationships_deleted=counters.relationships_deleted)
+        return GraphQueryResult(records=records, count=len(records), stats=stats)
+
+    @staticmethod
+    def _managed_error(message: str, code: str, native_code: Any) -> GraphDatabaseError:
+        error = GraphDatabaseError(message, code)
+        error.native_code = native_code if isinstance(native_code, str) and re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", native_code) else None
+        return error
+
+    async def managed_read(self, cypher: str, params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
+        session = self._get_session()
+        try:
+            response = await session.run(Query(cypher, timeout=10), params or {})
+            return await self._managed_result(response)
+        except GraphDatabaseError:
+            raise
+        except Exception as error:
+            raise self._managed_error("Managed graph read failed; check connection and schema.", "GRAPH_READ_FAILED", getattr(error, "code", None)) from None
+        finally:
+            await session.close()
+
+    async def managed_transaction(self, operation: Callable[[ManagedGraphTransaction], Awaitable[T]]) -> T:
+        """Explicit graph-only transaction; never retries a primary/native writer."""
+        session = self._get_session()
+        tx = None
+        committed = committing = False
+        requests = parameter_bytes = 0
+        try:
+            tx = await session.begin_transaction(timeout=10)
+
+            async def query(cypher: str, params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
+                nonlocal requests, parameter_bytes
+                requests += 1
+                parameter_bytes += len(json.dumps(params or {}, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
+                if requests > 256 or parameter_bytes > 1024 * 1024:
+                    raise GraphDatabaseError("Managed transaction request budget exceeded.", "GRAPH_TRANSACTION_BUDGET")
+                return await self._managed_result(await tx.run(cypher, params or {}), statistics=True)
+
+            class Transaction:
+                async def query(self, cypher: str, params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
+                    return await query(cypher, params)
+
+            result = await operation(Transaction())
+            committing = True
+            await tx.commit()
+            committed = True
+            return result
+        except GraphDatabaseError:
+            raise
+        except Exception as error:
+            code = getattr(error, "code", "") or ""
+            message = str(error)
+            conflict = (code.startswith("Neo.TransientError.")
+                        or code.startswith("Memgraph.TransientError.") and re.search(r"serialization|conflict", message, re.I)
+                        or code == "Memgraph.ClientError.MemgraphError.MemgraphError" and re.search(r"Unable to commit due to unique constraint violation on :CortexV2SourceState\(key\)", message))
+            result_code = "GRAPH_TRANSACTION_CONFLICT" if conflict else "GRAPH_TRANSACTION_OUTCOME_UNKNOWN" if committing else "GRAPH_TRANSACTION_FAILED"
+            raise self._managed_error("Managed transaction conflicted; retry only its graph job." if conflict else "Managed transaction failed; no primary mutation may be resent.", result_code, code) from None
+        finally:
+            if tx is not None and not committed:
+                try:
+                    await tx.rollback()
+                except Exception:
+                    pass  # A failed commit may already have closed the native transaction.
+            await session.close()
 
     # ============================================================================
     # Connection Management
@@ -92,6 +211,8 @@ class CypherGraphAdapter:
             GraphConnectionError: If connection fails
             GraphAuthenticationError: If authentication fails
         """
+        if self._driver is not None:
+            raise GraphConnectionError("Graph adapter is already connected. Disconnect before reconnecting.")
         try:
             self._config = config
 
@@ -113,15 +234,14 @@ class CypherGraphAdapter:
             # Detect database type (Neo4j uses elementId(), Memgraph uses id())
             await self._detect_database_type()
 
-        except Exception as e:
-            # Parse error for better diagnostics
-            error_message = str(e)
-            error_code = getattr(e, "code", None)
-
-            # Throw specific error type based on diagnosis
-            raise self._create_connection_error(
-                error_message, error_code, config, e if isinstance(e, Exception) else None
-            )
+        except BaseException as error:
+            try:
+                await self.disconnect()
+            except Exception:
+                pass
+            if not isinstance(error, Exception):
+                raise
+            raise self._create_connection_error(str(error), getattr(error, "code", None)) from None
 
     async def _verify_authentication(self) -> None:
         """
@@ -141,79 +261,28 @@ class CypherGraphAdapter:
             await session.close()
 
     def _create_connection_error(
-        self,
-        error_message: str,
-        error_code: Optional[str],
-        config: GraphConnectionConfig,
-        cause: Optional[Exception] = None,
+        self, error_message: str, error_code: Optional[str],
     ) -> GraphConnectionError:
-        """Create appropriate error type based on connection failure diagnosis."""
-        lower_message = error_message.lower()
-
-        # Authentication failure detection - throw specific GraphAuthenticationError
-        if (
-            "authentication" in lower_message
-            or "unauthorized" in lower_message
-            or "credentials" in lower_message
-            or (error_code and "Security.Unauthorized" in str(error_code))
-            or (error_code and "Security.Authentication" in str(error_code))
-        ):
-            message = (
-                f"Graph database authentication failed at {config.uri}. "
-                f"Check that NEO4J_USERNAME and NEO4J_PASSWORD environment variables are correct. "
-                f"Current username: '{config.username}'. "
-                f"Original error: {error_message}"
+        """Keep raw driver errors, credentials and credential-bearing URIs private."""
+        message = error_message.lower()
+        if ("authentication" in message or "unauthorized" in message or "credentials" in message
+                or (error_code and "Security." in str(error_code))):
+            return GraphAuthenticationError(
+                "Graph database authentication failed. Check the selected provider's username and password.",
+                "[redacted]", "[redacted]",
             )
-            return GraphAuthenticationError(message, config.uri, config.username, cause)
-
-        # Connection refused detection
-        if (
-            "econnrefused" in lower_message
-            or "connection refused" in lower_message
-            or "failed to connect" in lower_message
-        ):
-            message = (
-                f"Cannot connect to graph database at {config.uri}. "
-                f"Ensure Neo4j/Memgraph is running and accessible. "
-                f"For Docker: 'docker compose -f docker-compose.graph.yml up -d'. "
-                f"Original error: {error_message}"
-            )
-            return GraphConnectionError(message, cause)
-
-        # DNS/host resolution failure
-        if (
-            "enotfound" in lower_message
-            or "getaddrinfo" in lower_message
-            or "name or service not known" in lower_message
-        ):
-            message = (
-                f"Cannot resolve graph database host in {config.uri}. "
-                f"Check that NEO4J_URI is correctly configured. "
-                f"Original error: {error_message}"
-            )
-            return GraphConnectionError(message, cause)
-
-        # Timeout detection
-        if "timeout" in lower_message or "timed out" in lower_message:
-            message = (
-                f"Connection to graph database timed out at {config.uri}. "
-                f"The database may be starting up, overloaded, or unreachable. "
-                f"Original error: {error_message}"
-            )
-            return GraphConnectionError(message, cause)
-
-        # Generic fallback with context
         return GraphConnectionError(
-            f"Failed to connect to graph database at {config.uri}: {error_message}",
-            cause,
+            "Graph database connection failed. Check the selected provider's URI, readiness and network access."
         )
 
     async def disconnect(self) -> None:
-        """Disconnect from the graph database."""
-        if self._driver:
-            await self._driver.close()
-            self._driver = None
-            self._config = None
+        """Release a driver once, even if its close fails."""
+        driver = self._driver
+        self._driver = None
+        self._config = None
+        self._managed_engine = None
+        if driver is not None:
+            await driver.close()
 
     async def is_connected(self) -> bool:
         """
@@ -235,21 +304,24 @@ class CypherGraphAdapter:
         """Detect database type and set appropriate ID function."""
         session = self._get_session()
         try:
-            # Try elementId() - if it fails, we're on Memgraph
-            result = await session.run(
-                "CREATE (n:__TEST__) RETURN elementId(n) as id"
-            )
+            result = await session.run("RETURN elementId(null) AS id")
             await result.consume()
-            await session.run("MATCH (n:__TEST__) DELETE n")
             self._use_element_id = True
-        except Exception:
-            # elementId() not supported, use id() instead (Memgraph)
+        except Exception as error:
+            import re
+            message = str(error)
+            code = getattr(error, "code", None)
+            unsupported = (
+                re.search("elementid", message, re.I)
+                and re.search(r"unknown function|unrecognized function|not (?:yet )?(?:supported|implemented|defined)|does not exist|doesn't exist", message, re.I)
+                and (not code or re.search("SyntaxError|SemanticError|Unsupported", str(code), re.I)
+                     or code == "Memgraph.ClientError.MemgraphError.MemgraphError")
+            )
+            if not unsupported:
+                raise
+            result = await session.run("RETURN id(null) AS id")
+            await result.consume()
             self._use_element_id = False
-            # Clean up if test node was created
-            try:
-                await session.run("MATCH (n:__TEST__) DELETE n")
-            except Exception:
-                pass
         finally:
             await session.close()
 

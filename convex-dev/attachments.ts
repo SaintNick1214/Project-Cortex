@@ -1,3 +1,4 @@
+import { captureInsertedRow, markDeletedRow, requireLifecycleReady, deleteUnreferencedStorage } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Attachments API
  *
@@ -158,7 +159,7 @@ export const attach = mutation({
       });
     }
 
-    const _id = await ctx.db.insert("attachments", {
+    const _id = await captureInsertedRow(ctx, "attachments", {
       attachmentId,
       memorySpaceId: args.memorySpaceId,
       tenantId: args.tenantId,
@@ -207,23 +208,15 @@ export const remove = mutation({
       });
     }
 
-    // Delete file from storage
-    try {
-      await ctx.storage.delete(attachment.storageId);
-    } catch (error) {
-      // Log but don't fail - file might already be deleted or inaccessible
-      console.warn(
-        `Failed to delete file ${attachment.storageId}:`,
-        error,
-      );
-    }
-
-    // Delete the attachment record
-    await ctx.db.delete(attachment._id);
+    await requireLifecycleReady(ctx);
+    await markDeletedRow(ctx, attachment._id);
+    const binaryDisposition = await deleteUnreferencedStorage(ctx, attachment.storageId);
 
     return {
       deleted: true,
       attachmentId: args.attachmentId,
+      binaryDisposition,
+      fileDeleted: binaryDisposition === "deleted",
       deletedAt: Date.now(),
     };
   },
@@ -241,49 +234,23 @@ export const removeMany = mutation({
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireLifecycleReady(ctx);
     let deleted = 0;
     const errors: Array<{ attachmentId: string; error: string }> = [];
-
+    const binaryDispositions: Array<{ attachmentId: string; disposition: "deleted" | "protected" | "missing" }> = [];
     for (const attachmentId of args.attachmentIds) {
-      try {
-        const attachment = await lookupAttachment(
-          ctx,
-          attachmentId,
-          args.tenantId,
-        );
-
-        if (!attachment) {
-          errors.push({
-            attachmentId,
-            error: "ATTACHMENT_NOT_FOUND",
-          });
-          continue;
-        }
-
-        // Delete file from storage
-        try {
-          await ctx.storage.delete(attachment.storageId);
-        } catch (error) {
-          console.warn(
-            `Failed to delete file ${attachment.storageId}:`,
-            error,
-          );
-        }
-
-        // Delete the attachment record
-        await ctx.db.delete(attachment._id);
-        deleted++;
-      } catch (error) {
-        errors.push({
-          attachmentId,
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      }
+      const attachment = await lookupAttachment(ctx, attachmentId, args.tenantId);
+      if (!attachment) { errors.push({attachmentId, error: "ATTACHMENT_NOT_FOUND"}); continue; }
+      await markDeletedRow(ctx, attachment._id);
+      const disposition = await deleteUnreferencedStorage(ctx, attachment.storageId);
+      binaryDispositions.push({attachmentId, disposition});
+      deleted++;
     }
 
     return {
       deleted,
       total: args.attachmentIds.length,
+      binaryDispositions,
       errors: errors.length > 0 ? errors : undefined,
     };
   },
@@ -347,26 +314,20 @@ export const purgeAll = mutation({
       attachments = await ctx.db.query("attachments").collect();
     }
 
+    await requireLifecycleReady(ctx);
     let filesDeleted = 0;
+    const binaryDispositions: Array<{ attachmentId: string; disposition: "deleted" | "protected" | "missing" }> = [];
     for (const attachment of attachments) {
-      // Delete file from storage
-      try {
-        await ctx.storage.delete(attachment.storageId);
-        filesDeleted++;
-      } catch (error) {
-        console.warn(
-          `Failed to delete file ${attachment.storageId}:`,
-          error,
-        );
-      }
-
-      // Delete the attachment record
-      await ctx.db.delete(attachment._id);
+      await markDeletedRow(ctx, attachment._id);
+      const disposition = await deleteUnreferencedStorage(ctx, attachment.storageId);
+      if (disposition === "deleted") filesDeleted++;
+      binaryDispositions.push({attachmentId: attachment.attachmentId, disposition});
     }
 
     return {
       deleted: attachments.length,
       filesDeleted,
+      binaryDispositions,
     };
   },
 });

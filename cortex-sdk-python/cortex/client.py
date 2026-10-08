@@ -20,6 +20,7 @@ from .contexts import ContextsAPI
 from .conversations import ConversationsAPI
 from .facts import FactsAPI
 from .governance import GovernanceAPI
+from .graph.config import GraphConnectionOptions, resolve_graph_connection
 from .immutable import ImmutableAPI
 from .memory import MemoryAPI
 from .memory_spaces import MemorySpacesAPI
@@ -34,7 +35,7 @@ from .types import (
     AuthContext,
     CortexConfig,
     GraphConfig,
-    GraphConnectionConfig,
+    GraphSyncPolicy,
     LLMConfig,
 )
 from .users import UsersAPI
@@ -107,93 +108,26 @@ class Cortex:
         return None
 
     @staticmethod
-    async def _auto_configure_graph() -> Optional[GraphConfig]:
-        """
-        Auto-configure graph database from environment variables.
-
-        Uses a two-gate approach:
-        - Gate 1: Connection credentials must be present (NEO4J_URI or MEMGRAPH_URI + auth)
-        - Gate 2: CORTEX_GRAPH_SYNC must be explicitly set to 'true'
-
-        This prevents accidental graph connections - users must explicitly opt-in.
-
-        Returns:
-            GraphConfig if both gates pass, None otherwise
-        """
-        graph_sync_enabled = os.environ.get("CORTEX_GRAPH_SYNC") == "true"
-
-        if not graph_sync_enabled:
+    async def _auto_configure_graph(
+        enabled: Optional[bool] = None,
+        connection: Optional[GraphConnectionOptions] = None,
+    ) -> Optional[GraphConfig]:
+        selected = resolve_graph_connection(enabled, connection)
+        if selected is None:
             return None
-
-        # Check providers in priority order
-        neo4j_uri = os.environ.get("NEO4J_URI")
-        memgraph_uri = os.environ.get("MEMGRAPH_URI")
-
-        if neo4j_uri and memgraph_uri:
-            warnings.warn(
-                "[Cortex] Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j.",
-                UserWarning,
-                stacklevel=2,
-            )
-
-        if neo4j_uri:
-            try:
-                from .graph.adapters import CypherGraphAdapter
-
-                adapter = CypherGraphAdapter()
-                await adapter.connect(GraphConnectionConfig(
-                    uri=neo4j_uri,
-                    username=os.environ.get("NEO4J_USERNAME", "neo4j"),
-                    password=os.environ.get("NEO4J_PASSWORD", ""),
-                ))
-                return GraphConfig(adapter=adapter, auto_sync=True)
-            except ImportError:
-                warnings.warn(
-                    "[Cortex] neo4j package not installed. "
-                    "Run: pip install cortex-memory[graph]",
-                    UserWarning,
-                    stacklevel=2,
-                )
-                return None
-            except Exception as e:
-                print(f"[Cortex] Failed to connect to Neo4j: {e}")
-                return None
-
-        if memgraph_uri:
-            try:
-                from .graph.adapters import CypherGraphAdapter
-
-                adapter = CypherGraphAdapter()
-                await adapter.connect(GraphConnectionConfig(
-                    uri=memgraph_uri,
-                    username=os.environ.get("MEMGRAPH_USERNAME", "memgraph"),
-                    password=os.environ.get("MEMGRAPH_PASSWORD", ""),
-                ))
-                return GraphConfig(adapter=adapter, auto_sync=True)
-            except ImportError:
-                warnings.warn(
-                    "[Cortex] neo4j package not installed. "
-                    "Run: pip install cortex-memory[graph]",
-                    UserWarning,
-                    stacklevel=2,
-                )
-                return None
-            except Exception as e:
-                print(f"[Cortex] Failed to connect to Memgraph: {e}")
-                return None
-
-        # CORTEX_GRAPH_SYNC=true but no URI found - warn user
-        warnings.warn(
-            "[Cortex] CORTEX_GRAPH_SYNC=true but no graph database URI found. "
-            "Set NEO4J_URI or MEMGRAPH_URI to enable graph sync.",
-            UserWarning,
-            stacklevel=2,
-        )
-
-        return None
+        try:
+            from .graph.adapters import CypherGraphAdapter
+            adapter = CypherGraphAdapter()
+        except ImportError:
+            raise ImportError("Graph is enabled. Install cortex-memory[graph].") from None
+        await adapter.connect(selected)
+        return GraphConfig(adapter=adapter, auto_sync=True)
 
     @classmethod
-    async def create(cls, config: CortexConfig) -> "Cortex":
+    async def create(
+        cls, config: CortexConfig, *, graph_enabled: Optional[bool] = None,
+        graph_connection: Optional[GraphConnectionOptions] = None,
+    ) -> "Cortex":
         """
         Create a Cortex instance with automatic configuration.
 
@@ -214,22 +148,25 @@ class Cortex:
         Returns:
             Fully configured Cortex instance
         """
-        # Auto-configure graph if not explicitly provided
-        graph_config = config.graph or await cls._auto_configure_graph()
-
-        # Auto-configure LLM if not explicitly provided
-        llm_config = config.llm or cls._auto_configure_llm()
-
-        # Create a new config with the potentially auto-configured components
-        updated_config = CortexConfig(
-            convex_url=config.convex_url,
-            graph=graph_config,
-            resilience=config.resilience,
-            llm=llm_config,
-            auth=config.auth,  # Pass through auth context
-        )
-
-        return cls(updated_config)
+        # Manual adapters retain caller ownership and take priority over env/off.
+        graph_config = config.graph or await cls._auto_configure_graph(graph_enabled, graph_connection)
+        owned_adapter = graph_config.adapter if graph_config and config.graph is None else None
+        try:
+            updated_config = CortexConfig(
+                convex_url=config.convex_url, graph=graph_config,
+                resilience=config.resilience, llm=config.llm or cls._auto_configure_llm(),
+                auth=config.auth,
+            )
+            cortex = cls(updated_config)
+            cortex._owned_graph_adapter = owned_adapter
+            return cortex
+        except BaseException:
+            if owned_adapter is not None:
+                try:
+                    await owned_adapter.disconnect()
+                except Exception:
+                    pass  # Preserve construction error without credential diagnostics.
+            raise
 
     def __init__(self, config: CortexConfig) -> None:
         """
@@ -239,12 +176,16 @@ class Cortex:
             config: Cortex configuration including Convex URL and optional graph config
 
         """
+        self._owned_graph_adapter: Any = None
+        self._cleanup_task: Optional[asyncio.Task[None]] = None
+        self._worker_task: Optional[asyncio.Task[None]] = None
         # Initialize Convex client (sync) and wrap for async API
         sync_client = ConvexClient(config.convex_url)
         self.client = AsyncConvexClient(sync_client)
 
         # Get graph adapter if configured
         self.graph_adapter = config.graph.adapter if config.graph else None
+        graph_policy = GraphSyncPolicy("background" if config.graph and config.graph.auto_sync else "inline")
 
         # Store auth context for auto-injection into all operations
         self._auth_context: Optional[AuthContext] = config.auth
@@ -261,26 +202,26 @@ class Cortex:
 
         # Initialize API modules with graph adapter, resilience layer, and auth context
         self.conversations = ConversationsAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.immutable = ImmutableAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.mutable = MutableAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.vector = VectorAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.facts = FactsAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.memory = MemoryAPI(
             self.client, self.graph_adapter, self._resilience, self._llm_config,
-            self._auth_context
+            self._auth_context, graph_sync_policy=graph_policy
         )
         self.contexts = ContextsAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.users = UsersAPI(
             self.client, self.graph_adapter, self._resilience, self._auth_context
@@ -289,7 +230,7 @@ class Cortex:
             self.client, self.graph_adapter, self._resilience, self._auth_context
         )
         self.memory_spaces = MemorySpacesAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.governance = GovernanceAPI(
             self.client, self.graph_adapter, self._resilience, self._auth_context
@@ -301,7 +242,7 @@ class Cortex:
             self.client, self.graph_adapter, self._resilience, self._auth_context
         )
         self.artifacts = ArtifactsAPI(
-            self.client, self.graph_adapter, self._resilience, self._auth_context
+            self.client, self.graph_adapter, self._resilience, self._auth_context, graph_sync_policy=graph_policy
         )
         self.attachments = AttachmentsAPI(
             self.client, self._resilience, self._auth_context
@@ -316,18 +257,19 @@ class Cortex:
                 self.client,
                 self.graph_adapter,
                 config.graph.sync_worker_options,
+                tenant_id=self._auth_context.tenant_id if self._auth_context else None,
             )
 
             # Start worker asynchronously (don't block constructor)
-            asyncio.create_task(self._start_worker())
+            self._worker_task = asyncio.create_task(self._start_worker())
 
     async def _start_worker(self) -> None:
         """Start the graph sync worker (internal)."""
         if self.sync_worker:
             try:
                 await self.sync_worker.start()
-            except Exception as error:
-                print(f"Failed to start graph sync worker: {error}")
+            except Exception:
+                print("[Cortex] Graph sync worker initialization failed.")
 
     def get_graph_sync_worker(self) -> Any:
         """
@@ -379,45 +321,46 @@ class Cortex:
         """
         return self._resilience.is_healthy()
 
+    async def _dispose(self, graceful: bool, timeout_s: float = 30.0) -> None:
+        async def cleanup() -> None:
+            failed = False
+            try:
+                if self._worker_task is not None:
+                    await asyncio.gather(self._worker_task, return_exceptions=True)
+                if self.sync_worker:
+                    await self.sync_worker.stop()
+            except Exception:
+                failed = True
+            try:
+                if graceful:
+                    await self._resilience.shutdown(timeout_s)
+                else:
+                    self._resilience.stop_queue_processor()
+            except Exception:
+                failed = True
+            adapter = self._owned_graph_adapter
+            self._owned_graph_adapter = None
+            operations = [self.client.close()]
+            if adapter is not None:
+                operations.append(adapter.disconnect())
+            results = await asyncio.gather(*operations, return_exceptions=True)
+            if failed or any(isinstance(result, BaseException) for result in results):
+                raise RuntimeError("Cortex resource cleanup failed.") from None
+
+        if self._cleanup_task is None:
+            self._cleanup_task = asyncio.create_task(cleanup())
+            # Observe failure even when a waiter is cancelled; later disposal still
+            # awaits this task and receives its credential-free failure.
+            self._cleanup_task.add_done_callback(
+                lambda task: task.exception() if not task.cancelled() else None
+            )
+        # One cancelled waiter must not cancel shared owned-resource disposal.
+        await asyncio.shield(self._cleanup_task)
+
     async def close(self) -> None:
-        """
-        Close the connection to Convex and stop all workers.
-
-        Example:
-            >>> cortex = Cortex(config)
-            >>> # ... use cortex ...
-            >>> await cortex.close()
-        """
-        # Stop graph sync worker
-        if self.sync_worker:
-            self.sync_worker.stop()
-
-        # Stop resilience layer queue processor
-        self._resilience.stop_queue_processor()
-
-        await self.client.close()
+        """Await exactly-once owned cleanup; manual graph adapters remain caller-owned."""
+        await self._dispose(False)
 
     async def shutdown(self, timeout_s: float = 30.0) -> None:
-        """
-        Gracefully shutdown the SDK.
-
-        Waits for pending operations to complete before closing.
-
-        Args:
-            timeout_s: Maximum time to wait (default: 30 seconds)
-
-        Example:
-            >>> cortex = Cortex(config)
-            >>> # ... use cortex ...
-            >>> await cortex.shutdown()
-        """
-        # Stop graph sync worker
-        if self.sync_worker:
-            self.sync_worker.stop()
-
-        # Gracefully shutdown resilience layer
-        await self._resilience.shutdown(timeout_s)
-
-        # Close Convex client
-        await self.client.close()
-
+        """Drain pending work and await owned graph/Convex cleanup, idempotently."""
+        await self._dispose(True, timeout_s)

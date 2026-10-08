@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
+import { getPublicShare } from "@/lib/db/queries";
 import { BotIcon, GlobeIcon, UserIcon } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
@@ -10,14 +10,13 @@ export default async function SharePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const chat = await getChatById({ id });
-
-  // Access check: only show public conversations
-  if (!chat || chat.visibility !== "public") {
-    notFound();
-  }
-
-  const messages = await getMessagesByChatId({ id });
+  const chat = await getPublicShare(id);
+  if (!chat) notFound();
+  const messages = chat.messages.map((message, index) => ({
+    id: String(index),
+    role: message.role,
+    parts: [{ type: "text", text: message.text }],
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -54,11 +53,7 @@ export default async function SharePage({
                       : "bg-muted"
                   }`}
                 >
-                  {message.role === "user" ? (
-                    <UserIcon />
-                  ) : (
-                    <BotIcon />
-                  )}
+                  {message.role === "user" ? <UserIcon /> : <BotIcon />}
                 </div>
 
                 {/* Content */}
@@ -124,5 +119,7 @@ function MessageContent({ parts }: { parts: unknown }) {
   }
 
   // Fallback for unknown content
-  return <p className="text-muted-foreground italic">Unable to display content</p>;
+  return (
+    <p className="text-muted-foreground italic">Unable to display content</p>
+  );
 }

@@ -15,6 +15,7 @@ Pipeline flow:
 
 from dataclasses import dataclass, field
 from typing import Any, Callable, Coroutine, Dict, List, Literal, Optional, Protocol
+from uuid import uuid4
 
 from .conflict_prompts import (
     ConflictAction,
@@ -26,11 +27,31 @@ from .conflict_prompts import (
     validate_conflict_decision,
 )
 from .deduplication import DeduplicationConfig, FactDeduplicationService
+from .discovery import collect_candidates
+from .history import (
+    FactChangePipeline,
+    FactHistoryService,
+    HistoryReceipt,
+    HistoryWriteAfterCommitError,
+    LogEventParams,
+    RevisionAfterCommitError,
+    definite_backend_failure,
+    execute_fact_mutation,
+)
 from .slot_matching import SlotConflictResult, SlotMatchingConfig, SlotMatchingService
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # LLM Client Protocol
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+class DecisionLogError(RuntimeError):
+    committed = False
+    phase = "decision_log"
+
+    def __init__(self, cause: Exception) -> None:
+        super().__init__("Decision history publication failed")
+        self.original_cause = cause
 
 
 class BeliefRevisionLLMClient(Protocol):
@@ -153,6 +174,11 @@ class ReviseParams:
     participant_id: Optional[str] = None
     """Optional participant ID"""
 
+    tenant_id: Optional[str] = None
+    operation_id: Optional[str] = None
+    conversation_id: Optional[str] = None
+    source_ref: Optional[Dict[str, Any]] = None
+
 
 @dataclass
 class PipelineStageResult:
@@ -266,6 +292,7 @@ class BeliefRevisionService:
         llm_client: Optional[BeliefRevisionLLMClient] = None,
         graph_adapter: Optional[Any] = None,
         config: Optional[BeliefRevisionConfig] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize the belief revision service.
@@ -279,6 +306,7 @@ class BeliefRevisionService:
         self._client = client
         self._llm_client = llm_client
         self._graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._config = config or BeliefRevisionConfig()
 
         # Initialize slot matching service
@@ -379,12 +407,34 @@ class BeliefRevisionService:
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # Stage 4: Execute Decision
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        execution_result = await self._execute_decision(
-            action,
-            params,
-            target_fact,
-            reason,
-        )
+        operation_id = params.operation_id or str(uuid4())
+        intent = {"operationId": operation_id, "phase": "revision", "reason": reason, "confidence": confidence,
+                  "pipeline": {"slotMatching": pipeline_result.get("slot_matching", PipelineStageResult(executed=False)).executed,
+                               "semanticMatching": pipeline_result.get("semantic_matching", PipelineStageResult(executed=False)).executed,
+                               "llmResolution": pipeline_result.get("llm_resolution", PipelineStageResult(executed=False)).executed},
+                  "userId": params.user_id, "participantId": params.participant_id,
+                  "conversationId": params.conversation_id or (params.source_ref or {}).get("conversationId")}
+        from .._utils import filter_none_values
+
+        intent = filter_none_values(intent)
+        execution_result = await self._execute_decision(action, params, target_fact, reason, intent)
+        history = FactHistoryService(self._client)
+        fact = execution_result["fact"]
+        receipt_wire = fact.get("historyReceipt") if isinstance(fact, dict) else None
+        if receipt_wire:
+            receipt = HistoryReceipt.from_wire(receipt_wire)
+            try:
+                await history.retry_history(receipt)
+            except Exception as error:
+                raise HistoryWriteAfterCommitError(receipt, filter_none_values({"tenantId": params.tenant_id, "memorySpaceId": params.memory_space_id}), error) from error
+        elif action == "NONE" and self._get_fact_id(fact):
+            try:
+                await history.log(LogEventParams(fact_id=self._get_fact_id(fact), memory_space_id=params.memory_space_id, tenant_id=params.tenant_id,
+                    source_fact_id=self._document_id(fact), action="UPDATE", new_value=self._fact_text(fact), reason=reason, confidence=confidence,
+                    pipeline=FactChangePipeline(slot_matching=intent["pipeline"]["slotMatching"], semantic_matching=intent["pipeline"]["semanticMatching"], llm_resolution=intent["pipeline"]["llmResolution"]),
+                    user_id=params.user_id, participant_id=params.participant_id, conversation_id=intent.get("conversationId"), operation_id=operation_id))
+            except Exception as error:
+                raise DecisionLogError(error) from error
 
         return ReviseResult(
             action=action,
@@ -459,6 +509,7 @@ class BeliefRevisionService:
             },
             params.memory_space_id,
             params.user_id,
+            params.tenant_id,
         )
 
     async def _find_semantic_conflicts(
@@ -493,6 +544,7 @@ class BeliefRevisionService:
             params.memory_space_id,
             config,
             params.user_id,
+            params.tenant_id,
         )
 
         if result.is_duplicate and result.existing_fact:
@@ -515,26 +567,15 @@ class BeliefRevisionService:
         factType="preference", making them candidates for LLM review even if their
         predicates differ.
         """
-        from .._utils import filter_none_values
-
         # Skip if no subject or fact_type - can't match without these
         if not params.fact.subject or not params.fact.fact_type:
             return []
 
-        # Query facts with same subject AND factType
-        facts = await self._client.query(
-            "facts:list",
-            filter_none_values({
-                "memorySpaceId": params.memory_space_id,
-                "userId": params.user_id,
-                "subject": params.fact.subject,
-                "factType": params.fact.fact_type,
-                "includeSuperseded": False,
-                "limit": 20,  # Reasonable limit for LLM processing
-            }),
-        )
-
-        return facts or []
+        return await collect_candidates(self._client, "list", {
+            "memorySpaceId": params.memory_space_id, "tenantId": params.tenant_id,
+            "userId": params.user_id, "subject": params.fact.subject,
+            "factType": params.fact.fact_type, "includeSuperseded": False,
+        }, 20)
 
     async def _resolve_with_llm(
         self,
@@ -582,107 +623,62 @@ class BeliefRevisionService:
             return get_default_decision(new_fact, existing_facts)
 
     async def _execute_decision(
-        self,
-        action: ConflictAction,
-        params: ReviseParams,
-        target_fact: Optional[Any],
-        reason: str,
+        self, action: ConflictAction, params: ReviseParams, target_fact: Optional[Any],
+        reason: str, intent: Dict[str, Any],
     ) -> Dict[str, Any]:
-        """Stage 4: Execute the decision."""
+        """Freeze intent before writes; link and publication retries never rerun matching."""
         from .._utils import filter_none_values
 
-        superseded: List[Any] = []
-
+        history = FactHistoryService(self._client)
+        scope = filter_none_values({"tenantId": params.tenant_id, "memorySpaceId": params.memory_space_id})
         if action == "NONE":
-            # Return existing fact without changes - NEVER create a new fact for NONE
-            # The fact is already captured in the knowledge base
-            if target_fact:
-                return {"fact": target_fact, "superseded": []}
-            # No target_fact means the LLM determined this fact is already captured
-            # but didn't specify which existing fact. Return a placeholder result.
-            # This can happen when the LLM detects a duplicate concept without
-            # identifying the exact existing fact ID.
-            return {
-                "fact": {
-                    "fact_id": None,
-                    "fact": params.fact.fact,
-                    "skipped": True,
-                    "reason": "Fact already captured in knowledge base (NONE action)",
-                },
-                "superseded": [],
-            }
-
-        if action == "UPDATE":
-            if target_fact:
-                # Update the existing fact in place (no new version created)
-                fact_id = self._get_fact_id(target_fact)
-                updated = await self._client.mutation(
-                    "facts:updateInPlace",
-                    filter_none_values({
-                        "memorySpaceId": params.memory_space_id,
-                        "factId": fact_id,
-                        "fact": params.fact.fact,
-                        "confidence": params.fact.confidence,
-                        "tags": params.fact.tags,
-                    }),
-                )
-                return {"fact": updated, "superseded": []}
-
-        elif action == "SUPERSEDE":
-            if target_fact:
-                # Create new fact
-                new_fact = await self._client.mutation(
-                    "facts:store",
-                    filter_none_values({
-                        "memorySpaceId": params.memory_space_id,
-                        "participantId": params.participant_id,
-                        "userId": params.user_id,
-                        "fact": params.fact.fact,
-                        "factType": params.fact.fact_type or "custom",
-                        "subject": params.fact.subject,
-                        "predicate": params.fact.predicate,
-                        "object": params.fact.object,
-                        "confidence": params.fact.confidence,
-                        "sourceType": "conversation",
-                        "tags": params.fact.tags or [],
-                    }),
-                )
-
-                # Mark old fact as superseded by the new fact
-                # This sets both supersededBy and validUntil, and links the facts together
-                old_fact_id = self._get_fact_id(target_fact)
-                new_fact_id = self._get_fact_id(new_fact)
-                await self._client.mutation(
-                    "facts:supersede",
-                    {
-                        "memorySpaceId": params.memory_space_id,
-                        "oldFactId": old_fact_id,
-                        "newFactId": new_fact_id,
-                        "reason": reason,
-                    },
-                )
-
-                superseded.append(target_fact)
-                return {"fact": new_fact, "superseded": superseded}
-
-        # ADD action or fallback: create new fact
-        new_fact = await self._client.mutation(
-            "facts:store",
-            filter_none_values({
-                "memorySpaceId": params.memory_space_id,
-                "participantId": params.participant_id,
-                "userId": params.user_id,
-                "fact": params.fact.fact,
-                "factType": params.fact.fact_type or "custom",
-                "subject": params.fact.subject,
-                "predicate": params.fact.predicate,
-                "object": params.fact.object,
-                "confidence": params.fact.confidence,
-                "sourceType": "conversation",
-                "tags": params.fact.tags or [],
-            }),
-        )
+            return {"fact": target_fact or {"fact_id": None, "fact": params.fact.fact, "skipped": True, "reason": "Fact already captured in knowledge base (NONE action)"}, "superseded": []}
+        if action == "UPDATE" and target_fact:
+            updated = await execute_fact_mutation(self._client, "facts:updateInPlace", filter_none_values({**scope,
+                "factId": self._get_fact_id(target_fact), "expectedSourceFactId": self._document_id(target_fact),
+                "historyIntent": {**intent, "phase": "revision_update"}, "fact": params.fact.fact,
+                "confidence": params.fact.confidence, "tags": params.fact.tags}), history, "revision_update", graph_adapter=self._graph_adapter, graph_sync_policy=self._graph_sync_policy)
+            return {"fact": updated, "superseded": []}
+        new_fact = await execute_fact_mutation(self._client, "facts:store", filter_none_values({**scope,
+            "participantId": params.participant_id, "userId": params.user_id,
+            "fact": params.fact.fact, "factType": params.fact.fact_type or "custom",
+            "subject": params.fact.subject, "predicate": params.fact.predicate, "object": params.fact.object,
+            "confidence": params.fact.confidence, "sourceType": "conversation", "sourceRef": params.source_ref,
+            "tags": params.fact.tags or [], "historyIntent": {**intent, "phase": "revision_store"}}), history, "revision_store", graph_adapter=self._graph_adapter, graph_sync_policy=self._graph_sync_policy)
+        if action == "SUPERSEDE" and target_fact:
+            link_args = filter_none_values({**scope, "oldFactId": self._get_fact_id(target_fact), "newFactId": self._get_fact_id(new_fact),
+                "expectedOldFactId": self._document_id(target_fact), "expectedNewFactId": self._document_id(new_fact),
+                "reason": reason, "historyIntent": {**intent, "phase": "revision_link"}})
+            try:
+                from ..graph.erasure import write_graph_mutation
+                linked = await write_graph_mutation(self._client, self._graph_adapter, self._graph_sync_policy, "facts:supersede", link_args)
+            except Exception as error:
+                store_anchor = HistoryReceipt.from_wire(new_fact["historyReceipt"]) if new_fact.get("historyReceipt") else None
+                raise RevisionAfterCommitError({"store": {"committed": True, "createdFactId": self._get_fact_id(new_fact), "createdDocumentId": self._document_id(new_fact), "storeAnchor": store_anchor},
+                    "link": {"committed": False} if definite_backend_failure(error) else {"outcome": "unknown"},
+                    "scope": scope, "intent": intent, "expectedOldFactId": self._document_id(target_fact), "expectedNewFactId": self._document_id(new_fact)}, error) from error
+            fact = linked.get("fact") or new_fact
+            if linked.get("historyReceipt"):
+                fact["historyReceipt"] = linked["historyReceipt"]
+            # Store CREATE is independently retained. Publish its original anchor too.
+            if new_fact.get("historyReceipt"):
+                store_receipt = HistoryReceipt.from_wire(new_fact["historyReceipt"])
+                try:
+                    await history.retry_history(store_receipt)
+                except Exception as error:
+                    link_receipt = HistoryReceipt.from_wire(linked["historyReceipt"])
+                    combined = HistoryReceipt(store_receipt.events + link_receipt.events, tuple(dict.fromkeys(store_receipt.affected_fact_ids + link_receipt.affected_fact_ids)), link_receipt.result_fact_id)
+                    raise HistoryWriteAfterCommitError(combined, scope, error) from error
+            return {"fact": fact, "superseded": [target_fact]}
         return {"fact": new_fact, "superseded": []}
+
+    @staticmethod
+    def _document_id(fact: Any) -> Optional[str]:
+        return fact.get("_id") if isinstance(fact, dict) else getattr(fact, "_id", None)
+
+    @staticmethod
+    def _fact_text(fact: Any) -> str:
+        return str(fact.get("fact", "")) if isinstance(fact, dict) else str(getattr(fact, "fact", ""))
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # Private: Utilities

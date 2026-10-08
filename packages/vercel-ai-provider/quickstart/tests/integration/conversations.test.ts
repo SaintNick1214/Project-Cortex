@@ -1,465 +1,374 @@
-/**
- * Integration Tests: Conversations API Routes
- *
- * Tests the conversations API routes with mocked Cortex SDK.
- */
-
-import {
-  createMockCortex,
-  resetMockStores,
-  seedTestData,
-  type MockCortex,
-} from "../helpers/mock-cortex";
-
-// Mock the Cortex SDK module
-let mockCortex: MockCortex;
-
-jest.mock("../../lib/cortex", () => ({
-  getCortex: () => mockCortex,
+/** Real route/session/scope/cleanup integration with an explicitly mocked SDK transport. */
+import { GET, POST, DELETE } from "../../app/api/conversations/route";
+import { createScopedCortex, withCortex } from "../../lib/cortex";
+const mockAccount = {
+  accountId: "owner",
+  username: "testuser",
+  role: "user",
+  tenantId: "tenant",
+  allowedMemorySpaceIds: ["owned", "space-a", "space-b"],
+};
+const mockRows = new Map<string, any>();
+let mockSession = true;
+const mockClose = jest.fn(),
+  mockShutdown = jest.fn(),
+  mockAdmin = jest.fn();
+const mockConnect = jest.fn(), mockDisconnect = jest.fn(), mockResolveGraph = jest.fn();
+const mockGet = jest.fn(async (id: string) => mockRows.get(id) ?? null);
+const mockList = jest.fn(async (args: any) => ({
+  conversations: [...mockRows.values()].filter(
+    (r) =>
+      r.memorySpaceId === args.memorySpaceId &&
+      r.participants.userId === args.userId
+  ),
 }));
-
-// Import route handlers after mocking
-import {
-  GET as conversationsGet,
-  POST as conversationsPost,
-  DELETE as conversationsDelete,
-} from "../../app/api/conversations/route";
-
-/**
- * Helper to create a mock Request object
- */
-function createRequest(
+const mockCreate = jest.fn(async (args: any) => {
+  const row = {
+    ...args,
+    tenantId: "tenant",
+    createdAt: 1,
+    updatedAt: 2,
+    messageCount: 0,
+  };
+  mockRows.set(args.conversationId, row);
+  return row;
+});
+const mockDelete = jest.fn(async (id: string) => {
+  mockRows.delete(id);
+  return { deleted: true };
+});
+const mockFactory = jest.fn(async (_: any, runtime: any) => {
+  runtime.initializeTransport({ setAdminAuth: mockAdmin });
+  return {
+    conversations: {
+      get: mockGet,
+      list: mockList,
+      create: mockCreate,
+      delete: mockDelete,
+    },
+    close: mockClose,
+    shutdown: mockShutdown,
+  };
+});
+jest.mock("@cortexmemory/sdk", () => ({
+  Cortex: { create: (...args: any[]) => mockFactory(...args) },
+  resolveGraphConnection: (...args: any[]) => mockResolveGraph(...args),
+  CypherGraphAdapter: class {
+    connect = mockConnect;
+    disconnect = mockDisconnect;
+  },
+}));
+jest.mock("convex/browser", () => ({
+  ConvexHttpClient: class {
+    setAdminAuth = mockAdmin;
+    async function(name: string) {
+      if (name !== "app/sessions:resolve")
+        throw new Error("unexpected private operation");
+      return mockSession ? mockAccount : null;
+    }
+  },
+}));
+const request = (
   method: string,
-  options: {
-    body?: Record<string, unknown>;
-    searchParams?: Record<string, string>;
-  } = {},
-): Request {
-  const url = new URL("http://localhost:3000/api/conversations");
-
-  if (options.searchParams) {
-    Object.entries(options.searchParams).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-  }
-
-  const init: RequestInit = { method };
-  if (options.body) {
-    init.body = JSON.stringify(options.body);
-    init.headers = { "Content-Type": "application/json" };
-  }
-
-  return new Request(url.toString(), init);
+  params: Record<string, string> = {},
+  body?: unknown,
+  signed = true
+) =>
+  new Request(
+    "https://unit.invalid/api/conversations?" + new URLSearchParams(params),
+    {
+      method,
+      headers: {
+        origin: "https://unit.invalid",
+        ...(signed ? { cookie: "cortex-app-session=" + "a".repeat(64) } : {}),
+        "content-type": "application/json",
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    }
+  );
+function seed(id: string, updates: any = {}) {
+  const r = {
+    conversationId: id,
+    participants: { userId: "owner" },
+    memorySpaceId: "owned",
+    tenantId: "tenant",
+    metadata: { title: "Test Chat" },
+    createdAt: 1,
+    updatedAt: 2,
+    messageCount: 0,
+    ...updates,
+  };
+  mockRows.set(id, r);
+  return r;
 }
-
-/**
- * Helper to parse JSON response
- */
-async function parseResponse(response: Response): Promise<{
-  status: number;
-  data: Record<string, unknown>;
-}> {
-  const data = await response.json();
-  return { status: response.status, data };
-}
-
-describe("Conversations API Routes", () => {
-  beforeEach(() => {
-    resetMockStores();
-    mockCortex = createMockCortex();
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockRows.clear();
+  mockSession = true;
+  mockShutdown.mockResolvedValue(undefined);
+  mockConnect.mockResolvedValue(undefined);
+  mockDisconnect.mockResolvedValue(undefined);
+  mockResolveGraph.mockReturnValue({ uri: "bolt://unit.invalid", username: "unit", password: "unit-only" });
+  mockGet.mockImplementation(async (id) => mockRows.get(id) ?? null);
+  mockCreate.mockImplementation(async (args) => {
+    const r = seed(args.conversationId, args);
+    return r;
   });
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // GET /api/conversations
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  describe("GET /api/conversations", () => {
-    it("should return 400 if userId is missing and no conversationId", async () => {
-      const request = createRequest("GET");
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(400);
-      expect(data.error).toBe("userId is required");
+  mockDelete.mockImplementation(async (id) => {
+    mockRows.delete(id);
+    return { deleted: true };
+  });
+  mockList.mockImplementation(async (args) => ({
+    conversations: [...mockRows.values()].filter(
+      (r) =>
+        r.memorySpaceId === args.memorySpaceId &&
+        r.participants.userId === args.userId
+    ),
+  }));
+  Object.assign(process.env, {
+    CONVEX_URL: "http://127.0.0.1:3218",
+    CORTEX_APP_DEPLOYMENT_ADMIN_KEY: "unit-private-key",
+    CORTEX_APP_ORIGIN: "https://unit.invalid",
+  });
+});
+describe("private Conversations API routes", () => {
+  test("configured graph delete selects owned delivery and joins, while reads remain off", async () => {
+    process.env.CORTEX_GRAPH_SYNC = "true";
+    seed("graph-owned");
+    expect((await DELETE(request("DELETE", { conversationId: "graph-owned" }))).status).toBe(200);
+    expect(mockFactory.mock.calls[0][0].graphEnabled).toBe(true);
+    expect(mockFactory.mock.calls[0][0].graph).toMatchObject({ autoSync: false });
+    expect(mockFactory.mock.calls[0][0].graph.adapter.connect).toBe(mockConnect);
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    expect(mockDisconnect).toHaveBeenCalledTimes(1);
+    expect(mockShutdown.mock.invocationCallOrder[0]).toBeLessThan(mockDisconnect.mock.invocationCallOrder[0]);
+    expect(mockDelete).toHaveBeenCalledTimes(1);
+    expect(mockDelete).toHaveBeenCalledWith("graph-owned");
+    expect(mockShutdown).toHaveBeenCalledTimes(1);
+    await GET(request("GET"));
+    expect(mockFactory.mock.calls[1][0].graphEnabled).toBe(false);
+    delete process.env.CORTEX_GRAPH_SYNC;
+  });
+  test("graph-off deletion remains supported and graph-on foreign owner cannot delete", async () => {
+    process.env.CORTEX_GRAPH_SYNC = "false";
+    seed("plain-owned");
+    expect((await DELETE(request("DELETE", { conversationId: "plain-owned" }))).status).toBe(200);
+    expect(mockFactory.mock.calls[0][0].graphEnabled).toBe(false);
+    process.env.CORTEX_GRAPH_SYNC = "true";
+    seed("foreign", { participants: { userId: "foreign" } });
+    expect((await DELETE(request("DELETE", { conversationId: "foreign" }))).status).toBe(404);
+    expect(mockDelete).toHaveBeenCalledTimes(1);
+    delete process.env.CORTEX_GRAPH_SYNC;
+  });
+  test("missing session refuses before SDK construction", async () => {
+    expect((await GET(request("GET", {}, undefined, false))).status).toBe(401);
+    expect(mockFactory).not.toHaveBeenCalled();
+  });
+  test("detail projects owner history and agent messages", async () => {
+    seed("c", {
+      messageCount: 2,
+      messages: [
+        { id: "u", role: "user", content: "Hello", timestamp: 1 },
+        { id: "a", role: "agent", content: "Hi", timestamp: 2 },
+      ],
     });
-
-    it("should return single conversation with messages when conversationId is provided", async () => {
-      // Seed conversation with messages
-      seedTestData.conversation("conv-with-messages", {
-        userId: "testuser",
-        title: "Test Conversation",
-        messages: [
-          { role: "user", content: "Hello" },
-          { role: "assistant", content: "Hi there!" },
-        ],
-      });
-
-      const request = createRequest("GET", {
-        searchParams: { conversationId: "conv-with-messages" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect(data.conversation).toBeDefined();
-      expect((data.conversation as { id: string }).id).toBe(
-        "conv-with-messages",
-      );
-      expect((data.conversation as { title: string }).title).toBe(
-        "Test Conversation",
-      );
-      expect(data.messages).toBeDefined();
-      expect((data.messages as unknown[]).length).toBe(2);
+    const r = await GET(request("GET", { conversationId: "c" }));
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    expect(b.conversation).toMatchObject({
+      id: "c",
+      title: "Test Chat",
+      messageCount: 2,
     });
-
-    it("should return 404 when conversationId is not found", async () => {
-      const request = createRequest("GET", {
-        searchParams: { conversationId: "nonexistent-conv" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(404);
-      expect(data.error).toBe("Conversation not found");
+    expect(b.messages.map((m: any) => [m.id, m.role, m.content])).toEqual([
+      ["u", "user", "Hello"],
+      ["a", "assistant", "Hi"],
+    ]);
+    expect(mockGet).toHaveBeenCalledWith("c", {
+      includeMessages: true,
+      messageLimit: 100,
     });
-
-    it("should return empty array for user with no conversations", async () => {
-      const request = createRequest("GET", {
-        searchParams: { userId: "newuser" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect(data.conversations).toEqual([]);
-    });
-
-    it("should return conversations for user", async () => {
-      // Seed conversations
-      seedTestData.conversation("conv-1", {
-        userId: "testuser",
-        title: "First Chat",
-      });
-      seedTestData.conversation("conv-2", {
-        userId: "testuser",
-        title: "Second Chat",
-      });
-
-      const request = createRequest("GET", {
-        searchParams: { userId: "testuser" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect((data.conversations as unknown[]).length).toBe(2);
-
-      const conversations = data.conversations as {
-        id: string;
-        title: string;
-      }[];
-      expect(conversations.map((c) => c.id)).toContain("conv-1");
-      expect(conversations.map((c) => c.id)).toContain("conv-2");
-    });
-
-    it("should filter conversations by memorySpaceId", async () => {
-      // Seed conversations in different memory spaces
-      seedTestData.conversation("conv-1", {
-        userId: "testuser",
-        memorySpaceId: "space-a",
-        title: "Space A Chat",
-      });
-      seedTestData.conversation("conv-2", {
-        userId: "testuser",
-        memorySpaceId: "space-b",
-        title: "Space B Chat",
-      });
-
-      const request = createRequest("GET", {
-        searchParams: { userId: "testuser", memorySpaceId: "space-a" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect((data.conversations as unknown[]).length).toBe(1);
-      expect((data.conversations as { id: string }[])[0].id).toBe("conv-1");
-    });
-
-    it("should not return conversations from other users", async () => {
-      // Seed conversations for different users
-      seedTestData.conversation("conv-1", {
-        userId: "user-a",
-        title: "User A Chat",
-      });
-      seedTestData.conversation("conv-2", {
-        userId: "user-b",
-        title: "User B Chat",
-      });
-
-      const request = createRequest("GET", {
-        searchParams: { userId: "user-a" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect((data.conversations as unknown[]).length).toBe(1);
-      expect((data.conversations as { id: string }[])[0].id).toBe("conv-1");
-    });
-
-    it("should include conversation metadata in response", async () => {
-      seedTestData.conversation("conv-1", {
-        userId: "testuser",
-        title: "Test Chat Title",
-      });
-
-      const request = createRequest("GET", {
-        searchParams: { userId: "testuser" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      const conversation = (data.conversations as Record<string, unknown>[])[0];
-      expect(conversation.id).toBe("conv-1");
-      expect(conversation.title).toBe("Test Chat Title");
-      expect(conversation.createdAt).toBeDefined();
-      expect(conversation.updatedAt).toBeDefined();
-      expect(conversation.messageCount).toBeDefined();
-    });
-
-    it("should use default memorySpaceId if not provided", async () => {
-      const request = createRequest("GET", {
-        searchParams: { userId: "testuser" },
-      });
-      await conversationsGet(request);
-
-      expect(mockCortex.conversations.list).toHaveBeenCalledWith(
-        expect.objectContaining({
-          memorySpaceId: "quickstart-demo",
-          userId: "testuser",
-        }),
-      );
+    expect(mockClose).toHaveBeenCalledTimes(1);
+    expect(mockShutdown).toHaveBeenCalledTimes(1);
+  });
+  test("missing detail returns opaque404", async () => {
+    const r = await GET(request("GET", { conversationId: "missing" }));
+    expect(r.status).toBe(404);
+    expect(await r.json()).toEqual({ error: "Conversation unavailable" });
+  });
+  test("empty owned list is an empty array", async () => {
+    const r = await GET(request("GET"));
+    expect(r.status).toBe(200);
+    expect(await r.json()).toEqual({ conversations: [] });
+  });
+  test("owned list returns all matching conversations", async () => {
+    seed("a");
+    seed("b");
+    const r = await GET(request("GET"));
+    expect((await r.json()).conversations.map((c: any) => c.id)).toEqual([
+      "a",
+      "b",
+    ]);
+  });
+  test("authorized memory-space selector filters exact scope", async () => {
+    seed("a", { memorySpaceId: "space-a" });
+    seed("b", { memorySpaceId: "space-b" });
+    const r = await GET(request("GET", { memorySpaceId: "space-a" }));
+    expect(r.status).toBe(200);
+    expect((await r.json()).conversations.map((c: any) => c.id)).toEqual(["a"]);
+  });
+  test("foreign caller user selector refuses before SDK", async () => {
+    expect((await GET(request("GET", { userId: "foreign" }))).status).toBe(403);
+    expect(mockFactory).not.toHaveBeenCalled();
+  });
+  test("projection includes durable metadata/count/timestamps", async () => {
+    seed("c", { metadata: { title: "Explicit" }, messageCount: 7 });
+    const r = await GET(request("GET"));
+    expect((await r.json()).conversations[0]).toEqual({
+      id: "c",
+      title: "Explicit",
+      createdAt: 1,
+      updatedAt: 2,
+      messageCount: 7,
     });
   });
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // POST /api/conversations
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  describe("POST /api/conversations", () => {
-    it("should return 400 if userId is missing", async () => {
-      const request = createRequest("POST", {
-        body: { title: "New Chat" },
-      });
-      const response = await conversationsPost(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(400);
-      expect(data.error).toBe("userId is required");
-    });
-
-    it("should create conversation with generated ID", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser" },
-      });
-      const response = await conversationsPost(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.conversation).toBeDefined();
-
-      const conversation = data.conversation as { id: string };
-      expect(conversation.id).toMatch(/^conv-\d+-[a-z0-9]+$/);
-    });
-
-    it("should create conversation with provided title", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser", title: "My Custom Title" },
-      });
-      const response = await conversationsPost(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      const conversation = data.conversation as { title: string };
-      expect(conversation.title).toBe("My Custom Title");
-    });
-
-    it("should use default title if not provided", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser" },
-      });
-      const response = await conversationsPost(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      const conversation = data.conversation as { title: string };
-      expect(conversation.title).toBe("New Chat");
-    });
-
-    it("should use provided memorySpaceId", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser", memorySpaceId: "custom-space" },
-      });
-      await conversationsPost(request);
-
-      expect(mockCortex.conversations.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          memorySpaceId: "custom-space",
-        }),
-      );
-    });
-
-    it("should use default memorySpaceId if not provided", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser" },
-      });
-      await conversationsPost(request);
-
-      expect(mockCortex.conversations.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          memorySpaceId: "quickstart-demo",
-        }),
-      );
-    });
-
-    it("should set conversation type to user-agent", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser" },
-      });
-      await conversationsPost(request);
-
-      expect(mockCortex.conversations.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: "user-agent",
-        }),
-      );
-    });
-
-    it("should set participants with userId and agentId", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser" },
-      });
-      await conversationsPost(request);
-
-      expect(mockCortex.conversations.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          participants: {
-            userId: "testuser",
-            agentId: "quickstart-assistant",
-          },
-        }),
-      );
-    });
-
-    it("should return conversation metadata", async () => {
-      const request = createRequest("POST", {
-        body: { userId: "testuser", title: "Test Chat" },
-      });
-      const response = await conversationsPost(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      const conversation = data.conversation as Record<string, unknown>;
-      expect(conversation.id).toBeDefined();
-      expect(conversation.title).toBe("Test Chat");
-      expect(conversation.createdAt).toBeDefined();
-      expect(conversation.updatedAt).toBeDefined();
-      expect(conversation.messageCount).toBe(0);
+  test("omitted space uses verified account default", async () => {
+    await GET(request("GET"));
+    expect(mockList).toHaveBeenCalledWith({
+      memorySpaceId: "owned",
+      userId: "owner",
+      limit: 50,
     });
   });
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // DELETE /api/conversations
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  describe("DELETE /api/conversations", () => {
-    it("should return 400 if conversationId is missing", async () => {
-      const request = createRequest("DELETE");
-      const response = await conversationsDelete(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(400);
-      expect(data.error).toBe("conversationId is required");
-    });
-
-    it("should delete conversation and return success", async () => {
-      // Seed a conversation
-      seedTestData.conversation("conv-to-delete", {
-        userId: "testuser",
-        title: "Delete Me",
-      });
-
-      const request = createRequest("DELETE", {
-        searchParams: { conversationId: "conv-to-delete" },
-      });
-      const response = await conversationsDelete(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(200);
-      expect(data.success).toBe(true);
-    });
-
-    it("should call cortex.conversations.delete with correct ID", async () => {
-      const request = createRequest("DELETE", {
-        searchParams: { conversationId: "conv-123" },
-      });
-      await conversationsDelete(request);
-
-      expect(mockCortex.conversations.delete).toHaveBeenCalledWith("conv-123");
+  test("list limit remains fifty", async () => {
+    await GET(request("GET", { memorySpaceId: "space-b" }));
+    expect(mockList).toHaveBeenCalledWith({
+      memorySpaceId: "space-b",
+      userId: "owner",
+      limit: 50,
     });
   });
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Edge Cases
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  describe("edge cases", () => {
-    it("should handle SDK errors gracefully for GET", async () => {
-      mockCortex.conversations.list = jest
-        .fn()
-        .mockRejectedValue(new Error("SDK error"));
-
-      const request = createRequest("GET", {
-        searchParams: { userId: "testuser" },
-      });
-      const response = await conversationsGet(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(500);
-      expect(data.error).toBe("Failed to fetch conversations");
-    });
-
-    it("should handle SDK errors gracefully for POST", async () => {
-      mockCortex.conversations.create = jest
-        .fn()
-        .mockRejectedValue(new Error("SDK error"));
-
-      const request = createRequest("POST", {
-        body: { userId: "testuser" },
-      });
-      const response = await conversationsPost(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(500);
-      expect(data.error).toBe("Failed to create conversation");
-    });
-
-    it("should handle SDK errors gracefully for DELETE", async () => {
-      mockCortex.conversations.delete = jest
-        .fn()
-        .mockRejectedValue(new Error("SDK error"));
-
-      const request = createRequest("DELETE", {
-        searchParams: { conversationId: "conv-123" },
-      });
-      const response = await conversationsDelete(request);
-      const { status, data } = await parseResponse(response);
-
-      expect(status).toBe(500);
-      expect(data.error).toBe("Failed to delete conversation");
-    });
+  test("list is sorted by descending durable updatedAt", async () => {
+    seed("old");
+    seed("new", { updatedAt: 5 });
+    const r = await GET(request("GET"));
+    expect((await r.json()).conversations.map((c: any) => c.id)).toEqual([
+      "new",
+      "old",
+    ]);
   });
+  test("create uses default title and fixed owner/agent/space", async () => {
+    const r = await POST(request("POST", {}, {}));
+    expect(r.status).toBe(200);
+    expect((await r.json()).conversation.title).toBe("New Chat");
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        memorySpaceId: "owned",
+        participants: { userId: "owner", agentId: "quickstart-assistant" },
+        type: "user-agent",
+        metadata: { title: "New Chat" },
+      })
+    );
+  });
+  test("create preserves explicit title", async () => {
+    const r = await POST(request("POST", {}, { title: "Custom" }));
+    expect((await r.json()).conversation.title).toBe("Custom");
+  });
+  test("create generates distinct UUIDs", async () => {
+    await POST(request("POST", {}, {}));
+    await POST(request("POST", {}, {}));
+    const ids = mockCreate.mock.calls.map(([a]) => a.conversationId);
+    expect(ids[0]).toMatch(/^[a-f0-9-]{36}$/);
+    expect(ids[0]).not.toBe(ids[1]);
+  });
+  test("forged POST user refuses before creation", async () => {
+    expect(
+      (await POST(request("POST", {}, { userId: "foreign" }))).status
+    ).toBe(403);
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+  test("invalid title refuses before creation", async () => {
+    expect((await POST(request("POST", {}, { title: 123 }))).status).toBe(400);
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+  test("delete missing ID refuses", async () => {
+    const r = await DELETE(request("DELETE"));
+    expect(r.status).toBe(400);
+    expect(mockDelete).not.toHaveBeenCalled();
+  });
+  test("delete checks owner then removes and awaits cleanup", async () => {
+    seed("c");
+    const r = await DELETE(request("DELETE", { conversationId: "c" }));
+    expect(r.status).toBe(200);
+    expect(await r.json()).toEqual({ success: true });
+    expect(mockRows.has("c")).toBe(false);
+    expect(mockGet.mock.invocationCallOrder[0]).toBeLessThan(
+      mockDelete.mock.invocationCallOrder[0]
+    );
+    expect(mockShutdown).toHaveBeenCalledTimes(1);
+  });
+  test("delete passes only the verified exact ID", async () => {
+    seed("c");
+    await DELETE(request("DELETE", { conversationId: "c" }));
+    expect(mockDelete).toHaveBeenCalledWith("c");
+  });
+  test("foreign owner delete refuses without mutation", async () => {
+    seed("c", { participants: { userId: "foreign" } });
+    expect(
+      (await DELETE(request("DELETE", { conversationId: "c" }))).status
+    ).toBe(404);
+    expect(mockDelete).not.toHaveBeenCalled();
+    expect(mockRows.has("c")).toBe(true);
+  });
+  test("foreign tenant response refuses instead of leaking rows", async () => {
+    seed("c", { tenantId: "foreign" });
+    expect((await GET(request("GET"))).status).toBe(404);
+  });
+  test("GET backend error is opaque503 and closes client", async () => {
+    mockList.mockRejectedValue(new Error("secret error"));
+    const r = await GET(request("GET"));
+    expect(r.status).toBe(503);
+    expect(await r.text()).not.toContain("secret error");
+    expect(mockClose).toHaveBeenCalledTimes(1);
+    expect(mockShutdown).toHaveBeenCalledTimes(1);
+  });
+  test("POST backend error is opaque503 and closes client", async () => {
+    mockCreate.mockRejectedValue(new Error("secret error"));
+    expect((await POST(request("POST", {}, {}))).status).toBe(503);
+    expect(mockClose).toHaveBeenCalledTimes(1);
+    expect(mockShutdown).toHaveBeenCalledTimes(1);
+  });
+  test("DELETE backend error is opaque503 and closes client", async () => {
+    seed("c");
+    mockDelete.mockRejectedValue(new Error("secret error"));
+    expect(
+      (await DELETE(request("DELETE", { conversationId: "c" }))).status
+    ).toBe(503);
+    expect(mockRows.has("c")).toBe(true);
+    expect(mockClose).toHaveBeenCalledTimes(1);
+    expect(mockShutdown).toHaveBeenCalledTimes(1);
+  });
+});
+
+test("graph construction and connection failures close borrowed adapter before propagating", async () => {
+  mockFactory.mockRejectedValueOnce(new Error("construction failed"));
+  await expect(createScopedCortex(mockAccount, true)).rejects.toThrow("construction failed");
+  expect(mockDisconnect).toHaveBeenCalledTimes(1);
+  mockDisconnect.mockClear();
+  mockFactory.mockClear();
+  mockConnect.mockRejectedValueOnce(new Error("connection failed"));
+  await expect(createScopedCortex(mockAccount, true)).rejects.toThrow("connection failed");
+  expect(mockFactory).not.toHaveBeenCalled();
+  expect(mockDisconnect).toHaveBeenCalledTimes(1);
+});
+test("graph-off reads retain no adapter authority", async () => {
+  await withCortex(mockAccount, async () => "read");
+  expect(mockResolveGraph).not.toHaveBeenCalled();
+  expect(mockConnect).not.toHaveBeenCalled();
+  expect(mockDisconnect).not.toHaveBeenCalled();
+});
+test("graph work rejection joins SDK and adapter teardown", async () => {
+  await expect(withCortex(mockAccount, async () => { throw new Error("work failed"); }, true)).rejects.toThrow("work failed");
+  expect(mockShutdown).toHaveBeenCalledTimes(1);
+  expect(mockDisconnect).toHaveBeenCalledTimes(1);
 });

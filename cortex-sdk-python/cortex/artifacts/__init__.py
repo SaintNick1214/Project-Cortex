@@ -8,6 +8,11 @@ from typing import Any, Dict, List, Optional, cast
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AppendContentParams,
     AppendContentResult,
@@ -99,6 +104,7 @@ class ArtifactsAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Artifacts API.
@@ -111,13 +117,19 @@ class ArtifactsAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -161,7 +173,7 @@ class ArtifactsAPI:
         validate_create_options(options)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:create",
                 filter_none_values({
                     "title": options.title,
@@ -175,19 +187,13 @@ class ArtifactsAPI:
                     "metadata": options.metadata,
                     "tags": options.tags,
                 }),
-            ),
+            graph_option(options), ),
             "artifacts:create",
-        )
+        graph_write=graph_option(options), )
 
         artifact = Artifact(**convert_convex_response(result))
 
         # Sync to graph if adapter present
-        if self.graph_adapter:
-            try:
-                await self.graph_adapter.sync_artifact(artifact)
-            except Exception as e:
-                import warnings
-                warnings.warn(f"Failed to sync artifact to graph: {e}")
 
         return artifact
 
@@ -273,7 +279,7 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:update",
                 filter_none_values({
                     "artifactId": artifact_id,
@@ -284,19 +290,13 @@ class ArtifactsAPI:
                     "changeSummary": options.change_summary if options else None,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            graph_option(options), ),
             "artifacts:update",
-        )
+        graph_write=graph_option(options), )
 
         artifact = Artifact(**convert_convex_response(result))
 
         # Sync to graph if adapter present
-        if self.graph_adapter:
-            try:
-                await self.graph_adapter.sync_artifact(artifact)
-            except Exception as e:
-                import warnings
-                warnings.warn(f"Failed to sync artifact update to graph: {e}")
 
         return artifact
 
@@ -325,16 +325,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:deleteArtifact",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "hard": hard,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:delete",
-        )
+        graph_write=None, )
 
         return cast(Dict[str, Any], result)
 
@@ -464,15 +464,15 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:undo",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:undo",
-        )
+        graph_write=None, )
 
         return UndoRedoResult(**convert_convex_response(result))
 
@@ -500,15 +500,15 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:redo",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:redo",
-        )
+        graph_write=None, )
 
         return UndoRedoResult(**convert_convex_response(result))
 
@@ -625,15 +625,15 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:startStreaming",
                 filter_none_values({
                     "artifactId": params.artifact_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:startStreaming",
-        )
+        graph_write=None, )
 
         return StartStreamingResult(**convert_convex_response(result))
 
@@ -663,7 +663,7 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:appendContent",
                 filter_none_values({
                     "artifactId": params.artifact_id,
@@ -671,9 +671,9 @@ class ArtifactsAPI:
                     "chunk": params.chunk,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:appendContent",
-        )
+        graph_write=None, )
 
         return AppendContentResult(**convert_convex_response(result))
 
@@ -704,16 +704,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:pauseStreaming",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "sessionId": session_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:pauseStreaming",
-        )
+        graph_write=None, )
 
         data = convert_convex_response(result)
         return PauseStreamingResult(
@@ -752,16 +752,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:resumeStreaming",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "sessionId": session_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:resumeStreaming",
-        )
+        graph_write=None, )
 
         data = convert_convex_response(result)
         return ResumeStreamingResult(
@@ -802,16 +802,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:cancelStreaming",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "sessionId": session_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:cancelStreaming",
-        )
+        graph_write=None, )
 
         data = convert_convex_response(result)
         return CancelStreamingResult(
@@ -855,16 +855,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:finalizeStreaming",
                 filter_none_values({
                     "artifactId": params.artifact_id,
                     "sessionId": params.session_id,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:finalizeStreaming",
-        )
+        graph_write=None, )
 
         data = convert_convex_response(result)
         return FinalizeStreamingResult(
@@ -911,16 +911,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:setStreamingState",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "streamingState": streaming_state,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:setStreamingState",
-        )
+        graph_write=None, )
 
         data = convert_convex_response(result)
         return SetStreamingStateResult(
@@ -1062,13 +1062,13 @@ class ArtifactsAPI:
                 "artifacts:setFileRef",
                 filter_none_values({
                     "artifactId": artifact_id,
-                    "fileRef": {
+                    "fileRef": filter_none_values({
                         "storageId": file_ref.storage_id,
                         "mimeType": file_ref.mime_type,
                         "size": file_ref.size,
                         "checksum": file_ref.checksum,
                         "originalFilename": file_ref.original_filename,
-                    },
+                    }),
                     "tenantId": self._tenant_id,
                 }),
             ),
@@ -1088,7 +1088,7 @@ class ArtifactsAPI:
 
         Args:
             artifact_id: The artifact's unique identifier
-            delete_file: If True, also delete the file from Convex storage.
+            delete_file: If True, request byte deletion only when no retained version or other document references it.
                         Default is False (keep file in storage).
 
         Returns:
@@ -1110,16 +1110,16 @@ class ArtifactsAPI:
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "artifacts:detachFile",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "deleteFile": delete_file,
                     "tenantId": self._tenant_id,
                 }),
-            ),
+            None, ),
             "artifacts:detachFile",
-        )
+        graph_write=None, )
 
         # Backend returns {success, artifactId, previousFileRef, fileDeleted, version, updatedAt}
         return DetachFileResult(**convert_convex_response(result))

@@ -8,7 +8,7 @@ import { signIn } from "./auth";
 
 const authFormSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(6).max(1024),
 });
 
 export type LoginActionState = {
@@ -17,7 +17,7 @@ export type LoginActionState = {
 
 export const login = async (
   _: LoginActionState,
-  formData: FormData
+  formData: FormData,
 ): Promise<LoginActionState> => {
   try {
     const validatedData = authFormSchema.parse({
@@ -53,7 +53,7 @@ export type RegisterActionState = {
 
 export const register = async (
   _: RegisterActionState,
-  formData: FormData
+  formData: FormData,
 ): Promise<RegisterActionState> => {
   try {
     const validatedData = authFormSchema.parse({

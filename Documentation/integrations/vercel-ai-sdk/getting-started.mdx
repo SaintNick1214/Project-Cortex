@@ -2,56 +2,30 @@
 
 <Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
-Complete guide to adding persistent memory to your Next.js application using Cortex Memory SDK v0.21.0+.
+Complete guide to adding persistent memory to your Next.js application using Cortex Memory SDK/provider 0.37.0.
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 22.16.0+ for CLI setup; provider runtime follows its package declaration
 - Next.js 14+ (App Router)
 - Convex account (free tier available)
 - OpenAI API key (or other LLM provider)
 
-## Option 1: Run the Quickstart Demo (Recommended)
+## Option 1: Run the quickstart demo
 
-The **fastest way** to understand Cortex Memory is with our interactive quickstart demo. This is a complete Next.js app with:
-
-- Real-time layer flow visualization
-- Live memory orchestration
-- Multi-tenant memory space switching
-- Streaming with progressive fact extraction
-- Authentication system
-- Data preview panels
-
-<Terminal title="Clone and install">
-cd packages/vercel-ai-provider/quickstart
-npm install
-</Terminal>
-
-<Terminal title="Configure environment">
+```bash
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cd demo
 cp .env.local.example .env.local
-</Terminal>
-
-Edit `.env.local` with your Convex URL and OpenAI key.
-
-<Terminal title="Deploy Convex schema (required)">
 npm run convex:dev
-</Terminal>
-
-<Terminal title="Start the demo">
 npm run dev
-</Terminal>
+```
 
-Open [http://localhost:3000](http://localhost:3000) and:
-
-1. **Send a message** like "Hi, I'm Alex and I work at Acme Corp as an engineer"
-2. **Watch the Layer Flow Diagram** show data flowing through all 7 Cortex layers in real-time
-3. **Ask a question** like "What do you remember about me?"
-4. **Refresh the page** and see memory persists across sessions
-5. **Try fact updates** - say "I actually prefer purple" after mentioning "I like blue" to see belief revision
-
-[View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+Before starting, configure `CONVEX_URL`, server-only `CORTEX_APP_DEPLOYMENT_ADMIN_KEY`, `CORTEX_APP_SETUP_TOKEN`, `OPENAI_API_KEY` and exact `CORTEX_APP_ORIGIN=http://localhost:3000`. Obtain the deployment key from your own composed backend setup. Use a separate private first-setup token in the initial setup form. Accounts/sessions live in private app tables; the server resolves allowed tenant/spaces from the opaque HttpOnly eight-hour session, not browser-supplied IDs. Open the same localhost host/port. Follow the [canonical quickstart README](../../../packages/vercel-ai-provider/quickstart/README.md) for private setup, independent template/SDK updates and optional shared graph lifecycle.
 
 ## Option 2: Add to Existing Project
+
+The provider is server-side infrastructure. Derive user, tenant and allowed memory space from your verified application session/ownership layer before model or data calls; request IDs and SDK AuthContext are scope selections, not verification. A recognized private Next backend additionally needs the second server-only `{deploymentKey}` factory argument to initialize native transport. Never expose this key or replace private calls with public-reference casts.
 
 ### Step 1: Install Dependencies
 

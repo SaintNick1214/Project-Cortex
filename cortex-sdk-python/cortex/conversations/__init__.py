@@ -9,8 +9,25 @@ import string
 import time
 from typing import Any, Dict, List, Literal, Optional
 
+from .._domain_export import conversations_export
+from .._domain_paging import (
+    DomainOperationPartialError,
+    collect,
+    loader,
+    natural,
+    resolve_scope,
+    same_selection,
+    select,
+)
 from .._utils import convert_convex_response, filter_none_values
+from ..auth.validators import validate_tenant_id
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    mutate_graph_selected,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AddMessageInput,
     AddMessageOptions,
@@ -35,6 +52,7 @@ from ..types import (
     DeleteConversationOptions,
     DeleteManyConversationsOptions,
     DeleteManyConversationsResult,
+    DomainReadOptions,
     ExportResult,
     GetConversationOptions,
     GetHistoryOptions,
@@ -86,6 +104,7 @@ class ConversationsAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Conversations API.
@@ -98,13 +117,19 @@ class ConversationsAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -181,7 +206,7 @@ class ConversationsAPI:
         tenant_id = (input.tenant_id if hasattr(input, "tenant_id") and input.tenant_id else None) or self._tenant_id
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "conversations:create",
                 filter_none_values({
                     "conversationId": conversation_id,
@@ -204,22 +229,11 @@ class ConversationsAPI:
                         "approvedParticipants": getattr(input.collaborative_settings, "approved_participants", None),
                     }) if input.collaborative_settings else None,  # Phase 4
                 }),
-            ),
+            graph_option(options), ),
             "conversations:create",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import (
-                    sync_conversation_relationships,
-                    sync_conversation_to_graph,
-                )
-
-                node_id = await sync_conversation_to_graph(result, self.graph_adapter)
-                await sync_conversation_relationships(result, node_id, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync conversation to graph: {error}")
 
         return Conversation(**convert_convex_response(result))
 
@@ -227,6 +241,7 @@ class ConversationsAPI:
         self,
         conversation_id: str,
         options: Optional[GetConversationOptions] = None,
+        *, tenant_id: Optional[str] = None,
     ) -> Optional[Conversation]:
         """
         Get a conversation by ID.
@@ -258,7 +273,7 @@ class ConversationsAPI:
                 "conversations:get",
                 filter_none_values({
                     "conversationId": conversation_id,
-                    "tenantId": self._tenant_id,  # Multi-tenancy support
+                    "tenantId": resolve_scope(self._tenant_id, tenant_id),  # Multi-tenancy support
                     "includeMessages": options.include_messages if options else None,
                     "messageLimit": options.message_limit if options else None,
                 }),
@@ -301,7 +316,7 @@ class ConversationsAPI:
         message_id = self._generate_message_id()
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "conversations:addMessage",
                 filter_none_values({
                     "conversationId": input.conversation_id,
@@ -313,159 +328,33 @@ class ConversationsAPI:
                         "metadata": input.metadata,
                     }),
                 }),
-            ),
+            graph_option(options), ),
             "conversations:addMessage",
-        )
+        graph_write=graph_option(options), )
 
         # Update in graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                nodes = await self.graph_adapter.find_nodes(
-                    "Conversation", {"conversationId": input.conversation_id}, 1
-                )
-                if nodes:
-                    await self.graph_adapter.update_node(
-                        nodes[0].id,
-                        {
-                            "messageCount": result["messageCount"],
-                            "updatedAt": result["updatedAt"],
-                        }, # type: ignore[arg-type]
-                    )
-            except Exception as error:
-                print(f"Warning: Failed to update conversation in graph: {error}")
 
         return Conversation(**convert_convex_response(result))
 
-    async def list(
-        self,
-        filter: Optional[ListConversationsFilter] = None,
-        *,
-        memory_space_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        tenant_id: Optional[str] = None,
-        type: Optional[ConversationType] = None,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
-    ) -> ListConversationsResult:
-        """
-        List conversations with optional filters and pagination.
-
-        Args:
-            filter: Optional filter with type, user_id, memory_space_id, dates,
-                   pagination, and sorting options
-            memory_space_id: Memory space ID to filter by (convenience kwarg)
-            user_id: User ID to filter by (convenience kwarg)
-            tenant_id: Tenant ID for multi-tenancy filter (convenience kwarg)
-            type: Conversation type to filter by (convenience kwarg)
-            limit: Max results to return (convenience kwarg)
-            offset: Pagination offset (convenience kwarg)
-
-        Returns:
-            ListConversationsResult with conversations and pagination metadata
-
-        Example:
-            >>> result = await cortex.conversations.list(ListConversationsFilter(
-            ...     user_id='user-123',
-            ...     limit=10
-            ... ))
-            >>> print(f"Found {result.total} conversations")
-
-            >>> # Using convenience kwargs
-            >>> result = await cortex.conversations.list(memory_space_id='space-123')
-
-            >>> # With pagination and sorting
-            >>> page2 = await cortex.conversations.list(ListConversationsFilter(
-            ...     memory_space_id='space-123',
-            ...     offset=10,
-            ...     limit=10,
-            ...     sort_by='lastMessageAt',
-            ...     sort_order='desc',
-            ... ))
-
-            >>> # Filter by date range
-            >>> recent = await cortex.conversations.list(ListConversationsFilter(
-            ...     created_after=int(time.time() * 1000) - 7 * 24 * 60 * 60 * 1000,
-            ... ))
-
-            >>> # Multi-tenant filtering
-            >>> tenant_convs = await cortex.conversations.list(tenant_id='tenant-abc')
-        """
-        # Build filter from kwargs if no filter object provided
-        if filter is None and any([memory_space_id, user_id, tenant_id, type, limit, offset]):
-            filter = ListConversationsFilter(
-                memory_space_id=memory_space_id,
-                user_id=user_id,
-                tenant_id=tenant_id,
-                type=type,
-                limit=limit,
-                offset=offset,
-            )
-
-        # All fields optional, validate only if provided
-        if filter and filter.type is not None:
+    async def list(self, filter: Optional[ListConversationsFilter] = None, *, memory_space_id: Optional[str] = None, user_id: Optional[str] = None, tenant_id: Optional[str] = None, type: Optional[ConversationType] = None, limit: Optional[int] = None, offset: Optional[int] = None, read_options: Optional[DomainReadOptions] = None) -> ListConversationsResult:
+        if filter is None:
+            filter = ListConversationsFilter(memory_space_id=memory_space_id, user_id=user_id, tenant_id=tenant_id, type=type, limit=limit, offset=offset)
+        if filter.type is not None:
             validate_conversation_type(filter.type)
-        if filter and filter.limit is not None:
-            validate_limit(filter.limit)
-        if filter and filter.offset is not None:
-            validate_offset(filter.offset)
-        if filter and filter.sort_order is not None:
+        tenant = resolve_scope(self._tenant_id, filter.tenant_id)
+        maximum, skipped = natural(filter.limit, 50), natural(filter.offset, 0)
+        if filter.sort_order is not None:
             validate_sort_order(filter.sort_order)
+        fields = {"memorySpaceId": filter.memory_space_id, "tenantId": tenant, "userId": filter.user_id, "participantId": filter.participant_id, "type": filter.type, "createdBefore": filter.created_before, "createdAfter": filter.created_after, "updatedBefore": filter.updated_before, "updatedAfter": filter.updated_after, "lastMessageBefore": filter.last_message_before, "lastMessageAfter": filter.last_message_after, "messageCountMin": filter.message_count if filter.message_count is not None else filter.message_count_min, "messageCountMax": filter.message_count if filter.message_count is not None else filter.message_count_max}
+        rows = await collect(loader(self.client, "conversations", fields), read_options)
+        if filter.sort_by:
+            key = filter.sort_by
+            rows.sort(key=lambda row: row["messages"][-1]["timestamp"] if key == "lastMessageAt" and row["messages"] else row.get(key, row["createdAt"]), reverse=filter.sort_order != "asc")
+        window = rows[skipped:skipped + maximum]
+        if filter.include_messages is False:
+            window = [{**row, "messages": []} for row in window]
+        return ListConversationsResult(conversations=[Conversation(**convert_convex_response(row)) for row in window], total=len(rows), limit=maximum, offset=skipped, has_more=skipped + maximum < len(rows))
 
-        # Handle message_count filter
-        message_count_min: Optional[int] = None
-        message_count_max: Optional[int] = None
-        if filter:
-            if filter.message_count is not None:
-                message_count_min = filter.message_count
-                message_count_max = filter.message_count
-            else:
-                message_count_min = filter.message_count_min
-                message_count_max = filter.message_count_max
-
-        # Support explicit tenant_id override from filter, fallback to auth context
-        tenant_id = (filter.tenant_id if filter and filter.tenant_id else None) or self._tenant_id
-
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "conversations:list",
-                filter_none_values({
-                    "tenantId": tenant_id,  # Multi-tenancy support (explicit or auth context)
-                    "type": filter.type if filter else None,
-                    "userId": filter.user_id if filter else None,
-                    "memorySpaceId": filter.memory_space_id if filter else None,
-                    "participantId": filter.participant_id if filter else None,
-                    "createdBefore": filter.created_before if filter else None,
-                    "createdAfter": filter.created_after if filter else None,
-                    "updatedBefore": filter.updated_before if filter else None,
-                    "updatedAfter": filter.updated_after if filter else None,
-                    "lastMessageBefore": filter.last_message_before if filter else None,
-                    "lastMessageAfter": filter.last_message_after if filter else None,
-                    "messageCountMin": message_count_min,
-                    "messageCountMax": message_count_max,
-                    "limit": filter.limit if filter else None,
-                    "offset": filter.offset if filter else None,
-                    "sortBy": filter.sort_by if filter else None,
-                    "sortOrder": filter.sort_order if filter else None,
-                    "includeMessages": filter.include_messages if filter else None,
-                }),
-            ),
-            "conversations:list",
-        )
-
-        # Convert response to ListConversationsResult
-        # Handle both dict response (with conversations key) and direct list response
-        raw_conversations = result if isinstance(result, list) else result.get("conversations", [])
-        conversations = [
-            Conversation(**convert_convex_response(conv))
-            for conv in raw_conversations
-        ]
-        return ListConversationsResult(
-            conversations=conversations,
-            total=result.get("total", len(conversations)) if isinstance(result, dict) else len(conversations),
-            limit=result.get("limit", filter.limit if filter and filter.limit else 50) if isinstance(result, dict) else (filter.limit if filter and filter.limit else 50),
-            offset=result.get("offset", filter.offset if filter and filter.offset else 0) if isinstance(result, dict) else (filter.offset if filter and filter.offset else 0),
-            has_more=result.get("hasMore", False) if isinstance(result, dict) else False,
-        )
 
     async def count(
         self,
@@ -498,7 +387,7 @@ class ConversationsAPI:
             >>> count = await cortex.conversations.count(memory_space_id='space-123')
         """
         # Build filter from kwargs if no filter object provided
-        if filter is None and any([memory_space_id, user_id, tenant_id, type]):
+        if filter is None and any(value is not None for value in [memory_space_id, user_id, tenant_id, type]):
             filter = CountConversationsFilter(
                 memory_space_id=memory_space_id,
                 user_id=user_id,
@@ -509,10 +398,19 @@ class ConversationsAPI:
         if filter and filter.type is not None:
             validate_conversation_type(filter.type)
 
+        context = self._tenant_id
+        selected = filter.tenant_id if filter else None
+        validate_tenant_id(context)
+        validate_tenant_id(selected)
+        if context is not None and selected is not None and context != selected:
+            raise ValueError("TENANT_SCOPE_MISMATCH")
+        selected_tenant = selected if selected is not None else context
+
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:count",
                 filter_none_values({
+                    "tenantId": selected_tenant,
                     "type": filter.type if filter else None,
                     "userId": filter.user_id if filter else None,
                     "memorySpaceId": filter.memory_space_id if filter else None,
@@ -523,108 +421,51 @@ class ConversationsAPI:
 
         return int(result)
 
-    async def delete(
-        self, conversation_id: str, options: Optional[DeleteConversationOptions] = None
-    ) -> ConversationDeletionResult:
-        """
-        Delete a conversation (for GDPR/cleanup).
-
-        Args:
-            conversation_id: The conversation to delete
-            options: Optional deletion options (e.g., syncToGraph)
-
-        Returns:
-            ConversationDeletionResult with deletion details
-
-        Example:
-            >>> result = await cortex.conversations.delete('conv-abc123')
-            >>> print(f"Deleted {result.messages_deleted} messages")
-            >>> print(f"Restorable: {result.restorable}")  # false - permanent!
-        """
+    async def delete(self, conversation_id: str, options: Optional[DeleteConversationOptions] = None, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> ConversationDeletionResult:
         validate_required_string(conversation_id, "conversation_id")
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        selected = [row for row in await select(loader(self.client, "conversations", {"tenantId": tenant, "conversationIds": [conversation_id]}), read_options)]
+        if len(selected) > 1:
+            raise ValueError("DOMAIN_SCOPE_AMBIGUOUS")
+        if not selected:
+            raise ValueError("CONVERSATION_NOT_FOUND")
+        outcome = await mutate_graph_selected(self.client, "conversations", selected, {"tenantId": tenant}, read_options, self.graph_adapter, self._graph_sync_policy, explicit=graph_option(options))
+        return ConversationDeletionResult(deleted=bool(outcome["confirmedCount"]), conversation_id=conversation_id, messages_deleted=selected[0]["document"]["messageCount"] if outcome["confirmedCount"] else 0, deleted_at=int(time.time() * 1000), restorable=False, partial=outcome)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "conversations:deleteConversation", filter_none_values({"conversationId": conversation_id})
-            ),
-            "conversations:deleteConversation",
-        )
 
-        # Delete from graph
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import delete_conversation_from_graph
+    async def delete_many(self, filter: Dict[str, Any], options: Optional[DeleteManyConversationsOptions] = None, *, read_options: Optional[DomainReadOptions] = None) -> DeleteManyConversationsResult:
+        def field(snake: str, camel: str) -> Any:
+            if snake in filter and camel in filter and filter[snake] != filter[camel]:
+                raise ValueError("DOMAIN_CONFLICTING_FILTER")
+            return filter[snake] if snake in filter else filter.get(camel)
+        tenant = resolve_scope(self._tenant_id, field("tenant_id", "tenantId"))
+        args = {"tenantId": tenant, "memorySpaceId": field("memory_space_id", "memorySpaceId"), "userId": field("user_id", "userId"), "participantId": field("participant_id", "participantId"), "type": filter.get("type")}
+        if not any(args[k] is not None for k in ("memorySpaceId", "userId", "type")):
+            raise ConversationValidationError("delete_many requires a selected filter", "MISSING_REQUIRED_FIELD")
+        if args["type"] is not None:
+            validate_conversation_type(args["type"])
+        load = loader(self.client, "conversations", args)
+        selected = await select(load, read_options)
+        if options and options.dry_run:
+            return DeleteManyConversationsResult(deleted=0, conversation_ids=[], total_messages_deleted=0, would_delete=len(selected), dry_run=True)
+        if options and options.require_confirmation is True and options.confirmation_threshold is None:
+            raise ValueError("DOMAIN_CONFIRMATION_REQUIRED")
+        threshold = natural(options.confirmation_threshold if options else None, 10)
+        if len(selected) > threshold:
+            raise ValueError("DELETE_MANY_THRESHOLD_EXCEEDED")
+        if not same_selection(selected, await select(load, read_options)):
+            raise ValueError("DOMAIN_SELECTION_CHANGED")
+        outcome = await mutate_graph_selected(self.client, "conversations", selected, {"tenantId": tenant}, read_options, self.graph_adapter, self._graph_sync_policy, explicit=graph_option(options))
+        try:
+            remaining = await select(load, read_options)
+            if remaining:
+                outcome["remainingPhysicalIds"] = [row["physicalId"] for row in remaining]
+                raise ValueError("DOMAIN_SELECTION_CHANGED")
+        except BaseException as cause:
+            raise DomainOperationPartialError("conversations:delete_many", outcome, cause) from cause
+        committed = [r for r in selected if r["physicalId"] in outcome["confirmedPhysicalIds"]]
+        return DeleteManyConversationsResult(deleted=outcome["confirmedCount"], conversation_ids=[r["document"]["conversationId"] for r in committed], total_messages_deleted=sum(r["document"]["messageCount"] for r in committed), partial=outcome)
 
-                await delete_conversation_from_graph(
-                    conversation_id, self.graph_adapter, True
-                )
-            except Exception as error:
-                print(f"Warning: Failed to delete conversation from graph: {error}")
-
-        return ConversationDeletionResult(**convert_convex_response(result))
-
-    async def delete_many(
-        self,
-        filter: Dict[str, Any],
-        options: Optional[DeleteManyConversationsOptions] = None,
-    ) -> DeleteManyConversationsResult:
-        """
-        Delete many conversations matching filters.
-
-        Args:
-            filter: Filter with user_id, memory_space_id, and/or type
-            options: Optional options including dryRun and confirmationThreshold
-
-        Returns:
-            DeleteManyConversationsResult with deletion counts
-
-        Example:
-            >>> # Preview what would be deleted (dryRun)
-            >>> preview = await cortex.conversations.delete_many(
-            ...     {'user_id': 'user-123'},
-            ...     DeleteManyConversationsOptions(dry_run=True)
-            ... )
-            >>> print(f"Would delete {preview.would_delete} conversations")
-
-            >>> # Execute deletion
-            >>> result = await cortex.conversations.delete_many({
-            ...     'memory_space_id': 'user-123-personal',
-            ...     'user_id': 'user-123',
-            ...     'type': 'user-agent',
-            ... })
-            >>> print(f"Deleted {result.deleted} conversations")
-        """
-        # Extract filter values
-        user_id = filter.get("user_id") or filter.get("userId")
-        memory_space_id = filter.get("memory_space_id") or filter.get("memorySpaceId")
-        conv_type = filter.get("type")
-
-        # Validate type if provided
-        if conv_type is not None:
-            validate_conversation_type(conv_type)
-
-        # Ensure at least one filter is provided
-        if user_id is None and memory_space_id is None and conv_type is None:
-            raise ConversationValidationError(
-                "delete_many requires at least one filter (user_id, memory_space_id, or type)",
-                "MISSING_REQUIRED_FIELD",
-            )
-
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "conversations:deleteMany",
-                filter_none_values({
-                    "userId": user_id,
-                    "memorySpaceId": memory_space_id,
-                    "type": conv_type,
-                    "dryRun": options.dry_run if options else None,
-                    "confirmationThreshold": options.confirmation_threshold if options else None,
-                }),
-            ),
-            "conversations:deleteMany",
-        )
-
-        return DeleteManyConversationsResult(**convert_convex_response(result))
 
     async def get_message(
         self, conversation_id: str, message_id: str
@@ -800,7 +641,7 @@ class ConversationsAPI:
         validate_visibility(visibility)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "conversations:getOrCreate",
                 filter_none_values({
                     "memorySpaceId": input.memory_space_id,
@@ -816,9 +657,9 @@ class ConversationsAPI:
                     "metadata": input.metadata,
                     "visibility": visibility,  # Pass visibility (defaults to 'private' if None)
                 }),
-            ),
+            None, ),
             "conversations:getOrCreate",
-        )
+        graph_write=None, )
 
         return Conversation(**convert_convex_response(result))
 
@@ -826,6 +667,7 @@ class ConversationsAPI:
         self,
         conversation_id: str,
         options: Optional[GetHistoryOptions] = None,
+        *, tenant_id: Optional[str] = None,
     ) -> GetHistoryResult:
         """
         Get paginated message history from a conversation.
@@ -862,7 +704,7 @@ class ConversationsAPI:
 
         if options:
             if options.limit is not None:
-                validate_limit(options.limit)
+                natural(options.limit)
             if options.offset is not None:
                 validate_offset(options.offset)
             if options.sort_order is not None:
@@ -876,6 +718,7 @@ class ConversationsAPI:
                 "conversations:getHistory",
                 filter_none_values({
                     "conversationId": conversation_id,
+                    "tenantId": resolve_scope(self._tenant_id, tenant_id),
                     "limit": options.limit if options else None,
                     "offset": options.offset if options else None,
                     "sortOrder": options.sort_order if options else None,
@@ -958,72 +801,16 @@ class ConversationsAPI:
 
         return [ConversationSearchResult(**convert_convex_response(item)) for item in result]
 
-    async def export(
-        self,
-        format: Literal["json", "csv"],
-        user_id: Optional[str] = None,
-        participant_id: Optional[str] = None,
-        memory_space_id: Optional[str] = None,
-        conversation_ids: Optional[List[str]] = None,
-        type: Optional[ConversationType] = None,
-        date_start: Optional[int] = None,
-        date_end: Optional[int] = None,
-        include_metadata: bool = True,
-    ) -> ExportResult:
-        """
-        Export conversations to JSON or CSV.
-
-        Args:
-            format: Export format ('json' or 'csv')
-            user_id: Filter by user ID
-            participant_id: Filter by participant ID (Hive Mode)
-            memory_space_id: Filter by memory space
-            conversation_ids: Specific conversation IDs to export
-            type: Filter by conversation type
-            date_start: Filter by start date
-            date_end: Filter by end date
-            include_metadata: Include metadata in export
-
-        Returns:
-            Export result with data
-
-        Example:
-            >>> exported = await cortex.conversations.export(
-            ...     format='json',
-            ...     memory_space_id='user-123-personal',
-            ...     user_id='user-123',
-            ...     include_metadata=True
-            ... )
-        """
+    async def export(self, format: Literal["json", "csv"], user_id: Optional[str] = None, participant_id: Optional[str] = None, memory_space_id: Optional[str] = None, conversation_ids: Optional[List[str]] = None, type: Optional[ConversationType] = None, date_start: Optional[int] = None, date_end: Optional[int] = None, include_metadata: bool = True, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> ExportResult:
         validate_export_format(format)
-
         if type is not None:
             validate_conversation_type(type)
         if conversation_ids is not None:
             validate_non_empty_list(conversation_ids, "conversation_ids")
-
-        # Validate date range
         validate_timestamp_range(date_start, date_end)
+        rows = await collect(loader(self.client, "conversations", {"tenantId": resolve_scope(self._tenant_id, tenant_id), "userId": user_id, "participantId": participant_id, "memorySpaceId": memory_space_id, "conversationIds": conversation_ids, "type": type, "dateStart": date_start, "dateEnd": date_end}), read_options)
+        return ExportResult(**convert_convex_response(conversations_export(rows, format, include_metadata)))
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "conversations:exportConversations",
-                filter_none_values({
-                    "userId": user_id,
-                    "participantId": participant_id,
-                    "memorySpaceId": memory_space_id,
-                    "conversationIds": conversation_ids,
-                    "type": type,
-                    "dateStart": date_start,
-                    "dateEnd": date_end,
-                    "format": format,
-                    "includeMetadata": include_metadata,
-                }),
-            ),
-            "conversations:exportConversations",
-        )
-
-        return ExportResult(**convert_convex_response(result))
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # Visibility & Access Control (Shareable Chats Phase 1)
@@ -1110,16 +897,16 @@ class ConversationsAPI:
         user_id = self._auth_context.user_id if self._auth_context else None
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "conversations:setVisibility",
                 filter_none_values({
                     "conversationId": input.conversation_id,
                     "visibility": input.visibility,
                     "userId": user_id,
                 }),
-            ),
+            None, ),
             "conversations:setVisibility",
-        )
+        graph_write=None, )
 
         return Conversation(**convert_convex_response(result))
 
@@ -1551,16 +1338,16 @@ class ConversationsAPI:
         user_id = self._auth_context.user_id if self._auth_context else ""
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "conversations:approveMessage",
                 {
                     "conversationId": input.conversation_id,
                     "messageId": input.message_id,
                     "approverId": user_id,
                 },
-            ),
+            None, ),
             "conversations:approveMessage",
-        )
+        graph_write=None, )
 
         return Conversation(**convert_convex_response(result))
 
@@ -1593,16 +1380,16 @@ class ConversationsAPI:
         user_id = self._auth_context.user_id if self._auth_context else ""
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "conversations:rejectMessage",
                 {
                     "conversationId": input.conversation_id,
                     "messageId": input.message_id,
                     "rejecterId": user_id,
                 },
-            ),
+            None, ),
             "conversations:rejectMessage",
-        )
+        graph_write=None, )
 
         return Conversation(**convert_convex_response(result))
 

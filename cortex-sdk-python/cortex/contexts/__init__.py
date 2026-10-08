@@ -8,6 +8,11 @@ from typing import Any, Dict, List, Optional, Union, cast
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AuthContext,
     Context,
@@ -58,6 +63,7 @@ class ContextsAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Contexts API.
@@ -70,13 +76,19 @@ class ContextsAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -137,7 +149,7 @@ class ContextsAPI:
         tenant_id = params.tenant_id if hasattr(params, 'tenant_id') and params.tenant_id else self._tenant_id
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:create",
                 filter_none_values({
                     "purpose": params.purpose,
@@ -157,19 +169,11 @@ class ContextsAPI:
                     "data": params.data,
                     "status": params.status,
                 }),
-            ),
+            graph_option(options), ),
             "contexts:create",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_context_relationships, sync_context_to_graph
-
-                node_id = await sync_context_to_graph(result, self.graph_adapter)
-                await sync_context_relationships(result, node_id, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync context to graph: {error}")
 
         # Manually construct to handle field name differences
         return Context(
@@ -193,7 +197,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def get(
         self,
@@ -263,7 +267,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def update(
         self,
@@ -303,24 +307,17 @@ class ContextsAPI:
 
         # Flatten updates into top-level parameters
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:update", filter_none_values({
                     "contextId": context_id,
                     "tenantId": self._tenant_id,  # Multi-tenancy
                     **updates
                 })
-            ),
+            , graph_option(options)),
             "contexts:update",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_context_to_graph
-
-                await sync_context_to_graph(result, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync context update to graph: {error}")
 
         # Manually construct to handle field name differences
         return Context(
@@ -344,7 +341,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def delete(
         self, context_id: str, options: Optional[DeleteContextOptions] = None
@@ -372,7 +369,7 @@ class ContextsAPI:
         opts = options or DeleteContextOptions()
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:deleteContext",
                 filter_none_values({
                     "contextId": context_id,
@@ -380,18 +377,11 @@ class ContextsAPI:
                     "cascadeChildren": opts.cascade_children,
                     "orphanChildren": opts.orphan_children,
                 }),
-            ),
+            graph_option(options), ),
             "contexts:deleteContext",
-        )
+        graph_write=graph_option(options), )
 
         # Delete from graph
-        if opts.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import delete_context_from_graph
-
-                await delete_context_from_graph(context_id, self.graph_adapter, True)
-            except Exception as error:
-                print(f"Warning: Failed to delete context from graph: {error}")
 
         return cast(Dict[str, Any], result)
 
@@ -669,16 +659,16 @@ class ContextsAPI:
         validate_required_string(scope, "scope")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:grantAccess",
                 filter_none_values({
                     "contextId": context_id,
                     "targetMemorySpaceId": target_memory_space_id,
                     "scope": scope,
                 }),
-            ),
+            None, ),
             "contexts:grantAccess",
-        )
+        graph_write=None, )
 
         # Manually construct to handle field name differences
         return Context(
@@ -702,7 +692,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def get_root(self, context_id: str) -> Context:
         """
@@ -748,7 +738,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def get_children(
         self,
@@ -874,12 +864,12 @@ class ContextsAPI:
         validate_required_string(participant_id, "participant_id")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:addParticipant",
                 {"contextId": context_id, "participantId": participant_id},
-            ),
+            None, ),
             "contexts:addParticipant",
-        )
+        graph_write=None, )
 
         # Manually construct to handle field name differences
         return Context(
@@ -903,7 +893,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def remove_participant(self, context_id: str, participant_id: str) -> Context:
         """
@@ -925,12 +915,12 @@ class ContextsAPI:
         validate_required_string(participant_id, "participant_id")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:removeParticipant",
                 {"contextId": context_id, "participantId": participant_id},
-            ),
+            None, ),
             "contexts:removeParticipant",
-        )
+        graph_write=None, )
 
         # Manually construct to handle field name differences
         return Context(
@@ -954,7 +944,7 @@ class ContextsAPI:
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
             metadata=result.get("metadata"),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
     async def get_by_conversation(self, conversation_id: str) -> List[Context]:
         """
@@ -1053,7 +1043,7 @@ class ContextsAPI:
             validate_data_object(updates["data"])
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:updateMany",
                 filter_none_values({
                     "memorySpaceId": filters.get("memorySpaceId"),
@@ -1063,9 +1053,9 @@ class ContextsAPI:
                     "rootId": filters.get("rootId"),
                     "updates": updates,
                 }),
-            ),
+            None, ),
             "contexts:updateMany",
-        )
+        graph_write=None, )
 
         return cast(Dict[str, Any], result)
 
@@ -1108,7 +1098,7 @@ class ContextsAPI:
             validate_timestamp(filters["completedBefore"], "completedBefore")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "contexts:deleteMany",
                 filter_none_values({
                     "memorySpaceId": filters.get("memorySpaceId"),
@@ -1117,9 +1107,9 @@ class ContextsAPI:
                     "completedBefore": filters.get("completedBefore"),
                     "cascadeChildren": cascade_children,
                 }),
-            ),
+            None, ),
             "contexts:deleteMany",
-        )
+        graph_write=None, )
 
         return cast(Dict[str, Any], result)
 

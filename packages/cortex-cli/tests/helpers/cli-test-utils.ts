@@ -322,3 +322,72 @@ export function stripAnsi(str: string): string {
   // eslint-disable-next-line no-control-regex
   return str.replace(/\x1b\[[0-9;]*m/g, "");
 }
+
+/** Compile the actual CLI without prebuild/template effects into an owned staging root. */
+export async function stageActualCLI(): Promise<{
+  entry: string;
+  root: string;
+  cleanup: () => Promise<void>;
+}> {
+  const { mkdtemp, mkdir, symlink, copyFile, rm } = await import("fs/promises");
+  const { tmpdir } = await import("os");
+  const { join, resolve, dirname } = await import("path");
+  const { fileURLToPath } = await import("url");
+  const { execFileSync } = await import("child_process");
+  const cliRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+  const repository = resolve(cliRoot, "../..");
+  const root = await mkdtemp(join(tmpdir(), "cortex-actual-cli-"));
+  try {
+    const staged = join(root, "cli");
+    await mkdir(staged);
+    await copyFile(join(cliRoot, "package.json"), join(staged, "package.json"));
+    await symlink(join(cliRoot, "node_modules"), join(staged, "node_modules"));
+    await symlink(join(repository, "node_modules"), join(root, "node_modules"));
+    execFileSync(
+      process.execPath,
+      [
+        join(repository, "node_modules/typescript/bin/tsc"),
+        "--outDir",
+        join(staged, "dist"),
+      ],
+      { cwd: cliRoot, stdio: "pipe", timeout: 30000 },
+    );
+    return {
+      entry: join(staged, "dist/index.js"),
+      root,
+      cleanup: () => rm(root, { recursive: true, force: true }),
+    };
+  } catch (error) {
+    await rm(root, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+/** A minimal allowlist avoids inherited credentials/targets; subprocess never opens stdin. */
+export async function runActualCLI(
+  entry: string,
+  args: string[],
+  home: string,
+  cwd: string,
+): Promise<{ status: number | null; stdout: string; stderr: string }> {
+  const { spawnSync } = await import("child_process");
+  const result = spawnSync(process.execPath, [entry, ...args], {
+    cwd,
+    encoding: "utf8",
+    timeout: 15000,
+    env: {
+      HOME: home,
+      PATH: process.env.PATH ?? "",
+      NO_COLOR: "1",
+      DOTENV_CONFIG_QUIET: "true",
+      CONVEX_URL_CLI: "http://127.0.0.1:1",
+      CONVEX_URL: "http://127.0.0.1:1",
+    },
+  });
+  if (result.error) throw result.error;
+  return {
+    status: result.status,
+    stdout: result.stdout,
+    stderr: result.stderr,
+  };
+}

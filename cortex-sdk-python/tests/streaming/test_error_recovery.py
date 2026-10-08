@@ -178,7 +178,13 @@ class TestStreamErrorRecovery:
         Test: Rollback strategy cleans up data
         Validates: Delete mutation is called
         """
-        recovery = StreamErrorRecovery(mock_convex_client)
+        from cortex.memory.streaming.progressive_storage_handler import (
+            ProgressiveStorageHandler,
+        )
+
+        storage = ProgressiveStorageHandler(mock_convex_client, "test-space", "test-conv", "test-user")
+        storage._adopt({"_id": "actual-partial", "memoryId": "partial-mem-123", "sourceRevision": 2, "referenceGeneration": "captured-generation", "ownershipRevision": 1})
+        recovery = StreamErrorRecovery(mock_convex_client, partial_storage=storage)
 
         options = RecoveryOptions(strategy=FailureStrategy.ROLLBACK)
 
@@ -188,13 +194,17 @@ class TestStreamErrorRecovery:
         )
 
         # CRITICAL: Validate rollback
-        assert result.success is True or mock_convex_client.mutation.called
+        assert result.success is True
+        assert storage.was_deleted() is True
         # Delete should be called for partial memory
         delete_calls = [
             call for call in mock_convex_client.mutation.call_args_list
             if "deleteMemory" in str(call)
         ]
-        assert len(delete_calls) > 0, "Delete mutation should be called"
+        assert len(delete_calls) == 1, "Exact partial deletion must be sent once"
+        args = delete_calls[0].args[1]
+        assert args["expectedPhysicalId"] == "actual-partial" and args["expectedSourceRevision"] == 2
+        assert args["expectedReferenceGeneration"] == "captured-generation" and args["expectedPartial"] is True
 
     @pytest.mark.asyncio
     async def test_retry_with_backoff_delays(self):

@@ -14,6 +14,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Awaitable, Callable, Dict, List, Literal, Optional, Union
 
+from .discovery import collect_candidates
+
 # Type alias for deduplication strategy
 DeduplicationStrategy = Literal["none", "exact", "structural", "semantic"]
 
@@ -168,6 +170,7 @@ class FactDeduplicationService:
         memory_space_id: str,
         config: DeduplicationConfig,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> DuplicateResult:
         """
         Find a duplicate fact in the database.
@@ -191,7 +194,7 @@ class FactDeduplicationService:
         # 1. Structural match (most reliable)
         if config.strategy == "structural" or config.strategy == "semantic":
             structural_match = await self._find_structural_match(
-                candidate, memory_space_id, user_id
+                candidate, memory_space_id, user_id, tenant_id
             )
 
             if structural_match:
@@ -206,7 +209,7 @@ class FactDeduplicationService:
         # 2. Exact text match
         if config.strategy == "exact" or config.strategy == "semantic":
             exact_match = await self._find_exact_match(
-                candidate, memory_space_id, user_id
+                candidate, memory_space_id, user_id, tenant_id
             )
 
             if exact_match:
@@ -234,6 +237,7 @@ class FactDeduplicationService:
                 config.generate_embedding,
                 config.similarity_threshold,
                 user_id,
+                tenant_id,
             )
 
             if semantic_match:
@@ -252,43 +256,27 @@ class FactDeduplicationService:
         candidate: FactCandidate,
         memory_space_id: str,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> Optional[Any]:
         """Find a fact with matching subject, predicate, and object."""
         # Only check structural match if we have at least subject AND (predicate OR object)
         if not candidate.subject or (not candidate.predicate and not candidate.object):
             return None
 
-        try:
-            # Build query parameters
-            query_params: Dict[str, Any] = {
-                "memorySpaceId": memory_space_id,
-                "subject": candidate.subject,
-            }
-            if candidate.predicate:
-                query_params["predicate"] = candidate.predicate
-            if candidate.object:
-                query_params["object"] = candidate.object
-            if user_id:
-                query_params["userId"] = user_id
-            query_params["limit"] = 1
-
-            facts = await self.client.query("facts:findByStructure", query_params)
-
-            if facts and len(facts) > 0:
-                # Convert to FactRecord-like object
-                from .._utils import convert_convex_response
-                from ..types import FactRecord
-                return FactRecord(**convert_convex_response(facts[0]))
-            return None
-        except Exception:
-            # Query might not exist yet, fall through
-            return None
+        query_params: Dict[str, Any] = {
+            "memorySpaceId": memory_space_id, "subject": candidate.subject,
+            "predicate": candidate.predicate, "object": candidate.object,
+            "userId": user_id, "tenantId": tenant_id,
+        }
+        facts = await collect_candidates(self.client, "findByStructure", query_params, 1)
+        return facts[0] if facts else None
 
     async def _find_exact_match(
         self,
         candidate: FactCandidate,
         memory_space_id: str,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> Optional[Any]:
         """Find a fact with matching normalized text."""
         normalized_candidate = normalize_fact_text(candidate.fact)
@@ -297,23 +285,19 @@ class FactDeduplicationService:
         query_params: Dict[str, Any] = {
             "memorySpaceId": memory_space_id,
             "factType": candidate.fact_type,
-            "limit": 100,  # Check first 100 facts
+            "tenantId": tenant_id,
         }
         if user_id:
             query_params["userId"] = user_id
 
         # Get facts for this memory space and optionally filter by user
-        facts = await self.client.query("facts:list", query_params)
+        facts = await collect_candidates(self.client, "list", query_params, 100)
 
         if not facts:
             return None
 
         # Find exact match by normalized text
-        from .._utils import convert_convex_response
-        from ..types import FactRecord
-
-        for fact_data in facts:
-            fact = FactRecord(**convert_convex_response(fact_data))
+        for fact in facts:
             normalized_existing = normalize_fact_text(fact.fact)
             if normalized_candidate == normalized_existing:
                 return fact
@@ -327,6 +311,7 @@ class FactDeduplicationService:
         generate_embedding: Callable[[str], Awaitable[List[float]]],
         threshold: float,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> Optional[Dict[str, Any]]:
         """Find a semantically similar fact using embeddings."""
         # Generate embedding for candidate fact
@@ -336,25 +321,21 @@ class FactDeduplicationService:
         query_params: Dict[str, Any] = {
             "memorySpaceId": memory_space_id,
             "factType": candidate.fact_type,
-            "limit": 50,  # Limit for performance
+            "tenantId": tenant_id,
         }
         if user_id:
             query_params["userId"] = user_id
 
         # Get existing facts
-        facts = await self.client.query("facts:list", query_params)
+        facts = await collect_candidates(self.client, "list", query_params, 50)
 
         if not facts:
             return None
 
-        from .._utils import convert_convex_response
-        from ..types import FactRecord
-
         best_match: Optional[Dict[str, Any]] = None
 
         # Compare with each existing fact
-        for fact_data in facts:
-            fact = FactRecord(**convert_convex_response(fact_data))
+        for fact in facts:
 
             # Generate embedding for existing fact
             existing_embedding = await generate_embedding(fact.fact)

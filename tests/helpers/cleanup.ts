@@ -1,3 +1,4 @@
+import { graphOffResult } from "../../src/graph/erasure";
 /**
  * Test Cleanup Helpers
  *
@@ -30,9 +31,9 @@ export class TestCleanup {
 
     for (const conversation of conversations) {
       try {
-        await this.client.mutation(api.conversations.deleteConversation, {
+        graphOffResult(await this.client.mutation(api.conversations.deleteConversation, {
           conversationId: conversation.conversationId,
-        });
+        }));
         deleted++;
       } catch (err: any) {
         // Ignore "CONVERSATION_NOT_FOUND" errors (already deleted)
@@ -55,7 +56,7 @@ export class TestCleanup {
     console.log("🧹 Purging ALL memories from database...");
 
     try {
-      const result = await this.client.mutation(api.memories.purgeAll, {});
+      const result = graphOffResult(await this.client.mutation(api.memories.purgeAll, {}));
 
       console.log(`✅ Purged ${result.deleted} total memories`);
 
@@ -74,7 +75,7 @@ export class TestCleanup {
     console.log("🧹 Purging facts table...");
 
     try {
-      const result = await this.client.mutation(api.facts.purgeAll, {});
+      const result = graphOffResult(await this.client.mutation(api.facts.purgeAll, {}));
 
       console.log(`✅ Purged ${result.deleted} facts`);
 
@@ -93,7 +94,7 @@ export class TestCleanup {
     console.log("🧹 Purging contexts table...");
 
     try {
-      const result = await this.client.mutation(api.contexts.purgeAll, {});
+      const result = graphOffResult(await this.client.mutation(api.contexts.purgeAll, {}));
 
       console.log(`✅ Purged ${result.deleted} contexts`);
 
@@ -112,7 +113,7 @@ export class TestCleanup {
     console.log("🧹 Purging memorySpaces table...");
 
     try {
-      const result = await this.client.mutation(api.memorySpaces.purgeAll, {});
+      const result = graphOffResult(await this.client.mutation(api.memorySpaces.purgeAll, {}));
 
       console.log(`✅ Purged ${result.deleted} memory spaces`);
 
@@ -276,9 +277,9 @@ export class ScopedCleanup {
           this.belongsToRun(conv.conversationId)
         ) {
           try {
-            await this.client.mutation(api.conversations.deleteConversation, {
+            graphOffResult(await this.client.mutation(api.conversations.deleteConversation, {
               conversationId: conv.conversationId,
-            });
+            }));
             deleted++;
           } catch {
             // Ignore already deleted
@@ -347,10 +348,10 @@ export class ScopedCleanup {
 
             for (const mem of memories) {
               try {
-                await this.client.mutation(api.memories.deleteMemory, {
+                graphOffResult(await this.client.mutation(api.memories.deleteMemory, {
                   memorySpaceId: space.memorySpaceId,
                   memoryId: mem.memoryId,
-                });
+                }));
                 deleted++;
               } catch {
                 // Ignore errors
@@ -388,10 +389,10 @@ export class ScopedCleanup {
 
             for (const fact of facts) {
               try {
-                await this.client.mutation(api.facts.deleteFact, {
+                graphOffResult(await this.client.mutation(api.facts.deleteFact, {
                   memorySpaceId: space.memorySpaceId,
                   factId: fact.factId,
-                });
+                }));
                 deleted++;
               } catch {
                 // Ignore errors
@@ -459,10 +460,10 @@ export class ScopedCleanup {
       for (const user of result.entries) {
         if (this.belongsToRun(user.id)) {
           try {
-            await this.client.mutation(api.immutable.purge, {
+            graphOffResult(await this.client.mutation(api.immutable.purge, {
               type: "user",
               id: user.id,
-            });
+            }));
             deleted++;
           } catch {
             // Ignore errors
@@ -526,10 +527,10 @@ export class ScopedCleanup {
         // Check if type or id belongs to this run
         if (this.belongsToRun(record.type) || this.belongsToRun(record.id)) {
           try {
-            await this.client.mutation(api.immutable.purge, {
+            graphOffResult(await this.client.mutation(api.immutable.purge, {
               type: record.type,
               id: record.id,
-            });
+            }));
             deleted++;
           } catch {
             // Ignore errors
@@ -560,9 +561,9 @@ export class ScopedCleanup {
       // Try to purge namespace that matches our runId pattern
       // The runId format is like "mutable-run-1234567890-abc123"
       try {
-        const result = await this.client.mutation(api.mutable.purgeNamespace, {
+        const result = graphOffResult(await this.client.mutation(api.mutable.purgeNamespace, {
           namespace: this.runId,
-        });
+        }));
         deleted += result.deleted;
       } catch {
         // Namespace may not exist
@@ -579,12 +580,12 @@ export class ScopedCleanup {
       for (const suffix of suffixes) {
         const namespace = `${this.runId}-${suffix}`;
         try {
-          const result = await this.client.mutation(
+          const result = graphOffResult(await this.client.mutation(
             api.mutable.purgeNamespace,
             {
               namespace,
             },
-          );
+          ));
           deleted += result.deleted;
         } catch {
           // Namespace may not exist

@@ -1,3 +1,5 @@
+import { graphMutation } from "./lib/graphSync";
+import { captureInsertedRow, reconcileRow, markDeletedRow, extractReferenceSlots, requireLifecycleReady, deleteUnreferencedStorage } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Artifacts API
  *
@@ -14,7 +16,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Shared Validators
@@ -45,7 +47,7 @@ const streamingStateValidator = v.union(
 /**
  * Create a new artifact with initial content
  */
-export const create = mutation({
+export const create = graphMutation({
   args: {
     artifactId: v.optional(v.string()), // Auto-generate if not provided
     memorySpaceId: v.string(), // Required - memory space isolation
@@ -84,25 +86,10 @@ export const create = mutation({
       args.artifactId ||
       `art-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
-    // Check for duplicate artifactId (within tenant if provided)
-    let existing;
-    if (args.tenantId) {
-      existing = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", artifactId),
-        )
-        .first();
-    } else {
-      existing = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", artifactId))
-        .first();
-    }
-
-    if (existing) {
-      throw new ConvexError("ARTIFACT_ALREADY_EXISTS");
-    }
+    const candidates = await ctx.db.query("artifacts")
+      .withIndex("by_tenant_artifactId", q => q.eq("tenantId", args.tenantId).eq("artifactId", artifactId)).take(2);
+    if (candidates.length > 1) throw new ConvexError("ARTIFACT_SCOPE_AMBIGUOUS");
+    if (candidates.length) throw new ConvexError("ARTIFACT_ALREADY_EXISTS");
 
     // Create initial version history entry
     const initialVersion = {
@@ -123,7 +110,7 @@ export const create = mutation({
           }
         : undefined;
 
-    const _id = await ctx.db.insert("artifacts", {
+    const _id = await captureInsertedRow(ctx, "artifacts", {
       artifactId,
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
@@ -155,7 +142,7 @@ export const create = mutation({
  * IMPORTANT: If user has undone and is not at the latest version,
  * this creates a new branch from current position, discarding future versions.
  */
-export const update = mutation({
+export const update = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()), // For tenant-isolated lookup
@@ -174,23 +161,11 @@ export const update = mutation({
     changeSummary: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      // Security: Only match if global (no tenantId) to prevent cross-tenant access
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+    // Exact tenant equality includes known tenantless rows; duplicate physical rows are ambiguous.
+    const candidates = await ctx.db.query("artifacts")
+      .withIndex("by_tenant_artifactId", q => q.eq("tenantId", args.tenantId).eq("artifactId", args.artifactId)).take(2);
+    if (candidates.length > 1) throw new ConvexError("ARTIFACT_SCOPE_AMBIGUOUS");
+    const artifact = candidates[0] ?? null;
 
     if (!artifact) {
       throw new ConvexError("ARTIFACT_NOT_FOUND");
@@ -246,7 +221,7 @@ export const update = mutation({
         : artifact.kindConfig;
 
     // Update artifact
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       content: newContent,
       title: newTitle,
       kindConfig: kindConfigUpdate,
@@ -265,7 +240,7 @@ export const update = mutation({
 /**
  * Delete an artifact (soft delete by default, hard delete optional)
  */
-export const deleteArtifact = mutation({
+export const deleteArtifact = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -295,21 +270,25 @@ export const deleteArtifact = mutation({
     }
 
     if (args.hard) {
-      // Hard delete - permanently remove
-      await ctx.db.delete(artifact._id);
+      const storageIds = extractReferenceSlots("artifacts", artifact).flatMap(slot => slot.storageId ? [slot.storageId] : []);
+      if (storageIds.length) await requireLifecycleReady(ctx);
+      await markDeletedRow(ctx, artifact._id);
+      const binaryDispositions = [];
+      for (const storageId of storageIds) binaryDispositions.push({storageId, disposition: await deleteUnreferencedStorage(ctx, storageId)});
 
       return {
         deleted: true,
         artifactId: args.artifactId,
         deletedAt: Date.now(),
         permanent: true,
+        binaryDispositions,
         versionsPurged: artifact.versionHistory?.length ?? artifact.version,
       };
     }
 
     // Soft delete - set isDeleted flag (separate from streamingState)
     const now = Date.now();
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       isDeleted: true,
       deletedAt: now,
       deletedBy: args.deletedBy,
@@ -332,28 +311,17 @@ export const deleteArtifact = mutation({
  * Does NOT delete current version, just moves the pointer back.
  * Allows redo to restore the undone version.
  */
-export const undo = mutation({
+export const undo = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+    // Exact tenant equality includes known tenantless rows; duplicate physical rows are ambiguous.
+    const candidates = await ctx.db.query("artifacts")
+      .withIndex("by_tenant_artifactId", q => q.eq("tenantId", args.tenantId).eq("artifactId", args.artifactId)).take(2);
+    if (candidates.length > 1) throw new ConvexError("ARTIFACT_SCOPE_AMBIGUOUS");
+    const artifact = candidates[0] ?? null;
 
     if (!artifact) {
       throw new ConvexError("ARTIFACT_NOT_FOUND");
@@ -374,7 +342,7 @@ export const undo = mutation({
 
     // Update artifact to reflect undone state
     // Restore content, title, and fileRef from the target version
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       content: targetVersion.content,
       title: targetVersion.title,
       fileRef: targetVersion.fileRef,
@@ -398,28 +366,17 @@ export const undo = mutation({
  *
  * Only available if user has previously undone.
  */
-export const redo = mutation({
+export const redo = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+    // Exact tenant equality includes known tenantless rows; duplicate physical rows are ambiguous.
+    const candidates = await ctx.db.query("artifacts")
+      .withIndex("by_tenant_artifactId", q => q.eq("tenantId", args.tenantId).eq("artifactId", args.artifactId)).take(2);
+    if (candidates.length > 1) throw new ConvexError("ARTIFACT_SCOPE_AMBIGUOUS");
+    const artifact = candidates[0] ?? null;
 
     if (!artifact) {
       throw new ConvexError("ARTIFACT_NOT_FOUND");
@@ -440,7 +397,7 @@ export const redo = mutation({
 
     // Update artifact to reflect redone state
     // Restore content, title, and fileRef from the target version
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       content: targetVersion.content,
       title: targetVersion.title,
       fileRef: targetVersion.fileRef,
@@ -466,7 +423,7 @@ export const redo = mutation({
  * Error state can transition back to draft for retry
  * See 00-unified-specification.md for valid transitions
  */
-export const setStreamingState = mutation({
+export const setStreamingState = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -497,7 +454,7 @@ export const setStreamingState = mutation({
     const now = Date.now();
     const previousState = artifact.streamingState;
 
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: args.streamingState,
       updatedAt: now,
     });
@@ -518,7 +475,7 @@ export const setStreamingState = mutation({
  * NOTE: Schema uses single fileRef, not attachedFiles array.
  * Use completeArtifactUpload for file uploads via storage.
  */
-export const setFileRef = mutation({
+export const setFileRef = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -558,7 +515,7 @@ export const setFileRef = mutation({
 
     const now = Date.now();
 
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       fileRef: args.fileRef,
       content: undefined, // fileRef and content are mutually exclusive
       updatedAt: now,
@@ -574,7 +531,7 @@ export const setFileRef = mutation({
  * Keeps the most recent N versions and removes older ones.
  * Always preserves version 1 (initial creation) and current active version.
  */
-export const purgeVersions = mutation({
+export const purgeVersions = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -655,7 +612,7 @@ export const purgeVersions = mutation({
     // Calculate actual versions purged
     const versionsToRemove = totalVersions - prunedHistory.length;
 
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       versionHistory: prunedHistory,
     });
 
@@ -671,7 +628,7 @@ export const purgeVersions = mutation({
  *
  * WARNING: Permanently deletes all artifacts!
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {
     tenantId: v.optional(v.string()), // Limit to tenant if provided
   },
@@ -712,7 +669,7 @@ export const purgeAll = mutation({
     }
 
     for (const artifact of allArtifacts) {
-      await ctx.db.delete(artifact._id);
+      await markDeletedRow(ctx, artifact._id);
     }
 
     return { deleted: allArtifacts.length };
@@ -1274,7 +1231,7 @@ function isValidTransition(from: string, to: string): boolean {
  *
  * See 00-unified-specification.md Section 3.5
  */
-export const startStreaming = mutation({
+export const startStreaming = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1317,7 +1274,7 @@ export const startStreaming = mutation({
     // Update artifact to streaming state with metadata
     // Note: streamingMetadata schema only supports: sessionId, startedAt, lastChunkAt,
     // bytesReceived, estimatedTotal, errorMessage, errorCode
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "streaming",
       streamingMetadata: {
         sessionId,
@@ -1348,7 +1305,7 @@ export const startStreaming = mutation({
  * Requires: artifact in 'streaming' state with matching sessionId.
  * Updates streamingMetadata with progress information.
  */
-export const appendContent = mutation({
+export const appendContent = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1395,7 +1352,7 @@ export const appendContent = mutation({
       (artifact.streamingMetadata?.bytesReceived || 0) + chunkBytes;
 
     // Update artifact with appended content
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       content: newContent,
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1432,7 +1389,7 @@ export const appendContent = mutation({
  * Transitions: streaming → paused
  * Preserves content and session for later resumption.
  */
-export const pauseStreaming = mutation({
+export const pauseStreaming = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1473,7 +1430,7 @@ export const pauseStreaming = mutation({
 
     // Note: Schema streamingMetadata doesn't have pausedAt/pauseReason fields
     // We transition to paused state but can't store pause metadata in schema
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "paused",
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1500,7 +1457,7 @@ export const pauseStreaming = mutation({
  * Transitions: paused → streaming
  * Continues from where streaming was paused.
  */
-export const resumeStreaming = mutation({
+export const resumeStreaming = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1541,7 +1498,7 @@ export const resumeStreaming = mutation({
     const now = Date.now();
 
     // Note: Schema streamingMetadata doesn't have pausedAt/resumedAt/totalPauseDuration fields
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "streaming",
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1567,7 +1524,7 @@ export const resumeStreaming = mutation({
  * Transitions: streaming|paused → draft
  * Preserves partial content (does not lose data).
  */
-export const cancelStreaming = mutation({
+export const cancelStreaming = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1620,7 +1577,7 @@ export const cancelStreaming = mutation({
 
     // Revert to draft, optionally preserving content
     // Note: Schema streamingMetadata only supports limited fields
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "draft",
       content: preserveContent ? artifact.content : "",
       streamingMetadata: {
@@ -1657,7 +1614,7 @@ export const cancelStreaming = mutation({
  * Clears streamingMetadata and ensures content is complete.
  * Optionally creates a new version in history.
  */
-export const finalizeStreaming = mutation({
+export const finalizeStreaming = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1734,7 +1691,7 @@ export const finalizeStreaming = mutation({
 
     // Finalize: transition to final state, clear streaming metadata
     // Note: Schema streamingMetadata only supports limited fields
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "final",
       streamingMetadata: {
         // Clear all active streaming fields
@@ -1774,7 +1731,7 @@ export const finalizeStreaming = mutation({
  * Transitions: streaming|paused|draft → error
  * Records error details while preserving content.
  */
-export const setStreamingError = mutation({
+export const setStreamingError = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1814,7 +1771,7 @@ export const setStreamingError = mutation({
 
     const now = Date.now();
 
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "error",
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1844,7 +1801,7 @@ export const setStreamingError = mutation({
  * Transitions: error → draft
  * Allows re-attempting streaming after an error.
  */
-export const retryFromError = mutation({
+export const retryFromError = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1875,7 +1832,7 @@ export const retryFromError = mutation({
     const clearContent = args.clearContent === true; // Default false
 
     // Note: Schema streamingMetadata only supports limited fields
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       streamingState: "draft",
       content: clearContent ? "" : artifact.content,
       streamingMetadata: {
@@ -1924,7 +1881,7 @@ export const retryFromError = mutation({
  * await fetch(uploadUrl, { method: 'POST', body: file });
  * ```
  */
-export const generateArtifactUploadUrl = mutation({
+export const generateArtifactUploadUrl = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1991,7 +1948,7 @@ export const generateArtifactUploadUrl = mutation({
  * });
  * ```
  */
-export const completeArtifactUpload = mutation({
+export const completeArtifactUpload = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -2078,7 +2035,7 @@ export const completeArtifactUpload = mutation({
       updates.streamingState = "final";
     }
 
-    await ctx.db.patch(artifact._id, updates);
+    await reconcileRow(ctx, artifact._id, updates);
 
     return {
       success: true,
@@ -2177,29 +2134,18 @@ export const getArtifactFileUrl = query({
  * });
  * ```
  */
-export const detachFile = mutation({
+export const detachFile = graphMutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     deleteFile: v.optional(v.boolean()), // Default: false
   },
   handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+    // Exact tenant equality includes known tenantless rows; duplicate physical rows are ambiguous.
+    const candidates = await ctx.db.query("artifacts")
+      .withIndex("by_tenant_artifactId", q => q.eq("tenantId", args.tenantId).eq("artifactId", args.artifactId)).take(2);
+    if (candidates.length > 1) throw new ConvexError("ARTIFACT_SCOPE_AMBIGUOUS");
+    const artifact = candidates[0] ?? null;
 
     if (!artifact) {
       throw new ConvexError("ARTIFACT_NOT_FOUND");
@@ -2216,18 +2162,7 @@ export const detachFile = mutation({
     const now = Date.now();
     const previousFileRef = artifact.fileRef;
 
-    // Delete file from storage if requested
-    if (args.deleteFile) {
-      try {
-        await ctx.storage.delete(artifact.fileRef.storageId);
-      } catch (error) {
-        // Log but don't fail - file might already be deleted or inaccessible
-        console.warn(
-          `Failed to delete file ${artifact.fileRef.storageId}:`,
-          error,
-        );
-      }
-    }
+    if (args.deleteFile) await requireLifecycleReady(ctx);
 
     // If versionPointer is not at the end, truncate future versions (branch)
     let versionHistory = [...artifact.versionHistory];
@@ -2261,13 +2196,15 @@ export const detachFile = mutation({
     versionHistory.push(newVersionEntry);
 
     // Clear the fileRef
-    await ctx.db.patch(artifact._id, {
+    await reconcileRow(ctx, artifact._id, {
       fileRef: undefined,
       version: newVersion,
       versionPointer: newVersion,
       versionHistory,
       updatedAt: now,
     });
+
+    const binaryDisposition = args.deleteFile ? await deleteUnreferencedStorage(ctx, previousFileRef.storageId) : undefined;
 
     return {
       success: true,
@@ -2278,7 +2215,8 @@ export const detachFile = mutation({
         size: previousFileRef.size,
         originalFilename: previousFileRef.originalFilename,
       },
-      fileDeleted: args.deleteFile ?? false,
+      fileDeleted: binaryDisposition === "deleted",
+      binaryDisposition,
       version: newVersion,
       updatedAt: now,
     };

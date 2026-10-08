@@ -91,7 +91,7 @@ function PureEditor({
   }, [onSaveContent]);
 
   useEffect(() => {
-    if (editorRef.current && content) {
+    if (editorRef.current) {
       const currentContent = buildContentFromDocument(
         editorRef.current.state.doc
       );
@@ -146,7 +146,7 @@ function PureEditor({
   }, [suggestions, content]);
 
   return (
-    <div className="prose dark:prose-invert relative" ref={containerRef} />
+    <div className="prose dark:prose-invert relative min-w-0 flex-1" ref={containerRef} />
   );
 }
 

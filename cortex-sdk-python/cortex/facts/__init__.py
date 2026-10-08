@@ -4,11 +4,29 @@ Cortex SDK - Facts API
 Layer 3: Structured knowledge extraction and storage
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Dict, List, Optional, Union, cast
+from uuid import uuid4
 
+from .._domain_export import facts_export
+from .._domain_paging import (
+    DomainOperationPartialError,
+    collect,
+    loader,
+    natural,
+    resolve_scope,
+    same_selection,
+    select,
+)
 from .._utils import convert_convex_response, filter_none_values
+from ..auth.validators import validate_tenant_id
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    graph_option,
+    mutate_graph_selected,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AuthContext,
     CountFactsFilter,
@@ -16,6 +34,7 @@ from ..types import (
     DeleteFactResult,
     DeleteManyFactsParams,
     DeleteManyFactsResult,
+    DomainReadOptions,
     FactRecord,
     FactType,
     ListFactsFilter,
@@ -48,6 +67,7 @@ from .deduplication import (
     FactDeduplicationService,
     StoreWithDedupResult,
 )
+from .discovery import parse_fact, resolve_fact_scope
 from .history import (
     ActionCounts,
     ActivitySummary,
@@ -55,8 +75,14 @@ from .history import (
     FactChangeEvent,
     FactChangePipeline,
     FactHistoryService,
+    FactOperationAlreadyCommittedError,
+    HistoryReceipt,
+    HistorySelector,
+    HistoryWriteAfterCommitError,
     LogEventParams,
     SupersessionChainEntry,
+    execute_fact_mutation,
+    execute_relationship_mutation,
 )
 from .slot_matching import (
     DEFAULT_PREDICATE_CLASSES,
@@ -99,8 +125,20 @@ class StoreFactWithDedupOptions:
     deduplication: Optional[Union[DeduplicationConfig, DeduplicationStrategy]] = None
     """Deduplication configuration or strategy shorthand."""
 
-    sync_to_graph: bool = False
+    sync_to_graph: Optional[bool] = None
     """Whether to sync the fact to the graph database."""
+
+
+class FactsDeletionPartialError(RuntimeError):
+    """Earlier scalar delete transactions committed; later batch did not complete."""
+    committed = True
+    phase = "physical_delete"
+
+    def __init__(self, deleted: int, memory_space_id: str, cause: Exception) -> None:
+        super().__init__("Fact deletion partially committed; paging did not complete")
+        self.deleted = deleted
+        self.memory_space_id = memory_space_id
+        self.original_cause = cause
 
 
 class FactsAPI:
@@ -118,6 +156,7 @@ class FactsAPI:
         auth_context: Optional[AuthContext] = None,
         llm_client: Optional[BeliefRevisionLLMClient] = None,
         belief_revision_config: Optional[BeliefRevisionConfig] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Facts API.
@@ -132,11 +171,12 @@ class FactsAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
         self._dedup_service = FactDeduplicationService(client)
         self._llm_client = llm_client
-        self._history_service = FactHistoryService(client, resilience)
+        self._history_service = FactHistoryService(client, resilience, auth_context)
 
         # Always initialize belief revision service - "batteries included"
         # When no LLM is configured, the service uses heuristics via get_default_decision()
@@ -146,6 +186,7 @@ class FactsAPI:
             llm_client,
             graph_adapter,
             belief_revision_config,
+            graph_sync_policy=graph_sync_policy,
         )
 
     @property
@@ -153,10 +194,15 @@ class FactsAPI:
         """Get tenant_id from auth context (for multi-tenancy)."""
         return self._auth_context.tenant_id if self._auth_context else None
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -204,11 +250,13 @@ class FactsAPI:
         if params.metadata is not None:
             validate_metadata(params.metadata)
 
+        tenant_id = resolve_fact_scope(self._tenant_id, params.tenant_id)
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "facts:store",
                 filter_none_values({
                     "memorySpaceId": params.memory_space_id,
+                    "tenantId": tenant_id,
                     "participantId": params.participant_id,
                     "userId": params.user_id,
                     "fact": params.fact,
@@ -219,11 +267,11 @@ class FactsAPI:
                     "confidence": params.confidence,
                     "sourceType": params.source_type,
                     "sourceRef": (
-                        {
+                        filter_none_values({
                             "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "conversation_id", None),
                             "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "message_ids", None)) or [],
                             "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "memory_id", None),
-                        }
+                        })
                         if params.source_ref
                         else None
                     ),
@@ -248,21 +296,13 @@ class FactsAPI:
                     # Vector embedding for semantic search (v0.30.0+)
                     "embedding": params.embedding,
                 }),
-            ),
+            graph_option(options), ),
             "facts:store",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_fact_relationships, sync_fact_to_graph
 
-                node_id = await sync_fact_to_graph(result, self.graph_adapter)
-                await sync_fact_relationships(result, node_id, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync fact to graph: {error}")
-
-        return FactRecord(**convert_convex_response(result))
+        return parse_fact(result)
 
     async def store_with_dedup(
         self,
@@ -333,11 +373,17 @@ class FactsAPI:
             tags=params.tags,
         )
 
+        tenant_id = resolve_fact_scope(self._tenant_id, params.tenant_id)
+        if params.operation_id:
+            prior = await self._history_service.get_operation_receipt(params.memory_space_id, params.operation_id, "update", tenant_id)
+            if prior:
+                raise FactOperationAlreadyCommittedError(prior)
         duplicate_result = await self._dedup_service.find_duplicate(
             candidate,
             params.memory_space_id,
             dedup_config,
             params.user_id,
+            tenant_id,
         )
 
         # Handle duplicate found
@@ -359,6 +405,7 @@ class FactsAPI:
                     existing.fact_id,
                     update_data,
                     UpdateFactOptions(sync_to_graph=opts.sync_to_graph),
+                    tenant_id=tenant_id, operation_id=params.operation_id, expected_source_fact_id=existing._id,
                 )
 
                 return StoreWithDedupResult(
@@ -398,7 +445,7 @@ class FactsAPI:
         )
 
     async def get(
-        self, memory_space_id: str, fact_id: str
+        self, memory_space_id: str, fact_id: str, *, tenant_id: Optional[str] = None
     ) -> Optional[FactRecord]:
         """
         Retrieve a fact by ID.
@@ -419,7 +466,7 @@ class FactsAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "facts:get", {"memorySpaceId": memory_space_id, "factId": fact_id}
+                "facts:get", filter_none_values({"memorySpaceId": memory_space_id, "factId": fact_id, "tenantId": resolve_fact_scope(self._tenant_id, tenant_id)})
             ),
             "facts:get",
         )
@@ -427,7 +474,7 @@ class FactsAPI:
         if not result:
             return None
 
-        return FactRecord(**convert_convex_response(result))
+        return parse_fact(result)
 
     async def list(
         self,
@@ -495,10 +542,7 @@ class FactsAPI:
         if filter.metadata is not None:
             validate_metadata(filter.metadata)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "facts:list",
-                filter_none_values({
+        args = filter_none_values({
                     "memorySpaceId": filter.memory_space_id,
                     "factType": filter.fact_type,
                     "subject": filter.subject,
@@ -523,12 +567,17 @@ class FactsAPI:
                     "offset": filter.offset,
                     "sortBy": filter.sort_by,
                     "sortOrder": filter.sort_order,
-                }),
-            ),
-            "facts:list",
-        )
-
-        return [FactRecord(**convert_convex_response(fact)) for fact in result]
+                })
+        args["tenantId"] = resolve_scope(self._tenant_id, getattr(filter, "tenant_id", None))
+        limit = args.pop("limit", None)
+        offset = args.pop("offset", 0) or 0
+        sort_by = args.pop("sortBy", None)
+        sort_order = args.pop("sortOrder", None)
+        rows = await collect(loader(self.client, "facts", args))
+        if sort_by:
+            rows.sort(key=lambda row: row.get(sort_by, 0), reverse=sort_order != "asc")
+        window = rows[offset:] if limit is None else rows[offset:offset + natural(limit)]
+        return [parse_fact(row) for row in window]
 
     async def search(
         self,
@@ -600,10 +649,7 @@ class FactsAPI:
             if options.metadata is not None:
                 validate_metadata(options.metadata)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "facts:search",
-                filter_none_values({
+        args = filter_none_values({
                     "memorySpaceId": memory_space_id,
                     "query": query,
                     "factType": options.fact_type if options else None,
@@ -629,12 +675,17 @@ class FactsAPI:
                     "offset": options.offset if options else None,
                     "sortBy": options.sort_by if options else None,
                     "sortOrder": options.sort_order if options else None,
-                }),
-            ),
-            "facts:search",
-        )
-
-        return [FactRecord(**convert_convex_response(fact)) for fact in result]
+                })
+        args["tenantId"] = resolve_scope(self._tenant_id, getattr(options, "tenant_id", None))
+        limit = args.pop("limit", 20)
+        offset = args.pop("offset", 0) or 0
+        sort_by = args.pop("sortBy", None)
+        sort_order = args.pop("sortOrder", None)
+        rows = await collect(loader(self.client, "facts", args))
+        if sort_by:
+            rows.sort(key=lambda row: row.get(sort_by, 0), reverse=sort_order != "asc")
+        window = rows[offset:] if limit is None else rows[offset:offset + natural(limit)]
+        return [parse_fact(row) for row in window]
 
     async def semantic_search(
         self,
@@ -725,6 +776,7 @@ class FactsAPI:
         fact_id: str,
         updates: Union[UpdateFactInput, Dict[str, Any]],
         options: Optional[UpdateFactOptions] = None,
+        *, tenant_id: Optional[str] = None, operation_id: Optional[str] = None, expected_source_fact_id: Optional[str] = None, expected_source_fingerprint: Optional[str] = None,
     ) -> FactRecord:
         """
         Update a fact (creates new version).
@@ -825,24 +877,21 @@ class FactsAPI:
                 "embedding": updates.get("embedding"),
             })
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "facts:update",
-                mutation_payload,
-            ),
-            "facts:update",
-        )
+        fingerprint = expected_source_fingerprint if expected_source_fingerprint is not None else (options.expected_source_fingerprint if options else None)
+        if fingerprint is not None:
+            import re
+            if not isinstance(fingerprint, str) or re.fullmatch(r"[a-f0-9]{64}", fingerprint) is None:
+                raise ValueError("DOMAIN_INVALID_FINGERPRINT")
+        mutation_payload["expectedSourceFingerprint"] = fingerprint
+        mutation_payload = filter_none_values(mutation_payload)
+        mutation_payload.update(filter_none_values({"tenantId": resolve_fact_scope(self._tenant_id, tenant_id), "operationId": operation_id or str(uuid4()), "expectedSourceFactId": expected_source_fact_id}))
+        async def operation() -> Any:
+            return await execute_fact_mutation(self.client, "facts:update", mutation_payload, self._history_service, "update", graph_adapter=self.graph_adapter, graph_sync_policy=self._graph_sync_policy, sync_to_graph=graph_option(options))
+        result = await operation() if fingerprint is not None else await self._execute_with_resilience(operation, "facts:update", graph_write=graph_option(options))
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_fact_to_graph
 
-                await sync_fact_to_graph(result, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync fact update to graph: {error}")
-
-        return FactRecord(**convert_convex_response(result))
+        return parse_fact(result)
 
     async def delete(
         self,
@@ -870,87 +919,39 @@ class FactsAPI:
         validate_fact_id_format(fact_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "facts:deleteFact", {"memorySpaceId": memory_space_id, "factId": fact_id}
-            ),
+            , graph_option(options)),
             "facts:deleteFact",
-        )
+        graph_write=graph_option(options), )
 
         # Delete from graph
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import delete_fact_from_graph
-
-                await delete_fact_from_graph(fact_id, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to delete fact from graph: {error}")
 
         return DeleteFactResult(
             deleted=result.get("deleted", False),
             fact_id=result.get("factId", fact_id),
-        )
+        graph_jobs=result.get("graphJobs"), graph_disposition=result.get("graphDisposition"), )
 
-    async def delete_many(
-        self,
-        params: DeleteManyFactsParams,
-    ) -> DeleteManyFactsResult:
-        """
-        Delete multiple facts matching filters in a single operation.
-
-        This is a hard delete operation. For soft delete (marking as superseded),
-        use delete() on individual facts.
-
-        Args:
-            params: Delete many parameters with optional filters
-
-        Returns:
-            DeleteManyFactsResult with deleted count and memory_space_id
-
-        Example:
-            >>> from cortex.types import DeleteManyFactsParams
-            >>> # Delete all facts in a memory space
-            >>> result = await cortex.facts.delete_many(
-            ...     DeleteManyFactsParams(memory_space_id='agent-1')
-            ... )
-            >>> print(f"Deleted {result.deleted} facts")
-
-            >>> # Delete all facts for a specific user (GDPR compliance)
-            >>> gdpr_result = await cortex.facts.delete_many(
-            ...     DeleteManyFactsParams(
-            ...         memory_space_id='agent-1',
-            ...         user_id='user-to-delete'
-            ...     )
-            ... )
-
-            >>> # Delete all preference facts
-            >>> pref_result = await cortex.facts.delete_many(
-            ...     DeleteManyFactsParams(
-            ...         memory_space_id='agent-1',
-            ...         fact_type='preference'
-            ...     )
-            ... )
-        """
+    async def delete_many(self, params: DeleteManyFactsParams, *, read_options: Optional[DomainReadOptions] = None) -> DeleteManyFactsResult:
         validate_memory_space_id(params.memory_space_id)
-
         if params.fact_type is not None:
             validate_fact_type(params.fact_type)
+        tenant = resolve_scope(self._tenant_id, params.tenant_id)
+        args = {"memorySpaceId": params.memory_space_id, "tenantId": tenant, "userId": params.user_id, "factType": params.fact_type, "includeSuperseded": params.include_superseded}
+        load = loader(self.client, "facts", {**args, "deleteOperationPrefix": str(uuid4())})
+        selected = await select(load, read_options)
+        if not same_selection(selected, await select(load, read_options)):
+            raise ValueError("DOMAIN_SELECTION_CHANGED")
+        outcome = await mutate_graph_selected(self.client, "facts", selected, args, read_options, self.graph_adapter, self._graph_sync_policy, explicit=graph_option(read_options))
+        try:
+            remaining = await select(load, read_options)
+            if remaining:
+                outcome["remainingPhysicalIds"] = [row["physicalId"] for row in remaining]
+                raise ValueError("DOMAIN_SELECTION_CHANGED")
+        except BaseException as cause:
+            raise DomainOperationPartialError("facts:delete_many", outcome, cause) from cause
+        return DeleteManyFactsResult(deleted=outcome["confirmedCount"], memory_space_id=params.memory_space_id, partial=outcome)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "facts:deleteMany",
-                filter_none_values({
-                    "memorySpaceId": params.memory_space_id,
-                    "userId": params.user_id,
-                    "factType": params.fact_type,
-                }),
-            ),
-            "facts:deleteMany",
-        )
-
-        return DeleteManyFactsResult(
-            deleted=result.get("deleted", 0),
-            memory_space_id=result.get("memorySpaceId", params.memory_space_id),
-        )
 
     async def count(
         self,
@@ -977,6 +978,9 @@ class FactsAPI:
             ... )
         """
         validate_memory_space_id(filter.memory_space_id)
+        validate_tenant_id(self._tenant_id)
+        validate_tenant_id(filter.tenant_id)
+        tenant_id = resolve_fact_scope(self._tenant_id, filter.tenant_id)
 
         if filter.fact_type is not None:
             validate_fact_type(filter.fact_type)
@@ -1012,6 +1016,7 @@ class FactsAPI:
                 "facts:count",
                 filter_none_values({
                     "memorySpaceId": filter.memory_space_id,
+                    "tenantId": tenant_id,
                     "factType": filter.fact_type,
                     "subject": filter.subject,
                     "predicate": filter.predicate,
@@ -1240,7 +1245,7 @@ class FactsAPI:
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
     async def get_history(
-        self, memory_space_id: str, fact_id: str
+        self, memory_space_id: str, fact_id: str, *, tenant_id: Optional[str] = None
     ) -> List[FactRecord]:
         """
         Get complete version history for a fact.
@@ -1259,61 +1264,44 @@ class FactsAPI:
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "facts:getHistory", {"memorySpaceId": memory_space_id, "factId": fact_id}
-            ),
-            "facts:getHistory",
+        selected_tenant = resolve_fact_scope(self._tenant_id, tenant_id)
+        chain = await self._history_service.get_supersession_chain(
+            fact_id, HistorySelector(memory_space_id=memory_space_id, tenant_id=selected_tenant)
         )
+        if not chain:
+            result = await self.client.query("facts:getHistory", filter_none_values({
+                "memorySpaceId": memory_space_id, "factId": fact_id, "tenantId": selected_tenant,
+            }))
+            if any(row.get("supersedes") is not None or row.get("supersededBy") is not None for row in result):
+                raise ValueError("FACT_HISTORY_RELATIONSHIP_UNRESOLVED")
+            return [parse_fact(v) for v in result]
+        records: List[FactRecord] = []
+        for node in chain:
+            try:
+                rows = await self.client.query("facts:getHistory", filter_none_values({
+                    "memorySpaceId": memory_space_id, "factId": node.fact_id,
+                    "tenantId": selected_tenant, "sourceFactId": node.source_fact_id,
+                }))
+            except Exception as error:
+                if any(code in str(error) for code in ("FACT_HISTORY_SOURCE_REQUIRED", "FACT_HISTORY_SOURCE_MISMATCH")):
+                    raise ValueError("FACT_HISTORY_ORIGINAL_RECORD_UNAVAILABLE") from error
+                raise
+            if len(rows) != 1 or rows[0].get("_id") != node.source_fact_id:
+                raise ValueError("FACT_HISTORY_ORIGINAL_RECORD_UNAVAILABLE")
+            records.append(parse_fact(rows[0]))
+        return records
 
-        return [FactRecord(**convert_convex_response(v)) for v in result]
-
-    async def export(
-        self,
-        memory_space_id: str,
-        format: str = "json",
-        fact_type: Optional[FactType] = None,
-    ) -> Dict[str, Any]:
-        """
-        Export facts in various formats.
-
-        Args:
-            memory_space_id: Memory space ID
-            format: Export format ('json', 'jsonld', or 'csv')
-            fact_type: Filter by fact type
-
-        Returns:
-            Export result
-
-        Example:
-            >>> exported = await cortex.facts.export(
-            ...     'agent-1',
-            ...     format='json',
-            ...     fact_type='preference'
-            ... )
-        """
+    async def export(self, memory_space_id: str, format: str = "json", fact_type: Optional[FactType] = None, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
         validate_export_format(format)
-
         if fact_type is not None:
             validate_fact_type(fact_type)
+        rows = await collect(loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": resolve_scope(self._tenant_id, tenant_id), "factType": fact_type, "includeSuperseded": False}), read_options)
+        return facts_export(rows, format)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "facts:exportFacts",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "format": format,
-                    "factType": fact_type,
-                }),
-            ),
-            "facts:exportFacts",
-        )
-
-        return cast(Dict[str, Any], result)
 
     async def consolidate(
-        self, memory_space_id: str, fact_ids: List[str], keep_fact_id: str
+        self, memory_space_id: str, fact_ids: List[str], keep_fact_id: str, *, tenant_id: Optional[str] = None, operation_id: Optional[str] = None, expected_fact_ids: Optional[List[Dict[str, str]]] = None
     ) -> Dict[str, Any]:
         """
         Merge duplicate facts.
@@ -1338,17 +1326,23 @@ class FactsAPI:
         validate_required_string(keep_fact_id, "keep_fact_id")
         validate_consolidation(fact_ids, keep_fact_id)
 
+        if len(fact_ids) > 3:
+            raise ValueError("FACT_HISTORY_CONSOLIDATION_BUDGET")
+        operation_id = operation_id or str(uuid4())
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: execute_relationship_mutation(self.client,
                 "facts:consolidate",
-                {
+                filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": resolve_fact_scope(self._tenant_id, tenant_id),
+                    "operationId": operation_id,
+                    "expectedFactIds": expected_fact_ids,
                     "factIds": fact_ids,
                     "keepFactId": keep_fact_id,
-                },
-            ),
+                }), self._history_service, "consolidate",
+            graph_adapter=self.graph_adapter, graph_sync_policy=self._graph_sync_policy, sync_to_graph=None, ),
             "facts:consolidate",
-        )
+        graph_write=None, )
 
         return cast(Dict[str, Any], result)
 
@@ -1443,6 +1437,7 @@ class FactsAPI:
         validate_required_string(params.fact.fact, "fact")
         validate_confidence(params.fact.confidence, "confidence")
 
+        params = replace(params, tenant_id=resolve_fact_scope(self._tenant_id, params.tenant_id))
         return await self._belief_revision_service.revise(params)
 
     async def check_conflicts(self, params: ReviseParams) -> ConflictCheckResult:
@@ -1486,6 +1481,7 @@ class FactsAPI:
         validate_required_string(params.fact.fact, "fact")
         validate_confidence(params.fact.confidence, "confidence")
 
+        params = replace(params, tenant_id=resolve_fact_scope(self._tenant_id, params.tenant_id))
         return await self._belief_revision_service.check_conflicts(params)
 
     async def supersede(
@@ -1495,6 +1491,10 @@ class FactsAPI:
         old_fact_id: str,
         new_fact_id: str,
         reason: Optional[str] = None,
+        tenant_id: Optional[str] = None,
+        operation_id: Optional[str] = None,
+        expected_old_fact_id: Optional[str] = None,
+        expected_new_fact_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Manually supersede one fact with another.
@@ -1521,8 +1521,6 @@ class FactsAPI:
             >>> if result["superseded"]:
             ...     print("Fact superseded successfully")
         """
-        import time
-
         validate_memory_space_id(memory_space_id)
         validate_required_string(old_fact_id, "old_fact_id")
         validate_fact_id_format(old_fact_id)
@@ -1537,42 +1535,20 @@ class FactsAPI:
                 "old_fact_id and new_fact_id must be different."
             )
 
-        # Verify old fact exists
-        old_fact = await self.get(memory_space_id, old_fact_id)
-        if not old_fact:
-            raise ValueError(f"Old fact not found: {old_fact_id}")
+        operation_id = operation_id or str(uuid4())
+        selected_tenant = resolve_fact_scope(self._tenant_id, tenant_id)
+        intent = filter_none_values({"operationId": operation_id, "phase": "supersede", "reason": reason if reason is not None else "Manual supersession", "userId": self._auth_context.user_id if self._auth_context else None})
+        args = filter_none_values({"tenantId": selected_tenant, "memorySpaceId": memory_space_id, "oldFactId": old_fact_id, "newFactId": new_fact_id, "expectedOldFactId": expected_old_fact_id, "expectedNewFactId": expected_new_fact_id, "reason": reason, "operationId": operation_id, "historyIntent": intent})
+        result: Dict[str, Any] = await self._execute_with_resilience(lambda: execute_relationship_mutation(self.client, "facts:supersede", args, self._history_service, "supersede", graph_adapter=self.graph_adapter, graph_sync_policy=self._graph_sync_policy, sync_to_graph=None), "facts:supersede", graph_write=None)
+        if result.get("historyReceipt"):
+            receipt = HistoryReceipt.from_wire(result["historyReceipt"])
+            try:
+                await self._history_service.retry_history(receipt)
+            except Exception as error:
+                raise HistoryWriteAfterCommitError(receipt, filter_none_values({"tenantId": selected_tenant, "memorySpaceId": memory_space_id}), error) from error
+        return result
 
-        # Verify new fact exists
-        new_fact = await self.get(memory_space_id, new_fact_id)
-        if not new_fact:
-            raise ValueError(f"New fact not found: {new_fact_id}")
-
-        # Mark old fact as superseded
-        await self.update(
-            memory_space_id,
-            old_fact_id,
-            {"validUntil": int(time.time() * 1000)},
-        )
-
-        # Log the supersession event
-        await self._history_service.log(LogEventParams(
-            fact_id=old_fact_id,
-            memory_space_id=memory_space_id,
-            action="SUPERSEDE",
-            old_value=old_fact.fact,
-            new_value=new_fact.fact,
-            superseded_by=new_fact_id,
-            reason=reason,
-        ))
-
-        return {
-            "superseded": True,
-            "oldFactId": old_fact_id,
-            "newFactId": new_fact_id,
-            "reason": reason,
-        }
-
-    async def history(self, fact_id: str, limit: Optional[int] = None) -> List[FactChangeEvent]:
+    async def history(self, fact_id: str, limit: Optional[int] = None, selector: Optional[HistorySelector] = None) -> List[FactChangeEvent]:
         """
         Get change history for a specific fact.
 
@@ -1591,7 +1567,10 @@ class FactsAPI:
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
 
-        return await self._history_service.get_history(fact_id, limit)
+        return await self._history_service.get_history(fact_id, limit, selector)
+
+    async def retry_history(self, receipt: HistoryReceipt) -> Dict[str, List[str]]:
+        return await self._history_service.retry_history(receipt)
 
     async def get_changes(self, filter: ChangeFilter) -> List[FactChangeEvent]:
         """
@@ -1615,7 +1594,7 @@ class FactsAPI:
 
         return await self._history_service.get_changes(filter)
 
-    async def get_supersession_chain(self, fact_id: str) -> List[SupersessionChainEntry]:
+    async def get_supersession_chain(self, fact_id: str, selector: Optional[HistorySelector] = None) -> List[SupersessionChainEntry]:
         """
         Get the supersession chain for a fact.
 
@@ -1636,7 +1615,7 @@ class FactsAPI:
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
 
-        return await self._history_service.get_supersession_chain(fact_id)
+        return await self._history_service.get_supersession_chain(fact_id, selector)
 
     async def get_activity_summary(
         self, memory_space_id: str, hours: int = 24
@@ -1692,6 +1671,9 @@ __all__ = [
     "FactChangeEvent",
     "FactChangePipeline",
     "FactHistoryService",
+    "HistoryReceipt",
+    "HistorySelector",
+    "FactsDeletionPartialError",
     "LogEventParams",
     "SupersessionChainEntry",
     # Slot matching exports
@@ -1705,4 +1687,3 @@ __all__ = [
     "normalize_predicate",
     "normalize_subject",
 ]
-

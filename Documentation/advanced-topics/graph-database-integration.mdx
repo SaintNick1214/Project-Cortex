@@ -171,115 +171,53 @@ See **[Graph Capabilities](./graph-capabilities)** for built-in graph features w
 
 ---
 
-## Section 3: Setup & Configuration
+## Project-owned setup and runtime configuration
 
-### Quick Start with Docker
-
-**Time to complete:** 5 minutes
-
-#### Neo4j Setup
+SDK init/install and independently versioned template init call one shared optional graph setup service. Both Neo4j and Memgraph are supported; graph off does not require Docker.
 
 ```bash
-# Start Neo4j from project root
-docker-compose -f docker-compose.graph.yml up -d neo4j
-
-# Verify it's running
-docker ps
-# Should see: cortex-neo4j (ports 7474, 7687)
-
-# Access Neo4j Browser
-open http://localhost:7474
-# Username: neo4j
-# Password: cortex-dev-password
+cortex init agent --template basic --local --yes --graph neo4j --graph-mode local
+cortex install ./existing-project --no-deploy --yes --graph memgraph --graph-mode local
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph neo4j --graph-mode local
+cortex graph setup . --graph neo4j --graph-mode local --yes --dry-run
+cortex graph setup . --graph neo4j --graph-mode local --yes
+cortex graph status .
+cortex graph stop .
+cortex graph start .
 ```
 
-#### Memgraph Setup
+Local setup uses pinned images, loopback ports, private credential/env files and validated project-owned Compose resources. Stop preserves volumes. No global container names, port/PID guessing or unrelated resource deletion is performed. `--graph-bolt-port` and `--graph-http-port` select SDK/setup local ports; template init uses `--bolt-port` and `--http-port`. Repeated setup preserves existing credentials and data. `--skip-graph` conflicts with an explicitly enabled graph. Dry-run performs no configuration, dependency, credential, container or metadata writes.
 
-```bash
-# Start Memgraph
-docker-compose -f docker-compose.graph.yml up -d memgraph
+An existing service uses `--graph-mode existing --graph-uri bolt://localhost:7687` with a credential-free URI and that provider's environment tuple, or `--graph-credentials` for the SDK/setup private 0600 credential file. It is probed without graph data writes; external start/stop is not owned by the CLI.
 
-# Verify it's running
-docker ps
-# Should see: cortex-memgraph (ports 7688, 3001)
-
-# Access Memgraph Lab
-open http://localhost:3001
-# Username: memgraph
-# Password: cortex-dev-password
-```
-
-### Environment Configuration
-
-Add to `.env.local`:
-
-**For Neo4j:**
-
-```bash
+```env
+CORTEX_GRAPH_SYNC=true
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=cortex-dev-password
+NEO4J_PASSWORD=your-private-password
 ```
 
-**For Memgraph:**
+For Memgraph use `MEMGRAPH_URI`, `MEMGRAPH_USERNAME`, `MEMGRAPH_PASSWORD` instead. The shared TypeScript SDK/provider resolver and its Python counterpart never mix the providers' credentials. Explicit off prevents driver work; explicit provider/connection selects one tuple; missing/ambiguous enabled configuration or failed connection reports an error.
 
-```bash
-MEMGRAPH_URI=bolt://localhost:7688
-MEMGRAPH_USERNAME=memgraph
-MEMGRAPH_PASSWORD=cortex-dev-password
+```typescript
+import { Cortex, resolveGraphConnection } from "@cortexmemory/sdk";
+
+const connection = resolveGraphConnection({ enabled: true });
+const cortex = await Cortex.create({
+  convexUrl: process.env.CONVEX_URL!,
+  graphEnabled: true,
+});
+try {
+  // Use ordinary namespaced APIs with verified application scope.
+} finally {
+  cortex.close();
+  await cortex.shutdown();
+}
 ```
 
-### Verify Connection
+`new Cortex()` remains manual configuration; `Cortex.create()` performs asynchronous environment-based graph connection. Manual adapters are borrowed; disconnect them in their owner's finally block. Provider auto setup uses `createCortexMemoryAsync` with `enableGraphMemory:true` and awaited factory `close()`. Native deployment credentials are server-only transport initialization, distinct from application session verification.
 
-**Test in Browser/Lab:**
-
-```cypher
-RETURN "Connected!" as message
-```
-
-### Docker Management
-
-```bash
-# Stop services
-docker-compose -f docker-compose.graph.yml stop neo4j
-docker-compose -f docker-compose.graph.yml stop memgraph
-
-# Restart
-docker-compose -f docker-compose.graph.yml restart neo4j
-
-# View logs
-docker-compose -f docker-compose.graph.yml logs -f neo4j
-
-# Fresh start (deletes data)
-docker-compose -f docker-compose.graph.yml down -v
-docker-compose -f docker-compose.graph.yml up -d
-```
-
-### Troubleshooting Setup
-
-**Issue: Containers won't start**
-
-```bash
-# Check if ports are in use
-lsof -i :7474 -i :7687 -i :7688 -i :3001
-
-# If ports are in use, stop conflicting services
-```
-
-**Issue: "Connection refused"**
-
-1. Wait 30 seconds for containers to fully start
-2. Check container health: `docker-compose -f docker-compose.graph.yml ps`
-3. Check logs: `docker-compose -f docker-compose.graph.yml logs`
-
-**Issue: "Authentication failed"**
-
-- Verify username/password in `.env.local`
-- Neo4j: `neo4j` / `cortex-dev-password`
-- Memgraph: `memgraph` / `cortex-dev-password`
-- If changed, reset: `docker-compose -f docker-compose.graph.yml down -v && docker-compose -f docker-compose.graph.yml up -d`
-
----
+Current managed synchronization uses a disjoint version 2 namespace with physical source identities, exact tenant/user/space scope, SourceState and queued jobs. Legacy/manual graph data is preserved rather than reinterpreted as managed ownership. Managed labels are `CortexV2Memory`, `CortexV2Fact`, `CortexV2Conversation` and the other `CortexV2*` kinds, keyed by captured physical source and exact scope. Unprefixed low-level Cypher examples below illustrate manual/legacy graphs; they do not select the current managed namespace or provide tenant authorization. Use the scoped SDK operations for managed data. Rebuild/erasure maintenance requires the matching fixed administrator transports (`createGraphRebuildTransport`, `createGraphErasureTransport`) and an explicit domain; an ordinary application AuthContext does not grant this capability. User/space cascade requires its separate erasure transport and matching graph participant. Readiness/reference migrations and unknown/partial receipts must be inspected before another mutation; a successful primary SDK deletion alone does not prove graph erasure.
 
 ## Section 4: TypeScript Integration
 
@@ -372,7 +310,7 @@ Use Cortex's built-in graph sync:
 
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
-import { CypherGraphAdapter } from "@cortexmemory/sdk/graph";
+import { CypherGraphAdapter } from "@cortexmemory/sdk";
 
 // Setup graph adapter
 const graphAdapter = new CypherGraphAdapter();
@@ -412,7 +350,7 @@ import {
   syncContextToGraph,
   syncMemoryToGraph,
   syncFactToGraph,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 
 // Sync a context
 const context = await cortex.contexts.get("ctx-001");
@@ -923,7 +861,7 @@ import { Cortex } from "@cortexmemory/sdk";
 import {
   CypherGraphAdapter,
   initializeGraphSchema,
-} from "@cortexmemory/sdk/graph";
+} from "@cortexmemory/sdk";
 
 // Initialize graph adapter
 const graphAdapter = new CypherGraphAdapter();

@@ -1,3 +1,4 @@
+import { graphOffResult } from "../src/graph/erasure";
 /**
  * Interactive Test Runner
  *
@@ -307,10 +308,10 @@ async function purgeAllDatabases() {
 
   for (const entry of entriesResult.entries) {
     try {
-      await client.mutation(api.immutable.purge, {
+      graphOffResult(await client.mutation(api.immutable.purge, {
         type: entry.type,
         id: entry.id,
-      });
+      }));
       immutableDeleted++;
     } catch (error: unknown) {
       if (
@@ -360,9 +361,9 @@ async function purgeAllDatabases() {
 
   for (const ns of namespaces) {
     try {
-      const result = await client.mutation(api.mutable.purgeNamespace, {
+      const result = graphOffResult(await client.mutation(api.mutable.purgeNamespace, {
         namespace: ns,
-      });
+      }));
 
       mutableDeleted += result.deleted;
     } catch (_error: unknown) {
@@ -377,7 +378,7 @@ async function purgeAllDatabases() {
   let memoryDeleted = 0;
 
   try {
-    const result = await client.mutation(api.memories.purgeAll, {});
+    const result = graphOffResult(await client.mutation(api.memories.purgeAll, {}));
     memoryDeleted = result.deleted;
   } catch (_error: unknown) {
     // Purge might fail if no data

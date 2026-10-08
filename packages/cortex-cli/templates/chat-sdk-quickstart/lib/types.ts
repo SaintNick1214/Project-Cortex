@@ -31,7 +31,7 @@ export interface Document {
   id: string;
   title: string;
   content: string | null;
-  kind: string;
+  kind: ArtifactKind;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -81,6 +81,11 @@ export type ChatTools = {
 };
 
 export type CustomUIDataTypes = {
+  "recall-start": { orchestrationId: string };
+  "recall-complete": import("@cortexmemory/sdk").RecallSummary;
+  "remember-start": { orchestrationId: string };
+  "remember-complete": import("@cortexmemory/sdk").OrchestrationSummary;
+  "layer-update": import("@cortexmemory/sdk").LayerEvent;
   textDelta: string;
   imageDelta: string;
   sheetDelta: string;

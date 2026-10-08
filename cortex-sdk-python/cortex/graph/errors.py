@@ -4,7 +4,9 @@ Cortex SDK - Graph Database Error Classes
 Error classes for graph database operations, matching TypeScript SDK.
 """
 
-from typing import Optional
+from typing import Any, List, Optional
+
+from ..types import GraphJobReceipt, GraphScope
 
 
 class GraphDatabaseError(Exception):
@@ -29,6 +31,7 @@ class GraphDatabaseError(Exception):
         self.message = message
         self.code = code
         self.cause = cause
+        self.native_code: Optional[str] = None
 
     def __str__(self) -> str:
         if self.code:
@@ -214,3 +217,39 @@ __all__ = [
     "GraphSchemaError",
     "GraphSyncError",
 ]
+
+
+class GraphJobUnresolved(GraphDatabaseError):  # noqa: N818 - Matches public TS error name
+    """Only the original immutable job may be retried; never resend the primary write."""
+
+    def __init__(self, receipt: Optional[GraphJobReceipt] = None) -> None:
+        super().__init__("The original graph job is missing, expired or contradictory. Do not resend the primary mutation.", "GRAPH_JOB_UNRESOLVED")
+        self.receipt = receipt
+
+
+class GraphPrimaryOutcomeUnknown(GraphDatabaseError):  # noqa: N818 - Matches public TS error name
+    """A lost graph-enabled primary response does not establish a committed result."""
+
+    def __init__(self, domain: str, scope: GraphScope, invocation_id: str, intent: Any, known_physical_source_ids: Optional[List[str]] = None) -> None:
+        super().__init__("The graph-enabled primary response was lost. Inspect and replan without automatically resending it.", "GRAPH_PRIMARY_OUTCOME_UNKNOWN")
+        self.outcome = "unknown"
+        self.domain = domain
+        self.scope = scope
+        self.invocation_id = invocation_id
+        self.intent = intent
+        self.known_physical_source_ids = known_physical_source_ids or []
+
+
+class GraphCommittedPartial(GraphDatabaseError):  # noqa: N818 - Matches public TS error name
+    """Primary data committed; retry only its retained original graph jobs."""
+
+    def __init__(self, primary_result: Any, jobs: List[GraphJobReceipt], graph_outcome: str, reason: str) -> None:
+        super().__init__("Primary data committed; graph delivery or acknowledgement is incomplete. Retry only the original graph jobs.", "GRAPH_COMMITTED_PARTIAL")
+        self.known_committed = True
+        self.primary_result = primary_result
+        self.jobs = jobs
+        self.graph_outcome = graph_outcome
+        self.reason = reason
+
+
+__all__ += ["GraphJobUnresolved", "GraphPrimaryOutcomeUnknown", "GraphCommittedPartial"]

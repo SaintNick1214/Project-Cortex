@@ -32,9 +32,10 @@ T = TypeVar("T")
 class StreamErrorRecovery:
     """Handles error recovery for streaming operations"""
 
-    def __init__(self, client: Any, resilience: Optional[Any] = None) -> None:
+    def __init__(self, client: Any, resilience: Optional[Any] = None, *, partial_storage: Optional[Any] = None) -> None:
         self.client = client
         self._resilience = resilience
+        self.partial_storage = partial_storage
         self.resume_token_ttl = 3600000  # 1 hour in milliseconds
 
     async def _execute_with_resilience(
@@ -110,18 +111,14 @@ class StreamErrorRecovery:
     ) -> RecoveryResult:
         """Rollback to last known good state"""
         try:
-            # Delete partial memory if it exists
             if context.partial_memory_id:
-                await self._execute_with_resilience(
-                    lambda: self.client.mutation(
-                        "memories:deleteMemory",
-                        {
-                            "memorySpaceId": context.memory_space_id,
-                            "memoryId": context.partial_memory_id,
-                        },
-                    ),
-                    "memories:deleteMemory",
-                )
+                from ...graph.errors import GraphDatabaseError
+
+                if not self.partial_storage or context.partial_outcome_unknown:
+                    raise GraphDatabaseError("Exact partial settlement is required.", "GRAPH_PARTIAL_OUTCOME_UNKNOWN")
+                await self.partial_storage.rollback()
+                if not self.partial_storage.was_deleted():
+                    raise GraphDatabaseError("Finalized partial is preserved.", "GRAPH_FINALIZED_PARTIAL_PRESERVED")
 
             return RecoveryResult(success=True, strategy=FailureStrategy.ROLLBACK)
 

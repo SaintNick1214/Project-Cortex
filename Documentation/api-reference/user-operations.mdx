@@ -2,7 +2,7 @@
 id: user-operations
 title: User Operations API
 sidebar_position: 6
-description: Complete API reference for user profile management, including multi-tenancy, GDPR-compliant cascade deletion, and auth context integration.
+description: Complete API reference for user profile management, including multi-tenancy, supported administrative erasure, and auth context integration.
 ---
 
 # User Operations API
@@ -24,7 +24,7 @@ The primary purpose of user profiles is **cross-tool memory sharing**. Same `use
 **Key Features:**
 
 - **Cross-Tool Memory Sharing** - Same `userId` means same memories across all tools
-- **GDPR Cascade Deletion** - One call deletes across all layers with userId
+- **GDPR Cascade Deletion** - One call deletes across the supported primary scope with userId
 - **Multi-Tenancy** - Full tenant isolation via `tenantId`
 - **Extensible Profiles** - Flexible data field for any developer needs
 - **Version History** - Time-travel queries for user data
@@ -49,100 +49,11 @@ const memories = await cortex.memory.recall({
 // Returns: "User prefers TypeScript" - stored in Cursor, recalled in Claude!
 ```
 
-### Secondary Feature: GDPR Cascade Deletion
+### Secondary feature: supported administrative erasure
 
-<Callout type="tip">
-**Available in SDK**: Full cascade deletion is implemented in the open-source SDK. Cloud Mode (planned) will add legal guarantees, certificates, and managed graph integration.
-</Callout>
+Cascade requires the separate fixed administrative erasure transport and an exact tenant selection. Omitted tenant selects tenantless data only. Its scope is exclusive supported primary records, with shared/foreign/operational/provenance residuals disclosed in `result.erasure`; `complete` is supported verified completion, while `fullUserDataErased` remains false. Partial/unknown errors carry a receipt: inspect that and persisted state before another attempt. No transaction-wide rollback or universal physical erasure is promised. A configured graph or selected managed graph jobs additionally require an explicit graph participant using the matching adapter and fixed `createGraphErasureTransport({url, deploymentKey})`; manual/legacy graph data is preserved. Ordinary AuthContext is not administrator authority.
 
-When a user requests data deletion (GDPR "right to be forgotten"), a single API call removes their data from **every store that contains an explicit `userId` reference**:
-
-```typescript
-// SDK: One call deletes from ALL stores with userId
-await cortex.users.delete("user-123", { cascade: true });
-
-// Automatically deletes from:
-// - User profile (immutable store, type='user')
-// - Layer 1a (conversations.*) - All conversations with userId
-// - Layer 1b (immutable.*) - All records with userId
-// - Layer 1c (mutable.*) - All keys with userId
-// - Layer 2 (vector.*) - All memories with userId (across ALL memory spaces)
-// - Layer 3 (facts.*) - All facts referencing userId
-// - Graph (if adapter configured) - All nodes with userId property
-```
-
-**No other API provides this cross-layer, cross-store cascade capability.**
-
-**Key Principle: Full Capability in Free SDK**
-
-The free SDK provides **complete cascade deletion** functionality. You get everything you need:
-
-- Full cascade implementation across all layers
-- Graph support when you provide an adapter (DIY setup)
-- Best-effort verification checks
-- Transaction-like rollback on failure
-
-<Callout type="info" title="Cloud Mode (Planned)">
-A managed Cloud Mode is under development that will add legal guarantees, certificates, managed graph integration, and enterprise support. The SDK already provides the full technical capability.
-</Callout>
-
-**Implementation Details:**
-
-The SDK implements cascade deletion using a three-phase approach:
-
-1. **Collection Phase**: Gather all records to delete across all layers
-2. **Backup Phase**: Create rollback snapshots of all records
-3. **Deletion Phase**: Delete in reverse dependency order with automatic rollback on failure
-
-```typescript
-// Example: Full cascade deletion with verification
-const result = await cortex.users.delete("user-123", {
-  cascade: true, // Enable cascade across all layers
-  verify: true, // Verify completeness after deletion (default)
-  dryRun: false, // Preview without deleting (optional)
-});
-
-// Result includes detailed breakdown
-console.log(
-  `Deleted ${result.totalDeleted} records across ${result.deletedLayers.length} layers`,
-);
-console.log(`Conversations: ${result.conversationsDeleted}`);
-console.log(`Vector memories: ${result.vectorMemoriesDeleted}`);
-console.log(`Facts: ${result.factsDeleted}`);
-console.log(`Graph nodes: ${result.graphNodesDeleted || "N/A (no adapter)"}`);
-console.log(
-  `Verification: ${result.verification.complete ? "Complete" : "Issues found"}`,
-);
-```
-
-**Graph Integration:**
-
-Cascade deletion includes graph nodes if you provide a graph adapter:
-
-```typescript
-import { CypherGraphAdapter } from "@cortex-platform/sdk/graph";
-
-// Configure graph adapter (DIY in free SDK)
-const graphAdapter = new CypherGraphAdapter({
-  uri: process.env.NEO4J_URI,
-  username: process.env.NEO4J_USER,
-  password: process.env.NEO4J_PASSWORD,
-});
-
-// Initialize Cortex with graph
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
-  graph: {
-    adapter: graphAdapter,
-  },
-});
-
-// Now cascade deletion includes graph!
-await cortex.users.delete("user-123", { cascade: true });
-// Deletes from Convex (conversations, immutable, mutable, vector, facts) AND graph
-```
-
-In Cloud Mode (planned), the graph adapter will be provided and managed automatically.
+Profile-only deletion is separate. Use the explicit cascade example under [delete()](#delete), not caller identity as maintenance authority. Complete user export uses `exportData`, while `users.export` remains an ordinary scoped profile-oriented view.
 
 ### Additional Feature: Semantic Convenience
 
@@ -181,7 +92,7 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
 
 **Why the wrapper exists:**
 
-1. **GDPR Cascade** - Deletes from ALL stores with `userId` across ALL layers
+1. **GDPR Cascade** - Deletes from the supported stores with `userId` across the supported primary scope
 2. **Semantic clarity** - `users.get()` is clearer than `immutable.get('user', ...)`
 3. **Specialized validation** - User-specific rules and constraints
 4. **User-centric operations** - Operations optimized for user management
@@ -199,7 +110,7 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
     facts.* — userId tracked, included in GDPR cascade
   </FlowNode>
   <FlowNode title="Convenience APIs" icon="layers" variant="success">
-    users.* wraps immutable (type='user') + GDPR cascade across ALL layers
+    users.* wraps immutable (type='user') + supported administrative erasure
   </FlowNode>
 </FlowDiagram>
 
@@ -212,7 +123,7 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
     { feature: "Shared", values: ["All agents", "All agents", "All agents", "Per-agent (memorySpace)"] },
     { feature: "Versioning", values: ["Auto (unlimited)", "Auto (20 versions)", "None", "Auto (10 versions)"] },
     { feature: "userId", values: ["N/A (IS the user)", "Optional", "Optional", "Optional"] },
-    { feature: "GDPR Cascade", values: ["ALL stores", "No", "No", "No"] },
+    { feature: "GDPR Cascade", values: ["the supported stores", "No", "No", "No"] },
     { feature: "API", values: ["users.get(id)", "immutable.get('user', id)", "mutable.get('users', id)", "vector.search(memorySpaceId, ...)"] },
     { feature: "Use Case", values: ["User profiles", "User feedback, submissions", "User sessions, cache", "Memory space memories"] },
   ]}
@@ -220,7 +131,7 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
 
 **Key Differences:**
 
-- **ONLY `cortex.users.*` has GDPR cascade** - deletes from ALL stores with userId
+- **ONLY `cortex.users.*` has GDPR cascade** - erases the supported exclusive primary scope through explicit administration
 - `cortex.users.*` is a wrapper over `cortex.immutable.*` with `type='user'`
 - All stores (conversations, immutable, mutable, vector) support **optional** `userId` field
 - `userId` links enable GDPR cascade deletion
@@ -232,6 +143,11 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
 User profiles support full multi-tenant isolation via `tenantId`:
 
 ```typescript
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+
 // Create tenant-scoped user
 await cortex.users.update("user-123", {
   tenantId: "customer-acme", // SaaS platform isolation
@@ -248,17 +164,17 @@ const users = await cortex.users.list({
   limit: 100,
 });
 
-// GDPR cascade respects tenant isolation
+// Administrative erasure selects one exact tenant
 await cortex.users.delete("user-123", {
-  cascade: true,
-  // Deletes all user data across ALL stores with userId
+  cascade: true, erasureTransport, tenantId: "team-a",
+  // Deletes all user data across the supported stores with userId
   // Graph nodes also include tenantId for proper isolation
 });
 ```
 
 ### Tenant Isolation in GDPR Cascade
 
-When cascade deleting a user with `tenantId`, all associated data across all stores includes tenant context:
+When cascade deleting a user with `tenantId`, the supported exclusive primary selection includes exact tenant context:
 
 ```typescript
 // Cascade deletion covers:
@@ -279,7 +195,7 @@ When cascade deleting a user with `tenantId`, all associated data across all sto
 User operations integrate with the Auth Context system:
 
 ```typescript
-import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Create auth context from your auth provider
 const auth = createAuthContext({
@@ -517,217 +433,34 @@ await cortex.users.update("user-123", {
 
 ### delete()
 
-Delete a user profile with optional cascade to delete all associated data across all layers.
-
-<Callout type="tip">
-**Fully Implemented in SDK**: Cascade deletion with verification and rollback is available in the free SDK. Cloud Mode adds legal certificates and guarantees.
-</Callout>
-
-**Signature:**
+Delete a profile, or explicitly erase supported owned user data.
 
 ```typescript
-cortex.users.delete(
-  userId: string,
-  options?: DeleteOptions
-): Promise<UserDeleteResult>
-```
+// Profile-only operation in the ordinary SDK scope.
+await cortex.users.delete("user-123");
 
-**Parameters:**
-
-<APITable
-  parameters={[
-    { name: "userId", type: "string", required: true, description: "Unique user identifier to delete" },
-    { name: "options.cascade", type: "boolean", required: false, default: "false", description: "Delete from ALL stores with userId" },
-    { name: "options.verify", type: "boolean", required: false, default: "true", description: "Verify deletion completeness" },
-    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview what would be deleted without actually deleting" }
-  ]}
-/>
-
-**Returns:**
-
-```typescript
-interface UserDeleteResult {
-  userId: string;
-  deletedAt: number;
-
-  // Per-layer deletion counts
-  conversationsDeleted: number;
-  conversationMessagesDeleted: number;
-  immutableRecordsDeleted: number;
-  mutableKeysDeleted: number;
-  vectorMemoriesDeleted: number;
-  factsDeleted: number;
-  graphNodesDeleted?: number; // Undefined if no graph adapter
-
-  // Verification results
-  verification: {
-    complete: boolean;
-    issues: string[]; // Any problems found during verification
-  };
-
-  // Summary
-  totalDeleted: number; // Sum of all deleted records
-  deletedLayers: string[]; // Which layers were affected
-}
-```
-
-**Implementation Details:**
-
-The SDK uses a three-phase approach for cascade deletion:
-
-1. **Collection Phase**: Gathers all records to delete across all layers (conversations, immutable, mutable, vector, facts, graph)
-2. **Backup Phase**: Creates rollback snapshots of all records in case deletion fails
-3. **Deletion Phase**: Deletes in reverse dependency order (facts → vector → mutable → immutable → conversations → graph → user profile)
-
-If any deletion fails, the SDK automatically rolls back all changes using the backups.
-
-**Example 1: Delete profile only (no cascade)**
-
-```typescript
-// Delete just the user profile (default behavior)
-const result = await cortex.users.delete("user-123");
-
-console.log(`Deleted at: ${new Date(result.deletedAt)}`);
-console.log(`Total deleted: ${result.totalDeleted}`); // 1 (just the profile)
-console.log(`Layers affected: ${result.deletedLayers}`); // ['user-profile']
-```
-
-**Example 2: GDPR Cascade Deletion (SDK & Cloud)**
-
-```typescript
-// Delete profile + ALL data with explicit userId references
-const result = await cortex.users.delete("user-123", {
-  cascade: true,
-  verify: true, // Verify nothing was missed (default)
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
 });
-
-// Per-layer breakdown
-console.log(`Conversations deleted: ${result.conversationsDeleted}`);
-console.log(
-  `  Messages in those conversations: ${result.conversationMessagesDeleted}`,
-);
-console.log(`Immutable records deleted: ${result.immutableRecordsDeleted}`);
-console.log(`Mutable keys deleted: ${result.mutableKeysDeleted}`);
-console.log(`Vector memories deleted: ${result.vectorMemoriesDeleted}`);
-console.log(`Facts deleted: ${result.factsDeleted}`);
-console.log(
-  `Graph nodes deleted: ${result.graphNodesDeleted || "N/A (no graph)"}`,
-);
-
-// Summary
-console.log(`Total records deleted: ${result.totalDeleted}`);
-console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
-
-// Verification
-if (result.verification.complete) {
-  console.log("Deletion verified - no orphaned records");
-} else {
-  console.warn("Verification issues:");
-  result.verification.issues.forEach((issue) => console.warn(`  - ${issue}`));
-}
-```
-
-**Example 3: Dry Run (Preview Without Deleting)**
-
-```typescript
-// Preview what would be deleted without actually deleting
-const preview = await cortex.users.delete("user-123", {
-  cascade: true,
-  dryRun: true, // Just preview, don't delete
-});
-
-console.log(
-  `Would delete ${preview.totalDeleted} records across ${preview.deletedLayers.length} layers`,
-);
-console.log(`Conversations: ${preview.conversationsDeleted}`);
-console.log(`Vector memories: ${preview.vectorMemoriesDeleted}`);
-console.log(`Facts: ${preview.factsDeleted}`);
-
-// User still exists after dry run
-const user = await cortex.users.get("user-123");
-console.log(`User still exists: ${user !== null}`); // true
-```
-
-**Example 4: Automatic Rollback on Failure**
-
-```typescript
 try {
-  // If any deletion fails, everything is rolled back automatically
-  const result = await cortex.users.delete("user-123", {
+  const preview = await cortex.users.delete("user-123", {
     cascade: true,
+    tenantId: "team-a",
+    erasureTransport,
+    dryRun: true,
+    verify: true,
   });
-  console.log("Deletion successful!");
-} catch (error) {
-  if (error instanceof CascadeDeletionError) {
-    console.error("Deletion failed and was rolled back:");
-    console.error(error.message);
-    // All deleted records have been restored
-    const user = await cortex.users.get("user-123");
-    console.log(`User restored: ${user !== null}`); // true
-  }
+  console.log(preview.erasure);
+  // Remove dryRun only after reviewing the exact selected domain.
+} finally {
+  erasureTransport.close();
 }
 ```
 
-**Example 5: Granular Control (🚧 Planned - Cloud Mode)**
+Cascade requires the separate fixed administrative erasure transport and an exact tenant selection. Omitted tenant selects tenantless data only. Its scope is exclusive supported primary records, with shared/foreign/operational/provenance residuals disclosed in `result.erasure`; `complete` is supported verified completion, while `fullUserDataErased` remains false. Partial/unknown errors carry a receipt: inspect that and persisted state before another attempt. No transaction-wide rollback or universal physical erasure is promised. A configured graph or selected managed graph jobs additionally require an explicit graph participant using the matching adapter and fixed `createGraphErasureTransport({url, deploymentKey})`; manual/legacy graph data is preserved. Ordinary AuthContext is not administrator authority.
 
-<Callout type="warning">
-Granular layer control is planned for Cortex Cloud. Currently, `cascade: true` deletes from ALL layers. The options below are not yet implemented.
-</Callout>
-
-```typescript
-// 🚧 PLANNED - Cortex Cloud: Only delete mutable data (like sessions, cache)
-const result = await cortex.users.delete("user-123", {
-  cascade: true,
-  // 🚧 PLANNED OPTIONS (not yet implemented):
-  // deleteFromConversations: false,  // Preserve
-  // deleteFromImmutable: false,      // Preserve
-  // deleteFromMutable: true,         // DELETE (live data only)
-  // deleteFromVector: false,         // Preserve
-  // auditReason: "Session cleanup",
-});
-
-// Currently deletes from all layers when cascade: true
-console.log(`Total deleted: ${result.totalDeleted}`);
-```
-
-**Example 6: Why Use Cascade (vs Manual Deletion)**
-
-The SDK's cascade deletion handles all the complexity automatically:
-
-```typescript
-// Recommended: Use cascade deletion (SDK handles all layers)
-const result = await cortex.users.delete("user-123", {
-  cascade: true,
-  verify: true, // Verify deletion completeness
-});
-
-console.log(`Deleted ${result.totalDeleted} records`);
-console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
-
-// Manual approach would require calling each API separately:
-// - cortex.conversations.delete() for each conversation
-// - cortex.immutable.purge() for each record
-// - cortex.mutable.delete() for each key
-// - cortex.vector.delete() for each memory
-// - cortex.facts.delete() for each fact
-// The cascade option handles all of this automatically!
-```
-
-<Callout type="info" title="SDK vs Cloud Mode (Planned)">
-The SDK provides full cascade deletion with automatic verification and rollback. Cloud Mode (under development) will add legal certificates, cryptographic proof, and managed graph adapters.
-</Callout>
-
-**Errors:**
-
-- `CortexError('USER_NOT_FOUND')` - User profile doesn't exist
-- `CortexError('DELETION_FAILED')` - Delete operation failed
-
-**See Also:**
-
-- [Deleting Profiles](/core-features/user-profiles)
-- [GDPR Compliance](/core-features/user-profiles)
-
----
+`cascade` defaults false; verification defaults true. `--no-verify`/`verify:false` does not bypass preflight, ownership or readiness and does not certify verified completion. The receipt includes planned/outcome rows, per-table deleted/detached/preserved counts, remaining IDs, graph/verification states, errors, unknowns and explicit exclusions. Serialized document byte estimates are not physical storage freed.
 
 ### search()
 
@@ -1047,89 +780,47 @@ console.log(`Would update ${preview.userIds.length} inactive users`);
 
 ### deleteMany()
 
-Bulk delete multiple user profiles by explicit IDs or filters.
-
-**Signature:**
+Select explicit user IDs or an ordinary scoped filter. Profile deletion is the default. Cascade uses one exact administrator transport/tenant and per-user receipts; a partially completed bulk operation is not atomic rollback.
 
 ```typescript
-// By explicit user IDs
-cortex.users.deleteMany(
-  userIds: string[],
-  options?: DeleteManyOptions
-): Promise<DeleteManyResult>
-
-// By filters (select users matching criteria)
-cortex.users.deleteMany(
-  filters: UserFilters,
-  options?: DeleteManyOptions
-): Promise<DeleteManyResult>
-```
-
-**Parameters:**
-
-<APITable
-  parameters={[
-    { name: "userIdsOrFilters", type: "string[] | UserFilters", required: true, description: "Array of user IDs (1-100) OR UserFilters object to select users" },
-    { name: "options.cascade", type: "boolean", required: false, default: "false", description: "Enable cascade deletion across all layers" },
-    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview without deleting" }
-  ]}
-/>
-
-**Returns:**
-
-```typescript
-interface DeleteManyResult {
-  deleted: number; // Number of users successfully deleted
-  userIds: string[]; // IDs of users that were deleted
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+try {
+  const preview = await cortex.users.deleteMany(["user-1", "user-2"], {
+    cascade: true,
+    tenantId: "team-a",
+    erasureTransport,
+    dryRun: true,
+    verify: true,
+  });
+  console.log(preview);
+} finally {
+  erasureTransport.close();
 }
 ```
 
-**Example 1: Delete by explicit IDs**
+### exportData()
+
+Stream complete version1 data for the supported user closure:17 authoritative table families, eligible retained histories, shared membership projections and verified file bytes/metadata. Exact user/tenant linkage is validated; unresolved historical ownership is not guessed. This is deployment administration, separate from ordinary SDK caller scope.
 
 ```typescript
-// Delete specific users
-const result = await cortex.users.deleteMany(["user-1", "user-2", "user-3"]);
-
-console.log(`Deleted ${result.deleted} users`);
-console.log(`Deleted IDs: ${result.userIds.join(", ")}`);
+const transport = cortex.users.createExportTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+for await (const event of cortex.users.exportData("user-123", {
+  transport,
+  tenantId: "team-a",
+  pageSize: 100,
+})) {
+  const canonicalText = cortex.users.serializeExportEvent(event);
+  // Write to private staging; publish only after the terminal complete manifest.
+}
 ```
 
-**Example 2: Delete by filters**
-
-```typescript
-// Delete inactive users (not updated in 1 year)
-const oldUsers = await cortex.users.deleteMany(
-  { updatedBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
-  { cascade: true },
-);
-
-console.log(`Deleted ${oldUsers.deleted} inactive users`);
-
-// Delete users by displayName pattern
-const testUsers = await cortex.users.deleteMany(
-  { displayName: "test-user" },
-  { cascade: true },
-);
-```
-
-**Example 3: Dry run preview**
-
-```typescript
-const preview = await cortex.users.deleteMany(
-  { createdBefore: Date.now() - 180 * 24 * 60 * 60 * 1000 },
-  { dryRun: true },
-);
-
-console.log(`Would delete ${preview.userIds.length} users`);
-```
-
-**Errors:**
-
-- `UserValidationError('EMPTY_USER_IDS_ARRAY')` - Empty userIds array
-- `UserValidationError('USER_ID_ARRAY_TOO_LARGE')` - More than 100 userIds
-- `UserValidationError('TOO_MANY_MATCHES')` - Filter matched >100 users
-
----
+Consume the stream through its terminal manifest; a partial iterator is not a complete export. Version1 is rolling-read, not an atomic deployment snapshot. Use the SDK serializer to preserve Convex encoding and canonical cross-language values. Blob metadata/digests are checked. External graph infrastructure and operational/reference/erasure records are disclosed exclusions. The SDK does not publish files; `cortex users export` performs private atomic JSON publication and leaves no final complete file on failure.
 
 ### export()
 
@@ -1177,10 +868,10 @@ const csvExport = await cortex.users.export({
 });
 ```
 
-**Example 2: Full GDPR export with related data**
+**Example 2: Scoped profile view with related data**
 
 ```typescript
-// Export user data with all associated content
+// Ordinary scoped view; use exportData for the complete supported user closure.
 const gdprExport = await cortex.users.export({
   format: "json",
   filters: { displayName: "alex" },
@@ -1812,7 +1503,7 @@ async function generatePersonalizedResponse(userId: string, message: string) {
 Use auth context for tenant isolation:
 
 ```typescript
-import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Initialize Cortex with tenant-scoped auth
 const cortex = new Cortex({
@@ -1923,7 +1614,7 @@ function calculateEngagement(
 The SDK supports multi-tenancy through the `tenantId` field in auth context:
 
 ```typescript
-import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Initialize with tenant-specific auth context
 const cortex = new Cortex({
@@ -2122,38 +1813,9 @@ if (userData) {
 }
 ```
 
-### 6. Cascade Deletion for GDPR
+### 6. Review export and erasure scope
 
-Always use cascade for user deletions:
-
-```typescript
-// GDPR-compliant deletion
-async function handleGDPRDeletion(userId: string) {
-  // Export data first (GDPR requirement)
-  const userData = await cortex.users.export({
-    format: "json",
-    includeMemories: true,
-    includeConversations: true,
-  });
-
-  // Save export for records
-  const fs = await import("fs/promises");
-  await fs.writeFile(`gdpr-export-${userId}.json`, userData);
-
-  // Delete profile + all data with cascade
-  const result = await cortex.users.delete(userId, {
-    cascade: true, // Delete from ALL layers
-    verify: true, // Verify deletion completeness
-  });
-
-  console.log(`Deleted ${result.totalDeleted} records`);
-  console.log(
-    `Verification: ${result.verification.complete ? "Complete" : "Issues found"}`,
-  );
-
-  return result;
-}
-```
+Use `users.exportData` for complete supported-layer administrative user export and private staging, then independently review the exact erasure preview. Export and erasure are different fixed capabilities; neither is granted by a user ID or JWT. Retain the returned erasure receipt and its residual/partial/unknown qualifications rather than labeling the operation universal physical deletion.
 
 ---
 
@@ -2164,7 +1826,7 @@ Users are universal graph nodes - everything in Cortex can link to a user via th
 **User as Graph Hub:**
 
 - Central node connecting all user-related data across the system
-- Enables GDPR cascade deletion across all layers
+- Enables GDPR cascade deletion across the supported primary scope
 
 **Incoming Edges (What Links To Users):**
 
@@ -2178,23 +1840,28 @@ Users are universal graph nodes - everything in Cortex can link to a user via th
 
 **GDPR Cascade as Graph Operation:**
 
-The `delete({ cascade: true })` operation traverses all layers and deletes entities with matching userId:
+With an explicit administrator transport, cascade evaluates supported physical ownership and exact tenant linkage; a matching userId alone does not authorize deletion. Shared records are detached/preserved and graph work requires the matching participant:
 
 ```
 User-123 (delete this node)
-  ↓ cascade follows all userId edges
+  ↓ supported exclusive physical ownership and exact tenant scope
   ├──> Conversations with userId='user-123' (delete)
   ├──> Memories with userId='user-123' (delete)
   ├──> Facts with userId='user-123' (delete)
   ├──> Immutable records with userId='user-123' (delete)
   ├──> Mutable records with userId='user-123' (delete)
-  └──> Graph nodes with userId='user-123' (delete, if graph configured)
+  └──> Managed graph projection (explicit participant; legacy/manual data preserved)
 ```
 
 **Example Result:**
 
 ```typescript
-const result = await cortex.users.delete("user-123", { cascade: true });
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
+
+const result = await cortex.users.delete("user-123", { cascade: true, erasureTransport, tenantId: "team-a" });
 
 // Result shows per-layer deletion counts:
 // {
@@ -2215,14 +1882,14 @@ const result = await cortex.users.delete("user-123", { cascade: true });
 
 ## Error Reference
 
-The Users API exports two error classes for granular error handling:
+The public SDK exports `UserValidationError`. Cascade failures use an error named `CascadeDeletionError` with a cause and optional erasure receipt; that class is not a named export of the public SDK entrypoint.
 
 ### UserValidationError
 
 Thrown when client-side validation fails (before reaching the backend):
 
 ```typescript
-import { UserValidationError } from "@cortex-platform/sdk";
+import { UserValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.users.update("", { name: "Test" }); // Empty userId
@@ -2237,21 +1904,30 @@ try {
 
 ### CascadeDeletionError
 
-Thrown when cascade deletion fails (automatically rolls back):
+Thrown when supported cascade erasure stops. Earlier committed deletions remain committed; a failed or unknown later outcome does not restore them. Inspect the optional receipt before any further mutation. Bulk failures likewise retain earlier per-user outcomes and unstarted users.
 
 ```typescript
-import { CascadeDeletionError } from "@cortex-platform/sdk";
+const erasureTransport = cortex.users.createErasureTransport({
+  url: process.env.CONVEX_URL!,
+  deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
+});
 
 try {
-  await cortex.users.delete("user-123", { cascade: true });
+  await cortex.users.delete("user-123", { cascade: true, erasureTransport, tenantId: "team-a" });
 } catch (error) {
-  if (error instanceof CascadeDeletionError) {
-    console.log(error.message); // Cascade deletion failed for user...
-    console.log(error.cause); // Original error that caused failure
-    // Note: All deleted records have been automatically restored
+  if (error instanceof Error && error.name === "CascadeDeletionError") {
+    console.error(error.message);
+    console.error(error.cause); // Original failure; this does not imply rollback
+    if ("receipt" in error) {
+      console.log(error.receipt); // Recorded outcomes, remaining IDs and unknowns
+    }
+    // Inspect recorded and persisted state before deciding how to continue.
+    // Do not automatically replay delete(); another call creates a new operation.
   }
 }
 ```
+
+Receipt inspection is read-only. The fixed transport's `getReceiptPage` observes the original operation using its exact domain, operation ID and item key; it does not resume or replay `eraseRecord`. An optional error receipt describes the supported scope, committed outcomes, remaining IDs, unknowns and residuals. Resolve unknown outcomes against the original persisted receipts before considering another mutation. No transaction-wide rollback, automatic restoration or public user-erasure resume method is promised.
 
 ### Validation Error Codes (UserValidationError)
 

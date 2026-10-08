@@ -27,7 +27,7 @@ class TestProgressiveStorageHandler:
         """
         # Mock Convex client
         mock_client = MagicMock()
-        mock_client.mutation = AsyncMock(return_value={"memoryId": "partial-mem-123"})
+        mock_client.mutation = AsyncMock(return_value={"_id": "actual-partial-source", "memoryId": "partial-mem-123", "sourceRevision": 1, "referenceGeneration": "captured-partial-gen", "ownershipRevision": 1})
 
         handler = ProgressiveStorageHandler(
             client=mock_client,
@@ -61,7 +61,7 @@ class TestProgressiveStorageHandler:
         Validates: Update timing logic
         """
         mock_client = MagicMock()
-        mock_client.mutation = AsyncMock(return_value={"memoryId": "partial-mem-123"})
+        mock_client.mutation = AsyncMock(return_value={"_id": "actual-partial-source", "memoryId": "partial-mem-123", "sourceRevision": 1, "referenceGeneration": "captured-partial-gen", "ownershipRevision": 1})
 
         handler = ProgressiveStorageHandler(
             client=mock_client,
@@ -98,7 +98,7 @@ class TestProgressiveStorageHandler:
         Validates: Force flag works correctly
         """
         mock_client = MagicMock()
-        mock_client.mutation = AsyncMock(return_value={"memoryId": "partial-mem-123"})
+        mock_client.mutation = AsyncMock(return_value={"_id": "actual-partial-source", "memoryId": "partial-mem-123", "sourceRevision": 1, "referenceGeneration": "captured-partial-gen", "ownershipRevision": 1})
 
         handler = ProgressiveStorageHandler(
             client=mock_client,
@@ -125,7 +125,7 @@ class TestProgressiveStorageHandler:
         Validates: History length and content accuracy
         """
         mock_client = MagicMock()
-        mock_client.mutation = AsyncMock(return_value={"memoryId": "partial-mem-123"})
+        mock_client.mutation = AsyncMock(return_value={"_id": "actual-partial-source", "memoryId": "partial-mem-123", "sourceRevision": 1, "referenceGeneration": "captured-partial-gen", "ownershipRevision": 1})
 
         handler = ProgressiveStorageHandler(
             client=mock_client,
@@ -159,7 +159,7 @@ class TestProgressiveStorageHandler:
         Validates: State transitions and finalization
         """
         mock_client = MagicMock()
-        mock_client.mutation = AsyncMock(return_value={"memoryId": "partial-mem-123"})
+        mock_client.mutation = AsyncMock(return_value={"_id": "actual-partial-source", "memoryId": "partial-mem-123", "sourceRevision": 1, "referenceGeneration": "captured-partial-gen", "ownershipRevision": 1})
 
         handler = ProgressiveStorageHandler(
             client=mock_client,
@@ -191,7 +191,7 @@ class TestProgressiveStorageHandler:
         Validates: State is completely cleared
         """
         mock_client = MagicMock()
-        mock_client.mutation = AsyncMock(return_value={"memoryId": "partial-mem-123"})
+        mock_client.mutation = AsyncMock(return_value={"_id": "actual-partial-source", "memoryId": "partial-mem-123", "sourceRevision": 1, "referenceGeneration": "captured-partial-gen", "ownershipRevision": 1})
 
         handler = ProgressiveStorageHandler(
             client=mock_client,
@@ -210,7 +210,13 @@ class TestProgressiveStorageHandler:
         assert handler.get_partial_memory_id() is None
         assert handler.is_ready() is False
         assert handler.is_complete() is False
-        assert len(handler.get_update_history()) == 0
+        assert len(handler.get_update_history()) == 1  # Retained original update evidence
+        assert handler.was_deleted() is True
+        sent = mock_client.mutation.call_args.args[1]
+        assert sent["expectedPhysicalId"] == "actual-partial-source"
+        assert sent["expectedSourceRevision"] == 1
+        assert sent["expectedReferenceGeneration"] == "captured-partial-gen"
+        assert sent["expectedPartial"] is True
 
     def test_should_update_logic(self):
         """

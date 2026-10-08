@@ -481,7 +481,8 @@ class AttachmentsAPI:
         """
         Delete an attachment.
 
-        Removes both the metadata record and the file from storage.
+        Removes metadata; bytes shared with another document or retained version survive.
+        The boolean reports metadata deletion, not byte erasure.
 
         Args:
             attachment_id: The attachment ID to delete
@@ -554,4 +555,5 @@ class AttachmentsAPI:
             deleted=result.get("deleted", 0),
             total=result.get("total", len(attachment_ids)),
             errors=result.get("errors"),
+            binary_dispositions=result.get("binaryDispositions"),
         )

@@ -1,3 +1,4 @@
+import { captureInsertedRow, reconcileRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Convex Sessions API
  *
@@ -41,7 +42,7 @@ export const create = mutation({
       memoryCount: 0,
     };
 
-    const id = await ctx.db.insert("sessions", session);
+    const id = await captureInsertedRow(ctx, "sessions", session);
 
     return {
       _id: id,
@@ -84,7 +85,7 @@ export const touch = mutation({
       throw new Error(`Session not found: ${args.sessionId}`);
     }
 
-    await ctx.db.patch(session._id, {
+    await reconcileRow(ctx, session._id, {
       lastActiveAt: Date.now(),
       status: "active",
     });
@@ -108,7 +109,7 @@ export const end = mutation({
       throw new Error(`Session not found: ${args.sessionId}`);
     }
 
-    await ctx.db.patch(session._id, {
+    await reconcileRow(ctx, session._id, {
       status: "ended",
       endedAt: Date.now(),
     });
@@ -151,7 +152,7 @@ export const endAll = mutation({
     const sessionIds: string[] = [];
 
     for (const session of sessions) {
-      await ctx.db.patch(session._id, {
+      await reconcileRow(ctx, session._id, {
         status: "ended",
         endedAt: now,
       });
@@ -376,7 +377,7 @@ export const expireIdle = mutation({
     let expired = 0;
 
     for (const session of sessions) {
-      await ctx.db.patch(session._id, {
+      await reconcileRow(ctx, session._id, {
         status: "ended",
         endedAt: now,
       });
@@ -404,7 +405,7 @@ export const incrementMessageCount = mutation({
       return; // Session may not exist - silently ignore
     }
 
-    await ctx.db.patch(session._id, {
+    await reconcileRow(ctx, session._id, {
       messageCount: (session.messageCount ?? 0) + 1,
       lastActiveAt: Date.now(),
     });
@@ -428,7 +429,7 @@ export const incrementMemoryCount = mutation({
       return; // Session may not exist - silently ignore
     }
 
-    await ctx.db.patch(session._id, {
+    await reconcileRow(ctx, session._id, {
       memoryCount: (session.memoryCount ?? 0) + 1,
       lastActiveAt: Date.now(),
     });

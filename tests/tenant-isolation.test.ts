@@ -101,6 +101,9 @@ describeWithConvex("Tenant Isolation", () => {
     } catch {
       // Ignore
     }
+
+    // Close the clients actually owned by this suite; no forced Jest exit.
+    await Promise.all([tenantA?.cortex, tenantB?.cortex].filter(Boolean).map(client => client.shutdown()));
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -6,6 +6,8 @@
  */
 
 import type { RememberResult } from "./index";
+import type {GraphJobReceipt} from "../graph/types";
+export interface PartialSourceEvidence {memoryId:string;physicalSourceId:string;sourceRevision:number;referenceGeneration:string;ownershipRevision:number;tenantId?:string;memorySpaceId:string;graphJobs:GraphJobReceipt[];graphDisposition?:"queued"|"delivered";}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Stream Hooks & Events
@@ -114,6 +116,7 @@ export interface ProgressiveFact {
 export interface GraphSyncEvent {
   timestamp: number;
   eventType:
+    | "queued"
     | "node-created"
     | "node-updated"
     | "relationship-created"
@@ -148,6 +151,8 @@ export interface ErrorContext {
   chunkNumber: number;
   bytesProcessed: number;
   partialMemoryId?: string;
+  partialSource?: PartialSourceEvidence;
+  partialOutcomeUnknown?: boolean;
   lastSuccessfulUpdate?: number;
 }
 
@@ -361,6 +366,8 @@ export interface StreamingOptions {
  * Internal streaming context for processing
  */
 export interface StreamContext {
+  partialSource?: PartialSourceEvidence;
+  partialOutcomeUnknown?: boolean;
   memorySpaceId: string;
   conversationId: string;
   userId: string;
@@ -398,6 +405,7 @@ export interface PerformanceInsights {
  * Progressive processing results
  */
 export interface ProgressiveProcessing {
+  partialSource?: PartialSourceEvidence;
   factsExtractedDuringStream: ProgressiveFact[];
   partialStorageHistory: PartialUpdate[];
   graphSyncEvents?: GraphSyncEvent[];

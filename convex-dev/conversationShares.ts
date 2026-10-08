@@ -1,3 +1,4 @@
+import { captureInsertedRow, reconcileRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Conversation Shares API
  *
@@ -83,10 +84,9 @@ export const create = mutation({
     // Verify the conversation exists
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) =>
-        q.eq("conversationId", args.conversationId),
-      )
-      .first();
+      .withIndex("by_conversationId", q => q.eq("conversationId", args.conversationId))
+      .filter(q => q.eq(q.field("tenantId"), args.tenantId))
+      .unique();
 
     if (!conversation) {
       throw new ConvexError("CONVERSATION_NOT_FOUND");
@@ -106,7 +106,7 @@ export const create = mutation({
     const now = Date.now();
     const shareId = generateShareId();
 
-    const id = await ctx.db.insert("conversationShares", {
+    const id = await captureInsertedRow(ctx, "conversationShares", {
       shareId,
       conversationId: args.conversationId,
       grantedBy: args.grantedBy,
@@ -157,7 +157,7 @@ export const revoke = mutation({
       throw new ConvexError("REVOKE_NOT_AUTHORIZED");
     }
 
-    await ctx.db.patch(share._id, {
+    await reconcileRow(ctx, share._id, {
       status: "revoked",
       revokedAt: Date.now(),
     });
@@ -187,7 +187,7 @@ export const incrementViewCount = mutation({
     if (!validity.valid) {
       // If share is expired due to views, update status
       if (validity.reason === "MAX_VIEWS_REACHED") {
-        await ctx.db.patch(share._id, {
+        await reconcileRow(ctx, share._id, {
           status: "expired",
         });
       }
@@ -204,7 +204,7 @@ export const incrementViewCount = mutation({
       updates.status = "expired";
     }
 
-    await ctx.db.patch(share._id, updates);
+    await reconcileRow(ctx, share._id, updates);
 
     return {
       viewCount: newCount,

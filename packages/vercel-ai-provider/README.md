@@ -10,10 +10,10 @@ Add long-term memory to any Vercel AI SDK application with a single import. Buil
 ## ✨ Features
 
 - 🧠 **Automatic Memory** - Retrieves relevant context before each response, stores conversations after
-- 🚀 **Zero Configuration** - Works out of the box with sensible defaults
+- 🚀 **Explicit Configuration** - Select a backend, verified application scope and model provider
 - 📦 **TypeScript Native** - Built for TypeScript, not ported from Python
-- 🔒 **Self-Hosted** - Deploy Convex anywhere, no API keys or vendor lock-in
-- ⚡ **Edge Compatible** - Works in Vercel Edge Functions, Cloudflare Workers
+- 🔒 **Self-Hosted** - Use your selected Convex deployment and private provider credentials
+- ⚙️ **Server Runtime** - Graph drivers and deployment-admin credentials require a trusted server runtime
 - 🎯 **Memory Spaces** - Isolate memory by user, team, or project
 - 🐝 **Hive Mode** - Share memory across multiple agents/applications
 - 📊 **ACID Guarantees** - Never lose data with Convex transactions
@@ -26,8 +26,10 @@ Add long-term memory to any Vercel AI SDK application with a single import. Buil
 The best way to get started is with our interactive quickstart demo:
 
 ```bash
-cd packages/vercel-ai-provider/quickstart
-npm install
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cd demo
+# Configure private server values and native backend per the app README.
+npm run convex:dev
 npm run dev
 ```
 
@@ -45,7 +47,7 @@ The quickstart demonstrates:
 ### Installation
 
 ```bash
-npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
+npm install @cortexmemory/vercel-ai-provider@0.37.0 @cortexmemory/sdk@0.37.0 ai convex
 ```
 
 ### AI SDK v6 Compatibility
@@ -75,7 +77,9 @@ const memoryAgent = new ToolLoopAgent({
 import { createAgentUIStreamResponse } from "ai";
 
 export async function POST(req: Request) {
-  const { messages, userId, memorySpaceId } = await req.json();
+  const { messages } = await req.json();
+  // Supply your application's verified session/ownership helper.
+  const { userId, memorySpaceId } = await requireVerifiedAppScope(req);
 
   return createAgentUIStreamResponse({
     agent: memoryAgent,
@@ -84,6 +88,8 @@ export async function POST(req: Request) {
   });
 }
 ```
+
+`requireVerifiedAppScope` is an application helper you must implement; request IDs are not verified authority. Internal Next app handlers also require the private server deployment transport, not a public-reference fallback.
 
 See [`lib/agents/memory-agent.ts`](./quickstart/lib/agents/memory-agent.ts) for a complete example.
 
@@ -102,8 +108,8 @@ This provider now supports all SDK v0.21.0 capabilities:
 1. **Deploy Cortex Backend to Convex:**
 
 ```bash
-npx @cortexmemory/cli init
-# Follow the wizard to set up Convex backend
+cortex install . --no-deploy --yes --graph none
+# Select/configure your own target, then run explicit cortex dev/codegen.
 ```
 
 2. **Create Memory-Enabled Chat:**
@@ -390,17 +396,20 @@ Creates a memory-augmented model factory.
 
 ### createCortexMemoryAsync(config)
 
-Async version for automatic graph configuration from environment variables.
+Async version for the shared graph resolver and connection setup. Set `enableGraphMemory:true` to enable it; `false` prevents graph work. Choose one complete provider tuple via `graphConfig` or the matching Neo4j/Memgraph environment. Missing/ambiguous enabled configuration and failed connections are errors.
 
 ```typescript
-// Reads graph config from NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+// Select one complete Neo4j or Memgraph configuration.
 const cortexMemory = await createCortexMemoryAsync({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "smart-agent",
   userId: "user-123",
   agentId: "my-assistant",
+  enableGraphMemory: true,
 });
 ```
+
+The factory owns resources it creates; close the memory factory with `await cortexMemory.close()` when done. Manual graph adapters remain borrowed and must be disconnected by their owner. SDK init/install and template init share the same optional project graph setup; `cortex graph setup/start/stop/status` manage only owned resources, and stop preserves volumes. For an internal composed Next backend, use the normal verified app session boundary and the factory's second server-only `{deploymentKey}` argument; it initializes native transport before graph/API construction. It does not authorize an unverified request identity. React hooks are imported from `@cortexmemory/vercel-ai-provider/react`.
 
 ### Manual Memory Control
 
@@ -431,12 +440,12 @@ const config = cortexMemory.getConfig();
 ## Documentation
 
 - [Quickstart Demo](./quickstart/README.md) - Interactive demo with visualization
-- [Getting Started](../../Documentation/08-integrations/vercel-ai-sdk/getting-started.md) - Step-by-step tutorial
-- [API Reference](../../Documentation/08-integrations/vercel-ai-sdk/api-reference.md) - Complete API documentation
-- [Advanced Usage](../../Documentation/08-integrations/vercel-ai-sdk/advanced-usage.md) - Custom configurations
-- [Memory Spaces](../../Documentation/08-integrations/vercel-ai-sdk/memory-spaces.md) - Multi-tenancy guide
-- [Hive Mode](../../Documentation/08-integrations/vercel-ai-sdk/hive-mode.md) - Cross-application memory
-- [Troubleshooting](../../Documentation/08-integrations/vercel-ai-sdk/troubleshooting.md) - Common issues
+- [Getting Started](../../Documentation/integrations/vercel-ai-sdk/getting-started.mdx) - Step-by-step tutorial
+- [API Reference](../../Documentation/integrations/vercel-ai-sdk/api-reference.mdx) - Complete API documentation
+- [Advanced Usage](../../Documentation/integrations/vercel-ai-sdk/advanced-usage.mdx) - Custom configurations
+- [Memory Spaces](../../Documentation/integrations/vercel-ai-sdk/memory-spaces.mdx) - Multi-tenancy guide
+- [Hive Mode](../../Documentation/integrations/vercel-ai-sdk/hive-mode.mdx) - Cross-application memory
+- [Troubleshooting](../../Documentation/integrations/vercel-ai-sdk/troubleshooting.mdx) - Common issues
 
 ## FAQ
 
@@ -502,7 +511,7 @@ This is expected if:
 - Using keyword search without embeddings (set up `embeddingProvider`)
 - Running on local Convex (vector search not supported locally)
 
-For more troubleshooting help, see [Troubleshooting Guide](../../Documentation/08-integrations/vercel-ai-sdk/troubleshooting.md).
+For more troubleshooting help, see [Troubleshooting Guide](../../Documentation/integrations/vercel-ai-sdk/troubleshooting.mdx).
 
 ## Contributing
 

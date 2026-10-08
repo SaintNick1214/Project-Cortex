@@ -5,9 +5,28 @@ SDK wrapper for fact change history operations.
 Provides audit trail for belief revision decisions.
 """
 
+from copy import deepcopy
 from dataclasses import dataclass
-from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional
+from datetime import datetime, timezone
+from types import MappingProxyType
+from typing import (
+    Any,
+    AsyncIterator,
+    Dict,
+    List,
+    Literal,
+    Mapping,
+    Optional,
+    Tuple,
+    cast,
+)
+from uuid import uuid4
+
+from typing_extensions import NotRequired, TypedDict
+
+from .._utils import filter_none_values
+from ..types import AuthContext, FactHistoryEndpoint, FactHistoryPayload
+from .discovery import resolve_fact_scope, scoped_pages
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Types
@@ -81,6 +100,32 @@ class FactChangeEvent:
     """Conversation ID if applicable"""
 
 
+    _id: Optional[str] = None
+    scope_version: Optional[Literal[1]] = None
+    tenant_id: Optional[str] = None
+    source_fact_id: Optional[str] = None
+    source_memory_space_id: Optional[str] = None
+    source_memory_id: Optional[str] = None
+    source_conversation_id: Optional[str] = None
+    owner_known: Optional[bool] = None
+    owner_user_id: Optional[str] = None
+    association_known: Optional[bool] = None
+    associated_user_ids: Optional[List[str]] = None
+    source_ref: Optional[Dict[str, Any]] = None
+    evidence: Optional[Dict[str, Any]] = None
+    supersedes_endpoint: Optional[FactHistoryEndpoint] = None
+    superseded_by_endpoint: Optional[FactHistoryEndpoint] = None
+    operation_id: Optional[str] = None
+    phase: Optional[str] = None
+    event_role: Optional[str] = None
+    operation_kind: Optional[str] = None
+    request_digest: Optional[str] = None
+    affected_fact_ids: Optional[List[str]] = None
+    result_fact_id: Optional[str] = None
+    pending_rich_event: Optional["PendingRichEventV1"] = None
+    publication_state: Optional[Literal["pending", "complete"]] = None
+
+
 @dataclass
 class LogEventParams:
     """Parameters for logging a change event."""
@@ -124,6 +169,10 @@ class LogEventParams:
     conversation_id: Optional[str] = None
     """Conversation ID if applicable"""
 
+    tenant_id: Optional[str] = None
+    source_fact_id: Optional[str] = None
+    operation_id: Optional[str] = None
+
 
 @dataclass
 class ChangeFilter:
@@ -146,6 +195,8 @@ class ChangeFilter:
 
     offset: Optional[int] = None
     """Offset for pagination"""
+
+    tenant_id: Optional[str] = None
 
 
 @dataclass
@@ -209,440 +260,535 @@ class SupersessionChainEntry:
     """Reason for the supersession"""
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# FactHistoryService
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    source_fact_id: Optional[str] = None
+
+
+def _freeze(value: Any) -> Any:
+    if isinstance(value, dict):
+        return MappingProxyType({k: _freeze(v) for k, v in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(v) for v in value)
+    return value
+
+
+def _thaw(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {k: _thaw(v) for k, v in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw(v) for v in value]
+    return value
+
+
+@dataclass(frozen=True)
+class PendingRichEventV1:
+    """The original backend payload; absent keys and null values stay distinct."""
+
+    payload: FactHistoryPayload
+    absent_fields: Tuple[str, ...]
+    payload_digest: str
+    version: Literal[1] = 1
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "payload", _freeze(_thaw(self.payload)))
+        object.__setattr__(self, "absent_fields", tuple(self.absent_fields))
+
+    @classmethod
+    def from_wire(cls, value: Dict[str, Any]) -> "PendingRichEventV1":
+        if value.get("version") != 1:
+            raise ValueError("FACT_HISTORY_PENDING_EVENT_UNRESOLVED")
+        return cls(cast(FactHistoryPayload, value["payload"]), tuple(value["absentFields"]), value["payloadDigest"])
+
+    def to_wire(self) -> Dict[str, Any]:
+        return {"version": 1, "payload": _thaw(self.payload), "absentFields": list(self.absent_fields), "payloadDigest": self.payload_digest}
+
+
+@dataclass(frozen=True)
+class HistoryEventReceipt:
+    event_id: str
+    _id: str
+    pending: Optional[PendingRichEventV1] = None
+    request_json: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class HistoryReceipt:
+    events: Tuple[HistoryEventReceipt, ...]
+    affected_fact_ids: Tuple[str, ...]
+    result_fact_id: Optional[str] = None
+    committed: Literal[True] = True
+    graph_jobs: Tuple[Any, ...] = ()
+
+    @classmethod
+    def from_wire(cls, value: Dict[str, Any]) -> "HistoryReceipt":
+        if value.get("committed") is not True:
+            raise ValueError("FACT_HISTORY_PENDING_EVENT_UNRESOLVED")
+        from ..graph.erasure import graph_receipt_from_wire
+
+        return cls(tuple(HistoryEventReceipt(e["eventId"], e["_id"], PendingRichEventV1.from_wire(e["pending"]) if e.get("pending") else None, e.get("requestJson")) for e in value["events"]), tuple(value["affectedFactIds"]), value.get("resultFactId"), graph_jobs=tuple(graph_receipt_from_wire(job) for job in value.get("graphJobs", [])))
+
+
+def _receipt_graph_jobs(receipt: HistoryReceipt) -> List[Any]:
+    from ..graph.identity import graph_wire
+
+    return [graph_wire(job) for job in receipt.graph_jobs]
+
+
+class HistoryWriteAfterCommitError(RuntimeError):
+    committed = True
+    phase = "rich_publication"
+
+    def __init__(self, receipt: HistoryReceipt, scope: Dict[str, Any], cause: Exception) -> None:
+        super().__init__("Fact committed; rich history publication remains pending")
+        self.receipt = receipt
+        self.affected_fact_ids = receipt.affected_fact_ids
+        self.event_ids = tuple(event.event_id for event in receipt.events)
+        first = receipt.events[0].pending if receipt.events else None
+        self.operation_id = first.payload.get("operationId") if first else None
+        self.request_digest = first.payload.get("requestDigest") if first else None
+        self.scope = _freeze(deepcopy(scope))
+        self.original_cause = cause
+
+
+class RevisionAfterCommitError(RuntimeError):
+    phase = "revision_link"
+    committed = True
+
+    def __init__(self, receipt: Dict[str, Any], cause: Exception) -> None:
+        super().__init__("Revision store committed; relationship phase incomplete")
+        self.receipt = _freeze(receipt)
+        self.original_cause = cause
+
+
+class FactCommitOutcomeUnknownError(RuntimeError):
+    committed = None
+
+    def __init__(self, operation_id: str, phase: str, scope: Dict[str, Any], cause: Exception) -> None:
+        super().__init__("Fact commit outcome unknown; reconcile the original operation before retrying")
+        self.operation_id = operation_id
+        self.phase = phase
+        self.scope = _freeze(scope)
+        self.original_cause = cause
+
+
+class FactOperationAlreadyCommittedError(RuntimeError):
+    committed = True
+    phase = "update"
+
+    def __init__(self, receipt: HistoryReceipt) -> None:
+        super().__init__("Original dedup update committed; reconcile retained operation without rediscovery")
+        self.receipt = receipt
+
+
+class FactCommittedResultUnavailableError(RuntimeError):
+    committed = True
+
+    def __init__(self, receipt: HistoryReceipt) -> None:
+        super().__init__("FACT_HISTORY_COMMITTED_RESULT_UNAVAILABLE")
+        self.receipt = receipt
+
+
+class FactCommittedReceiptUnresolvedError(RuntimeError):
+    """The server acknowledged commitment, but no authoritative receipt was read."""
+    committed = True
+    phase = "committed_receipt_unresolved"
+
+    def __init__(self, operation_id: str, mutation_phase: str, scope: Dict[str, Any], disposition: str, cause: Exception, receipt_cause: Optional[Exception] = None) -> None:
+        super().__init__("Fact committed; retained operation receipt unresolved")
+        self.operation_id = operation_id
+        self.mutation_phase = mutation_phase
+        self.scope = _freeze(scope)
+        self.receipt_disposition = disposition
+        self.original_cause = cause
+        self.receipt_cause = receipt_cause
+
+
+@dataclass
+class HistorySelector:
+    tenant_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    source_memory_space_id: Optional[str] = None
+    fact_id: Optional[str] = None
+    source_fact_id: Optional[str] = None
+    incoming_fact_id: Optional[str] = None
+    user_id: Optional[str] = None
+    owner_user_id: Optional[str] = None
+    after: Optional[int] = None
+    before: Optional[int] = None
+    action: Optional[FactChangeAction] = None
+
+    def to_wire(self) -> Dict[str, Any]:
+        return filter_none_values({"tenantId": self.tenant_id, "memorySpaceId": self.memory_space_id, "sourceMemorySpaceId": self.source_memory_space_id, "factId": self.fact_id, "sourceFactId": self.source_fact_id, "incomingFactId": self.incoming_fact_id, "userId": self.user_id, "ownerUserId": self.owner_user_id, "after": self.after, "before": self.before, "action": self.action})
+
+
+class HistoryDeleteResult(TypedDict):
+    deleted: int
+    remaining: Optional[int]
+    isDone: bool
+    continueCursor: str
+    page: List[Dict[str, Any]]
+    splitCursor: NotRequired[Optional[str]]
+    pageStatus: NotRequired[Optional[Literal["SplitRequired", "SplitRecommended"]]]
+
+
+def _finite_time(value: Any) -> None:
+    import math
+
+    try:
+        valid = not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value)
+    except (OverflowError, TypeError, ValueError):
+        valid = False
+    if not valid:
+        raise ValueError("FACT_HISTORY_INVALID_TIME_RANGE")
+
+
+def _time_range(selector: HistorySelector) -> None:
+    for value in (selector.after, selector.before):
+        if value is not None:
+            _finite_time(value)
+    if selector.after is not None and selector.before is not None and selector.after > selector.before:
+        raise ValueError("FACT_HISTORY_INVALID_TIME_RANGE")
+
+
+def _timestamp(value: datetime) -> int:
+    if not isinstance(value, datetime):
+        raise ValueError("FACT_HISTORY_INVALID_TIME_RANGE")
+    try:
+        raw = value.timestamp() * 1000
+        _finite_time(raw)
+        return int(raw)
+    except (OverflowError, OSError, TypeError, ValueError) as error:
+        raise ValueError("FACT_HISTORY_INVALID_TIME_RANGE") from error
+
+
+def _optional_timestamp(value: Optional[datetime]) -> Optional[int]:
+    return None if value is None else _timestamp(value)
+
+
+def _batch_hint(limit: Optional[int]) -> int:
+    if limit is not None and (isinstance(limit, bool) or not isinstance(limit, int) or limit < 1):
+        raise ValueError("FACT_HISTORY_INVALID_PAGE_SIZE")
+    return min(limit if limit is not None else 256, 256)
 
 
 class FactHistoryService:
-    """
-    Service for managing fact change history.
+    """Durable exact-scope audit. Omitted scope selects known tenantless records."""
 
-    Example:
-        >>> history = FactHistoryService(convex_client)
-        >>>
-        >>> # Log a change event
-        >>> await history.log(LogEventParams(
-        ...     fact_id="fact-123",
-        ...     memory_space_id="space-1",
-        ...     action="UPDATE",
-        ...     old_value="User likes blue",
-        ...     new_value="User likes purple",
-        ...     reason="User explicitly stated preference change",
-        ... ))
-        >>>
-        >>> # Get history for a fact
-        >>> events = await history.get_history("fact-123")
-        >>>
-        >>> # Get changes in a time range
-        >>> recent_changes = await history.get_changes(ChangeFilter(
-        ...     memory_space_id="space-1",
-        ...     after=datetime.now() - timedelta(hours=24),
-        ... ))
-    """
-
-    def __init__(
-        self,
-        client: Any,
-        resilience: Optional[Any] = None,
-    ) -> None:
-        """
-        Initialize the fact history service.
-
-        Args:
-            client: Convex client instance
-            resilience: Optional resilience layer for retries
-        """
+    def __init__(self, client: Any, resilience: Optional[Any] = None, auth_context: Optional[AuthContext] = None) -> None:
         self._client = client
         self._resilience = resilience
+        self._auth_context = auth_context
 
-    async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
-    ) -> Any:
-        """Execute an operation through the resilience layer (if available)."""
+    def _scope(self, tenant_id: Optional[str] = None) -> Optional[str]:
+        return resolve_fact_scope(self._auth_context.tenant_id if self._auth_context else None, tenant_id)
+
+    async def _execute_with_resilience(self, operation: Any, operation_name: str) -> Any:
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
 
-    async def log(self, params: LogEventParams) -> Dict[str, str]:
-        """
-        Log a fact change event.
+    async def log(self, params: LogEventParams) -> Dict[str, Any]:
+        args = filter_none_values({"tenantId": self._scope(params.tenant_id), "sourceFactId": params.source_fact_id, "operationId": params.operation_id or str(uuid4()), "factId": params.fact_id, "memorySpaceId": params.memory_space_id, "action": params.action, "oldValue": params.old_value, "newValue": params.new_value, "supersededBy": params.superseded_by, "supersedes": params.supersedes, "reason": params.reason, "confidence": params.confidence, "pipeline": filter_none_values({"slotMatching": params.pipeline.slot_matching, "semanticMatching": params.pipeline.semantic_matching, "llmResolution": params.pipeline.llm_resolution}) if params.pipeline else None, "userId": params.user_id, "participantId": params.participant_id, "conversationId": params.conversation_id})
+        result = await self._execute_with_resilience(lambda: self._client.mutation("factHistory:logEvent", args), "factHistory:log")
+        return {"event_id": result["eventId"], "_id": result.get("_id"), "receipt": HistoryReceipt.from_wire(result["receipt"]) if result.get("receipt") else None}
 
-        Args:
-            params: Event parameters
+    async def pages(self, selector: Optional[HistorySelector] = None) -> AsyncIterator[List[FactChangeEvent]]:
+        selected = selector or HistorySelector()
+        _time_range(selected)
+        args = filter_none_values({**selected.to_wire(), "tenantId": self._scope(selected.tenant_id)})
 
-        Returns:
-            Dict with the created event ID
-        """
-        from .._utils import filter_none_values
+        async def load(page_range: Dict[str, Any]) -> Dict[str, Any]:
+            result: Dict[str, Any] = await self._execute_with_resilience(lambda: self._client.query("factHistory:page", {**args, "paginationOpts": {**page_range, "numItems": 256}}), "factHistory:page")
+            return result
 
-        result = await self._execute_with_resilience(
-            lambda: self._client.mutation(
-                "factHistory:logEvent",
-                filter_none_values({
-                    "factId": params.fact_id,
-                    "memorySpaceId": params.memory_space_id,
-                    "action": params.action,
-                    "oldValue": params.old_value,
-                    "newValue": params.new_value,
-                    "supersededBy": params.superseded_by,
-                    "supersedes": params.supersedes,
-                    "reason": params.reason,
-                    "confidence": params.confidence,
-                    "pipeline": (
-                        {
-                            "slotMatching": params.pipeline.slot_matching,
-                            "semanticMatching": params.pipeline.semantic_matching,
-                            "llmResolution": params.pipeline.llm_resolution,
-                        }
-                        if params.pipeline
-                        else None
-                    ),
-                    "userId": params.user_id,
-                    "participantId": params.participant_id,
-                    "conversationId": params.conversation_id,
-                }),
-            ),
-            "factHistory:log",
-        )
+        async for page in scoped_pages(load, "factHistory"):
+            yield [self._parse_event(e) for e in page]
 
-        return {"event_id": result.get("eventId", "")}
+    async def get_history(self, fact_id: str, limit: Optional[int] = None, selector: Optional[HistorySelector] = None) -> List[FactChangeEvent]:
+        from dataclasses import replace
 
-    async def get_history(
-        self, fact_id: str, limit: Optional[int] = None
-    ) -> List[FactChangeEvent]:
-        """
-        Get history for a specific fact.
+        limit = 100 if limit is None else limit
+        self._validate_window(limit, 0)
+        result: List[FactChangeEvent] = []
+        async for page in self.pages(replace(selector or HistorySelector(), fact_id=fact_id)):
+            result.extend(page[:limit - len(result)])
+            if len(result) >= limit:
+                break
+        return result
 
-        Args:
-            fact_id: The fact ID to get history for
-            limit: Max events to return (default: 100)
+    async def get_event(self, event_id: str, tenant_id: Optional[str] = None) -> Optional[FactChangeEvent]:
+        result = await self._execute_with_resilience(lambda: self._client.query("factHistory:getEvent", filter_none_values({"eventId": event_id, "tenantId": self._scope(tenant_id)})), "factHistory:getEvent")
+        return self._parse_event(result) if result else None
 
-        Returns:
-            List of change events
-        """
-        from .._utils import filter_none_values
-
-        result = await self._execute_with_resilience(
-            lambda: self._client.query(
-                "factHistory:getHistory",
-                filter_none_values({
-                    "factId": fact_id,
-                    "limit": limit,
-                }),
-            ),
-            "factHistory:getHistory",
-        )
-
-        return [self._parse_event(e) for e in (result or [])]
-
-    async def get_event(self, event_id: str) -> Optional[FactChangeEvent]:
-        """
-        Get a specific change event by ID.
-
-        Args:
-            event_id: The event ID
-
-        Returns:
-            The event or None if not found
-        """
-        result = await self._execute_with_resilience(
-            lambda: self._client.query(
-                "factHistory:getEvent",
-                {"eventId": event_id},
-            ),
-            "factHistory:getEvent",
-        )
-
-        if not result:
-            return None
-
-        return self._parse_event(result)
+    @staticmethod
+    def _validate_window(limit: int, offset: int) -> None:
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1 or isinstance(offset, bool) or not isinstance(offset, int) or offset < 0:
+            raise ValueError("FACT_HISTORY_INVALID_PAGE_SIZE")
 
     async def get_changes(self, filter: ChangeFilter) -> List[FactChangeEvent]:
-        """
-        Get changes in a time range with filters.
+        limit, skip = filter.limit if filter.limit is not None else 100, filter.offset if filter.offset is not None else 0
+        self._validate_window(limit, skip)
+        result: List[FactChangeEvent] = []
+        selector = HistorySelector(tenant_id=filter.tenant_id, memory_space_id=filter.memory_space_id, after=_optional_timestamp(filter.after), before=_optional_timestamp(filter.before), action=filter.action)
+        async for page in self.pages(selector):
+            if skip >= len(page):
+                skip -= len(page)
+                continue
+            result.extend(page[skip:skip + limit - len(result)])
+            skip = 0
+            if len(result) >= limit:
+                break
+        return result
 
-        Args:
-            filter: Filter parameters
+    async def count_by_action(self, memory_space_id: str, after: Optional[datetime] = None, before: Optional[datetime] = None, tenant_id: Optional[str] = None) -> Dict[str, int]:
+        counts = {"CREATE": 0, "UPDATE": 0, "SUPERSEDE": 0, "DELETE": 0, "total": 0}
+        async for page in self.pages(HistorySelector(tenant_id=tenant_id, memory_space_id=memory_space_id, after=_optional_timestamp(after), before=_optional_timestamp(before))):
+            for event in page:
+                counts[event.action] += 1
+                counts["total"] += 1
+        return counts
 
-        Returns:
-            List of change events
-        """
-        from .._utils import filter_none_values
+    async def get_activity_summary(self, memory_space_id: str, hours: int = 24, tenant_id: Optional[str] = None) -> ActivitySummary:
+        _finite_time(hours)
+        if hours <= 0:
+            raise ValueError("FACT_HISTORY_INVALID_TIME_RANGE")
+        now = datetime.now(timezone.utc)
+        try:
+            raw_since = now.timestamp() * 1000 - hours * 3600000
+            _finite_time(raw_since)
+            since = int(raw_since)
+            since_iso = datetime.fromtimestamp(since / 1000, timezone.utc).isoformat()
+        except (OverflowError, OSError, TypeError, ValueError) as error:
+            raise ValueError("FACT_HISTORY_INVALID_TIME_RANGE") from error
+        counts = ActionCounts()
+        facts: set[str] = set()
+        actors: set[str] = set()
+        total = 0
+        async for page in self.pages(HistorySelector(tenant_id=tenant_id, memory_space_id=memory_space_id, after=since, before=int(now.timestamp() * 1000))):
+            for event in page:
+                setattr(counts, event.action, getattr(counts, event.action) + 1)
+                total += 1
+                facts.add(event.source_fact_id or event.fact_id)
+                actors.update(v for v in (event.user_id, event.participant_id) if v)
+        return ActivitySummary(TimeRange(hours, since_iso, now.isoformat()), total, counts, len(facts), len(actors))
 
-        result = await self._execute_with_resilience(
-            lambda: self._client.query(
-                "factHistory:getChangesByTimeRange",
-                filter_none_values({
-                    "memorySpaceId": filter.memory_space_id,
-                    "after": int(filter.after.timestamp() * 1000) if filter.after else None,
-                    "before": int(filter.before.timestamp() * 1000) if filter.before else None,
-                    "action": filter.action,
-                    "limit": filter.limit,
-                    "offset": filter.offset,
-                }),
-            ),
-            "factHistory:getChanges",
-        )
+    async def get_operation_receipt(self, memory_space_id: str, operation_id: str, phase: str, tenant_id: Optional[str] = None) -> Optional[HistoryReceipt]:
+        result = await self._client.query("factHistory:getOperationReceipt", filter_none_values({"tenantId": self._scope(tenant_id), "memorySpaceId": memory_space_id, "operationId": operation_id, "phase": phase}))
+        return HistoryReceipt.from_wire(result) if result else None
 
-        return [self._parse_event(e) for e in (result or [])]
+    async def retry_history(self, receipt: HistoryReceipt) -> Dict[str, List[str]]:
+        event_ids: List[str] = []
+        for event in receipt.events:
+            pending = event.pending
+            if pending is None:
+                raise ValueError("FACT_HISTORY_PENDING_EVENT_UNRESOLVED")
+            p = pending.payload
+            if not p.get("operationId") or not p.get("phase") or not p.get("eventRole"):
+                raise ValueError("FACT_HISTORY_PENDING_EVENT_UNRESOLVED")
+            args = filter_none_values({"tenantId": self._scope(p.get("tenantId")), "memorySpaceId": p["memorySpaceId"], "operationId": p["operationId"], "phase": p["phase"], "eventRole": p["eventRole"], "eventId": event.event_id, "pending": pending.to_wire()})
+            result = await self._execute_with_resilience(lambda: self._client.mutation("factHistory:publishPendingEvent", args), "factHistory:publishPendingEvent")
+            event_ids.append(result["eventId"])
+        return {"event_ids": event_ids}
 
-    async def count_by_action(
-        self,
-        memory_space_id: str,
-        after: Optional[datetime] = None,
-        before: Optional[datetime] = None,
-    ) -> Dict[str, int]:
-        """
-        Count changes by action type.
+    async def get_supersession_chain(self, fact_id: str, selector: Optional[HistorySelector] = None) -> List[SupersessionChainEntry]:
+        from dataclasses import replace
 
-        Args:
-            memory_space_id: Memory space to query
-            after: Start timestamp
-            before: End timestamp
+        identities: set[Optional[str]] = set()
+        initial_event: Optional[FactChangeEvent] = None
+        async for page in self.pages(replace(selector or HistorySelector(), fact_id=fact_id)):
+            for event in page:
+                identities.add(event.source_fact_id)
+                if initial_event is None:
+                    initial_event = event
+        if initial_event is None:
+            return []
+        if len(identities) != 1 or None in identities:
+            raise ValueError("FACT_HISTORY_SOURCE_AMBIGUOUS")
+        source_space = initial_event.memory_space_id
+        queue = list(identities)
+        visited: set[str] = set()
+        edges: Dict[str, set[str]] = {}
+        entries: Dict[str, SupersessionChainEntry] = {}
+        while queue:
+            source_id = queue.pop(0)
+            assert source_id is not None
+            if source_id in visited:
+                continue
+            visited.add(source_id)
+            for selected in (replace(selector or HistorySelector(), memory_space_id=source_space, fact_id=None, source_fact_id=source_id, incoming_fact_id=None), replace(selector or HistorySelector(), memory_space_id=source_space, fact_id=None, source_fact_id=None, incoming_fact_id=source_id)):
+                async for page in self.pages(selected):
+                    for event in page:
+                        if not event.source_fact_id:
+                            raise ValueError("FACT_HISTORY_RELATIONSHIP_UNRESOLVED")
+                        event_source = event.source_fact_id
+                        queue.append(event_source)
+                        if event_source not in entries:
+                            entries[event_source] = SupersessionChainEntry(event.fact_id, event.superseded_by, event.timestamp, event.reason, event_source)
+                        for direction, endpoint in (("supersedes", event.supersedes_endpoint), ("supersededBy", event.superseded_by_endpoint)):
+                            if not endpoint or endpoint["state"] == "unknown":
+                                raise ValueError("FACT_HISTORY_RELATIONSHIP_UNRESOLVED")
+                            if endpoint["state"] == "known":
+                                target = endpoint.get("factDocumentId")
+                                if not target or endpoint.get("scopeVersion") != 1 or endpoint.get("tenantId") != self._scope((selector or HistorySelector()).tenant_id) or endpoint.get("memorySpaceId") != event.memory_space_id:
+                                    raise ValueError("FACT_HISTORY_SCOPE_MISMATCH")
+                                start, end = (event_source, target) if direction == "supersededBy" else (target, event_source)
+                                edges.setdefault(start, set()).add(end)
+                                if len(edges[start]) > 1:
+                                    raise ValueError("FACT_HISTORY_RELATIONSHIP_CONFLICT")
+                                queue.append(target)
+        # Topological order also detects cycles without mistaking reciprocal witnesses for a cycle.
+        degree = {node: 0 for node in visited}
+        for targets in edges.values():
+            for target in targets:
+                degree[target] = degree.get(target, 0) + 1
+        ready = sorted(node for node, count in degree.items() if count == 0)
+        ordered: List[str] = []
+        while ready:
+            node = ready.pop(0)
+            ordered.append(node)
+            for target in sorted(edges.get(node, set())):
+                degree[target] -= 1
+                if degree[target] == 0:
+                    ready.append(target)
+        if len(ordered) != len(degree):
+            raise ValueError("FACT_HISTORY_RELATIONSHIP_CYCLE")
+        if any(node not in entries for node in ordered):
+            raise ValueError("FACT_HISTORY_RELATIONSHIP_UNRESOLVED")
+        return [entries[node] for node in ordered]
 
-        Returns:
-            Dict with counts by action type and total
-        """
-        from .._utils import filter_none_values
+    async def _delete(self, name: str, args: Dict[str, Any], selector: Optional[HistorySelector], pagination_opts: Optional[Dict[str, Any]] = None) -> HistoryDeleteResult:
+        selected = selector or HistorySelector()
+        _time_range(selected)
+        if pagination_opts is not None:
+            size = pagination_opts.get("numItems")
+            if isinstance(size, bool) or not isinstance(size, int) or not 1 <= size <= 256:
+                raise ValueError("FACT_HISTORY_INVALID_PAGE_SIZE")
+        payload = filter_none_values({**selected.to_wire(), **args, "tenantId": self._scope(selected.tenant_id), "paginationOpts": pagination_opts})
+        result: Dict[str, Any] = await self._execute_with_resilience(lambda: self._client.mutation(f"factHistory:{name}", payload), f"factHistory:{name}")
+        return cast(HistoryDeleteResult, result)
 
-        result = await self._execute_with_resilience(
-            lambda: self._client.query(
-                "factHistory:countByAction",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "after": int(after.timestamp() * 1000) if after else None,
-                    "before": int(before.timestamp() * 1000) if before else None,
-                }),
-            ),
-            "factHistory:countByAction",
-        )
+    async def delete_by_fact_id(self, fact_id: str, selector: Optional[HistorySelector] = None, pagination_opts: Optional[Dict[str, Any]] = None) -> HistoryDeleteResult:
+        return await self._delete("deleteByFactId", {"factId": fact_id}, selector, pagination_opts)
 
-        return {
-            "CREATE": result.get("CREATE", 0),
-            "UPDATE": result.get("UPDATE", 0),
-            "SUPERSEDE": result.get("SUPERSEDE", 0),
-            "DELETE": result.get("DELETE", 0),
-            "total": result.get("total", 0),
-        }
+    async def delete_by_user_id(self, user_id: str, selector: Optional[HistorySelector] = None, pagination_opts: Optional[Dict[str, Any]] = None) -> HistoryDeleteResult:
+        """Actor selection; this does not imply ownership erasure."""
+        return await self._delete("deleteByUserId", {"userId": user_id}, selector, pagination_opts)
 
-    async def get_supersession_chain(
-        self, fact_id: str
-    ) -> List[SupersessionChainEntry]:
-        """
-        Get the supersession chain for a fact.
+    async def delete_by_owner(self, owner_user_id: str, selector: Optional[HistorySelector] = None, pagination_opts: Optional[Dict[str, Any]] = None) -> HistoryDeleteResult:
+        return await self._delete("deleteByOwner", {"ownerUserId": owner_user_id}, selector, pagination_opts)
 
-        Returns the chain of facts that led to the current state,
-        showing how the knowledge evolved over time.
+    async def delete_by_memory_space(self, memory_space_id: str, selector: Optional[HistorySelector] = None, pagination_opts: Optional[Dict[str, Any]] = None) -> HistoryDeleteResult:
+        return await self._delete("deleteByMemorySpace", {"memorySpaceId": memory_space_id}, selector, pagination_opts)
 
-        Args:
-            fact_id: The fact ID to trace
-
-        Returns:
-            List of chain entries from oldest to newest
-        """
-        result = await self._execute_with_resilience(
-            lambda: self._client.query(
-                "factHistory:getSupersessionChain",
-                {"factId": fact_id},
-            ),
-            "factHistory:getSupersessionChain",
-        )
-
-        return [
-            SupersessionChainEntry(
-                fact_id=e.get("factId", ""),
-                superseded_by=e.get("supersededBy"),
-                timestamp=e.get("timestamp", 0),
-                reason=e.get("reason"),
-            )
-            for e in (result or [])
-        ]
-
-    async def get_activity_summary(
-        self,
-        memory_space_id: str,
-        hours: int = 24,
-    ) -> ActivitySummary:
-        """
-        Get activity summary for a time period.
-
-        Args:
-            memory_space_id: Memory space to query
-            hours: Number of hours to look back (default: 24)
-
-        Returns:
-            Activity summary
-        """
-        result = await self._execute_with_resilience(
-            lambda: self._client.query(
-                "factHistory:getActivitySummary",
-                {
-                    "memorySpaceId": memory_space_id,
-                    "hours": hours,
-                },
-            ),
-            "factHistory:getActivitySummary",
-        )
-
-        time_range_data = result.get("timeRange", {})
-        action_counts_data = result.get("actionCounts", {})
-
-        return ActivitySummary(
-            time_range=TimeRange(
-                hours=time_range_data.get("hours", hours),
-                since=time_range_data.get("since", ""),
-                until=time_range_data.get("until", ""),
-            ),
-            total_events=result.get("totalEvents", 0),
-            action_counts=ActionCounts(
-                CREATE=action_counts_data.get("CREATE", 0),
-                UPDATE=action_counts_data.get("UPDATE", 0),
-                SUPERSEDE=action_counts_data.get("SUPERSEDE", 0),
-                DELETE=action_counts_data.get("DELETE", 0),
-            ),
-            unique_facts_modified=result.get("uniqueFactsModified", 0),
-            active_participants=result.get("activeParticipants", 0),
-        )
-
-    async def delete_by_fact_id(self, fact_id: str) -> Dict[str, int]:
-        """
-        Delete history for a fact (GDPR cascade).
-
-        Args:
-            fact_id: The fact ID
-
-        Returns:
-            Dict with number of events deleted
-        """
-        result = await self._execute_with_resilience(
-            lambda: self._client.mutation(
-                "factHistory:deleteByFactId",
-                {"factId": fact_id},
-            ),
-            "factHistory:deleteByFactId",
-        )
-
-        return {"deleted": result.get("deleted", 0)}
-
-    async def delete_by_user_id(self, user_id: str) -> Dict[str, int]:
-        """
-        Delete history for a user (GDPR cascade).
-
-        Args:
-            user_id: The user ID
-
-        Returns:
-            Dict with number of events deleted
-        """
-        result = await self._execute_with_resilience(
-            lambda: self._client.mutation(
-                "factHistory:deleteByUserId",
-                {"userId": user_id},
-            ),
-            "factHistory:deleteByUserId",
-        )
-
-        return {"deleted": result.get("deleted", 0)}
-
-    async def delete_by_memory_space(
-        self, memory_space_id: str
-    ) -> Dict[str, int]:
-        """
-        Delete history for a memory space.
-
-        Args:
-            memory_space_id: The memory space ID
-
-        Returns:
-            Dict with number of events deleted
-        """
-        result = await self._execute_with_resilience(
-            lambda: self._client.mutation(
-                "factHistory:deleteByMemorySpace",
-                {"memorySpaceId": memory_space_id},
-            ),
-            "factHistory:deleteByMemorySpace",
-        )
-
-        return {"deleted": result.get("deleted", 0)}
-
-    async def purge_old_events(
-        self,
-        older_than: datetime,
-        memory_space_id: Optional[str] = None,
-        limit: Optional[int] = None,
-    ) -> Dict[str, int]:
-        """
-        Purge old history events (retention policy).
-
-        Args:
-            older_than: Delete events before this date
-            memory_space_id: Optional memory space filter
-            limit: Max events to delete per call
-
-        Returns:
-            Dict with deleted count and remaining count
-        """
-        from .._utils import filter_none_values
-
-        result = await self._execute_with_resilience(
-            lambda: self._client.mutation(
-                "factHistory:purgeOldEvents",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "olderThan": int(older_than.timestamp() * 1000),
-                    "limit": limit,
-                }),
-            ),
-            "factHistory:purgeOldEvents",
-        )
-
-        return {
-            "deleted": result.get("deleted", 0),
-            "remaining": result.get("remaining", 0),
-        }
+    async def purge_old_events(self, older_than: datetime, memory_space_id: Optional[str] = None, limit: Optional[int] = None, tenant_id: Optional[str] = None, pagination_opts: Optional[Dict[str, Any]] = None) -> HistoryDeleteResult:
+        cutoff = _timestamp(older_than)
+        hint = _batch_hint(limit)
+        if pagination_opts is not None:
+            size = pagination_opts.get("numItems")
+            if isinstance(size, bool) or not isinstance(size, int) or not 1 <= size <= 256:
+                raise ValueError("FACT_HISTORY_INVALID_PAGE_SIZE")
+            pagination_opts = {**pagination_opts, "numItems": min(size, hint)}
+        return await self._delete("purgeOldEvents", filter_none_values({"olderThan": cutoff, "limit": limit}), HistorySelector(tenant_id=tenant_id, memory_space_id=memory_space_id), pagination_opts)
 
     def _parse_event(self, data: Dict[str, Any]) -> FactChangeEvent:
-        """Parse a raw event dict into a FactChangeEvent."""
-        pipeline_data = data.get("pipeline")
-        pipeline = None
-        if pipeline_data:
-            pipeline = FactChangePipeline(
-                slot_matching=pipeline_data.get("slotMatching"),
-                semantic_matching=pipeline_data.get("semanticMatching"),
-                llm_resolution=pipeline_data.get("llmResolution"),
-            )
+        from .._utils import convert_convex_response
 
-        return FactChangeEvent(
-            event_id=data.get("eventId", ""),
-            fact_id=data.get("factId", ""),
-            memory_space_id=data.get("memorySpaceId", ""),
-            action=data.get("action", "CREATE"),
-            timestamp=data.get("timestamp", 0),
-            old_value=data.get("oldValue"),
-            new_value=data.get("newValue"),
-            superseded_by=data.get("supersededBy"),
-            supersedes=data.get("supersedes"),
-            reason=data.get("reason"),
-            confidence=data.get("confidence"),
-            pipeline=pipeline,
-            user_id=data.get("userId"),
-            participant_id=data.get("participantId"),
-            conversation_id=data.get("conversationId"),
-        )
+        raw = dict(data)
+        pending = raw.pop("pendingRichEvent", None)
+        raw.pop("_creationTime", None)
+        pipeline = raw.pop("pipeline", None)
+        endpoints = {key: raw.pop(key) for key in ("supersedesEndpoint", "supersededByEndpoint") if key in raw}
+        values = convert_convex_response(raw)
+        for key, value in endpoints.items():
+            values["supersedes_endpoint" if key == "supersedesEndpoint" else "superseded_by_endpoint"] = value
+        values["pipeline"] = FactChangePipeline(**convert_convex_response(pipeline)) if pipeline is not None else None
+        values["pending_rich_event"] = PendingRichEventV1.from_wire(pending) if pending else None
+        return FactChangeEvent(**values)
+
+async def execute_fact_mutation(client: Any, name: str, args: Dict[str, Any], history: FactHistoryService, phase: str, *, graph_adapter: Any = None, graph_sync_policy: Any = None, sync_to_graph: Optional[bool] = None) -> Dict[str, Any]:
+    """Resolve retained operation evidence after response loss; never rerun a decision."""
+    from ..graph.erasure import requested_graph, write_graph_mutation
+
+    if requested_graph(graph_adapter, sync_to_graph):
+        captured_result: Dict[str, Any] = await write_graph_mutation(client, graph_adapter, graph_sync_policy, name, args, sync_to_graph)
+        return captured_result
+
+    operation_id = args.get("operationId") or args.get("historyIntent", {}).get("operationId")
+    scope = filter_none_values({"tenantId": args.get("tenantId"), "memorySpaceId": args["memorySpaceId"]})
+    try:
+        result: Dict[str, Any] = await client.mutation(name, args)
+        return result
+    except Exception as error:
+        unavailable = "FACT_HISTORY_COMMITTED_RESULT_UNAVAILABLE" in str(error)
+        if definite_backend_failure(error) and not unavailable:
+            raise
+        if operation_id:
+            try:
+                receipt = await history.get_operation_receipt(args["memorySpaceId"], operation_id, phase, args.get("tenantId"))
+            except Exception as receipt_error:
+                if unavailable:
+                    raise FactCommittedReceiptUnresolvedError(operation_id, phase, scope, "unavailable", error, receipt_error) from error
+                receipt = None
+            if unavailable and receipt is None:
+                raise FactCommittedReceiptUnresolvedError(operation_id, phase, scope, "missing", error) from error
+            if receipt:
+                if unavailable or receipt.result_fact_id is None:
+                    raise FactCommittedResultUnavailableError(receipt) from error
+                try:
+                    recovered = await client.query("facts:get", filter_none_values({**scope, "factId": receipt.events[0].pending.payload.get("factId") if receipt.events[0].pending else args.get("factId")}))
+                except Exception:
+                    recovered = None
+                # Ordinary update output has a new logical id; obtain it from the original new role anchor.
+                for event in receipt.events:
+                    if event.pending and event.pending.payload.get("sourceFactId") == receipt.result_fact_id:
+                        logical_id = event.pending.payload["factId"]
+                        try:
+                            recovered = await client.query("facts:get", {**scope, "factId": logical_id})
+                        except Exception:
+                            recovered = None
+                        break
+                if not recovered or recovered.get("_id") != receipt.result_fact_id:
+                    raise FactCommittedResultUnavailableError(receipt) from error
+                # Recover only the original committed source, with the exact retained envelopes.
+                recovered["historyReceipt"] = {"committed": True, "events": [{"eventId": e.event_id, "_id": e._id, "pending": e.pending.to_wire() if e.pending else None, **({"requestJson": e.request_json} if e.request_json is not None else {})} for e in receipt.events], "affectedFactIds": list(receipt.affected_fact_ids), "resultFactId": receipt.result_fact_id, **({"graphJobs": _receipt_graph_jobs(receipt)} if receipt.graph_jobs else {})}
+                return dict(recovered)
+        raise FactCommitOutcomeUnknownError(operation_id or "", phase, scope, error) from error
 
 
-__all__ = [
-    "FactChangeAction",
-    "FactChangePipeline",
-    "FactChangeEvent",
-    "LogEventParams",
-    "ChangeFilter",
-    "TimeRange",
-    "ActionCounts",
-    "ActivitySummary",
-    "SupersessionChainEntry",
-    "FactHistoryService",
-]
+def definite_backend_failure(error: Exception) -> bool:
+    """The public async transport preserves the original server exception as cause."""
+    from convex import ConvexError, ConvexExecutionError
+
+    current: Optional[BaseException] = error
+    while current is not None:
+        if isinstance(current, (ConvexError, ConvexExecutionError)):
+            return True
+        current = current.__cause__
+    return False
+
+
+async def execute_relationship_mutation(client: Any, name: str, args: Dict[str, Any], history: FactHistoryService, phase: str, *, graph_adapter: Any = None, graph_sync_policy: Any = None, sync_to_graph: Optional[bool] = None) -> Dict[str, Any]:
+    """Reconcile a lost pair/group reply using retained identity without touching facts."""
+    from ..graph.erasure import requested_graph, write_graph_mutation
+
+    if requested_graph(graph_adapter, sync_to_graph):
+        captured_result: Dict[str, Any] = await write_graph_mutation(client, graph_adapter, graph_sync_policy, name, args, sync_to_graph)
+        return captured_result
+
+    try:
+        result: Dict[str, Any] = await client.mutation(name, args)
+        return result
+    except Exception as error:
+        if definite_backend_failure(error):
+            raise
+        operation_id = args.get("operationId") or args.get("historyIntent", {}).get("operationId", "")
+        try:
+            receipt = await history.get_operation_receipt(args["memorySpaceId"], operation_id, phase, args.get("tenantId"))
+        except Exception:
+            receipt = None
+        if receipt is None:
+            raise FactCommitOutcomeUnknownError(operation_id, phase, filter_none_values({"tenantId": args.get("tenantId"), "memorySpaceId": args["memorySpaceId"]}), error) from error
+        wire = {"committed": True, "events": [{"eventId": e.event_id, "_id": e._id, "pending": e.pending.to_wire() if e.pending else None, **({"requestJson": e.request_json} if e.request_json is not None else {})} for e in receipt.events], "affectedFactIds": list(receipt.affected_fact_ids), "resultFactId": receipt.result_fact_id, **({"graphJobs": _receipt_graph_jobs(receipt)} if receipt.graph_jobs else {})}
+        if phase == "supersede":
+            return {"superseded": True, "oldFactId": args["oldFactId"], "newFactId": args["newFactId"], "reason": args.get("reason"), "historyReceipt": wire}
+        return {"consolidated": True, "keptFactId": args["keepFactId"], "mergedCount": len(args["factIds"]) - 1, "historyReceipt": wire}

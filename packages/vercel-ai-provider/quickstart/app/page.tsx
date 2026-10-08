@@ -50,8 +50,12 @@ const ChatHistorySidebar = dynamic(
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 function MainContent() {
-  const { isLoading, isAdminSetup, isAuthenticated, user } = useAuth();
-  const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
+  const { isLoading, isAdminSetup, isAuthenticated, user, error } = useAuth();
+  const [memorySpaceId, setMemorySpaceId] = useState("");
+  useEffect(() => {
+    setMemorySpaceId(user?.allowedMemorySpaceIds[0] || "");
+    setCurrentConversationId(null);
+  }, [user?.id]);
   const [currentConversationId, setCurrentConversationId] = useState<
     string | null
   >(null);
@@ -119,12 +123,20 @@ function MainContent() {
     return <LoginScreen />;
   }
 
+  if (!memorySpaceId || !user?.allowedMemorySpaceIds.includes(memorySpaceId))
+    return <p role="status">Loading authorized memory...</p>;
+
   // Get userId from authenticated user
-  const userId = user?.id || "demo-user";
+  const userId = user?.id || "";
 
   // Main authenticated interface
   return (
     <main className="h-screen flex flex-col overflow-hidden">
+      {error && (
+        <p role="alert" className="p-3 text-red-400">
+          {error}
+        </p>
+      )}
       {/* Header */}
       <header className="border-b border-white/10 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -154,6 +166,7 @@ function MainContent() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left: Chat History Sidebar */}
         <ChatHistorySidebar
+          key={`${userId}:${memorySpaceId}`}
           memorySpaceId={memorySpaceId}
           currentConversationId={currentConversationId}
           onSelectConversation={handleSelectConversation}
@@ -163,6 +176,7 @@ function MainContent() {
         {/* Center: Chat Section */}
         <div className="flex-1 flex flex-col border-r border-white/10">
           <ChatInterface
+            key={`${userId}:${memorySpaceId}`}
             memorySpaceId={memorySpaceId}
             userId={userId}
             conversationId={currentConversationId}

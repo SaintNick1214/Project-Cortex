@@ -6,12 +6,34 @@ Layer 2: Searchable memory with embeddings and versioning
 
 from typing import Any, Dict, List, Optional, cast
 
+from .._domain_export import memory_export
+from .._domain_paging import (
+    DomainOperationPartialError,
+    active,
+    collect,
+    definite_failure,
+    loader,
+    natural,
+    partial,
+    resolve_scope,
+    same_selection,
+    select,
+    wait_operation,
+)
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..graph.erasure import (
+    GraphCommittedPartial,
+    graph_option,
+    mutate_graph_selected,
+    requested_graph,
+    write_graph_mutation,
+)
 from ..types import (
     AuthContext,
     CountMemoriesFilter,
     DeleteMemoryOptions,
+    DomainReadOptions,
     ListMemoriesFilter,
     MemoryEntry,
     SearchOptions,
@@ -21,6 +43,7 @@ from ..types import (
 )
 from .validators import (
     VectorValidationError,
+    resolve_domain_scope,
     validate_content,
     validate_count_filter,
     validate_delete_many_filter,
@@ -54,6 +77,7 @@ class VectorAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         auth_context: Optional[AuthContext] = None,
+        graph_sync_policy: Optional[Any] = None,
     ) -> None:
         """
         Initialize Vector API.
@@ -66,6 +90,7 @@ class VectorAPI:
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._graph_sync_policy = graph_sync_policy
         self._resilience = resilience
         self._auth_context = auth_context
 
@@ -74,10 +99,15 @@ class VectorAPI:
         """Get tenant_id from auth context (for multi-tenancy)."""
         return self._auth_context.tenant_id if self._auth_context else None
 
+    async def _mutate_graph(self, reference: str, args: Dict[str, Any], explicit: Optional[bool] = None) -> Any:
+        return await write_graph_mutation(self.client, self.graph_adapter, self._graph_sync_policy, reference, args, explicit)
+
     async def _execute_with_resilience(
-        self, operation: Any, operation_name: str
+        self, operation: Any, operation_name: str, *, graph_write: Optional[bool] = False
     ) -> Any:
         """Execute an operation through the resilience layer (if available)."""
+        if requested_graph(self.graph_adapter, graph_write):
+            return await operation()
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
@@ -115,11 +145,11 @@ class VectorAPI:
         validate_store_memory_input(input)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memories:store",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
-                    "tenantId": getattr(input, "tenant_id", None),  # Multi-tenancy: SaaS platform isolation
+                    "tenantId": resolve_scope(self._tenant_id, getattr(input, "tenant_id", None)),  # Exact constructor/input scope
                     "participantId": input.participant_id,
                     "content": input.content,
                     "contentType": input.content_type,
@@ -163,53 +193,21 @@ class VectorAPI:
                     "importance": input.metadata.get("importance") if isinstance(input.metadata, dict) else input.metadata.importance,
                     "tags": input.metadata.get("tags") if isinstance(input.metadata, dict) else input.metadata.tags,
                 }),
-            ),
+            graph_option(options), ),
             "memories:store",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import sync_memory_relationships, sync_memory_to_graph
-
-                node_id = await sync_memory_to_graph(result, self.graph_adapter)
-                await sync_memory_relationships(result, node_id, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync memory to graph: {error}")
 
         return MemoryEntry(**convert_convex_response(result))
 
-    async def get(
-        self, memory_space_id: str, memory_id: str
-    ) -> Optional[MemoryEntry]:
-        """
-        Get memory by ID.
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID
-
-        Returns:
-            Memory entry if found, None otherwise
-
-        Example:
-            >>> memory = await cortex.vector.get('agent-1', 'mem-abc123')
-        """
-        # Client-side validation
+    async def get(self, memory_space_id: str, memory_id: str, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Optional[MemoryEntry]:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        result = await wait_operation(self.client.query("memories:get", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id, "tenantId": tenant})), read_options)
+        return MemoryEntry(**convert_convex_response(result)) if result else None
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "memories:get", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id})
-            ),
-            "memories:get",
-        )
-
-        if not result:
-            return None
-
-        return MemoryEntry(**convert_convex_response(result))
 
     async def search(
         self,
@@ -249,10 +247,24 @@ class VectorAPI:
                 "memories:search",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": resolve_scope(self._tenant_id, opts.tenant_id),
+                    "participantId": opts.participant_id,
                     "query": query,
                     "embedding": opts.embedding,
                     "userId": opts.user_id,
                     "tags": opts.tags,
+                    "tagMatch": opts.tag_match,
+                    "importance": opts.importance,
+                    "createdBefore": opts.created_before,
+                    "createdAfter": opts.created_after,
+                    "updatedBefore": opts.updated_before,
+                    "updatedAfter": opts.updated_after,
+                    "lastAccessedBefore": opts.last_accessed_before,
+                    "lastAccessedAfter": opts.last_accessed_after,
+                    "accessCount": opts.access_count,
+                    "version": opts.version,
+                    "contentType": opts.content_type,
+                    "offset": opts.offset,
                     "sourceType": opts.source_type,
                     "minImportance": opts.min_importance,
                     "minScore": opts.min_score,
@@ -311,68 +323,29 @@ class VectorAPI:
             params["tags"] = updates["tags"]
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memories:update",
                 filter_none_values(params),
-            ),
+            graph_option(options), ),
             "memories:update",
-        )
+        graph_write=graph_option(options), )
 
         # Sync to graph if requested
-        if options and options.get("sync_to_graph") and self.graph_adapter:
-            try:
-                from ..graph import sync_memory_to_graph
-
-                await sync_memory_to_graph(result, self.graph_adapter)
-            except Exception as error:
-                print(f"Warning: Failed to sync memory update to graph: {error}")
 
         return MemoryEntry(**convert_convex_response(result))
 
-    async def delete(
-        self,
-        memory_space_id: str,
-        memory_id: str,
-        options: Optional[DeleteMemoryOptions] = None,
-    ) -> Dict[str, bool]:
-        """
-        Delete a memory.
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID
-            options: Optional delete options (e.g., syncToGraph)
-
-        Returns:
-            Deletion result
-
-        Example:
-            >>> await cortex.vector.delete('agent-1', 'mem-abc123')
-        """
-        # Client-side validation
+    async def delete(self, memory_space_id: str, memory_id: str, options: Optional[DeleteMemoryOptions] = None, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        selected = [row for row in await select(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant}), read_options) if row["document"]["memoryId"] == memory_id]
+        if len(selected) > 1:
+            raise ValueError("DOMAIN_SCOPE_AMBIGUOUS")
+        if not selected:
+            raise ValueError("MEMORY_NOT_FOUND")
+        outcome = await mutate_graph_selected(self.client, "memories", selected, {"memorySpaceId": memory_space_id, "tenantId": tenant}, read_options, self.graph_adapter, self._graph_sync_policy, explicit=graph_option(options))
+        return {"deleted": bool(outcome["confirmedCount"]), "memoryId": memory_id, "partial": outcome}
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memories:deleteMemory",  # Correct function name
-                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
-            ),
-            "memories:deleteMemory",
-        )
-
-        # Delete from graph with orphan cleanup
-        if options and options.sync_to_graph and self.graph_adapter:
-            try:
-                from ..graph import delete_memory_from_graph
-
-                await delete_memory_from_graph(
-                    memory_id, self.graph_adapter, True
-                )
-            except Exception as error:
-                print(f"Warning: Failed to delete memory from graph: {error}")
-
-        return cast(Dict[str, bool], result)
 
     async def update_many(
         self,
@@ -419,7 +392,7 @@ class VectorAPI:
             )
 
         result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
+            lambda: self._mutate_graph(
                 "memories:updateMany",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
@@ -428,57 +401,33 @@ class VectorAPI:
                     "importance": importance,
                     "tags": tags,
                 }),
-            ),
+            None, ),
             "memories:updateMany",
-        )
+        graph_write=None, )
 
         return cast(Dict[str, Any], result)
 
-    async def delete_many(
-        self,
-        memory_space_id: str,
-        user_id: Optional[str] = None,
-        source_type: Optional[SourceType] = None,
-    ) -> Dict[str, Any]:
-        """
-        Bulk delete memories matching filters.
-
-        Args:
-            memory_space_id: Memory space ID
-            user_id: Optional filter by user ID
-            source_type: Optional filter by source type
-
-        Returns:
-            Deletion result with deleted count and memory IDs
-
-        Example:
-            >>> result = await cortex.vector.delete_many(
-            ...     'agent-1',
-            ...     source_type='system'
-            ... )
-        """
-        # Client-side validation
+    async def delete_many(self, memory_space_id: str, user_id: Optional[str] = None, source_type: Optional[SourceType] = None, *, participant_id: Optional[str] = None, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
-
         if user_id is not None:
             validate_user_id(user_id)
-
         if source_type is not None:
             validate_source_type(source_type)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        load = loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant, "userId": user_id, "sourceType": source_type, "participantId": participant_id})
+        selected = await select(load, read_options)
+        if not same_selection(selected, await select(load, read_options)):
+            raise ValueError("DOMAIN_SELECTION_CHANGED")
+        outcome = await mutate_graph_selected(self.client, "memories", selected, {"memorySpaceId": memory_space_id, "tenantId": tenant}, read_options, self.graph_adapter, self._graph_sync_policy, explicit=graph_option(read_options))
+        try:
+            remaining = await select(load, read_options)
+            if remaining:
+                outcome["remainingPhysicalIds"] = [row["physicalId"] for row in remaining]
+                raise ValueError("DOMAIN_SELECTION_CHANGED")
+        except BaseException as cause:
+            raise DomainOperationPartialError("vector:delete_many", outcome, cause) from cause
+        return {"deleted": outcome["confirmedCount"], "memoryIds": [row["document"]["memoryId"] for row in selected if row["physicalId"] in outcome["confirmedPhysicalIds"]], "partial": outcome}
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memories:deleteMany",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "userId": user_id,
-                    "sourceType": source_type,
-                }),
-            ),
-            "memories:deleteMany",
-        )
-
-        return cast(Dict[str, Any], result)
 
     async def count(
         self,
@@ -486,6 +435,8 @@ class VectorAPI:
         user_id: Optional[str] = None,
         participant_id: Optional[str] = None,
         source_type: Optional[SourceType] = None,
+        *,
+        tenant_id: Optional[str] = None,
     ) -> int:
         """
         Count memories.
@@ -502,6 +453,10 @@ class VectorAPI:
         Example:
             >>> total = await cortex.vector.count('agent-1')
         """
+        selected_tenant = resolve_domain_scope(self._tenant_id, tenant_id)
+        if participant_id is not None and (not isinstance(participant_id, str) or not participant_id.strip()):
+            raise VectorValidationError("Invalid participant_id", "INVALID_PARTICIPANT_ID", "participant_id")
+
         # Client-side validation
         validate_memory_space_id(memory_space_id)
 
@@ -516,6 +471,7 @@ class VectorAPI:
                 "memories:count",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": selected_tenant,
                     "userId": user_id,
                     "participantId": participant_id,
                     "sourceType": source_type,
@@ -526,182 +482,56 @@ class VectorAPI:
 
         return int(result)
 
-    async def list(
-        self,
-        memory_space_id: str,
-        user_id: Optional[str] = None,
-        participant_id: Optional[str] = None,
-        source_type: Optional[SourceType] = None,
-        limit: Optional[int] = None,
-        enrich_facts: bool = False,
-    ) -> List[MemoryEntry]:
-        """
-        List memories with filtering.
-
-        Args:
-            memory_space_id: Memory space ID
-            user_id: Filter by user ID
-            participant_id: Filter by participant ID
-            source_type: Filter by source type
-            limit: Maximum results
-            enrich_facts: Include facts in results
-
-        Returns:
-            List of memory entries
-
-        Example:
-            >>> memories = await cortex.vector.list(
-            ...     'agent-1',
-            ...     user_id='user-123',
-            ...     limit=50
-            ... )
-        """
-        # Client-side validation
+    async def list(self, memory_space_id: str, user_id: Optional[str] = None, participant_id: Optional[str] = None, source_type: Optional[SourceType] = None, limit: Optional[int] = None, enrich_facts: bool = False, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> List[MemoryEntry]:
         validate_memory_space_id(memory_space_id)
-
         if user_id is not None:
             validate_user_id(user_id)
-
         if source_type is not None:
             validate_source_type(source_type)
-
-        if limit is not None:
+        if limit is not None and limit != 0:
             validate_limit(limit)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        rows = await collect(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant, "userId": user_id, "participantId": participant_id, "sourceType": source_type}), read_options, 100 if limit is None else natural(limit))
+        return [MemoryEntry(**convert_convex_response(row)) for row in rows]
 
-        # Convex list doesn't support enrichFacts parameter
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "memories:list",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "userId": user_id,
-                    "participantId": participant_id,
-                    "sourceType": source_type,
-                    "limit": limit,
-                    # enrichFacts not supported in Convex function
-                }),
-            ),
-            "memories:list",
-        )
 
-        return [MemoryEntry(**convert_convex_response(mem)) for mem in result]
-
-    async def export(
-        self,
-        memory_space_id: str,
-        user_id: Optional[str] = None,
-        format: str = "json",
-        include_embeddings: bool = False,
-        include_facts: bool = False,
-    ) -> Dict[str, Any]:
-        """
-        Export memories to JSON or CSV.
-
-        Args:
-            memory_space_id: Memory space ID
-            user_id: Filter by user ID
-            format: Export format ('json' or 'csv')
-            include_embeddings: Include embedding vectors
-            include_facts: Include facts in export
-
-        Returns:
-            Export result
-
-        Example:
-            >>> exported = await cortex.vector.export(
-            ...     'agent-1',
-            ...     user_id='user-123',
-            ...     format='json'
-            ... )
-        """
-        # Client-side validation
+    async def export(self, memory_space_id: str, user_id: Optional[str] = None, format: str = "json", include_embeddings: bool = False, include_facts: bool = False, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
         validate_export_format(format)
-
         if user_id is not None:
             validate_user_id(user_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        rows = await collect(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant, "userId": user_id}), read_options)
+        facts = await collect(loader(self.client, "facts", {"memorySpaceId": memory_space_id, "tenantId": tenant, "includeSuperseded": False}), read_options) if include_facts else []
+        return memory_export(rows, format, include_embeddings, include_facts, facts)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "memories:exportMemories",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "userId": user_id,
-                    "format": format,
-                    "includeEmbeddings": include_embeddings,
-                    "includeFacts": include_facts,
-                }),
-            ),
-            "memories:exportMemories",
-        )
 
-        return cast(Dict[str, Any], result)
-
-    async def archive(
-        self, memory_space_id: str, memory_id: str
-    ) -> Dict[str, Any]:
-        """
-        Soft delete (move to archive).
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID
-
-        Returns:
-            Archive result
-
-        Example:
-            >>> result = await cortex.vector.archive('agent-1', 'mem-123')
-        """
-        # Client-side validation
+    async def archive(self, memory_space_id: str, memory_id: str, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
+        tenant = resolve_scope(self._tenant_id, tenant_id)
+        selected = [row for row in await select(loader(self.client, "memories", {"memorySpaceId": memory_space_id, "tenantId": tenant}), read_options) if row["document"]["memoryId"] == memory_id]
+        if len(selected) != 1:
+            raise ValueError("DOMAIN_SCOPE_AMBIGUOUS" if selected else "MEMORY_NOT_FOUND")
+        active(read_options)
+        try:
+            result: Dict[str, Any] = await wait_operation(self._mutate_graph("memories:archive", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id, "tenantId": tenant, "expectedPhysicalId": selected[0]["physicalId"], "expectedFingerprint": selected[0]["fingerprint"]}), graph_option(read_options)), read_options)
+            return result
+        except BaseException as cause:
+            outcome = {"physicalId": selected[0]["physicalId"], "disposition": "knownRolledBack" if definite_failure(cause) else "outcomeUnknown"}
+            if isinstance(cause, GraphCommittedPartial):
+                outcome["disposition"] = "knownCommitted" if cause.primary_result.get("archived") else "alreadyAbsent"
+                outcome["graphJobs"] = cause.jobs
+            raise DomainOperationPartialError("vector:archive", partial([outcome]), cause) from cause
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memories:archive",
-                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
-            ),
-            "memories:archive",
-        )
 
-        return cast(Dict[str, Any], result)
-
-    async def restore_from_archive(
-        self, memory_space_id: str, memory_id: str
-    ) -> Dict[str, Any]:
-        """
-        Restore a memory from archive.
-
-        Args:
-            memory_space_id: Memory space ID
-            memory_id: Memory ID
-
-        Returns:
-            Restore result with restored flag, memoryId, and memory entry
-
-        Example:
-            >>> result = await cortex.vector.restore_from_archive('agent-1', 'mem-123')
-            >>> print(result['restored'])  # True
-            >>> print(result['memory'])  # MemoryEntry
-        """
-        # Client-side validation
+    async def restore_from_archive(self, memory_space_id: str, memory_id: str, *, tenant_id: Optional[str] = None, read_options: Optional[DomainReadOptions] = None) -> Dict[str, Any]:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
+        active(read_options)
+        result: Dict[str, Any] = await wait_operation(self._mutate_graph("memories:restoreFromArchive", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id, "tenantId": resolve_scope(self._tenant_id, tenant_id)}), graph_option(read_options)), read_options)
+        return result
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.mutation(
-                "memories:restoreFromArchive",
-                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
-            ),
-            "memories:restoreFromArchive",
-        )
-
-        # Convert memory in result to MemoryEntry
-        if result and "memory" in result:
-            result["memory"] = MemoryEntry(**convert_convex_response(result["memory"]))
-
-        return cast(Dict[str, Any], result)
 
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int

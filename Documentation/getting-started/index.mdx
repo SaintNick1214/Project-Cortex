@@ -9,7 +9,7 @@ sidebar_position: 0
 Welcome! This guide will help you go from zero to a working AI agent with persistent memory in under 5 minutes.
 
 <Callout type="info" title="Prerequisites">
-  **Node.js 18+**, npm/yarn/pnpm, and a free [Convex account](https://convex.dev).
+  **Node.js 22.16.0+** for CLI workflows, npm for Basic/Vercel and pnpm 10.33.0 for Chat. Anonymous local Convex setup is supported.
 </Callout>
 
 ## Choose Your Path
@@ -36,7 +36,7 @@ Welcome! This guide will help you go from zero to a working AI agent with persis
     Our CLI handles project setup, development, and deployment.
 
     ```bash
-    brew install cortex-memory/tap/cli
+    npm install -g @cortexmemory/cli@0.37.0
     ```
 
     [Installation Guide →](/getting-started/installation)
@@ -45,7 +45,7 @@ Welcome! This guide will help you go from zero to a working AI agent with persis
     Run `cortex init` to scaffold a new project with Convex backend configured.
 
     ```bash
-    cortex init my-project
+    cortex init my-project --template basic --local --yes --graph none
     cd my-project
     ```
 

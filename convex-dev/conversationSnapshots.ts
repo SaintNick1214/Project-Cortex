@@ -1,3 +1,4 @@
+import { captureInsertedRow, reconcileRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Conversation Snapshots API
  *
@@ -94,10 +95,9 @@ export const create = mutation({
     // Get the source conversation
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) =>
-        q.eq("conversationId", args.conversationId)
-      )
-      .first();
+      .withIndex("by_conversationId", q => q.eq("conversationId", args.conversationId))
+      .filter(q => q.eq(q.field("tenantId"), args.tenantId))
+      .unique();
 
     if (!conversation) {
       throw new ConvexError("CONVERSATION_NOT_FOUND");
@@ -135,7 +135,7 @@ export const create = mutation({
       facts = [];
     }
 
-    const id = await ctx.db.insert("conversationSnapshots", {
+    const id = await captureInsertedRow(ctx, "conversationSnapshots", {
       snapshotId,
       conversationId: args.conversationId,
       messages,
@@ -188,7 +188,7 @@ export const deleteSnapshot = mutation({
       throw new ConvexError("DELETE_NOT_AUTHORIZED");
     }
 
-    await ctx.db.patch(snapshot._id, {
+    await reconcileRow(ctx, snapshot._id, {
       status: "deleted",
     });
 

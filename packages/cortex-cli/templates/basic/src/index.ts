@@ -159,7 +159,7 @@ function prompt(): void {
     if (shouldContinue) {
       prompt();
     } else {
-      cleanup();
+      await cleanup();
     }
   });
 }
@@ -167,8 +167,8 @@ function prompt(): void {
 /**
  * Cleanup on exit
  */
-function cleanup(): void {
-  closeCortex();
+async function cleanup(): Promise<void> {
+  await closeCortex();
   rl.close();
   process.exit(0);
 }
@@ -213,11 +213,11 @@ async function main(): Promise<void> {
   // Handle signals
   process.on("SIGINT", () => {
     console.log("");
-    cleanup();
+    void cleanup().catch(() => process.exit(1));
   });
 
   process.on("SIGTERM", () => {
-    cleanup();
+    void cleanup().catch(() => process.exit(1));
   });
 
   // Start prompt loop

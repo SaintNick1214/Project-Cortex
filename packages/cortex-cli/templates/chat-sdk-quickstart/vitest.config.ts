@@ -21,7 +21,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./"),
+      "@": path.resolve(import.meta.dirname, "./"),
+      "server-only": path.resolve(
+        import.meta.dirname,
+        "./tests/helpers/server-only.ts"
+      ),
     },
   },
 });

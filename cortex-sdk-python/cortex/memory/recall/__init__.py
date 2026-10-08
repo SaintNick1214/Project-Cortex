@@ -9,6 +9,7 @@ Sub-modules for the recall() orchestration API:
 from .graph_enhancement import (
     GraphExpansionConfig,
     GraphExpansionResult,
+    GraphNativeSelection,
     expand_via_graph,
     extract_entities_from_query,
     extract_entities_from_results,
@@ -34,6 +35,7 @@ __all__ = [
     # Graph enhancement
     "GraphExpansionConfig",
     "GraphExpansionResult",
+    "GraphNativeSelection",
     "extract_entities_from_query",
     "extract_entities_from_results",
     "expand_via_graph",

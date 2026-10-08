@@ -8,6 +8,7 @@
  */
 
 import { Cortex } from "../src";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
@@ -22,6 +23,7 @@ const ctx = createTestRunContext();
 
 describe("GDPR: Cascade Deletion", () => {
   let cortex: Cortex;
+  let erasureTransport: ErasureTransport;
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -32,6 +34,14 @@ describe("GDPR: Cascade Deletion", () => {
   const TEST_USER_ID = generateTenantUserId(TEST_TENANT_ID);
 
   beforeAll(async () => {
+    // Deletion fixtures require an explicitly owned disposable target and key.
+    // Never obtain administrative authority from saved config or client fields.
+    const ownedUrl = process.env.CORTEX_ERASURE_TEST_DISPOSABLE_URL;
+    const key = process.env.CORTEX_ERASURE_TEST_DEPLOYMENT_KEY;
+    if (ownedUrl !== "http://127.0.0.1:46512" || CONVEX_URL !== ownedUrl || !key) {
+      throw new Error("Explicit Task19 disposable erasure test binding required");
+    }
+    erasureTransport = createErasureTransport({url: ownedUrl, deploymentKey: key});
     // Initialize Cortex with auth context for multi-tenancy
     const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
     cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
@@ -42,6 +52,8 @@ describe("GDPR: Cascade Deletion", () => {
 
   afterAll(async () => {
     // NOTE: Removed purgeAll() to prevent deleting parallel test data.
+    erasureTransport.close();
+    await cortex.shutdown();
     await client.close();
   });
 
@@ -89,6 +101,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Delete space with cascade
       await cortex.memorySpaces.delete(SPACE, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -99,14 +112,10 @@ describe("GDPR: Cascade Deletion", () => {
       const memCheck = await cortex.vector.get(SPACE, mem.memoryId);
       expect(memCheck).toBeNull();
 
-      // Facts use soft delete - they're marked invalid
+      // Supported erasure physically removes facts and owned-space contexts.
       const factCheck = await cortex.facts.get(SPACE, fact.factId);
-      if (factCheck) {
-        expect(factCheck.validUntil).toBeDefined(); // Marked invalid
-      }
-
-      // Note: Contexts may not be cascade-deleted (design decision for audit trail)
-      // The test validates that conversations and memories are deleted
+      expect(factCheck).toBeNull();
+      expect(await cortex.contexts.get(_ctx.contextId)).toBeNull();
 
       // Validate: Counts reflect deletion (scoped by tenantId)
       const convCount = await cortex.conversations.count({
@@ -154,6 +163,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Delete space A with cascade
       await cortex.memorySpaces.delete(SPACE_A, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -179,6 +189,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Delete without any data
       await cortex.memorySpaces.delete(EMPTY_SPACE, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -877,10 +888,12 @@ describe("GDPR: Cascade Deletion", () => {
       // Cleanup
       await cortexA.memorySpaces.delete(spaceA, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
       await cortexB.memorySpaces.delete(spaceB, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
     });
@@ -934,6 +947,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Cascade delete Tenant A's space
       await cortexA.memorySpaces.delete(spaceA, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -953,6 +967,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Cleanup
       await cortexB.memorySpaces.delete(spaceB, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
     });
@@ -1123,6 +1138,7 @@ describe("GDPR: Cascade Deletion", () => {
       // 4. Cascade delete the space
       await cortex.memorySpaces.delete(SPACE, {
         cascade: true,
+        erasureTransport,
         reason: "GDPR governance test cleanup",
       });
 

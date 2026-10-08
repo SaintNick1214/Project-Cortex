@@ -1,3 +1,5 @@
+import { graphMutation } from "./lib/graphSync";
+import { reconcileRow, captureInsertedRow, markDeletedRow } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Immutable Store API (Layer 1b)
  *
@@ -6,7 +8,8 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query } from "./_generated/server";
+import { scopedImmutable, validateDomainScope } from "./lib/domainScope";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -15,7 +18,7 @@ import { mutation, query } from "./_generated/server";
 /**
  * Store immutable data (create v1 or increment version if exists)
  */
-export const store = mutation({
+export const store = graphMutation({
   args: {
     type: v.string(),
     id: v.string(),
@@ -28,30 +31,7 @@ export const store = mutation({
     const now = Date.now();
 
     // Check if entry already exists - use tenant-aware lookup when tenantId provided
-    let existing;
-    if (args.tenantId) {
-      // Tenant-isolated lookup
-      existing = await ctx.db
-        .query("immutable")
-        .withIndex("by_tenant_type_id", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("type", args.type)
-            .eq("id", args.id),
-        )
-        .first();
-    } else {
-      // Global lookup for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant access
-      const candidate = await ctx.db
-        .query("immutable")
-        .withIndex("by_type_id", (q) =>
-          q.eq("type", args.type).eq("id", args.id),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      existing = candidate && !candidate.tenantId ? candidate : null;
-    }
+    const existing = await scopedImmutable(ctx, args.tenantId, args.type, args.id);
 
     if (existing) {
       // Update: Create new version
@@ -69,7 +49,7 @@ export const store = mutation({
       ];
 
       // Update with new version
-      await ctx.db.patch(existing._id, {
+      await reconcileRow(ctx, existing._id, {
         data: args.data,
         version: newVersion,
         previousVersions: updatedPreviousVersions,
@@ -82,7 +62,7 @@ export const store = mutation({
       return await ctx.db.get(existing._id);
     }
     // Create: Version 1
-    const _id = await ctx.db.insert("immutable", {
+    const _id = await captureInsertedRow(ctx, "immutable", {
       type: args.type,
       id: args.id,
       data: args.data,
@@ -102,36 +82,14 @@ export const store = mutation({
 /**
  * Delete (purge) an immutable entry and all its versions
  */
-export const purge = mutation({
+export const purge = graphMutation({
   args: {
     type: v.string(),
     id: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    let entry;
-    if (args.tenantId) {
-      entry = await ctx.db
-        .query("immutable")
-        .withIndex("by_tenant_type_id", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("type", args.type)
-            .eq("id", args.id),
-        )
-        .first();
-    } else {
-      // Global lookup for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant deletion
-      const candidate = await ctx.db
-        .query("immutable")
-        .withIndex("by_type_id", (q) =>
-          q.eq("type", args.type).eq("id", args.id),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      entry = candidate && !candidate.tenantId ? candidate : null;
-    }
+    const entry = await scopedImmutable(ctx, args.tenantId, args.type, args.id);
 
     if (!entry) {
       throw new ConvexError("IMMUTABLE_ENTRY_NOT_FOUND");
@@ -139,7 +97,7 @@ export const purge = mutation({
 
     const versionsDeleted = entry.version; // Current + previous
 
-    await ctx.db.delete(entry._id);
+    await markDeletedRow(ctx, entry._id);
 
     return {
       deleted: true,
@@ -164,29 +122,7 @@ export const get = query({
     tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    let entry;
-    if (args.tenantId) {
-      entry = await ctx.db
-        .query("immutable")
-        .withIndex("by_tenant_type_id", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("type", args.type)
-            .eq("id", args.id),
-        )
-        .first();
-    } else {
-      // Global lookup for non-tenant records only
-      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant reads
-      const candidate = await ctx.db
-        .query("immutable")
-        .withIndex("by_type_id", (q) =>
-          q.eq("type", args.type).eq("id", args.id),
-        )
-        .first();
-      // Only match if the record is truly global (no tenantId)
-      entry = candidate && !candidate.tenantId ? candidate : null;
-    }
+    const entry = await scopedImmutable(ctx, args.tenantId, args.type, args.id);
 
     return entry || null;
   },
@@ -272,14 +208,12 @@ export const getVersion = query({
  */
 export const getHistory = query({
   args: {
+    tenantId: v.optional(v.string()),
     type: v.string(),
     id: v.string(),
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
-      .first();
+    const entry = await scopedImmutable(ctx, args.tenantId, args.type, args.id);
 
     if (!entry) {
       return [];
@@ -333,32 +267,10 @@ export const list = query({
     sortOrder: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Collect all entries matching the primary filter first
-    let entries;
-
-    if (args.type) {
-      entries = await ctx.db
-        .query("immutable")
-        .withIndex("by_type", (q) => q.eq("type", args.type!))
-        .collect();
-    } else if (args.userId) {
-      entries = await ctx.db
-        .query("immutable")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-        .collect();
-    } else {
-      entries = await ctx.db.query("immutable").collect();
-    }
-
-    // Tenant isolation filter (apply early for efficiency)
-    if (args.tenantId) {
-      entries = entries.filter((e) => e.tenantId === args.tenantId);
-    }
-
-    // Post-filter by userId if both type and userId specified
-    if (args.userId && args.type) {
-      entries = entries.filter((e) => e.userId === args.userId);
-    }
+    validateDomainScope(args.tenantId);
+    let entries = await ctx.db.query("immutable").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
+    if (args.type) entries = entries.filter(e => e.type === args.type);
+    if (args.userId) entries = entries.filter(e => e.userId === args.userId);
 
     // Apply date filters
     if (args.createdAfter !== undefined) {
@@ -494,6 +406,7 @@ export const search = query({
  */
 export const count = query({
   args: {
+    tenantId: v.optional(v.string()),
     type: v.optional(v.string()),
     userId: v.optional(v.string()),
     createdAfter: v.optional(v.number()),
@@ -502,22 +415,15 @@ export const count = query({
     updatedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let entries;
-
-    // Use index if type is provided
-    if (args.type) {
-      entries = await ctx.db
-        .query("immutable")
-        .withIndex("by_type", (q) => q.eq("type", args.type!))
-        .collect();
-    } else {
-      entries = await ctx.db.query("immutable").collect();
+    for (const cutoff of [args.createdAfter, args.createdBefore, args.updatedAfter, args.updatedBefore]) {
+      if (cutoff !== undefined && (!Number.isFinite(cutoff) || cutoff < 0)) throw new ConvexError("INVALID_TIMESTAMP");
     }
-
-    // Apply userId filter
-    if (args.userId) {
-      entries = entries.filter((e) => e.userId === args.userId);
-    }
+    if ((args.createdAfter !== undefined && args.createdBefore !== undefined && args.createdAfter >= args.createdBefore) ||
+        (args.updatedAfter !== undefined && args.updatedBefore !== undefined && args.updatedAfter >= args.updatedBefore)) throw new ConvexError("INVALID_DATE_RANGE");
+    validateDomainScope(args.tenantId);
+    let entries = await ctx.db.query("immutable").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
+    if (args.type) entries = entries.filter(e => e.type === args.type);
+    if (args.userId) entries = entries.filter(e => e.userId === args.userId);
 
     // Apply date filters
     if (args.createdAfter !== undefined) {
@@ -617,7 +523,7 @@ export const getAtTimestamp = query({
 /**
  * Bulk delete immutable entries
  */
-export const purgeMany = mutation({
+export const purgeMany = graphMutation({
   args: {
     type: v.optional(v.string()),
     userId: v.optional(v.string()),
@@ -639,7 +545,7 @@ export const purgeMany = mutation({
 
     for (const entry of entries) {
       totalVersionsDeleted += entry.version; // Current + previous
-      await ctx.db.delete(entry._id);
+      await markDeletedRow(ctx, entry._id);
       deleted++;
     }
 
@@ -654,7 +560,7 @@ export const purgeMany = mutation({
 /**
  * Delete old versions while keeping recent ones
  */
-export const purgeVersions = mutation({
+export const purgeVersions = graphMutation({
   args: {
     type: v.string(),
     id: v.string(),
@@ -686,7 +592,7 @@ export const purgeVersions = mutation({
     // Remove oldest versions (keep latest N)
     const updatedPreviousVersions = entry.previousVersions.slice(toRemove);
 
-    await ctx.db.patch(entry._id, {
+    await reconcileRow(ctx, entry._id, {
       previousVersions: updatedPreviousVersions,
     });
 
@@ -703,7 +609,7 @@ export const purgeVersions = mutation({
  * WARNING: This permanently deletes ALL immutable entries!
  * Only available in test/dev environments.
  */
-export const purgeAll = mutation({
+export const purgeAll = graphMutation({
   args: {},
   handler: async (ctx) => {
     // Safety check: Only allow in test/dev environments
@@ -727,7 +633,7 @@ export const purgeAll = mutation({
     const allEntries = await ctx.db.query("immutable").collect();
 
     for (const entry of allEntries) {
-      await ctx.db.delete(entry._id);
+      await markDeletedRow(ctx, entry._id);
     }
 
     return { deleted: allEntries.length };

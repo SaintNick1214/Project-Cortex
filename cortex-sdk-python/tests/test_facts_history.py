@@ -206,6 +206,24 @@ class MockClient:
 
     async def query(self, method: str, args: dict):
         self.last_query = (method, args)
+        if method == "factHistory:page":
+            rows = self.query_response
+            if isinstance(rows, dict):
+                counts = rows.get("actionCounts", rows)
+                rows = [{"eventId": f"evt-{i}-{action}", "factId": f"fact-{i % 75}", "sourceFactId": f"physical-{i % 75}", "memorySpaceId": "space-1", "action": action, "timestamp": int(datetime.now().timestamp() * 1000), "participantId": f"p-{i % 10}"} for action in ("CREATE", "UPDATE", "SUPERSEDE", "DELETE") for i in range(counts.get(action, 0))]
+                # Enumerate distinct facts over the entire observed activity window.
+                for i, row in enumerate(rows):
+                    row["factId"] = f"fact-{i % 75}"
+                    row["sourceFactId"] = f"physical-{i % 75}"
+            if rows and "eventId" not in rows[0]:
+                rows = [{**row, "eventId": f"evt-{i}", "sourceFactId": row["factId"], "scopeVersion": 1, "memorySpaceId": "space-1", "action": "SUPERSEDE", "supersedesEndpoint": {"state": "absent"}, "supersededByEndpoint": ({"state": "known", "factDocumentId": row["supersededBy"], "logicalFactId": row["supersededBy"], "scopeVersion": 1, "memorySpaceId": "space-1"} if row.get("supersededBy") else {"state": "absent"})} for i, row in enumerate(rows)]
+            if args.get("factId"):
+                rows = [e for e in rows if e["factId"] == args["factId"]]
+            if args.get("sourceFactId"):
+                rows = [e for e in rows if e.get("sourceFactId") == args["sourceFactId"]]
+            if args.get("incomingFactId"):
+                rows = [e for e in rows if e.get("supersededByEndpoint", {}).get("factDocumentId") == args["incomingFactId"]]
+            return {"page": rows, "isDone": True, "continueCursor": ""}
         return self.query_response
 
 
@@ -326,7 +344,8 @@ class TestFactHistoryServiceGetHistory:
 
         await service.get_history("fact-123", limit=10)
 
-        assert client.last_query[1]["limit"] == 10
+        assert client.last_query[0] == "factHistory:page"
+        assert client.last_query[1]["paginationOpts"]["numItems"] == 256
 
     async def test_get_history_empty(self) -> None:
         """Should handle empty history."""
