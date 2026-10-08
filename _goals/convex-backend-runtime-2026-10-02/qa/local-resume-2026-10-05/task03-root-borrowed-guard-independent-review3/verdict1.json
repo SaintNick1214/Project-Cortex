@@ -1,0 +1,83 @@
+{
+  "schema": "INDEPENDENT_G3_SCOPED_CODE_JUDGMENT_V1",
+  "verdict": "PASS",
+  "average": 4.4,
+  "dimensions": {
+    "TaskFulfillment": 5,
+    "CodeQuality": 4,
+    "TestQuality": 5,
+    "PatternAdherence": 4,
+    "Completeness": 4
+  },
+  "scope": [
+    "CODE_BEHAVIOR",
+    "CONTROLLED_HOST_FIXTURE_ONLY"
+  ],
+  "candidate": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam3/source-gates-borrowed3b.py",
+    "bytes": 26413,
+    "sha256": "b188559d77f89dcbe2a1173e906bffbc29dec22012536652f1e633302f7af71a"
+  },
+  "acceptedBoundedBehavior": "sticky metadata/body/local-cap failures and exact live borrowed/owner/ledger/caller/module authority links before/after actual reads",
+  "counts": {
+    "original18": 18,
+    "original71": 71,
+    "original14": 14,
+    "author19": 19,
+    "unchangedTotal": 122,
+    "independent": 61,
+    "passed": 183,
+    "failed": 0
+  },
+  "SourceEligibility": false,
+  "wholeGuardAcceptance": false,
+  "operativeAdoption": false,
+  "functionalAcceptance": false,
+  "parentLedgerAndWholeSourceCensus": "OPEN",
+  "underlyingN1R8": "REJECTED_OR_PENDING_UNADOPTED_DEPENDENCIES",
+  "nativeSourceGate": "unresolved_same_path_versions_REQUIRED_DENIAL_PRESERVED",
+  "controlledFixtureFacade": "authorized CODE-only temporary instance preflight permits ONLY exact native same-path-version denial after preserving all guards, restored before fixture open; no code/ledger factory modifications",
+  "heldSource": {
+    "count": 94,
+    "bytes": 1979108,
+    "minAgeSeconds": 548.961215141,
+    "allMemberFDsBeforeBodies": true,
+    "fullEOFHashBytesLiteral9Final": true,
+    "onceCloseCount": 94,
+    "errors": []
+  },
+  "nativeHeld": {
+    "count": 4,
+    "onceCloseCount": 4,
+    "errors": [],
+    "remainingOwnedFDs": 0
+  },
+  "oneLedger": {
+    "allActualIntervalsSameObject": true,
+    "allKnownCurrentBodyHeaderImportCompileDebtCharged": true,
+    "historicalChangedDocumentDebtBytes": 95863,
+    "noRefundNoReset": true,
+    "finalBytes": 65011713,
+    "intentionalFinalCloseUnknownRetained": true
+  },
+  "findings": [],
+  "priorCandidateFailuresPreserved": {
+    "G1": "three acquire metadata faults and one DATA-cap sticky denial repaired",
+    "G2": "borrowed.ledger owner.ledger ownerToken live-binding failures repaired"
+  },
+  "reviewerFailuresPreserved": [
+    "old own creator documentary ctime interval FAILED_UNKNOWN; distinct current prospective tuple only",
+    "native same-path-version Source admission/setup failure, followed by own ledgers_seen masking assertion; no candidate failure asserted",
+    "controls2 SyntaxError before candidate execution; controls3 distinct corrected source"
+  ],
+  "rawReferences": [
+    "independent-held-results4.json",
+    "native-bootstrap-closure4.json",
+    "historical-version-preflight-denial11.json",
+    "mature-final-results-readback15.json"
+  ],
+  "taskFunctional03": 0,
+  "taskFunctional04": 0,
+  "goalBoundedPercent": 5.9,
+  "productPercent": 0
+}
